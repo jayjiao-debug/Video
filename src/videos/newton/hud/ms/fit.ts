@@ -12,10 +12,12 @@
 //   fit_G  meter1 (G02: provisional, the slot with 证毕 under it, or the low-left place)
 // WHAT A FIT MAY SET (every field optional; frames KEYED TO THE VOICE: afterEnd / afterStart / line(id) / BEAT, never a
 // typed number):
-//   box          the boxes (film px, 1080 x 1800) the piece may draw in, fitted to the rebuilt face / hand / chair / plate
-//                (fx.tsx clamps each piece into its box; the checkers read it). The frame's rules: inside x 54-1026,
-//                nothing right of x 930 below y 950, nothing that matters below y 1490, never over a face, the
-//                subtitles, the REC row / stamp, the battery or the whisper bubble
+//   box          the boxes (film px, 1080 x 1920) the piece may draw in, fitted to the rebuilt face / hand / chair / plate
+//                (fx.tsx clamps each piece into its box; the checkers read it). The frame's rules (9:16, hud/style.ts
+//                FRAME = the kit's FRAME_9x16 with the REC override): inside x 110-970 above y 1000 and x 110-890
+//                below it (the app's button column is x >= 890 from y 1000), between y 340 (under the REC display,
+//                x 110-970 y 225-330) and y 1490 (the post's text from 1505), never over a face, the subtitles
+//                (band x 110-890, y 1270-1460), the REC row / stamp, the battery or the whisper bubble
 //   provisional  false once fitted (check.sh then treats a fault in it as an error, not a note)
 //   from, to     its frames (inclusive); a beat that lands on a sound is kept on its sound (when.ts absBeats: the stamp's
 //                jolt, the lunch bar's tick), the others are local frames from `from`

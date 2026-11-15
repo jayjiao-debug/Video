@@ -12,7 +12,7 @@
 // WHERE (anchored to the picture through ctx, hud/ms/screen.ts; then clamped into the item's box in when.ts):
 //   flick   his LEFT hand (people: arm 1, the free one; the quill is in his right), projected from the rig's 3D hand
 //           point (msFig(ctx, "newton").hands[1]) whenever he is in the posed shot. The ring (about 230 px across with
-//           its paper rim) goes on it; a hand right of x 820 or below y 950 puts it up-left of the hand with a short
+//           its paper rim) goes on it; a hand right of x 770 or below y 1000 puts it up-left of the hand with a short
 //           dotted leader (the plan); then the ring is clamped into its box and the label (under it, a little left)
 //           into its own (when.ts msItem("flick").box: ring, label); a ring over a face steps off it. No Newton in the
 //           posed shot -> the documented constant FLICK_HAND (the swatch's hand), clamped the same way. TODAY'S segB
@@ -49,7 +49,7 @@ import { MsMeter } from "./meter";
 const PF = "newton-ms-fx-flick";
 /** THE DOCUMENTED CONSTANT: his flicking hand when the frame has no Newton in its posed shot (a still without ctx;
  *  swatch_A: f0879 rows 700-1120, hand at 390, 226 of the strip). Clamped into the item's box like the rig's hand. */
-export const FLICK_HAND: MsPt = { x: 390, y: 926 };
+export const FLICK_HAND: MsPt = { x: 390, y: 986 };   // 9:15 (390, 926) + 60
 const RING = 100;
 /** round the ring's centre: its paper rim and the pop's overshoot (120); round the label's middle top: half its width
  *  laid a touch large and tilted (160), 2 above, 74 below */
@@ -60,11 +60,12 @@ export const flickPlace = (ctx: MsCtx | null | undefined) => {
   // hold: his hand leaves the frame at f775), else the constant
   const fromRig = !!(nt && nt.front);
   const hand = fromRig ? nt!.hands[1] : FLICK_HAND;
-  // THE RING (the plan): on the hand; a hand right of x 820 or below y 950 puts it up-left of the hand (in the gap
+  // THE RING (the plan): on the hand; a hand right of x 770 or below y 1000 (9:16: the ring would reach the app's
+  // button column, x >= 890 from y 1000; it was x 820 / y 950 on the 9:15 frame) puts it up-left of the hand (in the gap
   // between the two men) with a short leader. Then clamped into the ring's box (when.ts msItem("flick").box[0]: today's
   // keeps it clear of both faces for the whole hold, so it holds its place while the shot pans off him)
   const [RB, LB0] = msItem("flick").box, LBX = LB0 ?? RB;
-  const far = hand.x > 820 || hand.y > 950, want = far ? { x: hand.x - 150, y: hand.y - 150 } : hand;
+  const far = hand.x > 770 || hand.y > 1000, want = far ? { x: hand.x - 150, y: hand.y - 150 } : hand;
   const cx0 = RB.x0 + FL.ring, cx1 = Math.max(cx0, RB.x1 - FL.ring), cy0 = RB.y0 + FL.ring, cy1 = Math.max(cy0, RB.y1 - FL.ring);
   const c = { x: clamp(want.x, cx0, cx1), y: clamp(want.y, cy0, cy1) };
   // never over a face: step the ring below it (or above it) when the box leaves room
@@ -73,7 +74,7 @@ export const flickPlace = (ctx: MsCtx | null | undefined) => {
     const down = fb.y1 + RING + 18, up = fb.y0 - RING - 18;
     c.y = clamp(down <= cy1 ? down : up, cy0, cy1);
   }
-  // THE LABEL under the ring, a little to its left (the swatch), inside its own box (box[1]; left of x 930)
+  // THE LABEL under the ring, a little to its left (the swatch), inside its own box (box[1]; left of x 890)
   const lw = 300, lh = 66;
   const lx = clamp(c.x - 100, LBX.x0 + FL.lw, Math.max(LBX.x0 + FL.lw, LBX.x1 - FL.lw));
   const ly = clamp(c.y + RING + 22, LBX.y0 + FL.lu, Math.max(LBX.y0 + FL.lu, LBX.y1 - FL.ld));

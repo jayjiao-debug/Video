@@ -124,11 +124,16 @@ const P_DOOR = V(STX - 0.68, EYE_A, STAIRS.door.z + 0.06);
 const P_STEP = V(STX - 0.75, EYE_A, STAIRS.door.z - 0.36);
 /** NEWTON at the table: three-quarter to her lens (about 55 deg off it), the page 0.34 m in front of him; at his door
  *  (1.6 m from her lens, just inside his room, clear of the leaf's sweep, its inner ring in his right hand's reach),
- *  facing her; his way there goes round the table's corner */
+ *  facing her; his way there goes round the table's corner.
+ *  9:16 (15 Nov): his door mark is 4 cm further toward the doorway's middle (z -0.16; it was -0.12): standing in his
+ *  door in the held gap framing (f118-133) his jaw crossed the top corner of the app's button column (x >= 890 from
+ *  y 1000; 9:15's x 940 / y 950 cleared it), and 4 cm puts his face 47 px left (clear). The gap framing is unchanged;
+ *  M1's extreme close is aimed by his face's screen point, so it lands with his face where and as big as before (the
+ *  room behind him 1.4 deg over) */
 const F_DESK = yawTo(PAGE, P_GAP) - (58 * Math.PI) / 180;
 const N_DESK = PAGE.clone().add(V(-0.34 * Math.sin(F_DESK), 0, -0.34 * Math.cos(F_DESK))).setY(0);
 const N_MID = V(STX + 3.05, 0, 0.42);
-const N_DOOR = V(STX + 1.7, 0, -0.12);
+const N_DOOR = V(STX + 1.7, 0, -0.16);
 const F_DOOR = yawTo(N_DOOR, P_GAP);
 const N_PATH = [N_DESK, N_MID, N_DOOR], N_LEN = N_DESK.distanceTo(N_MID) + N_MID.distanceTo(N_DOOR);
 const CANDLE_AT = V(STX + 3.4, TABLE_TOP, 0.12);
@@ -316,7 +321,7 @@ const N_FACE_DOOR = N_DOOR.clone().setY(N_EYE + 0.02);
 const DOOR_AT = V(STAIRS.door.x + 0.18, 1.14, STAIRS.door.z);
 const DOOR2_AT = V(STAIRS.door.x - 0.03, 1.1, STAIRS.door.z);
 const H_HEAD = H_TOP.clone().setY(H_EYE);
-const GAP_CAM = C.aimCam(P_GAP, N_HEAD_DESK, 530, 700, FOV_GAP);
+const GAP_CAM = C.aimCam(P_GAP, N_HEAD_DESK, 530, 760, FOV_GAP);
 /** his face at his door as the gap framing shows it (M1 starts from there) */
 const FACE0 = C.toScreen(GAP_CAM, N_FACE_DOOR);
 /** M4: she turns to the door as its latch goes (someone is coming out) and follows Humphrey; her sidestep lands with
@@ -326,30 +331,38 @@ const LENS: C.LensKey[] = [
   // the cold open is ONE held frame (the gap framing, written as where his door mark sits in it, so the snap starts from it)
   { f: S.from, pos: P_GAP, at: N_FACE_DOOR, sx: FACE0.x, sy: FACE0.y, fov: FOV_GAP },
   { f: SNAP0, pos: P_GAP, at: N_FACE_DOOR, sx: FACE0.x, sy: FACE0.y, fov: FOV_GAP },
-  { f: GOOD, pos: P_GAP, at: N_FACE_DOOR, sx: 520, sy: 700, fov: C.zoomBy(FOV_GAP, XC_K), ease: easeOutCubic },
-  { f: PULL0, pos: P_GAP, at: N_FACE_DOOR, sx: 520, sy: 700, fov: C.zoomBy(FOV_GAP, XC_K) },
-  { f: THUD, pos: P_DOOR, at: DOOR_AT, sx: 540, sy: 620, fov: FOV, ease: smooth },
-  { f: FOL0, pos: P_DOOR, at: DOOR_AT, sx: 540, sy: 620, fov: FOV },
-  { f: FOL2, pos: P_STEP, at: H_HEAD, sx: 700, sy: 560, fov: FOV_H },
-  { f: LAUGH - 5, pos: P_STEP, at: H_HEAD, sx: 700, sy: 560, fov: FOV_H },
-  { f: LAUGH, pos: P_STEP, at: H_HEAD, sx: LAUGH_SX, sy: 640, fov: C.zoomBy(FOV_H, LAUGH_K), ease: easeOutCubic },
-  { f: PAN0, pos: P_STEP, at: H_HEAD, sx: LAUGH_SX, sy: 640, fov: C.zoomBy(FOV_H, LAUGH_K) },
-  { f: MISSION, pos: P_STEP, at: DOOR2_AT, sx: 540, sy: 700, fov: FOV, ease: swing },
+  { f: GOOD, pos: P_GAP, at: N_FACE_DOOR, sx: 520, sy: 760, fov: C.zoomBy(FOV_GAP, XC_K), ease: easeOutCubic },
+  { f: PULL0, pos: P_GAP, at: N_FACE_DOOR, sx: 520, sy: 760, fov: C.zoomBy(FOV_GAP, XC_K) },
+  { f: THUD, pos: P_DOOR, at: DOOR_AT, sx: 540, sy: 680, fov: FOV, ease: smooth },
+  { f: FOL0, pos: P_DOOR, at: DOOR_AT, sx: 540, sy: 680, fov: FOV },
+  { f: FOL2, pos: P_STEP, at: H_HEAD, sx: 700, sy: 620, fov: FOV_H },
+  { f: LAUGH - 5, pos: P_STEP, at: H_HEAD, sx: 700, sy: 620, fov: FOV_H },
+  { f: LAUGH, pos: P_STEP, at: H_HEAD, sx: LAUGH_SX, sy: 700, fov: C.zoomBy(FOV_H, LAUGH_K), ease: easeOutCubic },
+  { f: PAN0, pos: P_STEP, at: H_HEAD, sx: LAUGH_SX, sy: 700, fov: C.zoomBy(FOV_H, LAUGH_K) },
+  { f: MISSION, pos: P_STEP, at: DOOR2_AT, sx: 540, sy: 760, fov: FOV, ease: swing },
 ];
 /** her sidestep's footfalls (the walking bob) */
 const SIDESTEPS = [FOL0 + 6, FOL0 + 15, FOL0 + 24];
 /** M4's camera (FOL0 < f < FOL2): her eye glides from the title's place to the sidestep (landing on FOL1) while the aim
  *  takes Humphrey over 7 frames (from where he already is in her frame, so the pan starts from rest) and glides his
- *  head to its A04 place (700, 560) */
+ *  head to its A04 place (700, 620) */
 const FOL_WIDE = 12;
+/** 9:16 (15 Nov): THE LEAD THROUGH HIS CORNER. His banner's slip may not go left of x 110 now (9:15: x 66), so its right
+ *  edge sits at x 505 at the least, while on f314-321 his cheek swung to x 484-513 (the follow aims at his path averaged
+ *  over 7 frames, and that cuts the corner of his way out round the leaf, H_IN2 on f315): the follow leads him to the
+ *  right by up to FOL_LEAD px over f306-326 (a sine-squared bump peaking on f316, 1.45 deg of pan at its top, gone 4
+ *  frames before the gate-5 frame f330), so his cheek keeps 18 px or more clear of the slip's box (the live slip may
+ *  stray 6 px from the track's: banner.tsx HOLD). Same follow, same landing (FOL1, FOL2); f330 on is unchanged */
+const FOL_LEAD = 40;
+const folLead = (f: number) => FOL_LEAD * Math.pow(Math.sin(Math.PI * clamp01((f - FOL0 - 2) / 20)), 2);
 const followCam = (f: number): CamPose => {
   const u = smooth((f - FOL0) / (FOL1 - FOL0)), k = smooth((f - FOL0) / 7), v = smooth((f - FOL0 - 8) / (FOL1 - FOL0 - 8));
   // the lens widens while he passes nearest her (1.2 m: the corner of his way out), so he stays whole and his size
   // holds through the follow; it is back to FOV_H as he stops
   const near = Math.pow(Math.sin(Math.PI * clamp01((f - FOL0 - 6) / (FOL1 - FOL0 - 6))), 2);
   const pos = P_DOOR.clone().lerp(P_STEP, u), fov = C.zoomFov(FOV, FOV_H, u) + FOL_WIDE * near, him = hmEyeAvg(f, 3);
-  const s0 = C.toScreen(C.aimCam(pos, DOOR_AT, 540, 620, fov), him);
-  const tx = lerp(720, 700, v), ty = lerp(640, 560, v);
+  const s0 = C.toScreen(C.aimCam(pos, DOOR_AT, 540, 680, fov), him);
+  const tx = lerp(720, 700, v) + folLead(f), ty = lerp(700, 620, v);
   return C.aimCam(pos, him, lerp(s0.x, tx, k), lerp(s0.y, ty, k), fov);
 };
 /** the breathing's strength: none from the snap to the title's end (the extreme close, the pull back, the jolt, the
@@ -359,13 +372,19 @@ const breathK = (f: number) => {
   if (f > TITLE1 && f < TITLE1 + 20) return smooth((f - TITLE1) / 20);
   return 1 - smooth((f - (A06.leanFrom - 10)) / 10);
 };
+/** 9:16 (15 Nov): THE SWING'S TIP. The button column now starts at x 890 / y 1000 (9:15: x 940 / y 950); as she swings
+ *  off Humphrey (M6) his chin crossed its top corner on f479 (he is going down the step as the frame leaves him), so the
+ *  swing's first frames tip the lens down a hair: up to PAN_TIP deg over PAN0 .. PAN0 + 12 (a sine-squared bump, about
+ *  25 px at f479, gone before the A06 lean starts). Same swing, same landing on 好 */
+const PAN_TIP = 0.7;
+const panTip = (f: number) => -PAN_TIP * Math.pow(Math.sin(Math.PI * clamp01((f - PAN0) / 12)), 2);
 /** THE CAMERA of frame f: pure */
 const camAt = (f: number): CamPose => {
   let cam = f > FOL0 && f < FOL2 ? followCam(f) : C.lensCam(f, LENS);
   // the knock: the frame nods forward a hair on each rap (the second a little more: the door gives under it)
   const rp = rapPush(f, RAPS, [0.022, 0.034]);
   const j = jolt(f, THUD), b = breath(f, breathK(f));
-  cam = C.nudge(cam, { fwd: rp + j.fwd, pitch: -18 * rp + j.pitch + b.pitch, roll: j.roll, up: b.up - stepDip(f, SIDESTEPS) });
+  cam = C.nudge(cam, { fwd: rp + j.fwd, pitch: -18 * rp + j.pitch + b.pitch + panTip(f), roll: j.roll, up: b.up - stepDip(f, SIDESTEPS) });
   // the asides: the whisper lean on the door he is behind (A03; A06 lands with the pan back)
   if (f >= A03.from && f <= A03.to) cam = whisperLean(f, cam, { at: DOOR_AT });
   if (f >= A06.from) cam = whisperLean(f, cam, { at: DOOR2_AT });

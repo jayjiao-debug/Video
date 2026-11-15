@@ -293,12 +293,39 @@
    "id": "A01",
    "zh": "早上好！今天陪您过一天！",
    "en": "Good morning! I'm spending the day with you!",
-   "why": "the cold open: no greeting; the title carries the premise"
+   "why": "the cold open: no greeting; the title carries the premise",
+   "back": "15 Nov: 早上好！ is back as A01b (owner note); the rest of the line stays cut"
   }
  ],
  "lines": [
   {
-   "n": 1,
+   "id": "A01b",
+   "script_id": "00b",
+   "scene": "A",
+   "who": "ji",
+   "tts": "[bright, cheerful] 早上好！",
+   "zh": "早上好！",
+   "en": "Good morning!",
+   "screens": [
+    {
+     "zh": "早上好！",
+     "en": "Good morning!"
+    }
+   ],
+   "pre": 2.52,
+   "after": 0.0,
+   "en_on_screen": false,
+   "take": {
+    "status": "recorded",
+    "from_id": "A01 (v4: 早上好！今天陪您过一天！, cut at its pause)",
+    "pick": "1686"
+   },
+   "gain_db": -5.72,
+   "owner_note": "owner note 15 Nov (Jay): \"the interviewer doesnt have lines at beginning ... Oh we are finally here, then knock knock Good morning!\"",
+   "n": 1
+  },
+  {
+   "n": 2,
    "id": "A02",
    "script_id": "01",
    "v4_id": "A02",
@@ -313,7 +340,7 @@
      "en": "Good night."
     }
    ],
-   "pre": 4.5,
+   "pre": 0.98,
    "after": 2.2,
    "en_on_screen": true,
    "take": {
@@ -333,10 +360,11 @@
      "built": 2.2
     },
     "why": "G1, THE TITLE: +1.20 s (36 frames) between the slam's thud and A03 (EFFECTS_PLAN G1, the plan's full value): A03 starts 1.20 s later than in the delivered v5 track (6.600 s, f198 -> 7.800 s, f234), so the themed title 采访牛顿的一天 sits on the shut door from the thud (5.90 s, f177: A02 end + 0.4 s) for 1.87 s (in 0.6 s, held 1.0 s, out 0.27 s) and is gone before A03's whisper bubble. Written as A02's after-hold (1.0 -> 2.2), not A03's pre, so A03's preFrom moves with A03 and the cold open up to the thud (REC beep, STOP 1/5, raps, steps, A02, the swing, the thud, the pigeon) does not move."
-   }
+   },
+   "pre_note": "was 4.5: the new opening lines A01a / A01b take the rest, A02 still starts at 4.600 s"
   },
   {
-   "n": 2,
+   "n": 3,
    "id": "A03",
    "script_id": "02",
    "v4_id": "A03",
@@ -366,7 +394,7 @@
    ]
   },
   {
-   "n": 3,
+   "n": 4,
    "id": "A04",
    "script_id": "03",
    "v4_id": "A04",
@@ -395,7 +423,7 @@
    ]
   },
   {
-   "n": 4,
+   "n": 5,
    "id": "A05",
    "script_id": "04",
    "v4_id": "A05",
@@ -424,7 +452,7 @@
    ]
   },
   {
-   "n": 5,
+   "n": 6,
    "id": "A06",
    "script_id": "05",
    "v4_id": "A06",
@@ -461,7 +489,7 @@
    ]
   },
   {
-   "n": 6,
+   "n": 7,
    "id": "B01",
    "script_id": "06",
    "v4_id": "B01",
@@ -491,7 +519,7 @@
    ]
   },
   {
-   "n": 7,
+   "n": 8,
    "id": "B02",
    "script_id": "07",
    "v4_id": "B02",
@@ -520,7 +548,7 @@
    ]
   },
   {
-   "n": 8,
+   "n": 9,
    "id": "B03",
    "script_id": "08",
    "v4_id": "B03",
@@ -558,7 +586,7 @@
    }
   },
   {
-   "n": 9,
+   "n": 10,
    "id": "B04",
    "script_id": "09",
    "v4_id": "B04",
@@ -590,7 +618,7 @@
    ]
   },
   {
-   "n": 10,
+   "n": 11,
    "id": "B05",
    "script_id": "10",
    "v4_id": "B05",
@@ -619,7 +647,7 @@
    ]
   },
   {
-   "n": 11,
+   "n": 12,
    "id": "B06",
    "script_id": "11",
    "v4_id": "B06",
@@ -647,7 +675,7 @@
    ]
   },
   {
-   "n": 12,
+   "n": 13,
    "id": "B07",
    "script_id": "12",
    "v4_id": "B07",
@@ -676,7 +704,7 @@
    ]
   },
   {
-   "n": 13,
+   "n": 14,
    "id": "B08",
    "script_id": "13",
    "v4_id": "B08",
@@ -704,7 +732,7 @@
    ]
   },
   {
-   "n": 14,
+   "n": 15,
    "id": "B09",
    "script_id": "14",
    "v4_id": "B09",
@@ -753,7 +781,7 @@
    }
   },
   {
-   "n": 15,
+   "n": 16,
    "id": "C01",
    "script_id": "15",
    "v4_id": "C01",
@@ -783,7 +811,7 @@
    ]
   },
   {
-   "n": 16,
+   "n": 17,
    "id": "C02",
    "script_id": "16",
    "v4_id": "C02",
@@ -811,7 +839,7 @@
    ]
   },
   {
-   "n": 17,
+   "n": 18,
    "id": "C03",
    "script_id": "17",
    "v4_id": "C03",
@@ -840,7 +868,7 @@
    ]
   },
   {
-   "n": 18,
+   "n": 19,
    "id": "C04",
    "script_id": "18",
    "v4_id": "C04",
@@ -869,7 +897,7 @@
    ]
   },
   {
-   "n": 19,
+   "n": 20,
    "id": "C05",
    "script_id": "19",
    "v4_id": "C05",
@@ -899,7 +927,7 @@
    ]
   },
   {
-   "n": 20,
+   "n": 21,
    "id": "C06",
    "script_id": "20",
    "v4_id": "C06",
@@ -927,7 +955,7 @@
    ]
   },
   {
-   "n": 21,
+   "n": 22,
    "id": "C07",
    "script_id": "21",
    "v4_id": "C07",
@@ -956,7 +984,7 @@
    ]
   },
   {
-   "n": 22,
+   "n": 23,
    "id": "D01",
    "script_id": "22",
    "v4_id": "D01",
@@ -986,7 +1014,7 @@
    ]
   },
   {
-   "n": 23,
+   "n": 24,
    "id": "D02",
    "script_id": "23",
    "v4_id": "D02",
@@ -1014,7 +1042,7 @@
    ]
   },
   {
-   "n": 24,
+   "n": 25,
    "id": "D03",
    "script_id": "24",
    "v4_id": "D03",
@@ -1043,7 +1071,7 @@
    ]
   },
   {
-   "n": 25,
+   "n": 26,
    "id": "D04",
    "script_id": "25",
    "v4_id": "D04",
@@ -1071,7 +1099,7 @@
    ]
   },
   {
-   "n": 26,
+   "n": 27,
    "id": "D05",
    "script_id": "26",
    "v4_id": "D05",
@@ -1101,7 +1129,7 @@
    ]
   },
   {
-   "n": 27,
+   "n": 28,
    "id": "D06",
    "script_id": "27",
    "v4_id": "D06",
@@ -1129,7 +1157,7 @@
    ]
   },
   {
-   "n": 28,
+   "n": 29,
    "id": "E01",
    "script_id": "28",
    "v4_id": "E01",
@@ -1158,7 +1186,7 @@
    ]
   },
   {
-   "n": 29,
+   "n": 30,
    "id": "E02",
    "script_id": "29",
    "v4_id": "E02",
@@ -1187,7 +1215,7 @@
    ]
   },
   {
-   "n": 30,
+   "n": 31,
    "id": "E03",
    "script_id": "30",
    "v4_id": "E03",
@@ -1216,7 +1244,7 @@
    ]
   },
   {
-   "n": 31,
+   "n": 32,
    "id": "E04",
    "script_id": "31",
    "v4_id": "E04",
@@ -1244,7 +1272,7 @@
    ]
   },
   {
-   "n": 32,
+   "n": 33,
    "id": "E05",
    "script_id": "32",
    "v4_id": "E05",
@@ -1273,7 +1301,7 @@
    ]
   },
   {
-   "n": 33,
+   "n": 34,
    "id": "E06",
    "script_id": "33",
    "v4_id": "E06",
@@ -1301,7 +1329,7 @@
    ]
   },
   {
-   "n": 34,
+   "n": 35,
    "id": "E07",
    "script_id": "34",
    "v4_id": "E07",
@@ -1335,7 +1363,7 @@
    ]
   },
   {
-   "n": 35,
+   "n": 36,
    "id": "F01",
    "script_id": "35",
    "v4_id": "F01",
@@ -1365,7 +1393,7 @@
    ]
   },
   {
-   "n": 36,
+   "n": 37,
    "id": "F02",
    "script_id": "36",
    "v4_id": "F02",
@@ -1400,7 +1428,7 @@
    ]
   },
   {
-   "n": 37,
+   "n": 38,
    "id": "F03",
    "script_id": "37",
    "v4_id": "F03",
@@ -1428,7 +1456,7 @@
    ]
   },
   {
-   "n": 38,
+   "n": 39,
    "id": "F04",
    "script_id": "38",
    "v4_id": "F04",
@@ -1456,7 +1484,7 @@
    ]
   },
   {
-   "n": 39,
+   "n": 40,
    "id": "F05",
    "script_id": "39",
    "v4_id": "F05",
@@ -1493,7 +1521,7 @@
    ]
   },
   {
-   "n": 40,
+   "n": 41,
    "id": "F06",
    "script_id": "40",
    "v4_id": "F06",
@@ -1522,7 +1550,7 @@
    ]
   },
   {
-   "n": 41,
+   "n": 42,
    "id": "F07",
    "script_id": "41",
    "v4_id": "F07",
@@ -1550,7 +1578,7 @@
    ]
   },
   {
-   "n": 42,
+   "n": 43,
    "id": "F08",
    "script_id": "42",
    "v4_id": "F08",
@@ -1579,7 +1607,7 @@
    ]
   },
   {
-   "n": 43,
+   "n": 44,
    "id": "F09",
    "script_id": "43",
    "v4_id": "F09",
@@ -1619,7 +1647,7 @@
    ]
   },
   {
-   "n": 44,
+   "n": 45,
    "id": "F10",
    "script_id": "44",
    "v4_id": "F10",
@@ -1647,7 +1675,7 @@
    ]
   },
   {
-   "n": 45,
+   "n": 46,
    "id": "F11",
    "script_id": "45",
    "v4_id": "F11",
@@ -1676,7 +1704,7 @@
    ]
   },
   {
-   "n": 46,
+   "n": 47,
    "id": "F12",
    "script_id": "46",
    "v4_id": "F12",
@@ -1708,7 +1736,7 @@
    ]
   },
   {
-   "n": 47,
+   "n": 48,
    "id": "F13",
    "script_id": "47",
    "v4_id": "F13",
@@ -1737,7 +1765,7 @@
    ]
   },
   {
-   "n": 48,
+   "n": 49,
    "id": "F14",
    "script_id": "48",
    "v4_id": "F14",
@@ -1770,7 +1798,7 @@
    ]
   },
   {
-   "n": 49,
+   "n": 50,
    "id": "F15",
    "script_id": "49",
    "v4_id": "F15",
@@ -1802,7 +1830,7 @@
    ]
   },
   {
-   "n": 50,
+   "n": 51,
    "id": "F16",
    "script_id": "50",
    "v4_id": "F16",
@@ -1830,7 +1858,7 @@
    ]
   },
   {
-   "n": 51,
+   "n": 52,
    "id": "G01a",
    "script_id": "51",
    "v4_id": "G01",
@@ -1864,7 +1892,7 @@
    ]
   },
   {
-   "n": 52,
+   "n": 53,
    "id": "G01b",
    "script_id": "52",
    "v4_id": "G01",
@@ -1897,7 +1925,7 @@
    ]
   },
   {
-   "n": 53,
+   "n": 54,
    "id": "G02",
    "script_id": "53",
    "v4_id": "G02",
@@ -1934,7 +1962,7 @@
    ]
   },
   {
-   "n": 54,
+   "n": 55,
    "id": "G03",
    "script_id": "54",
    "v4_id": "G03",
@@ -1962,7 +1990,7 @@
    ]
   },
   {
-   "n": 55,
+   "n": 56,
    "id": "G04",
    "script_id": "55",
    "v4_id": "G04",

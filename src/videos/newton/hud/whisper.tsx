@@ -6,7 +6,7 @@
 // (whisperCapAt): the bubble REPLACES it, never both. Pose.captions === false (and the nocap input prop) hide the bubble
 // as they hide a subtitle; Pose.hud === false does not (a subtitle stays then too). The edges follow `noov`.
 //   <Whisper f words edges />   words: draw the bubble; edges: draw the vignette
-//   whisperLayout(screen, tune)   the bubble's geometry for one caption screen (px on 1080 x 1800)
+//   whisperLayout(screen, tune)   the bubble's geometry for one caption screen (px on 1080 x 1920)
 //   whisperRectAt(f)              the box the bubble takes on frame f (hud/index.ts hudRectsAt: "whisper"), or null
 // THE LOOK, in the vlog UI's skin (hud/vlog.tsx, hud/style.ts HC): one FrSans bold face; her speaker tint (HC.warm, the
 // reporter's subtitle colour) is the bubble's paper, edged with the subtitles' warm ink line (HC.ink) and their hard
@@ -15,10 +15,10 @@
 // ink-rimmed dots trail from its lower left toward the bottom of the frame (toward her, behind the lens). No English
 // row under her Chinese (her lines are spoken in Chinese: hud/caption.tsx enShown); a line spoken in English would get
 // a small English row inside the bubble.
-// THE PHONE-SAFE PLACE (layout.ts PHONE): centred on x 540, slid left so its right edge stays left of x 926 (the app's
-// buttons cover x > 940 from y 950); the body's bottom on y 1426 so the tail's last dot (and its drop) ends above y 1490
-// (the post's text covers the left from y 1510); one row: about y 1314-1426, the tag from about y 1293, inside the
-// subtitle band the camera plans already keep faces out of. A Chinese screen over 13 characters breaks into two rows
+// THE PHONE-SAFE PLACE (style.ts FRAME, the kit's 9:16 caption band x 110-890, y 1270-1460): centred on x 540, slid
+// left so its right edge stays left of x 886 (the app's buttons cover x >= 890 from y 1000); the body's bottom on
+// y 1396 so the tail's last dot (and its drop) ends above y 1460 (the post's text covers x 58-805 from y 1505); one
+// row: about y 1284-1396, the tag from about y 1263, in the subtitle band the camera plans already keep faces out of. A Chinese screen over 13 characters breaks into two rows
 // (hud/caption.tsx capRows), the bubble growing upward. whisper.ts WHISPER_TUNE[id].x / .bottom move it for a framing.
 // MOTION: it pops in on her first word (scale 0.82 -> 1 with a slight overshoot, opacity in 3 frames; fully in 5 frames
 // later) from its tail; a second screen of the line (E07) fades in while the bubble's width eases to it (4 frames; the words clipped to the body); out
@@ -40,8 +40,8 @@ export const BUB = {
   px: 58, minPx: 48, ls: 2, step: 1.24, enPx: 30, enLs: 0.4,
   /** inside the ink rim, the rim, the corner radius of a two-row bubble (one row: a pill) */
   padX: 36, padY: 22, rim: 5, radius: 44,
-  /** the default place: centre x, the body's bottom y (the lowest it may sit: the tail then ends above y 1490) */
-  cx: 540, bottom: 1426,
+  /** the default place: centre x, the body's bottom y (the lowest it may sit: the tail then ends above y 1460) */
+  cx: 540, bottom: 1396,
   /** the tag 悄悄说 */
   tag: "悄悄说", tagPx: 26, tagLs: 2, tagPadX: 14, tagPadY: 7, tagRim: 4, tagDx: 28,
   /** the tail's two dots (radius, offset from the body's lower left / from the first dot) */

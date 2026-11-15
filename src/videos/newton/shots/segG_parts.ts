@@ -105,7 +105,7 @@ export const fromCamLocal = (cam: CamPose, L: CamLocal): { at: THREE.Vector3; ro
 export const heldBoard = (cam: CamPose, f: number, o: { k?: number; px?: number; py?: number; depth?: number; tilt?: number; spin?: number } = {}) => {
   const F = C.camFrame(cam), k = easeOutCubic(clamp01(o.k ?? 1)), depth = o.depth ?? 0.72;
   const life = V(0.0018 * Math.sin(f * 0.061 + 2), 0.0015 * Math.sin(f * 0.047 + 3.3), 0.001 * Math.sin(f * 0.037 + 4.1));
-  const mid = C.fromScreen(F, o.px ?? 540, (o.py ?? 820) + (1 - k) * 1300, depth).add(life);
+  const mid = C.fromScreen(F, o.px ?? 540, (o.py ?? 880) + (1 - k) * 1300, depth).add(life);
   const tilt = ((o.tilt ?? 6) + 26 * (1 - k)) * Math.PI / 180, roll = 0.009 * Math.sin(f * 0.043) + 0.05 * (1 - k);
   // its axes in camera space (x right, y up, z forward): its face (+z) toward the lens, its +y up the frame
   const zb = V(0, Math.sin(tilt), -Math.cos(tilt)), up0 = V(-Math.sin(roll), Math.cos(roll), 0), yb = up0.addScaledVector(zb, -up0.dot(zb)).normalize();
@@ -204,7 +204,7 @@ export const mixGradeG = (a: GradeParams, b: GradeParams, k: number): GradeParam
   const m = (x: number[], y: number[]) => x.map((v, i) => lerp(v, y[i], k));
   return { ky: m(a.ky, b.ky), sat: m(a.sat, b.sat) as [number, number, number], tintS: m(a.tintS, b.tintS) as [number, number], tintM: m(a.tintM, b.tintM) as [number, number], tintH: m(a.tintH, b.tintH) as [number, number], vig: m(a.vig, b.vig) as [number, number] };
 };
-/** A WARM SPILL of firelight (a soft radial glow, screen-blended) centred at (x, y) px on the 1080 x 1800 frame,
+/** A WARM SPILL of firelight (a soft radial glow, screen-blended) centred at (x, y) px on the 1080 x 1920 frame,
  *  radius r px, strength k 0..1 (the same look as segF_parts flash) */
 export const spill = (key: string, p: { x: number; y: number }, r: number, k: number) => k <= 0.01 ? null :
   h("div", { key, style: { position: "absolute", left: 0, top: 0, width: W, height: H, pointerEvents: "none", mixBlendMode: "screen", opacity: Math.min(1, k),

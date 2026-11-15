@@ -2,7 +2,7 @@
 // the free hand's actions. The preview harness has no lens blur and no HUD: the aside's dof is PRINTED (the film draws
 // it), and with guides (default on) a translucent strip shows the subtitle band (layout.ts SCREEN.capTop..capBottom)
 // and a red line the mic's limit (y 1190). One "frame" = one test (TESTS[i]):
-//   bash scripts/kit/queue/still.sh src/videos/newton/preview/cam_test.ts /home/user/newton_work/film/wp3/cam/ --pick 0,1,2,3,4,5,6,7,8,9,10 --size 540x900
+//   bash scripts/kit/queue/still.sh src/videos/newton/preview/cam_test.ts /home/user/newton_work/film/wp3/cam/ --pick 0,1,2,3,4,5,6,7,8,9,10 --size 540x960
 //   0 rest          room (morning), NEWTON at the desk, the mic at rest (no aim)
 //   1 aim newton    the same, the mic held toward his mouth
 //   2 aside         the mic turned to the lens (dof printed: focus on the mic, he goes soft)
@@ -106,7 +106,7 @@ export const TESTS: Test[] = [
   } },
 ];
 
-if (typeof window !== "undefined") preview({ w: 540, h: 900 }, (c) => {
+if (typeof window !== "undefined") preview({ w: 540, h: 960 }, (c) => {
   const w = new World(c.renderer, c.camera);
   c.scene.add(w.root);
   const o = c.opts, want: (string | number)[] | undefined = o.tests;

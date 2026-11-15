@@ -33,7 +33,7 @@ const lin = (hex: string) => new THREE.Color(hex);           // THREE.Color(hex)
 const U = {
   uMsWash: { value: 0 },
   uMsSweep: { value: 0 },
-  uMsRes: { value: new THREE.Vector2(1080, 1800) },
+  uMsRes: { value: new THREE.Vector2(1080, 1920) },
   /** the paper and the ink of the ramp (linear) */
   uMsPaper: { value: lin(WASH_PAPER) },
   uMsInk: { value: lin("#4a3826") },
@@ -43,12 +43,14 @@ float msHash( vec2 p ) { return fract( sin( dot( p, vec2( 12.9898, 78.233 ) ) ) 
 float msNoise( vec2 p ) { vec2 i = floor( p ), f = fract( p ); vec2 u = f * f * ( 3.0 - 2.0 * f );
   return mix( mix( msHash( i ), msHash( i + vec2( 1.0, 0.0 ) ), u.x ), mix( msHash( i + vec2( 0.0, 1.0 ) ), msHash( i + vec2( 1.0, 1.0 ) ), u.x ), u.y ); }
 `;
-// film px (1080 wide, y down) from the fragment's place in the render target; the front d runs 0 (top right) .. 1
-// (bottom left); behind it the surface's light (linear, before tone mapping) is mapped to the ink -> paper ramp
+// film px (1080 wide, y down) from the fragment's place in the render target, in the approved 9:15 frame's rows (the
+// 1920 frame's row minus 60: the paper's grain and the front lie on the picture exactly as approved; the 60 px strips
+// above and below take the same paper); the front d runs 0 (top right) .. 1 (bottom left); behind it the surface's
+// light (linear, before tone mapping) is mapped to the ink -> paper ramp
 const BODY = `
 if ( uMsWash > 0.0 ) {
   vec2 msQ = gl_FragCoord.xy / uMsRes;
-  vec2 msP = vec2( msQ.x * 1080.0, ( 1.0 - msQ.y ) * 1800.0 );
+  vec2 msP = vec2( msQ.x * 1080.0, ( 1.0 - msQ.y ) * 1920.0 - 60.0 );
   float msD = ( 1080.0 - msP.x ) / 1080.0 * 0.45 + msP.y / 1800.0 * 0.55;
   float msF = uMsSweep * 1.12 - 0.06;
   float msW = ( 1.0 - smoothstep( msF - 0.05, msF + 0.05, msD ) ) * uMsWash;

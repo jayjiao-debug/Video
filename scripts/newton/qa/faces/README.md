@@ -1,8 +1,11 @@
 # faces: the face vs HUD checker of NewtonFilm
 
 Headless (no GL, no browser, no render queue). For every frame it poses the film's real World the way the clearance
-checker does, takes every visible figure's face from the rig's own face drawing, projects it to the 9:15 screen
-(1080 x 1800) with the frame's camera and reports where it lies under that frame's HUD. The header of `check.ts` has
+checker does, takes every visible figure's face from the rig's own face drawing, projects it to the 9:16 screen
+(1080 x 1920) with the frame's camera and reports where it lies under that frame's HUD. The zones are hud/style.ts
+`FRAME` (the kit's FRAME_9x16 with the film's one override, 15 Nov): the cut sides x < 58 and x > 1024 (`margin`),
+the app's icons (y 143-222), button column (x >= 890 from y 1000) and post text (x 58-805 from y 1505) plus everything
+below y 1490 (`phone`), the subtitle band x 110-890, y 1280-1460 (`band`). The header of `check.ts` has
 the whole contract (face regions, the HUD items, the freeze and the cut-out, the joins and the words).
 
 ```
@@ -16,7 +19,7 @@ bash scripts/newton/qa/faces/run.sh --from 4380 --to 4420
 
 - **FACE UNDER THE HUD**: one row per range of frames where one figure's face lies under one HUD item (REC, the stamp
   small or big, the battery, a fact card, the title, the subtitle rows, the empty subtitle band, the phone app's own
-  things, the 54 px margins, the skin's effect boxes).
+  things and the frame's bottom line, the cut sides, the skin's effect boxes).
 - **HIDDEN ONLY**: the same, where the face's five key points are all behind another solid.
 - **JOINS**: the 11 joins of beats.ts against the picture's cuts (and the clock races of hud/vlog.tsx).
 - **WORDS vs JOINS**: every subtitle, card and whisper bubble against the next join (`--words` prints only this).
@@ -34,7 +37,7 @@ bash scripts/newton/qa/faces/run.sh --from 4380 --to 4420
 
 ### `margin` is HIGH only on held frames (gate-5 note F7, 15 Nov)
 
-The 54 px margins at each side are picture only (another screen shape may trim them). A face that crosses the frame
+The cut sides (x < 58 and x > 1024: Douyin fills the screen and cuts them off). A face that crosses the frame
 edge during a move or an exit is part of that move, not a framing fault. So every `margin` hit is classified after
 all frames are posed:
 

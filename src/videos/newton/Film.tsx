@@ -1,5 +1,6 @@
-// 《采访牛顿的一天》 (formerly 《跟着牛顿过一天》) the film composition "NewtonFilm" (9:15, 1080 x 1800, 30 fps, TOTAL
-// frames from the timing; the lens keeps the 1920 frame's width of view: story.ts LENS_H, world.ts setCamera). A copy of
+// 《采访牛顿的一天》 (formerly 《跟着牛顿过一天》) the film composition "NewtonFilm" (9:16, 1080 x 1920, 30 fps, TOTAL
+// frames from the timing; Jay 15 Nov: back to 9:16, the lens keeping its width of view: story.ts LENS_H, world.ts
+// setCamera; the overlays on hud/style.ts FRAME). A copy of
 // Qin's Film.tsx (WP1) on the shared kit (src/kit/fx/ink, src/kit/film/env).
 // Engine: story.ts (segment contract + how to build a segment), world.ts (places, props, cast).
 // Per page (a still, or one farm chunk): the font is loaded, then the World is built ONCE under the delayRender handle
@@ -29,9 +30,10 @@
 // title block (hud/title.tsx TitleCard) is no longer mounted: skin A's <MsTitle> replaces it.
 // Input props: src/kit/film/env.ts (lang, nocap, nohud, noov, cover, zoom / sx / sy / ov, nopost, slate, kick, dbg,
 // ovonly, inksamples), and this film's own:
-//   mask: true   THE PHONE MASK for review cuts (default off): the phone app's covered areas (the top-corner icons to
-//                y 60, the button column x > 940 from y 950, the post's text from y 1510 on the left, the 54 px
-//                margins) as translucent overlays over everything. A component prop or an input prop:
+//   mask: true   THE PHONE MASK for review cuts (default off): what Douyin does to a 9:16 film (hud/style.ts FRAME):
+//                the cut sides x < 58 and x > 1024, the back / search icons at y 143-222, the button column x >= 890
+//                from y 1000, the post's text x 58-805 from y 1505, the words outline (x 110-970 above y 1000,
+//                110-890 below, y 340-1490), the REC display and the caption band, as translucent overlays over everything. A component prop or an input prop:
 //                bash scripts/kit/queue/remotion_still.sh NewtonFilm 582 /abs/out.png --props='{"mask":true}'
 //   cap: {zh, en?, who?}   a caption drawn instead of the frame's own (subtitle layout reviews only)
 //   fx: {force, at?, item?}   SKIN A's STILL TEST (hud/ms/when.ts MS_FX; stills only, never the film): force = the item
@@ -226,11 +228,11 @@ const Hud: React.FC<{ h: number; P: Pose; lit: number }> = ({ h, P, lit }) => (
     {P.cards !== false ? <FactCard f={h} /> : null}
   </>
 );
-/** the animatic's slate (input prop slate: true): frame, segment, line and the shot's own label, top left. Its own
+/** the animatic's slate (input prop slate: true): frame, segment, line and the shot's own label, top left under the REC display (x 120, y 360). Its own
  *  layer above everything, also where a shot hides the HUD. */
 const Slate: React.FC<{ f: number; P: Pose }> = ({ f, P }) => (
   <AbsoluteFill style={{ pointerEvents: "none" }}>
-    <div style={{ position: "absolute", left: 44, top: 96, padding: "8px 16px", borderRadius: 10, background: "rgba(10,12,22,0.62)", color: "#fff", fontFamily: FONT_STACK, fontWeight: 700, fontSize: 34, letterSpacing: 1, whiteSpace: "nowrap" }}>
+    <div style={{ position: "absolute", left: 120, top: 360, padding: "8px 16px", borderRadius: 10, background: "rgba(10,12,22,0.62)", color: "#fff", fontFamily: FONT_STACK, fontWeight: 700, fontSize: 34, letterSpacing: 1, whiteSpace: "nowrap" }}>
       {`f${f} · ${segAt(f).id} · L${lineNo(f)}${P.slate ? " · " + P.slate : ""}`}
     </div>
   </AbsoluteFill>

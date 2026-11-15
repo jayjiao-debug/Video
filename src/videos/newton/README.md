@@ -1,7 +1,8 @@
 # NewtonFilm: the segment builder's contract
 
-《采访牛顿的一天》 (formerly 《跟着牛顿过一天》; composition `NewtonFilm`, this folder). 9:15, 1080 x 1800 since 14 Nov (the phone-safe frame: section
-10 and `layout.ts PHONE`; the lens keeps the 1920 frame's width of view: section 7), 30 fps, `TOTAL` frames from the timing (5258 =
+《采访牛顿的一天》 (formerly 《跟着牛顿过一天》; composition `NewtonFilm`, this folder). 9:16, 1080 x 1920 (Jay, 15 Nov: back to 9:16; it was
+9:15, 1080 x 1800 on 14 Nov; the phone-safe frame: section 10 and `hud/style.ts FRAME`; the lens kept its width of view:
+section 7), 30 fps, `TOTAL` frames from the timing (5258 =
 175.3 s on the placeholder timing; the real voice will change it: never copy a number). The bible and the storyboard
 are `PLAN.md`: read section 7 for your scene, and the script's stage directions
 (`/mnt/project-files/next-video/newton/script_v4/script_v4.md`). The engine is a copy of Qin's (`src/videos/qin/`).
@@ -90,7 +91,7 @@ r.set({ at, facing, pose: { kind: "idle", t: f / FPS }, expr: "deadpan", gaze, t
 w.update();                                           // solves the figures; r.handWorld(i), r.headWorld() valid after it
 w.prop("plate").put(ROOM.plate, { lid: 0, steam: 1, t: f / FPS });   // props: every frame (section 6)
 const M = C.putMic(w, cam, f, { aim: r.headWorld().add(V(0, -0.1, 0)) });  // her mic + hand, after update (section 7)
-const p = w.project(r.headWorld());                   // -> { x, y, z, front, on } in 1080 x 1800 px
+const p = w.project(r.headWorld());                   // -> { x, y, z, front, on } in 1080 x 1920 px
 return { camera: cam, post: { dof: M.dof }, overlays, top, cards, hud, captions, clock, focus, title, slate };
 ```
 
@@ -229,13 +230,13 @@ breathing sway); a light handheld only with `walk` (her walking 0..1, 1.5 = a tr
 (`import * as C from "../cam"`). Every function is pure (frame in, pose out); the moves take a CamPose and return one,
 so they stack.
 
-THE 9:15 LENS (14 Nov). Every CamPose `fov` (the layout cameras, cam.ts, the shots) is still the vertical angle of the
-1080 x 1920 frame the scenes were built for, so a fov number keeps its WIDTH of view. `world.ts setCamera` gives the
-1800 frame its real vertical angle, `story.ts lensFov(fov)` = 2 atan(tan(fov/2) x 1800 / 1920) (62 -> 58.8 deg), and
-`cam.ts camFrame` / `toScreen` / `fromScreen` use the same (`story.ts lensTan`, `LENS_H` 1920). Never convert a fov by
-hand. A camera given by position and look point shows the old 1920 picture less 60 px at the top and the bottom; a
-camera AIMED at a screen point (`frameOn`, `aimDir`, `aimCam`) puts it on that point of the 1800 frame. Every screen
-number is px on 1080 x 1800 (the invisible mic and hands' frame numbers moved up 60 px, so they stand where they did).
+THE LENS (9:16 again since 15 Nov). Every CamPose `fov` (the layout cameras, cam.ts, the shots) is the vertical angle of
+the 1080 x 1920 frame, so a fov number keeps its WIDTH of view; `story.ts lensFov` / `lensTan` (`LENS_H` 1920) are the
+identity now (on the 9:15 frame of 14 Nov they gave the 1800 frame its real angle). Never convert a fov by hand. THE
+9:15 -> 9:16 MOVE: the 1920 frame is the 1800 frame with 60 px more picture at the top and at the bottom, at the same
+scale, so a 9:15 screen point (x, y) is (x, y + 60) now; every screen number in the shots, cam.ts and the skin's fits
+was moved so (proved: the posed world is identical on all 5438 frames, and picture-only stills match the 9:15 ones
+row for row, newton_work/film/f916/FRAME.md). Every screen number is px on 1080 x 1920; a plan's 9:15 number + 60.
 
 THE LENS MOVE (camplan OVERVIEW, "do this before building any scene", item 5): ONE helper for every lens move in all
 seven scenes. Two rules: a zoom is interpolated in log(tan(fov/2)) (equal steps of the move are equal steps of picture
@@ -254,7 +255,7 @@ const cam = C.lensCam(f, [
 C.aimCam(pos, at, sx, sy, fov, rollDeg)   // one frame: the camera at pos turned so world point `at` lands on (sx, sy) px
 C.zoomFov(a, b, t)                        // the fov t of the way from a to b in log(tan(fov/2))
 C.zoomBy(fov, k) / C.zoomFactor(a, b)     // tan(half) x k (0.75 a quarter tighter); the size change of a move (> 1 tighter)
-C.screenTan(sx, sy, fov)                  // a screen point as tangents off the axis (the 9:15 lens)
+C.screenTan(sx, sy, fov)                  // a screen point as tangents off the axis (the 1920 frame's lens)
 C.lensK(f, on, len, ease)                 // 0..1 through a move that starts on `on` and lands on `on + len`
 ```
 Keys: `{ f, pos, at, sx, sy, fov, roll?, ease? }`, `pos` and `at` may be functions of the frame (a walking subject, her
@@ -287,9 +288,9 @@ const M = C.putMic(w, cam, f, {
 return { camera: cam, post: { dof: M.dof } };   // a light focus on the aim; never a dof that blurs him for an aside (section 10)
 ```
 
-- Where it sits (never drawn): at rest the red head's centre is at about 335 / 988 px on the 1800 frame (r 94 px); it
-  follows the aim sideways (x 230..640). (The old aside pose, 520 / 944 r 136 with `lens: 1` or aim "lens", is RETIRED
-  with the old aside: section 10, THE WHISPER.) The head's bottom edge never comes below y 1130 (`MIC_FRAME.band`,
+- Where it sits (never drawn): at rest the red head's centre is at about 335 / 1048 px on the 1920 frame (r 94 px); it
+  follows the aim sideways (x 230..640). (The old aside pose, 520 / 1004 r 136 with `lens: 1` or aim "lens", is RETIRED
+  with the old aside: section 10, THE WHISPER.) The head's bottom edge never comes below y 1190 (`MIC_FRAME.band`,
   `SCREEN.mic`).
 - `C.micPose(cam, f, o)` = the same without putting it: `{ mic, hand, head, headPx, dof, visible }`.
 - HER RIGHT HAND (`handR`): `C.freeHand(cam, grip, { bar, palm, pose, side })` at any world point;
@@ -392,18 +393,22 @@ Film.tsx draws, in order: `<Whisper f />` (the whisper's darkened edges and bubb
 layer (`<VlogHud f rec={P.rec} cards={P.cards} />`, every `registerHud`, then `<TitleCard f at={P.title} />` and
 `<FactCard f />`), then `P.overlays`, then `<Caption f />` (not on a whisper line's frames), then `P.top`.
 `import { ... } from "../hud"` (hud/index.ts re-exports everything).
-THE PHONE-SAFE FRAME (9:15, 1080 x 1800; Jay's measure on his phone, 14 Nov; `layout.ts PHONE`): the outer 54 px of
-each side are picture only; the app's back / search icons cover the top corners to y 60; its button column covers
-x > 940 from y 950 down (words and effects below y 950 stay left of x 930, so a centred row is at most 780 px); the
-post's text covers the left from y 1510 (subtitles end above y 1490, nothing that matters below y 1500). Review stills
+THE PHONE-SAFE FRAME (9:16, 1080 x 1920; `hud/style.ts FRAME` = the kit's `FRAME_9x16` with the film's ONE override,
+Jay 15 Nov "the rec and batter need to go in a tad bit", the same numbers as the 李白 film; `layout.ts PHONE` / `SCREEN`
+carry copies for the picture side): Douyin FILLS the screen and CUTS x < 58 and x > 1024 off; its back icon sits at
+x 58-150 and its search icon at x 920-1024, y 143-222; its button column covers x >= 890 from y 1000 down; the post's
+text covers x 58-805 from y 1505 (to 1790). The REC display is x 110-970, y 225-330 (the REC row on y 250, the
+timestamp row on y 308). WORDS, CARDS AND EFFECTS: inside x 110-970 above y 1000 and x 110-890 below it, between y 340
+and 1490 (a row centred on x 540 below y 1000 is at most 700 px). FACES AND ANYTHING THAT MATTERS: inside x 58-1024 and
+above y 1490, clear of the REC row, the battery, the subtitle and the effect boxes while they are on. Review stills
 draw it with the PHONE MASK: `bash scripts/kit/queue/remotion_still.sh NewtonFilm <frame> <abs out.png>
 --props='{"mask":true}'` (`hud/phone.tsx`, Film.tsx prop `mask`, default off; any other remotion flag passes the same
 way). `--props='{"cap":{"zh":"……","who":"ji"}}'` draws a given subtitle instead of the frame's (layout reviews).
 HER CAMERA'S RECORDING UI (`hud/vlog.tsx`, Jay 14 Nov; PLAN 5): the REC lamp (1 Hz, soft) and "REC" top left (row
-y 116, x 54..181, y 97..135), the scene's timestamp under it (「清晨 05:00」 / EARLY MORNING, rows at about y 161 / 189,
-x 54..267, y 140..204 at most: on every scene's FIRST FRAME it slides in 1.5x big over x 54..372, y 140..234 at most,
+y 250, x 110..233, y 231..269), the scene's timestamp under it (「清晨 05:00」 / EARLY MORNING, its row centred on y 308,
+x 110..274, y 289..327 at most: on every scene's FIRST FRAME it slides in 1.5x big over x 110..354, y 289..344 at most,
 holds to 1.6 s, then shrinks into its place for the rest of the scene; each scene's own box: `stampRect(id, big)`), the
-battery top right (x 843..1026, y 95..137; drains with the clock, red at 2 a.m.). THE CLOCK RUNS FAST ONLY AT THE CLOCK
+battery top right (x 787..970, y 229..271; drains with the clock, red at 2 a.m.). THE CLOCK RUNS FAST ONLY AT THE CLOCK
 JOINS (`CLOCK_JOINS`: A->B, C->D, D->E, F->G, keyed on `SEGMENTS`, and G's room -> garden join `BEAT.G.garden`, 02:00 ->
 03:00): from 10 frames before the cut to 8 after (`RACES`, `raceAt(f)`, `clockAt(f)`); at a whip or match join (B->C,
 E->F) the stamp slides in with its time set. So hold the picture still over the outgoing 10 frames of a clock join.
@@ -421,42 +426,44 @@ vanishes mid-scene reads as the camera stopping). `cards: false` (skips the big 
 | `rec: false` | hides her camera's REC lamp and the timestamp on this frame (the battery stays, still) |
 | `hud: false` | hides the whole HUD layer (the vlog UI and registered HUDs too; the subtitle and the whisper bubble stay) |
 | `captions: false` | hides the subtitle on this frame (and the whisper bubble) |
-| `overlays` / `top` | your own 2D nodes below / above the subtitle (1080 x 1800 px, `story.ts W / H`); the end black goes in `top` |
+| `overlays` / `top` | your own 2D nodes below / above the subtitle (1080 x 1920 px, `story.ts W / H`); the end black goes in `top` |
 | `post` | `{ dof, bloom, grade, gradeAmount, ink, ao, bg }` over the place's look (never a dof that blurs him for an aside: THE WHISPER below) |
 
 - SUBTITLES (`hud/caption.tsx`): one screen at a time (the lines file's `screens`): Chinese 66 px, English 36 px under it
   ONLY for lines spoken in English (`enShown`), no box, a dark outline on its own layer (zh 5.5 px, en 3.5 px) and a
   soft shadow; tints ji warm white `#fff3e0`, nt pale gold `#ffdf8e`, hm white. The block is ANCHORED ON ITS BOTTOM: the
-  last row ends on y 1488 (`CAP_BOTTOM`): one Chinese row y ~1401-1488, Chinese + English y ~1355-1488. A Chinese
-  screen over 13 characters (`CAP_ROW`) breaks into two rows (from about y 1325); every row is centred and at most
-  780 px wide (`CAP_W`): 12-13 characters shrink to 58-63 px; English over 780 px wraps to two rows. 3-frame fades at
-  the start and end of a run, none between screens. Line 01's screen shows from frame 0 (`capOn`). `CAP_BAND`
-  x 54..930, y 1325..1490. A screen's hold after its speech, its fade included, is CLIPPED before the next whip or
+  last row ends on y 1458 (`CAP_BOTTOM`, inside the kit's caption band x 110-890, y 1270-1460): one Chinese row
+  y ~1375-1458, Chinese + English y ~1325-1458, Chinese + two English rows from y ~1285. A Chinese screen over 13
+  characters (`CAP_ROW`) breaks into two rows (from about y 1295); every row stays inside x 110-890 and centred while it
+  can: up to 10 characters at 66 px, 11 shrink to 64 px to stay centred in 700 px (`CAP_W`), 12-13 take 58 px
+  (`ZH_MIN`) and slide left just enough to fit; English over 700 px wraps to two rows. 3-frame fades at the start and
+  end of a run, none between screens. Line 01's screen shows from frame 0 (`capOn`). `CAP_BAND` x 110..890,
+  y 1280..1460. A screen's hold after its speech, its fade included, is CLIPPED before the next whip or
   match join (`capEnd(c)`, beats.ts `joinClip`: THE WORDS AND THE JOINS below). Exports `Caption, capOn, capAlpha,
   capEnd, capLayout, capRows, SPEAKER_COL, ZH_PX, EN_PX, ZH_MIN, ZH_Y, EN_Y0, EN_STEP, CAP_BAND, CAP_ROW, CAP_W,
   CAP_BOTTOM`.
 - FACT CARDS (`hud/card.tsx`): a cream paper slip (deckled, torn bottom, grain, shadow, tilted -2.2 deg), Chinese ink
-  46 px (2-3 rows, at most 12 characters), English sepia 28 px under a rule; the slip from x 75, at most 580 px wide,
-  its bottom edge on y 1140 (the tallest starts at about y 786); flutters in from the left over 8 frames, floats,
+  46 px (2-3 rows, at most 12 characters), English sepia 28 px under a rule; the slip from x 131, at most 580 px wide,
+  its bottom edge on y 1200 (the tallest starts at about y 846); flutters in from the left over 8 frames, floats,
   slides out over 8. Its end, the exit included, is CLIPPED before the next whip or match join (`cardEnd(c)`; the exit
   runs over the clipped end; `factCardAt(f)` returns the card with its shown `to`). Exports `FactCard, factCardAt,
-  cardEnd, SHOWN_CARDS, factRows, factLayout, factRectAt, FACT_SLOT {54, 758, 676, 1161}, CARD_X, CARD_BOTTOM, cardTop,
+  cardEnd, SHOWN_CARDS, factRows, factLayout, factRectAt, FACT_SLOT {110, 817, 732, 1221}, CARD_X, CARD_BOTTOM, cardTop,
   CARD_MAXW, CARD_ROW`.
 - TITLE BLOCK (`hud/title.tsx`, no longer mounted: skin A's `hud/ms` MsTitle draws the title 「采访牛顿的一天」): the title 96 px, an ivory double rule with a lozenge, 「1686年5月 · 剑桥三一学院」
   40 px and the English line 24 px, ivory paint on the dark oak; drops 46 px over 10 frames, one bounce, fades over
   its last 10, over `TITLE_SPAN`. Exports `TitleCard, setTitlePlace, titleRect, titleRectAt, TITLE_HOME (540, 900),
-  TITLE_RECT {125, 736, 955, 1026}, TitlePlace`. In 9:15 the plans put it on the door's upper panel, the block about
-  y 260-480 (camplan A.md).
+  TITLE_RECT {156, 796, 924, 1044}, TitlePlace`. In 9:15 the plans put it on the door's upper panel, the block about
+  y 260-480 (camplan A.md; + 60 on the 9:16 frame).
 - THE END and dips (`hud/end.tsx`): `endBlack(f, from, fade = 8)` (put it in `Pose.top`), `endBlackAlpha`,
   `dipAlpha(f, a, b, fade)`, `black(a)`, `<EndBlack>`, `<Black>`, `FADE_MIN` 3. The colour is the film's darkest warm
   tone `#140d09`, never #000; every fade is 3 frames or more.
 - Keep faces (and the mic) out from under the HUD: `hudRectsAt(f)` (the subtitle's real box or the whisper bubble's,
-  the card, the title for that frame) and `hudHits(f, rect)`. `layout.ts SCREEN` holds the same boxes on 1080 x 1800 (`W`, `H`, `cx`, `cy`):
-  `top` 60, subtitle band `capTop` 1325 .. `capBottom` 1490, `bottom` 1500, eyes above `eyes` 600, `card` {54, 758,
-  676, 1161}, `title` {125, 736, 955, 1026}, `rec` {54, 97, 267, 204}, `stampBig` {54, 140, 372, 234}, `battery` {843,
-  95, 1026, 137}, words left of `rail.x` 930 below `rail.y` 950, the invisible mic's head bottom never below `mic`
-  1130 (`micRest` 335 / 988). Style helpers: `HC` (palette), `SAFE` (x 54..930), `textW`, `em`, `spanK`, `overlaps`,
-  `turnedRect`, `Rect`.
+  the card, the title for that frame) and `hudHits(f, rect)`. `layout.ts SCREEN` holds the same boxes on 1080 x 1920 (`W`, `H`, `cx`, `cy`):
+  `top` 340, subtitle band `capTop` 1280 .. `capBottom` 1460, `bottom` 1490, eyes above `eyes` 660, `card` {110, 817,
+  732, 1221}, `title` {156, 796, 924, 1044}, `rec` {110, 231, 274, 327}, `stampBig` {110, 289, 354, 344}, `battery`
+  {787, 229, 970, 271}, words left of `rail.x` 890 below `rail.y` 1000, the invisible mic's head bottom never below
+  `mic` 1190 (`micRest` 335 / 1048). Style helpers: `HC` (palette), `FRAME` (the film's frame spec), `SAFE` (x 110..890
+  below y 1000, `rightHigh` 970 above it, y 340..1490), `textW`, `em`, `spanK`, `overlaps`, `turnedRect`, `Rect`.
 
 THE WORDS AND THE JOINS (camplan OVERVIEW item 4; owner row 86: nothing from the outgoing place may still show once
 the move starts). The HUD keeps words off the joins by itself, from beats.ts `JOINS` (section 8): no subtitle and no
@@ -559,7 +566,7 @@ lectures, eats, stares at the door). Her line is for us, not for him.
    /home/user/newton_work/film/<lane>/shimmer --frame F`.
 6. Faces vs the HUD (headless, about 10 s a scene): `bash scripts/newton/qa/faces/run.sh --seg X --out
    /home/user/newton_work/film/<lane>/faces` lists every face under the vlog UI, a subtitle, the whisper bubble, a card,
-   the title, the phone app's things or the 54 px margins; `== JOINS` checks every join of beats.ts `JOINS` against the
+   the title, the phone app's things or the cut sides (x < 58, x > 1024); `== JOINS` checks every join of beats.ts `JOINS` against the
    picture's cuts; `== WORDS vs JOINS` (also alone: `run.sh --words`) every subtitle, card and bubble against its next
    join.
 

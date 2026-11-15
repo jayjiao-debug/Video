@@ -93,9 +93,9 @@ export const F_S = V(ELX + 0.85, 0, 0.65);
 /** the TWO (the step down lands on it on 火 of F06) and THE EXTREME CLOSE (the one slow push lands on it on
  *  "dressings" of F15, lens only, and holds to F's last frame): his eyes' screen point and the lens.
  *  The extreme close keeps his whole head ball inside x 160-1000 (its radius about 400 px), its hair below the REC
- *  row and the battery, his chin above y 1100 */
-export const F_TWO = { sx: 620, sy: 610, fov: 60 };
-export const F_XC = { sx: 585, sy: 665, fov: 33 };
+ *  row and the battery, his chin above y 1160 */
+export const F_TWO = { sx: 620, sy: 670, fov: 60 };
+export const F_XC = { sx: 585, sy: 725, fov: 33 };
 const CROUCH_POS = V(F_S.x, F_EYE_CROUCH, F_S.z);
 /** F's LAST CAMERA (held from "dressings" to F's last frame; G opens on it: no cut) */
 export const F_END_CAM: CamPose = C.aimCam(CROUCH_POS, F_SEAT_EYES, F_XC.sx, F_XC.sy, F_XC.fov);

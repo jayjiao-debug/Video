@@ -4,10 +4,12 @@
 //   - the three voice gaps (when.ts gapPending()): "QA: MS gap G1 pending: ..." is a NOTE, never an error: the voice
 //     job inserts the gaps later and every item moves with its line;
 //   - every item: its frames and seconds, its scene, its gap, whether it draws in the film now, its boxes;
-//   - the kit's check (overlay/frame.ts checkOverlays) of every switched-on item against the phone-safe frame, the
-//     film's REC row, battery and stamp, the subtitle shown, the whisper bubble, the fact card, the app's buttons (this
-//     film's rule: nothing right of x 930 below y 950), the post's text (nothing below y 1490), each other, the quiet
-//     span F07..G02 and the effects budget (2 a scene, 45 frames apart). Faces are the faces checker's
+//   - the kit's check (overlay/frame.ts checkOverlays) of every switched-on item against the film's frame (hud/style.ts
+//     FRAME: the kit's FRAME_9x16 with the film's one override): inside x 110-970 and above y 1490, off the REC display
+//     (x 110-970, y 225-330) and everything above the words line (y 340), off the app's zones (both cut sides x < 58 /
+//     x > 1024, the back / search icons, the button column x >= 890 from y 1000, the post's text x 58-805 from y 1505),
+//     off the vlog stamp (its big intro reaches y 344) and battery, the subtitle shown, the whisper bubble, the fact
+//     card, each other, the quiet span F07..G02 and the effects budget (2 a scene, 45 frames apart). Faces are the faces checker's
 //     (scripts/newton/qa/faces: hudRectsAt carries the skin's boxes as "ms-<id>");
 //   - THE CUT-OUT (cutout.ts, freeze.ts): its ink and paper are the skin's (CUT_INK = MS.ink, the line and the place he
 //     left = MS.paper), the pass's own wash is off (one wash look: wash.ts), and it lives on the card's frames only, with
@@ -15,11 +17,12 @@
 //     sticker against the card's words is the faces checker's (THE CUT-OUT vs THE CARD).
 // Exit code 0 unless the check finds a fault in an item that is not provisional (provisional boxes are reported as
 // notes until the builder fits them).
-import { FRAME_9x15, checkOverlays, type FrameSpec, type Zone } from "../../../../kit/overlay/frame";
+import { checkOverlays, type FrameSpec, type Zone } from "../../../../kit/overlay/frame";
 import { MS_ITEMS, QUIET, FREEZE, msEnabled, msShown, msFrozen, msItem, gapLines, sec } from "./when";
 import { capOn, capLayout, enShown } from "../caption";
 import { factRectAt } from "../card";
-import { vlogRectsAt, VLOG_RECT } from "../vlog";
+import { vlogRectsAt } from "../vlog";
+import { FRAME } from "../style";
 import { whisperCapAt, whisperRectAt } from "../whisper";
 import { TOTAL } from "../../story";
 import { MS } from "./skin";
@@ -28,10 +31,9 @@ import { CUT, CARD_LEN, cutAt } from "../../freeze";
 import { CUT_INK, CUT_LOOK } from "../../cutout";
 
 declare const process: { exitCode?: number };   // plain Node (no @types/node in the film's tsc run)
-const SPEC: FrameSpec = { ...FRAME_9x15, rec: VLOG_RECT.rec };
+const SPEC: FrameSpec = FRAME;
 const RULES: Zone[] = [
-  { what: "the app's buttons (film rule: x > 930 below y 950)", r: { x0: 930, y0: 950, x1: 1080, y1: 1800 } },
-  { what: "the post's text (film rule: below y 1490)", r: { x0: 0, y0: 1490, x1: 1080, y1: 1800 } },
+  { what: `above the words line (film rule: y < ${FRAME.top}, the REC display's rows)`, r: { x0: 0, y0: 0, x1: FRAME.W, y1: FRAME.top } },
 ];
 const protect = (f: number): Zone[] => {
   const z: Zone[] = [...RULES];

@@ -6,7 +6,7 @@
 // English = a thinner ink line and a softer fill, since there is no lighter weight of the face.
 import { FONT_STACK } from "../../group/kit/overlay";
 import { textW, wrapRows } from "../../wanbi/hud/base";
-import { SCREEN, PHONE } from "../layout";
+import { FRAME_9x16, type FrameSpec } from "../../../kit/overlay/frame";
 
 export { FONT_STACK, textW, wrapRows };
 
@@ -25,11 +25,19 @@ export const HC = {
   black: "#140d09",
 };
 
-/** a screen box in film px (1080 x 1800) */
+/** a screen box in film px (9:16, 1080 x 1920) */
 export type Rect = { x0: number; y0: number; x1: number; y1: number };
-/** the phone-safe area for words (layout.ts PHONE / SCREEN): x 54..930 below y 950 (the app's buttons are right of
- *  x 940), so a row CENTRED on x 540 is at most 780 px wide; nothing above y 60 or below y 1500 */
-export const SAFE = { left: PHONE.margin, right: SCREEN.rail.x, railY: SCREEN.rail.y, bottom: SCREEN.bottom, top: SCREEN.top };
+/** THE FILM'S FRAME (Jay, 15 Nov: back to 9:16, "the rec and batter need to go in a tad bit"): the kit's FRAME_9x16
+ *  (Douyin fills the screen and cuts ~58 px off each side; its back / search icons at y 143-222, its button column
+ *  x >= 890 from y 1000, the post's text x 58-805 from y 1505) with ONE local override, the same as the 李白 film's:
+ *  the REC row centred on y 250 (the REC block starts on x 110), the timestamp row under it centred on y 308, the
+ *  battery ending on x 970, so the REC display is x 110-970, y 225-330, and words / cards / effects start at y 340.
+ *  Every overlay, the skin check (hud/ms/check.ts), the faces checker and the phone mask read THIS. */
+export const FRAME: FrameSpec = { ...FRAME_9x16, top: 340, recY: 250, labelY: 308, rec: { x0: 110, y0: 225, x1: 970, y1: 330 } };
+/** the phone-safe area for words, cards and effects (FRAME): x 110..970 above y 1000 (`rightHigh`), x 110..890 below
+ *  it (`right`: the app's buttons), so a row CENTRED on x 540 below y 1000 is at most 700 px wide; nothing above
+ *  y 340 (`top`, under the REC display) or below y 1490 (`bottom`, the post's text) */
+export const SAFE = { left: FRAME.side, right: 890, rightHigh: FRAME.W - FRAME.side, railY: 1000, bottom: FRAME.bottom, top: FRAME.top };
 
 /** in / out of a span [a, b] (inclusive): 0 outside, 1 inside, eased linearly over `nin` frames at the start and `nout`
  *  at the end; a span that starts on frame 0 is already in */

@@ -1,5 +1,5 @@
 // hud/ms/meter.tsx: SKIN A's LAUGH METER (EFFECTS_PLAN rows 5, 6, 8, 10; stage 2b): a slip of his paper in the slot top
-// right under the battery (skin.ts METER: x 754-1024, y 154-292), with 笑 inside the dashed pencil guide of a circle his
+// right under the REC display's battery (skin.ts METER: x 698-968, y 348-486; 9:16, Jay 15 Nov), with 笑 inside the dashed pencil guide of a circle his
 // compass has not drawn yet, the count 0/1, and one CRIMSON CROSS per failed try (the meter's rubric mark). THE COUNT is
 // set in the body hand (FrSans bold through the iron-gall ink filter), as the approved frames draw it (A_fx.png,
 // swatch_A.png: upright bold numerals; the generator's italic face never loaded, so what Jay picked is FrSans), not in
@@ -15,7 +15,7 @@
 //   meter1  row 10  after G02's laugh: the compass closes the circle in one sweep (from the tick dot, clockwise), 0
 //                   becomes 1 (1/1), and 证毕 is written in crimson under it (quill on a paper scrap, a swash); gone
 //                   before the sack's thump. If his head is in the slot on that hold, the whole piece goes low left
-//                   (x 72-306, y 1070-1290: the plan's other place, when.ts meter1's second box), at 0.8 its size.
+//                   (x 110-344, y 1100-1320: the plan's other place, fit_G's box), at 0.8 its size.
 // Look: looks/frames/A_fx.png (the slip), swatch_A.png (tick 2 + note, 1/1 + 证毕); looks/src/skin_a.py meter_slip,
 // sheet.py swatch_a. Ids: newton-ms-meter*. A pure function of (f, ctx).
 import React from "react";
@@ -31,11 +31,13 @@ const S = METER.slip, C = METER.circle, N = METER.count, T = METER.tries, NOTE =
 const SCX = S.x + S.w / 2, SCY = S.y + S.h / 2;
 /** the count's digit ends at SPLIT and "/1" starts there (FrSans digits are about 0.57 em) */
 const DIGIT = 0.57 * N.px, SPLIT = N.x + DIGIT;
-/** the slot (when.ts SLOT) and the plan's other place for the 1/1 */
-const SLOT = { x0: 752, y0: 155, x1: 1026, y1: 300 };
-const LOW_LEFT = { x: 80, y: 1078, s: 0.8 };
+/** the slot (when.ts SLOT; 9:16: under the REC display, skin.ts METER) and the plan's other place for the 1/1 (low left
+ *  on his gown: the 9:15 place + 30, not + 60, so 证毕's swash ends by y 1320, above an English line's subtitle block
+ *  (from y 1325 on the 9:16 caption band); its left edge on the frame's side x 110) */
+const SLOT = { x0: 696, y0: 349, x1: 970, y1: 494 };
+const LOW_LEFT = { x: 118, y: 1108, s: 0.8 };
 /** 证毕: written with the broad nib in crimson under the slip (swatch_A: under it, a little right, a swash below) */
-const QED = { x: 806, y: 378, S: 76, rots: [-7, 3], lifts: [0, 6] };
+const QED = { x: 806 - 56, y: 378 + 194, S: 76, rots: [-7, 3], lifts: [0, 6] };
 const qedW = quillLayout("证毕", QED.S, { rots: QED.rots, lifts: QED.lifts }).width;
 
 type Showing = {

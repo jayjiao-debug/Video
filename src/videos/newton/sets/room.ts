@@ -29,7 +29,7 @@ import type { CastLight } from "../../group/kit/cast";
 import { lightRig, paint, rng, css } from "../../../kit/sets/okit";
 import { ROOM_SET as S, ROOM, RMX } from "../layout/room";
 import type { PlaceLook, ParamValue } from "./index";
-import { maker, boxG, levelQuad, ceilQuad, wallQuad, tileUV, lathe, Part } from "./parts/common";
+import { maker, boxG, levelQuad, ceilQuad, wallQuad, tileUV, lathe, Part, inkWorld } from "./parts/common";
 import { NC, paperPile, holedWall, revealG, leadedWindow, doorLeaf, doorTex, panelTex, plasterTex, oakBoardsTex, sunShaft, dustMotes, pageTex, pageEdgeTex, spinesTex, ashlarTex } from "./parts/newton";
 
 export type Hour = "morning" | "noon" | "evening" | "night";
@@ -247,6 +247,12 @@ export function buildRoom(K: Kit) {
       for (const s of [-1, 1]) Q.shell([[mEdge, boxG(s > 0 ? 0.005 : -0.185, s > 0 ? 0.185 : -0.005, 0.012, 0.035, -0.12, 0.12).rotateY(yaw).translate(px, top, pz)], [mP, new THREE.PlaneGeometry(0.175, 0.235).rotateX(-Math.PI / 2).translate(s * 0.095, 0.0365, 0).rotateY(yaw).translate(px, top, pz)]], 0.004);
     }
     Q.into(group, "room.desk.paper", { cast: true });
+    // THE PAPER IN THE INK PASS'S WORLD (owner note 15 Nov: "the table outline is clipping through the papers"): the
+    // ink pass draws the desk top's edges from a world-only buffer (camera layer 0), where the papers (NOINK Parts with
+    // their own hull) are missing, so an edge line ran straight across every sheet and pile lying over the desk's edge.
+    // The paper's solids join layer 0 as well (their hulls stay NOINK only): the pass sees the paper on top and the edge
+    // stops under it. props/index.ts does the same for the desk papers the shots put down (sheets, drafts, books).
+    inkWorld(group, "room.desk.paper");
     // loose sheets on the floor by the desk (a couple fallen)
     const mLoose = Mk.tex(pageTex(85), 0.9);
     for (const [dx, dz, yaw] of [[-0.95, 0.35, 0.4], [0.95, 0.5, -0.7]] as [number, number, number][]) Mk.mesh("room.sheet", new THREE.PlaneGeometry(0.22, 0.29).rotateX(-Math.PI / 2).rotateY(yaw).translate(x + dx, 0.0008, z + dz), mLoose, { cast: false, noink: true });

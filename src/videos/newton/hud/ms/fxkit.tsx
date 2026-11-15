@@ -8,9 +8,9 @@ import { MOTION } from "./skin";
 import { sinkFilter, sinkK } from "./marks";
 import type { MsCtx, MsFig, MsPt } from "./screen";
 
-/** the film-sized SVG every piece draws in (1080 x 1800 film px) */
+/** the film-sized SVG every piece draws in (1080 x 1920 film px) */
 export const Sheet: React.FC<{ id: string; children: React.ReactNode }> = ({ id, children }) => (
-  <svg id={id} width={1080} height={1800} viewBox="0 0 1080 1800" style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>{children}</svg>
+  <svg id={id} width={1080} height={1920} viewBox="0 0 1080 1920" style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>{children}</svg>
 );
 
 /** A SLIP LAID DOWN at local frame `at` over MOTION.slap frames (3): it comes down a touch large and settles flat, its

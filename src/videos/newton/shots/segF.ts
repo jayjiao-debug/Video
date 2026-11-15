@@ -87,7 +87,7 @@ const breath = (f: number) => 0.004 * Math.sin((2 * Math.PI * 0.24 * f) / 30 + 0
 /** her place behind the walker: back along his way, out to his left, her eye height */
 const FOLLOW = { back: 1.4, side: 0.6 };
 /** the flame on screen through the follow and on both frames of the match */
-const FLAME_PX = { x: 560, y: 980 }, FOLLOW_FOV = 62;
+const FLAME_PX = { x: 560, y: 1040 }, FOLLOW_FOV = 62;
 /** his candle hand while he walks (his left: E handed it to him so), the same in the garden and inside, so the match
  *  holds; the same bob on the same frames */
 const carryHand = (at: THREE.Vector3, facing: number, f: number, moving: boolean) => rel(at, facing, 0.27, 0.74 + (moving ? 0.012 * Math.sin((f / FPS) * Math.PI * 2 * 1.1) : 0), 0.12);
@@ -330,13 +330,13 @@ const SACK_CARRY = (p: THREE.Vector3, face: number) => rel(p, face, 0.31, 0.72, 
 
 // ==================================================================================================== HER CAMERA
 /** the three-thing (W3): from the bench's end, his eyes upper right, the fire door in the middle, Humphrey at the heap */
-const W3 = { sx: 850, sy: 580, fov: 61 };
+const W3 = { sx: 850, sy: 640, fov: 61 };
 /** his own pages on the bench by the mouldy book (the set's written papers), card 3 beside them (lower left) */
 const DRAFTS_AT = V(ELX + 1.93, ELAB_SET.bench.top, 0.09), DRAFTS_ROT = 1.62;   // between the old book's spread and the crucibles
 const PAGES = DRAFTS_AT.clone().add(V(0, 0.09, 0));
-const PG = { sx: 760, sy: 560, fov: 44 };
+const PG = { sx: 760, sy: 620, fov: 44 };
 /** the medium at the end of the push over her promise (she has stepped in 0.36 m) */
-const MED = { sx: 720, sy: 562, fov: 44 };
+const MED = { sx: 720, sy: 622, fov: 44 };
 const CROUCH = V(F_S.x, F_EYE_CROUCH, F_S.z);
 const W3_CAM = (eyes = N_EYES) => C.aimCam(P_WIDE, eyes, W3.sx, W3.sy, W3.fov);
 const PAGE_CAM = C.aimCam(P_WIDE, PAGES, PG.sx, PG.sy, PG.fov);

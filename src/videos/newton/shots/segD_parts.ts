@@ -3,7 +3,7 @@
 // functions of their arguments (no state between frames). (The old take's handkerchief pad and frameOn / mixCam are
 // gone: script v5 cut the wipe, and every framing now goes through cam.ts aimCam / lensCam.)
 import * as THREE from "three";
-import { clamp01, lerp, smooth, type CamPose } from "../story";
+import { clamp01, lerp, smooth, H_915, Y_915, type CamPose } from "../story";
 import * as C from "../cam";
 import { SCHOOLS, SCHOOLS_SET } from "../layout";
 import { NOTES } from "../props";
@@ -70,15 +70,15 @@ export const stopPose = (f: number, fall: number, len: number, s: number): { pos
  *  deg at the peak (the old 45 px at fov 45); at the long lens give clapAmp(fov) so the frame dips CLAP_DIP_PX;
  *  the roll stays (a roll does not grow with the lens). Pure. */
 export const CLAP_JOLT = [0.55, 1, 0.5, 0.22, 0.08] as const;
-/** the dip the frame makes at a clap (px on the 1800 frame): 34, because his own head jolt on the clap (segD: accent
+/** the dip the frame makes at a clap (px; measured on the 9:15 frame, the same px on 1920: the lens keeps its scale): 34, because his own head jolt on the clap (segD: accent
  *  "jolt", amp 0.3 / 0.4) lifts the face another 15-20 px, so the face moves about 50 px at the first clap (the faces
  *  checker: head top y 344 -> 282 with a 45 px dip, too big for "a small jolt") */
 export const CLAP_DIP_PX = 34;
-/** the pitch scale that gives CLAP_DIP_PX at CamPose fov `fov` (the dip in degrees = px / (1800 / the real vertical
- *  angle)) */
+/** the pitch scale that gives CLAP_DIP_PX at CamPose fov `fov` (the dip in degrees = px / (1800 / the vertical angle
+ *  of the 9:15 frame the jolt was approved on: rows 60-1860 of the 1920 frame, so the number is unchanged)) */
 export const clapAmp = (fov: number) => {
-  const vfov = (2 * Math.atan(C.screenTan(540, 0, fov).y) * 180) / Math.PI;
-  return ((CLAP_DIP_PX / 1800) * vfov) / 1.15;
+  const vfov = (2 * Math.atan(C.screenTan(540, Y_915, fov).y) * 180) / Math.PI;
+  return ((CLAP_DIP_PX / H_915) * vfov) / 1.15;
 };
 export const clapJolt = (c: CamPose, f: number, ons: number[], amp = 1): CamPose => {
   let k = 0;

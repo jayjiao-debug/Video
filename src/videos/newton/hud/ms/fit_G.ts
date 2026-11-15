@@ -13,11 +13,17 @@
 //           left), so the 1/1 never jumps between the places. The piece lies at x 72-306, y 1070-1290 (the slip
 //           x 80-296, y 1078-1188, 证毕 and its swash under it): over the fireplace, left of his right hand, below his chin
 //           (y 853-874), clear of the subtitle band and the app's buttons.
+// 9:16 (15 Nov, the frame stage): the box below is the 9:15 one + 60 in y (the lens kept its width of view: a 9:15
+// point (x, y) is (x, y + 60) now), pulled inside the 9:16 rules (hud/style.ts FRAME: x 110-970 from y 340, x <= 890
+// below y 1000, nothing below 1490) where it crossed them; FRAME.md (newton_work/film/f916) has the allowed areas.
+// Scene G check on 9:16 (15 Nov): the head box meets the new slot (696-970, 349-494) on every hold frame, so the piece is
+// always low left; masked still f5040: the slip about 30 px left of his right arm, 证毕 clear of his hand, nothing under
+// his chin; skin check 0 findings; no subtitle shows over the hold.
 import type { MsFit } from "./fit";
 
 export const FIT_G: MsFit = {
   meter1: {
-    box: [{ x0: 70, y0: 1070, x1: 380, y1: 1290 }],
+    box: [{ x0: 110, y0: 1100, x1: 380, y1: 1320 }],   // 9:16: meter.tsx LOW_LEFT (118, 1108): the piece x 110-344, y 1100-1320, above G02's subtitle block (y 1325)
     provisional: false,
   },
 };

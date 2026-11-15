@@ -11,11 +11,20 @@
 //           keep-clear for the wig). His lecture hand (f2421-2436) is up on the LEFT of his head (about x 190), the
 //           far side from the slot. The piece does not jolt with clap 1 (a screen element; when.ts says so).
 //           Frames unchanged (D05.to + 1 .. D05.to + 30): out 12 frames before clap 2.
+// 9:16 (15 Nov, the frame stage): the box below is the 9:15 one + 60 in y (the lens kept its width of view: a 9:15
+// point (x, y) is (x, y + 60) now), pulled inside the 9:16 rules (hud/style.ts FRAME: x 110-970 from y 340, x <= 890
+// below y 1000, nothing below 1490) where it crossed them; FRAME.md (newton_work/film/f916) has the allowed areas.
+// THE D SCENE PASS ON 9:16 (15 Nov): the slot is fixed by the frame (skin.ts METER), and on the picture it now sits
+// 56 px further left and 134 px lower than in 9:15, so on the approved medium the wig's right side came within 19-28 px
+// of the box on the hold and 2 px at the top of clap 1's jolt (f2437; in 9:15 it was 83-107 px clear). segD.ts HOLD
+// (M5's landing, the medium for tick 2, the claps and "Don't.") takes his eyes 8 px left and 8 px lower: nothing of him
+// (wig, locks, quill, ink line included) comes within 28 px of the box on f2419-2435 and 12 px at f2437 (the box's empty
+// bottom-left corner; the slip and the note themselves are 35 px and more away). Box and frames unchanged.
 import type { MsFit } from "./fit";
 
 export const FIT_D: MsFit = {
   tick2: {
-    box: [{ x0: 752, y0: 146, x1: 1026, y1: 350 }],
+    box: [{ x0: 696, y0: 340, x1: 970, y1: 544 }],   // 9:16: the meter's slot under the REC display (skin.ts METER) and the note
     provisional: false,
   },
 };

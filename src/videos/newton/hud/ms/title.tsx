@@ -17,13 +17,16 @@
 //         A03's whisper bubble); when.ts makes it 56 whenever that still ends before the bubble, and every beat here
 //         follows the item's own numbers.
 //   Where: DRAWN IN THE APPROVED LAYOUT (looks/frames/A_title.png, skin_a.py title(): the leaf 780 x 580 at 130, 330,
-//         turned -3 deg; inside msItem("title").box[0], x 110-930, y 300-940) and then PUT ON HIS DOOR (ctx.door, the
+//         turned -3 deg; in the 9:15 px it was approved in, x 110-930, y 300-940) and then PUT ON HIS DOOR (ctx.door, the
 //         door leaf's face on screen): a similarity follows the shut door's place, size and roll on screen (the slam's
 //         jolt shakes it with the door: the approved layout lands exactly on the settled hold, REF_DOOR). The title
 //         starts on the thud, the frame the door is shut, so it never lies over his face in the doorway; should the door
 //         still be open on a frame (a rebuilt scene), the door's own perspective takes the leaf in with it (a homography
 //         from the shut face to the swinging one), so the leaf rides the door leaf. Without ctx.door (another set, a
-//         forced still elsewhere) it is drawn in the approved layout as it is.
+//         forced still elsewhere) it is drawn in the approved layout moved LAYOUT_DY (60) down. 9:16 (15 Nov): the layout
+//         and REF_DOOR stay in the 9:15 px the title was approved in; the door on screen (ctx.door, 1920 px) is 60 px
+//         lower, so the similarity carries the whole title 60 px down with it, and LAYOUT_DX (14) right so the torn
+//         left edge clears the words line at x 110: msItem("title").box[0] x 110-970, y 360-1000 on screen.
 //   Words: only 采访 / 牛顿 / 的一天 (牛顿 largest, crimson with an iron-gall rim; the other two small, iron-gall); the
 //         compass orbit round a sun-dot is the skin's wordless mark. No date, no place.
 //   Ids: every id starts with "newton-ms-title". No blend modes and no backdrop filters (the cut composites the overlays
@@ -77,7 +80,8 @@ const inv = (m: M3): M3 => {
   return [A / det, -(b * i - c * h) / det, (b * f - c * e) / det, B / det, (a * i - c * g) / det, -(a * f - c * d) / det, C / det, -(a * h - b * g) / det, (a * e - b * d) / det];
 };
 /** THE REFERENCE: his shut door's face on screen on the settled hold of the title (segA f205 on the voice track of
- *  14 Nov, after the slam's jolt; probed headless with screen.ts msDoor), where the approved layout lands exactly */
+ *  14 Nov, after the slam's jolt; probed headless with screen.ts msDoor), where the approved layout lands exactly; in
+ *  the 9:15 px of the layout (on the 1920 frame that door is 60 px lower: the similarity then moves the layout so) */
 const REF_DOOR: MsPt[] = [{ x: 210, y: 1508 }, { x: 882, y: 1528 }, { x: 1144, y: -519 }, { x: -37, y: -503 }];
 const H_REF = homog(UNIT, REF_DOOR);
 /** the leaf's centre on the door (the face's own 0..1 coordinates) and its local axes on the reference */
@@ -88,16 +92,23 @@ const axes = (H: M3) => {
 };
 const REF_AX = axes(H_REF);
 /** the door's bottom edge in the layout's px (where the empty leaf goes under), a line through the reference corners */
+/** the layout's px are the 9:15 frame's: drawn without a door, it moves this far down onto the 1920 frame */
+const LAYOUT_DY = 60;
+/** 9:16 (15 Nov, the integrator): the leaf's torn left edge, turned -3 deg, reached x 98 on the hold (f210; x 84 at
+ *  f228 as the A03 lean pushes in) against the words line at x 110 (FRAME_9x16 side; in 9:15 the line was 54). The
+ *  whole title slides this far right on screen, after the door's similarity, before its swing: the hold's leaf then
+ *  runs x ~112-964 (inside x 110-970 above y 1000); the words, the orbit and the door's own picture are unchanged */
+const LAYOUT_DX = 14;
 const doorBottomY = (x: number) => REF_DOOR[0].y + ((x - REF_DOOR[0].x) * (REF_DOOR[1].y - REF_DOOR[0].y)) / (REF_DOOR[1].x - REF_DOOR[0].x);
 
 /** where the layout goes on this frame: the screen = M (layout px), as a CSS transform (null = as drawn) */
 const onDoor = (ctx: MsCtx | null | undefined): string | null => {
   const D = ctx?.door;
-  if (!D) return null;
+  if (!D) return `translate(${LAYOUT_DX}px, ${LAYOUT_DY}px)`;
   const Hs = homog(UNIT, D.shut), ax = axes(Hs);
   const s = Math.sqrt((ax.su * ax.sv) / (REF_AX.su * REF_AX.sv)), r = ax.ang - REF_AX.ang, c = s * Math.cos(r), sn = s * Math.sin(r);
   // the similarity: the leaf's centre onto the door's anchor, scaled and turned with the door's face
-  let M: M3 = [c, -sn, ax.a.x - (c * LC.x - sn * LC.y), sn, c, ax.a.y - (sn * LC.x + c * LC.y), 0, 0, 1];
+  let M: M3 = [c, -sn, ax.a.x - (c * LC.x - sn * LC.y) + LAYOUT_DX, sn, c, ax.a.y - (sn * LC.x + c * LC.y), 0, 0, 1];
   // the swing: from the shut face to where the face is now (identity once it is shut)
   if (D.open > 1e-3) M = mul(homog(D.shut, D.now), M);
   const k = M[8];
@@ -148,8 +159,8 @@ export const MsTitle: React.FC<{ f: number; ctx?: MsCtx | null }> = ({ f, ctx })
     </g>
   ) : null;
   return (
-    <div id={P} style={{ position: "absolute", left: 0, top: 0, width: 1080, height: 1800, transformOrigin: "0 0", transform: tr ?? undefined }}>
-      <svg width={1080} height={1800} viewBox="0 0 1080 1800" style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
+    <div id={P} style={{ position: "absolute", left: 0, top: 0, width: 1080, height: 1920, transformOrigin: "0 0", transform: tr ?? undefined }}>
+      <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
         <defs>
           {msDefs(P)}
           {nibFilter(`${P}-nibR`, MS.crimson, MS.edgeCrimson, W_NAME.S, 5)}

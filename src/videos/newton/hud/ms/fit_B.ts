@@ -20,11 +20,26 @@
 //           r443 on tick1's first frame, and the ease back (landing on card 2's ding) carries it down-left of the slot
 //           and then under it at C2 (652, 544) r238; his head's edge stays below y 300 across x 752-1026 for the whole
 //           tick (f1469-1497).
+// 9:16 (15 Nov, the frame stage): the box below is the 9:15 one + 60 in y (the lens kept its width of view: a 9:15
+// point (x, y) is (x, y + 60) now), pulled inside the 9:16 rules (hud/style.ts FRAME: x 110-970 from y 340, x <= 890
+// below y 1000, nothing below 1490) where it crossed them; FRAME.md (newton_work/film/f916) has the allowed areas.
+// SCENE B ON 9:16 (15 Nov, the scene pass):
+//   flick   still held off; the label's box now ends at y 1320, 5 px over B01's subtitle block (Chinese + English rows
+//           from y 1325 on the 9:16 frame: the captions sit 90 px higher on the picture than in 9:15), so the label
+//           stays above the subtitle if it is ever released (B01 shows to f778, the flick runs f768-797).
+//   card    I2 is 7 % looser with his eyes 22 px right (segB.ts I2), so the whole lifted sticker stays inside what the
+//           phone shows (x >= 58): on the held frame his head is x 146-561, y 311-726 (eyes y 612), both hands above
+//           the slip's top (y 996); the lifted sticker's footprint x 61-680, y 252-989 (matte 98-662), the seal box still
+//           10 px clear, the name 艾 28 px clear (was 0), every written word clear (faces check).
+//   meter0  unchanged (the slot x 696-970, y 340-494): his head stays left of x 561 on the I2 hold.
+//   tick1   unchanged in time and box; segB.ts C2 now lands his head ball at (559, 701) r 223, 25 px off the slot's
+//           corner from f1475 to the tick's end (f1497). On f1469-1473 (the slip arriving while the lens eases back out
+//           of the whisper's extreme close) the slip passes over the top of his wig, never his face.
 import type { MsFit } from "./fit";
 
 export const FIT_B: MsFit = {
   flick: {
-    box: [{ x0: 490, y0: 690, x1: 930, y1: 1010 }, { x0: 490, y0: 1010, x1: 930, y1: 1300 }],
+    box: [{ x0: 490, y0: 750, x1: 890, y1: 1070 }, { x0: 490, y0: 1070, x1: 890, y1: 1320 }],   // 9:15 + 60, left of x 890; the label above B01's subtitle (1325)
     provisional: true,
     heldOff: "B gate 5 r2 (15 Nov): W1 is the closer two-thing (Newton's head 337 px) and the flick travels 188 px across his chest toward the door (f766-768), readable in a 270 px thumbnail, but the hand is about 34 px across (director wants 70+); held off, the editor's fallback drops row 3",
   },

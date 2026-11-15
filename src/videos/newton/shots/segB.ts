@@ -120,28 +120,36 @@ const W1 = P(-0.45, 0.8, EYE_B + 0.02);
  *  the plate 1.3x bigger (its rim 315 px; with the lifted cover and the steam over 400), still left of his body and
  *  clear of it, his face beside it at the right with his eyes down on it. From her eye height the plate is 2 m off, so
  *  the look down stays about 16 deg: a steeper one needs the lens over the table, where his face, 1.8 plates wide,
- *  covers the plate or leaves the frame. */
-const P0 = P(-0.9, -0.15, EYE_B);
+ *  covers the plate or leaves the frame.
+ *  9:16 (15 Nov): 12 cm to her right of the gate-5 place (x -0.9 -> -0.78), same height, lens and aim (the plate stays
+ *  on (226, 1160), its rim 329 px): the parallax carries his face about 40 px left, so his cheek and chin clear the
+ *  app's button column (x >= 890 from y 1000; skin right edge 940 -> 884 at worst). */
+const P0 = P(-0.78, -0.15, EYE_B);
 /** W1 is a closer two-thing than the first build's (76; note B1's fallback): Newton's head 330+ px, Humphrey's 400 px with
  *  its left edge clear of x 70; the follow then opens a little (54 -> 62) to keep his whole figure as he comes nearer */
 const INS_FOV = 38, W1_FOV = 54, DOOR_FOV = 62;
 /** the insert: the plate (+5 cm, the dome) low left, above the subtitle row; his face upper right, eyes down on it */
 const PLATE_AIM = ROOM.plate.clone().add(V(0, 0.05, 0));
-const INS_SX = 226, INS_SY = 1100;
+const INS_SX = 226, INS_SY = 1160;
 /** the two-thing: the middle between their eyes (Humphrey at H1, Newton) */
 const hEyesAt = (p: THREE.Vector3) => p.clone().add(V(0, H_EYE, 0));
 const PAIR = hEyesAt(H1).lerp(N_EYES, 0.5);
-const PAIR_SX = 590, PAIR_SY = 620;
+const PAIR_SX = 590, PAIR_SY = 680;
 /** the doorway: Humphrey's eyes standing in it */
 const DOOR_PT = hEyesAt(D1);
-const DOOR_SX = 560, DOOR_SY = 640;
+const DOOR_SX = 560, DOOR_SY = 700;
 /** M2's middle: Humphrey's head while he walks (room ahead of him, to the left) */
-const FOLLOW_SX = 640, FOLLOW_SY = 760;
+const FOLLOW_SX = 640, FOLLOW_SY = 820;
 /** I2: the desk's front-right corner (three-quarter, 26 deg off his facing). His eyes sit at x 345: the card's lifted cut-out
  *  (his right wig locks are its right edge, at x 680 with the paper margin) stays left of the seal box (x 690), and its
- *  left edge stays out of the 54 px margin. */
+ *  left edge stays out of the 54 px margin.
+ *  9:16 (15 Nov): 抖音 cuts x < 58 off a 9:16 film, and at gate 5's lens (58, eyes at x 345) the lifted sticker's paper
+ *  margin reached x 19 (its matte x 58: his wig curl on the visible edge, the margin cut) and its quill's margin touched
+ *  the name 艾 (0 px). The lens is 7 % looser (58 -> 61.7) and his eyes 22 px right (345 -> 367), the smallest change
+ *  that keeps the whole sticker on the phone with its right edge where it was: footprint x 61-680 (matte 98-662), the
+ *  seal still 10 px clear, 艾 28 px clear. Same place, same aim point, same landing on 写 and the same 7 s hold. */
 const I2 = P(1.62, -0.1, EYE_B + 0.02);
-const I2_FOV = 58, I2_SX = 345, I2_SY = 518;
+const I2_FOV = 61.7, I2_SX = 367, I2_SY = 578;
 /** THE EVIDENCE (gate 5 note B2): the paper tower at the desk's right end (sets/room.ts, the 0.27 m pile behind the drafts
  *  corner), three hands thick. From the corner it stands right behind the hand's-breadth drafts stack, so no frame of
  *  the drafts can leave it out (or whole) without a step of half a metre; the snap therefore lands on the tower itself:
@@ -151,19 +159,26 @@ const I2_FOV = 58, I2_SX = 345, I2_SY = 518;
 const PILE_MID = V(RMX + ROOM_SET.desk.x + 0.6, ROOM.deskTop + 0.135, ROOM_SET.desk.z - 0.25);
 /** DR: she leans 27 cm to her left (and 5 cm in) and turns to the tower; the lens tightens (58 -> 38). The lean is what
  *  takes Newton's head and wig locks out by the left edge (from the corner they stand 120 px left of the tower at
- *  most); on the way out his head stays below y 300, never under REC or the stamp */
+ *  most); on the way out his head stays below y 360, never under REC or the stamp */
 const DR = P(1.35, -0.05, EYE_B + 0.02);
-const DR_FOV = 38, DR_SX = 384, DR_SY = 980;
+const DR_FOV = 38, DR_SX = 384, DR_SY = 1040;
 /** C1: the first build's DRAFTS lean (0.12 m toward the stack, 3 cm down, lens 51.6): the medium of his face over the
  *  page that the tilt back up lands on (unchanged) */
 const C1P = I2.clone().add(ROOM.drafts.clone().sub(I2).setY(0).normalize().multiplyScalar(0.12)).add(V(0, -0.03, 0));
-const C1_FOV = 51.6, C1_SX = 470, C1_SY = 600;
+const C1_FOV = 51.6, C1_SX = 470, C1_SY = 660;
 /** CLOSE: the end of the slow push */
 const CL = P(1.3, -0.62, EYE_B - 0.02);
-const CL_FOV = 52, CL_SX = 492, CL_SY = 835;
-/** C2: back at the corner under card 2: his face up and right of the card, the stack right of it */
+const CL_FOV = 52, CL_SX = 492, CL_SY = 895;
+/** C2: back at the corner under card 2: his face up and right of the card, the stack right of it.
+ *  9:16 (15 Nov): the meter's slot is now x 696-970, y 340-494 (the frame's REC display moved in and down: relative to
+ *  the picture the slot sits 134 px lower and 56 px further left than in 9:15), and at gate 5's aim (640, 660) his
+ *  head's crown and wig were under tick 1's slip for the whole hold (the ball 105 px into the slot). The aim is 92 px
+ *  left and 95 px down (same place, same lens, same landing on card 2's ding): his head ball (559, 701) r 223 stays
+ *  25 px off the slot's corner from f1475 to the end of the tick (f1497), and its bottom (y 923) 53 px above card 2
+ *  (x 113-714, y 976-1221). The ease back from the whisper's extreme close starts on f1466, so on the tick's first
+ *  frames (f1469-1473, the slip arriving, the lens moving) the slip still passes over the top of his wig (no face). */
 const C2 = P(1.62, -0.15, EYE_B + 0.02);
-const C2_FOV = 58, C2_SX = 640, C2_SY = 600;
+const C2_FOV = 58, C2_SX = 548, C2_SY = 755;
 /** the whisper: a step in to the extreme close (the scene's one) */
 const WHISPER_STEP = 0.3, WHISPER_TILT = 3;
 

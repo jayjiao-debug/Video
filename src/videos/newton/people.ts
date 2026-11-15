@@ -27,7 +27,9 @@
 //     second): const r = w.actor(newtonAt(f, KEYS)) with KEYS = [[S.from, "gownInk"], [stroke1, "gownSmudge"], [stroke2, "gown"]]
 //   - Variants that are 3D parts HIDE BY NAME (state.hide): "earQuill" (the quill behind his ear), "nest" (the
 //     tufts), "locks", "coat" / "gown" (only their 3D skirts). GATE 1: the nest and the quill stay on ALL DAY (they no
-//     longer go after scene A): the shots pass hide: NEWTON_HIDE, which is now []. ONE QUILL (gate 1 director note 2:
+//     longer go after scene A): the shots pass hide: NEWTON_HIDE, which is now []. OWNER NOTE 15 NOV: the nest is his
+//     morning only: World.update() adds "nest" to every Newton figure's hide from C's first frame (NEWTON_TIDY_FROM in
+//     world.ts), so A and B show it and noon onward he is combed, whatever the shot passes. ONE QUILL (gate 1 director note 2:
 //     "behind his ear when he walks, in his hand when he writes"): on every frame the "quill" PROP is in his hand,
 //     pass hide: newtonHide({ quill: false }) (= NEWTON_HIDE_WRITING) instead, and swap under a cut or a blink.
 //   - EYE LINES: frame on N_EYE / H_EYE (1.14 x the figure's scale), never on 1.14; seated, read r.headWorld(). The
@@ -57,6 +59,7 @@ import { rigHeadAccent, rigHeadAdd } from "../group/kit/rig3d";
 import { addPerson as addKitPerson, personalise, type Person } from "../wanbi/people";
 import { blush, BLUSH } from "./acc/blush";
 import { coat, gown, locks, nest, earQuill, inkSmear, soot, band } from "./acc/newton";
+import { DAGE, dage } from "../group/kit/rigacc/dage";
 import type { Speaker } from "./voice";
 
 export { personalise, blush, BLUSH, type Person };
@@ -264,6 +267,13 @@ export const HUMPHREY: NPerson = humphrey("humphrey", 0);
 /** HUMPHREY sooty from the furnace (F, G) */
 export const HUMPHREY_SOOT: NPerson = humphrey("humphreySoot", 1);
 export const HUMPHREY_BY: Record<"plain" | "soot", Person> = { plain: HUMPHREY, soot: HUMPHREY_SOOT };
+
+// ---------------------------------------------------------------------------------------------------- 大哥 (the cameo)
+/** 大哥, the account's cameo figure, hidden ONCE in the film (owner pick 15 Nov: "garden statue"): the rig's DAGE look
+ *  as it is (all greys, as if cut out of a black-and-white photo) standing on a stone plinth against the garden's east
+ *  wall in C's dial wide, finger to his lips. ALWAYS expr "hush", pose { kind: "shh" } (group/kit/rigacc/dage.ts); a
+ *  statue: no sway, one blink. Not in PEOPLE / the line-ups (he is not in the cast). */
+export const DAGE_STATUE: Person = { name: "dage", expr: "hush", look: DAGE, acc: () => dage() };
 
 // ---------------------------------------------------------------------------------------------------- THE LAUGH
 /** THE LAUGH (G53), t = seconds since it burst out: expr "laugh" (eyes squeezed shut), the mouth opening wide on every

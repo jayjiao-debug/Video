@@ -8,11 +8,11 @@
 // shrunk only if its widest row needs it) in ink black, broken into 2-3 rows of at most 12 characters at the best
 // punctuation; the English small (28 px, sepia ink) under a faint hand-ruled line. Both inks are roughened a hair by an
 // SVG displacement so they read as printed ink on paper, not a UI font (FrSans is the repo's only CJK face).
-// Slot (the 9:15 phone-safe frame, layout.ts PHONE): the slip's left edge on x 75 (its tilt and shadow keep clear of
-// the 54 px picture-only margin), at most 580 px wide (its box ends by x 677), its BOTTOM on y 1140 (so the card's box,
-// tilt and shadow included, spans about y 750..1162 at its tallest): clear of faces in the upper third (chins
-// included), of the subtitle band (from y 1325) and of the app's buttons (x > 940 below y 950); the slip hugs its words
-// (420-580 px wide). The invisible mic keeps out of the slot while a card shows (cards come when nobody speaks).
+// Slot (the 9:16 phone-safe frame, style.ts FRAME): the slip's left edge on x 131 (its tilt and shadow keep its box
+// from x 110, the frame's side), at most 580 px wide (its box ends by x 733), its BOTTOM on y 1200 (so the card's box,
+// tilt and shadow included, spans about y 810..1222 at its tallest: the 9:15 place + 60, where the picture moved):
+// clear of faces in the upper third (chins included), of the subtitle band (from y 1280) and of the app's buttons
+// (x >= 890 below y 1000); the slip hugs its words (420-580 px wide). The invisible mic keeps out of the slot while a card shows (cards come when nobody speaks).
 // Motion: flutters in from the left over 8 frames (slides 90 px, swings from -11 deg with a damped wobble, the shadow
 // tightens as it lands), floats 1.5 px while it rests, and over its last 8 frames lifts and slides out left.
 // THE JOINS (camplan OVERVIEW item 4): a card's end, its exit included, is CLIPPED before the next whip or match join
@@ -78,7 +78,7 @@ export const factRows = (s: string): string[] => {
 
 // ---------------------------------------------------------------------------------------------------- the layout
 /** the slot (px): left edge, bottom edge, the widest and the narrowest slip */
-export const CARD_X = 75, CARD_BOTTOM = 1140, CARD_MAXW = 580, CARD_MINW = 420;
+export const CARD_X = 131, CARD_BOTTOM = 1200, CARD_MAXW = 580, CARD_MINW = 420;
 /** the slip's top on screen: slips are anchored by their BOTTOM edge (y 1140, above the subtitle band from 1325), so a
  *  short card sits lower, further from the faces (the tallest starts at about y 775) */
 export const cardTop = (L: { h: number }) => CARD_BOTTOM - L.h;

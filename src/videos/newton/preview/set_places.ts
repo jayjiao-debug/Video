@@ -3,8 +3,8 @@
 // ONLY the places its views need, straight from the place files (its own env / mats / kit per place, the World's
 // figure light: look.cast + build.cast() + BAKED_LIGHT), so it works whether or not sets/index.ts has wired them yet.
 // One "frame" = one view, so several views render in one page:
-//   bash scripts/kit/queue/still.sh src/videos/newton/preview/set_places.ts /home/user/newton_work/film/wp2/ --pick 0,1,2 --size 540x900 --opts '{"views":["stairs.run","stairs.top","stairs.door"]}'
-//   bash scripts/kit/queue/still.sh src/videos/newton/preview/set_places.ts /home/user/newton_work/film/wp2/x.png --size 540x900 --opts '{"views":["room.plate"],"params":{"hour":"noon"}}'
+//   bash scripts/kit/queue/still.sh src/videos/newton/preview/set_places.ts /home/user/newton_work/film/wp2/ --pick 0,1,2 --size 540x960 --opts '{"views":["stairs.run","stairs.top","stairs.door"]}'
+//   bash scripts/kit/queue/still.sh src/videos/newton/preview/set_places.ts /home/user/newton_work/film/wp2/x.png --size 540x960 --opts '{"views":["room.plate"],"params":{"hour":"noon"}}'
 // Options (preview/common.ts adds w, h, ink, ao, raw, cam):
 //   views    "<place>.<camera>" names (or "<place>.<camera>@<preset>", a preset of that place's PRESETS below); frame i
 //            shows views[i % n] (default: every camera of every place, VIEW_NAMES)
@@ -73,7 +73,7 @@ const applyLight = (rc: RigCast, L: CastLight) => {
   rc.light = L;
 };
 
-preview({ w: 540, h: 900 }, (c) => {
+preview({ w: 540, h: 960 }, (c) => {
   const o = c.opts;
   const names: string[] = o.views ?? (o.place ? VIEW_NAMES.filter((n) => n.startsWith(o.place + ".")) : VIEW_NAMES);
   const parse = (n: string) => { const [pc, preset] = n.split("@"); const [p, cam] = pc.split(".") as [Place, string]; return { p, cam, preset }; };

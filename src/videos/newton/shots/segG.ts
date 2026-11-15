@@ -86,7 +86,7 @@ const SMEAR_N = 6;
 const MATCH_DOF = 2.4;
 /** "Good night." (his) and her 「晚安，牛顿先生。」 (her bow, 1.5 deg); on 先 the lens drops to the board */
 const T_BOW = L4.from - 1;
-const T_DR0 = capWord("G04", "先").from, T_DR1 = T_DR0 + 18, DROP_YAW = 4.5;
+const T_DR0 = capWord("G04", "先").from, T_DR1 = T_DR0 + 18, DROP_YAW = 6; // 9:16: was 4.5 (see elabCam)
 /** MATCH ⑪ */
 const T_MATCH = G.room;
 /** the 2 a.m. bite: the fork's clink on the plate (G04 end + 1.2 s: SYNC row 88) */
@@ -183,31 +183,40 @@ const charcoalAt = (f: number) => (f < T_SLIP ? { at: CH_REST, rot: CH_REST_ROT 
 /** F's extreme close (G opens on it: no cut) */
 /** CROUCHED over the board at her feet (her eye 0.86 m), looking down at it: it sits low in the middle */
 const P_CROUCH = B_REST.clone().addScaledVector(TO_HER, 0.42).setY(0.86);
-const CROUCH_SP = { sx: 540, sy: 960, fov: 58.8 };
+const CROUCH_SP = { sx: 540, sy: 1020, fov: 58.8 };
 /** HELD: ON ONE KNEE (her eye 1.15 m: level with his seated eyes; P_HOLD above), a step back with the board held up in
  *  front of him, the held board below his mouth line. His wig's right locks reach x 940 at this size, so the slot
  *  (x 740-1026, y 146-416) cannot be kept clear of his hair: the meter's 1/1 goes to the low-left place (fit_G.ts).
  *  meter.tsx moves it there on each frame his head box (centre +- r + 8) meets the slot (752-1026, 155-300), so his
  *  eyes sit a little higher and right than a plain third: the head box's top stays above y 270 and its right edge
- *  past x 775 through the whole hold (f5019-5057), and the 1/1 never jumps between the two places */
-const HOLD_SP = { sx: 490, sy: 560, fov: 60 };
+ *  past x 775 through the whole hold (f5019-5057), and the 1/1 never jumps between the two places (9:15 numbers).
+ *  9:16 (15 Nov): unchanged; the slot is now meter.tsx SLOT {696, 349, 970, 494} and his head ball spans x 166-806,
+ *  y 309-934 over the hold (faces --zone head), so the head box meets the slot on every frame 5019-5057 and the 1/1
+ *  stays low left (LOW_LEFT (118, 1108), the piece x 110-344, y 1100-1320: left of his right hand, under his chin) */
+const HOLD_SP = { sx: 490, sy: 620, fov: 60 };
 const HOLD: CamPose = C.aimCam(P_HOLD, F_SEAT_EYES, HOLD_SP.sx, HOLD_SP.sy, HOLD_SP.fov);
 /** the held board: its middle on the frame, its depth */
-const BH = { px: 540, py: 1095, depth: 0.86 };
+const BH = { px: 540, py: 1155, depth: 0.86 };
 /** TWO: standing (her eye 1.6 m), turned round to the door: HUMPHREY outside in the doorway (right of the middle; card 4
  *  beside him), room on the left for NEWTON stopping inside by the door's east jamb (he walks in from the right) */
 const DR = ELAB_SET.door, WL = ELAB_SET.walls;
 const P_TWO = V(ELX + 0.75, 1.6, -0.32);
 const H_AT = V(ELX + DR.x - 0.18, 0, WL.z1 + DR.wall + 0.42);
 const H_EYE = H_AT.clone().add(V(0, 1.38, 0));
-const TWO: CamPose = C.aimCam(P_TWO, H_EYE, 640, 400, 58.8);
+const TWO: CamPose = C.aimCam(P_TWO, H_EYE, 640, 460, 58.8);
 
 /** M1: the extreme close -> the board at her feet (her dip, the lens widening ahead of the tilt) -> the still take -> up
  *  onto one knee with it. Angles, not look points (panCam). His head is wider than the gap between the REC block and the
  *  battery, so where it leaves and comes back through the top is steered (a small turn to her left at the crossing:
- *  a sine bump with nothing at either end) to the right of the REC block, its eyes clear of the battery */
+ *  a sine bump with nothing at either end) to the right of the REC block, its eyes clear of the battery.
+ *  9:16 (15 Nov, the frame stage): the REC lamp and stamp now end at x 274 and the battery came in to x 787-970,
+ *  y 229-271 (hud/style.ts FRAME), so the 9:15 steer (exit -4, entry -5 deg) put his face under the battery (faces HIGH
+ *  f4632-4633, f4666-4668). The same two bumps, smaller: on the way down (f4632, about 280 px/f) a hair to her right,
+ *  +0.5 deg, so his skin passes between the stamp and the battery with about 20 px each side (x 295-768); on the way
+ *  up (f4666-4669, about 120 px/f) his skin is 563 px wide against the 513 px gap, so -2.5 deg splits it: no features
+ *  under either, the battery over 1 % of his skin for 2 frames (med) and the stamp's corner on his cheek's edge (low) */
 const CROUCH_CAM0 = C.aimCam(P_CROUCH, B_REST, CROUCH_SP.sx, CROUCH_SP.sy, CROUCH_SP.fov);
-const EXIT_YAW = -4, EXIT_BUMP = [0.15, 0.5], ENTRY_YAW = -5, ENTRY_BUMP = [0.3, 0.55];
+const EXIT_YAW = 0.5, EXIT_BUMP = [0.15, 0.5], ENTRY_YAW = -2.5, ENTRY_BUMP = [0.3, 0.55];
 const bump = (u: number, b: number[]) => Math.sin(Math.PI * clamp01((u - b[0]) / b[1]));
 const g1Cam = (f: number): CamPose => {
   if (f < T_DIP0) return F_END_CAM;
@@ -231,7 +240,10 @@ const elabCam = (f: number): CamPose => {
   if (f < T_PAN1) { const u = (f - T_PAN0) / (T_PAN1 - T_PAN0); return panCam(HOLD, TWO, smooth(u), smooth(clamp01((u - 0.25) / 0.75))); }
   if (f < T_DR0) { const b = bowK(f); return b > 0 ? C.nudge(TWO, { pitch: -1.5 * b }) : TWO; }
   // a small turn to her right on the way down (a sine bump, nothing at either end): Humphrey, aside by the jamb, leaves
-  // through the top between the REC block and the battery
+  // through the top between the REC block and the battery. 9:16 (15 Nov): the battery now ends at x 787 (it was x 865-1048
+  // in 9:15 px), and at 4.5 deg his cheek's edge passed under it (faces low f5262-5263); 6 deg keeps his skin 7 px left of
+  // it on the crossing frame (x 581-780 at f5262). The landing frame (5274, the board at -75 deg, ⑪) is unchanged: the bump
+  // is zero at both ends
   const u = clamp01((f - T_DR0) / (T_DR1 - T_DR0)), c = panCam(TWO, DROP_END, easeInOutCubic(u));
   return C.nudge(c, { yaw: DROP_YAW * Math.sin(Math.PI * u) });
 };
@@ -256,17 +268,25 @@ const P_ROOM = V(N_ROOM.x + 0.12, 1.15, N_ROOM.z + 1.9);
 const N_OFF = 35 * Math.PI / 180;
 const F_ROOM = Math.atan2(P_ROOM.x - N_ROOM.x, P_ROOM.z - N_ROOM.z) + N_OFF;
 const ROOM_FOV = 74;
-/** his eyes on (400, 580): the head three-quarter in the frame's left half, about a third down. GATE 5 r2 note G4 (his
- *  ear-quill in the REC row): at y 520 the quill's tip rose to (128, 141) and touched the 凌晨 02:00 glyphs. He now sits
+/** his eyes on (400, 700) (9:16, 15 Nov: see the last paragraph; it was (400, 580) on the 9:15 frame, (400, 640) after
+ *  the frame stage's + 60; every y in the next paragraph is 9:15 px, add 60 for 1920): the head three-quarter in the
+ *  frame's left half, about a third down. GATE 5 r2 note G4 (his ear-quill in the REC row): at y 520 the quill's tip rose to (128, 141) and touched the 凌晨 02:00 glyphs. He now sits
  *  60 px lower: the tip's y is 214 or more on every frame 5279-5396 (36 px or more under the glyphs; 232 or more on the
  *  hold from 5294), his head's bottom at y 737 at most (card 5's paper from 5283: the note's line is y 740), the candle's
  *  flame on 5385 at y 767. Clearing the whole REC box (y 240) needs y 604, which puts his head's bottom at y 761 (probe,
  *  15 Nov). The plate stays where it is: PLATE_SP is in this camera's screen and MATCH_L is solved from it, so match ⑪
- *  stays exact */
-const ROOM_CAM: CamPose = C.aimCam(P_ROOM, newtonEyes(N_ROOM, F_ROOM), 400, 580, ROOM_FOV);
+ *  stays exact.
+ *  9:16 (15 Nov, the frame stage): the REC display came down and in (hud/style.ts FRAME: the stamp row 凌晨 02:00 now at
+ *  x 110-274, y 289-327), right onto the quill: at (400, 640) its tip sat at (105-128, 292-333) on 5279-5345, on the
+ *  glyphs (probe). He now sits 60 px lower, the G4 way (move him, not the plate; about 2.7 deg of tilt): the tip's y is
+ *  363 or more on every frame 5279-5396 (36 px under the stamp row, 33 under the whole REC display), his head's bottom
+ *  at y 851 at most (card 5's paper is x 112-621, y 919-1220 on this frame), the flame on 5385 at (137, 884) and his
+ *  pinching hand at (139, 874), his eyes y 632-649 (a third down). ⑪ stays exact (circle (789.8, 689.9) 420 px, rim
+ *  (790, 685) 421 px) */
+const ROOM_CAM: CamPose = C.aimCam(P_ROOM, newtonEyes(N_ROOM, F_ROOM), 400, 700, ROOM_FOV);
 /** THE PLATE IN HER HANDS: its rim's middle on (sx, sy), w px across, its face tilted `tilt` deg toward her (so the
  *  food and the round of the plate read, and the board's face on the other side of the cut is not edge-on) */
-const PLATE_SP = { sx: 790, sy: 625, w: 410, tilt: 30 };
+const PLATE_SP = { sx: 790, sy: 685, w: 410, tilt: 30 };
 const RF = C.camFrame(ROOM_CAM);
 const PLATE_DEPTH = (2 * PLATE.r * W) / (2 * RF.tanH * PLATE_SP.w);
 const RIM_C = (() => { const q = C.fromScreen(RF, PLATE_SP.sx, PLATE_SP.sy, PLATE_DEPTH); return C.camToWorld(RF, q.x, q.y, q.z); })();

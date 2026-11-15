@@ -16,7 +16,7 @@ export const MsProof: React.FC<{ t: number }> = ({ t }) => {
   const nameW = quillLayout("牛顿", 270).width;
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
-      <svg width={1080} height={1800} viewBox="0 0 1080 1800" style={{ position: "absolute", left: 0, top: 0 }}>
+      <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{ position: "absolute", left: 0, top: 0 }}>
         <defs>
           {msDefs(P)}
           {nibFilter(`${P}-nibR`, MS.crimson, MS.edgeCrimson, 270)}

@@ -46,12 +46,13 @@
 //    on-screen string is L(zh, en). A beat that is not in beats.ts is derived in the segment's own file the same way
 //    (capWord("A06", "好").from for a ji line, capWord("F14", "burn").from for an nt / hm line: the word in the language
 //    the line is SPOKEN in).
-//    Screen zones (px on the 9:15 frame, 1080 x 1800, layout.ts SCREEN = the phone-safe frame): the outer 54 px of each
-//    side are picture only; nothing that matters above y 60 (the app's icons) or below y 1500 (the post's text), nor
-//    right of x 930 below y 950 (the app's buttons); the subtitle band (SCREEN.capTop..capBottom, ending above y 1490:
-//    Chinese large, English small under it only for English speech); faces between a quarter and a half of the way
-//    down and out of the vlog UI's corners (SCREEN.rec top left, x 54-330, y 95-205; SCREEN.battery top right; for the
-//    first 2 s of every scene the timestamp holds BIG in the top-left corner: hud VLOG_RECT.stampBig, to about y 290);
+//    Screen zones (px on the 9:16 frame, 1080 x 1920: the kit's FRAME_9x16 with this film's override, hud/style.ts
+//    FRAME; layout.ts SCREEN): the app cuts x < 58 and x > 1024 off (faces and anything that matters inside x 58-1024);
+//    words, cards and effects inside x 110-970 above y 1000 and x 110-890 below it, between y 340 and 1490; the app's
+//    back / search icons at y 143-222 in the top corners, its button column x > 890 from y 1000, the post's text x 58-805
+//    from y 1505; the subtitle band x 110-890, y 1270-1460 (Chinese large, English small under it only for English
+//    speech); faces out of the vlog UI (the REC block x 110-970, y 225-330: the REC row at y 250, the stamp row at
+//    y 308; for the first 2 s of every scene the timestamp holds BIG under the lamp: hud VLOG_RECT.stampBig);
 //    the fact card's slot is MID-LEFT (hud/ hudRectsAt(f) gives its box while it shows); the title block sits over the
 //    cold open (TITLE_SPAN, 0.2-3.2 s: v5 puts it on the door leaf, segA places it). Her mic and her hands are NEVER
 //    DRAWN (props/index.ts INVISIBLE; Jay, 14 Nov): what she holds or does moves as if by an invisible hand. Mouths
@@ -78,18 +79,25 @@ export type { Speaker };
 
 // ---------------------------------------------------------------------------------------------------- film constants
 export const FPS = 30;
-/** THE FRAME: 9:15, 1080 x 1800 (Jay, 14 Nov: the app fits a 9:15 film to the phone's width, nothing is cut at the
- *  sides; the phone-safe layout is layout.ts SCREEN and hud/). */
-export const W = 1080, H = 1800;
+/** THE FRAME: 9:16, 1080 x 1920 (Jay, 15 Nov: "i want to continue in 9x16"; it was 9:15, 1080 x 1800, on 14 Nov).
+ *  Douyin fills the screen with a 9:16 film and cuts about 58 px off each side (visible x 58-1024). The zones are the
+ *  shared kit's FRAME_9x16 with the film's one override (hud/style.ts FRAME: the REC block from x 110, the battery to
+ *  x 970, the REC row at y 250, the stamp row at y 308, words from y 340). */
+export const W = 1080, H = 1920;
 /** THE LENS REFERENCE: every CamPose.fov in this film (layout cameras, cam.ts, the shots) is the vertical angle of the
- *  1080 x 1920 frame the scenes were first built for, so a fov number keeps its WIDTH of view. The 1800 frame's real
- *  vertical angle is lensFov(fov): tan(half angle) x H / LENS_H (world.ts setCamera and cam.ts camFrame apply it; no
- *  shot converts by hand). The result: the same horizontal view, 60 px less at the top and the bottom. */
+ *  1080 x 1920 frame, so a fov number keeps its WIDTH of view. Since the film is back on 1920 (15 Nov) the frame's
+ *  real vertical angle IS the CamPose fov: lensTan / lensFov are the identity (H = LENS_H) and stay only so the code
+ *  that went through them during the 9:15 days reads the same. The approved 9:15 compositions are kept: the 1920
+ *  frame is the 1800 frame with 60 px more picture at the top and 60 px more at the bottom, at the same scale (an old
+ *  screen point (x, y) on 1800 is (x, y + 60) on 1920; every screen-space number in the film code was moved so). */
 export const LENS_H = 1920;
-/** tan of the half vertical angle the 1800 frame really has for a CamPose fov (degrees) */
+/** tan of the half vertical angle the frame really has for a CamPose fov (degrees): tan(fov / 2) on 1920 */
 export const lensTan = (fov: number) => Math.tan((fov * Math.PI) / 360) * (H / LENS_H);
-/** the real vertical fov (degrees) of the 1800 frame for a CamPose fov */
+/** the real vertical fov (degrees) of the frame for a CamPose fov: the fov itself on 1920 */
 export const lensFov = (fov: number) => (360 / Math.PI) * Math.atan(lensTan(fov));
+/** THE 9:15 FRAME the gate-5 compositions were approved on (14-15 Nov): its height, and how far down an old screen
+ *  point sits on the 1920 frame (the plan's 9:15 numbers convert with these; nothing draws at 1800 any more) */
+export const H_915 = 1800, Y_915 = (H - H_915) / 2;
 /** the film's title and the line under it (the title block, PLAN 5; from the lines file) */
 export const TITLE = L(TITLE_RAW[2], TITLE_RAW[3]);
 export const SUBTITLE = L(TITLE_RAW[4], TITLE_RAW[5]);
@@ -107,7 +115,7 @@ export const TITLE_EN_ON_SCREEN = false;
  *  4.5 s silent beat): his STOP 1/5 at 1.5 s (15 frames), her two raps on the door at 2.2 s. beats.ts BEAT.A reads them */
 export const COLD_OPEN_S = { stop: 1.5, knock: 2.2 };
 /** subtitle band centre: the Chinese row's middle (the HUD's own numbers rule: hud/caption.tsx, layout.ts SCREEN) */
-export const CAPTION_Y = 1450;
+export const CAPTION_Y = 1414;
 
 // ---------------------------------------------------------------------------------------------------- the places
 /** One place shows at a time (w.setPlace). Each is its own island along x (layout/base.ts ISLAND), all real and a few

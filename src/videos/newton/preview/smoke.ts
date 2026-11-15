@@ -3,7 +3,7 @@
 // people.ts exports them) under the room's figure light. If this renders, the harness, the font and the cast work. It
 // also prints the beat table's check (beats.ts beatCheck(): "QA: BEATS ok" or one line per problem) and skin A's
 // three voice gaps (hud/ms/when.ts gapLines(): "QA: MS gap G1 in" / "... pending", a note, never an error).
-//   bash scripts/kit/queue/still.sh src/videos/newton/preview/smoke.ts /home/user/newton_work/film/<lane>/smoke.png --size 540x900
+//   bash scripts/kit/queue/still.sh src/videos/newton/preview/smoke.ts /home/user/newton_work/film/<lane>/smoke.png --size 540x960
 import * as THREE from "three";
 import { preview } from "./common";
 import { makeSun } from "../../bt/pbr";
@@ -16,7 +16,7 @@ import { beatCheck } from "../beats";
 import { TITLE } from "../story";
 import { gapLines } from "../hud/ms/when";
 
-preview({ w: 540, h: 900 }, (c) => {
+preview({ w: 540, h: 960 }, (c) => {
   const bad = beatCheck();
   console.log(bad.length ? bad.map((m) => `QA: BEATS ${m}`).join("\n") : "QA: BEATS ok (beatCheck() = [])");
   // skin A's three voice gaps (hud/ms/when.ts): "QA: MS gap Gn pending" is a NOTE, never an error

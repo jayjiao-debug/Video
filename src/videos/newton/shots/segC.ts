@@ -6,7 +6,7 @@
 //
 // THE JOINS (beats.ts JOINS): ② whip IN on the noon strike (B owns the outgoing half; C lands it on the plate, 6 f,
 // the same smear and blur); ③ MATCH on f BEAT.C.garden: the plate's last frame and the dial's first sit at the same
-// place and size (the rim's ellipse centred (540, ~1112), about 505 px wide in both); ④ WHIP UP the range front after
+// place and size (the rim's ellipse centred (540, ~1172), about 505 px wide in both); ④ WHIP UP the range front after
 // him, out 6 / cut / in 6 (the approved pitch whip, blur only); ⑤ CLOCK (D's cut): the room view is dead still from
 // the jolt's settle (BEAT.C.jolt + 6) to the scene's last frame, so the race's 10 outgoing frames are a still frame.
 //
@@ -46,7 +46,7 @@ import * as THREE from "three";
 import { SEGMENTS, line, capWord, FPS, clamp01, lerp, smooth, easeInCubic, easeOutCubic, easeInOutCubic, type Segment, type CamPose, type Pose } from "../story";
 import { BEAT } from "../beats";
 import * as C from "../cam";
-import { NEWTON_GOWN_INK, NEWTON_HIDE, NEWTON_HIDE_WRITING, N_EYE, N_SCALE, N_LEAN_FWD } from "../people";
+import { NEWTON_GOWN_INK, NEWTON_HIDE, NEWTON_HIDE_WRITING, N_EYE, N_SCALE, N_LEAN_FWD, DAGE_STATUE } from "../people";
 import { RMX, ROOM, ROOM_CAMS, ROOM_SET, GDX, GARDEN, GARDEN_SET } from "../layout";
 import { CHAIR, PLATE } from "../props";
 import { rel, hang, lid, saying, accent, heads, at, ky, swaps, walkAlong, walkTime, yawTo, lerpA, type Rig, type RigPose } from "./common";
@@ -92,10 +92,10 @@ const TB = ROOM_SET.table;
 /** where Humphrey set the lid down in B (the table's right end, dome up), and the plate's turn there */
 const LID_DOWN = V(RMX + TB.x + 0.29, ROOM.tableTop + 0.002, TB.z + 0.07);
 const PLATE_ROT = yawTo(V(RMX + TB.x + 0.23, 0, TB.z + 0.44), ROOM.plate);
-/** the plate's rim centre and THE MATCH POINT: the plate's centre and the dial's centre both go to (540, 1100), so the
- *  two ellipses sit on each other (plate 511 px wide, centred (540, 1115); dial 499 px, (540, 1110)) */
+/** the plate's rim centre and THE MATCH POINT: the plate's centre and the dial's centre both go to (540, 1160), so the
+ *  two ellipses sit on each other (plate 511 px wide, centred (540, 1175); dial 499 px, (540, 1170)) */
 const PLATE_TOP = ROOM.plate.clone().add(V(0, PLATE.h, 0));
-const MATCH = { sx: 540, sy: 1100 };
+const MATCH = { sx: 540, sy: 1160 };
 const CAM_PLATE = C.aimCam(ROOM_CAMS.plate.pos, PLATE_TOP, MATCH.sx, MATCH.sy, ROOM_CAMS.plate.fov);
 /** WHIP ② IN: B's C.whip(cam, f, BEAT.B.whipOut, { dir: -1, out: 6, in: 6, deg: 25 }) continued: C's first 6 frames
  *  arrive on the plate from the right (still panning left), the lens blur and the smear running out */
@@ -141,10 +141,10 @@ const herG = (f: number) => bez(TROT_PTS[0], TROT_PTS[1], TROT_PTS[2], stride(cl
 const TROT_FALLS = Array.from({ length: 6 }, (_, i) => T_TROT0 + 3 + 10 * i).filter((x) => x < T_CUT);
 /** THE SET-UPS (every subject a FIXED world point, so a held view is truly still while he moves inside it):
  *  DIAL  the sundial's dial centre on the match point, lens 62 (58.8 deg seen on 9:15)
- *  WALK  his eyes where they are on "out" (6.5 m up the walk) at (500, 600), lens 31.7: he walks into it, full figure
+ *  WALK  his eyes where they are on "out" (6.5 m up the walk) at (500, 660), lens 31.7: he walks into it, full figure
  *        to close (head 135 -> 258 px), drifting right and down a little as he comes
- *  XCU   his eyes on his stop mark at (545, 700), lens 23.1 (a 28 % drop from WALK): head about 800 px wide, the skin
- *        clear of the button column and the REC row
+ *  XCU   his eyes on his stop mark at (508, 760) (9:15: (545, 700); see XCU_SX), lens 23.1 (a 28 % drop from WALK):
+ *        head about 800 px wide, the skin clear of the button column and the REC row
  *  LB    a fixed point on the cross walk 4.6 m short of his door (1.2 m up) at (540, 760), lens 70: on 诶 Newton
  *        (4.2 m off) runs at x ~740 with his door at x ~160; as she trots after him the point turns her view west,
  *        so he runs into the middle (x 430-460) and his door comes to meet him there by the whip */
@@ -153,13 +153,18 @@ const WALK_AT = eyesOf(walkAlong(WALK, WALK_SPEED, (T_M1_1 - T_WALK0) / FPS).at)
 const XCU_AT = eyesOf(GARDEN.walkTo);
 const LB_AT = V(GDX - 1.0, 1.2, GARDEN_SET.walks.cross);
 const FOV_DIAL = 62, FOV_WALK = 31.7, FOV_XCU = 23.1, FOV_LB = 70;
+/** 9:16 (15 Nov): the extreme close's eyes 37 px left of the approved 545 (same lens, same snap, same landing on "is").
+ *  The button column is now x >= 890 from y 1000 (it was x 940 from picture y 1010), and his last stride's dip before
+ *  the stop (f1800) and the snap's first frame (f1790) put his chin's skin under it (865 / 180 px2, faces checker);
+ *  at 508 both clear and he still leaves the frame on f1826 (the 4-frame empty frame 1826-1829 holds) */
+const XCU_SX = 508;
 const GKEYS: C.LensKey[] = [
   { f: T_M1_0, pos: herG, at: DIAL_AT, sx: MATCH.sx, sy: MATCH.sy, fov: FOV_DIAL },
-  { f: T_M1_1, pos: herG, at: WALK_AT, sx: 500, sy: 600, fov: FOV_WALK },
-  { f: T_M2_0, pos: herG, at: WALK_AT, sx: 500, sy: 600, fov: FOV_WALK },
-  { f: T_M2_1, pos: herG, at: XCU_AT, sx: 545, sy: 700, fov: FOV_XCU, ease: easeOutCubic },
-  { f: T_M3_0, pos: herG, at: XCU_AT, sx: 545, sy: 700, fov: FOV_XCU },
-  { f: T_M3_1, pos: herG, at: LB_AT, sx: 540, sy: 760, fov: FOV_LB },
+  { f: T_M1_1, pos: herG, at: WALK_AT, sx: 500, sy: 660, fov: FOV_WALK },
+  { f: T_M2_0, pos: herG, at: WALK_AT, sx: 500, sy: 660, fov: FOV_WALK },
+  { f: T_M2_1, pos: herG, at: XCU_AT, sx: XCU_SX, sy: 760, fov: FOV_XCU, ease: easeOutCubic },
+  { f: T_M3_0, pos: herG, at: XCU_AT, sx: XCU_SX, sy: 760, fov: FOV_XCU },
+  { f: T_M3_1, pos: herG, at: LB_AT, sx: 540, sy: 820, fov: FOV_LB },
 ];
 /** her eyes in the garden: the lens keys, her breathing while she stands, her footfalls while she trots */
 const gardenCam = (f: number): CamPose => {
@@ -194,6 +199,14 @@ const freezeBlink = (f: number) => {
   const d = f - T_BLINK;
   return [0.5, 1, 0.5, 0, 1, 0.5][d] ?? 0;
 };
+
+/** 大哥 (owner pick 15 Nov, the film's one cameo: "garden statue"): on his stone plinth against the east wall (set param
+ *  plinth, layout GARDEN.dage), to the right of Newton's walk in the dial wide; Newton walks past him and the push (M1)
+ *  leaves him behind (on screen about f1626-1690). A statue: dead still (pose time frozen), finger to his lips, one brow
+ *  cocked, eyes on her lens; ONE BLINK late in the hold, after her question and before the push: the only sign he is not
+ *  stone. Seen from in front and a little from his left, so the finger is in his left hand (dage() default). */
+const DAGE_FACING = -0.9, T_DAGE_BLINK = T_M1_0 - 10;
+const dageBlink = (f: number) => [0.5, 1, 1, 0.5][f - T_DAGE_BLINK] ?? 0;
 
 // ---------------------------------------------------------------------------------------------------- the room
 /** NEWTON writing standing at the desk's back edge, 0.25 m west of ROOM.deskWrite (so her corner can stay clear of the
@@ -275,10 +288,16 @@ const lensAt = (f: number) => {
 const joltK = (f: number) => { const d = f - T_JOLT; return d < 0 || d >= J_LEN ? 0 : d < 1 ? 1 : 1 - smooth((d - 1) / (J_LEN - 1)); };
 const FOV_ROOM = 80;
 const RKEYS: C.LensKey[] = [
-  { f: T_CUT, pos: lensAt, at: N_HEAD, sx: 470, sy: 470, fov: FOV_ROOM },
-  { f: T_KNEE, pos: lensAt, at: N_HEAD, sx: 470, sy: 460, fov: FOV_ROOM },
-  { f: T_JOLT, pos: lensAt, at: N_HEAD, sx: 470, sy: 460, fov: FOV_ROOM },
-  { f: T_JOLT + 5, pos: lensAt, at: N_HEAD, sx: 390, sy: 400, fov: FOV_ROOM, ease: easeOutCubic },
+  { f: T_CUT, pos: lensAt, at: N_HEAD, sx: 470, sy: 530, fov: FOV_ROOM },
+  { f: T_KNEE, pos: lensAt, at: N_HEAD, sx: 470, sy: 520, fov: FOV_ROOM },
+  { f: T_JOLT, pos: lensAt, at: N_HEAD, sx: 470, sy: 520, fov: FOV_ROOM },
+  // 9:16 (15 Nov): the final hold 28 px right of the approved (390, 460), same height, same lens, same landing. The REC
+  // display now sits 75 px lower on the picture (timestamp row y 289-327): at (390, 460) the top-left of his wig
+  // touched the racing clock's digits (box x 110-274) on clock join ⑤'s held frames (f2024-2033) and crossed the REC
+  // lamp's box at the top of the jolt (f2019, the faces checker's REC hit). Now the wig is 22 px clear of the digits
+  // and 14 px of the lamp (mesh, before its ink line); the chair stays across the middle with 拒收 on it, Newton beyond
+  // it and the plate behind him on the right
+  { f: T_JOLT + 5, pos: lensAt, at: N_HEAD, sx: 418, sy: 460, fov: FOV_ROOM, ease: easeOutCubic },
 ];
 const roomCam = (f: number): CamPose => {
   const fb = footBob(f, PUSHES, 0.012), j = joltK(f);
@@ -343,6 +362,7 @@ const poseGarden = (w: World, f: number): Pose => {
   w.setPlace("garden");
   w.set.param("time", "noon");
   w.set.param("gravel", "rough");      // the rough raked gravel (sets/garden.ts option, WP5-C): never cream planks
+  w.set.param("plinth", 1);            // 大哥's plinth (the cameo)
   const Wh = whipUp(gardenCam(f), f, T_WHIP, { to: roomCam(f), out: WHIP_OUT, in: WHIP_IN, deg: 44, inDeg: 30, yaw: -4 });
   const cam = Wh.cam;
   w.setCamera(cam);
@@ -362,6 +382,7 @@ const poseGarden = (w: World, f: number): Pose => {
     gaze: gl.gaze, turn: turnBack > 0 ? turnBack : undefined,
     hands: gardenHands(f, s), hide: NEWTON_HIDE, visible: true,
   });
+  w.actor(DAGE_STATUE).set({ at: GARDEN.dage, facing: DAGE_FACING, pose: { kind: "shh", t: 0 }, expr: "hush", gaze: 0, blink: dageBlink(f), visible: true });
   w.update();
   // the focus: on the dial for the match, pulled onto him from 您; then the light focus on his mouth
   const dialD = posOf(cam).distanceTo(DIAL_AT), mouthD = posOf(cam).distanceTo(mouthOf(n));

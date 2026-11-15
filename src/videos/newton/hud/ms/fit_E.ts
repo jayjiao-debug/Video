@@ -17,11 +17,17 @@
 //           From f2694 (M4, the step in) the plate grows and rises; the bar's bottom stays clamped at y 971 under it on
 //           the cloth until it goes (its out starts f2705), over the plate's near rim for at most 20 px on its last
 //           two frames.
+// 9:16 (15 Nov, the frame stage): the box below is the 9:15 one + 60 in y (the lens kept its width of view: a 9:15
+// point (x, y) is (x, y + 60) now), pulled inside the 9:16 rules (hud/style.ts FRAME: x 110-970 from y 340, x <= 890
+// below y 1000, nothing below 1490) where it crossed them; FRAME.md (newton_work/film/f916) has the allowed areas.
+// 9:16 scene refit (15 Nov): checked, the box stands. The picture of the hold f2662-2694 did not move, so the bar lies at
+// x 133-511, y 975-1043 (9:15 + 60): inside x 110-890 where it reaches below y 1000, under his chin (about y 935-940),
+// no subtitle f2662-2717; faces and check.sh clean (newton_work/film/f916/E/NOTES.md).
 import type { MsFit } from "./fit";
 
 export const FIT_E: MsFit = {
   lunch: {
-    box: [{ x0: 120, y0: 900, x1: 524, y1: 1000 }],
+    box: [{ x0: 120, y0: 960, x1: 524, y1: 1060 }],   // 9:15 + 60
     provisional: false,
   },
 };

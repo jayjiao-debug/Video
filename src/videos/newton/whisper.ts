@@ -41,7 +41,7 @@ export const WHISPER_LINES: string[] = ["A03", "A06", "B09", "D01", "D05", "E07"
 
 /** per-line tuning (optional; the defaults suit the camera plans' framings):
  *    x       the bubble's centre x (px; default 540, slid left of x 930 when wide)
- *    bottom  the bubble body's bottom y (px; default and lowest 1426: its tail then ends above y 1490)
+ *    bottom  the bubble body's bottom y (px; default and lowest 1396: its tail then ends above y 1460)
  *    step    the lean in metres (default WHISPER.step; never more than 40 % of the way to the subject)
  *    tilt    the tip in degrees (default WHISPER.tilt; + = the horizon turns clockwise on screen, cam.ts nudge)
  *    lens    true = the lean is done with the lens (the same growth of the subject, the camera does not move: tight

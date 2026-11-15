@@ -27,14 +27,20 @@
 // the film's length is NOT changed here (TOTAL and SEGMENTS come from the voice track). An item with `heldOff` set
 // never draws in the film (a review note holds it back until its scene is rebuilt); a still may still force it.
 //
-// THE BOXES: `box` is where an item may draw (film px, 1080 x 1800); the builders keep every pixel that matters inside
+// THE BOXES: `box` is where an item may draw (film px, 1080 x 1920); the builders keep every pixel that matters inside
 // it (the faces checker and check.ts read it). THE SCENE FITS (v5 rebuild): a scene builder refits its own items in
 // hud/ms/fit_<scene>.ts (fit.ts says what a fit may set: box, provisional, from / to, beats, heldOff, the banner's
 // slip), never here; MS_ITEMS below lays every fit over its item (FIT, SCENE_OF: a fit names only its own scene's items). `provisional: true` = the
 // plan's region or the approved frame's place, not yet fitted to the rebuilt scene (the builder fits it to the face /
-// hand / chair / plate it belongs to and sets provisional false). The frame's rules (every box): inside x 54-1026;
-// nothing right of x 930 below y 950; nothing that matters below y 1490; never over a face, the subtitles, the REC
-// row / stamp, the battery or the whisper bubble.
+// hand / chair / plate it belongs to and sets provisional false). The frame's rules (every box; 9:16, hud/style.ts
+// FRAME, Jay 15 Nov): inside x 110-970 from y 340 (under the REC display x 110-970, y 225-330); nothing right of x 890
+// below y 1000 (the app's buttons); nothing below y 1490 (the post's text from 1505); never over a face, the subtitles,
+// the REC row / stamp, the battery or the whisper bubble. THE 9:16 MOVE: every picture-tied box (the title on the door,
+// the banner by his head, the flick on the hand, the stamp on the chair, the lunch bar on the plate, the low-left 1/1)
+// is its 9:15 box + 60 in y (the lens kept its width of view: a 9:15 point (x, y) is (x, y + 60) now), then pulled
+// inside the rules above; the HUD-tied ones (the meter's slot and its note, the lead card's slip) follow the frame:
+// the meter's slot is x 696-970, y 340-494, under the battery (skin.ts METER), the lead card's slip x 110-890,
+// y 996-1490 (card.tsx CARD_T). FRAME.md (newton_work/film/f916) has each item's allowed area.
 import { FPS, line, card, seg, segmentAt, type SceneId } from "../../story";
 import { whisperSpan } from "../../whisper";
 import { IP } from "../../../../kit/film/env";
@@ -109,7 +115,7 @@ const TITLE_LEN = TITLE_FROM + 56 - 1 < A03_BUBBLE ? 56 : 50;
  *  CARD_LEN = 75) */
 const FREEZE_AT = FREEZE.at;
 
-const SLOT: Rect = { x0: 752, y0: 146, x1: 1026, y1: 300 };   // skin.ts METER (moved 12 px right, 14 Nov night)
+const SLOT: Rect = { x0: 696, y0: 340, x1: 970, y1: 494 };   // skin.ts METER: under the REC display's battery (9:16)
 /** row 2, HUMPHREY'S BANNER: in as he comes out of his door (segA H_OUT0: the latch, A03's end + 0.6 s, + 4 frames;
  *  his face is behind the door before it), gone the frame before A05's voice (her snap zoom); fit_A may move both */
 const BAN_FROM = FIT.banner?.from ?? afterEnd("A03", 0.6) + 4, BAN_TO = FIT.banner?.to ?? A05.from - 1;
@@ -117,7 +123,7 @@ const BAN_FROM = FIT.banner?.from ?? afterEnd("A03", 0.6) + 4, BAN_TO = FIT.bann
  *  f340-378), so the slip rides BELOW the lowest point his head reaches (his face to y 851, his outline to y 856 on
  *  f350), on the door left of him (bannerplace.ts "below"); the A rebuild's clear 360 x 270 beside his head moves this
  *  box there and the banner goes beside him (the approved place) by itself */
-const BAN_SLIP: Rect = FIT.banner?.slip ?? { x0: 66, y0: 862, x1: 600, y1: 1170 };
+const BAN_SLIP: Rect = FIT.banner?.slip ?? { x0: 110, y0: 922, x1: 600, y1: 1230 };   // 9:15 + 60, from x 110
 /** his head on frame f from the probed track (track.ts; the last probed frame past its end) */
 const humAt = (fr: number): Head => {
   const T = HUMPHREY_TRACK, i = Math.min(T.n - 1, Math.max(0, fr - T.first)) * 3;
@@ -133,7 +139,7 @@ const BAN_ENVELOPE = (() => {
   for (let fr = BAN_FROM; fr <= BAN_TO; fr++) all.push(...bannerBoxesAt(fr).slice(1));
   const u = union(all);
   return { x0: Math.floor(u.x0), y0: Math.floor(u.y0), x1: Math.ceil(u.x1), y1: Math.ceil(u.y1) };
-})();      // the meter's slot (plan: top right, under the battery at y 137; the slip laid a touch large reaches y 149)
+})();      // the meter's slot (plan: top right, under the battery; 9:16: under the REC display, from y 340)
 
 const raw: Omit<MsItem, "scene" | "ready">[] = [
   {
@@ -144,7 +150,7 @@ const raw: Omit<MsItem, "scene" | "ready">[] = [
     // dries; the ink sinks (to sepia, then gone) and the empty leaf is sucked under the door
     beats: { in: 18, slap: 0, orbit: 2, name: 3, small: 12, hold: 18, leave: 8, sink: TITLE_LEN - 8, under: TITLE_LEN - 4 },
     gap: "G1", whilePending: "show",
-    box: [{ x0: 110, y0: 300, x1: 930, y1: 940 }], provisional: false,
+    box: [{ x0: 110, y0: 360, x1: 970, y1: 1000 }], provisional: false,   // 9:15 + 60 (on the door), +14 x (title.tsx LAYOUT_DX)
     words: ["采访", "牛顿", "的一天"],
   },
   {
@@ -172,7 +178,8 @@ const raw: Omit<MsItem, "scene" | "ready">[] = [
     // gap between the two men, with a short leader; here under his face, down to y 657 on f768, and right of
     // Humphrey's, to x 650 on f786), then THE LABEL's, under the ring and left of x 930 (Humphrey's face ends at y 814).
     // fx.tsx flickPlace clamps each part into its box. Refit after the rebuild stages the flick
-    box: [{ x0: 664, y0: 669, x1: 1026, y1: 909 }, { x0: 560, y0: 909, x1: 930, y1: 990 }], provisional: true,
+    // 9:16: the 9:15 boxes + 60, pulled inside x 970 (above y 1000) and x 890 (the label, which reaches below y 1000)
+    box: [{ x0: 664, y0: 729, x1: 970, y1: 969 }, { x0: 560, y0: 969, x1: 890, y1: 1050 }], provisional: true,
     words: ["意思：别烦我"],
     // DIRECTOR r1 NOTE 3: on today's segB Newton leaves the picture at f775, so the ring circles an empty shelf and the
     // label reads as Humphrey's. OFF until the B rebuild keeps his flicking hand in frame and steady from B01's end to
@@ -197,9 +204,10 @@ const raw: Omit<MsItem, "scene" | "ready">[] = [
     gap: "G2", whilePending: "off",
     // the label slip (name, date, the three propositions, the target) and the wax seal; the rest of the frame is the
     // washed set and Newton himself (no word over his face)
-    // (stage 2a: fitted; the compass construction behind him, x 57-800 y 150-870, is cut away round his figure and is
+    // (stage 2a: fitted; the compass construction behind him, x 58-800 y 210-930, is cut away round his figure and is
     // not a box: it would sit on his face in the faces checker)
-    box: [{ x0: 56, y0: 936, x1: 930, y1: 1490 }, { x0: 690, y0: 330, x1: 926, y1: 578 }], provisional: false,
+    // 9:16: the slip drawn at 0.89 inside x 110-890, y 996-1490 (card.tsx CARD_T); the seal's box + 60 with his head
+    box: [{ x0: 110, y0: 996, x1: 890, y1: 1490 }, { x0: 690, y0: 390, x1: 926, y1: 638 }], provisional: false,
     words: ["艾萨克·牛顿", "1686年5月 · 剑桥三一学院", "冷面学神", "命题一", "睡衣：助手从没见他穿过", "命题二", "独自坐下吃饭：助手没见过", "命题三", "出生：他说一升杯装得下", "今日目标：让他笑一次"],
   },
   {
@@ -234,7 +242,7 @@ const raw: Omit<MsItem, "scene" | "ready">[] = [
     gap: null, whilePending: "show",
     // stage 2b: the word rides the chair's seat (ctx.props.chair) clamped so the piece, jolt included, stays in here
     // (fx.tsx stampAnchor); today's seat moves x 893-767, y 1192-1105 over the hold. Refit after the rebuild
-    box: [{ x0: 560, y0: 990, x1: 920, y1: 1290 }], provisional: true,
+    box: [{ x0: 560, y0: 1050, x1: 890, y1: 1350 }], provisional: true,   // 9:15 + 60, left of x 890
     words: ["拒收"],
   },
   {
@@ -243,7 +251,7 @@ const raw: Omit<MsItem, "scene" | "ready">[] = [
     from: D05.to + 1, to: D05.to + 30,
     beats: { in: 4, slip: 0, cross: 2, crossLen: 6, note: 8, leave: 6 },
     gap: null, whilePending: "show",
-    box: [{ x0: 752, y0: 146, x1: 1026, y1: 350 }], provisional: false,
+    box: [{ x0: 696, y0: 340, x1: 970, y1: 544 }], provisional: false,   // the slot and the note under it (9:16)
     words: ["笑", "0/1", "✗", "✗", "我笑的不算"],
   },
   {
@@ -259,7 +267,7 @@ const raw: Omit<MsItem, "scene" | "ready">[] = [
     // bar's height on today's E02 (x 545 at y 900-980; the plan's x 120 on the left), so the 2 % end no longer lies on
     // the gown. Refit over the far rim (x 120-900, y 900-1290, 12 px clear of the gown) after the E rebuild frames the
     // plate below his chin
-    box: [{ x0: 120, y0: 900, x1: 533, y1: 980 }], provisional: true,
+    box: [{ x0: 120, y0: 960, x1: 533, y1: 1040 }], provisional: true,   // 9:15 + 60
     words: ["午饭进度", "1%", "2%"],
   },
   {
@@ -271,9 +279,9 @@ const raw: Omit<MsItem, "scene" | "ready">[] = [
     gap: null, whilePending: "show",
     // the slot plus 证毕 under it; if the rebuilt hold puts his hair in the slot: the low-left place x 70-380,
     // y 1080-1290 (on his gown, never his face)
-    // stage 2b: the slot with 证毕 under it (to y 412). The low-left place (meter.tsx LOW_LEFT, at 0.8: x 72-306,
-    // y 1070-1290) draws only while his head is in the slot, not on today's G02: if the rebuilt hold uses it, put it here
-    box: [{ x0: 720, y0: 146, x1: 1026, y1: 416 }], provisional: true,
+    // stage 2b: the slot with 证毕 under it (9:16: x 664-970, y 340-610). The low-left place (meter.tsx LOW_LEFT, at
+    // 0.8: x 110-344, y 1100-1320) draws only while his head is in the slot: if the rebuilt hold uses it, put it here
+    box: [{ x0: 664, y0: 340, x1: 970, y1: 610 }], provisional: true,
     words: ["笑", "1/1", "✗", "✗", "证毕"],
   },
 ];

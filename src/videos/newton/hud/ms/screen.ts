@@ -23,7 +23,7 @@
 //                of the drawing on the page runs onto the sticker. Built once per held frame (the pose does not change).
 import * as THREE from "three";
 import type { World } from "../../world";
-import type { Pose } from "../../story";
+import { W as FILM_W, H as FILM_H, type Pose } from "../../story";
 import { facePoint, headRadius } from "../../people";
 import type { Rect } from "../../../../kit/overlay/frame";
 import { cutAt, cutPivot } from "../../freeze";
@@ -69,7 +69,7 @@ const msCut = (w: World, f: number, held: number): MsCut | null => {
   const keep = cutKeep(w, r);
   const key = `${held}|${keep.map((o) => o.uuid).join(",")}`;
   if (cutMemo && cutMemo.key === key) return cutMemo.cut;
-  const cam = w.camera, Wd = 1080, Hd = 1800, C = CUT_CELL, GW = Math.ceil(Wd / C), GH = Math.ceil(Hd / C);
+  const cam = w.camera, Wd = FILM_W, Hd = FILM_H, C = CUT_CELL, GW = Math.ceil(Wd / C), GH = Math.ceil(Hd / C);
   cam.updateMatrixWorld();
   const grid = new Uint8Array(GW * GH);
   const mark = (cx: number, cy: number) => { if (cx >= 0 && cy >= 0 && cx < GW && cy < GH) grid[cy * GW + cx] = 1; };

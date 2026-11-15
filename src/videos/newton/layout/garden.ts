@@ -40,6 +40,11 @@ export const GARDEN_SET = {
    *  head), the chimney (x, z, width, top) */
   elab: { x0: 0.6, x1: 4.6, z0: -14.25, z1: -11.0, eaveBack: 3.5, eaveFront: 2.45, door: { x: 2.2, w: 0.9, h: 1.95 }, win: { x: 3.75, w: 0.5, y0: 1.0, y1: 1.55 }, chimney: { x: 1.15, z: -13.4, w: 0.62, top: 5.4 } },
   /** the garden walls: height, coping */ wall: { h: 2.8, cope: 0.16 },
+  /** 大哥's PLINTH (owner pick 15 Nov, the film's one cameo: "garden statue"): a stone pedestal against the east wall's
+   *  face, 7.5 m up the east walk (z), so in C's dial wide he stands to the right of Newton's walk and Newton passes him
+   *  as he comes down it; the dial view's push leaves him behind. Its middle (x from GDX), width along the wall (w),
+   *  depth out from it (d), top (h). Shown only by the set param plinth (C) */
+  plinth: { x: 5.6 - 0.3, z: -7.5, w: 0.62, d: 0.56, h: 0.55 },
   /** the sun at noon and the moon at night (directions TOWARD them) */ sun: [-0.45, 0.78, 0.45] as [number, number, number], moon: [0.42, 0.62, 0.66] as [number, number, number],
 };
 const G = GARDEN_SET, E = G.elab;
@@ -57,6 +62,8 @@ export const GARDEN = {
   night: [V(GDX + G.range.x + 0.45, 0, XW), V(GDX + EW, 0, XW), V(GDX + EW, 0, NW), V(GDX + E.door.x, 0, NW + 0.1), V(GDX + E.door.x, 0, E.z1 + 0.55)],
   /** the sundial's pillar (its foot, on the east walk 1.4 m south of the crossing) and the centre of its dial's face */
   sundial: V(GDX + G.sundial.x, 0, G.sundial.z), dial: V(GDX + G.sundial.x, G.sundial.top, G.sundial.z),
+  /** where 大哥 stands on his plinth (its top's middle: at.y = the plinth's top) */
+  dage: V(GDX + G.plinth.x, G.plinth.h, G.plinth.z),
 };
 /** the look height, at a figure's floor point (x, z), that puts NEWTON's eyes (N_EYE over his floor: people.ts, 1.14 x
  *  his scale, gate 1 director note 1) in the frame's

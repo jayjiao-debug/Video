@@ -6,17 +6,19 @@
 // wider than a row may be. Both in the SPEAKER'S TINT (记者 ji warm white, Newton nt pale gold, Humphrey hm white) over
 // a dark warm ink line drawn as its own layer UNDER the fills (Chinese 5.5 px, English a thinner 3.5 px so it reads
 // lighter), a hard little drop and a soft shadow.
-// THE 9:15 PHONE-SAFE PLACE (layout.ts PHONE, Jay's measure, 14 Nov): the block is anchored on its BOTTOM: its last
-// row (the English one under an English line, else the Chinese) ends above y 1490 (CAP_BOTTOM; the post's text covers
-// the left from y 1510). One Chinese row sits at about y 1405-1490; two rows from about y 1325; an English row under
-// them pushes the Chinese up (one Chinese + one English row: about y 1355-1490).
-// Width: the app's buttons cover x > 940 below y 950, so words stay left of x 930 and a row CENTRED on x 540 is at most
-// 780 px wide (CAP_W). A CHINESE LINE OVER 13 CHARACTERS (CAP_ROW) BREAKS INTO TWO ROWS (the most balanced split at a
-// mark); a row of up to 11 characters keeps 66 px, a 12-13 character row shrinks (to 58 px at the least) so it stays
-// centred in 780 px. Optical centring: a trailing full-width mark counts half. Two trailing marks in a row (「？！」) are
-// set tight: the first is pulled back half an em (its own blank half would show as a gap) and only the last one's half
-// em counts as blank.
-// English wider than 780 px breaks into two balanced rows (so it stays centred and clear of the buttons).
+// THE 9:16 PHONE-SAFE PLACE (style.ts FRAME, the kit's caption band x 110-890, y 1270-1460): the block is anchored on
+// its BOTTOM: its last row (the English one under an English line, else the Chinese) ends on y 1458 (CAP_BOTTOM; the
+// post's text covers x 58-805 from y 1505). One Chinese row sits at about y 1375-1458; two rows from about y 1295; an
+// English row under them pushes the Chinese up (one Chinese + one English row: about y 1325-1458).
+// Width: the app's buttons cover x >= 890 below y 1000, so words stay inside x 110-890 and a row CENTRED on x 540 is at
+// most 700 px wide (CAP_W). A CHINESE LINE OVER 13 CHARACTERS (CAP_ROW) BREAKS INTO TWO ROWS (the most balanced split
+// at a mark); a row of up to 10 characters keeps 66 px, an 11 character row shrinks so it stays centred in 700 px, a
+// 12-13 character row takes 58 px (ZH_MIN) and slides left just enough to stay inside x 110-890 (the rule as before:
+// centred while it can be at 58 px or more, then slid, shrunk below 58 only if it still does not fit the band).
+// Optical centring: a trailing full-width mark counts half. Two trailing marks in a row (「？！」) are set tight: the
+// first is pulled back half an em (its own blank half would show as a gap) and only the last one's half em counts as
+// blank.
+// English wider than 700 px breaks into two balanced rows (so it stays centred and clear of the buttons).
 // Motion: fades in over 3 frames where a run of captions starts and out over 3 frames where it ends; between two
 // screens that follow each other frame to frame it switches clean (a fade there would blink). When the film OPENS ON
 // A LINE (its first word within OPEN_ON frames, v4's greeting: PLAN 7 A1) that screen is already up on frame 0; v5's
@@ -41,16 +43,18 @@ export const ZH_PX = 66, EN_PX = 36;
 export const ZH_MIN = 58;
 /** the most characters in one Chinese row: a screen over 13 characters breaks into two rows (Jay, 14 Nov) */
 export const CAP_ROW = 13;
-/** the widest a row may be (px), centred on x 540: 2 x (930 - 540) */
+/** the widest a row may be (px), centred on x 540: 2 x (890 - 540) */
 export const CAP_W = 2 * (SAFE.right - 540);
-/** the block's bottom: its last row's ink and drop end on or above this y (the phone's post text from y 1510) */
-export const CAP_BOTTOM = 1488;
+/** the block's bottom: its last row's ink and drop end on or above this y (the kit's band ends on 1460; the phone's
+ *  post text from y 1505) */
+export const CAP_BOTTOM = 1458;
 /** the single Chinese row's centre y (Chinese only), the English rows' first centre below a Chinese row and their step;
  *  capLayout anchors the whole block on CAP_BOTTOM, so these are the one-row Chinese case */
-export const ZH_Y = 1444, EN_Y0 = ZH_Y + ZH_PX / 2 + 14 + EN_PX / 2, EN_STEP = Math.round(EN_PX * 1.24);
-/** the band the subtitles own (layout.ts SCREEN.capTop / capBottom match): two Chinese rows, or one Chinese and one
- *  English row, fill it; keep faces out of it while a subtitle shows (hudRectsAt gives the real rows' box) */
-export const CAP_BAND: Rect = { x0: SAFE.left, y0: 1325, x1: SAFE.right, y1: 1490 };
+export const ZH_Y = 1414, EN_Y0 = ZH_Y + ZH_PX / 2 + 14 + EN_PX / 2, EN_STEP = Math.round(EN_PX * 1.24);
+/** the band the subtitles own (layout.ts SCREEN.capTop / capBottom match; inside the kit's FRAME_9x16 caption band):
+ *  two Chinese rows, or one Chinese and one English row, fill it; keep faces out of it while a subtitle shows
+ *  (hudRectsAt gives the real rows' box) */
+export const CAP_BAND: Rect = { x0: SAFE.left, y0: 1280, x1: SAFE.right, y1: 1460 };
 const LS_ZH = 1, LS_EN = 0.4, FADE = 3;
 /** the widest English row (px): wider than this and it breaks into two balanced rows (keeps it centred) */
 const EN_ROW_W = CAP_W;

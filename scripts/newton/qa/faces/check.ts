@@ -2,16 +2,19 @@
 // film's REAL World exactly as the clearance checker does (scripts/kit/qa/clearance: w.beginFrame(f) -> SEG.pose(w, f)
 // -> w.endFrame(P) -> root.updateMatrixWorld), takes every VISIBLE figure's face from the rig's own face drawing
 // (the uniforms the face shader draws with: the head ball's centre and radius, the face direction and its right / up
-// axes, which already carry the head layer's scale and the slide narrowing), projects the face to the 9:15 screen
-// (1080 x 1800, the film's own w.project with the 9:15 lens: story.ts lensFov) with the frame's camera, and reports
-// where it lies under the HUD of that frame (the phone-safe layout, layout.ts PHONE / SCREEN):
+// axes, which already carry the head layer's scale and the slide narrowing), projects the face to the 9:16 screen
+// (1080 x 1920, the film's own w.project: story.ts lensFov, the identity on this frame) with the frame's camera, and
+// reports where it lies under the HUD of that frame (the phone-safe layout: hud/style.ts FRAME, the kit's FRAME_9x16
+// with the film's one override, Jay 15 Nov):
 //   rec, stamp (small) / stampBig (a scene's first 2 s), battery    hud/vlog.tsx (hudRectsAt)
 //   card, title                                                      hud/card.tsx, hud/title.tsx (title placed by Pose.title)
 //   caption  (the subtitle's real rows' box while one shows)         hud/caption.tsx
-//   band     (hud CAPTION_BAND, y 1325..1490, x 54..930, while a subtitle shows and the face misses the rows' box)
-//   phone    (the phone app's own things: the icons over the top corners to y 60, the buttons x > 940 from y 950, the
-//            post's text from y 1510 left of x 900; layout.ts PHONE; every frame)
-//   margin   (the outer 54 px of each side: picture only, another screen shape may trim it; every frame). A margin hit
+//   band     (hud CAPTION_BAND, y 1280..1460, x 110..890, while a subtitle shows and the face misses the rows' box)
+//   phone    (the phone app's own things, FRAME.app: the back icon x 58-150 and the search icon x 920-1024 at
+//            y 143-222, the button column x >= 890 from y 1000, the post's text x 58-805 from y 1505; and everything
+//            below the frame's bottom line, y 1490: nothing that matters there; every frame)
+//   margin   (THE CUT SIDES, FRAME.app: Douyin fills the screen and cuts x < 58 and x > 1024 off: a face there is not
+//            seen; every frame). A margin hit
 //            counts only on a HELD frame (gate-5 note F7): where the camera moves (her move shifts the face's own point
 //            on screen by CAM_PX or more per frame, at its centre or its sides) or the face itself is moving across the
 //            frame (its head box's centre or size changes by FACE_PX, and by FACE_REL of its radius, or more per frame,
@@ -57,7 +60,8 @@ import * as THREE from "three";
 import * as fs from "fs";
 import hooks from "../../../../src/videos/newton/kit.world";
 import { hudRectsAt, endBlackAlpha, stampAt, stampRect, titleRect, TITLE_HOME, OFF_AT, VLOG_RECT, CAPTION_BAND, RACES, capEnd, cardEnd, type Rect } from "../../../../src/videos/newton/hud";
-import { SCREEN, PHONE } from "../../../../src/videos/newton/layout";
+import { SCREEN } from "../../../../src/videos/newton/layout";
+import { FRAME } from "../../../../src/videos/newton/hud/style";
 import { BEAT, JOINS, WHIP_CLEAR, joinAfter } from "../../../../src/videos/newton/beats";
 import { W, H, CAPTIONS, LINE_IDS, CARDS } from "../../../../src/videos/newton/story";
 import { WHISPERS } from "../../../../src/videos/newton/whisper";
@@ -138,13 +142,13 @@ const area = (b: Box) => Math.max(0, b.x1 - b.x0) * Math.max(0, b.y1 - b.y0);
 const inter = (a: Box, b: Box): Box => ({ x0: Math.max(a.x0, b.x0), y0: Math.max(a.y0, b.y0), x1: Math.min(a.x1, b.x1), y1: Math.min(a.y1, b.y1) });
 const SCR: Box = { x0: 0, y0: 0, x1: W, y1: H };
 const BAND: Box = { ...CAPTION_BAND };
-/** the phone app's own things on the 9:15 frame (layout.ts PHONE): what the viewer never sees of the picture */
-const APP: Box[] = [
-  { x0: 0, y0: 0, x1: PHONE.icons.w, y1: PHONE.icons.y1 }, { x0: W - PHONE.icons.w, y0: 0, x1: W, y1: PHONE.icons.y1 },
-  { x0: PHONE.buttons.x0, y0: PHONE.buttons.y0, x1: W, y1: H }, { x0: 0, y0: PHONE.post.y0, x1: PHONE.post.x1, y1: H },
-];
-/** the 54 px picture-only margins */
-const MARGIN: Box[] = [{ x0: 0, y0: 0, x1: PHONE.margin, y1: H }, { x0: W - PHONE.margin, y0: 0, x1: W, y1: H }];
+/** the frame's cut sides (FRAME.app "the side the app cuts off": x < 58, x > 1024) and the phone app's own things on
+ *  the 9:16 frame (the icons, the button column, the post's text) plus everything below the frame's bottom line
+ *  (FRAME.bottom, y 1490): what the viewer never sees of the picture, or what nothing that matters may sit in */
+const isCut = (what: string) => /cuts off/.test(what);
+const APP: Box[] = [...FRAME.app.filter((z) => !isCut(z.what)).map((z) => ({ ...z.r })), { x0: 0, y0: FRAME.bottom, x1: W, y1: H }];
+/** the cut sides (x < 58, x > 1024) */
+const MARGIN: Box[] = FRAME.app.filter((z) => isCut(z.what)).map((z) => ({ ...z.r }));
 const STAMP_SMALL_H = VLOG_RECT.stamp.y1 - VLOG_RECT.stamp.y0;
 const fmtB = (b: Box) => `${Math.round(b.x0)},${Math.round(b.y0)}..${Math.round(b.x1)},${Math.round(b.y1)}`;
 const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);

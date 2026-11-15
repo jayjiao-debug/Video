@@ -30,8 +30,13 @@
 //     - the label slip pasted over the desk line: 艾萨克·牛顿 (crimson, the broad nib), 1686年5月 · 剑桥三一学院 (small,
 //       sepia), 命题一/二/三 (crimson labels) with the three stats in iron-gall, a dotted rule, 今日目标：让他笑一次 with the
 //       meter's empty circle and 0/1 (upright FrSans bold, as the meter draws it: the approved frames' numerals).
-//   Where: the slip and every word inside x 70-930 (the paper inside x 56-930), y 944-1490; the seal in x 690-926,
-//         y 330-578 (msItem("card").box); the construction x 57-800, y 150-870, never over his face. The lifted
+//   Where (9:16, Jay 15 Nov; style.ts FRAME): THE SLIP is the approved one (laid out below in its 9:15 numbers, the
+//         paper in x 56-930, y 936-1490) drawn at CARD_K = 0.89 its size through CARD_T, so its paper and every word
+//         sit inside x 110-888, y 996-1490 (the card's box: inside x 110-890 below y 1000, clear of the app's buttons
+//         and above the post's text; its top on the 9:15 place + 60, where the picture moved); the seal in x 690-926,
+//         y 390-638 (msItem("card").box: the 9:15 place + 60, beside his head); the construction (picture-tied, +60)
+//         x 58-800, y 210-930, never over his face: it may reach x 58 on the left, at the edge of the visible frame but
+//         outside the words line (110): the B scene's call (FRAME.md). The lifted
 //         cut-out (14 px margin and the 3 / 4 px edge included) stays clear of the slip's words and of the seal:
 //         scripts/newton/qa/faces measures it on the held frame (THE CUT-OUT vs THE CARD).
 //   Ids: every id starts with "newton-ms-card". No blend modes and no backdrop filters. A pure function of (f, ctx).
@@ -50,9 +55,17 @@ import { liftBox } from "../../../../kit/fx/isolate";
 const P = "newton-ms-card";
 
 // ---------------------------------------------------------------------------------------------------- the layout
-// the approved frame (skin_a.py card()), the slip fitted inside the card's box (x 56-930, y 944-1490: the approved slip
-// ran to x 46 and y 1496) and its rows closed up by 4 % to fit
+// the approved frame (skin_a.py card()), the slip fitted inside the card's 9:15 box (x 56-930, y 944-1490: the approved
+// slip ran to x 46 and y 1496) and its rows closed up by 4 % to fit. THE 9:16 PLACE: everything on the slip (the paper,
+// its words, the target row before it flies) is drawn in these numbers through CARD_T, which maps the 9:15 box
+// x 56-930, y 936-1490 onto x 110-888, y 996-1489 (CARD_K = 0.89: the 780 px between the frame's side and the app's
+// buttons); cardPt / cardBox give a point / box on screen
 const SLIP = { x: 68, y: 962, w: 848, h: 508, rot: -0.8 };
+export const CARD_K = 0.89;
+const CARD_O = { x: 56, y: 936 }, CARD_AT = { x: 110, y: 996 };
+const CARD_T = `translate(${CARD_AT.x} ${CARD_AT.y}) scale(${CARD_K}) translate(${-CARD_O.x} ${-CARD_O.y})`;
+const cardPt = (p: { x: number; y: number }) => ({ x: CARD_AT.x + (p.x - CARD_O.x) * CARD_K, y: CARD_AT.y + (p.y - CARD_O.y) * CARD_K });
+const cardBox = (b: { x0: number; y0: number; x1: number; y1: number }) => { const a = cardPt({ x: b.x0, y: b.y0 }), c = cardPt({ x: b.x1, y: b.y1 }); return { x0: a.x, y0: a.y, x1: c.x, y1: c.y }; };
 const SC = { x: SLIP.x + SLIP.w / 2, y: SLIP.y + SLIP.h / 2 };
 /** the name's write: one character every NAME_PER frames from beats.name */
 const NAME_PER = 0.9;
@@ -65,13 +78,15 @@ const RULE = { x0: 88, x1: 900, y: 1346 };
 const TGT = { x: 86, y: 1422, px: 58, pre: "今日目标：让他", mid: "笑", post: "一次" };
 const RING = { cx: 760, cy: TGT.y - 21, r: 34 };
 const COUNT = { x: 806, y: TGT.y, px: 60 };
-/** the seal (the approved: centre 808, 452, r 112, turned 8 deg) */
-const SEAL = { cx: 806, cy: 452, r: 112, rot: 8, rows: ["冷面", "学神"] };
+/** the seal (the approved: centre 808, 452, r 112, turned 8 deg; 9:16: y + 60 with the picture) */
+const SEAL = { cx: 806, cy: 512, r: 112, rot: 8, rows: ["冷面", "学神"] };
+/** the seal's box (msItem("card").box[1]): the 9:15 x 690-926, y 330-578, + 60 */
+const SEAL_BOX = { x0: 690, y0: 390, x1: 926, y1: 638 };
 /** the approved frame's construction against his head there (head 360, 500, drawn radius 195; the probed radius is about
  *  1.1 x the drawn one): centre (+0.15 r, +0.09 r), radius 1.54 r, triangle at -96 / 18 / 158 deg, the dashed orbit */
 const CON = { dx: 0.15, dy: 0.09, R: 1.54, tri: [-96, 18, 158], orb: { dx: 40 / 326, dy: 30 / 326, rx: 1.13, ry: 0.46, rot: -12 } };
-/** fallback when no Newton is found (a forced still elsewhere): the probed head on B03's last frame (f909) */
-const HEAD0 = { x: 354, y: 505, r: 214 };
+/** fallback when no Newton is found (a forced still elsewhere): the probed head on B03's last frame (f909; 9:16 + 60) */
+const HEAD0 = { x: 354, y: 565, r: 214 };
 
 // ---------------------------------------------------------------------------------------------------- helpers
 const n1 = (v: number) => v.toFixed(1);
@@ -111,7 +126,9 @@ const rowBox = (s: string, x: number, y: number, px: number, ls = 0): Box => ({ 
  *  propositions, the dotted rule and the target row (the ring and 0/1 with it), each turned with the slip; 4 px round
  *  each (6 for the name) for the nib's swell and the ink filters. at / to = the card's first t on which the line is being
  *  written and its last t before it has sunk into the paper (the beats below) */
-export const msCardWords = (): { what: string; r: Box; at: number; to: number }[] => {
+export const msCardWords = (): { what: string; r: Box; at: number; to: number }[] => msCardWords915().map((w) => ({ ...w, r: cardBox(w.r) }));
+/** the same in the slip's own (9:15) numbers, before CARD_T */
+const msCardWords915 = (): { what: string; r: Box; at: number; to: number }[] => {
   // (the ink sinks from `out` over 6 f: part() reaches 1 on out + 5, where the slip's ink is no longer drawn)
   const b = msItem("card").beats, to = b.out + 4;
   const grow = (r: Box, d = 4): Box => ({ x0: r.x0 - d, y0: r.y0 - d, x1: r.x1 + d, y1: r.y1 + d });
@@ -152,11 +169,11 @@ export const MsCard: React.FC<{ f: number; ctx?: MsCtx | null }> = ({ f, ctx }) 
   const hd0 = nt ? { x: nt.head.x, y: nt.head.y, r: nt.r } : HEAD0, hp = liftPt(hd0, lift);
   const hd = { x: hp.x, y: hp.y, r: hd0.r * (lift?.s ?? 1) };
   const face = liftBox(nt?.face ?? { x0: HEAD0.x - 190, y0: HEAD0.y + 26, x1: HEAD0.x + 186, y1: HEAD0.y + 198 }, lift);
-  const hands = (nt?.hands ?? [{ x: 225, y: 930 }, { x: 388, y: 928 }]).map((h) => liftPt(h, lift));
+  const hands = (nt?.hands ?? [{ x: 225, y: 990 }, { x: 388, y: 988 }]).map((h) => liftPt(h, lift));
 
   // ---- THE CONSTRUCTION (behind him: cut away round his figure)
   const ccx = hd.x + CON.dx * hd.r, ccy = hd.y + CON.dy * hd.r;
-  const R = Math.min(CON.R * hd.r, ccx - 60, 1022 - ccx, ccy - 150);
+  const R = Math.min(CON.R * hd.r, ccx - 60, 1022 - ccx, ccy - 210);
   const tri = CON.tri.map((a) => ({ x: ccx + R * Math.cos((a * Math.PI) / 180), y: ccy + R * Math.sin((a * Math.PI) / 180) }));
   const circK = easeOut(writeK(t, b.construct, 5), 1.5), triK = writeK(t, b.construct + 2, 4), orbO = writeK(t, b.construct + 3, 3);
   const triLen = tri.reduce((L, p, i) => L + Math.hypot(tri[(i + 1) % 3].x - p.x, tri[(i + 1) % 3].y - p.y), 0);
@@ -173,23 +190,23 @@ export const MsCard: React.FC<{ f: number; ctx?: MsCtx | null }> = ({ f, ctx }) 
   const sticker = ctx?.cut && lift ? ctx.cut : null;
   const liftT = lift ? `translate(${n1(lift.cx + (lift.x ?? 0))} ${n1(lift.cy + (lift.y ?? 0))}) rotate(${(lift.rot ?? 0).toFixed(3)}) scale(${(lift.s ?? 1).toFixed(4)}) translate(${n1(-lift.cx)} ${n1(-lift.cy)})` : undefined;
   const cut = sticker ? (
-    <mask id={`${P}-behind`} maskUnits="userSpaceOnUse" x={0} y={0} width={1080} height={1800}>
-      <rect x={0} y={0} width={1080} height={1800} fill="#fff" />
+    <mask id={`${P}-behind`} maskUnits="userSpaceOnUse" x={0} y={0} width={1080} height={1920}>
+      <rect x={0} y={0} width={1080} height={1920} fill="#fff" />
       <g fill="#000" transform={liftT}>
         {sticker.rects.map(([x, y, w, h], i) => <rect key={i} x={x} y={y} width={w} height={h} />)}
       </g>
       <rect x={n1(face.x0 - 10)} y={n1(face.y0 - 10)} width={n1(face.x1 - face.x0 + 20)} height={n1(face.y1 - face.y0 + 20)} fill="#000" />
     </mask>
   ) : (
-    <mask id={`${P}-behind`} maskUnits="userSpaceOnUse" x={0} y={0} width={1080} height={1800}>
-      <rect x={0} y={0} width={1080} height={1800} fill="#fff" />
+    <mask id={`${P}-behind`} maskUnits="userSpaceOnUse" x={0} y={0} width={1080} height={1920}>
+      <rect x={0} y={0} width={1080} height={1920} fill="#fff" />
       <g fill="#000" stroke="#000">
         {/* his head and wig, the wig's side curls, the face box itself */}
         <ellipse cx={n1(hd.x)} cy={n1(hd.y)} rx={n1(1.25 * r)} ry={n1(1.03 * r)} strokeWidth={0} />
         <ellipse cx={n1(hd.x)} cy={n1(hd.y + 0.47 * r)} rx={n1(1.23 * r)} ry={n1(0.58 * r)} strokeWidth={0} />
         <rect x={n1(face.x0 - 10)} y={n1(face.y0 - 10)} width={n1(face.x1 - face.x0 + 20)} height={n1(face.y1 - face.y0 + 20)} strokeWidth={0} />
         {/* his body, arms and hands down to the desk */}
-        <path d={`M${n1(hd.x - 0.62 * r)},${n1(hd.y + 0.85 * r)} L${n1(hd.x + 0.62 * r)},${n1(hd.y + 0.85 * r)} L${n1(hd.x + 0.72 * r)},1000 L${n1(hd.x - 0.72 * r)},1000 Z`} strokeWidth={0} />
+        <path d={`M${n1(hd.x - 0.62 * r)},${n1(hd.y + 0.85 * r)} L${n1(hd.x + 0.62 * r)},${n1(hd.y + 0.85 * r)} L${n1(hd.x + 0.72 * r)},1060 L${n1(hd.x - 0.72 * r)},1060 Z`} strokeWidth={0} />
         {hands.map((h, i) => (
           <React.Fragment key={i}>
             <line x1={n1(hd.x + (i ? 0.5 : -0.5) * r)} y1={n1(hd.y + 0.98 * r)} x2={n1(h.x)} y2={n1(h.y)} strokeWidth={n1(0.36 * r)} strokeLinecap="round" />
@@ -209,7 +226,7 @@ export const MsCard: React.FC<{ f: number; ctx?: MsCtx | null }> = ({ f, ctx }) 
   );
 
   // ---- THE SEAL, pressed in 2 f (it lands round and wide and settles), right of his head
-  const seal = { ...SEAL, cx: clamp(Math.max(SEAL.cx, hd.x + 1.25 * r + SEAL.r + 10), 690 + SEAL.r, 926 - SEAL.r - 6), cy: clamp(hd.y - 0.25 * r, 330 + SEAL.r + 6, 578 - SEAL.r * 1.11 - 2) };
+  const seal = { ...SEAL, cx: clamp(Math.max(SEAL.cx, hd.x + 1.25 * r + SEAL.r + 10), SEAL_BOX.x0 + SEAL.r, SEAL_BOX.x1 - SEAL.r - 6), cy: clamp(hd.y - 0.25 * r, SEAL_BOX.y0 + SEAL.r + 6, SEAL_BOX.y1 - SEAL.r * 1.11 - 2) };
   const sd = t - b.seal, squash = sd < 0 ? 0 : sd === 0 ? 1.22 : sd === 1 ? 1.08 : sd === 2 ? 0.97 : 1;
 
   // ---- THE SLIP'S INK (in the slip's turned frame)
@@ -238,27 +255,30 @@ export const MsCard: React.FC<{ f: number; ctx?: MsCtx | null }> = ({ f, ctx }) 
   // fx's meter (meter0) takes over on the next frame.
   // fk = along the arc; fe = the strip's size and the marks' layout on it (narrowed early, so it never lies on his arm)
   const fk = smooth(writeK(t, b.fly, b.leave)), fe = easeOut(fk, 3), flying = t >= b.fly;
+  // kk: the card's scale on the marks' card end (before the flight they are drawn inside CARD_T, in the slip's 9:15
+  // numbers; in flight on screen, from the slip's place and size there)
+  const kk = flying ? CARD_K : 1;
   const tPer = 0.32, tAt = b.target;
   // the strip: from round the target row on the card (the slip's own frame) to the meter's slip; centre on an arc
   const A0 = { x: 76, y: TGT.y - 62, w: 904 - 76, h: 84 }, A1 = METER.slip;
-  const c0 = rotAbout({ x: A0.x + A0.w / 2, y: A0.y + A0.h / 2 }, SC, SLIP.rot), c1 = { x: A1.x + A1.w / 2, y: A1.y + A1.h / 2 };
+  const c0 = cardPt(rotAbout({ x: A0.x + A0.w / 2, y: A0.y + A0.h / 2 }, SC, SLIP.rot)), c1 = { x: A1.x + A1.w / 2, y: A1.y + A1.h / 2 };
   const ctl = { x: Math.max(c0.x, 680), y: lerp(c0.y, c1.y, 0.45) };
   const cen = { x: (1 - fk) ** 2 * c0.x + 2 * (1 - fk) * fk * ctl.x + fk * fk * c1.x, y: (1 - fk) ** 2 * c0.y + 2 * (1 - fk) * fk * ctl.y + fk * fk * c1.y };
-  const sw = lerp(A0.w, A1.w, fe), shh = lerp(A0.h, A1.h, fe), srot = lerp(SLIP.rot, A1.rot, fe);
+  const sw = lerp(A0.w * CARD_K, A1.w, fe), shh = lerp(A0.h * CARD_K, A1.h, fe), srot = lerp(SLIP.rot, A1.rot, fe);
   // each mark's place in the strip's own (unturned) frame, from the centre: on the card -> on the meter
-  const loc = (card: MsPt, meter: MsPt): MsPt => lerpPt({ x: card.x - (A0.x + A0.w / 2), y: card.y - (A0.y + A0.h / 2) }, { x: meter.x - c1.x, y: meter.y - c1.y }, fe);
+  const loc = (card: MsPt, meter: MsPt): MsPt => lerpPt({ x: (card.x - (A0.x + A0.w / 2)) * kk, y: (card.y - (A0.y + A0.h / 2)) * kk }, { x: meter.x - c1.x, y: meter.y - c1.y }, fe);
   // (before the flight: the card slip's own unturned frame, turned with it below)
   const base = flying ? cen : { x: A0.x + A0.w / 2, y: A0.y + A0.h / 2 };
   const pos = (card: MsPt, meter: MsPt): MsPt => { const l = loc(card, meter); return { x: base.x + l.x, y: base.y + l.y }; };
   const midX0 = TGT.x + TGT.pre.length * TGT.px;                 // 笑's left edge on the slip (FrSans CJK: 1 em)
-  const mid = pos({ x: midX0 + TGT.px / 2, y: TGT.y }, { x: METER.circle.cx, y: METER.circle.cy + 16 }), midPx = lerp(TGT.px, METER.circle.px, fe);
-  const ring = pos({ x: RING.cx, y: RING.cy }, { x: METER.circle.cx, y: METER.circle.cy }), ringR = lerp(RING.r, METER.circle.r, fe);
-  const cnt = pos({ x: COUNT.x, y: COUNT.y }, { x: METER.count.x, y: METER.count.y }), cntPx = lerp(COUNT.px, METER.count.px, fe);
+  const mid = pos({ x: midX0 + TGT.px / 2, y: TGT.y }, { x: METER.circle.cx, y: METER.circle.cy + 16 }), midPx = lerp(TGT.px * kk, METER.circle.px, fe);
+  const ring = pos({ x: RING.cx, y: RING.cy }, { x: METER.circle.cx, y: METER.circle.cy }), ringR = lerp(RING.r * kk, METER.circle.r, fe);
+  const cnt = pos({ x: COUNT.x, y: COUNT.y }, { x: METER.count.x, y: METER.count.y }), cntPx = lerp(COUNT.px * kk, METER.count.px, fe);
   // the count's digit ends at cntSplit and "/1" starts there, as meter.tsx sets it (FrSans digits are about 0.57 em)
   const cntDigit = 0.57 * cntPx, cntSplit = cnt.x + cntDigit;
   const ringO = writeK(t, tAt + 2, 2), dotO = writeK(t, tAt + 3, 1), cntO = writeK(t, tAt + 3, 2);
   // the rest of the line shrinks into 笑 and is gone by 40 % of the flight
-  const rest = smooth(clamp01(fk / 0.4)), restS = 1 - 0.8 * rest;
+  const rest = smooth(clamp01(fk / 0.4)), restS = (1 - 0.8 * rest) * kk;
   const targetInk = (
     <>
       {rest < 1 ? (
@@ -283,10 +303,10 @@ export const MsCard: React.FC<{ f: number; ctx?: MsCtx | null }> = ({ f, ctx }) 
   // before the flight the marks sit on the card's slip (its turn); in flight on the strip (the strip's turn)
   const target = flying
     ? leaf(P, `${P}-strip`, cen.x - sw / 2, cen.y - shh / 2, sw, shh, srot, { fill: MS.slip, small: true, fox: false }, targetInk)
-    : <g transform={`rotate(${SLIP.rot} ${SC.x} ${SC.y})`}>{targetInk}</g>;
+    : <g transform={CARD_T}><g transform={`rotate(${SLIP.rot} ${SC.x} ${SC.y})`}>{targetInk}</g></g>;
 
   return (
-    <svg id={P} width={1080} height={1800} viewBox="0 0 1080 1800" style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
+    <svg id={P} width={1080} height={1920} viewBox="0 0 1080 1920" style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
       <defs>
         {msDefs(P)}
         {nibFilter(`${P}-nibN`, MS.crimson, MS.edgeCrimson, NAME.S, 4)}
@@ -297,7 +317,7 @@ export const MsCard: React.FC<{ f: number; ctx?: MsCtx | null }> = ({ f, ctx }) 
         {cut}
       </defs>
       {/* a soft shade under the vlog UI so its white and amber words keep their contrast on the pale page */}
-      {shade > 0 ? <rect x={0} y={0} width={1080} height={290} fill={`url(#${P}-shade)`} opacity={shade} /> : null}
+      {shade > 0 ? <rect x={0} y={0} width={1080} height={420} fill={`url(#${P}-shade)`} opacity={shade} /> : null}
       {sk < 1 ? (
         <g filter={sk > 0 ? `url(#${P}-sink)` : undefined}>
           {construction}
@@ -305,7 +325,7 @@ export const MsCard: React.FC<{ f: number; ctx?: MsCtx | null }> = ({ f, ctx }) 
         </g>
       ) : null}
       {lay > 0 && paper > 0 ? (
-        <g transform={`translate(0 ${layDy.toFixed(1)})`} opacity={clamp01(lay * 2) * paper}>
+        <g transform={`translate(0 ${layDy.toFixed(1)}) ${CARD_T}`} opacity={clamp01(lay * 2) * paper}>
           {leaf(P, `${P}-slip`, SLIP.x, SLIP.y, SLIP.w, SLIP.h, SLIP.rot, { fill: MS.slip, fox: false }, sk < 1 ? <g filter={sk > 0 ? `url(#${P}-sink)` : undefined}>{slipInk}</g> : null)}
         </g>
       ) : null}

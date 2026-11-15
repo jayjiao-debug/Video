@@ -52,8 +52,9 @@ export const GARDEN_LOOK: PlaceLook = {
 };
 /** the per-frame dressing: time "noon" | "night", glow 0..1 (the elaboratory's door, window and chimney), window 0..1
  *  (his window lit), gravel "raked" (the default: gravelTex's straight rake lines) | "rough" (roughGravelTex: coarser
- *  grain, faint broken wavy rake grooves; C sets it; added by WP5-C) */
-export const GARDEN_PARAMS: Record<string, ParamValue> = { time: "noon", glow: 0, window: 0, gravel: "raked" };
+ *  grain, faint broken wavy rake grooves; C sets it; added by WP5-C), plinth 0 | 1 (大哥's stone pedestal against the
+ *  east wall, layout GARDEN_SET.plinth: C sets it for the film's one cameo; owner pick 15 Nov) */
+export const GARDEN_PARAMS: Record<string, ParamValue> = { time: "noon", glow: 0, window: 0, gravel: "raked", plinth: 0 };
 
 const B = S.bounds, WK = S.walks, R = S.range, C = S.chapel, E = S.elab;
 const X0 = GDX + B.x0, X1 = GDX + B.x1, Z0 = B.z0, Z1 = B.z1;
@@ -202,6 +203,18 @@ export function buildGarden(K: Kit) {
     const gn = new THREE.ExtrudeGeometry(sh, { depth: 0.018, bevelEnabled: false }).translate(0, 0, -0.009).rotateY(Math.PI / 2);   // local x -> world -z
     P.add(mBronze, gn.translate(x, top, z), 0.003);
     P.into(group, "garden.sundial", { cast: true });
+  }
+
+  // 大哥's PLINTH (param plinth; owner pick 15 Nov): a stone pedestal against the east wall, a base, a die and a cap, in
+  // the sundial's stone, with its own hull like the sundial; hidden unless C asks for it
+  const plinthG = new THREE.Group(); plinthG.name = "garden.plinth"; plinthG.visible = false; group.add(plinthG);
+  {
+    const L = S.plinth, P = new Part(K), x = GDX + L.x, z = L.z, hw = L.w / 2, hd = L.d / 2, x1 = GDX + S.bounds.x1;
+    const blk = (o: number, y0: number, y1: number) => boxG(x - hd - o, Math.min(x + hd + o, x1 - 0.002), y0, y1, z - hw - o, z + hw + o);
+    P.add(mStoneLo, blk(0.05, 0, 0.09), 0.004);              // the base
+    P.add(mStonePlain, blk(0, 0.09, L.h - 0.08), 0.004);     // the die
+    P.add(mStonePlain, blk(0.04, L.h - 0.08, L.h), 0.004);   // the cap
+    P.into(plinthG, "garden.plinth", { cast: true });
   }
 
   // =================================================================================================== the range (west)
@@ -407,6 +420,7 @@ export function buildGarden(K: Kit) {
       if (name === "glow") glow = Math.max(0, Math.min(1, Number(v)));
       if (name === "window") { win = Math.max(0, Math.min(1, Number(v))); applyTime(); }
       if (name === "gravel") { gravel = v === "rough" ? "rough" : "raked"; applyGravel(); }
+      if (name === "plinth") plinthG.visible = Number(v) > 0;
     },
     cast(): Partial<CastLight> { return gardenCast(time); },
   };

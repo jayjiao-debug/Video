@@ -28,7 +28,7 @@
 //                           blinks, his eyes stay on the paper; "Don't." with FLICK 3/4, not looking up; still for ⑦.
 // Every frame is a pure function of f; every time comes from line() / capWord() / BEAT (beats.ts sits on SYNC_POINTS).
 import * as THREE from "three";
-import { SEGMENTS, line, capWord, FPS, LENS_H, H, clamp01, smooth, type Segment, type CamPose, type Pose } from "../story";
+import { SEGMENTS, line, capWord, FPS, LENS_H, H_915, clamp01, smooth, type Segment, type CamPose, type Pose } from "../story";
 import { BEAT } from "../beats";
 import * as C from "../cam";
 import { NEWTON_GOWN, NEWTON_HIDE, newtonEyes } from "../people";
@@ -48,8 +48,9 @@ const EYE_D = 1.5;
 /** his DRAWN eye line over people.ts newtonEyes (the aim height): measured with the faces checker (--dump: "eyes y")
  *  at the lectern, 7 cm higher; every framing below aims at the drawn eyes, so the plan's screen points hold */
 const EYE_LIFT = 0.07;
-/** a CamPose fov (the 1920 reference) for a REAL vertical angle on the 1800 frame (the plan's 9:15 numbers) */
-const camFov = (real: number) => (2 * Math.atan(Math.tan((real * RAD) / 2) * (LENS_H / H))) / RAD;
+/** a CamPose fov (the 1920 reference) for a REAL vertical angle of the 9:15 frame (the plan's 9:15 numbers: the
+ *  frame of 1800 rows the shots were approved on; the 1920 frame keeps its width of view, so the number holds) */
+const camFov = (real: number) => (2 * Math.atan(Math.tan((real * RAD) / 2) * (LENS_H / H_915))) / RAD;
 const sineInOut = (x: number) => 0.5 - 0.5 * Math.cos(Math.PI * clamp01(x));
 
 // ---------------------------------------------------------------------------------------------------- the beats
@@ -108,7 +109,7 @@ const backDist = (f: number) => {
  *  three-quarter toward her and his way back goes three-quarter away), the lens, his stop's eyes on (ST_SX, ST_SY) */
 const ST_BEAR = 18 * RAD, ST_DIST = 4.4;
 const ST_POS = ST_STOP.clone().add(V(Math.cos(ST_BEAR) * ST_DIST, EYE_D, Math.sin(ST_BEAR) * ST_DIST));
-const ST_FOV = 44, ST_SX = 450, ST_SY = 800;
+const ST_FOV = 44, ST_SX = 450, ST_SY = 860;
 const ST_EYES = newtonEyes(ST_STOP, ST_STOP_FACE).add(V(0, EYE_LIFT, 0));
 const CAM_ST = C.aimCam(ST_POS, ST_EYES, ST_SX, ST_SY, ST_FOV);
 const camStreet = (f: number): CamPose => C.nudge(CAM_ST, { up: breath(f) });
@@ -136,9 +137,22 @@ const LAST_YAW = Math.atan2(HALL_PATH[4].x - HALL_PATH[3].x, HALL_PATH[4].z - HA
  *          about 1020 px and the face's skin runs into the 54 px margin and under the button column; at 5.5 deg the
  *          head is about 780 px and M4 is still x1.9 */
 const HALL = V(SCX + 2.6, EYE_D, WZ1 - 0.8);
-const WIDE_FOV = FOV, WIDE_SX = 430, WIDE_SY = 780;
-const MED_FOV = camFov(10.42), MED_SX = 470, MED_SY = 560;
-const XC_FOV = camFov(5.5), XC_SX = 500, XC_SY = 640;
+const WIDE_FOV = FOV, WIDE_SX = 430, WIDE_SY = 840;
+const MED_FOV = camFov(10.42), MED_SX = 470, MED_SY = 620;
+/** XC_SY 9:16 (15 Nov): his eyes 94 px lower than the approved 700 (same lens, same sx, same push landing on "students"
+ *  and the same D05 tip). The quill behind his ear stands up on the screen-left side of his head; the REC display now
+ *  sits 75 px lower on the picture, and at 700 the quill crossed the timestamp 下午 (box x 110-180, y 289-327) and the
+ *  REC lamp from the push's end through the hold to the pull back (f2279-2398, in 9:15 it was about 27 px under the
+ *  stamp). At 794 it is 19 px or more under the stamp on the whole hold (f2291-2387); it touches the box's empty
+ *  bottom-right corner (past 午) on f2282-2288 while the push is still moving. The face stays clear of the subtitle */
+const XC_FOV = camFov(5.5), XC_SX = 500, XC_SY = 794;
+/** THE MEDIUM AFTER THE PULL BACK (M5's landing, the hold for tick 2, the claps and "Don't." to clock ⑦): MED with his
+ *  eyes 8 px further left and 8 px lower (9:16, 15 Nov). The meter's slot is fixed by the frame (skin.ts METER: x 696-970,
+ *  y 340-544 with tick 2's note), 134 px lower on the picture than in 9:15, so on MED the wig's right side came within
+ *  19 px of the slot on the hold and 2 px (its ink line in the slot's empty corner) at the top of clap 1's jolt (f2437);
+ *  in 9:15 it was 83-107 px clear. This keeps the director's "tick 2 clear" with the smallest move: the zoom on "miss"
+ *  and the push from MED are unchanged */
+const HOLD_SX = MED_SX - 8, HOLD_SY = MED_SY + 8;
 const hallKeys: C.LensKey[] = [
   { f: T_CUT, pos: HALL, at: N_EYES, sx: WIDE_SX, sy: WIDE_SY, fov: WIDE_FOV },
   { f: T_M3_0, pos: HALL, at: N_EYES, sx: WIDE_SX, sy: WIDE_SY, fov: WIDE_FOV },
@@ -146,7 +160,7 @@ const hallKeys: C.LensKey[] = [
   { f: T_M4_0, pos: HALL, at: N_EYES, sx: MED_SX, sy: MED_SY, fov: MED_FOV },
   { f: T_M4_1, pos: HALL, at: N_EYES, sx: XC_SX, sy: XC_SY, fov: XC_FOV, ease: sineInOut },
   { f: T_ME, pos: HALL, at: N_EYES, sx: XC_SX, sy: XC_SY, fov: XC_FOV },
-  { f: T_M5_1, pos: HALL, at: N_EYES, sx: MED_SX, sy: MED_SY, fov: MED_FOV },
+  { f: T_M5_1, pos: HALL, at: N_EYES, sx: HOLD_SX, sy: HOLD_SY, fov: MED_FOV },
 ];
 /** the whisper's lean: D01 a step (0.4 m: she stays behind the last row) and the tip; D05 on the extreme close only the
  *  tip (the lens is at its closest: script v5 risk 6), and its lean releases ON 我 with the pull back */

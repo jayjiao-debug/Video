@@ -7,11 +7,11 @@
 //                              the default); `span={[a, b]}` draws it over another span (previews)
 //   setTitlePlace(p)           where the block sits: a TitlePlace, or a function of the frame (to follow the door while
 //                              the camera settles). The SEGMENT BUILDER calls it once at module scope (segA.ts), e.g.
-//                              setTitlePlace({ x: 540, y: 880, scale: 0.95 }). Default: the frame's centre (540, 900).
-// On the 9:15 frame (1080 x 1800) the plans put it on the shut door's upper panel (camplan A.md: its anchor about y 368,
-// the block about y 260-480, clear of the REC label row at 180 by 80 px or more); segA places it with Pose.title (the
-// door's point through cam.ts toScreen, which is in 1800-frame px). Its whole width (about 830 px at scale 1) stays
-// inside the 54 px margins.
+//                              setTitlePlace({ x: 540, y: 940, scale: 0.95 }). Default: the frame's centre (540, 960).
+// NOT MOUNTED (skin A's hud/ms MsTitle draws the title). On the 9:15 frame of 14 Nov the plans put it on the shut door's
+// upper panel (camplan A.md: its anchor about y 368, the block about y 260-480; + 60 on today's 9:16 frame, 1080 x 1920);
+// segA would place it with Pose.title (the door's point through cam.ts toScreen, in 1920-frame px). Its whole width
+// (about 830 px at scale 1) stays inside x 110-970 (hud/style.ts FRAME).
 // The look: a title page painted on dark oak: the title (story.ts TITLE: 「采访牛顿的一天」) large (96 px), a thin ivory double
 // rule with a lozenge, the subtitle row (empty since the date and place moved to Newton's intro card; it was
 // 「1686年5月 · 剑桥三一学院」 small (40 px) and "May 1686, Trinity College, Cambridge") with the English title smaller

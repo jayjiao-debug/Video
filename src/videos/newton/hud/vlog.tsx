@@ -4,8 +4,8 @@
 // (above the 3D picture, under the title block, the fact card, the shot's overlays and the subtitles), unless the
 // frame's Pose says hud: false.
 //   <VlogHud f rec? cards? />
-//     REC       a red lamp + "REC" top left (layout.ts SCREEN.rec, the row centred on y 116, under the phone app's icons
-//               that cover the top corners to y 60; the lamp's ink ring starts on x 32, kit FRAME_9x15.rec). The lamp BREATHES at
+//     REC       a red lamp + "REC" top left (style.ts FRAME.rec, the row centred on y 250, under the phone app's icons
+//               at y 143-222; the lamp's ink ring starts on x 110, Jay 15 Nov "a tad bit in"). The lamp BREATHES at
 //               1 Hz: about 11 frames lit, 11 dim, 4-frame soft ramps, never below 24 % (never a hard flash). Gone
 //               (with the timestamp) where a Pose says rec: false. On the lead card's freeze (f916-990) the lamp is
 //               held LIT (prop `lit`, Film.tsx from msFrozen: she is still recording) while the rest of the UI holds. The blink's period is 1 s stretched by a hair
@@ -19,8 +19,8 @@
 //     时间戳    the scene's timestamp: the time of day (story.ts SCENE_STAMP: 清晨 in pale gold) and the clock (05:00,
 //               warm white) in ONE CHINESE ROW, like the cards (the owner's default, 14 Nov night: no English row under
 //               it in the Chinese film; STAMP_EN_ROW); lang en: the clock alone over the English word (EARLY MORNING,
-//               22 px, ivory, spaced capitals). The row sits under REC at about y 161 (SCREEN.rec).
-//               On every scene's first frame it SLIDES IN BIG (x1.5, to about x 400, y 234) under REC, holds, then
+//               22 px, ivory, spaced capitals). The row sits under REC centred on y 308 (style.ts FRAME.labelY).
+//               On every scene's first frame it SLIDES IN BIG (x1.5, to about x 480, y 344) under REC, holds, then
 //               shrinks into its small place (2 s in all) and stays.
 //               THE CLOCK RUNS FAST ONLY AT THE CLOCK JOINS (script v5: ① A->B, ⑤ C->D, ⑦ D->E and ⑩ F->G, the first
 //               frames of B, D, E, G; beats.ts JOINS, never a frame number), over each join's own race frames
@@ -39,7 +39,7 @@
 //               gives the hour, A 05:00 and G 02:00; B-F show the time word alone (上午 / 中午 / 下午 / 傍晚 / 夜). Their
 //               digits come in (3 frames) as a race into or out of them starts, run, and fade out over DIGITS_FADE
 //               frames after a race lands on a word-only scene (digitsAlpha). Lang en: the English row is the word.
-//     battery   top right (SCREEN.battery: x ~870..1048 on the row y 116, its nub ending on x 1048, kit FRAME_9x15.rec):
+//     battery   top right (x ~790..970 on the row y 250, its nub ending on x 970, style.ts FRAME.rec):
 //               its level follows the CLOCK, not the frame:
 //               100 % at 05:00 down to 12 % at
 //               02:00 (scene starts: A 100, B 75, C 71, D 58, E 46, F 25, G 12), each scene draining 3 points more
@@ -55,10 +55,9 @@ import React from "react";
 import { AbsoluteFill } from "remotion";
 import { useOverlayFont } from "../../group/kit/overlay";
 import { FPS, SCENES, SCENE_STAMP, SEGMENTS, clamp01, clockText, easeInOutCubic, easeOutCubic, segmentAt, type SceneId } from "../story";
-import { FRAME_9x15 } from "../../../kit/overlay/frame";
 import { EN } from "../lang";
 import { BEAT, JOINS, RACE_PRE, RACE_POST } from "../beats";
-import { FONT_STACK, HC, textW, type Rect } from "./style";
+import { FONT_STACK, FRAME, HC, textW, type Rect } from "./style";
 
 // ---------------------------------------------------------------------------------------------------- the clock
 /** HER CAMERA SWITCHES OFF on this frame (beats.ts BEAT.G.cameraOff = scene G to - 1.4 s = TOTAL - 42; cues.json
@@ -160,20 +159,18 @@ export const batteryAt = (f: number): number => {
 };
 
 // ---------------------------------------------------------------------------------------------------- geometry
-// THE 9:15 PHONE-SAFE PLACE (layout.ts PHONE, Jay's measure, 14 Nov): the app's back / search icons cover the top
-// corners down to y 60, so the REC row sits at y 116 and its label rows (the timestamp) at about 161 / 189. THE SIDES
-// (the owner, 14 Nov; kit FRAME_9x15.rec x0 32, x1 1048): the REC lamp's outer ink ring starts on x 32 and the
-// battery's nub (with its ink line) ends on x 1048, nearer the sides than the 54 px picture-only margin (nothing is cut
-// off in 9:15); the REC label and the timestamp under it keep their place against the lamp (the stamp's left edge on
-// the lamp's), so the whole left corner moved 26 px left and the battery with its % 22 px right, each on its old y.
-// The camera plans assumed REC + stamp in x 54-330, y 95-205, the big stamp to about y 290 for 2 s, the battery
-// x 820-1026: the boxes below now start / end nearer the sides, never further in.
-const ROW = 116;                                          // the REC row's centre y (SCREEN.rec)
-const X0 = FRAME_9x15.rec.x0;                             // 32: the corner's left edge (the lamp's ink ring)
-const X1 = FRAME_9x15.rec.x1;                             // 1048: the battery's right edge (its nub's ink line)
+// THE 9:16 PHONE-SAFE PLACE (style.ts FRAME: the kit's FRAME_9x16 with the film's one override, Jay 15 Nov "the rec
+// and batter need to go in a tad bit", the same numbers as the 李白 film): Douyin cuts ~58 px off each side and its
+// back / search icons sit at y 143-222, so the REC row is centred on y 250 and the timestamp row under it on y 308;
+// the REC lamp's outer ink ring starts on x 110 and the battery's nub (with its ink line) ends on x 970, so the whole
+// display is x 110-970, y 225-330 (FRAME.rec). The REC label and the timestamp keep their place against the lamp (the
+// stamp's ink allowance from x 110, 4 px in from the lamp's ring). The big stamp (a scene's first 2 s) reaches about y 344.
+const ROW = FRAME.recY;                                   // 250: the REC row's centre y
+const X0 = FRAME.rec.x0;                                  // 110: the corner's left edge (the lamp's ink ring)
+const X1 = FRAME.rec.x1;                                  // 970: the battery's right edge (its nub's ink line)
 const DOT = { x: X0 + 5 + 13, r: 13 };                    // the lamp's centre x and radius (its ink ring 5 px more: x 32)
 const REC_X = DOT.x + 24, REC_PX = 36, REC = "REC";       // the label (the same in both languages)
-const ST = { x: X0, y: 144, zh: 30, en: 22, gap: 4, big: 1.5, bigY: 144, lsEn: 2.0 };
+const ST = { x: X0 + 4, y: FRAME.labelY - 15, zh: 30, en: 22, gap: 4, big: 1.5, bigY: FRAME.labelY - 15, lsEn: 2.0 };   // the 30 px row centred on y 308
 /** the stamp's small English row under the Chinese one: only in the English film (lang en, where it is the word); the
  *  Chinese film shows Chinese only, like the cards (the owner's default, 14 Nov night) */
 const STAMP_EN_ROW = EN;

@@ -169,24 +169,30 @@ const insertCam = (f: number): CamPose => {
   const k = stride(clamp01((f - T_PUSH0) / (T_PUSH1 - T_PUSH0)), 0.35);
   const fly = lagged(f, flyPos, 6), target = ROOM.plate.clone().add(V(0, 0.03, 0)).lerp(fly, smooth(Math.min(1, k * 1.4)));
   const pos = target.clone().addScaledVector(FLY_DIR, lerp(0.86, 0.17, k));
-  return C.aimCam(pos, target, 540, lerp(860, 800, k), C.zoomFov(50, 44, k));
+  return C.aimCam(pos, target, 540, lerp(920, 860, k), C.zoomFov(50, 44, k));
 };
 /** S_UP: straightened at the table's front-left, turned to him at his desk (his eyes a little right of the middle,
  *  high: the desk's left end and its paper beside him) */
-const P2 = P(-1.40, -1.40, EYE_E), S_UP: [number, number] = [600, 560], FOV_UP = 55;
+const P2 = P(-1.40, -1.40, EYE_E), S_UP: [number, number] = [600, 620], FOV_UP = 55;
 /** B2, THE TWO-THING over the bites: from the table's left side by the wall, across the plate to him (the plate low
  *  left, its far rim in the lunch bar's zone, x 120-900, y 900-1290; his face high right; the page in his left hand
  *  right of his face) */
-const B2 = P(-2.08, -0.52, EYE_E), S_B2: [number, number] = [700, 720], FOV_B2 = 64;
+const B2 = P(-2.08, -0.52, EYE_E), S_B2: [number, number] = [700, 780], FOV_B2 = 64;
 /** P4, THE PLATE CLOSE: she bends over the plate from the front (two bites gone; the fork laid back beside it) */
-const P4 = P(-1.40, -1.30, 1.40), PLATE_AIM = ROOM.plate.clone().add(V(0, 0.02, 0)), S_PLATE: [number, number] = [540, 780], FOV_PLATE = 36;
+const P4 = P(-1.40, -1.30, 1.40), PLATE_AIM = ROOM.plate.clone().add(V(0, 0.02, 0)), S_PLATE: [number, number] = [540, 840], FOV_PLATE = 36;
 /** D1, THE CLOSE in front of his desk's left end (0.45 m in front of its front edge, 23 deg to his right): the left
  *  pile's three shut books sit 0.87 m from the lens and 0.27 m left of its line to his face, so they fall in the
  *  frame's bottom-left corner and not as a dark block under his face (director note 4: the camplan's spot at the front-left corner, 39 deg,
  *  looks straight across the pile, which then fills the bottom centre from y 1030 down); XC the same spot, the longer
  *  lens (the scene's one extreme close) */
-const D1 = P(0.05, -0.50, EYE_E), S_D1: [number, number] = [600, 570], FOV_D1 = 56;
-const S_XC: [number, number] = [580, 690], FOV_XC = 41;   // "Hooke": crown y ~120, eyes ~570, chin ~900 (the camplan's XC); his exit right then stays above the phone's button column
+const D1 = P(0.05, -0.50, EYE_E), S_D1: [number, number] = [600, 630], FOV_D1 = 56;
+/** 9:16 (15 Nov, the scene refit): the extreme close is 3 deg wider and 10 px higher than the frame stage's 9:15 + 60
+ *  ([580, 750], 41): his head is about 7 % smaller round the same point, so it fits between the battery (x 787-970,
+ *  y 229-271) and the button column (x >= 890 from y 1000); "Hooke" f2886: head ball y ~200-1020, his walk out right
+ *  then passes over the column's top (the 9:15 frame had the column at x 940 / y 1010 and the battery above y 197) */
+const S_XC: [number, number] = [580, 740], FOV_XC = 44;
+/** 9:16: M5's aim dips by up to this many px (a sine over the aim's 20 frames, 0 at both ends) */
+const M5_DIP = 45;
 /** his eyes at the desk (the aim) */
 const EYES_DESK = newtonEyes(ND, ROOM.deskFacing);
 /** his eyes wherever he is, 3 frames late (her eyes follow a walker a little late) */
@@ -220,7 +226,10 @@ const baseCam = (f: number): CamPose => {
   if (f < T_TURN1) {
     const u = clamp01((f - T_TURN0) / (T_TURN1 - T_TURN0));
     const pos = P4.clone().lerp(D1, stride(u, 0.3));
-    return aimMix(pos, PLATE_AIM, EYES_DESK, smooth(clamp01((f - T_TURN0) / 20)), S_PLATE, S_D1, FOV_PLATE, FOV_D1, smooth(Math.min(1, u * 1.6)));
+    // 9:16: the aim's screen point dips by a sine over the pan (M5_DIP), 0 at both ends, so his face comes in under
+    // the battery (now x 787-970, y 229-271)
+    const kAt = smooth(clamp01((f - T_TURN0) / 20)), dip = M5_DIP * Math.sin(Math.PI * kAt);
+    return aimMix(pos, PLATE_AIM, EYES_DESK, kAt, [S_PLATE[0], S_PLATE[1] + dip], [S_D1[0], S_D1[1] + dip], FOV_PLATE, FOV_D1, smooth(Math.min(1, u * 1.6)));
   }
   // the close; M6 THE SNAP to the extreme close (6 frames, out-cubic) landing on "Hooke"; held to the end
   return C.lensCam(f, [
