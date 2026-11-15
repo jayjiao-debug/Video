@@ -59,7 +59,7 @@ const wrapEn = (s: string, px: number, room: number, n: number): string[] => {
  *  top, the source named in a small ink chip (旧唐书, 新唐书), the words in night-indigo ink, Chinese only (the film is
  *  spoken in Chinese). LOW in the frame (nobody speaks while it shows, so it may take the subtitle band), centred,
  *  left of the app's buttons. It swings in from the top a little drunk and tips out. */
-const Z = { x0: 150, x1: 930, bottom: 1478 }, MAXW = Z.x1 - Z.x0;
+const Z = { x0: 150, x1: 890, bottom: 1478 }, MAXW = Z.x1 - Z.x0;
 const PADX = 34, PADY = 26, ZH = 46, LS = 1, ROWH = Math.round(ZH * 1.4), CHIP = 30;
 const NIN = 8, NOUT = 8;
 /** split 「旧唐书：……」 into the source and the words */

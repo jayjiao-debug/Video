@@ -46,7 +46,7 @@ const camOf = (c: CamPose) => {
   _cam.fov = lensFov(c.fov); _cam.aspect = W / H; _cam.near = 0.03; _cam.far = 600; _cam.updateProjectionMatrix(); _cam.updateMatrixWorld(true);
   return _cam;
 };
-/** a world point on the film's screen (px, 1080 x 1800) and its depth in front of the lens */
+/** a world point on the film's screen (px, 1080 x 1920) and its depth in front of the lens */
 const toScreen = (c: CamPose, p: V3Like) => {
   const cam = camOf(c), v = (p instanceof THREE.Vector3 ? p.clone() : new THREE.Vector3(p[0], p[1], p[2]));
   const z = -v.clone().applyMatrix4(cam.matrixWorldInverse).z;

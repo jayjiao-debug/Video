@@ -45,9 +45,9 @@ export const timeStampAt = (f: number): { id: SceneId; text: string; at: number;
 };
 
 // ---------------------------------------------------------------------------------------------------- geometry
-const ROW = 120;                                      // the REC row's centre (SCREEN.rec; the app's icons end at y 60)
+const ROW = 250;                                      // the REC row's centre (SCREEN.rec; 9:16: the app's icons end at y 225)
 const DOT = { x: SCREEN.rec.x0 + 39, r: 17 };         // the REC dot's centre x and radius
-const STAMP = { x: SCREEN.rec.x0 + 22, y: 180, px: EN ? 30 : 34, big: 1.55, bigY: 196 };
+const STAMP = { x: SCREEN.rec.x0 + 22, y: 308, px: EN ? 30 : 34, big: 1.55, bigY: 324 };
 const IN = 8, HOLD = 44, SHRINK = 12;                 // the timestamp's intro: slide in, hold, shrink (frames)
 /** the boxes the vlog UI takes (px): the REC row, the small timestamp, its big intro, the battery */
 export const VLOG_RECT: Record<"rec" | "stamp" | "stampBig" | "battery", Rect> = {
@@ -144,7 +144,7 @@ export const ClockRace: React.FC<{ p: number; from: SceneId; to: SceneId; cutIn:
   const op = clamp01(p / 0.08), rowOp = op * (1 - clamp01((p - 0.5) / 0.07)), bandOp = op * (1 - clamp01((p - 0.66) / 0.3));
   const ch = (k: number) => SHICHEN[((k % 12) + 12) % 12] + "时";
   const band = (k: number, y0: number) => {
-    const y = ((y0 + 1800 * p * 2.2 + 300 * k) % 1900) - 50;
+    const y = ((y0 + 1920 * p * 2.2 + 300 * k) % 2020) - 50;
     return <div key={k} style={{ position: "absolute", left: 0, top: y, width: 1080, height: 26 + 10 * k, background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.22) 50%, rgba(255,255,255,0) 100%)", mixBlendMode: "screen" }} />;
   };
   const flash = cutIn >= 0 && cutIn <= 1 ? 0.5 * (1 - cutIn / 2) : 0;

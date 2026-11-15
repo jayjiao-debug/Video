@@ -65,10 +65,10 @@ const cam = (f: number): CamPose => {
 const MT = LI_TABLE;
 const HE_AT = rel(MT.at, MT.facing, 0.75, 0, 0.35), HE_F = yawTo(HE_AT, MT.at) - 0.3;
 const memoryCam = (f: number): CamPose => { void f; return aim(V(MT.at.x + 0.3, 1.36, MT.at.z + 2.1), rel(MT.at, MT.facing, 0.35, 0.95, 0), 840); };
-const PAPER = (f: number) => h("div", { key: "memPaper", style: { position: "absolute", left: 0, top: 0, width: 1080, height: 1800, background: "rgba(236,214,170,0.38)", boxShadow: "inset 0 0 220px 80px rgba(120,90,50,0.55)", opacity: 1, pointerEvents: "none" }, "data-f": f });
+const PAPER = (f: number) => h("div", { key: "memPaper", style: { position: "absolute", left: 0, top: 0, width: 1080, height: 1920, background: "rgba(236,214,170,0.38)", boxShadow: "inset 0 0 220px 80px rgba(120,90,50,0.55)", opacity: 1, pointerEvents: "none" }, "data-f": f });
 
 // ------------------------------------------------------------------------------------------------ the end
-const OFF_MID = 900;
+const OFF_MID = 960;
 const offBlack = (key: string, top: number, height: number) => h("div", { key, style: { position: "absolute", left: 0, top, width: 1080, height, background: "#000" } });
 const offLine = (hw: number, hh: number, a: number) => h("div", { key: "offLine", style: {
   position: "absolute", left: 540 - hw, top: OFF_MID - hh, width: 2 * hw, height: 2 * hh, borderRadius: hh, background: "#fffaf0", opacity: a,
@@ -76,7 +76,7 @@ const offLine = (hw: number, hh: number, a: number) => h("div", { key: "offLine"
 const switchOff = (f: number) => {
   const [c0, c1] = F.collapse, d0 = F.dot[0];
   if (f < c0) return null;
-  if (f >= F.black) return offBlack("offBlack", 0, 1800);
+  if (f >= F.black) return offBlack("offBlack", 0, 1920);
   const kids: ReturnType<typeof h>[] = [];
   if (f <= c1) {
     const k = (f - c0 + 1) / (c1 - c0 + 1), hh = Math.max(3, OFF_MID * (1 - smooth(k)));
@@ -85,15 +85,15 @@ const switchOff = (f: number) => {
       h("div", { key: "offGrey", style: { position: "absolute", left: 0, top: OFF_MID - hh, width: 1080, height: 2 * hh, background: `rgba(128,124,120,${grey.toFixed(3)})` } }),
       h("div", { key: "offVeil", style: { position: "absolute", left: 0, top: OFF_MID - hh, width: 1080, height: 2 * hh,
         background: `linear-gradient(to bottom, rgba(255,246,232,${edge.toFixed(3)}) 0%, rgba(255,246,232,${mid.toFixed(3)}) 50%, rgba(255,246,232,${edge.toFixed(3)}) 100%)` } }),
-      offBlack("offTop", 0, OFF_MID - hh), offBlack("offBottom", OFF_MID + hh, 1800 - OFF_MID - hh),
+      offBlack("offTop", 0, OFF_MID - hh), offBlack("offBottom", OFF_MID + hh, 1920 - OFF_MID - hh),
     );
     const la = clamp01((60 - hh) / 50);
     if (la > 0) kids.push(offLine(540, 3, la));
   } else {
     const n = f - d0, u = smooth(Math.min(1, (n + 1) / 6)), a = n < 6 ? 1 : 1 - (n - 5) / 5;
-    kids.push(offBlack("offAll", 0, 1800), offLine(lerp(540, 7, u), lerp(3, 7, u * u), a));
+    kids.push(offBlack("offAll", 0, 1920), offLine(lerp(540, 7, u), lerp(3, 7, u * u), a));
   }
-  return h("div", { key: "switchOff", style: { position: "absolute", left: 0, top: 0, width: 1080, height: 1800, overflow: "hidden" } }, ...kids);
+  return h("div", { key: "switchOff", style: { position: "absolute", left: 0, top: 0, width: 1080, height: 1920, overflow: "hidden" } }, ...kids);
 };
 
 // ------------------------------------------------------------------------------------------------ 李白 at night

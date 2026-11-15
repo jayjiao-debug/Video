@@ -46,7 +46,7 @@ const SOBER = [B.splash + 3, B.splash + 48] as const;
 const GRUDGE = [Cb.glare + 4, lineId("C22").from + 10] as const;
 
 // ---------------------------------------------------------------------------------------------------- the cup counter
-const CC = { x0: 792, y0: 222, x1: 1016, y1: 324 };
+const CC = { x0: 746, y0: 345, x1: 970, y1: 447 };   // 9:16: under the REC block, inside x 970
 const CupCounter: React.FC<{ f: number }> = ({ f }) => {
   const L = life(f, CUPS_IN, CUPS_OUT, SKIN.motion.arrive, SKIN.motion.leave) ?? life(f, SIP_IN, SIP_OUT, SKIN.motion.arrive, SKIN.motion.leave);
   if (!L) return null;
@@ -58,7 +58,7 @@ const CupCounter: React.FC<{ f: number }> = ({ f }) => {
   // "/300" only while short of the goal; the number and "/300" shrink to fit the cloth (138 px after the cup)
   const of = n < 300 || n > 300, nk = Math.min(1, 138 / (dw + (of ? 68 : 0)));
   return (
-    <svg width={1080} height={1800} viewBox="0 0 1080 1800" style={{ position: "absolute", left: 0, top: 0, opacity: op }}>
+    <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{ position: "absolute", left: 0, top: 0, opacity: op }}>
       <defs>
         {gradient(`${ID}-cc-cloth`, [C.paper, [TONE.clothLow, 0.85], TONE.clothFold])}
         {gradient(`${ID}-cc-amber`, [TONE.amberTop, [C.lead, 0.5], TONE.amberDeep])}
@@ -106,13 +106,13 @@ const CupCounter: React.FC<{ f: number }> = ({ f }) => {
  *  moon (Jay, 15 Nov: "why you are out in the morning doesn't give me context"). A thought cloud in her own warm paper,
  *  top left, out before the picture freezes for his card. */
 const MOON_OS = [capWord("A02", "月亮").from + 8, FREEZE_AT_WORLD - 3] as const;
-const MO = { x0: 96, y0: 238, x1: 640, y1: 330 };
+const MO = { x0: 110, y0: 345, x1: 654, y1: 437 };
 const MoonOS: React.FC<{ f: number }> = ({ f }) => {
   const L = life(f, MOON_OS[0], MOON_OS[1], 5, 5);
   if (!L) return null;
   const p = pop(L.t, 0, 7), op = p.o * (1 - L.leave), cy = (MO.y0 + MO.y1) / 2;
   return (
-    <svg width={1080} height={1800} viewBox="0 0 1080 1800" style={{ position: "absolute", left: 0, top: 0, opacity: op }}>
+    <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{ position: "absolute", left: 0, top: 0, opacity: op }}>
       <g transform={`translate(${MO.x0 + 40},${cy}) scale(${p.s.toFixed(3)}) translate(${-MO.x0 - 40},${-cy})`}>
         {/* the cloud: a rounded body with three bumps, and two little puffs trailing down toward the lens */}
         <rect x={MO.x0 + 4} y={MO.y0 + 8} width={MO.x1 - MO.x0} height={MO.y1 - MO.y0} rx={44} fill={TONE.shadow} />
@@ -152,7 +152,7 @@ const WaitBar: React.FC<{ f: number }> = ({ f }) => {
   const pct = full ? (k >= 1 ? 100 : Math.round(3 + 97 * k)) : Math.max(1, Math.round(crawl * 100));
   const label = full ? (EN ? "He's calling!" : "叫了！") : (EN ? "Waiting for the emperor…" : "等皇上叫……");
   return (
-    <svg width={1080} height={1800} viewBox="0 0 1080 1800" style={{ position: "absolute", left: 0, top: 0, opacity: op }}>
+    <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{ position: "absolute", left: 0, top: 0, opacity: op }}>
       <g transform={`translate(${WB.x},${WB.y + dy})`}>
         {glyph("wl", label, 0, -36, 36, full ? C.lead : C.paper, { anchor: "start", ink: 8, inkColor: C.ink, ls: 2 })}
         {glyph("wp", `${pct}%`, WB.w, -36, 32, C.paper, { anchor: "end", ink: 7, inkColor: C.ink })}
@@ -170,9 +170,9 @@ const SoberStamp: React.FC<{ f: number }> = ({ f }) => {
   const L = life(f, SOBER[0], SOBER[1], 1, 8);
   if (!L) return null;
   const t = L.t, s = slap(t, 0, 1.9), leave = easeIn(L.leave, 2), op = 1 - leave;
-  const x = 300, y = 420;
+  const x = 340, y = 480;   // 9:16: in from the left edge (the pop and the rays stay right of x 110)
   return (
-    <svg width={1080} height={1800} viewBox="0 0 1080 1800" style={{ position: "absolute", left: 0, top: 0, opacity: op }}>
+    <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{ position: "absolute", left: 0, top: 0, opacity: op }}>
       <defs>{roughFilter(`${ID}-sb-edge`, SKIN.body.rough!, 2)}</defs>
       {burst("sbb", x, y, 12, 70, 190, clamp01(t / 10), { color: C.accent, width: 8, seed: 2 })}
       <g transform={`translate(${x},${y + 30 * leave}) rotate(${(-10 + 40 * leave).toFixed(1)}) scale(${s.toFixed(3)})`} filter={`url(#${ID}-sb-edge)`}>
@@ -185,14 +185,14 @@ const SoberStamp: React.FC<{ f: number }> = ({ f }) => {
 };
 
 // ---------------------------------------------------------------------------------------------------- 记仇 +1
-const GM = { cx: 470, y: 420, w: 300, h: 26 };
+const GM = { cx: 470, y: 480, w: 300, h: 26 };
 const GrudgeMeter: React.FC<{ f: number }> = ({ f }) => {
   const L = life(f, GRUDGE[0], GRUDGE[1], 5, 7);
   if (!L) return null;
   const t = L.t, k = easeOut(part(t, 4, 10)), plus = pop(t, 12, 7, SKIN.motion.over), leave = easeIn(L.leave, 2);
   const op = clamp01((t + 1) / 3) * (1 - leave), bx = barBoxes(GM.w, GM.h, 0.62 + 0.38 * k, 5);
   return (
-    <svg width={1080} height={1800} viewBox="0 0 1080 1800" style={{ position: "absolute", left: 0, top: 0, opacity: op }}>
+    <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{ position: "absolute", left: 0, top: 0, opacity: op }}>
       <g transform={`translate(${GM.cx - GM.w / 2},${GM.y - 30 * leave})`}>
         {glyph("gl", EN ? "Grudge" : "记仇", -14, 0, 38, C.paper, { anchor: "end", ink: 8, inkColor: C.ink, ls: 2 })}
         <rect x={-5} y={-GM.h / 2 - 5} width={GM.w + 10} height={GM.h + 10} rx={8} fill={C.ink} />
@@ -218,7 +218,7 @@ export const fxShown = (): Shown[] => [
   { what: "cup counter (the last cup)", kind: "effect", from: SIP_IN, to: SIP_OUT, rect: () => ({ x0: CC.x0 - 20, y0: CC.y0 - 10, x1: CC.x1 + 4, y1: CC.y1 + 60 }), scene: "F" },
   { what: "记者OS (the moon)", kind: "effect", from: MOON_OS[0], to: MOON_OS[1], rect: () => ({ x0: MO.x0 - 6, y0: MO.y0 - 24, x1: MO.x1 + 10, y1: MO.y1 + 60 }), scene: "A" },
   { what: "wait bar", kind: "effect", from: WAIT[0], to: WAIT[1], rect: () => ({ x0: WB.x - 6, y0: WB.y - 64, x1: WB.x + WB.w + 6, y1: WB.y + 22 }), scene: "B" },
-  { what: "醒酒 stamp", kind: "effect", from: SOBER[0], to: SOBER[1], rect: () => ({ x0: 130, y0: 300, x1: 470, y1: 500 }), scene: "B" },
+  { what: "醒酒 stamp", kind: "effect", from: SOBER[0], to: SOBER[1], rect: () => ({ x0: 110, y0: 360, x1: 530, y1: 560 }), scene: "B" },
   { what: "记仇 meter", kind: "effect", from: GRUDGE[0], to: GRUDGE[1], rect: () => ({ x0: GM.cx - GM.w / 2 - 110, y0: GM.y - 40, x1: GM.cx + GM.w / 2 + 100, y1: GM.y + 40 }), scene: "C" },
 ];
 export const FX_RECTS = (f: number): { what: string; r: Rect }[] => fxShown().filter((s) => f >= s.from && f <= s.to).map((s) => ({ what: s.what, r: s.rect(f)! }));

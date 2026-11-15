@@ -14,7 +14,7 @@
 import * as THREE from "three";
 import { C, TONE } from "./hud/skin";
 
-const TW = 720, TH = 1200;            // the texture (the frame's 1080 x 1800 at two thirds)
+const TW = 720, TH = 1280;            // the texture (the frame's 1080 x 1920 at two thirds)
 const MARGIN = 1.12;                  // the card is this much bigger than the frame at its depth
 const BEHIND = 0.42;                  // metres behind his head
 
@@ -71,7 +71,7 @@ export class Isolation {
       uniforms: {
         map: { value: this.tex }, mask: { value: this.rt.texture }, opacity: { value: 0 }, margin: { value: MARGIN },
         ring: { value: new THREE.Color(C.lead) }, edge: { value: new THREE.Color(TONE.shadow.startsWith("rgba") ? "#0c0e22" : TONE.shadow) },
-        px: { value: new THREE.Vector2(1 / 1080, 1 / 1800) },
+        px: { value: new THREE.Vector2(1 / 1080, 1 / 1920) },
       },
     });
     this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), this.mat);

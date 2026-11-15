@@ -72,13 +72,14 @@ export type { Speaker };
 
 // ---------------------------------------------------------------------------------------------------- film constants
 export const FPS = 30;
-/** THE FRAME: 9:15, 1080 x 1800 (Jay, 14 Nov: the app fits a 9:15 film to the phone's width, nothing is cut at the
- *  sides; the phone-safe layout is layout.ts SCREEN and hud/). */
-export const W = 1080, H = 1800;
+/** THE FRAME: 9:16, 1080 x 1920 (Jay, 15 Nov: "i want to continue in 9x16, but the rec and batter need to go in a tad
+ *  bit"; 14 Nov it was 9:15, 1080 x 1800). The app fills the phone with a 9:16 film and cuts about 5 % off each side;
+ *  the phone-safe layout is layout.ts SCREEN and hud/. */
+export const W = 1080, H = 1920;
 /** THE LENS REFERENCE: every CamPose.fov in this film is the vertical angle of the 1080 x 1920 frame the scenes were
- *  first built for, so a fov number keeps its WIDTH of view. The 1800 frame's real vertical angle is lensFov(fov):
- *  tan(half angle) x H / LENS_H (world.ts setCamera applies it). The same view, 60 px less at the top and the bottom:
- *  a screen y given on the 1920 reference (shots/lb.ts aim's sy) lands at y - REF_DY on the film. */
+ *  first built for, so a fov number keeps its WIDTH of view. lensFov(fov) is the film frame's real vertical angle:
+ *  tan(half angle) x H / LENS_H (world.ts setCamera applies it). Back on 9:16 (15 Nov) H = LENS_H: lensFov(fov) = fov
+ *  and REF_DY = 0 (on the 9:15 frame it was the same view with 60 px less at the top and the bottom). */
 export const LENS_H = 1920, REF_DY = (LENS_H - H) / 2;
 export const lensTan = (fov: number) => Math.tan((fov * Math.PI) / 360) * (H / LENS_H);
 export const lensFov = (fov: number) => (360 / Math.PI) * Math.atan(lensTan(fov));

@@ -54,7 +54,7 @@ export const POEM_SOUNDS: [number, string, number, string][] = BUILT.filter((p) 
 export const poemAt = (f: number) => poemOn(f) !== null;
 
 // layout: the last row sits on the subtitle band, an earlier row above it (words below y 950 stay left of x 930)
-const X0 = 150, X1 = 930, CX = (X0 + X1) / 2, ROW_Y = [1262, 1398], MAXW = X1 - X0 - 30;
+const X0 = 150, X1 = 890, CX = (X0 + X1) / 2, ROW_Y = [1262, 1398], MAXW = X1 - X0 - 30;
 const pxFor = (n: number) => Math.min(96, Math.floor(MAXW / (n * 1.04)));
 export const poemRect = (f: number): Rect | null => {
   const p = poemOn(f);
@@ -72,7 +72,7 @@ export const PoemFx: React.FC<{ f: number }> = ({ f }) => {
   const titleK = clamp01((f - p.from) / 6);
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
-      <svg width={1080} height={1800} viewBox="0 0 1080 1800" style={{ position: "absolute", left: 0, top: 0, opacity: 1 - (soft ? out : clamp01((out - 0.4) / 0.6)) }}>
+      <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{ position: "absolute", left: 0, top: 0, opacity: 1 - (soft ? out : clamp01((out - 0.4) / 0.6)) }}>
         <defs>
           {roughFilter(`${ID}-brush`, SKIN.display.rough!, 2)}
           {roughFilter(`${ID}-band`, { fx: 0.012, fy: 0.12, scale: 9, seed: 21 }, 2)}

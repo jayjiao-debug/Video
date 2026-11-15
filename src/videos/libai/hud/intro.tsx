@@ -7,7 +7,7 @@
 //                    sources (each says who said it) and the day's target 醒酒, paid off by the bucket of water in B.
 //   <SideBanner f />  the side characters' banners on the live shot (no freeze): the messenger (B), 高力士 (C), the
 //                     drinking friend (E), 贺知章 in the memory (F, quiet): a strip of the same cloth over their heads.
-//   LEAD_CARD_RECT, sideBannerRect(f)   the boxes they take (film px, 1080 x 1800)
+//   LEAD_CARD_RECT, sideBannerRect(f)   the boxes they take (film px, 1080 x 1920)
 import React from "react";
 import { AbsoluteFill } from "remotion";
 import { EN } from "../lang";
@@ -21,7 +21,7 @@ import type { Rect } from "./style";
 
 const ID = "libai-card";
 /** the card's box before its swing (film px) and where its cord hangs from */
-const BOX = { x0: 70, y0: 980, x1: 760, y1: 1452 };
+const BOX = { x0: 110, y0: 980, x1: 800, y1: 1452 };   // 9:16: 40 px further in
 const HANG = { x: (BOX.x0 + BOX.x1) / 2, y: BOX.y0 - 40 };
 export const LEAD_CARD_RECT: Rect = { x0: BOX.x0 - 30, y0: HANG.y - 10, x1: BOX.x1 + 40, y1: BOX.y1 + 40 };
 
@@ -52,7 +52,7 @@ export const leadHold = (f: number): number => { const z = CLOCK.at(f); return z
 /** the card leaves over the last LEAVE_N frames of the freeze, carried off by her zoom back in */
 const LEAVE_N = 10;
 /** where the zoom back in pushes from (his chest in the card's framing) */
-const RIDE = { x: 540, y: 900, k: 1.7 };
+const RIDE = { x: 540, y: 960, k: 1.7 };
 
 export const LeadCard: React.FC<{ f: number }> = ({ f }) => {
   const z = CLOCK.at(f);
@@ -73,7 +73,7 @@ export const LeadCard: React.FC<{ f: number }> = ({ f }) => {
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
       <Veil k={veil} />
-      <svg width={1080} height={1800} viewBox="0 0 1080 1800" style={{ position: "absolute", left: 0, top: 0, opacity: op, transform: `scale(${ride.toFixed(4)})`, transformOrigin: `${RIDE.x}px ${RIDE.y}px` }}>
+      <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{ position: "absolute", left: 0, top: 0, opacity: op, transform: `scale(${ride.toFixed(4)})`, transformOrigin: `${RIDE.x}px ${RIDE.y}px` }}>
         <defs>
           {gradient(`${ID}-amber`, [TONE.amberTop, [C.lead, 0.5], TONE.amberDeep])}
           {gradient(`${ID}-cloth`, [C.paper, [C.paper, 0.4], [TONE.clothLow, 0.85], TONE.clothFold])}
@@ -181,7 +181,7 @@ export const SideBanner: React.FC<{ f: number }> = ({ f }) => {
   const tagW = (EN ? 16 : 34) * [...(EN ? d.tagEn : d.tag)].length + 40;
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
-      <svg width={1080} height={1800} viewBox="0 0 1080 1800" style={{ position: "absolute", left: 0, top: 0, opacity: op }}>
+      <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{ position: "absolute", left: 0, top: 0, opacity: op }}>
         <defs>
           {gradient(`${ID}-gb-cloth`, [C.paper, [TONE.clothLow, 0.85], TONE.clothFold])}
           {roughFilter(`${ID}-gb-edge`, SKIN.body.rough!, 2)}
