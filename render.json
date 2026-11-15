@@ -1,1 +1,1 @@
-{"id":"libai-03","composition":"LibaiFilm","start":0,"end":5357,"chunks":20,"concurrency":1,"timeout":900000,"output":"libai_v3","flags":"--crf=14"}
+{"id":"libai-04-review","composition":"LibaiFilm","start":0,"end":5405,"chunks":20,"concurrency":1,"timeout":900000,"output":"libai_v4_review_half","flags":"--scale=0.5 --crf=20"}
