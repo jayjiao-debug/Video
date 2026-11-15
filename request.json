@@ -1,29 +1,25 @@
 {
- "id": "newton-v5-f16-01",
+ "id": "libai-a0203-01",
  "model_prefs": [
   "eleven_v4"
  ],
- "words": true,
  "items": [
   {
    "type": "dialogue",
-   "name": "v5_F16_s1686",
-   "model": "eleven_v4",
-   "seed": 1686,
-   "settings": {
-    "stability": 0.5
-   },
+   "name": "lb_A0203_s744",
+   "lang": "zh",
+   "seed": 744,
    "lines": [
     {
-     "text": "[steady, then cracking] In her last illness, I changed her dressings myself.",
+     "text": "[just woken, squinting, tipsy, slow] 是我……你哪位？",
      "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
      }
     },
     {
-     "text": "[moved, warm] 她丢下了您，您却守着她。",
+     "text": "[bright, eager] 我今天跟拍您！",
      "voice": {
       "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
       "voice_id": "I23uc91tu5zY2PA1tKEN",
@@ -34,23 +30,20 @@
   },
   {
    "type": "dialogue",
-   "name": "v5_F16_s1642",
-   "model": "eleven_v4",
-   "seed": 1642,
-   "settings": {
-    "stability": 0.5
-   },
+   "name": "lb_A0203_s762",
+   "lang": "zh",
+   "seed": 762,
    "lines": [
     {
-     "text": "[steady, then cracking] In her last illness, I changed her dressings myself.",
+     "text": "[just woken, squinting, tipsy, slow] 是我……你哪位？",
      "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
      }
     },
     {
-     "text": "[moved, warm] 她丢下了您，您却守着她。",
+     "text": "[bright, eager] 我今天跟拍您！",
      "voice": {
       "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
       "voice_id": "I23uc91tu5zY2PA1tKEN",
@@ -60,31 +53,11 @@
    ]
   },
   {
-   "type": "dialogue",
-   "name": "v5_F16_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[steady, then cracking] In her last illness, I changed her dressings myself.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[moved, warm] 她丢下了您，您却守着她。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    }
-   ]
+   "type": "sfx",
+   "name": "sfx_hiccup",
+   "text": "A single short comic drunk man's hiccup, hic, close and dry, no music.",
+   "duration": 0.6,
+   "influence": 0.6
   }
  ]
 }
