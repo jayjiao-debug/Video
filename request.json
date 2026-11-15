@@ -1,17 +1,29 @@
 {
- "id": "libai-c22-01",
+ "id": "newton-v5-notes-01",
  "model_prefs": [
   "eleven_v4"
  ],
+ "words": true,
  "items": [
   {
    "type": "dialogue",
-   "name": "lb_C22_s744",
-   "lang": "zh",
-   "seed": 744,
+   "name": "v5_A01_s1686",
+   "model": "eleven_v4",
+   "seed": 1686,
+   "settings": {
+    "stability": 0.5
+   },
    "lines": [
     {
-     "text": "[to camera, scared] 完了。高公公可是皇上身边最红的人。",
+     "text": "[just arrived, a little winded, relieved] 终于到了！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[bright, cheerful, calling through a door] 早上好！",
      "voice": {
       "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
       "voice_id": "I23uc91tu5zY2PA1tKEN",
@@ -22,12 +34,131 @@
   },
   {
    "type": "dialogue",
-   "name": "lb_C22_s762",
-   "lang": "zh",
-   "seed": 762,
+   "name": "v5_A01_s1642",
+   "model": "eleven_v4",
+   "seed": 1642,
+   "settings": {
+    "stability": 0.5
+   },
    "lines": [
     {
-     "text": "[to camera, scared] 完了。高公公可是皇上身边最红的人。",
+     "text": "[just arrived, a little winded, relieved] 终于到了！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[bright, cheerful, calling through a door] 早上好！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "v5_A01_s2026",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[just arrived, a little winded, relieved] 终于到了！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[bright, cheerful, calling through a door] 早上好！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "v5_B01_s1686",
+   "model": "eleven_v4",
+   "seed": 1686,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[polite, hopeful] Sir, your breakfast.",
+     "voice": {
+      "owner": "333250518273b1daa7efac81d613e82401a57b4749951a5f22c1dd136fde494b",
+      "voice_id": "pYDLV125o4CgqP8i49Lg",
+      "name": "Toby"
+     }
+    },
+    {
+     "text": "[calling out, helpful] 他说马上来！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "v5_B01_s1642",
+   "model": "eleven_v4",
+   "seed": 1642,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[polite, hopeful] Sir, your breakfast.",
+     "voice": {
+      "owner": "333250518273b1daa7efac81d613e82401a57b4749951a5f22c1dd136fde494b",
+      "voice_id": "pYDLV125o4CgqP8i49Lg",
+      "name": "Toby"
+     }
+    },
+    {
+     "text": "[calling out, helpful] 他说马上来！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "v5_B01_s2026",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[polite, hopeful] Sir, your breakfast.",
+     "voice": {
+      "owner": "333250518273b1daa7efac81d613e82401a57b4749951a5f22c1dd136fde494b",
+      "voice_id": "pYDLV125o4CgqP8i49Lg",
+      "name": "Toby"
+     }
+    },
+    {
+     "text": "[calling out, helpful] 他说马上来！",
      "voice": {
       "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
       "voice_id": "I23uc91tu5zY2PA1tKEN",
