@@ -128,24 +128,27 @@ const pedestalTex = () => paint(6 * 128, 256, (g, W, H) => {
     g.restore();
   }
 });
-/** THE PLAQUE: a tablet of the darker stone with a cut border and 大哥 engraved on it. The two characters are drawn
- *  stroke by stroke (no font: the render page may have none for them), each cut dark with a lit lip under it */
+/** THE PLAQUE: a tablet of the darker stone with a cut border and "Juno" engraved on it (owner note 15 Nov: "change that
+ *  大哥 sign to Juno"). The letters are drawn stroke by stroke (no font: the render page may have none), each cut dark
+ *  with a lit lip under it; cap height 96 px, x-height 60 px, baseline y 128 on the 256 x 160 tablet */
 const plaqueTex = () => paint(256, 160, (g, W, H) => {
   const r = rng(137);
   g.fillStyle = "#bfb294"; g.fillRect(0, 0, W, H);
   for (let i = 0; i < 7; i++) blotch(g, W * r(), H * r(), W * (0.12 + 0.2 * r()), r() < 0.5 ? NC.stoneDark : NC.stone, 0.22);
   const cut = (pts: [number, number][], lw: number) => {
     g.lineWidth = lw; g.lineCap = "round"; g.lineJoin = "round";
-    for (const [dx, dy, col] of [[1.6, 2.4, css("#f1e8d2", 0.9)], [0, 0, "#5c5444"]] as [number, number, string][]) {
+    for (const [dx, dy, col] of [[1.6, 2.4, css("#f1e8d2", 0.9)], [0, 0, "#4a4234"]] as [number, number, string][]) {
       g.strokeStyle = col; g.beginPath(); pts.forEach(([px, py], i) => (i ? g.lineTo(px + dx, py + dy) : g.moveTo(px + dx, py + dy))); g.stroke();
     }
   };
   cut([[10, 10], [W - 10, 10], [W - 10, H - 10], [10, H - 10], [10, 10]], 4);
-  // each character in a 100 x 100 box, laid at (ox, oy) with side s
-  const s = 96, oy = (H - s) / 2, glyph = (ox: number, strokes: [number, number][][]) => { for (const st of strokes) cut(st.map(([px, py]) => [ox + (px * s) / 100, oy + (py * s) / 100]), 9); };
-  glyph(26, [[[10, 38], [90, 38]], [[50, 8], [50, 40], [44, 62], [30, 80], [10, 93]], [[50, 40], [58, 62], [72, 80], [92, 93]]]);                              // 大
-  glyph(134, [[[8, 10], [92, 10]], [[24, 20], [58, 20], [58, 36], [24, 36], [24, 20]], [[76, 10], [76, 42]],                                                  // 哥
-    [[4, 52], [96, 52]], [[22, 62], [56, 62], [56, 80], [22, 80], [22, 62]], [[76, 52], [76, 93], [64, 88]]]);
+  const lw = 12, B = 128, X = 68;                                  // stroke, baseline, x-height top (12 px reads at phone size)
+  const ell = (cx: number, cy: number, rx: number, ry: number): [number, number][] => Array.from({ length: 25 }, (_, k) => [cx + rx * Math.sin((k / 24) * 2 * Math.PI), cy - ry * Math.cos((k / 24) * 2 * Math.PI)]);
+  cut([[20, 33], [64, 33]], lw);                                                                                     // J: the bar
+  cut([[50, 33], [50, 106], [47, 119], [40, 126], [30, 127], [22, 119]], lw);                                        //    the stem and its hook
+  cut([[88, X], [88, 106], [92, 120], [100, 127], [110, 127], [118, 120], [122, 107]], lw); cut([[122, X], [122, B]], lw); // u
+  cut([[144, X], [144, B]], lw); cut([[144, 90], [149, 75], [158, 68], [168, 68], [175, 74], [178, 86], [178, B]], lw);  // n
+  cut(ell(216, 98, 16, 30), lw);                                                                                     // o
 });
 const roughGravelTex = (seed: number, lines = 11, px = 512) => paint(px, px, (g, W, H) => {
   const r = rng(seed), wrap = (fn: (dx: number, dy: number) => void) => { for (const dx of [-W, 0, W]) for (const dy of [-H, 0, H]) fn(dx, dy); };
@@ -261,7 +264,7 @@ export function buildGarden(K: Kit) {
   // pedestal against the east wall, in the sundial's stone: a MOULDED BASE (a plinth block, a fillet, a cyma up to the
   // die), the DIE (each face a sunk panel, rain streaks from under the cornice, green at its foot: pedestalTex), a
   // MOULDED CAP (a cavetto, a fillet, the cornice), the statue's own footing slab on it (the figure's stone, a tone
-  // down), an ENGRAVED PLAQUE on the face toward her (plaqueTex: 大哥, cut by hand: no font) and a little moss at the
+  // down), an ENGRAVED PLAQUE on the face toward her (plaqueTex: "Juno", cut by hand: no font) and a little moss at the
   // foot. Each moulding is one four-sided lathe with its own hull, so the steps are drawn lines. Hidden unless C asks
   const plinthG = new THREE.Group(); plinthG.name = "garden.plinth"; plinthG.visible = false; group.add(plinthG);
   {
