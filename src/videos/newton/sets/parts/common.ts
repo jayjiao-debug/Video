@@ -14,6 +14,18 @@ import { paint, rng, css, mix, blotch, NOINK, clamp, type G2, type RGB } from ".
 
 export { NOINK, Part, hullGeo };
 
+/** THIN THINGS LYING ON INKED FURNITURE (paper on the desk): the solids of the Part meshes named `name` under `root`
+ *  (and, with no name, every Part solid under it) join the ink pass's world layer 0 as well as NOINK, so the pass's
+ *  world-only buffer sees them on top of the furniture and a table edge's line stops under them instead of running
+ *  across them. Their hulls (`<name>.ink`) stay NOINK only, so the outline they already have is unchanged. */
+export const inkWorld = (root: THREE.Object3D, name?: string) => {
+  root.traverse((o) => {
+    const m = o as THREE.Mesh;
+    if (!m.isMesh || m.name.endsWith(".ink") || (name !== undefined && m.name !== name)) return;
+    if (m.layers.isEnabled(NOINK)) m.layers.enable(0);
+  });
+};
+
 // =====================================================================================================================
 // colour
 // =====================================================================================================================

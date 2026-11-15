@@ -12,6 +12,7 @@
 //   the carriageway: cobbles with a central stone kennel (gutter), stone flag footways along both fronts, a few oak
 //   posts guarding the footway.
 import { ISLAND, V, EYE, eyeCam, type Stand, type Cam } from "./base";
+import { N_EYE } from "../people";
 
 export const STRX = ISLAND.street;
 const WX = -3.6, EX = 3.6, LINE = -1.35;          // the building lines (west, east) and his walking line
@@ -44,9 +45,10 @@ export const STREET = {
   /** his walking line's x (a little west of the kennel, on the cobbles) */ lineX: STRX + LINE,
   /** the kennel (gutter) centre line's x; the footways' inner edges */ kennelX: STRX, footW: STRX + WX + STREET_SET.foot, footE: STRX + EX - STREET_SET.foot,
 };
-/** the look height, at a figure's floor point (x, z), that puts NEWTON's eyes (1.14 m over his floor) in the frame's
+/** the look height, at a figure's floor point (x, z), that puts NEWTON's eyes (N_EYE over his floor: people.ts, 1.14 x
+ *  his scale, gate 1 director note 1) in the frame's
  *  upper third (layout.ts SCREEN.eyes) when her eyes stand at (cx, cz), `eye` over the same floor */
-const third = (cx: number, cz: number, x: number, z: number, eye = EYE) => { const d = Math.hypot(x - cx, z - cz); return eye - d * Math.tan(Math.atan((eye - 1.14) / d) + 0.197); };
+const third = (cx: number, cz: number, x: number, z: number, eye = EYE) => { const d = Math.hypot(x - cx, z - cz); return eye - d * Math.tan(Math.atan((eye - N_EYE) / d) + 0.197); };
 /** NAMED CAMERAS (her eyes, EYE over the cobbles) */
 export const STREET_CAMS: Record<"gate" | "trot" | "wipe" | "street" | "back", Cam> = {
   /** D start: across the street, looking at the gate's arch as he comes out of it */

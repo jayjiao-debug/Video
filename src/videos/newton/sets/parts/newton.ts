@@ -113,17 +113,20 @@ export const ashlarTex = (o: { seed: number; base?: string; lo?: string; hi?: st
     }
   }, true);
 };
-/** OAK BOARDS (a floor): n boards across the tile (u), the grain along v, butt joints staggered, soft wear */
+/** OAK BOARDS (a floor): n boards across the tile (u), the grain along v, butt joints staggered, soft wear.
+ *  QUIET (rebuild prep, "the ground never shimmers"): the boards differ only a little in tone, the grain is a few broad
+ *  faint streaks (no hairlines), and the joints are wide soft bands a shade darker (never thin dark lines), so the
+ *  mipmaps have nothing fine and contrasty to alias on a moving floor. */
 export const oakBoardsTex = (o: { seed: number; n: number; base: string; lo: string; joint?: string; px?: number; len?: number }) =>
   paint(o.px ?? 512, o.px ?? 512, (g, W, H) => {
-    const r = rng(o.seed), bw = W / o.n;
+    const r = rng(o.seed), bw = W / o.n, jw = Math.max(4, W / 110);
     for (let i = 0; i < o.n; i++) {
-      g.fillStyle = css(mix(o.base, o.lo, 0.1 + 0.45 * r())); g.fillRect(i * bw, 0, bw + 1, H);
-      g.strokeStyle = css(o.lo, 0.35); g.lineWidth = Math.max(1.2, W / 340);
-      for (let k = 0; k < 5; k++) { const x = i * bw + bw * (0.1 + 0.8 * r()); g.beginPath(); g.moveTo(x, 0); g.bezierCurveTo(x + bw * 0.1 * (r() - 0.5), H * 0.33, x + bw * 0.1 * (r() - 0.5), H * 0.66, x, H); g.stroke(); }
-      blotch(g, i * bw + bw / 2, H * r(), bw * 0.8, "#fff1dc", 0.06);
-      g.fillStyle = o.joint ?? css(o.lo, 0.9); g.fillRect(i * bw - 1.5, 0, 3, H);
-      const y = H * ((i * 0.37 + 0.2 * r()) % 1); g.fillRect(i * bw, y - 1.5, bw, 3);
+      g.fillStyle = css(mix(o.base, o.lo, 0.14 + 0.2 * r())); g.fillRect(i * bw, 0, bw + 1, H);
+      g.strokeStyle = css(o.lo, 0.1); g.lineWidth = Math.max(4, W / 90);
+      for (let k = 0; k < 4; k++) { const x = i * bw + bw * (0.15 + 0.7 * r()); g.beginPath(); g.moveTo(x, 0); g.bezierCurveTo(x + bw * 0.1 * (r() - 0.5), H * 0.33, x + bw * 0.1 * (r() - 0.5), H * 0.66, x, H); g.stroke(); }
+      blotch(g, i * bw + bw / 2, H * r(), bw * 0.8, "#fff1dc", 0.05);
+      g.fillStyle = o.joint ?? css(mix(o.base, o.lo, 0.75), 0.6); g.fillRect(i * bw - jw / 2, 0, jw, H);
+      const y = H * ((i * 0.37 + 0.2 * r()) % 1); g.fillRect(i * bw + jw / 2, y - jw / 2, bw - jw, jw);
     }
   }, true);
 /** LEADED GLASS: diamond quarries (or square panes) over a pane w x h metres, `q` metres across a quarry; the glass
@@ -186,13 +189,14 @@ export const leadMaskTex = (o: { w: number; h: number; q?: number; square?: bool
 export const gravelTex = (o: { seed: number; lines?: number; px?: number; base?: string; along?: boolean }) => paint(o.px ?? 512, o.px ?? 512, (g, W, H) => {
   const r = rng(o.seed);
   g.fillStyle = o.base ?? NC.gravel; g.fillRect(0, 0, W, H);
-  for (let i = 0; i < 2600; i++) { g.fillStyle = css(r() < 0.5 ? NC.gravelLo : NC.gravelHi, 0.55 + 0.4 * r()); g.beginPath(); g.arc(W * r(), H * r(), 0.8 + 1.6 * r(), 0, 7); g.fill(); }
+  // QUIET: fewer, bigger, fainter grains (no pin-prick dots to sparkle when the camera moves)
+  for (let i = 0; i < 1300; i++) { g.fillStyle = css(r() < 0.5 ? NC.gravelLo : NC.gravelHi, 0.2 + 0.18 * r()); g.beginPath(); g.arc(W * r(), H * r(), 1.6 + 2 * r(), 0, 7); g.fill(); }
   const n = o.lines ?? 9;
   for (let i = 0; i < n; i++) {
     const x = (W * (i + 0.5)) / n;
-    g.strokeStyle = css("#9d8f6c", 0.35); g.lineWidth = W / n * 0.18;
+    g.strokeStyle = css("#9d8f6c", 0.2); g.lineWidth = W / n * 0.18;
     g.beginPath(); g.moveTo(x + W / n * 0.12, 0); g.lineTo(x + W / n * 0.12, H); g.stroke();
-    g.strokeStyle = css("#f4ecd6", 0.45); g.lineWidth = W / n * 0.12;
+    g.strokeStyle = css("#f4ecd6", 0.26); g.lineWidth = W / n * 0.12;
     g.beginPath(); g.moveTo(x - W / n * 0.06, 0); g.lineTo(x - W / n * 0.06, H); g.stroke();
   }
 }, true);

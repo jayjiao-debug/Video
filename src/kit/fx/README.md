@@ -4,7 +4,8 @@ Shared kit (`src/kit/fx/`, KIT.md). Built for Hongmen; Hongmen's old paths `src/
 files. From a film folder `src/videos/<film>/` the import is `../../kit/fx/...`.
 
 Files: `ink.ts` (the outline pass), `stable.ts` (settings and QA helpers for everything that is not ink),
-`rim.ts` (the head rim light; not part of this story).
+`rim.ts` (the head rim light; not part of this story), `isolate.ts` (the cut-out for the lead's intro card; its own
+section at the end, not part of this story either).
 Numbers, pictures and what is left: `/home/user/hm_notes/flicker_fix.md`. The measurements behind it:
 `/home/user/hm_notes/flicker_m.md` (the test), `flicker_a1.md` (the outline pass), `flicker_a2.md` (everything else).
 
@@ -141,3 +142,55 @@ import { InkPass, noInkFallback } from "../../kit/fx/ink";   // instead of "../v
 Measured through a scratch entry that swaps the pass from outside (Arthur, the tournament, frame 470, shimmer
 over_ppm): 1080x1920: 22635 -> 377 (with ink off: 754); 540x960: 77177 -> 15595 (with ink off: 24239). The look:
 `/home/user/hm_work/flick/f/pics/ab_arthur470_1080_x3.png`. Table: `/home/user/hm_notes/flicker_fix.md`.
+
+## The cut-out for the lead's intro card (`isolate.ts`)
+
+While the lead's intro card is up he is ISOLATED: he stays in full colour with a cut-out line round him, like a
+sticker lifted off the picture, and everything behind him drops to a wash. `IsolatePass` is the picture's half of that
+card, one pass in the film's own chain, so it is in the farm render, in the cut's picture and in a preview alike. The
+card's words are the film's DOM layer (`src/kit/overlay/`), placed round him.
+
+It is a building block with **no look of its own**. The wash's two colours and its strength, the line, the drop, the
+lift and what he leaves behind come from the film's skin on every frame; `IsolateState` has no defaults.
+
+```tsx
+import { IsolatePass, screenBox, liftBox } from "../../kit/fx/isolate";
+// Film.tsx, with the other passes:                   iso: new IsolatePass(scene, camera),
+// in the chain, between the lens blur and bloom:     <primitive object={fx.iso} dispose={null} />
+// a preview harness:                                 comp.addPass(iso)  after the ink pass, before the tone mapping pass
+fx.iso.set(z ? {                                              // every frame; z = CLOCK.at(f) (overlay/freeze.ts), L = the card's life
+  k: L.k,                                                     // the wash, the line and the drop fade with it
+  keep: [world.actor(LEAD).group, world.prop("jar").group],   // him, and what he holds
+  wash: { dark: C.ink, light: C.paper, amount: 0.9, dim: 0.85 },
+  outline: { color: C.paper, width: 14 },                     // film px
+  shadow: { x: 10, y: 14, alpha: 0.45 },                      // optional
+  lift: { s: lerp(1, 1.25, e), rot: lerp(0, -4, e), y: lerp(0, -40, e), cx, cy },   // optional; from 1 and 0, so he does not jump
+  left: { color: C.ink, alpha: 1 },                           // optional: the flat shape he leaves where he stood
+} : null);
+const body = screenBox(world.actor(LEAD).group, camera, W, H);   // where he is, in film px
+const onCard = liftBox(body, lift);                              // where the lifted cut-out is: for slots() and checkOverlays()
+```
+
+How it works: the whole scene is drawn once more for its depth only, then the objects in `keep` are drawn over that
+depth, alone, with their own materials. What comes through is the part of them the camera really sees, and that is the
+matte. Inside the matte the picture is left as it is (he keeps the film's light, ink and grade); outside it the picture
+is washed; the line is the matte grown by `width`. Nothing is remembered between frames. With no state, or `k` 0, the
+pass returns at once.
+
+What to know:
+
+- The picture stands still under the card (the freeze); `k` and the `lift` may move over the hold. That is how the card
+  arrives and how he is pushed toward the viewer without the scene moving.
+- A thing in front of him cuts the matte (the table he sits behind). What he HOLDS goes in `keep`, or it is washed.
+- Lifted clear of where he stood, the washed picture still shows him there: give `left`, or grow him in place.
+- `screenBox` is the whole figure (also the part behind the table), each mesh measured on its own, a little generous.
+- Cost: two more draws of the scene (one for depth, one of the kept objects) on the card's frames only. Not timed.
+- Put the pass in before the film's first full render. Between the lens blur and bloom it makes the R3F composer build
+  two effect passes where it built one, which is the same picture to within rounding, not to the bit (below).
+
+Proof (14 Nov 2026, try-out code outside the repo, kept in the project's files under
+`pose-clipping/kit_blocks/tryout_code/cutout/`): frame 360 of 李白's film, he drinks from the jar behind a table with a
+second figure beside him. He, his head and the jar stay in colour, the table's edge cuts him, the other figure is
+washed, at 540 and at 1080 wide, in the preview harness and in the film's own chain under the HUD and the caption.
+With the pass idle the harness frame is the same as without the pass (0 pixels differ); in the film's chain 206 of
+518,400 pixels differ by one level of 255.

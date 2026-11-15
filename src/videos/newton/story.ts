@@ -1,5 +1,5 @@
-// 《跟着牛顿过一天》 (NewtonFilm) film engine: timing, the segment contract and the segment table. An adapted copy of
-// src/videos/qin/story.ts. The design: PLAN.md in this folder (the bible, the storyboard of section 7, file owners).
+// 《采访牛顿的一天》 (NewtonFilm; formerly 《跟着牛顿过一天》) film engine: timing, the segment contract and the segment
+// table. An adapted copy of src/videos/qin/story.ts. The design: PLAN.md in this folder (the bible, the storyboard of section 7, file owners).
 // Data files (WP1; segment builders treat them as read-only and ask for changes in /home/user/newton_work/film/requests.md):
 //   story.ts     this file: FPS / frames, the dialogue lines (zh + en), quotes, the Segment / Pose / Place types,
 //                SEGMENTS, CARDS, SCENE, SCENE_CLOCK / SCENE_STAMP / SCENE_TIME (the vlog's timestamps), the title block,
@@ -44,16 +44,20 @@
 // 4. Frames: every frame number comes from beats.ts (BEAT.X.name, placeAt, TITLE_SPAN) or from line() / lineId() /
 //    cap() / capWord() / quote() / SEGMENTS / CARDS here; every mark from layout.ts / layout/<place>.ts; every
 //    on-screen string is L(zh, en). A beat that is not in beats.ts is derived in the segment's own file the same way
-//    (capWord("A01", "好").from for a ji line, capWord("F14", "burn").from for an nt / hm line: the word in the language
+//    (capWord("A06", "好").from for a ji line, capWord("F14", "burn").from for an nt / hm line: the word in the language
 //    the line is SPOKEN in).
-//    Screen zones (px on 1080 x 1920, layout.ts SCREEN): nothing that matters above y 150 or in the subtitle band
-//    (SCREEN.capTop..capBottom: Chinese large, English small under it) or below SCREEN.bottom; faces in the upper third
-//    but out of the vlog UI's corners (SCREEN.rec top left, SCREEN.battery top right; for the first 2 s of every scene the
-//    timestamp holds BIG in the top-left corner: hud VLOG_RECT.stampBig, about x 50..400, y 240..345);
-//    the fact card's slot is MID-LEFT (hud/ hudRectsAt(f) gives its box while it shows); the title block sits on the
-//    shut door (TITLE_SPAN). Her mic and her hands are NEVER DRAWN (props/index.ts INVISIBLE; Jay, 14 Nov): what she
-//    holds or does moves as if by an invisible hand. Mouths move ONLY inside a character's own line:
-//    ...speak(quote("nt", "A02"), f, id). ji (the reporter) is the camera: never a figure.
+//    Screen zones (px on the 9:16 frame, 1080 x 1920: the kit's FRAME_9x16 with this film's override, hud/style.ts
+//    FRAME; layout.ts SCREEN): the app cuts x < 58 and x > 1024 off (faces and anything that matters inside x 58-1024);
+//    words, cards and effects inside x 110-970 above y 1000 and x 110-890 below it, between y 340 and 1490; the app's
+//    back / search icons at y 143-222 in the top corners, its button column x > 890 from y 1000, the post's text x 58-805
+//    from y 1505; the subtitle band x 110-890, y 1270-1460 (Chinese large, English small under it only for English
+//    speech); faces out of the vlog UI (the REC block x 110-970, y 225-330: the REC row at y 250, the stamp row at
+//    y 308; for the first 2 s of every scene the timestamp holds BIG under the lamp: hud VLOG_RECT.stampBig);
+//    the fact card's slot is MID-LEFT (hud/ hudRectsAt(f) gives its box while it shows); the title block sits over the
+//    cold open (TITLE_SPAN, 0.2-3.2 s: v5 puts it on the door leaf, segA places it). Her mic and her hands are NEVER
+//    DRAWN (props/index.ts INVISIBLE; Jay, 14 Nov): what she holds or does moves as if by an invisible hand. Mouths
+//    move ONLY inside a character's own line: ...speak(quote("nt", "A02"), f, id). ji (the reporter) is the camera:
+//    never a figure.
 // =====================================================================================================================
 import type React from "react";
 import type * as THREE from "three";
@@ -68,20 +72,50 @@ export {
   clamp01, clamp, lerp, lin, smooth, smootherstep, easeInQuad, easeOutQuad, easeInOutQuad, easeInCubic, easeOutCubic, easeInOutCubic,
   easeOutBack, between, spring, pop, spl, mix3, add3, camMix, rng, hash, since, h,
 } from "../group/story";
-export { cap, capWord, capsOf, captionAt, lineNum, enWords, CAPTIONS, LINE_IDS, CAP_MAXW, type CaptionGroup } from "./captions";
+import { cap as capV5, capWord as capWordV5, type CaptionGroup } from "./captions";
+export { capsOf, captionAt, lineNum, enWords, CAPTIONS, LINE_IDS, CAP_MAXW, type CaptionGroup } from "./captions";
 export { VOICE_SOURCE, SPOKEN };
 export type { Speaker };
 
 // ---------------------------------------------------------------------------------------------------- film constants
 export const FPS = 30;
+/** THE FRAME: 9:16, 1080 x 1920 (Jay, 15 Nov: "i want to continue in 9x16"; it was 9:15, 1080 x 1800, on 14 Nov).
+ *  Douyin fills the screen with a 9:16 film and cuts about 58 px off each side (visible x 58-1024). The zones are the
+ *  shared kit's FRAME_9x16 with the film's one override (hud/style.ts FRAME: the REC block from x 110, the battery to
+ *  x 970, the REC row at y 250, the stamp row at y 308, words from y 340). */
 export const W = 1080, H = 1920;
+/** THE LENS REFERENCE: every CamPose.fov in this film (layout cameras, cam.ts, the shots) is the vertical angle of the
+ *  1080 x 1920 frame, so a fov number keeps its WIDTH of view. Since the film is back on 1920 (15 Nov) the frame's
+ *  real vertical angle IS the CamPose fov: lensTan / lensFov are the identity (H = LENS_H) and stay only so the code
+ *  that went through them during the 9:15 days reads the same. The approved 9:15 compositions are kept: the 1920
+ *  frame is the 1800 frame with 60 px more picture at the top and 60 px more at the bottom, at the same scale (an old
+ *  screen point (x, y) on 1800 is (x, y + 60) on 1920; every screen-space number in the film code was moved so). */
+export const LENS_H = 1920;
+/** tan of the half vertical angle the frame really has for a CamPose fov (degrees): tan(fov / 2) on 1920 */
+export const lensTan = (fov: number) => Math.tan((fov * Math.PI) / 360) * (H / LENS_H);
+/** the real vertical fov (degrees) of the frame for a CamPose fov: the fov itself on 1920 */
+export const lensFov = (fov: number) => (360 / Math.PI) * Math.atan(lensTan(fov));
+/** THE 9:15 FRAME the gate-5 compositions were approved on (14-15 Nov): its height, and how far down an old screen
+ *  point sits on the 1920 frame (the plan's 9:15 numbers convert with these; nothing draws at 1800 any more) */
+export const H_915 = 1800, Y_915 = (H - H_915) / 2;
 /** the film's title and the line under it (the title block, PLAN 5; from the lines file) */
 export const TITLE = L(TITLE_RAW[2], TITLE_RAW[3]);
 export const SUBTITLE = L(TITLE_RAW[4], TITLE_RAW[5]);
-/** the title block on the shut door after A02 (PLAN 5): inclusive frames and both languages (beats.ts TITLE_SPAN) */
+/** the title block (inclusive frames and both languages; beats.ts TITLE_SPAN): v5 puts it over the cold open, 0.2-3.2 s
+ *  (the lines file's title_span_s), on the door leaf in the foreground (segA places it: Pose.title / setTitlePlace) */
 export const TITLE_BLOCK = { from: TITLE_RAW[0], to: TITLE_RAW[1], zh: TITLE_RAW[2], en: TITLE_RAW[3], subZh: TITLE_RAW[4], subEn: TITLE_RAW[5] };
-/** subtitle band centre (the HUD's own numbers rule: hud/) */
-export const CAPTION_Y = 0.72 * H;
+/** DECISION 3 (script v5, the default built while Jay decides): the fact cards and the title block show their Chinese
+ *  only, no English line on screen (Jay's rule: an English row only under English speech, which the subtitles already
+ *  follow). true brings back the small English line on the cards (hud/card.tsx) / under the title (hud/title.tsx); the
+ *  English stays in CARDS / TITLE_BLOCK for reference. The lines file says the same (card_en_on_screen,
+ *  title_en_on_screen). The English version of the film (lang en) is not affected. */
+export const CARD_EN_ON_SCREEN = false;
+export const TITLE_EN_ON_SCREEN = false;
+/** THE COLD OPEN's beats (script v5's A rows, seconds on the film clock; "Good night." (A02) comes at 4.6 s, after its
+ *  4.5 s silent beat): his STOP 1/5 at 1.5 s (15 frames), her two raps on the door at 2.2 s. beats.ts BEAT.A reads them */
+export const COLD_OPEN_S = { stop: 1.5, knock: 2.2 };
+/** subtitle band centre: the Chinese row's middle (the HUD's own numbers rule: hud/caption.tsx, layout.ts SCREEN) */
+export const CAPTION_Y = 1414;
 
 // ---------------------------------------------------------------------------------------------------- the places
 /** One place shows at a time (w.setPlace). Each is its own island along x (layout/base.ts ISLAND), all real and a few
@@ -102,6 +136,11 @@ export const SCENE = Object.fromEntries(SCENE_RAW.map(([id, zh, en, place]) => [
 /** THE VLOG'S CLOCK (PLAN 5, hud/vlog.tsx): each scene's time on her camera's timestamp, in minutes after the midnight
  *  that starts the film's day (G = 26:00 = 02:00 the next morning). Why these hours: PLAN.md section 5. */
 export const SCENE_CLOCK: Record<SceneId, number> = { A: 5 * 60, B: 11 * 60, C: 12 * 60, D: 15 * 60, E: 18 * 60, F: 23 * 60, G: 26 * 60 };
+/** DECISION 2 (script v5, the default built while Jay decides): THE CLOCK'S DIGITS SHOW ONLY WHERE A SOURCE GIVES THE
+ *  HOUR: 05:00 (A) and 02:00 (G). B-F show the time word alone (上午 / 中午 / 下午 / 傍晚 / 夜); their digits appear only
+ *  while the clock races across a clock join and land on the word (hud/vlog.tsx). SCENE_CLOCK still orders the day (the
+ *  races, the battery). true for a scene brings its digits back (review v2 row 7: 11:00 ... 23:00, no source). */
+export const SCENE_DIGITS: Record<SceneId, boolean> = { A: true, B: false, C: false, D: false, E: false, F: false, G: true };
 /** "HH:MM" (24-hour) of a clock in minutes (26:00 -> "02:00") */
 export const clockText = (min: number) => {
   const m = Math.floor(min), h = Math.floor(m / 60) % 24;
@@ -109,16 +148,17 @@ export const clockText = (min: number) => {
 };
 /** the timestamp's words: the lines file's time of day (zh) and its English, except where the hour is in the digits */
 const STAMP_WORD: Partial<Record<SceneId, [string, string]>> = { G: ["凌晨", "Small hours"] };
-/** each scene's timestamp: zh word (清晨), en word (Early morning), clock ("05:00"), min (300) */
+/** each scene's timestamp: zh word (清晨), en word (Early morning), clock ("05:00"), min (300), digits (whether the
+ *  clock shows at rest: SCENE_DIGITS) */
 export const SCENE_STAMP = Object.fromEntries(SCENES.map((id) => {
   const [zh, en] = STAMP_WORD[id] ?? [SCENE[id].time, SCENE[id].en];
-  return [id, { zh, en, clock: clockText(SCENE_CLOCK[id]), min: SCENE_CLOCK[id] }];
-})) as Record<SceneId, { zh: string; en: string; clock: string; min: number }>;
-/** each scene's timestamp as one string, L(zh, en): SCENE_TIME.A = "清晨 05:00" / "05:00 · Early morning" (the vlog UI
- *  draws it in two rows: hud/vlog.tsx) */
+  return [id, { zh, en, clock: clockText(SCENE_CLOCK[id]), min: SCENE_CLOCK[id], digits: SCENE_DIGITS[id] }];
+})) as Record<SceneId, { zh: string; en: string; clock: string; min: number; digits: boolean }>;
+/** each scene's timestamp at rest as one string, L(zh, en): SCENE_TIME.A = "清晨 05:00" / "05:00 · Early morning",
+ *  SCENE_TIME.B = "上午" / "Late morning" (the vlog UI draws it in two rows: hud/vlog.tsx) */
 export const SCENE_TIME = Object.fromEntries(SCENES.map((id) => {
   const s = SCENE_STAMP[id];
-  return [id, L(`${s.zh} ${s.clock}`, `${s.clock} · ${s.en}`)];
+  return [id, s.digits ? L(`${s.zh} ${s.clock}`, `${s.clock} · ${s.en}`) : L(s.zh, s.en)];
 })) as Record<SceneId, string>;
 
 // ---------------------------------------------------------------------------------------------------- the contract
@@ -127,7 +167,7 @@ export type V3Like = Vec3 | THREE.Vector3;
 /** a camera pose: camera.up = up ?? (0,1,0); position = pos; lookAt(look); rotateZ(roll ?? 0); fov (vertical, degrees) */
 export type CamPose = { pos: V3Like; look: V3Like; fov: number; roll?: number; up?: Vec3; near?: number; far?: number };
 export type PostPose = {
-  /** depth of field: focus distance (m) and blur-disc radius in px (at 1080 x 1920) of things at infinity; 0 = off.
+  /** depth of field: focus distance (m) and blur-disc radius in px (on the 1080-wide frame) of things at infinity; 0 = off.
    *  The ASIDES (mic to the lens, Newton soft behind it) use it. */
   dof?: { focus: number; amount: number } | null;
   /** bloom intensity (threshold 1.0: only emissive / glowing things bloom); default: the place's */
@@ -209,7 +249,9 @@ export const LINES: VoiceLine[] = VOICE_RAW.map(([n, s, e]) => {
   return { n, id: m.id, scene: m.scene, who: m.who, text: m.zh, zh: m.zh, en: m.en, spoken: SPOKEN[m.who], start: s, end: e, from, to: Math.round(e * FPS), pre, after: Math.round(m.after * FPS), preFrom: from - pre };
 });
 export const SPEECH_END = Math.round(VOICE_END_S * FPS);
-/** the line with number n (1-based) or id ("A03"). Throws when there is no such line. */
+/** the line with number n (1-based) or id ("A03"). Throws when there is no such line. (v4's greeting is cut and v4's
+ *  2 a.m. line is split at its pause in v5: those old ids are not lines; the A and G rebuilds name A02 / the cold open's
+ *  scene time and G01a / G01b.) */
 export const line = (n: number | string): VoiceLine => {
   const k = lineNum(n), l = LINES[k - 1];
   if (!l || l.n !== k) throw new Error(`line(${JSON.stringify(n)}): the dialogue has ${LINES.length} lines`);
@@ -217,6 +259,13 @@ export const line = (n: number | string): VoiceLine => {
 };
 /** the line with this id: lineId("A03") -> { from, to, who, ... } (the same as line("A03")) */
 export const lineId = (id: string): VoiceLine => line(id);
+/** screen k of line `line` (number or id): k counts from 0, a negative k from the end (cap("F09", -1)).
+ *  .from = the frame the screen is shown from = the frame its first spoken token starts on. Throws when there is none.
+ *  (captions.ts cap()) */
+export const cap = (ln: number | string, k: number): CaptionGroup => capV5(ln, k);
+/** THE FRAME OF A WORD (captions.ts capWord()) */
+export const capWord = (ln: number | string, word: string): CaptionGroup => capWordV5(ln, word);
+
 /** the line spoken at frame f (or null in a pause) */
 export const lineAt = (f: number) => LINES.find((l) => f >= l.from && f <= l.to) ?? null;
 /** the number of the line that frame f belongs to as PICTURE: the last line whose silent beat has started */

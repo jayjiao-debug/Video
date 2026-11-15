@@ -9,8 +9,11 @@
 //          chimney, a plank door (facing the garden, south) and a little leaded window;
 //   EAST   a brick garden wall with a stone coping (trees beyond); SOUTH another, with a gate.
 //   Raked gravel walks round two lawn beds edged with low box hedges and clipped cones; a cross walk from his staircase
-//   door to the east walk; a sundial on a stone pillar in the south bed.
+//   door to the east walk; THE SUNDIAL on a stone pillar on a square of flags at the END OF HIS WALK: on the east walk's
+//   centre line 1.4 m south of the crossing (camplan C.md staging change 1, director note 3, OVERVIEW: moved there from
+//   the south bed for match ③, the plate -> the dial; it touches F's night walk, which turns north at the crossing).
 import { ISLAND, V, EYE, eyeCam, type Stand, type Cam } from "./base";
+import { N_EYE } from "../people";
 
 export const GDX = ISLAND.garden;
 const EW = 3.6, WW = -5.2, NW = -10.0, SW = 6.6, XW = -3.0;           // the walks' centre lines (east, west, north, south, cross)
@@ -19,7 +22,12 @@ export const GARDEN_SET = {
   /** the walks: centre lines and width (gravel, raked along their length) */ walks: { east: EW, west: WW, north: NW, south: SW, cross: XW, w: 1.6 },
   /** the two lawn beds (x0, x1, z0, z1), edged with box (height, thickness), clipped cones at the corners */
   beds: [[-4.4, 2.8, -9.2, -3.8], [-4.4, 2.8, -2.2, 5.8]] as [number, number, number, number][], box: { h: 0.42, t: 0.34 }, cone: { h: 1.05, r: 0.34 },
-  /** the sundial in the south bed (its pillar's foot) */ sundial: { x: -0.8, z: 1.8 },
+  /** THE SUNDIAL (C.md staging change 1, 14 Nov): on the east walk's centre line, 1.4 m south of the crossing (x EW,
+   *  z XW + 1.4), its pillar's foot; the bronze dial r 0.26 (0.52 m across: the plate's size from C's dial view), its
+   *  top at y `top`; the gnomon x1.5 of the old one (0.15 m tall, 0.21 m long); hour lines; a square of stone flags
+   *  `flags` m on a side under it. Nobody walks there: C's walk stops at the crossing, his run goes west, F's night path
+   *  turns north at the crossing (1.4 m clear); a camera south of the crossing keeps 0.3 m off it */
+  sundial: { x: EW, z: XW + 1.4, dialR: 0.26, top: 1.03, gnomon: { h: 0.15, len: 0.21 }, flags: 1.2 },
   /** THE RANGE: its front's x, height to the parapet, the floor heights; its staircase door (z middle, width, height,
    *  arch rise); HIS WINDOW (first floor: z middle, width, sill, head, lights); the other windows' z middles */
   range: { x: -6.0, h: 8.6, floor1: 3.4, door: { z: XW, w: 1.1, h: 2.35, arch: 0.35 }, his: { z: -4.6, w: 1.5, y0: 4.15, y1: 5.75, lights: 3 },
@@ -32,6 +40,11 @@ export const GARDEN_SET = {
    *  head), the chimney (x, z, width, top) */
   elab: { x0: 0.6, x1: 4.6, z0: -14.25, z1: -11.0, eaveBack: 3.5, eaveFront: 2.45, door: { x: 2.2, w: 0.9, h: 1.95 }, win: { x: 3.75, w: 0.5, y0: 1.0, y1: 1.55 }, chimney: { x: 1.15, z: -13.4, w: 0.62, top: 5.4 } },
   /** the garden walls: height, coping */ wall: { h: 2.8, cope: 0.16 },
+  /** 大哥's PLINTH (owner pick 15 Nov, the film's one cameo: "garden statue"): a stone pedestal against the east wall's
+   *  face, 7.5 m up the east walk (z), so in C's dial wide he stands to the right of Newton's walk and Newton passes him
+   *  as he comes down it; the dial view's push leaves him behind. Its middle (x from GDX), width along the wall (w),
+   *  depth out from it (d), top (h). Shown only by the set param plinth (C) */
+  plinth: { x: 5.6 - 0.3, z: -7.5, w: 0.62, d: 0.56, h: 0.55 },
   /** the sun at noon and the moon at night (directions TOWARD them) */ sun: [-0.45, 0.78, 0.45] as [number, number, number], moon: [0.42, 0.62, 0.66] as [number, number, number],
 };
 const G = GARDEN_SET, E = G.elab;
@@ -47,11 +60,15 @@ export const GARDEN = {
   /** his run (C19-20): from the crossing west along the cross walk to his door */ runFrom: V(GDX + EW, 0, XW), runTo: V(GDX + G.range.x + 0.45, 0, XW),
   /** THE NIGHT WALK (F): his door -> along the cross walk -> up the east walk -> the elaboratory's door */
   night: [V(GDX + G.range.x + 0.45, 0, XW), V(GDX + EW, 0, XW), V(GDX + EW, 0, NW), V(GDX + E.door.x, 0, NW + 0.1), V(GDX + E.door.x, 0, E.z1 + 0.55)],
-  /** the sundial's pillar (its foot) */ sundial: V(GDX + G.sundial.x, 0, G.sundial.z),
+  /** the sundial's pillar (its foot, on the east walk 1.4 m south of the crossing) and the centre of its dial's face */
+  sundial: V(GDX + G.sundial.x, 0, G.sundial.z), dial: V(GDX + G.sundial.x, G.sundial.top, G.sundial.z),
+  /** where 大哥 stands on his plinth (its top's middle: at.y = the plinth's top) */
+  dage: V(GDX + G.plinth.x, G.plinth.h, G.plinth.z),
 };
-/** the look height, at a figure's floor point (x, z), that puts NEWTON's eyes (1.14 m over his floor) in the frame's
+/** the look height, at a figure's floor point (x, z), that puts NEWTON's eyes (N_EYE over his floor: people.ts, 1.14 x
+ *  his scale, gate 1 director note 1) in the frame's
  *  upper third (layout.ts SCREEN.eyes) when her eyes stand at (cx, cz), `eye` over the same floor */
-const third = (cx: number, cz: number, x: number, z: number, eye = EYE) => { const d = Math.hypot(x - cx, z - cz); return eye - d * Math.tan(Math.atan((eye - 1.14) / d) + 0.197); };
+const third = (cx: number, cz: number, x: number, z: number, eye = EYE) => { const d = Math.hypot(x - cx, z - cz); return eye - d * Math.tan(Math.atan((eye - N_EYE) / d) + 0.197); };
 /** NAMED CAMERAS (her eyes, EYE over the gravel) */
 export const GARDEN_CAMS: Record<"walk" | "turn" | "stairDoor" | "follow" | "elab" | "window" | "wide", Cam> = {
   /** C16-18: walking backwards in front of him down the east walk (the elaboratory and the chapel behind him) */

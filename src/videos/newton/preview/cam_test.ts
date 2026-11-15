@@ -130,7 +130,7 @@ if (typeof window !== "undefined") preview({ w: 540, h: 960 }, (c) => {
     const s = T.run(w, T.cam, f);
     w.endFrame({ camera: T.cam });
     guide.visible = o.guides !== false;
-    if (guide.visible) { place(band, T.cam, SCREEN.capTop, SCREEN.capBottom); place(line, T.cam, 1189, 1191); }
+    if (guide.visible) { place(band, T.cam, SCREEN.capTop, SCREEN.capBottom); place(line, T.cam, SCREEN.mic - 1, SCREEN.mic + 1); }
     const nt = [NEWTON, NEWTON_INK, NEWTON_GOWN_INK].map((p) => w.actor(p)).find((r) => r.state.visible !== false && r.group.visible);
     const hp = nt ? headPx(w, nt) : null;
     console.log(`QA: test ${i} ${T.name} f${f} | ${s}${hp ? ` | his head ${hp.x.toFixed(0)}/${hp.y.toFixed(0)} r ${hp.r.toFixed(0)}` : ""}`);

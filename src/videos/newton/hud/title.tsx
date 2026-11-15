@@ -1,13 +1,22 @@
-// hud/title.tsx: THE TITLE BLOCK of the Newton film (PLAN.md sections 5 and 7 A2; WP4). A pure function of the frame.
-//   <TitleCard f />            over beats.ts TITLE_SPAN (on the shut door after A02, 3 s; never on frame 0)
+// hud/title.tsx: THE OLD TITLE BLOCK of 《采访牛顿的一天》 (formerly 《跟着牛顿过一天》; PLAN.md sections 5 and 7 A2; WP4). NO LONGER
+// MOUNTED: skin A's <MsTitle> (hud/ms/title.tsx) draws the title; the faces checker still imports its boxes. A pure
+// function of the frame.
+//   <TitleCard f />            over beats.ts TITLE_SPAN (the lines file's title_span_s: f184-233 since 14 Nov night, the
+//                              title's real window from the slam's thud; never on frame 0)
 //   <TitleCard f at={{ x, y, scale, rot }} />   placed by the caller (any field left out comes from setTitlePlace /
 //                              the default); `span={[a, b]}` draws it over another span (previews)
 //   setTitlePlace(p)           where the block sits: a TitlePlace, or a function of the frame (to follow the door while
 //                              the camera settles). The SEGMENT BUILDER calls it once at module scope (segA.ts), e.g.
-//                              setTitlePlace({ x: 540, y: 880, scale: 0.95 }). Default: the frame's centre (540, 960).
-// The look: a title page painted on dark oak: 「跟着牛顿过一天」 large (96 px), a thin ivory double rule with a lozenge,
-// 「1686年5月 · 剑桥三一学院」 small (40 px) and "A Day with Newton · May 1686, Trinity College, Cambridge" smaller
-// (24 px) under it; ivory paint (a soft gradient, a thin dark edge, a hair of roughening so it reads painted, not
+//                              setTitlePlace({ x: 540, y: 940, scale: 0.95 }). Default: the frame's centre (540, 960).
+// NOT MOUNTED (skin A's hud/ms MsTitle draws the title). On the 9:15 frame of 14 Nov the plans put it on the shut door's
+// upper panel (camplan A.md: its anchor about y 368, the block about y 260-480; + 60 on today's 9:16 frame, 1080 x 1920);
+// segA would place it with Pose.title (the door's point through cam.ts toScreen, in 1920-frame px). Its whole width
+// (about 830 px at scale 1) stays inside x 110-970 (hud/style.ts FRAME).
+// The look: a title page painted on dark oak: the title (story.ts TITLE: 「采访牛顿的一天」) large (96 px), a thin ivory double
+// rule with a lozenge, the subtitle row (empty since the date and place moved to Newton's intro card; it was
+// 「1686年5月 · 剑桥三一学院」 small (40 px) and "May 1686, Trinity College, Cambridge") with the English title smaller
+// (24 px) under it (DECISION 3, script v5's default: that English line is OFF, story.ts TITLE_EN_ON_SCREEN; the block
+// is then the title, the rule and the Chinese line); ivory paint (a soft gradient, a thin dark edge, a hair of roughening so it reads painted, not
 // typed) with a warm dark shadow on the wood. English version (lang en): the English title large, the Chinese small.
 // Motion: it DROPS IN onto the door (falls 46 px and scales from 1.07 over 10 frames, its shadow tightening from a
 // lifted blur to a contact shadow), settles with one 4 px bounce, the rule grows from the lozenge, the small lines fade
@@ -16,7 +25,7 @@
 import React from "react";
 import { AbsoluteFill } from "remotion";
 import { useOverlayFont } from "../../group/kit/overlay";
-import { clamp01, easeInCubic, easeOutCubic } from "../story";
+import { W, H, TITLE_EN_ON_SCREEN, clamp01, easeInCubic, easeOutCubic } from "../story";
 import { TITLE_SPAN } from "../beats";
 import { EN, TXT } from "../lang";
 import { FONT_STACK, HC, textW, type Rect } from "./style";
@@ -24,7 +33,7 @@ import { FONT_STACK, HC, textW, type Rect } from "./style";
 /** where the block sits: its centre (px), scale and turn (deg) */
 export type TitlePlace = { x: number; y: number; scale?: number; rot?: number };
 /** the default: the frame's centre */
-export const TITLE_HOME: Required<TitlePlace> = { x: 540, y: 960, scale: 1, rot: 0 };
+export const TITLE_HOME: Required<TitlePlace> = { x: W / 2, y: H / 2, scale: 1, rot: 0 };
 let PLACE: TitlePlace | ((f: number) => TitlePlace) = TITLE_HOME;
 /** set where the title block sits (once, at module scope: a constant or a function of the frame, nothing stateful) */
 export const setTitlePlace = (p: TitlePlace | ((f: number) => TitlePlace)) => { PLACE = p; };
@@ -36,11 +45,12 @@ const placeAt = (f: number, at?: Partial<TitlePlace>): Required<TitlePlace> => {
 // ---------------------------------------------------------------------------------------------------- the words
 const MAIN = EN ? TXT.titleEn : TXT.titleZh;
 const SUB = EN ? TXT.subtitleEn : TXT.subtitleZh;
-const SMALL = EN ? `${TXT.titleZh} · ${TXT.subtitleZh}` : `${TXT.titleEn} · ${TXT.subtitleEn.replace(" · ", ", ")}`;
+/** the small third row: the other language (lang en: the Chinese; lang zh: the English, only if TITLE_EN_ON_SCREEN) */
+const SMALL = EN ? `${TXT.titleZh} · ${TXT.subtitleZh}` : TITLE_EN_ON_SCREEN ? `${TXT.titleEn} · ${TXT.subtitleEn.replace(" · ", ", ")}` : "";
 const MAIN_LS = EN ? 3 : 8, SUB_LS = EN ? 1 : 4, SMALL_LS = EN ? 2 : 1.5;
 const MAIN_PX = Math.min(EN ? 104 : 96, Math.floor((820 - MAIN_LS * ([...MAIN].length - 1)) / textW(MAIN, 1, 0)));
 const SUB_PX = Math.min(40, Math.floor(700 / textW(SUB, 1, 0)));
-const SMALL_PX = Math.min(24, Math.floor(820 / textW(SMALL, 1, 0)));
+const SMALL_PX = SMALL ? Math.min(24, Math.floor(820 / textW(SMALL, 1, 0))) : 0;
 /** the rows' centres relative to the block's centre */
 const Y_MAIN = -66, Y_RULE = -6, Y_SUB = 40, Y_SMALL = 90;
 const BLOCK_W = Math.max(textW(MAIN, MAIN_PX, MAIN_LS), textW(SUB, SUB_PX, SUB_LS), textW(SMALL, SMALL_PX, SMALL_LS));
@@ -48,7 +58,7 @@ const RULE_W = Math.round(Math.min(BLOCK_W, 470));
 
 /** the box the block takes at a place (its shadow and the drop's last frames included) */
 export const titleRect = (p: TitlePlace): Rect => {
-  const s = p.scale ?? 1, hw = (BLOCK_W / 2 + 24) * s, top = (-Y_MAIN + MAIN_PX / 2 + 50) * s, bot = (Y_SMALL + SMALL_PX / 2 + 24) * s;
+  const s = p.scale ?? 1, hw = (BLOCK_W / 2 + 24) * s, top = (-Y_MAIN + MAIN_PX / 2 + 50) * s, bot = ((SMALL ? Y_SMALL + SMALL_PX / 2 : Y_SUB + SUB_PX / 2) + 24) * s;
   const r = Math.abs(((p.rot ?? 0) * Math.PI) / 180), grow = Math.sin(r) * hw;
   return { x0: Math.floor(p.x - hw - grow * 0.2), y0: Math.floor(p.y - top - grow), x1: Math.ceil(p.x + hw + grow * 0.2), y1: Math.ceil(p.y + bot + grow) };
 };
@@ -88,7 +98,7 @@ export const TitleCard: React.FC<{ f: number; at?: Partial<TitlePlace>; span?: [
   const hw = RULE_W / 2;
   return (
     <AbsoluteFill style={{ pointerEvents: "none", opacity: op }}>
-      <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
+      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
         <defs>
           <linearGradient id={`${ID}iv`} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stopColor={HC.ivoryHi} />
@@ -112,7 +122,7 @@ export const TitleCard: React.FC<{ f: number; at?: Partial<TitlePlace>; span?: [
               </g>
             ) : null}
             {subO > 0 ? paint("sub", SUB, Y_SUB, SUB_PX, SUB_LS, 2.6, `url(#${ID}iv)`, subO) : null}
-            {smallO > 0 ? paint("small", SMALL, Y_SMALL, SMALL_PX, SMALL_LS, 2, HC.ivory, 0.9 * smallO) : null}
+            {SMALL && smallO > 0 ? paint("small", SMALL, Y_SMALL, SMALL_PX, SMALL_LS, 2, HC.ivory, 0.9 * smallO) : null}
           </g>
         </g>
       </svg>

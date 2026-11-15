@@ -1,7 +1,8 @@
 // Harness smoke test (no World, no input props; WP1, a copy of Qin's): a ground, a board with the title drawn in the
 // film's font, the sun and the two figures of the stand-in cast (shots/common.ts STAND_IN: NEWTON and HUMPHREY once
 // people.ts exports them) under the room's figure light. If this renders, the harness, the font and the cast work. It
-// also prints the beat table's check (beats.ts beatCheck(): "QA: BEATS ok" or one line per problem).
+// also prints the beat table's check (beats.ts beatCheck(): "QA: BEATS ok" or one line per problem) and skin A's
+// three voice gaps (hud/ms/when.ts gapLines(): "QA: MS gap G1 in" / "... pending", a note, never an error).
 //   bash scripts/kit/queue/still.sh src/videos/newton/preview/smoke.ts /home/user/newton_work/film/<lane>/smoke.png --size 540x960
 import * as THREE from "three";
 import { preview } from "./common";
@@ -13,10 +14,13 @@ import { addPerson } from "../people";
 import { STAND_IN } from "../shots/common";
 import { beatCheck } from "../beats";
 import { TITLE } from "../story";
+import { gapLines } from "../hud/ms/when";
 
 preview({ w: 540, h: 960 }, (c) => {
   const bad = beatCheck();
   console.log(bad.length ? bad.map((m) => `QA: BEATS ${m}`).join("\n") : "QA: BEATS ok (beatCheck() = [])");
+  // skin A's three voice gaps (hud/ms/when.ts): "QA: MS gap Gn pending" is a NOTE, never an error
+  console.log(gapLines().join("\n"));
   const M = c.mats();
   const ground = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), M.paint({ color: "#6b5a48" }));
   ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; c.scene.add(ground);

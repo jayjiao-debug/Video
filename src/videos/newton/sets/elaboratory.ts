@@ -58,15 +58,15 @@ const ceilAt = (z: number) => CB + ((CF - CB) * (z - Z0)) / (Z1 - Z0);
 /** the brick floor in basket weave: pairs of bricks turning by squares, sooty and ashy toward the furnace (left) */
 const floorTex = () => paint(512, 512, (g, Wd, H) => {
   const r = rng(601), n = 4, s = Wd / n;
-  g.fillStyle = "#4e3c34"; g.fillRect(0, 0, Wd, H);
+  g.fillStyle = "#6c5446"; g.fillRect(0, 0, Wd, H);                                    // QUIET: soft joints, close tones
   for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
     const across = (i + j) % 2 === 0;
     for (let k = 0; k < 2; k++) {
-      g.fillStyle = css(mix("#8e6450", r() < 0.5 ? "#6a4a3c" : "#a8826a", 0.25 + 0.5 * r()));
+      g.fillStyle = css(mix("#8e6450", r() < 0.5 ? "#76564a" : "#9e7862", 0.2 + 0.35 * r()));
       if (across) g.fillRect(i * s + 3, j * s + k * (s / 2) + 3, s - 6, s / 2 - 6); else g.fillRect(i * s + k * (s / 2) + 3, j * s + 3, s / 2 - 6, s - 6);
     }
   }
-  for (let i = 0; i < 30; i++) blotch(g, Wd * r(), H * r(), Wd * (0.04 + 0.08 * r()), r() < 0.6 ? "#3a2a24" : "#8a7a6a", 0.22);
+  for (let i = 0; i < 30; i++) blotch(g, Wd * r(), H * r(), Wd * (0.04 + 0.08 * r()), r() < 0.6 ? "#3a2a24" : "#8a7a6a", 0.14);
 }, true);
 /** the mouldy old book's open pages: close old type, a woodcut figure, green-grey mould creeping in from the edges */
 const bookTex = () => paint(512, 340, (g, Wd, H) => {
@@ -267,7 +267,9 @@ export function buildElaboratory(K: Kit) {
     P.add(Mk.flat("#d8c8a0", 0.9), boxG(bxm - B.d / 2, bxm + B.d / 2, by + 0.015, by + 0.06, bzm - B.w / 2, bzm + B.w / 2), 0.004);
     P.into(group, "elab.bench", { cast: true });
     const spread = new THREE.PlaneGeometry(B.w, B.d, 16, 1), sp = spread.attributes.position as THREE.BufferAttribute;
-    for (let i = 0; i < sp.count; i++) { const u = sp.getX(i) / (B.w / 2); sp.setZ(i, 0.018 * (1 - Math.abs(u)) ** 0.5 * Math.min(1, Math.abs(u) * 6)); }
+    // u is clamped to -1..1: the float32 x of the edge vertices (0.28000000119) gives |u| a hair over 1, and (1 - |u|) ** 0.5
+    // was NaN on the 4 edge vertices (12 NaN coordinates after the turns: computeBoundingSphere's dump, gate-5 note F5)
+    for (let i = 0; i < sp.count; i++) { const u = Math.max(-1, Math.min(1, sp.getX(i) / (B.w / 2))); sp.setZ(i, 0.018 * (1 - Math.abs(u)) ** 0.5 * Math.min(1, Math.abs(u) * 6)); }
     spread.computeVertexNormals();
     Mk.mesh("elab.book.pages", spread.rotateX(-Math.PI / 2).rotateY(Math.PI / 2).translate(bxm, by + 0.061, bzm), Mk.tex(bookTex(), 0.9), { cast: false });
     // loose papers by the book

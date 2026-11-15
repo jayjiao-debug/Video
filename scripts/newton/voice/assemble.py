@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""《跟着牛顿过一天》 (copied from the Qin film): lays the voice farm's per-line clips onto the film timeline and writes the voice track and its timing.
+"""《采访牛顿的一天》 (formerly 《跟着牛顿过一天》) (copied from the Qin film): lays the voice farm's per-line clips onto the film timeline and writes the voice track and its timing.
 
   assemble.py <lines_dir> <out_dir> [cuts.json ...]
                                         lines_dir holds <id>.wav (one per line, 48 kHz mono, silence trimmed), cut from the
                                         voice farm's dialogue generations (one generation per scene = consistent voices)
+  assemble.py                           NEWTON v5: the run of record, from the lines file's "voice" block (lines_dir, cuts,
+                                        out): /home/user/newton_work/film/voice/v5/lines -> /home/user/newton_work/film/voice
 Reads scripts/newton/voice/newton_lines.json: per line "pre" (silent seconds before it, for action), "after" (hold after it),
 "silent" (seconds: the line keeps a span of that length on the timeline but has no voice and no caption),
 plus "gap" (seconds between two lines), "lead" (silence before the first line), "trim" ({id: keep only the first N s}).
@@ -11,7 +13,20 @@ Writes <out_dir>/voice_timing.json (the format scripts/newton/gen_timing.py read
 frames) and <out_dir>/voice_48k.wav (the whole dialogue track). No media goes into the repo.
 Each cuts.json (scripts/newton/voice/cut_lines.py's line_cuts.json; a later file wins for the same line) gives the
 character alignment of every line, written into the timing as "words" (character times, offset so the first voiced
-character starts 0.05 s into the clip) so the captions follow the speech."""
+character starts 0.05 s into the clip) so the captions follow the speech.
+NEWTON v5: a line's "gain_db" in the lines file pins its gain (v5 keeps every v4 take's gain, so the voice sits where
+REMIX_v3 measured it); a line without one is brought toward "level_target_db" (the v4 median) when the lines file has
+it, else toward the median of this run, as before. "swap" (the F16 swap point, swap_take.py) is checked: the line must
+show the swap entry's words and its clip must be the entry's length (and no longer than its "max_s"), else nothing is
+written.
+NEWTON v5 review (14 Nov): THE CLIP GAIN of the hot syllables. The lines file's voice.clip_gain names a JSON file
+(scripts/newton/voice/clip_gain_v5.json, written by hot_syllables.py) of {"lines": {id: [span, ...]}, "lift_db": {id: dB}}:
+a span is [t0, t1, [dB, ...]] (a curve: values evenly from t0 to t1, straight lines in dB between them; hot_syllables.py's
+start and end at 0 dB) or [t0, t1, dB] (flat, CG_RAMP s raised-cosine ramps outside it), in the line's own clip seconds, so
+it moves with the line; the rest of the clip is untouched, sample for sample. "lift_db" is added to a line's pinned gain
+(the line whose loudest word was pulled down, so it keeps 10 LU over the bed), the -1 dBFS cap reading the clip-gained
+peak. It keeps the voice's loudest syllables under the sound mix's bus limiter (master +6.2 dB, ceiling -1.8 dBTP), so the
+limiter never acts on the voice. voice_timing.json lists each line's spans ("clip_gain": film seconds and the deepest dB)."""
 import json, os, subprocess, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 FPS, SR, TAIL_S = 30, 48000, 0.8
@@ -53,23 +68,88 @@ def level_db(src):
     return float(20 * np.log10(np.sqrt((act ** 2).mean()) + 1e-12)), float(20 * np.log10(np.abs(x).max() + 1e-12))
 
 LEVEL_SPAN = 6.0   # NEWTON: each line is brought toward the median speech level, at most this many dB either way
+CG_RAMP = 0.010    # NEWTON v5: the clip gain's ramps, s (outside each span)
 
-def main(lines_dir, out_dir, cut_files=()):
+def clip_gain_env(n, spans):
+    """NEWTON v5: the gain (linear, one per sample) of a clip n samples long under its clip-gain spans: [t0, t1, dB] a flat
+    span (raised-cosine ramps of CG_RAMP s outside it), [t0, t1, [dB, ...]] a curve (values evenly from t0 to t1, straight
+    lines in dB between them, 1 outside: hot_syllables.py's curves start and end at 0 dB); the lowest gain wins where spans
+    meet"""
+    import numpy as np
+    g = np.ones(n, np.float64); r = int(round(CG_RAMP * SR))
+    for t0, t1, db in spans:
+        if isinstance(db, list):
+            a, b = max(0, int(round(t0 * SR))), min(n, int(round(t1 * SR)) + 1)
+            if b <= a: continue
+            xs = np.linspace(t0, t1, len(db)); ts = np.arange(a, b) / SR
+            g[a:b] = np.minimum(g[a:b], 10 ** (np.minimum(0.0, np.interp(ts, xs, np.asarray(db, float))) / 20))
+            continue
+        k = 10 ** (min(0.0, float(db)) / 20)
+        a, b = max(0, int(round(t0 * SR))), min(n, int(round(t1 * SR)))
+        if b <= a: continue
+        seg = np.full(b - a, k)
+        g[a:b] = np.minimum(g[a:b], seg)
+        if r:
+            w = 0.5 - 0.5 * np.cos(np.linspace(0, np.pi, r + 2)[1:-1])      # 0 -> 1, open at both ends
+            lo = max(0, a - r); up = 1 - (1 - k) * w[r - (a - lo):]          # into the span
+            g[lo:a] = np.minimum(g[lo:a], up)
+            hi = min(n, b + r); dn = 1 - (1 - k) * w[::-1][: hi - b]          # out of it
+            g[b:hi] = np.minimum(g[b:hi], dn)
+    return g
+
+def apply_clip_gain(src, spans, tmp_dir, lid):
+    """NEWTON v5: writes the clip with its clip gain applied (32-bit float wav, so the untouched samples stay exact) and
+    returns its path"""
+    import numpy as np
+    raw = subprocess.check_output(["ffmpeg", "-v", "error", "-i", src, "-ac", "1", "-ar", str(SR), "-f", "f32le", "-"])
+    x = np.frombuffer(raw, np.float32).astype(np.float64)
+    y = (x * clip_gain_env(len(x), spans)).astype(np.float32)
+    out = os.path.join(tmp_dir, lid + ".wav")
+    subprocess.run(["ffmpeg", "-y", "-v", "error", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-", "-c:a", "pcm_f32le", out],
+                   input=y.tobytes(), check=True)
+    return out
+
+def main(lines_dir, out_dir, cut_files=(), clip_gain=True):
     cuts = {}
     for cf in cut_files:
         for c in json.load(open(cf)): cuts[c["id"]] = c
     spec = json.load(open(os.path.join(ROOT, "scripts/newton/voice/newton_lines.json")))
     gap, lead, trim = spec.get("gap", 0.18), spec.get("lead", 0.1), spec.get("trim", {})
+    byid = {l["id"]: l for l in spec["lines"]}
+    for sid, sw in spec.get("swap", {}).items():   # NEWTON v5: the swap point must agree with its line and its clip
+        l = byid.get(sid) or sys.exit(f"assemble: swap names line {sid}, which is not in the lines file")
+        for k in ("zh", "en", "tts", "screens"):
+            if l.get(k) != sw.get(k): sys.exit(f"assemble: line {sid}'s {k} is not the swap entry's ({sw.get('take')}): run swap_take.py")
+        d = dur(os.path.join(lines_dir, sid + ".wav"))
+        if abs(d - float(sw["len_s"])) > 0.002: sys.exit(f"assemble: {sid}.wav is {d:.3f} s, the swap entry ({sw.get('take')}) says {sw['len_s']} s: run swap_take.py")
+        if sw.get("max_s") and d > float(sw["max_s"]) + 1e-6:
+            sys.exit(f"assemble: {sid}.wav is {d:.3f} s, longer than the swap entry's max_s {sw['max_s']} s (two voices in one clip? swap_take.py cuts the line out of a dialogue render)")
+    cg_file = spec.get("voice", {}).get("clip_gain")   # NEWTON v5: the hot syllables' clip gain
+    cg = json.load(open(cg_file)) if clip_gain and cg_file and os.path.exists(cg_file) else {}
+    cgain, lift = cg.get("lines", {}), cg.get("lift_db", {})
+    for k in list(cgain) + list(lift):
+        if k not in byid: sys.exit(f"assemble: {cg_file} names line {k}, which is not in the lines file")
     os.makedirs(out_dir, exist_ok=True)
     t, lines, parts = lead, [], []
-    lv = {}
+    import tempfile
+    tmp_dir = tempfile.mkdtemp(prefix="cg_", dir=out_dir)
+    lv, cg_src = {}, {}
     for l in spec["lines"]:
         src = os.path.join(lines_dir, l["id"] + ".wav")
-        if not l.get("silent") and os.path.exists(src): lv[l["id"]] = level_db(src)
+        if not l.get("silent") and os.path.exists(src):
+            lv[l["id"]] = level_db(src)
+            if cgain.get(l["id"]):   # NEWTON v5: the clip with its clip gain; the -1 dBFS cap below reads its peak
+                d0 = dur(src)
+                for t0, t1, _ in cgain[l["id"]]:
+                    if not (0 <= t0 < t1 <= d0 + 1e-3): sys.exit(f"assemble: {l['id']}'s clip gain span {t0}-{t1} s is outside its {d0:.3f} s clip")
+                cg_src[l["id"]] = apply_clip_gain(src, cgain[l["id"]], tmp_dir, l["id"])
+                lv[l["id"]] = (lv[l["id"]][0], level_db(cg_src[l["id"]])[1])
     import statistics
-    target = statistics.median(v[0] for v in lv.values()) if lv else 0.0
+    target = spec["level_target_db"] if "level_target_db" in spec else (statistics.median(v[0] for v in lv.values()) if lv else 0.0)
     gains = {}
     for k, (rms, pk) in lv.items():
+        if byid[k].get("gain_db") is not None:   # NEWTON v5: pinned (the v4 take's own gain; + its lift, hot_syllables.py)
+            gains[k] = round(min(float(byid[k]["gain_db"]) + float(lift.get(k, 0)), -1.0 - pk), 2); continue
         g = max(-LEVEL_SPAN, min(LEVEL_SPAN, target - rms))
         gains[k] = round(min(g, -1.0 - pk), 2)   # never past -1 dBFS peak
     for i, l in enumerate(spec["lines"]):
@@ -83,23 +163,28 @@ def main(lines_dir, out_dir, cut_files=()):
         if silent: rec["silent"] = True
         w = None if silent else words_for(cuts.get(l["id"]), t, t + d, l["who"])
         if w: rec["words"] = w
+        if not silent and l["id"] in cg_src:         # NEWTON v5: the clip gain (its spans in film seconds, for the mix)
+            rec["clip_gain"] = [[round(t + t0, 3), round(t + t1, 3), round(min(db) if isinstance(db, list) else db, 1)] for t0, t1, db in cgain[l["id"]]]
+            if lift.get(l["id"]): rec["lift_db"] = lift[l["id"]]
+            src = cg_src[l["id"]]
         lines.append(rec)
-        if not silent: parts.append((src, t, d))
+        if not silent: parts.append((src, t, d, l["id"]))
         t += d + l.get("after", 0)
     speech_end = lines[-1]["end"]
     total = t + TAIL_S
     frames = int(round(total * FPS))
     # mix: each clip delayed to its start (adelay), summed; exact length = frames / FPS
     args = ["ffmpeg", "-y", "-v", "error"]
-    for src, _, _ in parts: args += ["-i", src]
+    for src, _, _, _ in parts: args += ["-i", src]
     flt = []
-    for k, (src, st, d) in enumerate(parts):
+    for k, (src, st, d, lid) in enumerate(parts):
         ms = int(round(st * 1000))
-        g = gains.get(os.path.basename(src)[:-4], 0.0)
+        g = gains.get(lid, 0.0)
         flt.append(f"[{k}:a]atrim=0:{d:.3f},asetpts=PTS-STARTPTS,aresample={SR},volume={g}dB,adelay={ms}|{ms}[a{k}]")
     flt.append("".join(f"[a{k}]" for k in range(len(parts))) + f"amix=inputs={len(parts)}:normalize=0:dropout_transition=0,apad,atrim=0:{frames / FPS:.4f}[out]")
     args += ["-filter_complex", ";".join(flt), "-map", "[out]", "-ac", "1", "-ar", str(SR), os.path.join(out_dir, "voice_48k.wav")]
     subprocess.run(args, check=True)
+    import shutil; shutil.rmtree(tmp_dir, ignore_errors=True)
     for rec in lines:
         if rec["id"] in gains: rec["gain_db"] = gains[rec["id"]]
     json.dump({"lines": lines, "speech_end": speech_end, "frames": frames, "tail_f": frames - int(round(speech_end * FPS))},
@@ -107,4 +192,8 @@ def main(lines_dir, out_dir, cut_files=()):
     print(f"{len(lines)} lines, speech end {speech_end:.2f} s, film {frames} frames = {frames / FPS:.2f} s")
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2], sys.argv[3:])
+    if len(sys.argv) == 1:   # NEWTON v5: the lines file's "voice" block
+        vb = json.load(open(os.path.join(ROOT, "scripts/newton/voice/newton_lines.json")))["voice"]
+        main(vb["lines_dir"], vb["out"], vb.get("cuts", []))
+    else:
+        main(sys.argv[1], sys.argv[2], sys.argv[3:])

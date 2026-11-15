@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Writes src/videos/newton/voice.ts and captions.ts from the dialogue's line timing (《跟着牛顿过一天》, 55 lines, scenes A-G).
+"""Writes src/videos/newton/voice.ts and captions.ts from the dialogue's line timing (《采访牛顿的一天》, formerly 《跟着牛顿过一天》; 55 lines, scenes A-G).
 An adapted copy of scripts/qin/gen_timing.py. What is different in this film:
   - three speakers: ji 记者 (the camera: never animated; she speaks CHINESE), nt Newton and hm Humphrey (they speak
     ENGLISH). Every line is a quote of its speaker: QUOTE_RAW has one per line, the words actually said (zh for ji, en
@@ -11,8 +11,14 @@ An adapted copy of scripts/qin/gen_timing.py. What is different in this film:
   - the segments are the scenes A-G of the lines file; a scene OWNS the silent beat ("pre") before its first line;
   - the lines file's "pre" / "after" (silent seconds before / after a line), "card" (zh + en, a fact card after the
     line), "card_hold" (its seconds) and "card_delay" (seconds after the line before it shows) go to voice.ts (LINE_RAW,
-    CARD_RAW); the scenes' "time" / "en" / "place" to SCENE_RAW; the title block (PLAN 5: on the shut door after
-    TITLE_AFTER, TITLE_DELAY s after its last word, for TITLE_HOLD s) to TITLE_RAW. No 时辰 HUD in this film.
+    CARD_RAW); the scenes' "time" / "en" / "place" to SCENE_RAW; the title block to TITLE_RAW: the lines file's
+    "title_span_s" ([from, to] s on the film clock; 14 Nov evening: from the slam's thud at the end of the cold open,
+    EFFECTS_PLAN row 1, gap G1 behind it; it was 0.2-3.2 s over the cold open; 14 Nov night: the title's real window,
+    f184-233, skin A's MsTitle from the thud), else (v4, PLAN 5) on the shut door after
+    TITLE_AFTER, TITLE_DELAY s after its last word, for TITLE_HOLD s. The title's only words are 采访牛顿的一天: the lines
+    file has no "subtitle" (the date and place moved to Newton's intro card), so TITLE_RAW's subtitle fields are empty
+    strings. No 时辰 HUD in this film. The title never shares the screen with a subtitle: a caption's linger ends the
+    frame before TITLE_RAW's first frame (a caption whose own words reach into the title block is a WARNING).
 
   gen_timing.py --placeholder [--json <timing.json>]   a bring-up timing laid out by length: no voice needed
   gen_timing.py <voice_timing.json>                    the real dialogue (/home/user/newton_work/film/voice/voice_timing.json)
@@ -58,7 +64,8 @@ SAY = {}          # placeholder: {id: seconds} how long a line takes when it is 
 LAUGH_LEAD = {"G02": 1.0}   # placeholder: seconds of the non-verbal laugh before the line's first word (PLAN 7 G.2:
                             # "What... use!" goes over the laugh's tail, its subtitle appears mid-laugh)
 WORD_SLACK = 0.15 # real voice: word times may run this far outside their line (then they are clamped into it)
-LINGER = 12       # a caption stays up to this many frames after its last token, or until the next one starts
+LINGER = 12       # a caption stays up to this many frames after its last token, or until the next one starts, and
+                  # never into the title block (it ends the frame before TITLE_RAW's first frame)
 MAXW = 16         # a screen's Chinese: at most this many full-width characters (PLAN 5), else a WARNING
 LEAD_CUT = 2      # a segment whose first line has no "pre" starts this many frames before its first word
 CARD_HOLD = 3.5   # a fact card is shown for the line's "card_hold" s, else its "after" s, else this long
@@ -287,12 +294,22 @@ def finish(caps, lines, rows, total, j):
         prev = rows[first[sc] - 2]
         if seg_from[sc] <= frame(prev["end"]): fail(f"segment {sc} would start on frame {seg_from[sc]}, inside line {prev['id']} (ends {frame(prev['end'])})")
     segs = [(sc, first[sc], last[sc], seg_from[sc], (seg_from[ids[i + 1]] if i + 1 < len(ids) else total) - 1) for i, sc in enumerate(ids)]
+    # the title block first: no caption lingers into it (the owner's rule: the title never shares the screen with a
+    # subtitle)
+    if j.get("title_span_s"):   # v5: the lines file places the title block itself (seconds on the film clock, inclusive)
+        t0, t1 = frame(j["title_span_s"][0]), frame(j["title_span_s"][1]) - 1
+        if t1 < t0: fail(f"title_span_s {j['title_span_s']} is empty")
+    else:
+        ta = next(r for r in rows if r["id"] == TITLE_AFTER)
+        t0 = frame(ta["end"]) + 1 + frame(TITLE_DELAY); t1 = t0 + frame(TITLE_HOLD) - 1
     for i, c in enumerate(caps):
         nx = caps[i + 1] if i + 1 < len(caps) else None
         to = c["end"] + LINGER if nx is None else min(nx["from"] - 1, c["end"] + LINGER)
         if nx is not None and nx["seg"] != c["seg"]: to = min(to, seg_from[nx["seg"]] - 1)    # not across the cut into the next segment
         if nx is None: to = min(to, total - 1)
+        if c["from"] < t0 <= to: to = t0 - 1                                                 # the linger ends before the title's first frame
         c["to"] = max(c["end"], to)
+        if c["from"] <= t1 and c["to"] >= t0: warn.append(f"line {c['id']} screen {c['k']} 「{c['zh']}」 ({c['from']}-{c['to']}) is on screen with the title block ({t0}-{t1})")
     cards = []
     for l, r in zip(lines, rows):
         if not l.get("card"): continue
@@ -301,9 +318,8 @@ def finish(caps, lines, rows, total, j):
         nx = rows[l["n"]] if l["n"] < len(rows) else None
         if nx is not None and to >= frame(nx["start"]): warn.append(f"the card after {l['id']} ({fr}-{to}) runs into line {nx['id']} (starts {frame(nx['start'])})")
         cards.append((l["n"], l["id"], fr, min(to, total - 1), l["card"]["zh"], l["card"]["en"]))
-    ta = next(r for r in rows if r["id"] == TITLE_AFTER)
-    t0 = frame(ta["end"]) + 1 + frame(TITLE_DELAY)
-    title = (t0, t0 + frame(TITLE_HOLD) - 1, j["title"]["zh"], j["title"]["en"], j["subtitle"]["zh"], j["subtitle"]["en"])
+    sub = j.get("subtitle") or {}   # 14 Nov evening: no subtitle row on the title (the date is on Newton's card)
+    title = (t0, t1, j["title"]["zh"], j["title"]["en"], sub.get("zh", ""), sub.get("en", ""))
     if title[0] <= 0: fail("the title block would sit on frame 0")
     for c in cards:
         if c[2] <= title[1] and c[3] >= title[0]: warn.append(f"the title block ({title[0]}-{title[1]}) overlaps the card after {c[1]} ({c[2]}-{c[3]})")
@@ -396,7 +412,8 @@ export const capWord = (line: number | string, word: string): CaptionGroup => {
 '''
 
 
-def write_ts(d, src, lines, rows, end_s, total, segs, caps, quotes, cards, title, scenes, speakers):
+def write_ts(d, src, lines, rows, end_s, total, segs, caps, quotes, cards, title, scenes, speakers, j=None):
+    j = j or {}
     js = lambda v: json.dumps(v, ensure_ascii=False)
     head = f"// GENERATED by scripts/newton/gen_timing.py from {src}: do not edit by hand.\n"
     os.makedirs(d, exist_ok=True)
@@ -431,7 +448,10 @@ def write_ts(d, src, lines, rows, end_s, total, segs, caps, quotes, cards, title
         f.write("export const CARD_RAW: [number, string, number, number, string, string][] = [\n")
         for c in cards: f.write(f"  [{c[0]}, {js(c[1])}, {c[2]}, {c[3]}, {js(c[4])}, {js(c[5])}],\n")
         f.write("];\n")
-        f.write(f"/** the title block (PLAN 5): [first frame, last frame (inclusive), title zh, title en, subtitle zh, subtitle en]: on the\n *  shut door, {TITLE_DELAY} s after the last word of {TITLE_AFTER}, for {TITLE_HOLD} s */\n")
+        where = (f"{j['title_span_s'][0]}-{j['title_span_s'][1]} s on the film clock (the lines file's title_span_s)"
+                 + ("" if j.get("subtitle") else ";\n *  no subtitle row (empty strings): the title's only words are its zh") if j.get("title_span_s")
+                 else f"on the\n *  shut door, {TITLE_DELAY} s after the last word of {TITLE_AFTER}, for {TITLE_HOLD} s")
+        f.write(f"/** the title block (PLAN 5): [first frame, last frame (inclusive), title zh, title en, subtitle zh, subtitle en]: {where} */\n")
         f.write(f"export const TITLE_RAW: [number, number, string, string, string, string] = [{title[0]}, {title[1]}, {js(title[2])}, {js(title[3])}, {js(title[4])}, {js(title[5])}];\n")
         f.write("/** the scenes (the lines file): [id, time of day zh, en, place] */\n")
         f.write("export const SCENE_RAW: [string, string, string, string][] = [\n")
@@ -517,7 +537,7 @@ def main():
     caps, quotes, warn = place(lines, rows, use_words=not a.no_words)
     segs, cards, title, w2 = finish(caps, lines, rows, total, j)
     warn += w2
-    write_ts(a.out, src, lines, rows, end_s, total, segs, caps, quotes, cards, title, scenes, speakers)
+    write_ts(a.out, src, lines, rows, end_s, total, segs, caps, quotes, cards, title, scenes, speakers, j)
     if a.md: write_md(a.md, src, lines, rows, end_s, total, segs, caps, cards, title)
     for c in caps:
         if c["to"] - c["from"] + 1 < 12: warn.append(f"line {c['id']} screen {c['k']} 「{c['zh']}」: on screen for only {c['to'] - c['from'] + 1} frames")

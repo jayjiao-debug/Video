@@ -27,6 +27,7 @@ import type { Mats } from "../../bt/pbr";
 import { makeKit, V, type Kit } from "../../../kit/props/kit";
 import * as T from "./things";
 import type { Hook } from "./things";
+import { inkWorld } from "../sets/parts/common";
 export { PC, PLATE, flyAt, QUILL, INK_BOTTLE, SHEET, DRAFTS, NOTES, BOOK, OLD_BOOK, CANDLE, candleTop, CHAIR, STOOL, SACK, SHOVEL, POKER, BOARD, boardDrawing, CRUCIBLE, FLASK, BELLOWS, MIC, HAND, INK_NEAR } from "./things";
 
 type V3Like = [number, number, number] | THREE.Vector3;
@@ -101,6 +102,7 @@ export type PutOpts = {
   /** sheets, books */ n?: number;
   /** shovel */ load?: boolean;
   /** poker, crucible */ hot?: number;
+  /** board: firelight on its drawn face 0..1 (default 0: the place's light alone; things.ts board) */ warm?: number;
   /** bellows */ open?: number;
   /** hand, handR */ pose?: "grip" | "open";
 };
@@ -155,6 +157,9 @@ const _g = V();
  *  hold keep their places), but these three stay hidden: the handkerchief, the chair, the board and the door's raps
  *  move as if an invisible hand did it (the Qin film's way). */
 export const INVISIBLE: ReadonlySet<PropName> = new Set<PropName>(["mic", "hand", "handR"]);
+/** the desk papers the shots lay down: their solids join the ink pass's world too (sets/parts/common.ts inkWorld; owner
+ *  note 15 Nov), so the desk's and the table's edge lines stop under them instead of running across the sheets */
+const INK_WORLD = new Set<PropName>(["sheets", "drafts", "books"]);
 export function buildProps(M: Mats): Props {
   const group = new THREE.Group(); group.name = "newton-props";
   const K = makeKit(M);
@@ -162,6 +167,7 @@ export function buildProps(M: Mats): Props {
   const make = (name: PropName, key: string): Prop => {
     const g = new THREE.Group(); g.name = key ? `prop.${name}:${key}` : `prop.${name}`; g.visible = false;
     const hook = BUILD[name](K, g) || null, film = PROP_SCALE[name];
+    if (INK_WORLD.has(name)) inkWorld(g);
     group.add(g);
     const prop: Prop = {
       name, group: g,

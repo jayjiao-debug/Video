@@ -7,6 +7,7 @@
 // NEWTON stands behind the lectern facing the benches (facing 0, toward +z). The SOUTH wall is the LEFT one (x0): the
 // sun comes in through its middle window high on the left and lays its patch on the aisle in front of the first rows.
 import { ISLAND, V, EYE, eyeCam, type Stand, type Cam } from "./base";
+import { N_EYE } from "../people";
 
 export const SCX = ISLAND.schools;
 const ROWS = [-3.5, -2.4, -1.3, -0.2, 0.9, 2.0, 3.1, 4.2];
@@ -33,9 +34,10 @@ export const SCHOOLS = {
   /** the sun's patch on the floor (the sunbeam lands here) */ beamFloor: V(SCX + 0.2, 0, -2.9),
   /** where SHE stands to clap (in the aisle by the third row, the lectern ahead) */ clap: V(SCX + 0.15, 0, -0.9),
 };
-/** the look height, at a figure's floor point (x, z), that puts NEWTON's eyes (1.14 m over his floor) in the frame's
+/** the look height, at a figure's floor point (x, z), that puts NEWTON's eyes (N_EYE over his floor: people.ts, 1.14 x
+ *  his scale, gate 1 director note 1) in the frame's
  *  upper third (layout.ts SCREEN.eyes) when her eyes stand at (cx, cz), `eye` over the same floor */
-const third = (cx: number, cz: number, x: number, z: number, eye = EYE) => { const d = Math.hypot(x - cx, z - cz); return eye - d * Math.tan(Math.atan((eye - 1.14) / d) + 0.197); };
+const third = (cx: number, cz: number, x: number, z: number, eye = EYE) => { const d = Math.hypot(x - cx, z - cz); return eye - d * Math.tan(Math.atan((eye - N_EYE) / d) + 0.197); };
 /** NAMED CAMERAS (her eyes, EYE over the boards) */
 export const SCHOOLS_CAMS: Record<"wide" | "door" | "lectern" | "benches" | "beam" | "clap", Cam> = {
   /** D: THE WIDE HOLD from the back by the door: the empty benches, the sunbeam, one man at the lectern */

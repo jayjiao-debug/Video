@@ -1,4 +1,4 @@
-# 《跟着牛顿过一天》 (NewtonFilm): bible, storyboard and build plan
+# 《采访牛顿的一天》 (NewtonFilm; formerly 《跟着牛顿过一天》): bible, storyboard and build plan
 
 An interview that follows Isaac Newton through ONE ordinary working day at Trinity College, Cambridge, in May 1686
 (he is 43 and writing the *Principia*). **The camera IS the interviewer** (记者, a young woman, Lin's voice, NEVER SEEN:
@@ -138,7 +138,7 @@ hand holds it up close); stick of charcoal; crucible(s); glass vessels; bellows;
   - THE TIMES (story.ts `SCENE_CLOCK` / `SCENE_STAMP`; 24-hour, read at a glance). No source gives the hours of one
     day; they are chosen to agree with what the characters say, the light the script asks for and Humphrey Newton's
     account (Keynes MS 135). SOURCED (director vlog round 1, note 5; facts_checked.md rows): only A 05:00 (row 3,
-    "sometimes not till 5 or 6"; card 1) and G 02:00 (G01 「两点了」 and row 3, "2 or 3 of the clock"). B 11:00,
+    "sometimes not till 5 or 6"; card 1) and G 02:00 (G01a 「两点了」 and row 3, "2 or 3 of the clock"). B 11:00,
     D 15:00, E 18:00 and F 23:00 have NO ROW in facts_checked.md, and a quick search (14 Nov) found no primary source:
     neither Trinity's hall dinner / supper hours around 1686 nor a day or hour for the Lucasian lecture (the
     Dictionary of Scientific Biography gives only "at least one lecture a week in every term", and adds "there is no
@@ -153,9 +153,9 @@ hand holds it up close); stick of charcoal; crucible(s); glass vessels; bellows;
     | D | 下午 15:00 · AFTERNOON | the lines file's afternoon; Humphrey records the habit (he read "to the walls", came back in a quarter of the half hour when nobody came), not the hour; mid-afternoon leaves room before supper and suits the slanting sunbeam in the Schools |
     | E | 傍晚 18:00 · SUPPER TIME | the lines file's "supper time" (the college supper of the period, early evening); slanting gold light (sunset about 19:40-20:10 solar); E01 "You haven't had a bite all day!" after a day of plates |
     | F | 夜 23:00 · NIGHT | the blue garden: at Cambridge in late May the sky never gets fully black, at 23:00 it is a deep blue (the script's "blue mid-tone"); F03 "Go to bed"; the fire watch (Humphrey: in spring the fire "scarcely went out", they sat up on alternate nights); leaves "time passes" (candle shorter, fire deep red) room before two |
-    | G | 凌晨 02:00 · SMALL HOURS | the clock strikes two and G01 says 「两点了」; he goes to bed straight after (G03 "Good night", his window goes dark): Humphrey's "2 or 3 of the clock" |
+    | G | 凌晨 02:00 · SMALL HOURS | the clock strikes two and G01a says 「两点了」; he goes to bed straight after (G03 "Good night", his window goes dark): Humphrey's "2 or 3 of the clock" |
   - SOUNDS (`scripts/newton/sound/cues.json`, the Qin film's way): `rec_beep` (the Qin film's 1 kHz beep, voice farm
-    run qin-sfx-01) at scene A from + 0.05 s: audible 0.05-0.11 s, 80 ms before her first word (A01's voice onset at
+    run qin-sfx-01) at scene A from + 0.05 s: audible 0.05-0.11 s, 80 ms before her first word (v4's greeting, cut in v5: its voice onset was
     about 0.19 s; the timing file's line start is 0.10 s) and well before the knock (0.64 s); `sfx_poweroff`
     (synthesised: `make_poweroff.py 0.80 1.07`: the button click on OFF_AT, the power-down sweep from 0.8 s later, on
     the end black, gone with the black's fade, a little static) at G to - 1.4 s. NO beep at the other scene starts: every cut already carries a line's last
@@ -172,7 +172,7 @@ hand holds it up close); stick of charcoal; crucible(s); glass vessels; bellows;
 - FACT CARDS (5): one slot MID-LEFT, ink on a cream paper slip (a slight tilt, torn/deckled edge, soft shadow),
   Chinese large and English small under it, shown only while nobody speaks (timing from the lines file), a short
   slide/flutter in and out. They never sit on a face.
-- TITLE BLOCK: 「跟着牛顿过一天」 large, 「1686年5月 · 剑桥三一学院」 small under it (English small line too), lands ON
+- TITLE BLOCK: 「采访牛顿的一天」 (formerly 「跟着牛顿过一天」) large, 「1686年5月 · 剑桥三一学院」 small under it (English small line too), lands ON
   THE SHUT DOOR after "Good night" (line A02) for 3 s; never on frame 0. It sits on the door's upper panel (segA: world
   y 1.28 m), its top about 140 px under the timestamp's English row at frame 140 (at least 80 px wanted).
 - End: his window goes dark (the last pluck), 0.4 s later her camera switches off (the click: the REC lamp dies, the

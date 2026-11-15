@@ -1,6 +1,8 @@
 # NewtonFilm: the segment builder's contract
 
-《跟着牛顿过一天》 (composition `NewtonFilm`, this folder). 1080 x 1920, 30 fps, `TOTAL` frames from the timing (5258 =
+《采访牛顿的一天》 (formerly 《跟着牛顿过一天》; composition `NewtonFilm`, this folder). 9:16, 1080 x 1920 (Jay, 15 Nov: back to 9:16; it was
+9:15, 1080 x 1800 on 14 Nov; the phone-safe frame: section 10 and `hud/style.ts FRAME`; the lens kept its width of view:
+section 7), 30 fps, `TOTAL` frames from the timing (5258 =
 175.3 s on the placeholder timing; the real voice will change it: never copy a number). The bible and the storyboard
 are `PLAN.md`: read section 7 for your scene, and the script's stage directions
 (`/mnt/project-files/next-video/newton/script_v4/script_v4.md`). The engine is a copy of Qin's (`src/videos/qin/`).
@@ -37,11 +39,12 @@ needs changes. No media in the repo; every picture, log and scratch file goes un
 ```ts
 // shots/segX.ts
 import { SEGMENTS, line, capWord, quote, card, FPS, type Segment } from "../story";
-import { BEAT, placeAt, ASIDES } from "../beats";
+import { BEAT, placeAt, JOINS } from "../beats";
 import * as C from "../cam";                          // a namespace: cam.ts's whip clashes with shots/common.ts whip
 import { NEWTON_INK, NEWTON_HIDE, HUMPHREY, newtonAt, laugh } from "../people";
 import { STAIRS, STAIRS_CAMS, SCREEN } from "../layout";   // layout.ts re-exports every place's marks, cameras, stand-ins
-import { speak, standing, saying, asideK } from "./common";
+import { speak, standing, saying } from "./common";
+import { whisperLean } from "../whisper";            // her asides: THE WHISPER (section 10)
 import { endBlack, setTitlePlace, hudRectsAt } from "../hud";
 
 const S = SEGMENTS[0];                                 // A = 0 ... G = 6
@@ -62,8 +65,8 @@ THE STUBS (`shots/segA.ts` .. `segG.ts`, WP1 + the integration check) render the
 places, the real cast and her mic and hands. Each calls `standIn(w, f, {...})` (section 9): the place of the frame
 (`placeAt`), a camera (`layout.ts STAND[place].cam` = WP2's `<PLACE>_STAND`, or the stub's own), NEWTON in the right
 variant on the place's stand-in mark (HUMPHREY where the scene has him), each speaking only inside his own lines, the
-place's params for the scene, and the mic held toward whoever speaks (round to the lens on the asides, out of the card
-slot under a card: it is lowered out of frame). What each stub already shows (copy what you like, then replace the whole file):
+place's params for the scene, and the mic held toward whoever speaks (round to the lens on the OLD asides, which are
+retired: an aside is now THE WHISPER, section 10; out of the card slot under a card: it is lowered out of frame). What each stub already shows (copy what you like, then replace the whole file):
 
 | stub | shows |
 |---|---|
@@ -138,24 +141,38 @@ draws. Every place has `<PLACE>_LOOK`, `<PLACE>_PARAMS`, `build<Place>(K)` in `s
 
 | export | who |
 |---|---|
-| `NEWTON` | 43, scale 1.0, resting face deadpan: a round head, his own long grey hair (`locks`), the morning bird's nest (`nest`), the quill behind his ear (`earQuill`), dark brown coat over a darker waistcoat, the white falling band, dark breeches, grey stockings |
+| `NEWTON` | 43, scale 1.06 (`N_SCALE`), width 0.9, resting face deadpan, resting lean 5 deg forward (`NEWTON_LEAN`): a round head, his own long grey hair (`locks`), the uncombed bird's nest (`nest`) and the quill behind his ear (`earQuill`) ALL DAY (ONE quill: in his hand when he writes, then not at the ear), dark brown coat open over a CRIMSON waistcoat (his one colour, `COL.vest`), the white falling band, dark breeches, grey stockings |
 | `NEWTON_INK` | the same with the blue-black ink smear across his nose (A until D's wipe) |
 | `NEWTON_GOWN`, `NEWTON_GOWN_INK`, `NEWTON_GOWN_SMUDGE` | under the black academic gown (outdoors in C and D, the lecture); with the ink; with the ghost after her first stroke |
-| `HUMPHREY` | early 20s, scale 0.95, round face, short brown hair, a plain mid-brown coat, small white collar; resting face neutral (A, B, E) |
+| `HUMPHREY` | early 20s, scale 0.94 (`H_SCALE`), width 1.16, round face, short brown hair, a plain DRAB grey-brown coat, small white collar; resting face `smile` (open eyes; a shot's `neutral` shows as `smile`) (A, B, E) |
 | `HUMPHREY_SOOT` | the same with soot on a cheek, brow, chin and coat (F, G) |
 
 Also: `NEWTON_BY` / `newtonFor({ ink, gown })` (the figure for a state), `newtonAt(f, keys)` (which Newton plays frame
 f: keys `[frame, "plain" | "ink" | "gown" | "gownInk" | "gownSmudge"][]`), `NewtonState`, `NEWTON_HIDE` (=
-`["earQuill", "nest"]`) / `newtonHide({ quill, nest })`, `HUMPHREY_BY`, `laugh(t, { amp, fade })`, `PEOPLE`,
+`[]` since gate 1) / `NEWTON_HIDE_WRITING` (= `["earQuill"]`: the quill is in his hand) / `newtonHide({ quill, nest })` (both on by default), `NEWTON_LEAN`, `N_SCALE`, `H_SCALE`, `N_EYE` / `H_EYE` / `eyeAim(person)` (the eye-line aim standing: `EYE_AIM` 1.14 x the scale), `N_LEAN_FWD` / `newtonEyes(at, facing)` (the lean's forward shift of his head; the aim with it), `facePoint(r, qx, qy, out)` / `headSurface(r, toward, out)` / `headRadius(r)` (points ON the head, after `w.update()`), `NPerson`, `Lean`, `HUMPHREY_BY`, `laugh(t, { amp, fade })`, `PEOPLE`,
 `PersonKey`, `SPEAKER_PERSON` (`ji: null, nt: NEWTON, hm: HUMPHREY`), `ALL_PEOPLE`, `NAMED`, `NEWTON_SWAPS`, `COL`,
 `addPerson`, `miniature`, `blush`, `BLUSH`. Accessories in `acc/newton.ts`: `coat`, `band`, `gown`, `locks`, `nest`,
 `earQuill`, `inkSmear(k)`, `soot(k)`.
 
 - Which Newton where: A `NEWTON_INK` with the quill and the nest; B, C room `NEWTON_INK` + `hide: NEWTON_HIDE`; C
   garden and D street `NEWTON_GOWN_INK` until the wipe, then (keys on `C.wipe(...).strokes`) `NEWTON_GOWN_SMUDGE`,
-  `NEWTON_GOWN`; D schools `NEWTON_GOWN`; E, F, G `NEWTON` + `hide: NEWTON_HIDE`. Every figure carries the quill and the
-  nest: hide them everywhere but A. A drawing change (ink, gown, soot) is a figure SWAP (one shown, the others hidden):
+  `NEWTON_GOWN`; D schools `NEWTON_GOWN`; E, F, G `NEWTON` + `hide: NEWTON_HIDE`. GATE 1 (14 Nov): the quill and the nest
+  stay on ALL DAY, so `NEWTON_HIDE` is empty. ONE quill: on every frame the `quill` prop is in his hand pass
+  `hide: NEWTON_HIDE_WRITING` (the ear quill off), and take it from the ear or put it back under a cut or a blink. A drawing change (ink, gown, soot) is a figure SWAP (one shown, the others hidden):
   hide it under a cut, a blink (`lid(t, id, swaps(keys))`) or her handkerchief.
+- POSTURE (gate 1): every Newton figure leans 5 deg forward (`RigState.lean`, group/kit/rig3d, added to the pose's own
+  lean) on every frame whose state sets no `lean`: people.ts `addPerson` puts it in, the way the resting face goes in.
+  A shot that wants another lean sets it for that frame: `lean: { pitch: 0 }` = upright. Keep the lean (standing and
+  on the stool); when a hand or a prop meets his head, move the hand or the prop, and use `{ pitch: 0 }` only as a
+  last resort, frame by frame (gate 1 director note 3).
+- EYE LINES (gate 1 director note 1): a camera that frames on a face aims at `N_EYE` (Newton, 1.208 m) / `H_EYE`
+  (Humphrey, 1.072 m) over the figure's floor, never at the scale-1 1.14; seated (the F / G stool), read
+  `r.headWorld()`. The 5 deg lean also carries his head `N_LEAN_FWD` (6.3 cm) forward along his facing: for a close
+  or medium frame aim at `newtonEyes(at, facing)` (= N_EYE up + that shift). The layout stand cameras (`third()` in
+  layout/; the elaboratory's stool and push cameras with the shift) already do.
+- A hand or prop that must touch his head (G's fork, D's handkerchief, G's candle) aims at a point ON the head:
+  `facePoint(n, 0, -0.35, 0.01)` (the mouth), `facePoint(n, 0, -0.15, 0.012)` (the nose), or
+  `headSurface(n, toward, out)`; never at `headWorld()`, which is the ball's centre.
 - THE LAUGH (G53): `r.set({ ...laugh((f - BEAT.G.laugh) / FPS), ... })`: expr "laugh", the mouth wide / half on every
   "ha" (7 frames), the head shaking (about 2.2 a second, 7 deg) and bobbing; `fade` 0..1 eases it out. After it:
   "smile" (or "smile_closed": eyes shut, a smile, a blush). It reads at quarter-screen size.
@@ -182,7 +199,7 @@ INK_NEAR`.
 | `plate` | THE DINNER: pewter plate r 0.13 with a chop, a roll, peas (on the table under its middle). Grip `pair` | `bites` 0..3, `lid` 0..1 (1 on, 0 off, between = lifted), `steam` 0..1, `fly` 0..1 (its place on its walk; leave it out = no fly), `t` |
 | `lid` | the domed cover alone (middle of its rim). Grip `knob` | |
 | `fork`, `knife` | middle of the handle, +y to the tip. Grip `hilt` | |
-| `quill` | where the fingers hold it, +y up the feather. Grip `hilt` (hide `earQuill` when it is in his hand) | |
+| `quill` | where the fingers hold it, +y up the feather. Grip `hilt` (hide `earQuill` when it is in his hand: `hide: NEWTON_HIDE_WRITING`) | |
 | `inkwell` | on the desk under its middle (`ROOM.inkwell`) | |
 | `inkBottle` | Humphrey's empty bottle (under its middle). Grip `grip` | |
 | `sheets` | loose written sheets fanned (on the desk: `ROOM.deskWrite`) | `n` 1..6 (3) |
@@ -213,13 +230,46 @@ breathing sway); a light handheld only with `walk` (her walking 0..1, 1.5 = a tr
 (`import * as C from "../cam"`). Every function is pure (frame in, pose out); the moves take a CamPose and return one,
 so they stack.
 
+THE LENS (9:16 again since 15 Nov). Every CamPose `fov` (the layout cameras, cam.ts, the shots) is the vertical angle of
+the 1080 x 1920 frame, so a fov number keeps its WIDTH of view; `story.ts lensFov` / `lensTan` (`LENS_H` 1920) are the
+identity now (on the 9:15 frame of 14 Nov they gave the 1800 frame its real angle). Never convert a fov by hand. THE
+9:15 -> 9:16 MOVE: the 1920 frame is the 1800 frame with 60 px more picture at the top and at the bottom, at the same
+scale, so a 9:15 screen point (x, y) is (x, y + 60) now; every screen number in the shots, cam.ts and the skin's fits
+was moved so (proved: the posed world is identical on all 5438 frames, and picture-only stills match the 9:15 ones
+row for row, newton_work/film/f916/FRAME.md). Every screen number is px on 1080 x 1920; a plan's 9:15 number + 60.
+
+THE LENS MOVE (camplan OVERVIEW, "do this before building any scene", item 5): ONE helper for every lens move in all
+seven scenes. Two rules: a zoom is interpolated in log(tan(fov/2)) (equal steps of the move are equal steps of picture
+size), and a move AIMS BY THE SUBJECT'S SCREEN POINT (each key says which world point sits where on the frame; every
+frame in between is solved for it, so the subject lands on its mark on the key frame). The scenes do not use it yet:
+each scene's camera rebuild moves onto it. An aside's lean is `whisperLean` (section 10, THE WHISPER), wrapped round
+whatever this helper returns.
+
+```ts
+// a snap on the punch word: 5 frames, a third tighter (tan x 0.667), his eyes kept on their screen point
+const w0 = capWord("A02", "Good").from;
+const cam = C.lensCam(f, [
+  { f: w0 - 5, pos: P_DOOR, at: eyes, sx: 540, sy: 470, fov: 62 },
+  { f: w0, pos: P_DOOR, at: eyes, sx: 540, sy: 520, fov: C.zoomBy(62, 0.667), ease: easeOutCubic },
+]);
+C.aimCam(pos, at, sx, sy, fov, rollDeg)   // one frame: the camera at pos turned so world point `at` lands on (sx, sy) px
+C.zoomFov(a, b, t)                        // the fov t of the way from a to b in log(tan(fov/2))
+C.zoomBy(fov, k) / C.zoomFactor(a, b)     // tan(half) x k (0.75 a quarter tighter); the size change of a move (> 1 tighter)
+C.screenTan(sx, sy, fov)                  // a screen point as tangents off the axis (the 1920 frame's lens)
+C.lensK(f, on, len, ease)                 // 0..1 through a move that starts on `on` and lands on `on + len`
+```
+Keys: `{ f, pos, at, sx, sy, fov, roll?, ease? }`, `pos` and `at` may be functions of the frame (a walking subject, her
+walking eye); `ease` shapes the move that ARRIVES at the key; held before the first key and after the last. It stacks
+with the moves below (`C.handheld(C.lensCam(...), f, { walk })`).
+
 ```ts
 const cam = C.povCam(f, [{ f: S.from, ...GARDEN_CAMS.walk }, { f: BEAT.C.stop, ...GARDEN_CAMS.turn, ease }], { walk: [[S.from, 1], [BEAT.C.stop, 0]] });
 C.keyCam(f, keys) / C.handheld(cam, f, { mood, walk, amp })     // the two halves of povCam
 C.follow(f, (g) => walkAlong(GARDEN.loop, 1.1, (g - t0) / FPS).at, { back: -1.8 })   // back < 0: she walks BACKWARDS in front of him
-const W = C.whip(camA, f, BEAT.C.whip - 4, { dir: 1, to: camB });   // { cam, post, smear, cut }: the whip IS the cut (C)
+const W = C.whip(camA, f, BEAT.D.schools - 4, { dir: -1, out: 4, in: 4, to: camB });   // { cam, post, smear, cut }: the whip IS the cut (the D join; no words over its out half: section 10)
 C.creep(cam, f, BEAT.F.push[0], BEAT.F.push[1], dist)            // THE SLOW PUSH-IN from 44 to the end of 50
-C.punchIn, C.dip, C.duck, C.aside, C.lean, C.leanStand, C.lower, C.handCover, C.nudge({ yaw, pitch, roll, right, up, fwd })
+C.punchIn, C.dip, C.duck, C.lean, C.leanStand, C.lower, C.handCover, C.nudge({ yaw, pitch, roll, right, up, fwd })
+// C.aside (the swing away to a wall) is RETIRED for asides: an aside never leaves Newton (section 10, THE WHISPER)
 C.whipSmear(k, dir), C.palm(cover)                               // overlays
 ```
 
@@ -229,18 +279,19 @@ camera, so they take the place's light and the lens blur. Put them AFTER `w.upda
 ```ts
 const M = C.putMic(w, cam, f, {
   aim: r.headWorld().add(V(0, -0.1, 0)),   // a world point it is held toward (the speaker's mouth, STAIRS.knock), or "lens"
-  lens: asideK(f),                         // 0..1 toward the ASIDE pose (the head turned to the lens; ease the swing, ~8 frames)
+  // no `lens`: the old ASIDE pose (the head turned to the lens) is RETIRED; an aside is THE WHISPER (section 10)
   enter: 1,                                // 0 = out of frame at the lower left .. 1 = in place (it enters on that diagonal)
   rap: C.rapK(f, [k0, k0 + 7]),            // the head pushed out to touch `aim` on each strike (A's knock)
   tilt: 12,                                // degrees: the head dipped toward something low (B11 the drafts)
   avoid: cardAt(f) ? SCREEN.card : undefined,   // slides right out of the fact card's slot while a card shows
 });
-return { camera: cam, post: { dof: M.dof } };   // the aside's dof: focus on the mic head (~0.39 m), he goes soft
+return { camera: cam, post: { dof: M.dof } };   // a light focus on the aim; never a dof that blurs him for an aside (section 10)
 ```
 
-- Where it sits: at rest the red head's centre is at about 335 / 1048 px (r 94 px, bottom edge 1142); it follows the aim
-  sideways (x 230..640); the aside pose is 520 / 1004 (r 136). The head's bottom edge never comes below y 1190
-  (`MIC_FRAME.band`, `SCREEN.mic`). So the head covers y ~950..1140: frame faces higher (eyes in the upper third).
+- Where it sits (never drawn): at rest the red head's centre is at about 335 / 1048 px on the 1920 frame (r 94 px); it
+  follows the aim sideways (x 230..640). (The old aside pose, 520 / 1004 r 136 with `lens: 1` or aim "lens", is RETIRED
+  with the old aside: section 10, THE WHISPER.) The head's bottom edge never comes below y 1190 (`MIC_FRAME.band`,
+  `SCREEN.mic`).
 - `C.micPose(cam, f, o)` = the same without putting it: `{ mic, hand, head, headPx, dof, visible }`.
 - HER RIGHT HAND (`handR`): `C.freeHand(cam, grip, { bar, palm, pose, side })` at any world point;
   `C.chairDrag(cam, chairAt, yaw)` (C06: the hand on the chair's top rail; the shot moves the chair; use
@@ -269,7 +320,7 @@ return { camera: cam, post: { dof: M.dof } };   // the aside's dof: focus on the
 - `cap(id, k)` (screen k of a line, negative k from the end; `.from` = the frame its first spoken token starts on;
   `.zh`, `.en`), `capsOf(id)`, `captionAt(f)`.
 - `capWord(id, word).from` = the frame the word starts on, in the language the line is SPOKEN in: Chinese characters for
-  a ji line (`capWord("A01", "好")`), English words for an nt / hm line (`capWord("F14", "burn")`,
+  a ji line (`capWord("A03", "睡")`), English words for an nt / hm line (`capWord("F14", "burn")`,
   `capWord("C04", "is")`, `capWord("G02", "use")`). A Chinese word on an English line throws.
 - `CARDS`, `card("A03")` `{ from, to, zh, en }`, `cardAt(f)`; `TITLE_BLOCK` `{ from, to, zh, en, subZh, subEn }`;
   `SCENE.F` `{ time: "夜", en: "Night", place }`; `TITLE`, `SUBTITLE`.
@@ -277,19 +328,31 @@ return { camera: cam, post: { dof: M.dof } };   // the aside's dof: focus on the
   `source`) for shared ones.
 - Easing and helpers: `clamp01, lerp, lin, smooth, smootherstep, ease*, spring, pop, between, rng, hash, since, h`.
 
-`beats.ts`: `BEAT.X.name` (a frame, or a `[first, last]` span), `TITLE_SPAN`, `ASIDES` (the six: A03 A06 B09 D01 D05
-E07, each `[from - 8, to + 8]`), `PLATES` (the five plate inserts with their hour), `placeAt(f)`, `SPANS`, `shotAt`,
-`beatCheck()`.
+`beats.ts`: `BEAT.X.name` (a frame, or a `[first, last]` span), `TITLE_SPAN`, `JOINS` (below), `PLATES` (the five plate
+inserts with their hour), `placeAt(f)`, `SPANS`, `shotAt`, `beatCheck()`. `ASIDES` and the `asideNN` spans are RETIRED
+(the old asides, `[from - 8, to + 8]`): the asides are THE WHISPER (section 10); `ASIDES` reads `whisper.ts
+WHISPER_LINES` and stays only for the old shots' `asideK` until each rebuild. A whisper line's frames are
+`whisperSpan(id)` (whisper.ts).
+
+THE JOINS (camplan OVERVIEW, "the joins in film order"): `JOINS` lists the plans' 12 joins, each `{ kind, cut, scene,
+first, what }`, every cut LOOKED UP (never typed): clock `seg("B").from`, whip `seg("C").from` (B -> C), match
+`BEAT.C.garden` (plate -> sundial), whip `BEAT.C.whipCut` (up the stairs), clock `seg("D").from`, whip `BEAT.D.schools`,
+clock `seg("E").from`, whip `seg("F").from` (E -> F), match `BEAT.F.inside` (his candle), clock `seg("G").from`, whip
+`BEAT.G.room`, clock `BEAT.G.garden` (on the placeholder timing: 582, 1405, 1444, 1718, 1855, 1900, 2343, 2832, 2894,
+4435, 5095, 5169). `joinAfter(f)` is the next one. THE WORDS KEEP OFF THE WHIPS AND MATCHES (OVERVIEW item 4; owner row
+86): no subtitle or fact card in the `WHIP_CLEAR` (6) frames before a whip's cut, none across a whip or match cut;
+`joinClip(from, to)` gives the last frame one may show, and the HUD applies it by itself (section 10). Clock joins clip
+nothing (card 5 across G's garden join is approved). `hud/vlog.tsx RACES` races the clock at each clock join.
 
 | scene | beats |
 |---|---|
 | A | `run` [ ], `knock` (好), `doorOpen` [ ], `goodNight`, `doorShut`, `glowOut`, `title`, `aside03` [ ], `card1` [ ], `humphreyOut`, `humphreyShuts`, `micHumphrey`, `laugh`, `headShake`, `humphreyDown`, `aside06` [ ] |
 | B | `plate` [ ], `lid`, `pullBack` [ ], `dinner`, `humphreyGoes`, `micDoor`, `micBack`, `micDrafts`, `apple`, `aside15` [ ], `card2` [ ] |
-| C | `plate` [ ] (noon, in the room), `garden`, `walk` [ ], `stop`, `turn`, `run`, `whip` (the cut to the room), `chair`, `wave`, `emptyChair` |
+| C | `plate` [ ] (noon, in the room), `garden`, `walk` [ ], `stop`, `turn`, `run`, `whipOut` (the whoosh: the whip up leaves the garden), `whipCut` (THE CUT inside it, 6 frames later: the join), `whip` (settled in the room: the storyboard's place change in `SPANS`), `chair`, `wave`, `emptyChair` |
 | D | `street` [ ], `wipe` [ ], `wipe2`, `schools`, `wide` [ ], `aside23` [ ], `notes` [ ], `aside27` [ ], `lecture` [ ], `timeCut`, `clap` [ ], `dont` |
 | E | `fly` [ ], `step`, `bite1`, `bite2`, `twoBites`, `look`, `hooke`, `aside35` [ ] |
 | F | `walk` [ ] (the night garden), `inside`, `card3` [ ], `sackOut`, `timePass`, `board` [ ], `push` [ ] (from 44 to the end of 50), `poke`, `spit`, `silence` [ ], `poke2` |
-| G | `strike1`, `strike2`, `board`, `boardUp` [ ], `laugh`, `laughHold` [ ], `sackDrop`, `card4` [ ], `goodNight`, `lastLine`, `room`, `card5` [ ], `outside`, `windowDark`, `black` [ ] |
+| G | `strike1`, `strike2`, `board`, `boardUp` [ ], `laugh`, `laughHold` [ ], `sackDrop`, `card4` [ ], `goodNight`, `lastLine`, `room` (the whip join), `card5` [ ], `outside`, `garden` (the clock join, 02:00 -> 03:00), `windowDark`, `cameraOff`, `black` [ ] |
 
 `placeAt(f)` is the storyboard's place: A stairs; B room; C room (the noon plate) -> garden (`BEAT.C.garden`) -> room
 (`BEAT.C.whip`); D street -> schools (`BEAT.D.schools`); E room; F garden at night -> elaboratory (`BEAT.F.inside`);
@@ -303,17 +366,21 @@ read the strokes from its result.
 basics `V, v3, yawTo, wrapA, lerpA, lid, speak, accent, heads` · keys `at` (step), `ky` / `kv` (eased), `path`,
 `swaps` · places `rel, hang, halberdHand, staged, headPx, kick, frag` · moving `walkAlong, walkTime, hopArc` ·
 sitting `seated, lap, kneel, KNEEL_DROP, bow, salute` · crowd `stagger, alive` · verbs `headM, headPop, swapTo, clap,
-yawCam, whip, shake` · staging `eye, standing, saying, STAND_IN, asideK, cardLower, standMic, dressRoom, CHAIR_ASIDE,
-standIn`.
+yawCam, whip, shake` · staging `eye, standing, saying, STAND_IN, asideK (RETIRED), cardLower, standMic, dressRoom,
+CHAIR_ASIDE, standIn`.
 The header of the file has a line per verb; segments are .ts (no JSX): `frag(...)` joins overlay nodes, `h` (story.ts)
 is `React.createElement`.
 
-- `asideK(f, len = 8)`: 0..1 into an aside (`ASIDES`), easing in over its first `len` frames and out over its last.
+- `asideK(f, len = 8)`: RETIRED with the old aside (the mic swung round to the lens, Newton soft behind it). It stays
+  only for today's shots until each scene is rebuilt; a rebuilt scene never calls it. Asides are THE WHISPER: wrap the
+  camera in `whisperLean` (section 10).
 - `cardLower(f, len = 8)`: 0..1 how far her mic is lowered under a fact card (nobody speaks: out over the card's first
   8 frames, back over its last 8).
 - `standMic(w, cam, f, { nt: rig, hm: rig }, o)`: the mic toward the mouth of whoever speaks (her own lines and the
-  silences: `o.listener`, default nt), `lens: asideK(f)`, lowered out of frame under a card (`enter: 1 - cardLower(f)`,
-  `avoid: SCREEN.card` while it goes); `o` overrides any MicO field. Returns the MicPose (put `dof` in `Pose.post`).
+  silences: `o.listener`, default nt), lowered out of frame under a card (`enter: 1 - cardLower(f)`, `avoid:
+  SCREEN.card` while it goes); `o` overrides any MicO field. Returns the MicPose. It still passes `lens: asideK(f)` for
+  the old shots: in a rebuilt scene pass `lens: 0` and never put its aside `dof` in `Pose.post` (section 10, THE
+  WHISPER).
 - `dressRoom(w, f, plate, { chair })`: the plate on `ROOM.plate` in its state, the drafts, inkwell and sheets on the
   desk, the chair at `CHAIR_ASIDE` (0.55 m to his left of `ROOM.chair`, clear of his coat) or at a point you give, or
   none (`chair: false`).
@@ -322,15 +389,30 @@ is `React.createElement`.
 
 ## 10. The HUD (`hud/`, WP4; Film.tsx draws it, shots only switch it)
 
-Film.tsx draws, in order: the HUD layer (`<VlogHud f rec={P.rec} cards={P.cards} />`, every `registerHud`, then
-`<TitleCard f at={P.title} />` and `<FactCard f />`), then `P.overlays`, then `<Caption f />`, then `P.top`.
+Film.tsx draws, in order: `<Whisper f />` (the whisper's darkened edges and bubble, right over the picture), the HUD
+layer (`<VlogHud f rec={P.rec} cards={P.cards} />`, every `registerHud`, then `<TitleCard f at={P.title} />` and
+`<FactCard f />`), then `P.overlays`, then `<Caption f />` (not on a whisper line's frames), then `P.top`.
 `import { ... } from "../hud"` (hud/index.ts re-exports everything).
+THE PHONE-SAFE FRAME (9:16, 1080 x 1920; `hud/style.ts FRAME` = the kit's `FRAME_9x16` with the film's ONE override,
+Jay 15 Nov "the rec and batter need to go in a tad bit", the same numbers as the 李白 film; `layout.ts PHONE` / `SCREEN`
+carry copies for the picture side): Douyin FILLS the screen and CUTS x < 58 and x > 1024 off; its back icon sits at
+x 58-150 and its search icon at x 920-1024, y 143-222; its button column covers x >= 890 from y 1000 down; the post's
+text covers x 58-805 from y 1505 (to 1790). The REC display is x 110-970, y 225-330 (the REC row on y 250, the
+timestamp row on y 308). WORDS, CARDS AND EFFECTS: inside x 110-970 above y 1000 and x 110-890 below it, between y 340
+and 1490 (a row centred on x 540 below y 1000 is at most 700 px). FACES AND ANYTHING THAT MATTERS: inside x 58-1024 and
+above y 1490, clear of the REC row, the battery, the subtitle and the effect boxes while they are on. Review stills
+draw it with the PHONE MASK: `bash scripts/kit/queue/remotion_still.sh NewtonFilm <frame> <abs out.png>
+--props='{"mask":true}'` (`hud/phone.tsx`, Film.tsx prop `mask`, default off; any other remotion flag passes the same
+way). `--props='{"cap":{"zh":"……","who":"ji"}}'` draws a given subtitle instead of the frame's (layout reviews).
 HER CAMERA'S RECORDING UI (`hud/vlog.tsx`, Jay 14 Nov; PLAN 5): the REC lamp (1 Hz, soft) and "REC" top left (row
-y 204, x 50..183, y 184..224), the scene's timestamp under it (「清晨 05:00」 / EARLY MORNING: on every scene's FIRST
-FRAME it slides in 1.5x big over x 50..394, y 242..353 at most while the clock runs on from the last scene's time, holds
-to 1.6 s, then shrinks to x 50..281, y 234..309 at most for the rest of the scene; each scene's own box:
-`stampRect(id, big)`, e.g. F at rest x 50..200, G big x 50..348), the battery top right (x 845..1038, y 182..226; drains
-with the clock, red at 2 a.m.). Her camera switches off on `OFF_AT` (`BEAT.G.cameraOff`, frame 5211 = G to - 1.4 s, 12
+y 250, x 110..233, y 231..269), the scene's timestamp under it (「清晨 05:00」 / EARLY MORNING, its row centred on y 308,
+x 110..274, y 289..327 at most: on every scene's FIRST FRAME it slides in 1.5x big over x 110..354, y 289..344 at most,
+holds to 1.6 s, then shrinks into its place for the rest of the scene; each scene's own box: `stampRect(id, big)`), the
+battery top right (x 787..970, y 229..271; drains with the clock, red at 2 a.m.). THE CLOCK RUNS FAST ONLY AT THE CLOCK
+JOINS (`CLOCK_JOINS`: A->B, C->D, D->E, F->G, keyed on `SEGMENTS`, and G's room -> garden join `BEAT.G.garden`, 02:00 ->
+03:00): from 10 frames before the cut to 8 after (`RACES`, `raceAt(f)`, `clockAt(f)`); at a whip or match join (B->C,
+E->F) the stamp slides in with its time set. So hold the picture still over the outgoing 10 frames of a clock join.
+Her camera switches off on `OFF_AT` (`BEAT.G.cameraOff`, frame 5211 = G to - 1.4 s, 12
 frames after the last pluck): the lamp dies, the whole UI goes grey (battery emptied) and holds still for 24 frames
 until the end black (`BEAT.G.black[0]` = OFF_AT + 24). KEEP FACES (skin; hair is fine) OUT OF THE TWO TOP CORNERS
 (`VLOG_RECT.rec`, `.stamp`, `.battery`, and the big intro box `.stampBig` during a scene's first 2 s) for the WHOLE
@@ -342,35 +424,103 @@ vanishes mid-scene reads as the camera stopping). `cards: false` (skips the big 
 | `title` | where the title block sits on this frame: `{ x, y, scale, rot }` (centre px, deg); fields left out come from `setTitlePlace` / the frame's centre. segA's stub lines it up with the shut door |
 | `cards: false` | hides the fact card and the title block on this frame, and skips the timestamp's big intro |
 | `rec: false` | hides her camera's REC lamp and the timestamp on this frame (the battery stays, still) |
-| `hud: false` | hides the whole HUD layer (the vlog UI and registered HUDs too) |
-| `captions: false` | hides the subtitle on this frame |
-| `overlays` / `top` | your own 2D nodes below / above the subtitle (1080 x 1920 px); the end black goes in `top` |
-| `post` | `{ dof, bloom, grade, gradeAmount, ink, ao, bg }` over the place's look (the asides: `dof` from putMic) |
+| `hud: false` | hides the whole HUD layer (the vlog UI and registered HUDs too; the subtitle and the whisper bubble stay) |
+| `captions: false` | hides the subtitle on this frame (and the whisper bubble) |
+| `overlays` / `top` | your own 2D nodes below / above the subtitle (1080 x 1920 px, `story.ts W / H`); the end black goes in `top` |
+| `post` | `{ dof, bloom, grade, gradeAmount, ink, ao, bg }` over the place's look (never a dof that blurs him for an aside: THE WHISPER below) |
 
-- SUBTITLES (`hud/caption.tsx`): one screen at a time (the lines file's `screens`): Chinese 66 px on one row, centred
-  on y 1318, English 36 px under it, no box, a dark outline on its own layer (zh 5.5 px, en 3.5 px) and a soft shadow;
-  tints ji warm white `#fff3e0`, nt pale gold `#ffdf8e`, hm white. Long rows shrink (to 53 px) to stay on one row inside
-  x 50..925; English over 800 px wraps to two rows. 3-frame fades at the start and end of a run, none between screens.
-  Line 01's screen shows from frame 0 (`capOn`). All text inside y 1277..1455 (`CAP_BAND` 1250..1500). Exports
-  `Caption, capOn, capAlpha, capLayout, capRows, SPEAKER_COL, ZH_PX, EN_PX, ZH_MIN, ZH_Y, EN_Y0, EN_STEP, CAP_BAND,
-  CAP_ROW`.
+- SUBTITLES (`hud/caption.tsx`): one screen at a time (the lines file's `screens`): Chinese 66 px, English 36 px under it
+  ONLY for lines spoken in English (`enShown`), no box, a dark outline on its own layer (zh 5.5 px, en 3.5 px) and a
+  soft shadow; tints ji warm white `#fff3e0`, nt pale gold `#ffdf8e`, hm white. The block is ANCHORED ON ITS BOTTOM: the
+  last row ends on y 1458 (`CAP_BOTTOM`, inside the kit's caption band x 110-890, y 1270-1460): one Chinese row
+  y ~1375-1458, Chinese + English y ~1325-1458, Chinese + two English rows from y ~1285. A Chinese screen over 13
+  characters (`CAP_ROW`) breaks into two rows (from about y 1295); every row stays inside x 110-890 and centred while it
+  can: up to 10 characters at 66 px, 11 shrink to 64 px to stay centred in 700 px (`CAP_W`), 12-13 take 58 px
+  (`ZH_MIN`) and slide left just enough to fit; English over 700 px wraps to two rows. 3-frame fades at the start and
+  end of a run, none between screens. Line 01's screen shows from frame 0 (`capOn`). `CAP_BAND` x 110..890,
+  y 1280..1460. A screen's hold after its speech, its fade included, is CLIPPED before the next whip or
+  match join (`capEnd(c)`, beats.ts `joinClip`: THE WORDS AND THE JOINS below). Exports `Caption, capOn, capAlpha,
+  capEnd, capLayout, capRows, SPEAKER_COL, ZH_PX, EN_PX, ZH_MIN, ZH_Y, EN_Y0, EN_STEP, CAP_BAND, CAP_ROW, CAP_W,
+  CAP_BOTTOM`.
 - FACT CARDS (`hud/card.tsx`): a cream paper slip (deckled, torn bottom, grain, shadow, tilted -2.2 deg), Chinese ink
-  46 px (2-3 rows, at most 12 characters), English sepia 28 px under a rule; slot x 56..656, the slip's bottom edge on
-  y 1195 (the tallest starts at about y 850); flutters in from the left over 8 frames, floats, slides out over 8.
-  Exports `FactCard, factCardAt, factRows, factLayout, factRectAt, FACT_SLOT {35, 811, 677, 1216}, CARD_X, CARD_BOTTOM,
-  cardTop, CARD_MAXW, CARD_ROW`.
-- TITLE BLOCK (`hud/title.tsx`): 「跟着牛顿过一天」 96 px, an ivory double rule with a lozenge, 「1686年5月 · 剑桥三一学院」
+  46 px (2-3 rows, at most 12 characters), English sepia 28 px under a rule; the slip from x 131, at most 580 px wide,
+  its bottom edge on y 1200 (the tallest starts at about y 846); flutters in from the left over 8 frames, floats,
+  slides out over 8. Its end, the exit included, is CLIPPED before the next whip or match join (`cardEnd(c)`; the exit
+  runs over the clipped end; `factCardAt(f)` returns the card with its shown `to`). Exports `FactCard, factCardAt,
+  cardEnd, SHOWN_CARDS, factRows, factLayout, factRectAt, FACT_SLOT {110, 817, 732, 1221}, CARD_X, CARD_BOTTOM, cardTop,
+  CARD_MAXW, CARD_ROW`.
+- TITLE BLOCK (`hud/title.tsx`, no longer mounted: skin A's `hud/ms` MsTitle draws the title 「采访牛顿的一天」): the title 96 px, an ivory double rule with a lozenge, 「1686年5月 · 剑桥三一学院」
   40 px and the English line 24 px, ivory paint on the dark oak; drops 46 px over 10 frames, one bounce, fades over
-  its last 10, over `TITLE_SPAN`. Exports `TitleCard, setTitlePlace, titleRect, titleRectAt, TITLE_HOME, TITLE_RECT
-  {125, 796, 955, 1086}, TitlePlace`.
+  its last 10, over `TITLE_SPAN`. Exports `TitleCard, setTitlePlace, titleRect, titleRectAt, TITLE_HOME (540, 900),
+  TITLE_RECT {156, 796, 924, 1044}, TitlePlace`. In 9:15 the plans put it on the door's upper panel, the block about
+  y 260-480 (camplan A.md; + 60 on the 9:16 frame).
 - THE END and dips (`hud/end.tsx`): `endBlack(f, from, fade = 8)` (put it in `Pose.top`), `endBlackAlpha`,
   `dipAlpha(f, a, b, fade)`, `black(a)`, `<EndBlack>`, `<Black>`, `FADE_MIN` 3. The colour is the film's darkest warm
   tone `#140d09`, never #000; every fade is 3 frames or more.
-- Keep faces (and the mic) out from under the HUD: `hudRectsAt(f)` (the subtitle's real box, the card, the title for
-  that frame) and `hudHits(f, rect)`. `layout.ts SCREEN` holds the same boxes: `top` 150, subtitle band `capTop` 1250 ..
-  `capBottom` 1500, `bottom` 1640, eyes above `eyes` 640, `card` {35, 811, 677, 1216}, `title` {125, 796, 955, 1086},
-  the app rail right of `rail.x` 930 below `rail.y` 900, the mic's head bottom never below `mic` 1190 (`micRest`
-  335 / 1048). Style helpers: `HC` (palette), `SAFE`, `textW`, `em`, `spanK`, `overlaps`, `turnedRect`, `Rect`.
+- Keep faces (and the mic) out from under the HUD: `hudRectsAt(f)` (the subtitle's real box or the whisper bubble's,
+  the card, the title for that frame) and `hudHits(f, rect)`. `layout.ts SCREEN` holds the same boxes on 1080 x 1920 (`W`, `H`, `cx`, `cy`):
+  `top` 340, subtitle band `capTop` 1280 .. `capBottom` 1460, `bottom` 1490, eyes above `eyes` 660, `card` {110, 817,
+  732, 1221}, `title` {156, 796, 924, 1044}, `rec` {110, 231, 274, 327}, `stampBig` {110, 289, 354, 344}, `battery`
+  {787, 229, 970, 271}, words left of `rail.x` 890 below `rail.y` 1000, the invisible mic's head bottom never below
+  `mic` 1190 (`micRest` 335 / 1048). Style helpers: `HC` (palette), `FRAME` (the film's frame spec), `SAFE` (x 110..890
+  below y 1000, `rightHigh` 970 above it, y 340..1490), `textW`, `em`, `spanK`, `overlaps`, `turnedRect`, `Rect`.
+
+THE WORDS AND THE JOINS (camplan OVERVIEW item 4; owner row 86: nothing from the outgoing place may still show once
+the move starts). The HUD keeps words off the joins by itself, from beats.ts `JOINS` (section 8): no subtitle and no
+fact card in the 6 frames before a whip's cut (`WHIP_CLEAR`), none across a whip or a match cut. A subtitle's hold after
+its speech and its 3-frame fade are clipped (`capEnd`), a card's exit flutter runs over its clipped end (`cardEnd`);
+`hudRectsAt` follows. On the placeholder timing: C05 is gone by 1711 (the whip up the stairs leaves on 1712, the cut
+1718), G04 by 5088 (G's whip, cut 5095; its voice ends 5094), card 2 by 1398 (the B -> C whip, cut 1405). Card 5
+stays across G's garden CLOCK join (approved). The timing (voice.ts, captions.ts, story.ts CARDS) never moves. So a
+whip's outgoing half is words-free: build it as a pure move. The faces checker prints every screen, card and bubble
+against its next join (`bash scripts/newton/qa/faces/run.sh --words`).
+
+### THE WHISPER (her asides; `whisper.ts`, `hud/whisper.tsx`)
+
+Jay's choice (14 Nov; the bible, "Talking to the audience"): every aside is a WHISPER. The lens leans in a step and
+tips a few degrees (as if she turned her shoulder to us), the picture's edges darken, the room sound dips (the music is
+never ducked), her line appears in HER OWN BUBBLE marked 悄悄说 (in place of the subtitle), and Newton carries on,
+unaware. An aside NEVER leaves Newton: the whisper is a lean, not a turn away.
+
+(a) THE LINES are `whisper.ts WHISPER_LINES`, the one list (today A03, A06, B09, D01, D05, E07; the sound mix and
+beats.ts read it). Every scene with a whisper line WRAPS ITS CAMERA in `whisperLean`, on every frame:
+
+```ts
+import { whisperLean } from "../whisper";
+// ... the shot's own camera for frame f (C.lensCam, C.keyCam, a frameOn ...)
+const cam = whisperLean(f, myCam(f), { at: eyes });   // at = Newton's eyes, or the door he is behind (A03)
+w.setCamera(cam);
+return { camera: cam, ... };
+```
+
+- Outside a whisper line it returns `cam` itself, untouched. Inside one it adds the lean to whatever the camera is
+  doing, so it stacks on a running move (A06's pan, B09's ease back, D01's zoom).
+- The lean: a 0.20 m step along the view (never more than 40 % of the way to `at`) and a 3 deg tip (+ turns the
+  horizon clockwise, as `C.nudge`); no noise, no handheld. With `at` the subject is HELD ON ITS SCREEN POINT
+  (`C.aimCam`) and the tip turns about it. `lens: true` does the lean with the lens (the camera stays put: a camera
+  near a wall). `WHISPER_TUNE[id]` sets `step`, `tilt`, `lens` and the bubble's `x` / `bottom` for one line.
+- Timing (all looked up from the line): in over 10 frames landing on her first word, held through the line, back over
+  10-14 frames after her voice (landing on the next speaker's first word when it comes within 20 frames); near a
+  scene's end it holds to the cut (A06, E07: the outgoing view stays still for the clock race or the whip).
+  `whisperSpan(id)`, `whisperAt(f)`, `whisperLeanK(f)` give the frames and the strength.
+- Run the clearance checker after adding it: the lens moves 0.2 m toward him.
+
+(b) THE BUBBLE, THE DARKENED EDGES AND THE ROOM DIP ARE AUTOMATIC: Film.tsx mounts `<Whisper />` (the bubble replaces
+the subtitle on the line's frames; `captions: false` hides it, `hud: false` does not), build.py dips the room from
+the same list. Never draw an aside's words in a shot, and never blur Newton with dof for an aside (no aside `dof` in
+`Pose.post`).
+
+(c) RETIRED with the old aside (the mic swung round to the lens, Newton soft behind it): `asideK` (shots/common.ts),
+putMic's `lens` / aim "lens" (the aside pose), `C.aside` (the swing away to a wall), segD `camAside23`, segE
+`asideK35`, segB `asideW`, and beats.ts `ASIDES` with the `BEAT.X.asideNN` spans. They stay in today's shots only until
+each scene's rebuild; a rebuilt scene uses none of them. `ASIDES` reads `WHISPER_LINES`.
+
+(d) KEEP FACES OUT OF THE BUBBLE, as out of a subtitle: `whisperRectAt(f)` (hudRectsAt "whisper"), about x 54..930 and
+y 1289-1490 for a one-row line (the 悄悄说 tag rises 36 px above `CAP_BAND`'s top 1325; a two-row line grows upward).
+The faces checker counts it like a subtitle.
+
+(e) During a whisper line Newton does NOT look into the lens and does NOT react to her words: he carries on (writes,
+lectures, eats, stares at the door). Her line is for us, not for him.
 
 ## 11. The picture rules (Jay's)
 
@@ -399,10 +549,11 @@ vanishes mid-scene reads as the camera stopping). `cards: false` (skips the big 
    the wipe, `prop:board x prop:hand / handR` about 1.1 cm while she holds it up; and off screen `prop:handR` "float"
    between her claps. Anything else is yours to fix.
 3. Stills ONLY through the queue, 540 wide, a few frames, outputs under `/home/user/newton_work/film/<lane>/`:
-   - `bash scripts/kit/queue/still.sh src/videos/newton/preview/filmX.ts /home/user/newton_work/film/<lane>/ --pick F1,F2 --size 540x960`
+   - `bash scripts/kit/queue/still.sh src/videos/newton/preview/filmX.ts /home/user/newton_work/film/<lane>/ --pick F1,F2 --size 540x900`
      the 3D picture only (absolute film frames; prints `QA: BEATS ok`).
    - `bash scripts/kit/queue/remotion_still.sh NewtonFilm <frame> /home/user/newton_work/film/<lane>/fNNNN.png` the real
-     frame with the HUD and the subtitle (about 90 s each).
+     frame with the HUD and the subtitle (about 30-90 s each; 540 x 900). Add `--props='{"mask":true}'` for the PHONE
+     MASK (every review still: section 10).
    - Previews: `preview/smoke.ts`, `preview/set_places.ts` (WP2: any `"place.cam@preset"`, e.g.
      `--opts '{"views":["garden.walk@night"]}'`), `preview/people_lineup.ts`, `preview/props_sheet.ts` (views small,
      big, desk, plate, hold, elab), `preview/cam_test.ts` (12 mic / hand tests with the subtitle band drawn in).
@@ -413,6 +564,11 @@ vanishes mid-scene reads as the camera stopping). `cards: false` (skips the big 
    `beatCheck()` (beats.ts) must return [].
 5. On a moving shot, the shimmer test: `python3 scripts/kit/qa/shimmer/shimmer.py run src/videos/newton/preview/filmX.ts
    /home/user/newton_work/film/<lane>/shimmer --frame F`.
+6. Faces vs the HUD (headless, about 10 s a scene): `bash scripts/newton/qa/faces/run.sh --seg X --out
+   /home/user/newton_work/film/<lane>/faces` lists every face under the vlog UI, a subtitle, the whisper bubble, a card,
+   the title, the phone app's things or the cut sides (x < 58, x > 1024); `== JOINS` checks every join of beats.ts `JOINS` against the
+   picture's cuts; `== WORDS vs JOINS` (also alone: `run.sh --words`) every subtitle, card and bubble against its next
+   join.
 
 ## 13. Open issues (integration check, 2026-11-13)
 

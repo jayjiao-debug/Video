@@ -38,11 +38,16 @@
 //                         hand, the mic out of shot, takes the other edge): { board, hand, handL }
 //   clapHands(cam, f, ons) she claps alone: the open right hand meets the back of the left (mic) hand at each frame of
 //                         `ons`: { mic, hand, handR }
-//   camFrame / toScreen / fromScreen   the camera's frame with its roll; world <-> 1080 x 1920 px
+//   camFrame / toScreen / fromScreen   the camera's frame with its roll; world <-> 1080 x 1920 px (story.ts lensTan:
+//                         the identity on 1920)
+//   THE LENS MOVE (OVERVIEW item 5, one helper for every scene): zoomFov / zoomBy (a zoom is interpolated in
+//                         log(tan(fov/2))), aimCam (a camera that puts a world point on a screen point), lensCam (keys
+//                         of position, subject, the subject's screen point and fov: the subject is AIMED, never the
+//                         look point), lensK (the 0..1 of a move between two frames)
 // Rules (PLAN 4): never inside geometry (keep 0.15 m from walls); his eyes in the upper third; faces out of the subtitle
 // band; the mic enters from the LOWER LEFT and its red head stays ABOVE the subtitle band (y < 1190 px).
 import * as THREE from "three";
-import { FPS, clamp01, lerp, smooth, easeInCubic, easeOutCubic, easeInOutCubic, hash, h, type CamPose, type V3Like } from "./story";
+import { FPS, W, H, H_915, Y_915, LENS_H, lensTan, clamp01, lerp, smooth, easeInCubic, easeOutCubic, easeInOutCubic, hash, h, type CamPose, type V3Like } from "./story";
 import { EYE, FOV } from "./layout/base";
 import { MIC, CHAIR, BOARD } from "./props/things";
 import type { World } from "./world";
@@ -235,8 +240,8 @@ export const creep = (c: CamPose, f: number, from: number, to: number, dist: num
   return { ...c, pos: arr(A.p.add(d)), look: arr(A.l.add(d)) };
 };
 /** LEAN, where he must be: the distance from the lens to the middle of a head `headW` m wide for it to fill `fill`
- *  (0.6) of the frame's width at the vertical fov `fov` on 9:16.  leanDist(0.6, 64, 0.52) -> 1.23 */
-export const leanDist = (fill = 0.6, fov = FOV, headW = 0.52, aspect = 9 / 16) => headW / (2 * fill * Math.tan((fov * RAD) / 2) * aspect);
+ *  (0.6) of the frame's width at the CamPose fov `fov` (the 1920 reference: W / LENS_H is the width's share).  leanDist(0.6, 64, 0.52) -> 1.23 */
+export const leanDist = (fill = 0.6, fov = FOV, headW = 0.52, aspect = W / LENS_H) => headW / (2 * fill * Math.tan((fov * RAD) / 2) * aspect);
 /** LEAN, his floor point: along the camera's view (horizontal), far enough that his head (headY m up, headW wide)
  *  fills `fill` of the width.  const at = leanStand(cam, { headY: 1.58 * 1.08 }) */
 export const leanStand = (c: CamPose, o: { fill?: number; headW?: number; headY?: number; floorY?: number } = {}): THREE.Vector3 => {
@@ -252,7 +257,7 @@ export const lean = (c: CamPose, f: number, on: number, head: V3Like, o: { back?
   const k = prog(f, on, o.len ?? 8, easeOutCubic);
   if (!k) return c;
   const A = camAxes(c), p = A.p.clone().addScaledVector(V(A.fwd.x, 0, A.fwd.z).normalize(), -(o.back ?? 0.08) * k);
-  const hd = v3(head), dist = hd.distanceTo(p), drop = dist * Math.tan(((c.fov * RAD) / 2)) * (o.third ?? 1 / 3);
+  const hd = v3(head), dist = hd.distanceTo(p), drop = dist * lensTan(c.fov) * (o.third ?? 1 / 3);
   const aim = hd.clone(); aim.y -= drop;
   return { ...c, pos: arr(p), look: arr(A.l.clone().lerp(aim, k)) };
 };
@@ -274,6 +279,75 @@ export const lower = (c: CamPose, f: number, on: number, o: { to?: number; tilt?
   return nudge({ ...c, pos: [p.x, p.y - drop, p.z], look: [l.x, l.y - drop * 0.85, l.z] }, { pitch: -(o.pitch ?? 6) * k, roll: (o.tilt ?? 8) * k });
 };
 
+// --------------------------------------------------------------------------------------------------- THE LENS MOVE
+// One helper for every lens move in all seven scenes (camplan OVERVIEW, "do this before building any scene", item 5).
+// Two rules:
+//   1. A ZOOM IS INTERPOLATED IN log(tan(fov/2)): equal steps of the move are equal steps of picture size. (A plain fov
+//      lerp races at the wide end and crawls at the tight end, so a snap seems to land late and a slow push to stall.)
+//   2. A MOVE AIMS BY THE SUBJECT'S SCREEN POINT: each key says which world point (his eyes, the plate, the door) sits
+//      where on the frame; every frame in between is solved for that, so the subject travels an eased straight line on
+//      the screen and lands on its mark ON the key frame, whatever the lens and the position do. (A look point lerped
+//      under a zoom drifts the subject off its mark mid-move.)
+// Every fov here is a CamPose fov (the 1920 reference: story.ts LENS_H); every screen point is px on 1080 x 1920.
+//   zoomFov(a, b, t)       the fov t (0..1) of the way from a to b, in log(tan(fov/2))
+//   zoomBy(fov, k)         the fov with tan(half) x k (k < 1 tighter: 0.75 = a quarter tighter, 0.667 = a third, the
+//                          bible's snap); zoomFactor(a, b) = tan(a/2) / tan(b/2), the size change of a move (> 1 tighter)
+//   screenTan(sx, sy, fov) a screen point as tangents off the view axis (x right, y up)
+//   aimCam(pos, at, sx, sy, fov, roll)   the camera at pos turned so world point `at` lands on (sx, sy); roll in deg
+//   lensCam(f, keys)       THE MOVE: keys { f, pos, at, sx, sy, fov, roll?, ease? } (pos and at may be functions of the
+//                          frame: a walking subject), eased between keys (default easeInOutCubic on the arriving key),
+//                          held before the first and after the last; returns aimCam of the frame
+//   lensK(f, on, len, e)   0..1 through a move that starts on `on` and lands on `on + len`
+//     snap on the punch word:  lensCam(f, [{ f: w - 5, pos: P, at: eyes, sx: 540, sy: 620, fov: 58 },
+//                                          { f: w, pos: P, at: eyes, sx: 540, sy: 660, fov: C.zoomBy(58, 0.667), ease: easeOutCubic }])
+/** the fov t (0..1) of the way from a to b, interpolated in log(tan(fov/2)) */
+export const zoomFov = (a: number, b: number, t: number) => {
+  const ta = Math.tan((a * RAD) / 2), tb = Math.tan((b * RAD) / 2);
+  return (2 * Math.atan(ta * Math.pow(tb / ta, t))) / RAD;
+};
+/** the fov whose tan(half) is k times fov's: k 0.75 = a quarter tighter, 0.667 = a third tighter, 1.25 = wider */
+export const zoomBy = (fov: number, k: number) => (2 * Math.atan(Math.tan((fov * RAD) / 2) * k)) / RAD;
+/** how much bigger the picture is at fov `to` than at `from` (> 1 = tighter): the size change a move makes */
+export const zoomFactor = (from: number, to: number) => Math.tan((from * RAD) / 2) / Math.tan((to * RAD) / 2);
+/** a screen point (px on 1080 x 1920) as the tangents of its offset from the view axis (x right, y up) at CamPose fov */
+export const screenTan = (sx: number, sy: number, fov: number) => {
+  const tv = lensTan(fov);
+  return { x: ((sx / W) * 2 - 1) * tv * (W / H), y: (1 - (sy / H) * 2) * tv };
+};
+/** AIM BY SCREEN POINT: the camera at `pos` with CamPose `fov` and `roll` (degrees, as CamKey) turned so that the world
+ *  point `at` lands on screen at (sx, sy) px. Pure; exact to well under a pixel for any point on the frame. */
+export const aimCam = (pos: V3Like, at: V3Like, sx: number, sy: number, fov = FOV, roll = 0): CamPose => {
+  const p = v3(pos), d = v3(at).sub(p), dist = Math.max(0.5, d.length());
+  d.normalize();
+  const t = screenTan(sx, sy, fov), n = Math.hypot(1, t.x, t.y), r = roll * RAD, cr = Math.cos(r), sr = Math.sin(r);
+  let fwd = d.clone();
+  for (let i = 0; i < 12; i++) {
+    let right = fwd.clone().cross(UP); if (right.lengthSq() < 1e-8) right.set(1, 0, 0); right.normalize();
+    const up0 = right.clone().cross(fwd).normalize();
+    const rr = right.clone().multiplyScalar(cr).addScaledVector(up0, sr), uu = up0.clone().multiplyScalar(cr).addScaledVector(right, -sr);
+    right = rr;
+    fwd = d.clone().multiplyScalar(n).addScaledVector(right, -t.x).addScaledVector(uu, -t.y).normalize();
+  }
+  return { pos: arr(p), look: arr(p.clone().addScaledVector(fwd, dist)), fov, roll: r };
+};
+/** a lens key: on frame f the lens is at `pos` with CamPose `fov` (and `roll` deg), the world point `at` on (sx, sy)
+ *  px; pos / at may be functions of the frame (a walking subject, her walking eye). `ease` shapes the move that
+ *  ARRIVES at this key (default easeInOutCubic). */
+export type LensKey = { f: number; pos: V3Like | ((f: number) => V3Like); at: V3Like | ((f: number) => V3Like); sx: number; sy: number; fov: number; roll?: number; ease?: Ease };
+const keyPt = (p: LensKey["pos"], f: number) => v3(typeof p === "function" ? p(f) : p);
+/** THE LENS MOVE: the camera of frame f from lens keys: position, subject point and screen point eased between the two
+ *  keys round f, the zoom in log(tan(fov/2)), then aimed (aimCam). Held before the first key and after the last. */
+export const lensCam = (f: number, keys: LensKey[]): CamPose => {
+  if (!keys.length) throw new Error("lensCam: no keys");
+  let i = 0; while (i + 1 < keys.length && keys[i + 1].f <= f) i++;
+  const a = keys[i], b = keys[Math.min(i + 1, keys.length - 1)];
+  if (b === a || f <= a.f) return aimCam(keyPt(a.pos, f), keyPt(a.at, f), a.sx, a.sy, a.fov, a.roll ?? 0);
+  const t = (b.ease ?? easeInOutCubic)(clamp01((f - a.f) / Math.max(1, b.f - a.f)));
+  return aimCam(keyPt(a.pos, f).lerp(keyPt(b.pos, f), t), keyPt(a.at, f).lerp(keyPt(b.at, f), t), lerp(a.sx, b.sx, t), lerp(a.sy, b.sy, t), zoomFov(a.fov, b.fov, t), lerp(a.roll ?? 0, b.roll ?? 0, t));
+};
+/** 0..1 through a move that starts on frame `on` and lands on `on + len` (the punch word's first frame), eased */
+export const lensK = (f: number, on: number, len: number, e: Ease = easeInOutCubic) => prog(f, on, len, e);
+
 // ------------------------------------------------------------------------------------------------------- overlays
 /** the whip's smear (k 0..1 from whip().smear): soft pale horizontal streaks drifting the pan's way, never opaque.
  *  whipSmear(W.smear, 1) */
@@ -281,11 +355,11 @@ export const whipSmear = (k: number, dir: 1 | -1, seed = 3) => {
   if (k <= 0.01) return null;
   const bars: ReturnType<typeof h>[] = [];
   for (let i = 0; i < 16; i++) {
-    const a = hash(i, seed), b = hash(i, seed + 1), y = ((i + 0.5) / 16) * 1920 + (a - 0.5) * 70, hgt = 20 + 70 * b, len = 600 + 800 * a;
-    const x = dir > 0 ? -len * 0.4 + b * 1080 * (1 - k) : 1080 - len * 0.6 - b * 1080 * (1 - k);
+    const a = hash(i, seed), b = hash(i, seed + 1), y = Y_915 + ((i + 0.5) / 16) * H_915 + (a - 0.5) * 70, hgt = 20 + 70 * b, len = 600 + 800 * a;
+    const x = dir > 0 ? -len * 0.4 + b * W * (1 - k) : W - len * 0.6 - b * W * (1 - k);
     bars.push(h("div", { key: i, style: { position: "absolute", left: x, top: y - hgt / 2, width: len, height: hgt, borderRadius: hgt / 2, background: i % 3 === 2 ? "#d9c08a" : "#f3ead8", opacity: (0.18 + 0.22 * a) * k } }));
   }
-  return h("div", { key: "whipSmear", style: { position: "absolute", left: 0, top: 0, width: 1080, height: 1920, overflow: "hidden", pointerEvents: "none" } },
+  return h("div", { key: "whipSmear", style: { position: "absolute", left: 0, top: 0, width: W, height: H, overflow: "hidden", pointerEvents: "none" } },
     h("div", { style: { position: "absolute", inset: 0, background: "#efe6d2", opacity: 0.22 * k * k } }), ...bars);
 };
 /** his palm over the lens (cover 0..1 from handCover().cover): a big warm shadowed palm closing in from the lower
@@ -293,7 +367,7 @@ export const whipSmear = (k: number, dir: 1 | -1, seed = 3) => {
 export const palm = (cover: number) => {
   if (cover <= 0.001) return null;
   const k = clamp01(cover), r = lerp(260, 2400, k), cx = lerp(1180, 620, k), cy = lerp(2050, 1100, k);
-  return h("div", { key: "palm", style: { position: "absolute", left: 0, top: 0, width: 1080, height: 1920, overflow: "hidden", pointerEvents: "none" } },
+  return h("div", { key: "palm", style: { position: "absolute", left: 0, top: 0, width: W, height: H, overflow: "hidden", pointerEvents: "none" } },
     h("div", { style: { position: "absolute", left: cx - r, top: cy - r * 1.15, width: 2 * r, height: 2.3 * r, borderRadius: "50%",
       background: `radial-gradient(ellipse at 45% 45%, #2a1d19 0%, #33231d ${Math.round(40 + 25 * k)}%, #5a3c2e 88%, #8a5e46 100%)`, boxShadow: `0 0 ${Math.round(60 + 80 * (1 - k))}px ${Math.round(20 * (1 - k))}px rgba(42,29,25,0.7)` } }),
     k > 0.98 ? h("div", { style: { position: "absolute", inset: 0, background: "#2a1d19" } }) : null);
@@ -302,21 +376,23 @@ export const palm = (cover: number) => {
 // ================================================================================================= HER MIC AND HANDS
 // Everything below is in the CAMERA's frame first (metres: x right, y up, z forward from the lens), then put into the
 // world: so the mic and her hands move with any camera move (whip, push-in, the walk bob) and stay where the frame
-// rules want them. The numbers are tuned for fov 62 on 9:16 (they scale with the fov: screen positions are kept).
-/** the frame size the screen numbers are in */
-const FW = 1080, FH = 1920;
+// rules want them. The numbers are tuned for fov 62 (they scale with the fov: screen positions are kept). The screen
+// numbers are px on 1080 x 1920 (on the 9:15 frame of 14-15 Nov they were 60 px less; they came back down with the
+// frame on 15 Nov, so every invisible hand, the mic and the held things stand exactly where they stood in the world).
+/** the frame size the screen numbers are in (story.ts W x H) */
+const FW = W, FH = H;
 /** her body in the camera's frame: the shoulders (m from the lens) and her arm's reach from a shoulder to the fist */
 export const BODY = { shoulderL: [-0.18, -0.25, -0.06] as [number, number, number], shoulderR: [0.18, -0.25, -0.06] as [number, number, number], reach: 0.64 };
-/** where the mic sits on the 1080 x 1920 frame: REST (x, y of the head's centre, depth m), the ASIDE, the lowest the
- *  head's centre may go (its bottom edge stays above the subtitle band: MIC_MAX_Y = 1190 minus its radius), how far
- *  toward the aim's x it slides */
+/** where the (invisible) mic sits on the 1080 x 1920 frame: REST (x, y of the head's centre, depth m), the ASIDE, the
+ *  lowest its bottom edge may go (band), how far toward the aim's x it slides. */
 export const MIC_FRAME = { rest: [330, 1050, 0.56] as [number, number, number], aside: [530, 990, 0.4] as [number, number, number], band: 1190, minX: 230, maxX: 640, follow: 0.38 };
-/** the camera's frame with its roll: lens p, forward, right, up; tanV / tanH = the half-angle tangents */
+/** the camera's frame with its roll: lens p, forward, right, up; tanV / tanH = the half-angle tangents of the frame as
+ *  drawn (tanV = story.ts lensTan(fov)) */
 export type CamFrame = { p: THREE.Vector3; fwd: THREE.Vector3; right: THREE.Vector3; up: THREE.Vector3; tanV: number; tanH: number };
 export const camFrame = (c: CamPose, aspect = FW / FH): CamFrame => {
   const A = camAxes(c), r = c.roll ?? 0, cr = Math.cos(r), sr = Math.sin(r);
   const right = A.right.clone().multiplyScalar(cr).addScaledVector(A.up, sr), up = A.up.clone().multiplyScalar(cr).addScaledVector(A.right, -sr);
-  const tanV = Math.tan((c.fov * RAD) / 2);
+  const tanV = lensTan(c.fov);
   return { p: A.p, fwd: A.fwd, right, up, tanV, tanH: tanV * aspect };
 };
 /** a camera-space point (x right, y up, z forward) -> world */

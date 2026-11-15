@@ -79,11 +79,11 @@ const washTex = (seed: number, base: string) => plasterTex(seed, base, css(mix(b
 /** STONE FLAGS for the footways: big rectangular slabs in courses along v */
 const flagsTex = (seed: number) => paint(256, 512, (g, W, H) => {
   const r = rng(seed);
-  g.fillStyle = "#8e8474"; g.fillRect(0, 0, W, H);
+  g.fillStyle = "#aa9e88"; g.fillRect(0, 0, W, H);                                     // QUIET: a soft joint, a shade down
   let y = 0;
   while (y < H) {
     const h = 60 + 50 * r(); let x = 0; const off = r() * 60;
-    while (x < W + 80) { const w = 70 + 70 * r(); g.fillStyle = css(mix("#c4b8a0", r() < 0.5 ? "#a89c86" : "#d6ccb4", 0.2 + 0.5 * r())); g.fillRect(x - off + 2, y + 2, w - 4, h - 4); x += w; }
+    while (x < W + 80) { const w = 70 + 70 * r(); g.fillStyle = css(mix("#c4b8a0", r() < 0.5 ? "#b2a690" : "#cec4ac", 0.15 + 0.3 * r())); g.fillRect(x - off + 2.5, y + 2.5, w - 5, h - 5); x += w; }
     y += h;
   }
 }, true);
@@ -93,7 +93,7 @@ const flagsTex = (seed: number) => paint(256, 512, (g, W, H) => {
  *  stones 0.1-0.17 m long. Tiles both ways. */
 const roadSettsTex = (seed: number) => paint(512, 512, (g, W, H) => {
   const r = rng(seed), rows = 14, ch = H / rows;
-  g.fillStyle = "#5f584f"; g.fillRect(0, 0, W, H);
+  g.fillStyle = "#7a7266"; g.fillRect(0, 0, W, H);                                     // QUIET: joints only a little darker
   const greys = ["#8e8679", "#9a9184", "#a69d8e", "#847c70", "#958c7c", "#a0988c"];
   for (let j = 0; j < rows; j++) {
     const y0 = j * ch, ws: number[] = [];
@@ -101,9 +101,9 @@ const roadSettsTex = (seed: number) => paint(512, 512, (g, W, H) => {
     const k = W / tot, off = r() * W;                                                   // stretch the course to tile exactly
     let x = 0;
     for (const w0 of ws) {
-      const w = w0 * k, gap = 2.6 + 1.2 * r(), j1 = () => (r() - 0.5) * 2.4;
+      const w = w0 * k, gap = 3.6 + 1.2 * r(), j1 = () => (r() - 0.5) * 2.4;
       const pts: [number, number][] = [[x + gap / 2 + j1(), y0 + gap / 2 + j1()], [x + w - gap / 2 + j1(), y0 + gap / 2 + j1()], [x + w - gap / 2 + j1(), y0 + ch - gap / 2 + j1()], [x + gap / 2 + j1(), y0 + ch - gap / 2 + j1()]];
-      const col = css(mix(greys[Math.floor(r() * greys.length)], r() < 0.5 ? "#7c7468" : "#b0a796", 0.35 * r()));
+      const col = css(mix(mix(greys[Math.floor(r() * greys.length)], "#948b7d", 0.45), r() < 0.5 ? "#7c7468" : "#b0a796", 0.2 * r()));
       for (const dx of [-W, 0, W]) for (const dy of j === 0 ? [0, H] : j === rows - 1 ? [0, -H] : [0]) {
         const P = pts.map(([px, py]) => [px + off + dx, py + dy] as [number, number]);
         g.fillStyle = col; g.beginPath(); P.forEach(([px, py], i) => (i ? g.lineTo(px, py) : g.moveTo(px, py))); g.closePath(); g.fill();
@@ -115,13 +115,13 @@ const roadSettsTex = (seed: number) => paint(512, 512, (g, W, H) => {
     }
   }
   // a little grit and wear, and a gentle unevenness of tone across the courses
-  for (let i = 0; i < 900; i++) { g.fillStyle = r() < 0.5 ? "rgba(40,36,30,0.18)" : "rgba(220,210,190,0.10)"; g.fillRect(W * r(), H * r(), 1.5 + 2 * r(), 1.5 + 2 * r()); }
+  for (let i = 0; i < 400; i++) { g.fillStyle = r() < 0.5 ? "rgba(40,36,30,0.08)" : "rgba(220,210,190,0.06)"; g.fillRect(W * r(), H * r(), 3 + 3 * r(), 3 + 3 * r()); }
 }, true);
 /** the KENNEL: narrow stone setts along v, darker and damp in the middle */
 const settsTex = (seed: number) => paint(128, 512, (g, W, H) => {
   const r = rng(seed);
-  g.fillStyle = "#6e675e"; g.fillRect(0, 0, W, H);
-  for (let y = 0; y < H; y += 26) for (let x = (y / 26) % 2 ? -16 : 0; x < W; x += 32) { g.fillStyle = css(mix("#9a9082", r() < 0.5 ? "#857c6e" : "#aaa090", 0.5 * r())); g.fillRect(x + 2, y + 2, 28, 22); }
+  g.fillStyle = "#837b70"; g.fillRect(0, 0, W, H);                                     // QUIET: soft joints
+  for (let y = 0; y < H; y += 26) for (let x = (y / 26) % 2 ? -16 : 0; x < W; x += 32) { g.fillStyle = css(mix("#9a9082", r() < 0.5 ? "#8e8578" : "#a49a8a", 0.4 * r())); g.fillRect(x + 2, y + 2, 28, 22); }
   const gr = g.createLinearGradient(0, 0, W, 0); gr.addColorStop(0, "rgba(40,40,46,0)"); gr.addColorStop(0.5, "rgba(40,40,46,0.12)"); gr.addColorStop(1, "rgba(40,40,46,0)");
   g.fillStyle = gr; g.fillRect(0, 0, W, H);
 }, true);

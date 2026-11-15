@@ -1,13 +1,18 @@
 {
  "film": "newton",
+ "version": "v5 (the redo, gate 2: script v5 revision 3, built on its recommended defaults while Jay decides)",
+ "source": "/mnt/project-files/next-video/newton/redo/lines_v5.json (the acting, shot and sound cells stay there)",
  "title": {
-  "zh": "跟着牛顿过一天",
-  "en": "A Day with Newton"
+  "zh": "采访牛顿的一天",
+  "en": "A Day Interviewing Newton"
  },
- "subtitle": {
-  "zh": "1686年5月 · 剑桥三一学院",
-  "en": "May 1686 · Trinity College, Cambridge"
- },
+ "title_span_s": [
+  6.1333,
+  7.8
+ ],
+ "title_en_on_screen": false,
+ "card_en_on_screen": false,
+ "rec_display": "05:00 (A) and 02:00 (G) are sourced (facts row 3). B-F: the digits race only during a clock join and land on the word alone (上午 / 中午 / 下午 / 傍晚 / 夜). This is the default; Jay can still choose digits.",
  "speakers": {
   "ji": "记者 (Lin, never seen: the camera)",
   "nt": "牛顿 Newton",
@@ -17,62 +22,313 @@
   "A": {
    "time": "清晨",
    "en": "Early morning",
-   "place": "stairs"
+   "place": "stairs",
+   "rec": "05:00",
+   "join_in": null,
+   "where": "his door (cold open through the gap), then the stairs"
   },
   "B": {
    "time": "上午",
    "en": "Late morning",
-   "place": "room"
+   "place": "room",
+   "rec": "上午 (word only)",
+   "join_in": "① the REC clock runs fast (under card 1)",
+   "where": "room"
   },
   "C": {
    "time": "中午",
    "en": "Noon",
-   "place": "garden"
+   "place": "garden",
+   "rec": "中午 (word only)",
+   "join_in": "② whip pan left on the noon strike; inside: ③ match cut plate → sundial, ④ whip up the stairs",
+   "where": "room (plate) / garden / room"
   },
   "D": {
    "time": "下午",
    "en": "Afternoon",
-   "place": "schools"
+   "place": "schools",
+   "rec": "下午 (word only)",
+   "join_in": "⑤ the REC clock runs fast; inside: ⑥ whip pan after him",
+   "where": "street / schools"
   },
   "E": {
    "time": "傍晚",
    "en": "Supper time",
-   "place": "room"
+   "place": "room",
+   "rec": "傍晚 (word only)",
+   "join_in": "⑦ the REC clock runs fast",
+   "where": "room"
   },
   "F": {
    "time": "夜",
    "en": "Night",
-   "place": "elaboratory"
+   "place": "elaboratory",
+   "rec": "夜 (word only)",
+   "join_in": "⑧ whip pan after him; inside: ⑨ match cut on his candle (fallback: a cover by his back)",
+   "where": "garden walk → elaboratory"
   },
   "G": {
    "time": "凌晨两点",
    "en": "2 a.m.",
-   "place": "elaboratory"
+   "place": "elaboratory",
+   "rec": "02:00",
+   "join_in": "⑩ the REC clock runs fast over the held frame (no cut); inside: ⑪ match cut board circle → plate",
+   "where": "elaboratory / his room"
   }
  },
  "gap": 0.1,
  "lead": 0.1,
- "lines": [
-  {
-   "n": 1,
-   "id": "A01",
-   "script_id": "01",
-   "scene": "A",
-   "who": "ji",
-   "tts": "[bright, eager] 早上好！今天陪您过一天！",
-   "zh": "早上好！今天陪您过一天！",
-   "en": "Good morning! I'm spending the day with you!",
+ "level_target_db": -23.748,
+ "voice": {
+  "lines_dir": "/home/user/newton_work/film/voice/v5/lines",
+  "cuts": [
+   "/home/user/newton_work/film/voice/v5/line_cuts.json"
+  ],
+  "out": "/home/user/newton_work/film/voice",
+  "clip_gain": "/home/user/newton_film/scripts/newton/voice/clip_gain_v5.json"
+ },
+ "review_fixes": {
+  "timing": {
+   "F05": {
+    "pre": 0.6,
+    "why": "F05's Emotion cell: one held beat before the line (he could walk away and does not); the personality sheet's held beat before each brush-off (his 14 f reaction delay)"
+   },
+   "F09": {
+    "pre": 0.6,
+    "why": "F08's row: N: no move for a beat; the turn (bible): music and camera go quiet, the fire heard alone before \"My mother\" (the push still runs F09 -> F15, its length unchanged)"
+   },
+   "G04": {
+    "after": 4.8,
+    "why": "card 5 (f5107-5217 in the first build) was still up when the REC lamp died (OFF_AT f5211)"
+   },
+   "A02": {
+    "after": 2.2,
+    "why": "G1, the title (effects_gaps.G1): +1.20 s after the thud, A03 1.20 s later"
+   },
+   "B03": {
+    "after": 2.5,
+    "why": "G2, Newton's intro card (effects_gaps.G2): +2.50 s freeze, the owner's 14 Nov rule"
+   },
+   "B09": {
+    "card_delay": 0.5,
+    "after": 4.3,
+    "why": "G3, tick 1 (effects_gaps.G3): card 2 and its ding +0.50 s"
+   }
+  },
+  "retime": {
+   "A06": "the alignment put 次 at film 17.08-17.16 s; the voice sounds until 17.70 and is silent from 17.75"
+  },
+  "clip_gain": "/home/user/newton_film/scripts/newton/voice/clip_gain_v5.json"
+ },
+ "swap": {
+  "F16": {
+   "take": "v5",
+   "wav": "/home/user/newton_work/film/voice/v5/f16/v5_F16_s1686.mp3",
+   "zh": "她丢下了您，您却守着她。",
+   "en": "She left you. You stayed with her.",
+   "tts": "[moved, warm] 她丢下了您，您却守着她。",
    "screens": [
     {
-     "zh": "早上好！今天陪您过一天！",
-     "en": "Good morning! I'm spending the day with you!"
+     "zh": "她丢下了您，您却守着她。",
+     "en": "She left you. You stayed with her."
     }
-   ]
+   ],
+   "len_s": 2.78,
+   "gain_db": null,
+   "cut": {
+    "segment": 1,
+    "voice_id": "I23uc91tu5zY2PA1tKEN",
+    "service_segment_s": [
+     4.36,
+     7.28
+    ],
+    "aligned_voiced_s": [
+     4.64,
+     7.04
+    ],
+    "before": {
+     "silent_run_s": [
+      4.15,
+      4.48
+     ]
+    },
+    "cut_s": [
+     4.315,
+     7.2
+    ],
+    "report": "/home/user/newton_work/film/voice/v5/f16/report.json"
+   },
+   "trimmed_s": [
+    4.42,
+    7.2
+   ],
+   "squeezed_s": [],
+   "max_s": 4.03,
+   "next": {
+    "take": "v5",
+    "zh": "她丢下了您，您却守着她。",
+    "en": "She left you. You stayed with her.",
+    "tts": "[moved, warm] 她丢下了您，您却守着她。",
+    "screens": [
+     {
+      "zh": "她丢下了您，您却守着她。",
+      "en": "She left you. You stayed with her."
+     }
+    ],
+    "est_s": 3.03
+   },
+   "how": "python3 scripts/newton/voice/swap_take.py F16 <the farm's take, mp3 or wav> --dry-run, then without --dry-run. THE CUT STEP: the farm renders F16 as a two-voice dialogue after Newton's F15, so swap_take reads the farm's report.json (the one beside the take, or --report) and cuts F16's own voice segment out in the silence before it (the envelope, cut_lines' rule; never at the service's segment boundary), then trims it the cut_lines way; it refuses a clip longer than max_s (next.est_s + 1.0 s), then rebuilds (assemble.py, gen_timing.py, hot_syllables.py --build: the new take's clip gain). Then the sound mix rebuild and the renders; --back returns to the take before",
+   "prev": {
+    "take": "v4",
+    "wav": "/home/user/newton_work/v4/voice/picked/lines/F16.wav",
+    "zh": "她走了，您却没走。",
+    "en": "She left. You stayed.",
+    "tts": "[moved, warm] 她走了，您却没走。",
+    "screens": [
+     {
+      "zh": "她走了，您却没走。",
+      "en": "She left. You stayed."
+     }
+    ],
+    "len_s": 2.29,
+    "gain_db": 5.8,
+    "next": {
+     "take": "v5",
+     "zh": "她丢下了您，您却守着她。",
+     "en": "She left you. You stayed with her.",
+     "tts": "[moved, warm] 她丢下了您，您却守着她。",
+     "screens": [
+      {
+       "zh": "她丢下了您，您却守着她。",
+       "en": "She left you. You stayed with her."
+      }
+     ],
+     "est_s": 3.03
+    },
+    "max_s": 4.03,
+    "how": "python3 scripts/newton/voice/swap_take.py F16 <the farm's take, mp3 or wav> --dry-run, then without --dry-run. THE CUT STEP: the farm renders F16 as a two-voice dialogue after Newton's F15, so swap_take reads the farm's report.json (the one beside the take, or --report) and cuts F16's own voice segment out in the silence before it (the envelope, cut_lines' rule; never at the service's segment boundary), then trims it the cut_lines way; it refuses a clip longer than max_s (next.est_s + 1.0 s), then rebuilds (assemble.py, gen_timing.py, hot_syllables.py --build: the new take's clip gain). Then the sound mix rebuild and the renders; --back returns to the take before",
+    "cut": {
+     "id": "F16",
+     "scene": "F",
+     "file": "v4_S6_s1686.mp3",
+     "seg": [
+      37.96000000000001,
+      40.24000000000001
+     ],
+     "guide": [
+      38.343,
+      40.0
+     ],
+     "cut": [
+      38.34,
+      40.88
+     ],
+     "kept": [
+      38.47,
+      40.76
+     ],
+     "chars": [
+      [
+       " ",
+       38.286,
+       38.343
+      ],
+      [
+       "她",
+       38.343,
+       38.4
+      ],
+      [
+       "走",
+       38.4,
+       38.52
+      ],
+      [
+       "了",
+       38.52,
+       38.64
+      ],
+      [
+       "，",
+       38.64,
+       39.2
+      ],
+      [
+       "您",
+       39.2,
+       39.52
+      ],
+      [
+       "却",
+       39.52,
+       39.76
+      ],
+      [
+       "没",
+       39.76,
+       39.92
+      ],
+      [
+       "走",
+       39.92,
+       40.0
+      ],
+      [
+       "。",
+       40.0,
+       40.24
+      ]
+     ],
+     "edge_db": [
+      -75.4,
+      -75.4
+     ],
+     "take": "1686"
+    }
+   }
+  }
+ },
+ "cut_from_v4": [
+  {
+   "id": "A01",
+   "zh": "早上好！今天陪您过一天！",
+   "en": "Good morning! I'm spending the day with you!",
+   "why": "the cold open: no greeting; the title carries the premise",
+   "back": "15 Nov: 早上好！ is back as A01b (owner note); the rest of the line stays cut"
+  }
+ ],
+ "lines": [
+  {
+   "id": "A01b",
+   "script_id": "00b",
+   "scene": "A",
+   "who": "ji",
+   "tts": "[bright, cheerful] 早上好！",
+   "zh": "早上好！",
+   "en": "Good morning!",
+   "screens": [
+    {
+     "zh": "早上好！",
+     "en": "Good morning!"
+    }
+   ],
+   "pre": 2.52,
+   "after": 0.0,
+   "en_on_screen": false,
+   "take": {
+    "status": "recorded",
+    "from_id": "A01 (v4: 早上好！今天陪您过一天！, cut at its pause)",
+    "pick": "1686"
+   },
+   "gain_db": -5.72,
+   "owner_note": "owner note 15 Nov (Jay): \"the interviewer doesnt have lines at beginning ... Oh we are finally here, then knock knock Good morning!\"",
+   "n": 1
   },
   {
    "n": 2,
    "id": "A02",
-   "script_id": "02",
+   "script_id": "01",
+   "v4_id": "A02",
    "scene": "A",
    "who": "nt",
    "tts": "[flat, matter-of-fact] Good night.",
@@ -84,13 +340,34 @@
      "en": "Good night."
     }
    ],
-   "after": 1.5,
-   "beat": "door shuts; title block on the door (3 s, runs under 03)"
+   "pre": 0.98,
+   "after": 2.2,
+   "en_on_screen": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "A02",
+    "pick": "1686"
+   },
+   "gain_db": -1.31,
+   "est": [
+    4.6,
+    5.5
+   ],
+   "effects_gap": {
+    "gap": "G1",
+    "after": {
+     "before": 1.0,
+     "built": 2.2
+    },
+    "why": "G1, THE TITLE: +1.20 s (36 frames) between the slam's thud and A03 (EFFECTS_PLAN G1, the plan's full value): A03 starts 1.20 s later than in the delivered v5 track (6.600 s, f198 -> 7.800 s, f234), so the themed title 采访牛顿的一天 sits on the shut door from the thud (5.90 s, f177: A02 end + 0.4 s) for 1.87 s (in 0.6 s, held 1.0 s, out 0.27 s) and is gone before A03's whisper bubble. Written as A02's after-hold (1.0 -> 2.2), not A03's pre, so A03's preFrom moves with A03 and the cold open up to the thud (REC beep, STOP 1/5, raps, steps, A02, the swing, the thud, the pigeon) does not move."
+   },
+   "pre_note": "was 4.5: the new opening lines A01a / A01b take the rest, A02 still starts at 4.600 s"
   },
   {
    "n": 3,
    "id": "A03",
-   "script_id": "03",
+   "script_id": "02",
+   "v4_id": "A03",
    "scene": "A",
    "who": "ji",
    "tts": "[baffled, amused] 他这是……刚要睡？",
@@ -102,17 +379,25 @@
      "en": "Is he... only just going to bed?"
     }
    ],
-   "card": {
-    "zh": "助手回忆：他常到两三点才睡，有时五六点。",
-    "en": "His assistant recalled: he seldom went to bed before 2 or 3, sometimes not till 5 or 6."
+   "after": 1.0,
+   "en_on_screen": false,
+   "aside": "悄悄说",
+   "take": {
+    "status": "recorded",
+    "from_id": "A03",
+    "pick": "1686"
    },
-   "card_hold": 3.5,
-   "after": 3.5
+   "gain_db": 0.44,
+   "est": [
+    6.6,
+    8.93
+   ]
   },
   {
    "n": 4,
    "id": "A04",
-   "script_id": "04",
+   "script_id": "03",
+   "v4_id": "A04",
    "scene": "A",
    "who": "ji",
    "tts": "[friendly, curious] 助手小哥，他平时笑吗？",
@@ -123,12 +408,25 @@
      "zh": "助手小哥，他平时笑吗？",
      "en": "Hey, assistant: does he ever laugh?"
     }
+   ],
+   "en_on_screen": false,
+   "question": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "A04",
+    "pick": "1686"
+   },
+   "gain_db": -0.52,
+   "est": [
+    10.03,
+    12.145
    ]
   },
   {
    "n": 5,
    "id": "A05",
-   "script_id": "05",
+   "script_id": "04",
+   "v4_id": "A05",
    "scene": "A",
    "who": "hm",
    "tts": "[startled, incredulous] Laugh? Mr Newton?",
@@ -141,12 +439,23 @@
     }
    ],
    "after": 1.0,
-   "beat": "Humphrey goes down the stairs"
+   "en_on_screen": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "A05",
+    "pick": "1686"
+   },
+   "gain_db": -2.94,
+   "est": [
+    12.245,
+    14.18
+   ]
   },
   {
    "n": 6,
    "id": "A06",
-   "script_id": "06",
+   "script_id": "05",
+   "v4_id": "A06",
    "scene": "A",
    "who": "ji",
    "tts": "[fired up, cheeky] 好，今天我要让他笑一次。",
@@ -158,12 +467,32 @@
      "en": "Right. Today, I'm going to make him laugh. Once."
     }
    ],
-   "after": 0.3
+   "after": 4.1,
+   "card_hold": 3.6,
+   "card_delay": 0.3,
+   "card": {
+    "zh": "助手回忆：他常到两三点才睡，有时五六点。",
+    "en": "His assistant recalled: he seldom went to bed before 2 or 3, sometimes not till 5 or 6.",
+    "en_on_screen": false
+   },
+   "en_on_screen": false,
+   "aside": "悄悄说",
+   "take": {
+    "status": "recorded",
+    "from_id": "A06",
+    "pick": "1686"
+   },
+   "gain_db": -4.75,
+   "est": [
+    15.28,
+    17.96
+   ]
   },
   {
    "n": 7,
    "id": "B01",
-   "script_id": "07",
+   "script_id": "06",
+   "v4_id": "B01",
    "scene": "B",
    "who": "hm",
    "tts": "[polite, hopeful] Sir, your dinner.",
@@ -175,14 +504,25 @@
      "en": "Sir, your dinner."
     }
    ],
-   "pre": 1.5,
+   "pre": 0.6,
    "after": 1.0,
-   "beat": "pre: morning plate + pull back; after: Humphrey leaves"
+   "en_on_screen": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "B01",
+    "pick": "1686"
+   },
+   "gain_db": -2.88,
+   "est": [
+    22.76,
+    24.32
+   ]
   },
   {
    "n": 8,
    "id": "B02",
-   "script_id": "08",
+   "script_id": "07",
+   "v4_id": "B02",
    "scene": "B",
    "who": "ji",
    "tts": "[calling out, helpful] 他说马上来！",
@@ -195,12 +535,23 @@
     }
    ],
    "after": 0.5,
-   "beat": "mic back to the plate"
+   "en_on_screen": false,
+   "take": {
+    "status": "recorded",
+    "from_id": "B02",
+    "pick": "1686"
+   },
+   "gain_db": -4.07,
+   "est": [
+    25.42,
+    26.82
+   ]
   },
   {
    "n": 9,
    "id": "B03",
-   "script_id": "09",
+   "script_id": "08",
+   "v4_id": "B03",
    "scene": "B",
    "who": "ji",
    "tts": "[lively] 牛顿先生，您在写什么？",
@@ -211,12 +562,34 @@
      "zh": "牛顿先生，您在写什么？",
      "en": "Mr Newton, what are you writing?"
     }
-   ]
+   ],
+   "en_on_screen": false,
+   "question": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "B03",
+    "pick": "1686"
+   },
+   "gain_db": -2.25,
+   "est": [
+    27.42,
+    29.3
+   ],
+   "after": 2.5,
+   "effects_gap": {
+    "gap": "G2",
+    "after": {
+     "before": 0.0,
+     "built": 2.5
+    },
+    "why": "G2, NEWTON'S INTRO CARD: +2.50 s (75 frames) at B03's end (the owner's rule, 14 Nov: the lead's intro-card freeze is about 2.5 s, \"hold a bit longer\", with the lead isolated as a cut-out; it replaces the plan's 1.3 s). The picture freezes on B03's last frame for the card's 75 frames; B04 starts 2.50 s later. Written as B03's after-hold (0 -> 2.5), never B04's pre: freeze.ts G2_READY reads line(\"B04\").preFrom - line(\"B03\").to (78 now) and its CARD_LEN (39, the effects build's file) must become 75."
+   }
   },
   {
    "n": 10,
    "id": "B04",
-   "script_id": "10",
+   "script_id": "09",
+   "v4_id": "B04",
    "scene": "B",
    "who": "nt",
    "tts": "[dry, distracted] An answer. The astronomer Halley asked how planets go round the Sun.",
@@ -231,12 +604,24 @@
      "zh": "行星是怎么绕太阳转的。",
      "en": "how planets go round the Sun."
     }
+   ],
+   "en_on_screen": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "B04",
+    "pick": "1686"
+   },
+   "gain_db": -0.67,
+   "est": [
+    29.4,
+    34.44
    ]
   },
   {
    "n": 11,
    "id": "B05",
-   "script_id": "11",
+   "script_id": "10",
+   "v4_id": "B05",
    "scene": "B",
    "who": "ji",
    "tts": "[teasing] 一个问题，写这么厚？",
@@ -247,12 +632,25 @@
      "zh": "一个问题，写这么厚？",
      "en": "One question, and it's this thick?"
     }
+   ],
+   "en_on_screen": false,
+   "question": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "B05",
+    "pick": "1642"
+   },
+   "gain_db": -0.86,
+   "est": [
+    34.54,
+    36.88
    ]
   },
   {
    "n": 12,
    "id": "B06",
-   "script_id": "12",
+   "script_id": "11",
+   "v4_id": "B06",
    "scene": "B",
    "who": "nt",
    "tts": "[dry, absorbed] I lost the first one. Began again.",
@@ -263,12 +661,24 @@
      "zh": "第一份弄丢了，只好重来。",
      "en": "I lost the first one. Began again."
     }
+   ],
+   "en_on_screen": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "B06",
+    "pick": "1642"
+   },
+   "gain_db": 1.01,
+   "est": [
+    36.98,
+    39.64
    ]
   },
   {
    "n": 13,
    "id": "B07",
-   "script_id": "13",
+   "script_id": "12",
+   "v4_id": "B07",
    "scene": "B",
    "who": "ji",
    "tts": "[cheeky] 是苹果砸头那个吗？",
@@ -279,12 +689,25 @@
      "zh": "是苹果砸头那个吗？",
      "en": "Is this the apple-on-the-head thing?"
     }
+   ],
+   "en_on_screen": false,
+   "question": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "B07",
+    "pick": "1642"
+   },
+   "gain_db": -0.92,
+   "est": [
+    39.74,
+    41.475
    ]
   },
   {
    "n": 14,
    "id": "B08",
-   "script_id": "14",
+   "script_id": "13",
+   "v4_id": "B08",
    "scene": "B",
    "who": "nt",
    "tts": "[cold, precise] It fell to the ground. Not on me.",
@@ -295,12 +718,24 @@
      "zh": "它掉在地上。没砸我。",
      "en": "It fell to the ground. Not on me."
     }
+   ],
+   "en_on_screen": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "B08",
+    "pick": "1642"
+   },
+   "gain_db": -0.5,
+   "est": [
+    41.575,
+    44.19
    ]
   },
   {
    "n": 15,
    "id": "B09",
-   "script_id": "15",
+   "script_id": "14",
+   "v4_id": "B09",
    "scene": "B",
    "who": "ji",
    "tts": "[deadpan] 没笑。",
@@ -312,17 +747,44 @@
      "en": "No laugh."
     }
    ],
+   "after": 4.3,
+   "card_hold": 3.7,
    "card": {
     "zh": "这个答案越写越厚，成了讲万有引力的巨著。",
-    "en": "The answer kept growing, and became his great book on universal gravitation."
+    "en": "The answer kept growing, and became his great book on universal gravitation.",
+    "en_on_screen": false
    },
-   "card_hold": 3.5,
-   "after": 3.5
+   "en_on_screen": false,
+   "aside": "悄悄说",
+   "take": {
+    "status": "recorded",
+    "from_id": "B09",
+    "pick": "1642"
+   },
+   "gain_db": 5.61,
+   "est": [
+    44.29,
+    45.11
+   ],
+   "card_delay": 0.5,
+   "effects_gap": {
+    "gap": "G3",
+    "card_delay": {
+     "before": 0.0,
+     "built": 0.5
+    },
+    "after": {
+     "before": 3.8,
+     "built": 4.3
+    },
+    "why": "G3, TICK 1: card 2 starts 0.50 s later (B09 end + 1 frame + 0.50 s = +16 frames; its ding with it), so the meter's first cross after 「没笑。」 reads before the card comes in (EFFECTS_PLAN G3 and row 6, the plan's full value). B09's after grows by the same 0.50 s (3.8 -> 4.3) so card 2 still ends before the B -> C cut, and the noon strike (anchored to card 2's end), whip 2 and C to the end move with it."
+   }
   },
   {
    "n": 16,
    "id": "C01",
-   "script_id": "16",
+   "script_id": "15",
+   "v4_id": "C01",
    "scene": "C",
    "who": "ji",
    "tts": "[cheeky, a bit rude] 您从来不出去玩吗？",
@@ -334,12 +796,25 @@
      "en": "Don't you ever go out and have fun?"
     }
    ],
-   "pre": 1.5
+   "pre": 1.0,
+   "en_on_screen": false,
+   "question": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "C01",
+    "pick": "1686"
+   },
+   "gain_db": 1.23,
+   "est": [
+    50.01,
+    51.63
+   ]
   },
   {
    "n": 17,
    "id": "C02",
-   "script_id": "17",
+   "script_id": "16",
+   "v4_id": "C02",
    "scene": "C",
    "who": "nt",
    "tts": "[dry, literal] I am out.",
@@ -350,12 +825,24 @@
      "zh": "我这不是出来了？",
      "en": "I am out."
     }
+   ],
+   "en_on_screen": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "C02",
+    "pick": "1686"
+   },
+   "gain_db": -3.84,
+   "est": [
+    51.73,
+    52.94
    ]
   },
   {
    "n": 18,
    "id": "C03",
-   "script_id": "18",
+   "script_id": "17",
+   "v4_id": "C03",
    "scene": "C",
    "who": "ji",
    "tts": "[teasing] 绕两圈就算玩？",
@@ -366,12 +853,25 @@
      "zh": "绕两圈就算玩？",
      "en": "Two laps of a garden counts as fun?"
     }
+   ],
+   "en_on_screen": false,
+   "question": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "C03",
+    "pick": "1686"
+   },
+   "gain_db": 0.0,
+   "est": [
+    53.04,
+    54.59
    ]
   },
   {
    "n": 19,
    "id": "C04",
-   "script_id": "19",
+   "script_id": "18",
+   "v4_id": "C04",
    "scene": "C",
    "who": "nt",
    "tts": "[lecturing, then cut off] Two laps is—",
@@ -384,12 +884,23 @@
     }
    ],
    "after": 1.0,
-   "beat": "he stops dead, turns, runs for the stairs"
+   "en_on_screen": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "C04",
+    "pick": "1642"
+   },
+   "gain_db": -3.18,
+   "est": [
+    54.69,
+    55.945
+   ]
   },
   {
    "n": 20,
    "id": "C05",
-   "script_id": "20",
+   "script_id": "19",
+   "v4_id": "C05",
    "scene": "C",
    "who": "ji",
    "tts": "[startled, curious] 诶？他想到什么了？",
@@ -402,12 +913,24 @@
     }
    ],
    "after": 1.0,
-   "beat": "whip upstairs: he is writing standing"
+   "en_on_screen": false,
+   "question": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "C05",
+    "pick": "1642"
+   },
+   "gain_db": 3.87,
+   "est": [
+    57.045,
+    58.645
+   ]
   },
   {
    "n": 21,
    "id": "C06",
-   "script_id": "21",
+   "script_id": "20",
+   "v4_id": "C06",
    "scene": "C",
    "who": "ji",
    "tts": "[amused, coaxing] 坐下写嘛。",
@@ -418,12 +941,24 @@
      "zh": "坐下写嘛。",
      "en": "Sit down to write!"
     }
+   ],
+   "en_on_screen": false,
+   "take": {
+    "status": "recorded",
+    "from_id": "C06",
+    "pick": "1686"
+   },
+   "gain_db": 4.04,
+   "est": [
+    59.745,
+    61.15
    ]
   },
   {
    "n": 22,
    "id": "C07",
-   "script_id": "22",
+   "script_id": "21",
+   "v4_id": "C07",
    "scene": "C",
    "who": "nt",
    "tts": "[absorbed, dismissive] No time.",
@@ -435,13 +970,24 @@
      "en": "No time."
     }
    ],
-   "after": 1.0,
-   "beat": "the empty chair"
+   "after": 1.1,
+   "en_on_screen": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "C07",
+    "pick": "1686"
+   },
+   "gain_db": 1.92,
+   "est": [
+    61.25,
+    62.39
+   ]
   },
   {
    "n": 23,
    "id": "D01",
-   "script_id": "23",
+   "script_id": "22",
+   "v4_id": "D01",
    "scene": "D",
    "who": "ji",
    "tts": "[amazed] 一个学生都没有。",
@@ -453,13 +999,25 @@
      "en": "Not one student."
     }
    ],
-   "pre": 3.0,
-   "beat": "pre: walk to the lecture with the ink wipe (1.5) + wide on the empty benches (1.5)"
+   "pre": 2.5,
+   "en_on_screen": false,
+   "aside": "悄悄说",
+   "take": {
+    "status": "recorded",
+    "from_id": "D01",
+    "pick": "1686"
+   },
+   "gain_db": -1.8,
+   "est": [
+    66.09,
+    67.91
+   ]
   },
   {
    "n": 24,
    "id": "D02",
-   "script_id": "24",
+   "script_id": "23",
+   "v4_id": "D02",
    "scene": "D",
    "who": "nt",
    "tts": "[dry, unbothered] The walls never miss a lecture.",
@@ -470,12 +1028,24 @@
      "zh": "墙，从来不缺课。",
      "en": "The walls never miss a lecture."
     }
+   ],
+   "en_on_screen": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "D02",
+    "pick": "1686"
+   },
+   "gain_db": -2.49,
+   "est": [
+    68.01,
+    70.32
    ]
   },
   {
    "n": 25,
    "id": "D03",
-   "script_id": "25",
+   "script_id": "24",
+   "v4_id": "D03",
    "scene": "D",
    "who": "ji",
    "tts": "[cheeky] 墙听得懂吗？",
@@ -486,12 +1056,25 @@
      "zh": "墙听得懂吗？",
      "en": "Do the walls understand it?"
     }
+   ],
+   "en_on_screen": false,
+   "question": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "D03",
+    "pick": "1686"
+   },
+   "gain_db": 3.04,
+   "est": [
+    70.42,
+    71.86
    ]
   },
   {
    "n": 26,
    "id": "D04",
-   "script_id": "26",
+   "script_id": "25",
+   "v4_id": "D04",
    "scene": "D",
    "who": "nt",
    "tts": "[deadpan] As well as the students.",
@@ -502,12 +1085,24 @@
      "zh": "跟学生差不多。",
      "en": "As well as the students."
     }
+   ],
+   "en_on_screen": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "D04",
+    "pick": "1686"
+   },
+   "gain_db": 1.06,
+   "est": [
+    71.96,
+    73.65
    ]
   },
   {
    "n": 27,
    "id": "D05",
-   "script_id": "27",
+   "script_id": "26",
+   "v4_id": "D05",
    "scene": "D",
    "who": "ji",
    "tts": "[laughing] 他没笑，我笑了。",
@@ -520,12 +1115,24 @@
     }
    ],
    "after": 2.0,
-   "beat": "muffled lecture, time cut, the lone clap"
+   "en_on_screen": false,
+   "aside": "悄悄说",
+   "take": {
+    "status": "recorded",
+    "from_id": "D05",
+    "pick": "1686"
+   },
+   "gain_db": 0.05,
+   "est": [
+    73.75,
+    76.39
+   ]
   },
   {
    "n": 28,
    "id": "D06",
-   "script_id": "28",
+   "script_id": "27",
+   "v4_id": "D06",
    "scene": "D",
    "who": "nt",
    "tts": "[flat] Don't.",
@@ -536,12 +1143,24 @@
      "zh": "别鼓掌。",
      "en": "Don't."
     }
+   ],
+   "en_on_screen": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "D06",
+    "pick": "1686"
+   },
+   "gain_db": 1.26,
+   "est": [
+    78.49,
+    79.27
    ]
   },
   {
    "n": 29,
    "id": "E01",
-   "script_id": "29",
+   "script_id": "28",
+   "v4_id": "E01",
    "scene": "E",
    "who": "ji",
    "tts": "[scolding, warm] 您今天一口都没吃！",
@@ -554,12 +1173,23 @@
     }
    ],
    "pre": 1.5,
-   "beat": "pre: supper plate with the fly"
+   "en_on_screen": false,
+   "take": {
+    "status": "recorded",
+    "from_id": "E01",
+    "pick": "1686"
+   },
+   "gain_db": -2.85,
+   "est": [
+    80.87,
+    82.795
+   ]
   },
   {
    "n": 30,
    "id": "E02",
-   "script_id": "30",
+   "script_id": "29",
+   "v4_id": "E02",
    "scene": "E",
    "who": "nt",
    "tts": "[genuinely surprised] Have I not?",
@@ -572,12 +1202,23 @@
     }
    ],
    "after": 2.0,
-   "beat": "two bites standing"
+   "en_on_screen": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "E02",
+    "pick": "1686"
+   },
+   "gain_db": -0.5,
+   "est": [
+    82.895,
+    84.085
+   ]
   },
   {
    "n": 31,
    "id": "E03",
-   "script_id": "31",
+   "script_id": "30",
+   "v4_id": "E03",
    "scene": "E",
    "who": "ji",
    "tts": "[brave, cheeky] 您是不是……没什么朋友？",
@@ -588,12 +1229,25 @@
      "zh": "您是不是……没什么朋友？",
      "en": "Do you... not have many friends?"
     }
+   ],
+   "en_on_screen": false,
+   "question": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "E03",
+    "pick": "1686"
+   },
+   "gain_db": 1.29,
+   "est": [
+    86.185,
+    88.585
    ]
   },
   {
    "n": 32,
    "id": "E04",
-   "script_id": "32",
+   "script_id": "31",
+   "v4_id": "E04",
    "scene": "E",
    "who": "nt",
    "tts": "[matter-of-fact] Friends interrupt.",
@@ -604,12 +1258,24 @@
      "zh": "朋友只会打扰我。",
      "en": "Friends interrupt."
     }
+   ],
+   "en_on_screen": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "E04",
+    "pick": "1686"
+   },
+   "gain_db": -3.02,
+   "est": [
+    88.685,
+    90.295
    ]
   },
   {
    "n": 33,
    "id": "E05",
-   "script_id": "33",
+   "script_id": "32",
+   "v4_id": "E05",
    "scene": "E",
    "who": "ji",
    "tts": "[unbothered, cheeky] 那讨厌的人呢？",
@@ -620,12 +1286,25 @@
      "zh": "那讨厌的人呢？",
      "en": "And people you can't stand?"
     }
+   ],
+   "en_on_screen": false,
+   "question": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "E05",
+    "pick": "1686"
+   },
+   "gain_db": 0.42,
+   "est": [
+    90.395,
+    91.715
    ]
   },
   {
    "n": 34,
    "id": "E06",
-   "script_id": "34",
+   "script_id": "33",
+   "v4_id": "E06",
    "scene": "E",
    "who": "nt",
    "tts": "[instant, with relish] Hooke.",
@@ -636,12 +1315,24 @@
      "zh": "胡克。",
      "en": "Hooke."
     }
+   ],
+   "en_on_screen": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "E06",
+    "pick": "1686"
+   },
+   "gain_db": -4.39,
+   "est": [
+    91.815,
+    92.55
    ]
   },
   {
    "n": 35,
    "id": "E07",
-   "script_id": "35",
+   "script_id": "34",
+   "v4_id": "E07",
    "scene": "E",
    "who": "ji",
    "tts": "[impressed, deadpan] 秒答。胡克定律那个胡克。",
@@ -656,12 +1347,26 @@
      "zh": "胡克定律那个胡克。",
      "en": "Hooke, as in Hooke's law."
     }
+   ],
+   "after": 0.8,
+   "en_on_screen": false,
+   "aside": "悄悄说",
+   "take": {
+    "status": "recorded",
+    "from_id": "E07",
+    "pick": "1686"
+   },
+   "gain_db": -1.87,
+   "est": [
+    92.65,
+    95.58
    ]
   },
   {
    "n": 36,
    "id": "F01",
-   "script_id": "36",
+   "script_id": "35",
+   "v4_id": "F01",
    "scene": "F",
    "who": "ji",
    "tts": "[curious, a little wary] 您在……炼金吗？",
@@ -673,13 +1378,25 @@
      "en": "Are you... making gold?"
     }
    ],
-   "pre": 2.2,
-   "beat": "pre: candle along the gravel to the glowing outbuilding"
+   "pre": 1.2,
+   "en_on_screen": false,
+   "question": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "F01",
+    "pick": "1686"
+   },
+   "gain_db": 1.23,
+   "est": [
+    97.68,
+    99.785
+   ]
   },
   {
    "n": 37,
    "id": "F02",
-   "script_id": "37",
+   "script_id": "36",
+   "v4_id": "F02",
    "scene": "F",
    "who": "nt",
    "tts": "[evasive] I'm watching a fire.",
@@ -691,18 +1408,30 @@
      "en": "I'm watching a fire."
     }
    ],
+   "after": 3.7,
+   "card_hold": 3.7,
    "card": {
-    "zh": "看火？他留下的炼金手稿，超过一百万词。",
-    "en": "Watching a fire? His alchemy papers run to over a million words."
+    "zh": "看火？他留下的炼金手稿，大约一百万个单词。",
+    "en": "Watching a fire? His alchemy papers run to about a million words.",
+    "en_on_screen": false
    },
-   "card_hold": 3.5,
-   "after": 3.5,
-   "tts_note": "generated as 'I am watching a fire.'; the take (1642) says I'm"
+   "en_on_screen": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "F02",
+    "pick": "1642"
+   },
+   "gain_db": 1.1,
+   "est": [
+    99.885,
+    102.055
+   ]
   },
   {
    "n": 38,
    "id": "F03",
-   "script_id": "38",
+   "script_id": "37",
+   "v4_id": "F03",
    "scene": "F",
    "who": "nt",
    "tts": "[flat] Go to bed.",
@@ -713,12 +1442,24 @@
      "zh": "回去睡觉。",
      "en": "Go to bed."
     }
+   ],
+   "en_on_screen": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "F03",
+    "pick": "1686"
+   },
+   "gain_db": 0.4,
+   "est": [
+    105.855,
+    106.76
    ]
   },
   {
    "n": 39,
    "id": "F04",
-   "script_id": "39",
+   "script_id": "38",
+   "v4_id": "F04",
    "scene": "F",
    "who": "ji",
    "tts": "[stubborn, warm] 不走，说好陪您一天。",
@@ -729,12 +1470,24 @@
      "zh": "不走，说好陪您一天。",
      "en": "No. I said I'd spend the whole day with you."
     }
+   ],
+   "en_on_screen": false,
+   "take": {
+    "status": "recorded",
+    "from_id": "F04",
+    "pick": "1642"
+   },
+   "gain_db": -0.95,
+   "est": [
+    106.86,
+    108.94
    ]
   },
   {
    "n": 40,
    "id": "F05",
-   "script_id": "40",
+   "script_id": "39",
+   "v4_id": "F05",
    "scene": "F",
    "who": "nt",
    "tts": "[dry, puzzled] Nobody stays a whole day.",
@@ -746,13 +1499,32 @@
      "en": "Nobody stays a whole day."
     }
    ],
-   "after": 2.0,
-   "beat": "time passes: candle shorter, fire deep red, the board on his knee"
+   "after": 1.5,
+   "review_fix": {
+    "pre": {
+     "script": 0,
+     "built": 0.6
+    },
+    "why": "F05's Emotion cell: one held beat before the line (he could walk away and does not); the personality sheet's held beat before each brush-off (his 14 f reaction delay)"
+   },
+   "pre": 0.6,
+   "en_on_screen": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "F05",
+    "pick": "1686"
+   },
+   "gain_db": 3.01,
+   "est": [
+    109.04,
+    111.295
+   ]
   },
   {
    "n": 41,
    "id": "F06",
-   "script_id": "41",
+   "script_id": "40",
+   "v4_id": "F06",
    "scene": "F",
    "who": "ji",
    "tts": "[tired, sincere] 这么守着火，不难熬吗？",
@@ -763,12 +1535,25 @@
      "zh": "这么守着火，不难熬吗？",
      "en": "Sitting up with a fire like this, isn't it hard?"
     }
+   ],
+   "en_on_screen": false,
+   "question": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "F06",
+    "pick": "1686"
+   },
+   "gain_db": 4.74,
+   "est": [
+    112.895,
+    115.335
    ]
   },
   {
    "n": 42,
    "id": "F07",
-   "script_id": "42",
+   "script_id": "41",
+   "v4_id": "F07",
    "scene": "F",
    "who": "nt",
    "tts": "[plain] I have sat up longer.",
@@ -779,12 +1564,24 @@
      "zh": "我守过更久的。",
      "en": "I have sat up longer."
     }
+   ],
+   "en_on_screen": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "F07",
+    "pick": "1686"
+   },
+   "gain_db": -2.15,
+   "est": [
+    115.435,
+    116.995
    ]
   },
   {
    "n": 43,
    "id": "F08",
-   "script_id": "43",
+   "script_id": "42",
+   "v4_id": "F08",
    "scene": "F",
    "who": "ji",
    "tts": "[curious] 守谁？",
@@ -795,12 +1592,25 @@
      "zh": "守谁？",
      "en": "Sat up with who?"
     }
+   ],
+   "en_on_screen": false,
+   "question": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "F08",
+    "pick": "1686"
+   },
+   "gain_db": 3.45,
+   "est": [
+    117.095,
+    117.845
    ]
   },
   {
    "n": 44,
    "id": "F09",
-   "script_id": "44",
+   "script_id": "43",
+   "v4_id": "F09",
    "scene": "F",
    "who": "nt",
    "tts": "[plain, guarded] My mother. When she was dying. Whole nights.",
@@ -815,12 +1625,32 @@
      "zh": "我整夜整夜地守。",
      "en": "Whole nights."
     }
+   ],
+   "review_fix": {
+    "pre": {
+     "script": 0,
+     "built": 0.6
+    },
+    "why": "F08's row: N: no move for a beat; the turn (bible): music and camera go quiet, the fire heard alone before \"My mother\" (the push still runs F09 -> F15, its length unchanged)"
+   },
+   "pre": 0.6,
+   "en_on_screen": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "F09",
+    "pick": "1686"
+   },
+   "gain_db": -0.22,
+   "est": [
+    117.945,
+    121.415
    ]
   },
   {
    "n": 45,
    "id": "F10",
-   "script_id": "45",
+   "script_id": "44",
+   "v4_id": "F10",
    "scene": "F",
    "who": "ji",
    "tts": "[warm] 您跟妈妈，一定很亲吧。",
@@ -831,12 +1661,24 @@
      "zh": "您跟妈妈，一定很亲吧。",
      "en": "You must have been close to your mother."
     }
+   ],
+   "en_on_screen": false,
+   "take": {
+    "status": "recorded",
+    "from_id": "F10",
+    "pick": "1686"
+   },
+   "gain_db": 1.13,
+   "est": [
+    121.515,
+    123.725
    ]
   },
   {
    "n": 46,
    "id": "F11",
-   "script_id": "46",
+   "script_id": "45",
+   "v4_id": "F11",
    "scene": "F",
    "who": "nt",
    "tts": "[dry, bitter] Close? My father died before I was born.",
@@ -849,16 +1691,27 @@
     }
    ],
    "after": 1.0,
-   "beat": "he pokes the fire"
+   "en_on_screen": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "F11",
+    "pick": "1686"
+   },
+   "gain_db": 2.38,
+   "est": [
+    123.825,
+    127.36
+   ]
   },
   {
    "n": 47,
    "id": "F12",
-   "script_id": "47",
+   "script_id": "46",
+   "v4_id": "F12",
    "scene": "F",
    "who": "nt",
    "tts": "[flat, bitter] When I was three, she remarried. And left me.",
-   "zh": "我三岁那年，她改嫁了。把我留下了。",
+   "zh": "我三岁那年，她改嫁了。把我丢下了。",
    "en": "When I was three, she remarried. And left me.",
    "screens": [
     {
@@ -866,15 +1719,27 @@
      "en": "When I was three, she remarried."
     },
     {
-     "zh": "把我留下了。",
+     "zh": "把我丢下了。",
      "en": "And left me."
     }
+   ],
+   "en_on_screen": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "F12",
+    "pick": "1686"
+   },
+   "gain_db": 2.82,
+   "est": [
+    128.46,
+    132.205
    ]
   },
   {
    "n": 48,
    "id": "F13",
-   "script_id": "48",
+   "script_id": "47",
+   "v4_id": "F13",
    "scene": "F",
    "who": "ji",
    "tts": "[stunned] 三岁？",
@@ -885,12 +1750,25 @@
      "zh": "三岁？",
      "en": "Three?"
     }
+   ],
+   "en_on_screen": false,
+   "question": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "F13",
+    "pick": "1686"
+   },
+   "gain_db": 3.9,
+   "est": [
+    132.305,
+    133.385
    ]
   },
   {
    "n": 49,
    "id": "F14",
-   "script_id": "49",
+   "script_id": "48",
+   "v4_id": "F14",
    "scene": "F",
    "who": "nt",
    "tts": "[hard, ashamed] As a boy, I threatened to burn her and my stepfather, house and all.",
@@ -907,12 +1785,23 @@
     }
    ],
    "after": 1.5,
-   "beat": "the fire spits; one cello note"
+   "en_on_screen": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "F14",
+    "pick": "1686"
+   },
+   "gain_db": -1.83,
+   "est": [
+    133.485,
+    138.385
+   ]
   },
   {
    "n": 50,
    "id": "F15",
-   "script_id": "50",
+   "script_id": "49",
+   "v4_id": "F15",
    "scene": "F",
    "who": "nt",
    "tts": "[steady, then cracking] In her last illness, I changed her dressings myself.",
@@ -927,77 +1816,156 @@
      "zh": "是我亲手给她换药。",
      "en": "I changed her dressings myself."
     }
+   ],
+   "en_on_screen": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "F15",
+    "pick": "1686"
+   },
+   "gain_db": 6.0,
+   "est": [
+    139.985,
+    144.105
    ]
   },
   {
    "n": 51,
    "id": "F16",
-   "script_id": "51",
+   "script_id": "50",
+   "v4_id": "F16",
    "scene": "F",
    "who": "ji",
-   "tts": "[moved, warm] 她走了，您却没走。",
-   "zh": "她走了，您却没走。",
-   "en": "She left. You stayed.",
+   "tts": "[moved, warm] 她丢下了您，您却守着她。",
+   "zh": "她丢下了您，您却守着她。",
+   "en": "She left you. You stayed with her.",
    "screens": [
     {
-     "zh": "她走了，您却没走。",
-     "en": "She left. You stayed."
+     "zh": "她丢下了您，您却守着她。",
+     "en": "She left you. You stayed with her."
     }
    ],
-   "after": 2.0,
-   "beat": "silence, only the fire"
+   "after": 0.3,
+   "en_on_screen": false,
+   "take": {
+    "status": "swap",
+    "swap": "F16",
+    "note": "plays the swap entry's take (newton_lines.json swap.F16); scripts/newton/voice/swap_take.py F16 <new take> drops the new one in"
+   },
+   "est": [
+    144.205,
+    147.236
+   ]
   },
   {
    "n": 52,
-   "id": "G01",
-   "script_id": "52",
+   "id": "G01a",
+   "script_id": "51",
+   "v4_id": "G01",
    "scene": "G",
    "who": "ji",
-   "tts": "[moved, then brave and cheeky] 两点了……说点轻松的……学几何，到底有什么用？",
-   "zh": "两点了……说点轻松的……学几何，到底有什么用？",
-   "en": "Two o'clock... something lighter... what is the actual use of geometry?",
+   "tts": "[moved, then brave] 两点了……说点轻松的……",
+   "zh": "两点了……说点轻松的……",
+   "en": "Two o'clock... something lighter...",
    "screens": [
     {
      "zh": "两点了……说点轻松的……",
      "en": "Two o'clock... something lighter..."
-    },
-    {
-     "zh": "学几何，到底有什么用？",
-     "en": "what is the actual use of geometry?"
     }
    ],
-   "pre": 3.0,
-   "beat": "pre: the clock strikes two (two strokes ~1.4 s apart), the board slides off his knee on the second stroke and clatters, her hand picks it up and holds it close"
+   "pre": 3.1,
+   "after": 0.6,
+   "en_on_screen": false,
+   "take": {
+    "status": "recorded_split",
+    "from_id": "G01",
+    "pick": "1686",
+    "split": [
+     2.3,
+     2.67
+    ]
+   },
+   "gain_db": 2.97,
+   "est": [
+    150.736,
+    153.361
+   ]
   },
   {
    "n": 53,
-   "id": "G02",
-   "script_id": "53",
+   "id": "G01b",
+   "script_id": "52",
+   "v4_id": "G01",
    "scene": "G",
-   "who": "nt",
-   "tts": "[bursts out laughing, incredulous] What... use! [laughs]",
-   "zh": "有……什么用！",
-   "en": "What... use!",
+   "who": "ji",
+   "tts": "[brave, cheeky] 学几何，到底有什么用？",
+   "zh": "学几何，到底有什么用？",
+   "en": "What is the actual use of geometry?",
    "screens": [
     {
-     "zh": "有……什么用！",
-     "en": "What... use!"
+     "zh": "学几何，到底有什么用？",
+     "en": "What is the actual use of geometry?"
     }
    ],
-   "card": {
-    "zh": "五年里，助手只见他笑过一次：有人问了这句。",
-    "en": "In five years his assistant saw him laugh only once: someone had asked this."
+   "en_on_screen": false,
+   "question": true,
+   "take": {
+    "status": "recorded_split",
+    "from_id": "G01",
+    "pick": "1686",
+    "split": [
+     2.3,
+     2.67
+    ]
    },
-   "card_hold": 3.5,
-   "after": 5.0,
-   "card_delay": 1.5,
-   "beat": "THE LAUGH: its own take (eyes squeezed shut, head shaking), 'What... use!' over its tail; then the laugh hold (2 s), Humphrey drops the sack (1 s), then card 4",
-   "pre": 0.6
+   "gain_db": 2.97,
+   "est": [
+    154.061,
+    155.991
+   ]
   },
   {
    "n": 54,
+   "id": "G02",
+   "script_id": "53",
+   "v4_id": "G02",
+   "scene": "G",
+   "who": "nt",
+   "tts": "[bursts out laughing, incredulous] What... use! [laughs]",
+   "zh": "什么……用？！",
+   "en": "What... use!",
+   "screens": [
+    {
+     "zh": "什么……用？！",
+     "en": "What... use!"
+    }
+   ],
+   "pre": 0.6,
+   "after": 5.3,
+   "card_hold": 3.7,
+   "card_delay": 1.5,
+   "card": {
+    "zh": "五年里，助手只见他笑过一次：有人问了这句。",
+    "en": "In five years his assistant saw him laugh only once: someone had asked this.",
+    "en_on_screen": false
+   },
+   "en_on_screen": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "G02",
+    "pick": "laugh2"
+   },
+   "gain_db": -5.47,
+   "est": [
+    156.691,
+    162.171
+   ]
+  },
+  {
+   "n": 55,
    "id": "G03",
    "script_id": "54",
+   "v4_id": "G03",
    "scene": "G",
    "who": "nt",
    "tts": "[warm, gruff, still smiling] Good night.",
@@ -1008,12 +1976,24 @@
      "zh": "晚安。",
      "en": "Good night."
     }
+   ],
+   "en_on_screen": true,
+   "take": {
+    "status": "recorded",
+    "from_id": "G03",
+    "pick": "1686"
+   },
+   "gain_db": -0.79,
+   "est": [
+    167.571,
+    168.651
    ]
   },
   {
-   "n": 55,
+   "n": 56,
    "id": "G04",
    "script_id": "55",
+   "v4_id": "G04",
    "scene": "G",
    "who": "ji",
    "tts": "[warm, smiling] 晚安，牛顿先生。",
@@ -1025,13 +2005,109 @@
      "en": "Good night, Mr Newton."
     }
    ],
-   "after": 4.5,
-   "card": {
-    "zh": "片中他的每个习惯，都出自他助手的回忆。",
-    "en": "Every habit of his in this film comes from his assistant's own account."
+   "after": 4.8,
+   "card_hold": 3.7,
+   "card_delay": 0.4,
+   "review_fix": {
+    "after": {
+     "script": 4.5,
+     "built": 4.8
+    },
+    "why": "card 5 (f5107-5217 in the first build) was still up when the REC lamp died (OFF_AT f5211)"
    },
-   "card_hold": 3.5,
-   "beat": "card 5 under the 2 a.m. bites, then his window goes dark, black"
+   "card": {
+    "zh": "熬夜、忘了吃饭、对墙讲课：都出自助手的回忆。",
+    "en": "Staying up late, forgetting to eat, lecturing to the walls: all from his assistant's own account.",
+    "en_on_screen": false
+   },
+   "en_on_screen": false,
+   "take": {
+    "status": "recorded",
+    "from_id": "G04",
+    "pick": "1686"
+   },
+   "gain_db": 2.56,
+   "est": [
+    168.751,
+    170.591
+   ]
   }
- ]
+ ],
+ "effects_gaps": {
+  "date": "2026-11-14 (late evening)",
+  "plan": "/mnt/project-files/next-video/newton/redo/looks/EFFECTS_PLAN.md (revision 2, \"The three gaps in the voice track\")",
+  "what": "the three gaps the title, Newton's intro card and tick 1 need, at their full values (G2 at the owner's 2.5 s); each line keeps its value before the gap beside the built one (\"effects_gap\"). The 全勤 stamp (G4) is not in.",
+  "fallback": false,
+  "length_rule": "the format allows 2:40-3:25 (day-in-life-film skill); the plan's 3:00 fallback is not used",
+  "G1": {
+   "line": "A02",
+   "after": 2.2,
+   "seconds": 1.2,
+   "frames": 36,
+   "why": "G1, THE TITLE: +1.20 s (36 frames) between the slam's thud and A03 (EFFECTS_PLAN G1, the plan's full value): A03 starts 1.20 s later than in the delivered v5 track (6.600 s, f198 -> 7.800 s, f234), so the themed title 采访牛顿的一天 sits on the shut door from the thud (5.90 s, f177: A02 end + 0.4 s) for 1.87 s (in 0.6 s, held 1.0 s, out 0.27 s) and is gone before A03's whisper bubble. Written as A02's after-hold (1.0 -> 2.2), not A03's pre, so A03's preFrom moves with A03 and the cold open up to the thud (REC beep, STOP 1/5, raps, steps, A02, the swing, the thud, the pigeon) does not move."
+  },
+  "G2": {
+   "line": "B03",
+   "after": 2.5,
+   "seconds": 2.5,
+   "frames": 75,
+   "why": "G2, NEWTON'S INTRO CARD: +2.50 s (75 frames) at B03's end (the owner's rule, 14 Nov: the lead's intro-card freeze is about 2.5 s, \"hold a bit longer\", with the lead isolated as a cut-out; it replaces the plan's 1.3 s). The picture freezes on B03's last frame for the card's 75 frames; B04 starts 2.50 s later. Written as B03's after-hold (0 -> 2.5), never B04's pre: freeze.ts G2_READY reads line(\"B04\").preFrom - line(\"B03\").to (78 now) and its CARD_LEN (39, the effects build's file) must become 75."
+  },
+  "G3": {
+   "line": "B09",
+   "card_delay": 0.5,
+   "after": 4.3,
+   "seconds": 0.5,
+   "frames": 15,
+   "why": "G3, TICK 1: card 2 starts 0.50 s later (B09 end + 1 frame + 0.50 s = +16 frames; its ding with it), so the meter's first cross after 「没笑。」 reads before the card comes in (EFFECTS_PLAN G3 and row 6, the plan's full value). B09's after grows by the same 0.50 s (3.8 -> 4.3) so card 2 still ends before the B -> C cut, and the noon strike (anchored to card 2's end), whip 2 and C to the end move with it."
+  },
+  "was_fallback": {
+   "date": "2026-11-14 (evening, the stopped run)",
+   "why": "the stopped run believed the film had to stay under 3:00 and used the plan's fallback; the format allows 2:40-3:25 (day-in-life-film), so the full gaps are in",
+   "G1": {
+    "A02.after": 2.0,
+    "seconds": 1.0
+   },
+   "G2": {
+    "B03.after": 1.3,
+    "seconds": 1.3
+   },
+   "G3": {
+    "B09.card_delay": 0.3,
+    "B09.after": 4.1,
+    "seconds": 0.3
+   },
+   "frames": 5390
+  }
+ },
+ "title_note": {
+  "date": "2026-11-14 (late evening)",
+  "why": "Jay's rule (18:05; the format skill): the title card's only words are 采访XXX的一天. The film's name changed from 跟着牛顿过一天 to 采访牛顿的一天. No subtitle row on the title: the date and place moved to Newton's intro card (EFFECTS_PLAN row 4, drawn by the skin's card in hud/ms). title_span_s is the plan's window from the slam's thud (5.90 s, f177) for 1.87 s to 7.77 s (in 0.6 s, held 1.0 s, out 0.27 s; TITLE_RAW f177-f232, 56 frames), gone before A03 at 7.80 s (f234) with G1's full 1.20 s. The old TitleCard (hud/title.tsx) is no longer mounted; skin A's MsTitle (hud/ms) draws the title.",
+  "was": {
+   "title": {
+    "zh": "跟着牛顿过一天",
+    "en": "A Day with Newton"
+   },
+   "title_span_s": [
+    0.2,
+    3.2
+   ]
+  },
+  "subtitle_moved": {
+   "zh": "1686年5月 · 剑桥三一学院",
+   "en": "May 1686 · Trinity College, Cambridge"
+  },
+  "was_fallback_span_s": [
+   5.9,
+   7.57
+  ],
+  "r3": {
+   "date": "2026-11-14 (night)",
+   "why": "title_span_s is the title's REAL window now: skin A's MsTitle (hud/ms/when.ts TITLE_FROM) starts on the slam's audible thud, A02 end + 0.37 + 0.27 s = f184 (segA's SND.thud; director r1 note 4), and TITLE_LEN resolves to 50 frames, so the title is f184-233 (6.1333-7.8 s, TITLE_RAW f184-f233), gone the frame before A03's whisper bubble at f234. gen_timing.py ends any caption's linger the frame before TITLE_RAW's first frame (the owner's rule: the title never shares the screen with a subtitle); A02's subtitle already ends on f177 on this voice track.",
+   "was_title_span_s": [
+    5.9,
+    7.77
+   ]
+  }
+ }
 }

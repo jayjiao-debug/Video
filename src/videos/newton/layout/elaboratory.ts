@@ -13,6 +13,7 @@
 //   FRONT (south) wall: the plank DOOR (standing open inward) on the BLUE NIGHT GARDEN, and the little leaded window.
 // Figures stand on the brick floor, y 0. THE STOOL (WP3's prop) goes on ELAB.stool, by the fire door.
 import { ISLAND, V, EYE, eyeCam, type Stand, type Cam } from "./base";
+import { N_EYE, N_SCALE, N_LEAN_FWD } from "../people";
 
 export const ELX = ISLAND.elaboratory;
 const FD = { z: -0.95, y0: 0.42, y1: 0.78, w: 0.38 };       // the fire door's opening on the furnace's face
@@ -44,10 +45,17 @@ export const ELAB = {
   /** the doorway: its middle on the floor, a step inside, a step outside (HUMPHREY in the doorway with the sack) */ door: V(ELX + DR.x, 0, W.z1), doorIn: V(ELX + DR.x, 0, W.z1 - 0.55), doorOut: V(ELX + DR.x, 0, W.z1 + DR.wall + 0.25), doorFacing: Math.PI,
   /** the middle of the room (her floor point) */ middle: V(ELX + 0.3, 0, 0.3),
 };
-/** the look height, at a figure's floor point (x, z), that puts NEWTON's eyes (1.14 m over his floor) in the frame's
- *  upper third (layout.ts SCREEN.eyes) when her eyes stand at (cx, cz), `eye` over the same floor (seated on the stool
- *  his eyes are about 0.35 lower: pass EYE + 0.35) */
-const third = (cx: number, cz: number, x: number, z: number, eye = EYE) => { const d = Math.hypot(x - cx, z - cz); return eye - d * Math.tan(Math.atan((eye - 1.14) / d) + 0.197) - (eye - EYE); };
+/** his eye-line aim seated on the stool: 0.79 m for the scale-1 figure (the old rule: 0.35 under the standing 1.14).
+ *  Seated, only his body above the seat grows with him: his drawn eye line rose 3.8 cm there with gate 1 (1.139 ->
+ *  1.177 m, F f3370; 7.0 cm standing), which is (N_SCALE - 1) x 0.63 m, and the aim rises with it */
+const STOOL_EYE = 0.79 + (N_SCALE - 1) * 0.63;
+/** the look height, at a figure's floor point (x, z), that puts NEWTON's eyes (`his` aim over his floor: standing N_EYE,
+ *  people.ts 1.14 x his scale, gate 1 director note 1; on the stool STOOL_EYE) in the frame's upper third (layout.ts
+ *  SCREEN.eyes) when her eyes stand at (cx, cz), EYE over the same floor */
+const third = (cx: number, cz: number, x: number, z: number, his = N_EYE) => { const d = Math.hypot(x - cx, z - cz); return EYE - d * Math.tan(Math.atan((EYE - his) / d) + 0.197); };
+/** where the stool cameras aim (floor point): his head on the stool, which NEWTON_LEAN carries N_LEAN_FWD forward of
+ *  the stool mark along stoolFacing (gate 1: measured 6.2 cm at G f4440), so his head keeps its place in the frame */
+const SX = ELX - 0.66 + Math.sin(ELAB.stoolFacing) * N_LEAN_FWD, SZ = FD.z + 0.1 + Math.cos(ELAB.stoolFacing) * N_LEAN_FWD;
 /** NAMED CAMERAS (her eyes, EYE over the brick floor) */
 export const ELAB_CAMS: Record<"enter" | "wide" | "stool" | "push" | "board" | "fire" | "door" | "bench", Cam> = {
   /** F: in the doorway, following his candle in: the glowing furnace ahead left, the bench right */
@@ -55,9 +63,9 @@ export const ELAB_CAMS: Record<"enter" | "wide" | "stool" | "push" | "board" | "
   /** the whole room from the front-right corner by the window: furnace, heap, stool, bench */
   wide: eyeCam(ELX + 1.5, 1.0, [ELX - 0.99, third(ELX + 1.5, 1.0, ELX - 0.99, -0.745), -0.745]),
   /** F 41-44: NEWTON on the stool by the fire door, three-quarter front, lit by the fire (the push-in starts here) */
-  stool: eyeCam(ELX + 0.7, 0.55, [ELX - 0.66, third(ELX + 0.7, 0.55, ELX - 0.66, FD.z + 0.1, EYE + 0.35), FD.z + 0.1]),
+  stool: eyeCam(ELX + 0.7, 0.55, [SX, third(ELX + 0.7, 0.55, SX, SZ, STOOL_EYE), SZ]),
   /** F 50: where the slow push-in stops (his face, the fire's light on it) */
-  push: eyeCam(ELX + 0.02, 0.05, [ELX - 0.66, third(ELX + 0.02, 0.05, ELX - 0.66, FD.z + 0.1, EYE + 0.35), FD.z + 0.1]),
+  push: eyeCam(ELX + 0.02, 0.05, [SX, third(ELX + 0.02, 0.05, SX, SZ, STOOL_EYE), SZ]),
   /** F: close on the board on his knee (looking down over it) */
   board: { pos: [ELX - 0.3, 1.45, FD.z + 0.45], look: [ELX - 0.6, 0.55, FD.z + 0.2], fov: 50 },
   /** close on the fire door: the coals, the flames, the glow on the brick */

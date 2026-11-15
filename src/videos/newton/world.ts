@@ -33,8 +33,13 @@ import type { CastLight } from "../group/kit/cast";
 import { ipNum } from "../../kit/film/env";
 import { buildSets, BAKED_LIGHT, type NewtonSet, type PlaceLook } from "./sets";
 import { buildProps, type Props, type Prop, type PropName } from "./props";
-import { addPerson, type Person } from "./people";
-import { FPS, W, H, type CamPose, type Pose, type Place, type V3Like } from "./story";
+import { addPerson, NEWTON_SWAPS, type Person } from "./people";
+import { FPS, W, H, SEGMENTS, lensFov, type CamPose, type Pose, type Place, type V3Like } from "./story";
+/** HIS HAIR (owner note 15 Nov: "messy in the morning because he pulled an all-nighter, but it continues later on"):
+ *  the uncombed bird's nest of tufts on his crown ("nest") is his MORNING only, A and B (上午); from C's first frame
+ *  (noon, after the whip ② cut) every Newton figure is drawn without it, whatever hide list the shot passes. The swap
+ *  happens under that cut (C opens on the plate, not on him). */
+export const NEWTON_TIDY_FROM = SEGMENTS.find((s) => s.id === "C")!.from;
 // Cover stills only (input props, all default to the film's own framing): zoom < 1 shows more around the same frame;
 // sx / sy move the picture right / down by that fraction of the frame (a lens shift, the perspective stays).
 const COVER_ZOOM = ipNum("zoom", 1, false), COVER_SX = ipNum("sx", 0), COVER_SY = ipNum("sy", 0);
@@ -93,9 +98,11 @@ export class World {
     if (id === undefined) { id = this.ids.size; this.ids.set(p, id); }
     const k = `${id}|${key}`;
     let r = this.rigs.get(k);
-    if (!r) { r = addPerson(this.rc, p); r.group.scale.setScalar(1); this.rigs.set(k, r); this.hide(r); }   // (never scaled: the rig's solver works in world space)
+    if (!r) { r = addPerson(this.rc, p); r.group.scale.setScalar(1); this.rigs.set(k, r); this.hide(r); if (NEWTON_SWAPS.includes(p)) this.newtons.add(r); }   // (never scaled: the rig's solver works in world space)
     return r;
   }
+  /** every Newton figure (NEWTON_SWAPS), for his hair (NEWTON_TIDY_FROM) */
+  private readonly newtons = new Set<Rig>();
   private hide(r: Rig) {
     const s = r.state as unknown as Record<string, unknown>;
     for (const key of Object.keys(s)) delete s[key];
@@ -131,7 +138,9 @@ export class World {
     cam.position.copy(toV(c.pos));
     this._look.copy(toV(c.look));
     cam.lookAt(this._look); cam.rotateZ(c.roll ?? 0);
-    cam.fov = c.fov; cam.near = c.near ?? 0.03; cam.far = c.far ?? 600; cam.aspect = this.aspect();
+    // THE LENS (story.ts LENS_H): a CamPose fov is the vertical angle of the 1920-tall frame, which the film is again
+    // (15 Nov): lensFov is the identity here (on the 9:15 frame it was tan(half) x 1800 / 1920: the same width of view)
+    cam.fov = lensFov(c.fov); cam.near = c.near ?? 0.03; cam.far = c.far ?? 600; cam.aspect = this.aspect();
     cam.zoom = COVER_ZOOM;
     cam.updateProjectionMatrix(); cam.updateMatrixWorld(true);
     if (COVER_SX || COVER_SY) {
@@ -153,6 +162,8 @@ export class World {
     for (const r of this.rigs.values()) {
       const st = r.state;
       r.group.userData.hmGround = st.visible === false ? 0 : st.seat ? (st.seat.floor ?? 0) : Math.max(0, st.at.y);
+      // his hair combed from noon on (a new array: the shots pass shared constants such as NEWTON_HIDE)
+      if (this.f >= NEWTON_TIDY_FROM && this.newtons.has(r) && !(st.hide ?? []).includes("nest")) st.hide = [...(st.hide ?? []), "nest"];
     }
     this.rc.update(this.camera, H); this.updated = true;
   }
