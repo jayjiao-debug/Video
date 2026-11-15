@@ -581,18 +581,30 @@ const elab = (w: World, f: number): Pose => {
  *  candle; the lids at rest all through (expr smile with the half lid: never the full dots), the smile's closed mouth;
  *  his facing 35 deg off the lens until he turns to the candle */
 const T_OFFER0 = T_MATCH + 4, T_TAKE = T_MATCH + 15, T_IN1 = T_CLINK - 6;
-const T_STEP0 = T_MATCH + 6, T_STEP1 = T_TAKE;
+const T_STEP0 = T_OFFER0, T_STEP1 = T_TAKE;
 const T_AT_MOUTH = T_CLINK + 12, T_CHEW = T_CLINK + 18, T_FORK_DOWN = T_CLINK + 28, T_FORK_LET = T_FORK_DOWN + 3;
 const T_RTURN0 = T_FORK_LET + 4, T_RTURN1 = T_RTURN0 + 20, T_REACH0 = T_OUT - 16;
 /** HIS HALF STEP IN toward her as she holds the plate out */
 const N_STEP = N_ROOM.clone().addScaledVector(V(RIM_C.x - N_ROOM.x, 0, RIM_C.z - N_ROOM.z).normalize(), 0.2);
-const STEP_V = N_ROOM.distanceTo(N_STEP) / ((T_STEP1 - T_STEP0) / FPS);
 /** facing the candle at his right hand (a little short of square to it, so the body stays three-quarter to her) */
 const F_PINCH = yawTo(N_STEP, CANDLE_R) + 0.3;
+/** THE HALF STEP AS ONE EASED SHIFT (gate 5 r3, note G5: walkAlong set off at a constant speed from a standstill, so
+ *  the legs snapped apart, the body dropped and tipped on f5286 and slammed back to idle on f5294). Now: the distance
+ *  on a smootherstep over T_STEP0..T_STEP1; ONE walk cycle (two short steps) whose phase follows that distance, so
+ *  the feet stay planted (a cycle covers 2 x STEP_S / 0.6 = 0.2 m, the step's length), from the double-support phase
+ *  0.05 to 1.05 (both feet down on the first and last walk frames); the bounce ramped up from 0 and back to 0; the
+ *  walk's own 4 deg forward pitch taken off his lean and the idle's sway carried in the lean's roll, so nothing tips
+ *  on the frames where the pose changes. The take (T_TAKE) and every beat after it are as before. */
+const STEP_S = 0.06, STEP_PH0 = 0.05, WALK_PITCH = 4, ROOM_LEAN = 5;
+const stepU = (f: number) => clamp01((f - T_STEP0) / (T_STEP1 - T_STEP0));
+const stepK = (f: number) => { const u = stepU(f); return u * u * u * (u * (u * 6 - 15) + 10); };
+const idleSway = (t: number) => 1.2 * Math.sin(t * 2 * Math.PI * 0.21);
 const roomN = (f: number) => {
-  const g = walkAlong([N_ROOM, N_STEP], STEP_V, (f - T_STEP0) / FPS, { startFacing: F_ROOM, endFacing: F_ROOM, bounce: 0.4 });
+  const k = stepK(f), walking = f > T_STEP0 && f < T_STEP1, t = f / FPS + 0.4;
   const turn = smooth(clamp01((f - T_RTURN0) / (T_RTURN1 - T_RTURN0)));
-  return { at: g.at, facing: lerpA(F_ROOM, F_PINCH, turn), pose: g.moving ? g.pose : ({ kind: "idle", t: f / FPS + 0.4 } as RigPose), turn };
+  const pose: RigPose = walking ? { kind: "walk", phase: (STEP_PH0 + k) % 1, stride: STEP_S, amount: 0.35 * Math.sin(Math.PI * stepU(f)) ** 2 } : { kind: "idle", t };
+  const lean = walking ? { pitch: ROOM_LEAN - WALK_PITCH, roll: idleSway(t) } : { pitch: ROOM_LEAN };
+  return { at: N_ROOM.clone().lerp(N_STEP, k), facing: lerpA(F_ROOM, F_PINCH, turn), pose, turn, lean };
 };
 /** the plate in her hands: the match, then held out to him */
 const offerK = (f: number) => smooth(clamp01((f - T_OFFER0) / (T_TAKE - T_OFFER0)));
@@ -676,7 +688,7 @@ const room = (w: World, f: number): Pose => {
   };
   const set = (mouth: THREE.Vector3 | null) => n.set({
     at: r.at, facing: r.facing, pose: r.pose, expr: "smile", gaze: at(f, R_GAZE), blink: Math.max(0.5, lid(t, 1)),
-    lookDown: rLookDown(f), head: chew, hide: NEWTON_HIDE, visible: true, lean: { pitch: 5 },
+    lookDown: rLookDown(f), head: chew, hide: NEWTON_HIDE, visible: true, lean: r.lean,
     hands: [rightAt(mouth), leftHand], armFront: [true, true], seat: undefined, twist: 0,
   });
   set(null);
