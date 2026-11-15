@@ -129,7 +129,9 @@ the slot on his right). Its place then follows him frame by frame with nothing r
 **The REC display in 9:16** starts at x 110 and the battery ends at x 970 (`FRAME_9x16.rec`). The owner, 15 Nov 2026:
 "i want to continue in 9x16, but the rec and batter need to go in a tad bit". The app cuts 57 px off each side of a
 9:16 film, so the films before this, with REC at about x 62, showed it half cut. 110 and 970 are the lines the words
-already keep, about 50 px inside what the phone shows.
+already keep, about 50 px inside what the phone shows. Moved in, the row would sit under the app's back and search
+icons (they end at y 222), so the REC row is centred at y 250, its label row at y 308, and words, cards and effects
+start at y 340 (`recY`, `labelY`, `top`).
 
 The check, in the film's smoke test (plain Node; import `../../kit/overlay/frame` alone):
 

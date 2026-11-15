@@ -48,9 +48,11 @@ export const FRAME_9x15: FrameSpec = {
 /** 9:16, 1080 x 1920: THE FRAME OF EVERY FILM. The owner, 15 Nov 2026: "i want to continue in 9x16, but the rec and
  *  batter need to go in a tad bit". Douyin fills the screen and cuts 57 px off each side (visible x 58 to 1024 on
  *  the phone measured), so the REC dot starts at rec.x0 = 110 and the battery ends at rec.x1 = 970: on the same lines
- *  as the words, about 50 px inside what the phone shows. The films before this had them at about x 62, half cut. */
+ *  as the words, about 50 px inside what the phone shows. The films before this had them at about x 62, half cut.
+ *  Moved in, the REC row would sit under the app's back and search icons (they end at y 222), so the row is centred
+ *  at y 250 (it was 230), its label row at y 308, and words, cards and effects start at y 340. */
 export const FRAME_9x16: FrameSpec = {
-  W: 1080, H: 1920, side: 110, top: 320, bottom: 1490, recY: 230, labelY: 288, rec: { x0: 110, y0: 195, x1: 970, y1: 312 },
+  W: 1080, H: 1920, side: 110, top: 340, bottom: 1490, recY: 250, labelY: 308, rec: { x0: 110, y0: 225, x1: 970, y1: 330 },
   app: [
     { what: "the side the app cuts off", r: { x0: 0, y0: 0, x1: 58, y1: 1920 } },
     { what: "the side the app cuts off", r: { x0: 1024, y0: 0, x1: 1080, y1: 1920 } },
