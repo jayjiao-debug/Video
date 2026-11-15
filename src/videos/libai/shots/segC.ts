@@ -46,7 +46,7 @@ const PAGE = T.on(-0.04, -0.14), STONE = T.on(-0.44, 0.02), BRUSH_REST = T.on(-0
 const WROTE = [S.from + 8, L20.from - 2, L20.from, L20.to] as const, LAY = [L20.to + 5, L21.from - 8] as const;
 const inkAt = (f: number) => 0.22 * ramp(f, WROTE[0], WROTE[1]) + 0.78 * ramp(f, WROTE[2], WROTE[3]);
 /** the brush in the writing hand: a little off upright, the tip down; lying on the desk at rest */
-const BRUSH_UP: [number, number, number] = [Math.PI + 0.3, 0, -0.12], BRUSH_FLAT: [number, number, number] = [Math.PI / 2, 0.15, 0];
+const BRUSH_UP: [number, number, number] = [Math.PI - 0.1, 0, -0.4], BRUSH_FLAT: [number, number, number] = [Math.PI / 2, 0.15, 0];
 const GRIP_TO_TIP = 0.155;
 const brushDir = (r: [number, number, number]) => new THREE.Vector3(0, 1, 0).applyEuler(new THREE.Euler(r[0], r[1], r[2], "YXZ"));
 /** the brush tip on the page: down the column being written, a lifted hop back up to the next one */
