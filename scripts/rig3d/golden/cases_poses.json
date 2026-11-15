@@ -17,5 +17,6 @@
   { "name": "pose_shh", "entry": "rig3d_pose_shh.ts", "size": "360x640", "pick": [0, 9, 14, 20, 27, 33], "opts": { "who": [{ "look": "class7", "hat": { "kind": "cap", "col": "#3f6b8f", "trim": "#2c4a66" }, "pose": "shh", "acc": ["finger"], "expr": "hush" }] } },
   { "name": "pose_shh_desk", "entry": "rig3d_pose_shh.ts", "size": "360x640", "pick": [14, 20, 27], "opts": { "who": [{ "look": "friend4", "pose": "shh", "arm": 0, "acc": ["finger0"], "expr": "hush", "seat": "desk" }] } },
   { "name": "pose_jawline", "entry": "rig3d_jawline.ts", "size": "360x450", "pick": [30, 46, 52, 66, 80, 95] },
-  { "name": "pose_jawline_desk", "entry": "rig3d_jawline.ts", "size": "360x450", "pick": [46, 66, 95], "opts": { "who": [{ "look": "friend4", "pose": "shh", "arm": 0, "acc": ["finger0"], "seat": "desk", "jawline": { "start": 12 } }], "cam": { "lookY": 0.98, "dist": 1.5 } } }
+  { "name": "pose_jawline_desk", "entry": "rig3d_jawline.ts", "size": "360x450", "pick": [46, 66, 95], "opts": { "who": [{ "look": "friend4", "pose": "shh", "arm": 0, "acc": ["finger0"], "seat": "desk", "jawline": { "start": 12 } }], "cam": { "lookY": 0.98, "dist": 1.5 } } },
+  { "name": "pose_mood", "entry": "rig3d_mood.ts", "size": "550x310", "pick": [25, 26, 28, 50, 51, 77, 103, 106, 157] }
 ]
