@@ -1,23 +1,17 @@
 {
  "font": "../../../public/bt/sans700.ttf",
- "_about": "采访秦始皇的一天 Douyin covers, title only (Jay, 2026-11-13), no dark band (Jay found the dark bottom ugly). A = frame 2985 (the terrace, he shouts at the camera), B = frame 886 (the corridor, blush and sword). Backgrounds are picture-only stills from the preview harness at the cover's shape, larger, then cropped uniformly (not in the repo): bash scripts/kit/queue/still.sh src/videos/newton/preview/film.ts /home/user/newton_work/film/cover/pv_tall_c --pick 2985 --size 1350x1800 and pv_wide_c at 2160x1620 (886: pv_tall2 at 1350x1800, pv_wide3 at 2160x1620). Then: python3 scripts/newton/cover/make_covers.py (the kit's cover.py with every line centred on its ink and a lighter vignette)",
+ "_about": "采访牛顿的一天 Douyin covers, title only like the Qin film's (Jay, 2026-11-13: title only, no dark band). Frame 192 (the cold open: Newton in his doorway at 5 a.m., mouth open on 晚安, the E4 board on his door). Backgrounds are picture-only stills from the preview harness at the cover's shape (not in the repo): bash scripts/kit/queue/still.sh src/videos/newton/preview/film.ts /home/user/newton_work/film/cover/tall/ --pick 192 --size 1080x1440, and /home/user/newton_work/film/cover/wide2/ --pick 192 --size 2160x1620 (resized uniformly to 1440x1080). Then: python3 scripts/newton/cover/make_covers.py",
  "covers": [
   {
-   "bg": "/home/user/newton_work/film/cover/pv_tall_c/f2985.png",
-   "crop": [
-    135,
-    90,
-    1215,
-    1530
-   ],
+   "bg": "/home/user/newton_work/film/cover/tall/f0192.png",
    "target": "douyin34",
    "layout": "low",
    "hook": [
-    "采访秦始皇",
+    "采访牛顿",
     "的一天"
    ],
    "same": true,
-   "out": "/home/user/newton_work/film/cover/out/cover_3x4_zh.png",
+   "out": "/home/user/newton_work/film/cover/out/newton_cover_3x4.png",
    "override": {
     "shade": null,
     "hooks": [
@@ -37,109 +31,37 @@
    }
   },
   {
-   "bg": "/home/user/newton_work/film/cover/pv_wide_c/f2985.png",
-   "crop": [
-    720,
-    150,
-    2160,
-    1230
-   ],
+   "bg": "/home/user/newton_work/film/cover/wide2/f0192.png",
    "target": "douyin43",
-   "layout": "side",
+   "layout": "bottom",
    "hook": [
-    "采访秦始皇",
+    "采访牛顿",
     "的一天"
    ],
    "same": true,
-   "out": "/home/user/newton_work/film/cover/out/cover_4x3_zh.png",
-   "override": {
-    "cx": 0.705,
-    "side": null,
-    "hooks": [
-     [
-      0.4,
-      0.46,
-      170,
-      8
-     ],
-     [
-      0.535,
-      0.46,
-      170,
-      8
-     ]
-    ]
-   }
-  },
-  {
-   "bg": "/home/user/newton_work/film/cover/pv_tall2/f0886.png",
-   "crop": [
-    121,
-    120,
-    1201,
-    1560
-   ],
-   "target": "douyin34",
-   "layout": "low",
-   "hook": [
-    "采访秦始皇",
-    "的一天"
-   ],
-   "same": true,
-   "out": "/home/user/newton_work/film/cover/out/cover_3x4_zh_B.png",
+   "out": "/home/user/newton_work/film/cover/out/newton_cover_4x3.png",
    "override": {
     "shade": null,
     "hooks": [
      [
-      0.661,
-      0.8,
-      150,
-      7
+      0.645,
+      0.6,
+      140,
+      8
      ],
      [
-      0.763,
-      0.8,
-      150,
-      7
+      0.75,
+      0.6,
+      140,
+      8
      ]
     ]
-   }
-  },
-  {
-   "bg": "/home/user/newton_work/film/cover/pv_wide3/f0886.png",
-   "crop": [
-    0,
-    150,
+   },
+   "size": [
     1440,
-    1230
-   ],
-   "target": "douyin43",
-   "layout": "side",
-   "hook": [
-    "采访秦始皇",
-    "的一天"
-   ],
-   "same": true,
-   "out": "/home/user/newton_work/film/cover/out/cover_4x3_zh_B.png",
-   "override": {
-    "cx": 0.3,
-    "side": null,
-    "hooks": [
-     [
-      0.44,
-      0.47,
-      170,
-      7
-     ],
-     [
-      0.575,
-      0.47,
-      170,
-      7
-     ]
-    ]
-   }
+    1080
+   ]
   }
  ],
- "sheet": "/home/user/newton_work/film/cover/out/qin_covers_sheet.png"
+ "sheet": "/home/user/newton_work/film/cover/out/newton_covers_sheet.png"
 }
