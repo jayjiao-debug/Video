@@ -7,7 +7,7 @@ import json, re, sys, os, numpy as np, soundfile as sf, librosa
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 VOICE = sys.argv[1] if len(sys.argv) > 1 else '/home/user/libai_work/voice/voice_48k.wav'
 TIMING = sys.argv[2] if len(sys.argv) > 2 else '/home/user/libai_work/voice/voice_timing.json'
-OUT_T = '/home/user/libai_work/voice/voice_timing_v4.json'; OUT_ON = '/home/user/libai_work/v4/onsets.json'
+OUT_T = sys.argv[3] if len(sys.argv) > 3 else '/home/user/libai_work/voice/voice_timing_v4.json'; OUT_ON = '/home/user/libai_work/v4/onsets.json'
 OUT_ENV = os.path.join(ROOT, 'src/videos/libai/voice_env.ts')
 y, sr = sf.read(VOICE); y = y.astype(np.float32)
 HOP = 240; FR = sr / HOP                                           # 5 ms

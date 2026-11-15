@@ -1,7 +1,7 @@
 // hud/intro.tsx: THE INTRO CARDS of the Li Bai film, in its skin (hud/skin.ts: the tavern's wine flag). Pure functions
 // of the frame.
-//   <LeadCard f />   李白's card: the picture FREEZES for FREEZE_N frames on his first close-up (A02, the lens is "the
-//                    moon" to him and he peers right into it), story.ts CLOCK. A cloth tag with the sky-blue toothed hem
+//   <LeadCard f />   李白's card: the picture FREEZES for FREEZE_N frames on his first close-up (A02, 是我……你哪位？:
+//                    he peers right into her lens), story.ts CLOCK. A cloth tag with the sky-blue toothed hem
 //                    swings in on its cord under his face: his name in wild amber cursive and 字太白, the seal 谪仙人
 //                    (paid off in F37), the year and the place (they are not on the title), three joke stats from the
 //                    sources (each says who said it) and the day's target 醒酒, paid off by the bucket of water in B.

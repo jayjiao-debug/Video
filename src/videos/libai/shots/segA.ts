@@ -2,7 +2,7 @@
 //   sleep   A01        REC on. 李白 asleep face down on his table, hugging the wine jar; a drinker asleep at the next
 //                      table, the keeper wiping by the screen. The invisible hand knocks twice: the table jumps.
 //   wake    A01 end    he lifts his head, dazed, squints at the lens.
-//   lean    A02        哟，月亮？ her lens is the moon to him: the camera pushes in on him (he peers).
+//   lean    A02        是我……你哪位？ he peers right up into her lens: the camera pushes in on him.
 //   jar     A04        好！先喝一杯！ the jar comes up to the lens in both hands.
 //   proud   A06        早酒: very pleased with himself (smug, a head tilt).
 //   count   A08        a hand up (counting), 一日: both hands out, a shrug.
@@ -30,7 +30,7 @@ const HEAD = rel(T.at, T.facing, 0, 0.98, 0.0);
 /** THE CAMERA PLAN (one take, still unless something gives her a reason):
  *    open     from his front left, him RIGHT of centre (the title's wine flag hangs on the left), the table filling the
  *             foot of the frame; her breathing only. The knocks: a small jolt each.
- *    月亮      A02: he leans right up to the lens, so she leans in too: the scene's one extreme close (his card freezes
+ *    哪位      A02: he leans right up to the lens, so she leans in too: the scene's one extreme close (his card freezes
  *             on it).
  *    jar      A04: the jar comes at the lens: she pulls back fast (6 frames) to the open framing.
  *    早酒      A06: snap zoom landing on 早酒, held to her next question.
@@ -62,7 +62,7 @@ const cam = (f: number): CamPose => {
 const li = (w: World, f: number): St => {
   const t = f / FPS, asleep = f < A.wake;
   const wakeK = ramp(f, A.wake - 2, A.wake + 10);
-  const expr = at<NonNullable<St["expr"]>>(f, [[0, "sleep"], [A.wake, "dazed"], [A.wake + 22, "smile"], [A.lean, "happy"], [lineId("A03").from + 8, "shock"], [lineId("A03").to - 10, "grin"], [L4.from, "laugh"], [L5.from + 10, "smile"], [A.proud, "smug"], [lineId("A07").from, "happy"], [A.shrug, "grin"], [A.card[0], "happy"], [A.card[0] + 20, "smile_closed"]]);
+  const expr = at<NonNullable<St["expr"]>>(f, [[0, "sleep"], [A.wake, "dazed"], [A.wake + 22, "smile"], [A.lean, "happy"], [lineId("A03").from + 8, "smile"], [lineId("A03").to - 10, "grin"], [L4.from, "laugh"], [L5.from + 10, "smile"], [A.proud, "smug"], [lineId("A07").from, "happy"], [A.shrug, "grin"], [A.card[0], "happy"], [A.card[0] + 20, "smile_closed"]]);
   const J = jarAt(f);
   const jar = held("jar", J.p, { rot: [J.tilt, 0, J.tilt * 0.6] });
   // the hands: hugging the jar / holding it up; A08 counting (right hand up), 一日 shrug (both out)
