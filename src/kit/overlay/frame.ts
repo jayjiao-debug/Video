@@ -2,9 +2,9 @@
 // draws over it, the free slots round a face, and the check that nothing lands on a face, a caption, the REC display
 // or the app's buttons. Geometry only: what a card or a title looks like is the film's own.
 //
-//   const S = slots(FRAME_9x15, faceRect)[0];             // the largest free slot beside / above / below the face
+//   const S = slots(FRAME_9x16, faceRect)[0];             // the largest free slot beside / above / below the face
 //   const B = fit({ w: 420, h: 150 }, S.r, { ax: 0 });    // the film's card of 420 x 150 placed in it (shrunk if it must)
-//   const faults = checkOverlays(items, { spec: FRAME_9x15, protect: (f) => [...faces(f), ...captions(f)] });
+//   const faults = checkOverlays(items, { spec: FRAME_9x16, protect: (f) => [...faces(f), ...captions(f)] });
 //
 // The app's zones were measured on ONE phone (1320 x 2868, Douyin, 14 Nov 2026). Measure again when a screenshot shows a
 // different crop, and change the numbers here so every film gets them.
@@ -31,10 +31,10 @@ export type FrameSpec = {
   /** what the app draws over the film */ app: Zone[];
   /** the caption band: the widest and tallest the captions may be */ caption: Rect;
 };
-/** 9:15, 1080 x 1800: the owner's choice for new films (14 Nov 2026). Douyin shows its whole width, with a black bar
- *  above and below, so the phone's clock and part of the post's text fall off the picture. The REC dot starts at
- *  rec.x0 and the battery ends at rec.x1, 32 px from each side: the owner asked for them nearer the sides here, where
- *  nothing is cut off (it was 54; 32 is a first number, not yet seen on a phone). */
+/** 9:15, 1080 x 1800: tried on 14 Nov 2026 and NOT kept (the owner went back to 9:16 the next day; see FRAME_9x16).
+ *  It stays for a film that must show its whole width: Douyin fits the width, with a black bar above and below, so
+ *  the phone's clock and part of the post's text fall off the picture. The REC dot starts at rec.x0 and the battery
+ *  ends at rec.x1, 32 px from each side, where nothing is cut off (32 was a first number, never seen on a phone). */
 export const FRAME_9x15: FrameSpec = {
   W: 1080, H: 1800, side: 54, top: 215, bottom: 1500, recY: 120, labelY: 180, rec: { x0: 32, y0: 85, x1: 1048, y1: 205 },
   app: [
@@ -45,9 +45,12 @@ export const FRAME_9x15: FrameSpec = {
   ],
   caption: { x0: 150, y0: 1270, x1: 930, y1: 1490 },
 };
-/** 9:16, 1080 x 1920: the films made before 14 Nov 2026. Douyin fills the screen and cuts 57 px off each side. */
+/** 9:16, 1080 x 1920: THE FRAME OF EVERY FILM. The owner, 15 Nov 2026: "i want to continue in 9x16, but the rec and
+ *  batter need to go in a tad bit". Douyin fills the screen and cuts 57 px off each side (visible x 58 to 1024 on
+ *  the phone measured), so the REC dot starts at rec.x0 = 110 and the battery ends at rec.x1 = 970: on the same lines
+ *  as the words, about 50 px inside what the phone shows. The films before this had them at about x 62, half cut. */
 export const FRAME_9x16: FrameSpec = {
-  W: 1080, H: 1920, side: 110, top: 320, bottom: 1490, recY: 230, labelY: 288, rec: { x0: 58, y0: 195, x1: 1024, y1: 312 },
+  W: 1080, H: 1920, side: 110, top: 320, bottom: 1490, recY: 230, labelY: 288, rec: { x0: 110, y0: 195, x1: 970, y1: 312 },
   app: [
     { what: "the side the app cuts off", r: { x0: 0, y0: 0, x1: 58, y1: 1920 } },
     { what: "the side the app cuts off", r: { x0: 1024, y0: 0, x1: 1080, y1: 1920 } },
