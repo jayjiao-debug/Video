@@ -26,6 +26,7 @@ one command. Hongmen keeps working through one-line re-exports and wrappers at i
 | wardrobe | Qin / Han robes, armour, hats, beards, a halberd for the rig's figures | `src/kit/acc/*.ts` | `src/kit/acc/` |
 | film contract, input props, language switch | every film | `src/kit/film/{contract,env,lang}.ts` | `src/kit/film/` |
 | title, intro card and screen effect building blocks | every 采访XX的一天 film: its themed title, intro cards, 花字, counters, stamps (blocks only; each film designs its own on top) | `import { defineSkin, life, pop, slap, setRow, glyph, bandPath, seal, slots, fit, clock, checkOverlays } from "../../kit/overlay"` | `src/kit/overlay/` |
+| the day engine | every 采访XX的一天 film: timeline from the generated voice, places, World, camera moves, verbs, film shell, subtitles, vlog UI, and the timing / voice / sound scripts. Start from the starter film `src/videos/day_template` | `makeTimeline, makeSets, DayWorld, makeCam, makeVerbs, makeDayFilm, makeCaption, makeVlog` from `../../kit/day/*`; `python3 scripts/kit/day/gen_timing.py --film <name> --placeholder` | `src/kit/day/` |
 
 **The rig is not in the kit.** `src/videos/group/kit` (rig3d, toon, cast, overlay, rigacc) is the rig layer, owned by
 another team: import it from there, never edit it (nor `vasa/`, `bt/`, `arthur/`, `scripts/rig3d/`, `scripts/arthur/`).

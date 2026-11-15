@@ -51,7 +51,7 @@ Shots never copy a number out of voice.ts / captions.ts: story.ts and beats.ts l
 cap(n, k), capWord(n, word), quote(who, n), SEGMENTS, CARDS, TITLE_SPAN), so a re-timed voice moves every beat by itself."""
 import argparse, json, math, os, re, sys
 
-ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))   # the repo (scripts/kit/day/ is 3 deep)
 FPS = 30
 RATE_ZH = 3.6     # placeholder: Chinese characters a second (ji)
 RATE_EN = 2.3     # placeholder: English words a second (nt, hm)
