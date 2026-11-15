@@ -1,0 +1,67 @@
+{
+ "font": "../../../public/bt/sans700.ttf",
+ "_about": "采访牛顿的一天 Douyin covers, title only like the Qin film's (Jay, 2026-11-13: title only, no dark band). Frame 192 (the cold open: Newton in his doorway at 5 a.m., mouth open on 晚安, the E4 board on his door). Backgrounds are picture-only stills from the preview harness at the cover's shape (not in the repo): bash scripts/kit/queue/still.sh src/videos/newton/preview/film.ts /home/user/newton_work/film/cover/tall/ --pick 192 --size 1080x1440, and /home/user/newton_work/film/cover/wide2/ --pick 192 --size 2160x1620 (resized uniformly to 1440x1080). Then: python3 scripts/newton/cover/make_covers.py",
+ "covers": [
+  {
+   "bg": "/home/user/newton_work/film/cover/tall/f0192.png",
+   "target": "douyin34",
+   "layout": "low",
+   "hook": [
+    "采访牛顿",
+    "的一天"
+   ],
+   "same": true,
+   "out": "/home/user/newton_work/film/cover/out/newton_cover_3x4.png",
+   "override": {
+    "shade": null,
+    "hooks": [
+     [
+      0.661,
+      0.8,
+      150,
+      7
+     ],
+     [
+      0.763,
+      0.8,
+      150,
+      7
+     ]
+    ]
+   }
+  },
+  {
+   "bg": "/home/user/newton_work/film/cover/wide2/f0192.png",
+   "target": "douyin43",
+   "layout": "bottom",
+   "hook": [
+    "采访牛顿",
+    "的一天"
+   ],
+   "same": true,
+   "out": "/home/user/newton_work/film/cover/out/newton_cover_4x3.png",
+   "override": {
+    "shade": null,
+    "hooks": [
+     [
+      0.645,
+      0.6,
+      140,
+      8
+     ],
+     [
+      0.75,
+      0.6,
+      140,
+      8
+     ]
+    ]
+   },
+   "size": [
+    1440,
+    1080
+   ]
+  }
+ ],
+ "sheet": "/home/user/newton_work/film/cover/out/newton_covers_sheet.png"
+}

@@ -1,0 +1,511 @@
+// THE GARDEN (place "garden", island x 300): the small walled garden below Newton's window, at noon and at night (PLAN
+// 1, 7C, F start, G end). WP2's set; the exports are the contract of sets/index.ts: GARDEN_LOOK, GARDEN_PARAMS,
+// buildGarden(K) -> { group, view, animate, setParam, cast }; gardenCast(time) is the figure light per time.
+// Every place-number is layout/garden.ts GARDEN_SET.
+//
+// WHAT THERE IS (the camera mostly looks north, -z)
+//   - RAKED GRAVEL walks (the rake lines run along each walk) round two lawn beds edged with low box hedges, clipped
+//     box cones at the corners; THE SUNDIAL on a stone pillar on a square of flags at the end of his walk (the east walk,
+//     1.4 m south of the crossing: C's match ③ from the plate), a bronze dial r 0.26 with hour lines and a gnomon;
+//   - WEST: the college range: red brick in English bond, a stone plinth and string course, stone-framed leaded
+//     windows with hood moulds, a parapet and a tiled roof with chimneys; his STAIRCASE DOOR (a four-centred stone
+//     arch, the door open on a dim stair foot) and HIS WINDOW on the first floor (param window 0..1: lit warm);
+//   - NORTH: the chapel's flank: pale ashlar, buttresses with set-offs and pinnacles, battlements against the sky, two
+//     big traceried windows; against it his ELABORATORY: a brick lean-to with a tiled pent roof, a brick chimney, a
+//     plank door standing ajar and a little leaded window (param glow 0..1: the door's gap, the window and the
+//     chimney's mouth glow orange, a warm light falls on the gravel in front);
+//   - EAST and SOUTH: brick garden walls with stone copings (a gate in the south one), trees beyond.
+// THE TIME (param time): "noon" = a high sun from the front left (short shadows), a blue sky with clouds; "night" =
+// MOONLIGHT: a cool key from the moon behind her right shoulder, a strong blue sky fill, a deep blue sky with the moon
+// and stars: a BLUE MID-TONE where gravel, stone and brick all read (never black).
+import * as THREE from "three";
+import type { EnvSpec } from "../../bt/pbr";
+import type { Kit } from "../../../kit/props/kit";
+import type { CastLight } from "../../group/kit/cast";
+import { lightRig, paint, rng, css, mix, blotch, skyDome, Batch, glowCard, type SkyStops } from "../../../kit/sets/okit";
+import { GARDEN_SET as S, GDX } from "../layout/garden";
+import type { PlaceLook, ParamValue } from "./index";
+import { maker, boxG, levelQuad, wallQuad, tileUV, lathe, roundBox, rockG, Part, quad4 } from "./parts/common";
+import { NC, NOINK, holedWall, revealG, wallPoly, brickTex, ashlarTex, gravelTex, leadedTex, plasterTex, roofTilesTex, plankTex, type Hole } from "./parts/newton";
+
+export type GardenTime = "noon" | "night";
+const BAKED = { bleach: 0.7, bodyShadeK: 0.4, contact: "#8a93c2" };
+/** THE FIGURES' LIGHT per time (cast() lays it over GARDEN_LOOK.cast; or w.setPlace("garden", { light: gardenCast("night") })) */
+export const GARDEN_CAST: Record<GardenTime, Partial<CastLight>> = {
+  noon: { key: [-0.45, 0.78, 0.45], tint: [1.0, 0.97, 0.92], tintK: 0.7, gain: 0.97, shade: [1.04, 0.95, 1.34], broad: 0, sheen: 0.08, contactLen: 0.45 },
+  night: { key: [0.42, 0.62, 0.66], tint: [0.8, 0.88, 1.0], tintK: 0.75, gain: 0.86, shade: [1.0, 0.92, 1.9], broad: 0.3, sheen: 0.1, contactLen: 0.2 },
+} as unknown as Record<GardenTime, Partial<CastLight>>;
+export const gardenCast = (t: GardenTime): Partial<CastLight> => GARDEN_CAST[t] ?? GARDEN_CAST.noon;
+
+const FILL: EnvSpec = {
+  frame: "world",
+  stops: [[-90, [0.48, 0.45, 0.4]], [-10, [0.55, 0.53, 0.5]], [4, [0.75, 0.8, 0.88]], [30, [0.66, 0.74, 0.88]], [90, [0.58, 0.67, 0.88]]],
+  boxes: [{ az: 135, el: 50, rot: 0, w: 36, h: 20, soft: 14, col: [1.0, 0.96, 0.88] }],
+};
+/** the garden's look (the figure light is noon's; cast() lays night over it) */
+export const GARDEN_LOOK: PlaceLook = {
+  bg: "#9cc0e0",
+  ao: { aoRadius: 0.6, distanceFalloff: 1.0, intensity: 1.7, color: "#2e2c40" },
+  cast: { grad: 0.22, bodyGrad: 0.16, sideTint: [0.92, 0.94, 1.0], shadeK: 0.36, wrap: [26, 52], edge: 0.13, bodySat: 0.13, lift: 0, ...GARDEN_CAST.noon, ...BAKED } as unknown as CastLight,
+  fill: FILL,
+  bloom: 0.35,
+};
+/** the per-frame dressing: time "noon" | "night", glow 0..1 (the elaboratory's door, window and chimney), window 0..1
+ *  (his window lit), gravel "raked" (the default: gravelTex's straight rake lines) | "rough" (roughGravelTex: coarser
+ *  grain, faint broken wavy rake grooves; C sets it; added by WP5-C), plinth 0 | 1 (大哥's moulded stone pedestal with
+ *  its plaque against the east wall, layout GARDEN_SET.plinth: C sets it for the film's one cameo; owner pick 15 Nov) */
+export const GARDEN_PARAMS: Record<string, ParamValue> = { time: "noon", glow: 0, window: 0, gravel: "raked", plinth: 0 };
+
+const B = S.bounds, WK = S.walks, R = S.range, C = S.chapel, E = S.elab;
+const X0 = GDX + B.x0, X1 = GDX + B.x1, Z0 = B.z0, Z1 = B.z1;
+const SKY_NOON: SkyStops = [[-10, "#c9c2b0"], [0, "#e4ebee"], [8, "#c6dbee"], [25, "#9cc0e6"], [60, "#78a6dc"], [90, "#6a9ad6"]];
+const SKY_NIGHT: SkyStops = [[-10, "#2c3658"], [0, "#56689c"], [8, "#465a92"], [25, "#36487e"], [60, "#2a3a6e"], [90, "#243266"]];
+
+// ---------------------------------------------------------------------------------------------------- paintings
+const lawnTex = () => paint(512, 512, (g, W, H) => {
+  const r = rng(91);
+  g.fillStyle = NC.grass; g.fillRect(0, 0, W, H);
+  for (let i = 0; i < 4; i++) { g.fillStyle = css(i % 2 ? NC.grassLo : "#93ae5e", 0.18); g.fillRect((W * i) / 4, 0, W / 4, H); }   // mowing stripes
+  for (let i = 0; i < 700; i++) { g.fillStyle = css(r() < 0.5 ? NC.grassLo : "#9cba66", 0.16); g.fillRect(W * r(), H * r(), 3.5, 6 + 5 * r()); }   // QUIET: soft tufts, no hairline blades
+}, true);
+const leafTex = (base: string, lo: string, hi: string, seed: number) => paint(256, 256, (g, W, H) => {
+  const r = rng(seed);
+  g.fillStyle = base; g.fillRect(0, 0, W, H);
+  for (let i = 0; i < 320; i++) { const x = W * r(), y = H * r(), s = 3 + 6 * r(); for (const dx of [-W, 0, W]) for (const dy of [-H, 0, H]) { g.fillStyle = css(r() < 0.5 ? lo : hi, 0.5); g.beginPath(); g.ellipse(x + dx, y + dy, s, s * 0.7, r() * 3, 0, 7); g.fill(); } }
+}, true);
+/** ROUGH RAKED GRAVEL (param gravel "rough", WP5-C for the director's note "the path reads as planks"): a coarse
+ *  grain of mixed pebbles (light, mid, grey-brown, a few dark, each with a little shadow), soft patches of tone, and
+ *  FEWER, FAINT, WOBBLING, BROKEN rake grooves (never straight boards); tiles both ways like gravelTex */
+/** THE DIAL's face: weathered bronze, a chapter ring, 24 radial lines (every hour on the half the sun crosses is a long
+ *  one) and a small ring at the gnomon's root; the cylinder's cap maps the canvas's square onto the disc */
+const dialTex = () => paint(256, 256, (g, W, H) => {
+  const c = W / 2;
+  g.fillStyle = "#9a7a3e"; g.fillRect(0, 0, W, H);
+  const gr = g.createRadialGradient(c * 0.9, c * 0.85, 0, c, c, c); gr.addColorStop(0, "rgba(255,236,190,0.18)"); gr.addColorStop(1, "rgba(60,40,16,0.25)");
+  g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  g.strokeStyle = "rgba(52,34,14,0.85)"; g.lineCap = "round";
+  g.lineWidth = 4; g.beginPath(); g.arc(c, c, c * 0.9, 0, Math.PI * 2); g.stroke();
+  g.lineWidth = 2; g.beginPath(); g.arc(c, c, c * 0.78, 0, Math.PI * 2); g.stroke();
+  for (let i = 0; i < 24; i++) {
+    const a = (i / 24) * Math.PI * 2, long = i % 2 === 0, r0 = long ? c * 0.2 : c * 0.62;
+    g.lineWidth = long ? 2.4 : 1.6;
+    g.beginPath(); g.moveTo(c + Math.cos(a) * r0, c + Math.sin(a) * r0); g.lineTo(c + Math.cos(a) * c * 0.9, c + Math.sin(a) * c * 0.9); g.stroke();
+  }
+  g.lineWidth = 2; g.beginPath(); g.arc(c, c, c * 0.12, 0, Math.PI * 2); g.stroke();
+  g.fillStyle = "rgba(70,110,90,0.18)";                                   // a little verdigris round the rim
+  for (let i = 0; i < 9; i++) { const a = i * 0.71, r = c * (0.8 + 0.08 * Math.sin(i * 3.1)); g.beginPath(); g.arc(c + Math.cos(a) * r, c + Math.sin(a) * r, 9, 0, Math.PI * 2); g.fill(); }
+});
+/** the stone of the slab the statue stands on (大哥's pedestal): the figure's own limestone (acc/statue.ts STONE), a
+ *  tone down, so he and his footing read as one block set on the cream pedestal */
+const STATUE_SLAB = "#c3bcab";
+/** the back pillar behind the statue's legs: width, depth, height above the footing, how far its face is behind his
+ *  feet's middle, its stone (a tone under his limbs) */
+const BACK_PILLAR = { w: 0.24, d: 0.07, h: 0.6, off: 0.1, col: "#b7af9c" };
+/** THE PEDESTAL's die, six faces side by side (cell k = BoxGeometry's face k): the sundial's stone with soft mottling,
+ *  a sunk panel (a dark cut along its top and left, a lit lip along its bottom and right), one or two rain streaks
+ *  running down from under the cornice, and a breath of green where the damp stands at its foot */
+const pedestalTex = () => paint(6 * 128, 256, (g, W, H) => {
+  const r = rng(131), cw = W / 6;
+  g.fillStyle = NC.stone; g.fillRect(0, 0, W, H);
+  for (let k = 0; k < 6; k++) {
+    const x0 = k * cw;
+    g.save(); g.beginPath(); g.rect(x0, 0, cw, H); g.clip();
+    for (let i = 0; i < 9; i++) blotch(g, x0 + cw * r(), H * r(), cw * (0.2 + 0.3 * r()), r() < 0.5 ? NC.stoneLo : NC.stoneHi, 0.3);
+    // the rain streaks: from the top edge down, wider and fainter as they run
+    for (let i = 0, n = 1 + Math.floor(r() * 2); i < n; i++) {
+      // (down the face's two sides, clear of the plaque over its middle: one on each side when there are two)
+      const sx = x0 + cw * ((i + k) % 2 ? 0.83 + 0.07 * r() : 0.09 + 0.08 * r()), len = H * (0.55 + 0.4 * r()), w0 = cw * (0.035 + 0.03 * r());
+      const gr = g.createLinearGradient(0, 0, 0, len); gr.addColorStop(0, css("#7d7462", 0.62)); gr.addColorStop(0.6, css("#7d7462", 0.3)); gr.addColorStop(1, css("#7d7462", 0));
+      g.fillStyle = gr; g.beginPath(); g.moveTo(sx - w0, 0); g.lineTo(sx + w0, 0); g.lineTo(sx + w0 * 1.8, len); g.lineTo(sx - w0 * 1.5, len); g.closePath(); g.fill();
+    }
+    const gm = g.createLinearGradient(0, H * 0.72, 0, H); gm.addColorStop(0, css("#7c8a55", 0)); gm.addColorStop(1, css("#7c8a55", 0.34));
+    g.fillStyle = gm; g.fillRect(x0, H * 0.72, cw, H * 0.28);
+    // the sunk panel
+    const m = cw * 0.13, px0 = x0 + m, px1 = x0 + cw - m, py0 = H * 0.09, py1 = H * 0.91;
+    g.lineWidth = 3.2; g.lineCap = "square";
+    g.strokeStyle = css("#857b66", 0.85); g.beginPath(); g.moveTo(px0, py1); g.lineTo(px0, py0); g.lineTo(px1, py0); g.stroke();
+    g.strokeStyle = css("#f3ead6", 0.9); g.beginPath(); g.moveTo(px1, py0); g.lineTo(px1, py1); g.lineTo(px0, py1); g.stroke();
+    g.restore();
+  }
+});
+/** THE PLAQUE: a tablet of the darker stone with a cut border and "Juno" engraved on it (owner note 15 Nov: "change that
+ *  大哥 sign to Juno"). The letters are drawn stroke by stroke (no font: the render page may have none), each cut dark
+ *  with a lit lip under it; cap height 96 px, x-height 60 px, baseline y 128 on the 256 x 160 tablet */
+const plaqueTex = () => paint(256, 160, (g, W, H) => {
+  const r = rng(137);
+  g.fillStyle = "#bfb294"; g.fillRect(0, 0, W, H);
+  for (let i = 0; i < 7; i++) blotch(g, W * r(), H * r(), W * (0.12 + 0.2 * r()), r() < 0.5 ? NC.stoneDark : NC.stone, 0.22);
+  const cut = (pts: [number, number][], lw: number) => {
+    g.lineWidth = lw; g.lineCap = "round"; g.lineJoin = "round";
+    for (const [dx, dy, col] of [[1.6, 2.4, css("#f1e8d2", 0.9)], [0, 0, "#4a4234"]] as [number, number, string][]) {
+      g.strokeStyle = col; g.beginPath(); pts.forEach(([px, py], i) => (i ? g.lineTo(px + dx, py + dy) : g.moveTo(px + dx, py + dy))); g.stroke();
+    }
+  };
+  cut([[10, 10], [W - 10, 10], [W - 10, H - 10], [10, H - 10], [10, 10]], 4);
+  const lw = 12, B = 128, X = 68;                                  // stroke, baseline, x-height top (12 px reads at phone size)
+  const ell = (cx: number, cy: number, rx: number, ry: number): [number, number][] => Array.from({ length: 25 }, (_, k) => [cx + rx * Math.sin((k / 24) * 2 * Math.PI), cy - ry * Math.cos((k / 24) * 2 * Math.PI)]);
+  cut([[20, 33], [64, 33]], lw);                                                                                     // J: the bar
+  cut([[50, 33], [50, 106], [47, 119], [40, 126], [30, 127], [22, 119]], lw);                                        //    the stem and its hook
+  cut([[88, X], [88, 106], [92, 120], [100, 127], [110, 127], [118, 120], [122, 107]], lw); cut([[122, X], [122, B]], lw); // u
+  cut([[144, X], [144, B]], lw); cut([[144, 90], [149, 75], [158, 68], [168, 68], [175, 74], [178, 86], [178, B]], lw);  // n
+  cut(ell(216, 98, 16, 30), lw);                                                                                     // o
+});
+const roughGravelTex = (seed: number, lines = 11, px = 512) => paint(px, px, (g, W, H) => {
+  const r = rng(seed), wrap = (fn: (dx: number, dy: number) => void) => { for (const dx of [-W, 0, W]) for (const dy of [-H, 0, H]) fn(dx, dy); };
+  g.fillStyle = css(mix(NC.gravel, NC.gravelLo, 0.25)); g.fillRect(0, 0, W, H);
+  for (let i = 0; i < 26; i++) { const x = W * r(), y = H * r(), rr = W * (0.08 + 0.14 * r()), c = r() < 0.5 ? NC.gravelHi : "#b9aa86"; wrap((dx, dy) => blotch(g, x + dx, y + dy, rr, c, 0.35)); }
+  // the rake grooves first (the stones lie over and between them): faint, wavy, broken into strokes of varying weight
+  for (let i = 0; i < lines; i++) {
+    const x0 = (W * (i + 0.3 + 0.4 * r())) / lines, k1 = 1 + Math.floor(r() * 2), k2 = 3 + Math.floor(r() * 3), a1 = W * (0.006 + 0.01 * r()), a2 = W * 0.004 * r(), p1 = 7 * r(), p2 = 7 * r();
+    const xAt = (y: number) => x0 + a1 * Math.sin((2 * Math.PI * k1 * y) / H + p1) + a2 * Math.sin((2 * Math.PI * k2 * y) / H + p2);
+    for (let y = 0; y < H; ) {
+      const len = H * (0.04 + 0.1 * r()), on = r() < 0.78, w = (W / lines) * (0.08 + 0.1 * r());
+      if (on) for (const [dx, col, a] of [[w * 0.55, "#8f8062", 0.1 + 0.08 * r()], [-w * 0.5, "#f6efdc", 0.12 + 0.1 * r()]] as [number, string, number][]) {
+        g.strokeStyle = css(col, a); g.lineWidth = w; g.lineCap = "round";
+        for (const ddy of [-H, 0, H]) { g.beginPath(); for (let t = 0; t <= 6; t++) { const yy = y + (len * t) / 6; g[t ? "lineTo" : "moveTo"](xAt(yy) + dx, yy + ddy); } g.stroke(); }
+      }
+      y += len + (on ? H * 0.004 : H * 0.02 * r());
+    }
+  }
+  // the stones: many, mixed, small to coarse; the bigger ones with a shadow under them
+  const cols = [NC.gravelHi, NC.gravelHi, "#f1e9d6", NC.gravelLo, NC.gravelLo, "#b3a481", "#9d9076", "#8a7f6c", "#cfc3a4"];
+  // QUIET (rebuild prep): fewer stones, none smaller than ~3 px across, at low opacity, so a moving walk never sparkles
+  for (let i = 0; i < 4200; i++) {
+    const x = W * r(), y = H * r(), rr = 1.5 + 2.4 * r() * r(), c = cols[Math.floor(r() * cols.length)], a = 0.2 + 0.2 * r(), ang = r() * 3;
+    wrap((dx, dy) => {
+      if (x + dx < -4 || x + dx > W + 4 || y + dy < -4 || y + dy > H + 4) return;
+      if (rr > 2.4) { g.fillStyle = css("#6e6452", 0.1); g.beginPath(); g.ellipse(x + dx + 0.6, y + dy + 0.8, rr, rr * 0.75, ang, 0, 7); g.fill(); }
+      g.fillStyle = css(c, a); g.beginPath(); g.ellipse(x + dx, y + dy, rr, rr * 0.75, ang, 0, 7); g.fill();
+    });
+  }
+}, true);
+/** a big perpendicular chapel window: pale stone mullions and tracery over dark glass (blue-grey by day) */
+const traceryTex = (w: number, h: number, rise: number) => paint(Math.round(w * 100), Math.round(h * 100), (g, W, H) => {
+  const ppm = W / w, r = rng(93);
+  g.fillStyle = "#5a6478"; g.fillRect(0, 0, W, H);
+  for (let i = 0; i < 160; i++) { g.fillStyle = css(r() < 0.5 ? "#6e7a90" : "#4a5266", 0.6); g.fillRect(W * r(), H * r(), 8 + 10 * r(), 10 + 14 * r()); }   // glass quarries' tone
+  g.strokeStyle = "rgba(40,40,50,0.55)"; g.lineWidth = 1.5;
+  for (let x = 0; x < W; x += 0.14 * ppm) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, H); g.stroke(); }
+  for (let y = 0; y < H; y += 0.2 * ppm) { g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
+  const st = NC.stoneHi, mw = 0.11 * ppm, n = 5;
+  g.fillStyle = st;
+  for (let i = 1; i < n; i++) g.fillRect((W * i) / n - mw / 2, (rise / h) * H * 0.4, mw, H);           // mullions
+  for (const v of [0.42, 0.72]) g.fillRect(0, H * (1 - v * (1 - rise / h)), W, mw * 0.9);               // transoms
+  // the tracery in the head: little arched panels (cinquefoil-ish) under the arch
+  g.strokeStyle = st; g.lineWidth = mw * 0.8;
+  const top = (rise / h) * H;
+  for (let i = 0; i < n; i++) { const x0 = (W * i) / n, x1 = (W * (i + 1)) / n, cx = (x0 + x1) / 2; g.beginPath(); g.moveTo(x0, top * 1.15); g.quadraticCurveTo(cx, top * 0.55, x1, top * 1.15); g.stroke(); }
+  g.beginPath(); g.moveTo(W * 0.2, top * 0.95); g.quadraticCurveTo(W * 0.5, -top * 0.1, W * 0.8, top * 0.95); g.stroke();
+  g.lineWidth = mw * 0.6; g.beginPath(); g.arc(W * 0.5, top * 0.62, W * 0.09, 0, 7); g.stroke();
+});
+/** the stair foot seen through his open door: dim oak steps going up into the dark */
+const stairFootTex = () => paint(256, 384, (g, W, H) => {
+  const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, "#2e2620"); gr.addColorStop(1, "#5a4636");
+  g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  for (let i = 0; i < 7; i++) { const y = H - (i + 1) * H * 0.11; g.fillStyle = css(mix("#7a5a3e", "#3a2c22", i / 7)); g.fillRect(W * 0.15, y, W * 0.7, H * 0.035); }
+  g.fillStyle = "rgba(230,215,190,0.18)"; g.fillRect(0, 0, W * 0.12, H); g.fillRect(W * 0.88, 0, W * 0.12, H);
+});
+/** the elaboratory's firelit inside, seen through the door gap and the window (unlit: its colour is the glow) */
+const fireInsideTex = () => paint(128, 192, (g, W, H) => {
+  const gr = g.createRadialGradient(W * 0.4, H * 0.8, 0, W * 0.4, H * 0.8, H * 0.9); gr.addColorStop(0, "#fff0b0"); gr.addColorStop(0.35, "#ffa040"); gr.addColorStop(1, "#7a2a10");
+  g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  g.fillStyle = "rgba(60,20,10,0.5)"; g.fillRect(W * 0.6, H * 0.2, W * 0.25, H * 0.6);
+});
+// ---------------------------------------------------------------------------------------------------- the builder
+export function buildGarden(K: Kit) {
+  const group = new THREE.Group(); group.name = "garden";
+  const Mk = maker(K, group), BT = new Batch();
+  const mGravelZ = Mk.tex(gravelTex({ seed: 94, lines: 9 }), 0.95), mGravelX = Mk.tex(gravelTex({ seed: 95, lines: 9 }), 0.95);
+  // param gravel: the walks' two maps, raked (the default) and rough, swapped on the same two materials
+  const gZ = mGravelZ as THREE.MeshStandardMaterial, gX = mGravelX as THREE.MeshStandardMaterial;
+  const GRAVEL_MAPS: Record<"raked" | "rough", [THREE.Texture | null, THREE.Texture]> = { raked: [gZ.map, gX.map as THREE.Texture], rough: [roughGravelTex(94), roughGravelTex(95)] };
+  const mLawn = Mk.tex(lawnTex(), 0.95), mBox = Mk.tex(leafTex(NC.box, NC.boxLo, NC.boxHi, 96), 0.9);
+  const mBrick = Mk.tex(brickTex({ seed: 97 }), 0.9), mBrickE = Mk.tex(brickTex({ seed: 98, soot: 0.25 }), 0.9);
+  const mStone = Mk.tex(ashlarTex({ seed: 99, nx: 3, ny: 4 }), 0.9), mStonePlain = Mk.flat(NC.stone, 0.9), mStoneLo = Mk.flat(NC.stoneLo, 0.9);
+  const mTile = Mk.tex(roofTilesTex(), 0.85), mIron = Mk.flat(NC.iron, 0.5), mBronze = Mk.flat("#9a7a3e", 0.5), mBark = Mk.flat("#5e4636", 0.9);
+  const mTree = Mk.flat("#5d8a48", 0.9), mTreeLo = Mk.flat("#4c7a3c", 0.9);
+
+  // =================================================================================================== the ground
+  const uvZ = (x: number, z: number): [number, number] => [(x - X0) / WK.w, -z / WK.w];
+  const uvX = (x: number, z: number): [number, number] => [-z / WK.w + 0.5, x / WK.w];
+  Mk.mesh("garden.gravel", levelQuad(X0, X1, Z0, Z1, 0, uvZ), mGravelZ, { cast: false });
+  // the E-W walks (north, cross, south): their own rake lines along x, between the west and east walks
+  for (const zc of [WK.north, WK.cross, WK.south]) Mk.mesh("garden.walkX", levelQuad(GDX + WK.west + WK.w / 2, GDX + WK.east - WK.w / 2, zc - WK.w / 2, zc + WK.w / 2, 0.0005, uvX), mGravelX, { cast: false });
+  // the lawn beds, their box hedges and cones
+  const mCone = Mk.tex(leafTex("#4a7838", "#3a6230", "#5e8c48", 100), 0.9);
+  for (const [bx0, bx1, bz0, bz1] of S.beds) {
+    const x0 = GDX + bx0, x1 = GDX + bx1, t = S.box.t, h = S.box.h;
+    Mk.mesh("garden.lawn", levelQuad(x0, x1, bz0, bz1, 0.0009, (x, z) => [x / 2.0, -z / 2.0]), mLawn, { cast: false });
+    const hedge = (cx: number, cz: number, lx: number, lz: number) => BT.add(mBox, tileUV(roundBox(lx, h, lz, 0.1, 2).translate(cx, h / 2 - 0.01, cz), 0.5));
+    hedge((x0 + x1) / 2, bz0 + t / 2, x1 - x0, t); hedge((x0 + x1) / 2, bz1 - t / 2, x1 - x0, t);
+    hedge(x0 + t / 2, (bz0 + bz1) / 2, t, bz1 - bz0 - 2 * t + 0.02); hedge(x1 - t / 2, (bz0 + bz1) / 2, t, bz1 - bz0 - 2 * t + 0.02);
+    const cone = lathe([[0.0, 0], [S.cone.r * 0.6, 0.02], [S.cone.r, 0.18], [S.cone.r * 0.82, 0.45], [S.cone.r * 0.45, 0.8], [0.05, S.cone.h], [0, S.cone.h + 0.02]], 18);
+    for (const [cx, cz] of [[x0 + t / 2, bz0 + t / 2], [x1 - t / 2, bz0 + t / 2], [x0 + t / 2, bz1 - t / 2], [x1 - t / 2, bz1 - t / 2]]) BT.add(mCone, cone.clone().translate(cx, h - 0.06, cz));
+  }
+  BT.flush(group, "garden.box");
+  // THE SUNDIAL at the end of his walk (layout GARDEN_SET.sundial; C.md staging change 1): a square of four stone flags
+  // on the east walk, the stone pillar (its capital wide enough to carry the bigger dial), the bronze dial with its hour
+  // lines (dialTex on the top cap), and the gnomon: a triangle plate whose edge rises toward the north (-z)
+  {
+    const D = S.sundial, P = new Part(K), x = GDX + D.x, z = D.z, top = D.top, th = 0.02, fl = D.flags / 2, gap = 0.015;
+    for (const [sx, sz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
+      const ax = x + (sx < 0 ? -fl : gap), bx = x + (sx < 0 ? -gap : fl), az = z + (sz < 0 ? -fl : gap), bz = z + (sz < 0 ? -gap : fl);
+      P.add(mStoneLo, boxG(ax, bx, 0, 0.018, az, bz), 0.004);
+    }
+    P.add(mStonePlain, lathe([[0.26, 0.018], [0.26, 0.1], [0.17, 0.14], [0.12, 0.32], [0.15, 0.62], [0.11, 0.86], [0.19, 0.93], [0.22, top - th], [0, top - th]], 24).translate(x, 0, z), 0.006);
+    P.add(Mk.tex(dialTex(), 0.5), new THREE.CylinderGeometry(D.dialR, D.dialR, th, 48).translate(x, top - th / 2, z), 0.004);
+    const sh = new THREE.Shape([new THREE.Vector2(-D.gnomon.len / 3, 0), new THREE.Vector2((2 * D.gnomon.len) / 3, 0), new THREE.Vector2((2 * D.gnomon.len) / 3, D.gnomon.h)]);
+    const gn = new THREE.ExtrudeGeometry(sh, { depth: 0.018, bevelEnabled: false }).translate(0, 0, -0.009).rotateY(Math.PI / 2);   // local x -> world -z
+    P.add(mBronze, gn.translate(x, top, z), 0.003);
+    P.into(group, "garden.sundial", { cast: true });
+  }
+
+  // 大哥's PEDESTAL (param plinth; owner pick 15 Nov, owner note 15 Nov "more proper statue like"): a square stone
+  // pedestal against the east wall, in the sundial's stone: a MOULDED BASE (a plinth block, a fillet, a cyma up to the
+  // die), the DIE (each face a sunk panel, rain streaks from under the cornice, green at its foot: pedestalTex), a
+  // MOULDED CAP (a cavetto, a fillet, the cornice), the statue's own footing slab on it (the figure's stone, a tone
+  // down), an ENGRAVED PLAQUE on the face toward her (plaqueTex: "Juno", cut by hand: no font) and a little moss at the
+  // foot. Each moulding is one four-sided lathe with its own hull, so the steps are drawn lines. Hidden unless C asks
+  const plinthG = new THREE.Group(); plinthG.name = "garden.plinth"; plinthG.visible = false; group.add(plinthG);
+  {
+    const L = S.plinth, P = new Part(K), x = GDX + L.x, z = L.z, hs = L.w / 2, ov = L.over, cap = L.cap, dieY0 = 0.25, dieY1 = cap - 0.15;
+    /** a square moulding round the pedestal's axis: its profile [how far beyond the die's face, y] from the bottom up,
+     *  closed on the axis at both ends, faces square to the wall and flat (Part.add works the normals out) */
+    const sq = (prof: [number, number][]) => {
+      const pts = [[-hs, prof[0][1]], ...prof, [-hs, prof[prof.length - 1][1]]].map(([o, y]) => new THREE.Vector2((hs + o) * Math.SQRT2, y));
+      const g = new THREE.LatheGeometry(pts, 4).rotateY(Math.PI / 4); g.deleteAttribute("normal");
+      return g.translate(x, 0, z);
+    };
+    P.add(mStoneLo, sq([[ov, 0], [ov, 0.13], [0.062, 0.152], [0.062, 0.186], [0.03, 0.214], [0.012, 0.248], [0, 0.262]]), 0.004);                                  // the base
+    // the die: a box whose six faces read six cells of one painting (BoxGeometry: +x -x +y -y +z -z, four corners each)
+    const die = boxG(x - hs, x + hs, dieY0, dieY1, z - hs, z + hs), duv = die.attributes.uv as THREE.BufferAttribute;
+    for (let i = 0; i < duv.count; i++) duv.setX(i, (Math.floor(i / 4) + duv.getX(i)) / 6);
+    P.add(Mk.tex(pedestalTex(), 0.9), die, 0.004);
+    P.add(mStonePlain, sq([[0, cap - 0.162], [0.012, cap - 0.15], [0.03, cap - 0.116], [0.058, cap - 0.094], [0.058, cap - 0.074], [ov, cap - 0.058], [ov, cap - 0.014], [ov - 0.016, cap]]), 0.004);   // the cap
+    const sl = L.slab / 2;
+    P.add(Mk.flat(STATUE_SLAB, 0.9), boxG(x - sl, x + sl, cap, L.h, z - sl, z + sl), 0.003);                                                                   // the statue's footing
+    // the BACK PILLAR behind his legs (a standing figure in stone has one: thin legs alone would not carry him): a flat
+    // upright block, a tone under the figure so his legs read in relief on it, wholly behind him (its face
+    // BACK_PILLAR.off behind his feet) from the footing up into the back of his body. It is square to the line from him
+    // to the sundial, where she stands for the one view that shows him (the figure turns its body to her lens anyway)
+    const bp = BACK_PILLAR, yaw = Math.atan2(GDX + S.sundial.x - x, S.sundial.z - z);
+    P.add(Mk.flat(bp.col, 0.9), new THREE.BoxGeometry(bp.w, bp.h, bp.d).translate(0, L.h + bp.h / 2 - 0.004, -bp.off - bp.d / 2).rotateY(yaw).translate(x, 0, z), 0.003);
+    // the plaque: a thin tablet on the face toward her (south, +z), in the upper half of the die
+    const pw = 0.3, ph = 0.19, py = dieY0 + (dieY1 - dieY0) * 0.56;
+    P.add(Mk.tex(plaqueTex(), 0.85), boxG(x - pw / 2, x + pw / 2, py - ph / 2, py + ph / 2, z + hs - 0.004, z + hs + 0.014), 0.003);
+    // moss: a few low cushions where the base meets the gravel, on the shaded north-west corner and under the plaque's face
+    const mMoss = Mk.flat("#7c8a55", 0.95), b = hs + ov;
+    for (const [mx, my, mz, r] of [[-b - 0.01, 0, 0.12, 0.075], [-b, 0, -0.16, 0.055], [-0.14, 0, b + 0.01, 0.07], [0.1, 0, b, 0.045], [-b + 0.03, 0.13, b - 0.05, 0.05]])
+      P.add(mMoss, new THREE.SphereGeometry(r, 10, 6).scale(1.25, 0.42, 1).translate(x + mx, my + r * 0.12, z + mz), 0);
+    P.into(plinthG, "garden.plinth", { cast: true });
+  }
+
+  // =================================================================================================== the range (west)
+  const rx = GDX + R.x, aR: [number, number] = [rx, Z1], bR: [number, number] = [rx, Z0];        // faces +x; u = Z1 - z
+  const U = (z: number) => Z1 - z;
+  const holes: (Hole & { kind: string })[] = [];
+  holes.push({ kind: "door", u0: U(R.door.z) - R.door.w / 2, u1: U(R.door.z) + R.door.w / 2, y0: 0, y1: R.door.h, arch: R.door.arch });
+  holes.push({ kind: "his", u0: U(R.his.z) - R.his.w / 2, u1: U(R.his.z) + R.his.w / 2, y0: R.his.y0, y1: R.his.y1 });
+  for (const z of R.ground) holes.push({ kind: "g", u0: U(z) - R.gw / 2, u1: U(z) + R.gw / 2, y0: R.gy0, y1: R.gy1 });
+  for (const z of R.first) holes.push({ kind: "f", u0: U(z) - R.gw / 2, u1: U(z) + R.gw / 2, y0: R.his.y0, y1: R.his.y1 });
+  Mk.mesh("garden.range", holedWall(aR, bR, 0, R.h, holes, 0.96, 0.68), mBrick, { cast: true });
+  // stone dressings: plinth, string course, parapet coping; a frame and a hood mould round every window and the door
+  Mk.mesh("garden.range.plinth", tileUV(boxG(rx - 0.02, rx + 0.07, 0, 0.45, Z0, Z1), 0.6), mStone);
+  Mk.mesh("garden.range.string", boxG(rx - 0.02, rx + 0.09, R.floor1 - 0.08, R.floor1 + 0.1, Z0, Z1), mStonePlain);
+  Mk.mesh("garden.range.cope", boxG(rx - 0.25, rx + 0.1, R.h - 0.05, R.h + 0.18, Z0, Z1), mStonePlain);
+  const glassFor: Record<string, THREE.MeshBasicMaterial[]> = { his: [], other: [] };
+  const mGlassDay = leadedTex({ w: 1.2, h: 1.5, q: 0.11, glass: "#8fa2b6", hi: "#b6c6d4", lo: "#6c7e94", lead: "#3a3a44" });
+  for (const h of holes) {
+    const zc = Z1 - (h.u0 + h.u1) / 2, w = h.u1 - h.u0, fw = 0.12, fd = 0.08;
+    if (h.kind === "door") {
+      Mk.mesh("garden.range.doorframe", boxG(rx - 0.01, rx + fd, 0, h.y1 + fw, zc + w / 2, zc + w / 2 + fw), mStonePlain);
+      Mk.mesh("garden.range.doorframe", boxG(rx - 0.01, rx + fd, 0, h.y1 + fw, zc - w / 2 - fw, zc - w / 2), mStonePlain);
+      Mk.mesh("garden.range.doorframe", boxG(rx - 0.01, rx + fd, h.y1 - (h.arch ?? 0) * 0.3, h.y1 + fw, zc - w / 2 - fw, zc + w / 2 + fw), mStonePlain);
+      for (const [k, nm] of ["jambL", "jambR", "head"].entries()) Mk.mesh(`garden.range.door.${nm}`, revealG(aR, bR, { ...h, arch: 0, y1: h.y1 - (h.arch ?? 0) }, 0.45, 1, [k]), mStonePlain, { cast: true });
+      // the open doorway: the stair foot in the dim inside, a step of stone at the threshold
+      Mk.mesh("garden.range.doorway", new THREE.PlaneGeometry(w, h.y1).rotateY(Math.PI / 2).translate(rx - 0.45, h.y1 / 2, zc), Mk.tex(stairFootTex(), 0.9), { cast: false });
+      Mk.mesh("garden.range.step", boxG(rx - 0.05, rx + 0.32, 0, 0.1, zc - w / 2 - 0.1, zc + w / 2 + 0.1), mStonePlain);
+      continue;
+    }
+    Mk.mesh("garden.range.frame", boxG(rx - 0.01, rx + fd, h.y0 - fw, h.y1 + fw, zc + w / 2, zc + w / 2 + fw), mStonePlain);
+    Mk.mesh("garden.range.frame", boxG(rx - 0.01, rx + fd, h.y0 - fw, h.y1 + fw, zc - w / 2 - fw, zc - w / 2), mStonePlain);
+    Mk.mesh("garden.range.frame", boxG(rx - 0.01, rx + fd + 0.03, h.y0 - fw, h.y0, zc - w / 2 - fw, zc + w / 2 + fw), mStonePlain);
+    Mk.mesh("garden.range.hood", boxG(rx - 0.01, rx + fd + 0.06, h.y1, h.y1 + fw + 0.04, zc - w / 2 - fw - 0.08, zc + w / 2 + fw + 0.08), mStonePlain);
+    Mk.mesh("garden.range.reveal", revealG(aR, bR, h, 0.22, 1), mStonePlain, { cast: true });
+    const lights = h.kind === "his" ? R.his.lights : 2;
+    const gm = new THREE.MeshBasicMaterial({ map: mGlassDay, fog: false, color: "#ffffff" });
+    (h.kind === "his" ? glassFor.his : glassFor.other).push(gm);
+    const glass = new THREE.Mesh(new THREE.PlaneGeometry(w, h.y1 - h.y0).rotateY(Math.PI / 2).translate(rx - 0.2, (h.y0 + h.y1) / 2, zc), gm);
+    glass.layers.set(NOINK); glass.name = "garden.range.glass." + h.kind; glass.castShadow = false; group.add(glass);
+    for (let i = 1; i < lights; i++) { const z = zc + w / 2 - (w * i) / lights; Mk.mesh("garden.range.mullion", boxG(rx - 0.22, rx - 0.12, h.y0, h.y1, z - 0.04, z + 0.04), mStonePlain); }
+  }
+  // the roof behind the parapet and two chimney stacks
+  Mk.mesh("garden.range.roof", quad4(new THREE.Vector3(rx - 0.2, R.h, Z1), new THREE.Vector3(rx - 0.2, R.h, Z0 - 2), new THREE.Vector3(rx - 4.5, R.h + 3.6, Z0 - 2), new THREE.Vector3(rx - 4.5, R.h + 3.6, Z1), (Z1 - Z0 + 2) / 2, 3), mTile, { cast: true });
+  for (const z of [-7.0, 3.0]) Mk.mesh("garden.range.chimney", tileUV(boxG(rx - 2.9, rx - 2.1, R.h + 1.0, R.h + 5.0, z - 0.6, z + 0.6), 0.96, 0.68), mBrick);
+
+  // =================================================================================================== the chapel (north)
+  const cz = C.z, aC: [number, number] = [X0 - 3, cz], bC: [number, number] = [X1 + 4, cz];         // faces +z; u = x - (X0 - 3)
+  const cHoles: Hole[] = C.windows.map(([x0, x1, y0, y1]) => ({ u0: GDX + x0 - aC[0], u1: GDX + x1 - aC[0], y0, y1, arch: (x1 - x0) * 0.62 }));
+  Mk.mesh("garden.chapel", holedWall(aC, bC, 0, C.h, cHoles, 1.8, 1.28), mStone, { cast: true });
+  for (const [i, h] of cHoles.entries()) {
+    const [x0, x1, y0, y1] = C.windows[i], w = x1 - x0, rise = h.arch ?? 0;
+    Mk.mesh("garden.chapel.reveal", revealG(aC, bC, { ...h, arch: 0, y1: y1 - rise }, 0.55, 1.2), mStoneLo, { cast: true });
+    // the glass with its tracery, set back in the reveal: the arched outline as one shape
+    const sh = new THREE.Shape(); const n = 14; sh.moveTo(0, 0); sh.lineTo(w, 0); sh.lineTo(w, y1 - y0 - rise);
+    for (let k = 1; k <= n; k++) { const t = k / n; sh.lineTo(w - w * t, y1 - y0 - rise + rise * Math.sin(Math.PI * t) ** 0.6); }
+    const g = new THREE.ShapeGeometry(sh, 2), p = g.attributes.position as THREE.BufferAttribute, uv = g.attributes.uv as THREE.BufferAttribute;
+    for (let k = 0; k < p.count; k++) uv.setXY(k, p.getX(k) / w, p.getY(k) / (y1 - y0));
+    g.translate(GDX + x0, y0, cz - 0.5);
+    const mT = new THREE.MeshBasicMaterial({ map: traceryTex(w, y1 - y0, rise), fog: false });
+    const m = Mk.mesh("garden.chapel.glass", g, mT, { cast: false, noink: true }); m.userData.day = true;
+    glassFor.other.push(mT);
+    // the head's reveal: a dark soffit card behind the arch (so the arch's opening is not see-through above the reveal)
+    Mk.mesh("garden.chapel.head", new THREE.PlaneGeometry(w + 0.02, rise + 0.02).translate(GDX + x0 + w / 2, y1 - rise / 2, cz - 0.56), mStoneLo, { cast: false });
+  }
+  // buttresses with two set-offs, gabled tops and pinnacles; the plinth; battlements
+  for (const bx of C.buttress.x) {
+    const x = GDX + bx, w = C.buttress.w, d = C.buttress.d;
+    Mk.mesh("garden.chapel.buttress", tileUV(boxG(x - w / 2, x + w / 2, 0, 6.5, cz - 0.05, cz + d), 0.6, 0.32), mStone);
+    Mk.mesh("garden.chapel.buttress", tileUV(boxG(x - w / 2 + 0.06, x + w / 2 - 0.06, 6.5, 11.2, cz - 0.05, cz + d * 0.68), 0.6, 0.32), mStone);
+    Mk.mesh("garden.chapel.buttress", tileUV(boxG(x - w / 2 + 0.12, x + w / 2 - 0.12, 11.2, C.h + 0.9, cz - 0.05, cz + d * 0.4), 0.6, 0.32), mStone);
+    for (const [y, dd] of [[6.5, d], [11.2, d * 0.68]] as [number, number][]) Mk.mesh("garden.chapel.setoff", quad4(new THREE.Vector3(x - w / 2, y, cz + dd), new THREE.Vector3(x + w / 2, y, cz + dd), new THREE.Vector3(x + w / 2, y + 0.45, cz + dd * 0.66), new THREE.Vector3(x - w / 2, y + 0.45, cz + dd * 0.66)), mStonePlain);
+    // the pinnacle: a square shaft and a tall pyramid
+    const px = x, pz = cz + d * 0.2;
+    Mk.mesh("garden.chapel.pinnacle", boxG(px - 0.28, px + 0.28, C.h + 0.9, C.h + 2.0, pz - 0.28, pz + 0.28), mStonePlain);
+    Mk.mesh("garden.chapel.pinnacle", new THREE.ConeGeometry(0.34, 2.4, 4).rotateY(Math.PI / 4).translate(px, C.h + 3.2, pz), mStonePlain);
+  }
+  Mk.mesh("garden.chapel.plinth", tileUV(boxG(aC[0], bC[0], 0, 0.6, cz - 0.02, cz + 0.12), 0.6), mStoneLo);
+  Mk.mesh("garden.chapel.parapet", tileUV(boxG(aC[0], bC[0], C.h - 0.3, C.h + 0.3, cz - 0.3, cz + 0.18), 0.6), mStonePlain);
+  for (let x = aC[0] + 0.3; x < bC[0]; x += 1.25) Mk.mesh("garden.chapel.merlon", boxG(x, x + 0.62, C.h + 0.3, C.h + 0.95, cz - 0.3, cz + 0.16), mStonePlain);
+
+  // =================================================================================================== the elaboratory (outside)
+  const ex0 = GDX + E.x0, ex1 = GDX + E.x1, ez0 = E.z0, ez1 = E.z1, eb = E.eaveBack, ef = E.eaveFront, wt = 0.24;
+  const eave = (z: number) => eb + ((ef - eb) * (z - ez0)) / (ez1 - ez0);
+  const glowMats: THREE.MeshBasicMaterial[] = [];
+  {
+    // the front wall with the door and the window (faces +z)
+    const aE: [number, number] = [ex0, ez1], bE: [number, number] = [ex1, ez1];
+    const dH: Hole = { u0: E.door.x - E.door.w / 2 - E.x0, u1: E.door.x + E.door.w / 2 - E.x0, y0: 0, y1: E.door.h };
+    const wH: Hole = { u0: E.win.x - E.win.w / 2 - E.x0, u1: E.win.x + E.win.w / 2 - E.x0, y0: E.win.y0, y1: E.win.y1 };
+    Mk.mesh("garden.elab.front", holedWall(aE, bE, 0, ef, [dH, wH], 0.96, 0.68), mBrickE, { cast: true });
+    for (const [k, nm] of ["jambL", "jambR", "head"].entries()) Mk.mesh(`garden.elab.door.${nm}`, revealG(aE, bE, dH, wt, 1, [k]), mBrickE, { cast: true });
+    Mk.mesh("garden.elab.front.reveal", revealG(aE, bE, wH, wt, 1), mBrickE, { cast: true });
+    Mk.mesh("garden.elab.lintel", boxG(GDX + E.door.x - E.door.w / 2 - 0.15, GDX + E.door.x + E.door.w / 2 + 0.15, E.door.h, E.door.h + 0.14, ez1 - 0.02, ez1 + 0.05), mStonePlain);
+    // the two sides (sloping tops) and the back is the chapel's buttress line
+    Mk.mesh("garden.elab.sideE", wallPoly([ex1, ez1], [ex1, ez0], [[0, 0], [ez1 - ez0, 0], [ez1 - ez0, eb], [0, ef]], 0, 0.96, 0.68), mBrickE, { cast: true });
+    Mk.mesh("garden.elab.sideW", wallPoly([ex0, ez0], [ex0, ez1], [[0, 0], [ez1 - ez0, 0], [ez1 - ez0, ef], [0, eb]], 0, 0.96, 0.68), mBrickE, { cast: true });
+    // the pent roof: one slab from the back (high) to the front (low), overhanging
+    const o = 0.3, th = 0.08;
+    Mk.mesh("garden.elab.roof", quad4(new THREE.Vector3(ex0 - o, eave(ez1 + o) + th, ez1 + o), new THREE.Vector3(ex1 + o, eave(ez1 + o) + th, ez1 + o), new THREE.Vector3(ex1 + o, eb + th, ez0 - 0.1), new THREE.Vector3(ex0 - o, eb + th, ez0 - 0.1), (ex1 - ex0 + 2 * o) / 1.2, 3.2), mTile, { cast: true });
+    Mk.mesh("garden.elab.roofEdge", boxG(ex0 - o, ex1 + o, eave(ez1 + o), eave(ez1 + o) + th + 0.01, ez1 + o - 0.06, ez1 + o), Mk.flat("#6a4630", 0.8));
+    // the chimney (against the west end, through the roof), its stone cap and its glowing mouth
+    const ch = E.chimney, cx = GDX + ch.x;
+    Mk.mesh("garden.elab.chimney", tileUV(boxG(cx - ch.w / 2, cx + ch.w / 2, 1.2, ch.top, ch.z - ch.w / 2, ch.z + ch.w / 2), 0.96, 0.68), mBrickE);
+    Mk.mesh("garden.elab.chimneyCap", boxG(cx - ch.w / 2 - 0.06, cx + ch.w / 2 + 0.06, ch.top, ch.top + 0.1, ch.z - ch.w / 2 - 0.06, ch.z + ch.w / 2 + 0.06), mStonePlain);
+    const mMouth = new THREE.MeshBasicMaterial({ color: "#000000", fog: false }); glowMats.push(mMouth);
+    Mk.mesh("garden.elab.mouth", new THREE.PlaneGeometry(ch.w * 0.6, ch.w * 0.6).rotateX(-Math.PI / 2).translate(cx, ch.top + 0.102, ch.z), mMouth, { cast: false, receive: false, noink: true });
+    // the door: plank leaf standing ajar (inward), the firelit inside behind it; the little window glowing
+    const mInside = new THREE.MeshBasicMaterial({ map: fireInsideTex(), color: "#000000", fog: false }); glowMats.push(mInside);
+    Mk.mesh("garden.elab.inside", new THREE.PlaneGeometry(E.door.w + 0.3, E.door.h + 0.2).translate(GDX + E.door.x, E.door.h / 2, ez1 - wt - 0.6), mInside, { cast: false, receive: false, noink: true });
+    Mk.mesh("garden.elab.insideW", new THREE.PlaneGeometry(E.win.w + 0.2, E.win.y1 - E.win.y0 + 0.2).translate(GDX + E.win.x, (E.win.y0 + E.win.y1) / 2, ez1 - wt - 0.3), mInside, { cast: false, receive: false, noink: true });
+    const leaf = new THREE.Mesh(boxG(0, E.door.w - 0.02, 0.01, E.door.h - 0.01, -0.025, 0.025), [Mk.flat("#5a4030", 0.8), Mk.flat("#5a4030", 0.8), Mk.flat("#5a4030", 0.8), Mk.flat("#5a4030", 0.8), Mk.tex(plankTex("#6e5038", 101), 0.85), Mk.tex(plankTex("#6e5038", 101), 0.85)]);
+    leaf.position.set(GDX + E.door.x - E.door.w / 2 + 0.01, 0, ez1 - wt + 0.03); leaf.rotation.y = 0.55; leaf.name = "garden.elab.door"; leaf.castShadow = true; leaf.receiveShadow = true; group.add(leaf);
+    const mWinGlass = new THREE.MeshBasicMaterial({ map: leadedTex({ w: E.win.w, h: E.win.y1 - E.win.y0, q: 0.1, glass: "#ffffff", hi: "#ffffff", lo: "#e0d0c0" }), color: "#6a6a74", fog: false, transparent: true, opacity: 0.85 });
+    glowMats.push(mWinGlass);
+    Mk.mesh("garden.elab.glass", new THREE.PlaneGeometry(E.win.w, E.win.y1 - E.win.y0).translate(GDX + E.win.x, (E.win.y0 + E.win.y1) / 2, ez1 - 0.12), mWinGlass, { cast: false, receive: false, noink: true });
+  }
+  // the chimney's glow sits IN its mouth: view() slides the card 0.5 m from the mouth toward the camera so the stack never
+  // hides half of it
+  const chimMouth = new THREE.Vector3(GDX + E.chimney.x, E.chimney.top + 0.2, E.chimney.z);
+  const chimGlow = glowCard(0.62, "#ff8a3a", 0); chimGlow.position.copy(chimMouth); group.add(chimGlow);
+  const doorGlow = glowCard(1.1, "#ff9a4a", 0); doorGlow.position.set(GDX + E.door.x, 1.0, ez1 + 0.05); group.add(doorGlow);
+
+  // =================================================================================================== the garden walls (east, south) and beyond
+  const wh = S.wall.h, cp = S.wall.cope;
+  Mk.mesh("garden.wallE", tileUV(boxG(X1, X1 + 0.36, 0, wh, Z0, Z1 + 0.36), 0.96, 0.68), mBrick);
+  Mk.mesh("garden.wallE.cope", boxG(X1 - 0.05, X1 + 0.41, wh, wh + cp, Z0, Z1 + 0.41), mStonePlain);
+  Mk.mesh("garden.wallS", tileUV(boxG(X0, X1 + 0.36, 0, wh, Z1, Z1 + 0.36), 0.96, 0.68), mBrick);
+  Mk.mesh("garden.wallS.cope", boxG(X0, X1 + 0.41, wh, wh + cp, Z1 - 0.05, Z1 + 0.41), mStonePlain);
+  Mk.mesh("garden.gate", new THREE.PlaneGeometry(1.1, 2.1).rotateY(Math.PI).translate(GDX - 0.8, 1.05, Z1 - 0.005), Mk.tex(plankTex("#6a4c36", 102), 0.85), { cast: false });
+  // trees beyond the east and south walls (chunky canopies on trunks)
+  {
+    const T = new Batch(), r = rng(103);
+    const tree = (x: number, z: number, s: number) => {
+      T.add(mBark, new THREE.CylinderGeometry(0.16 * s, 0.24 * s, 4.2 * s, 10).translate(x, 2.1 * s, z));
+      for (let i = 0; i < 5; i++) T.add(i % 2 ? mTree : mTreeLo, rockG(400 + Math.round(x * 7 + z * 3) + i, 2.6 * s * (0.8 + 0.4 * r()), 2.0 * s * (0.8 + 0.4 * r()), 2.4 * s * (0.8 + 0.4 * r()), 2, 0).translate(x + (r() - 0.5) * 1.8 * s, 3.8 * s + 1.6 * s * r(), z + (r() - 0.5) * 1.8 * s));
+    };
+    for (const [x, z, s] of [[8.5, -11, 1.3], [9.5, -4, 1.5], [8.2, 2.5, 1.2], [10.5, 7.5, 1.4], [-2, 12, 1.3], [4, 12.5, 1.2], [9, 13, 1.5]] as [number, number, number][]) tree(GDX + x, z, s);
+    T.flush(group, "garden.trees");
+    Mk.mesh("garden.beyond", levelQuad(GDX - 40, GDX + 40, -60, 40, -0.02, (x, z) => [x / 4, -z / 4]), Mk.tex(lawnTex(), 0.95), { cast: false });
+  }
+
+  // =================================================================================================== skies
+  const skyNoon = skyDome(new THREE.Vector3(GDX, 0, -4), SKY_NOON, (g, W, H) => {
+    const r = rng(104), elY = (el: number) => ((90 - el) / 180) * H;
+    for (let i = 0; i < 26; i++) { const x = W * r(), y = elY(10 + 30 * r()), s = W * (0.012 + 0.02 * r()); for (let k = 0; k < 5; k++) blotch(g, x + (k - 2) * s * 0.8, y + (r() - 0.5) * s * 0.4, s * (0.7 + 0.5 * r()), "#ffffff", 0.5); }
+  });
+  const skyNight = skyDome(new THREE.Vector3(GDX, 0, -4), SKY_NIGHT, (g, W, H) => {
+    const r = rng(105), elY = (el: number) => ((90 - el) / 180) * H;
+    for (let i = 0; i < 260; i++) { g.fillStyle = css("#e8eeff", 0.4 + 0.5 * r()); const s = 1 + 1.6 * r(); g.fillRect(W * r(), elY(8 + 80 * r()), s, s); }
+    // the moon behind her right shoulder is not in the north sky: a soft moonlit haze low in the south-west instead
+    const mx = W * 0.96, my = elY(34);
+    for (const dx of [0, -W]) { const gr = g.createRadialGradient(mx + dx, my, 0, mx + dx, my, H * 0.12); gr.addColorStop(0, "rgba(230,236,255,0.95)"); gr.addColorStop(0.08, "rgba(230,236,255,0.9)"); gr.addColorStop(0.1, "rgba(200,212,250,0.35)"); gr.addColorStop(1, "rgba(160,180,240,0)"); g.fillStyle = gr; g.fillRect(mx + dx - H * 0.12, my - H * 0.12, H * 0.24, H * 0.24); }
+  });
+  skyNight.visible = false; group.add(skyNoon, skyNight);
+
+  // =================================================================================================== the light
+  const keyAt = new THREE.Vector3(GDX - 0.2, 0, -4);
+  const Lr = lightRig(group, { dir: S.sun, k: 3.0, col: "#fff4e2", at: [keyAt.x, 0, keyAt.z], half: 15, hemi: ["#cfe0f0", "#a89a7c", 1.0], point: { col: "#ff9a48", k: 0, at: [GDX + E.door.x, 1.1, ez1 + 0.9], dist: 7 } });
+  // every lit material with its base env strength and colour: at night the env drops and the colour goes to MOONLIGHT
+  // BLUE (a multiply, so the bricks stay brick and the gravel stays gravel, only blue and a step darker: a mid-tone)
+  const envMats: [THREE.MeshStandardMaterial, number, THREE.Color][] = [];
+  group.traverse((o) => {
+    const m = (o as THREE.Mesh).material as THREE.Material | THREE.Material[] | undefined;
+    for (const q of m ? (Array.isArray(m) ? m : [m]) : []) if ((q as THREE.MeshStandardMaterial).isMeshStandardMaterial && !envMats.some(([e]) => e === q)) envMats.push([q as THREE.MeshStandardMaterial, (q as THREE.MeshStandardMaterial).envMapIntensity, (q as THREE.MeshStandardMaterial).color.clone()]);
+  });
+  const NIGHT_TINT = new THREE.Color(0.5, 0.64, 1.0);
+  let time: GardenTime = "noon", glow = 0, win = 0, gravel: "raked" | "rough" = "raked";
+  const applyGravel = () => { const [mz, mx] = GRAVEL_MAPS[gravel]; if (gZ.map !== mz) { gZ.map = mz; gX.map = mx; } };
+  const warm = new THREE.Color("#ffc870"), dark = new THREE.Color("#2a3252"), day = new THREE.Color("#ffffff"), nightGlass = new THREE.Color("#46557e");
+  const applyTime = () => {
+    const night = time === "night";
+    const d = new THREE.Vector3(...(night ? S.moon : S.sun)).normalize();
+    Lr.key.position.copy(keyAt).addScaledVector(d, 30); Lr.key.target.position.copy(keyAt); Lr.key.target.updateMatrixWorld();
+    Lr.key.color.set(night ? "#a8bcf0" : "#fff4e2"); Lr.key.intensity = night ? 1.5 : 3.0;
+    Lr.hemi.color.set(night ? "#7084c4" : "#cfe0f0"); Lr.hemi.groundColor.set(night ? "#323c66" : "#a89a7c"); Lr.hemi.intensity = night ? 1.5 : 1.0;
+    skyNoon.visible = !night; skyNight.visible = night;
+    for (const [m, e, c] of envMats) { m.envMapIntensity = e * (night ? 0.3 : 1); m.color.copy(c); if (night) m.color.multiply(NIGHT_TINT); }
+    for (const m of glassFor.other) m.color.copy(night ? nightGlass : day);
+    for (const m of glassFor.his) m.color.copy(night ? dark : day).lerp(warm, win);
+  };
+  applyTime();
+  const hideable: [THREE.Object3D, (p: THREE.Vector3) => boolean][] = [];
+  group.traverse((o) => {
+    if (o.name === "garden.range") hideable.push([o, (p) => p.x < rx - 0.02]);
+    if (o.name === "garden.chapel") hideable.push([o, (p) => p.z < cz - 0.02]);
+    if (o.name === "garden.elab.front") hideable.push([o, (p) => p.z < ez1 - 0.02 && p.x > ex0 && p.x < ex1]);
+  });
+  return {
+    group,
+    view(cam: THREE.Vector3) {
+      for (const [o, behind] of hideable) o.visible = !behind(cam);
+      chimGlow.position.copy(cam).sub(chimMouth).normalize().multiplyScalar(0.5).add(chimMouth);
+      chimGlow.lookAt(cam); doorGlow.lookAt(cam);
+    },
+    animate(t: number) {
+      const k = glow * (1 + 0.08 * Math.sin(t * 6.3) + 0.05 * Math.sin(t * 11.1 + 0.7) + 0.03 * Math.sin(t * 17.3 + 1.9));
+      Lr.point.intensity = 5.0 * k;
+      for (const m of glowMats) m.color.setRGB(Math.min(1, 0.08 + k), Math.min(1, 0.06 + 0.72 * k), Math.min(1, 0.06 + 0.35 * k));
+      chimGlow.material.opacity = 0.55 * k; doorGlow.material.opacity = 0.35 * k;
+    },
+    setParam(name: string, v: ParamValue) {
+      if (name === "time") { time = v === "night" ? "night" : "noon"; applyTime(); }
+      if (name === "glow") glow = Math.max(0, Math.min(1, Number(v)));
+      if (name === "window") { win = Math.max(0, Math.min(1, Number(v))); applyTime(); }
+      if (name === "gravel") { gravel = v === "rough" ? "rough" : "raked"; applyGravel(); }
+      if (name === "plinth") plinthG.visible = Number(v) > 0;
+    },
+    cast(): Partial<CastLight> { return gardenCast(time); },
+  };
+}
+void plasterTex;

@@ -11,6 +11,7 @@ import { WanbiFilm, WANBI_FRAMES } from "./videos/wanbi/Film";
 import { QinFilm, QIN_FRAMES } from "./videos/qin/Film";
 import { SuFilm, SU_FRAMES } from "./videos/su/Film";
 import { LibaiFilm, LIBAI_FRAMES } from "./videos/libai/Film";
+import { NewtonFilm, NEWTON_FRAMES } from "./videos/newton/Film";
 export const Root: React.FC = () => <>
   <Composition id="BtCannon" component={BtCannon} durationInFrames={BT_FRAMES} fps={30} width={1080} height={1920} />
   <Composition id="BtOil" component={BtOil} durationInFrames={OIL_FRAMES} fps={30} width={1080} height={1920} />
@@ -23,4 +24,5 @@ export const Root: React.FC = () => <>
   <Composition id="QinFilm" component={QinFilm} durationInFrames={QIN_FRAMES} fps={30} width={1080} height={1920} />
   <Composition id="SuFilm" component={SuFilm} durationInFrames={SU_FRAMES} fps={30} width={1080} height={1920} />
   <Composition id="LibaiFilm" component={LibaiFilm} durationInFrames={LIBAI_FRAMES} fps={30} width={1080} height={1920} />
+  <Composition id="NewtonFilm" component={NewtonFilm} durationInFrames={NEWTON_FRAMES} fps={30} width={1080} height={1920} />
 </>;
