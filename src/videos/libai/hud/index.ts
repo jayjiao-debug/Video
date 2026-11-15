@@ -25,7 +25,7 @@ import { captionRect } from "./caption";
 import { TITLE_SPAN } from "../beats";
 import type { Rect } from "./style";
 import { whisperRectAt, whisperCapAt } from "./whisper";
-import { gaoBannerRect } from "./intro";
+import { sideBannerRect } from "./intro";
 import { FX_RECTS } from "./fx";
 import { poemAt, poemRect } from "./poem";
 
@@ -53,7 +53,7 @@ export const hudRectsAt = (f: number): { what: string; r: Rect }[] => {
   const pr = poemRect(f);
   if (pr) out.push({ what: "poem", r: pr });
   out.push(...FX_RECTS(f));
-  const gb = gaoBannerRect(f);
+  const gb = sideBannerRect(f);
   if (gb) out.push({ what: "banner", r: gb });
   return out;
 };

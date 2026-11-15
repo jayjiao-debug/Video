@@ -5,13 +5,14 @@
 //                    swings in on its cord under his face: his name in wild amber cursive and 字太白, the seal 谪仙人
 //                    (paid off in F37), the year and the place (they are not on the title), three joke stats from the
 //                    sources (each says who said it) and the day's target 醒酒, paid off by the bucket of water in B.
-//   <GaoBanner f />  高力士's banner on the live shot when he is first seen in C (no freeze): a strip of the same cloth.
-//   LEAD_CARD_RECT, gaoBannerRect(f)   the boxes they take (film px, 1080 x 1800)
+//   <SideBanner f />  the side characters' banners on the live shot (no freeze): the messenger (B), 高力士 (C), the
+//                     drinking friend (E), 贺知章 in the memory (F, quiet): a strip of the same cloth over their heads.
+//   LEAD_CARD_RECT, sideBannerRect(f)   the boxes they take (film px, 1080 x 1920)
 import React from "react";
 import { AbsoluteFill } from "remotion";
 import { EN } from "../lang";
 import { CLOCK, FREEZE } from "../story";
-import { GAO_BANNER } from "../beats";
+import { SIDE_BANNERS } from "../beats";
 import { tracked } from "../track";
 import { SCREEN } from "../layout";
 import { life, glyph, roughFilter, grainFilter, gradient, seal, pop, slap, part, easeOut, easeIn, clamp01, typeOn, tornBox } from "../../../kit/overlay";
@@ -20,7 +21,7 @@ import type { Rect } from "./style";
 
 const ID = "libai-card";
 /** the card's box before its swing (film px) and where its cord hangs from */
-const BOX = { x0: 70, y0: 980, x1: 760, y1: 1452 };
+const BOX = { x0: 110, y0: 980, x1: 800, y1: 1452 };   // 9:16: 40 px further in
 const HANG = { x: (BOX.x0 + BOX.x1) / 2, y: BOX.y0 - 40 };
 export const LEAD_CARD_RECT: Rect = { x0: BOX.x0 - 30, y0: HANG.y - 10, x1: BOX.x1 + 40, y1: BOX.y1 + 40 };
 
@@ -51,7 +52,7 @@ export const leadHold = (f: number): number => { const z = CLOCK.at(f); return z
 /** the card leaves over the last LEAVE_N frames of the freeze, carried off by her zoom back in */
 const LEAVE_N = 10;
 /** where the zoom back in pushes from (his chest in the card's framing) */
-const RIDE = { x: 540, y: 900, k: 1.7 };
+const RIDE = { x: 540, y: 960, k: 1.7 };
 
 export const LeadCard: React.FC<{ f: number }> = ({ f }) => {
   const z = CLOCK.at(f);
@@ -72,7 +73,7 @@ export const LeadCard: React.FC<{ f: number }> = ({ f }) => {
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
       <Veil k={veil} />
-      <svg width={1080} height={1800} viewBox="0 0 1080 1800" style={{ position: "absolute", left: 0, top: 0, opacity: op, transform: `scale(${ride.toFixed(4)})`, transformOrigin: `${RIDE.x}px ${RIDE.y}px` }}>
+      <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{ position: "absolute", left: 0, top: 0, opacity: op, transform: `scale(${ride.toFixed(4)})`, transformOrigin: `${RIDE.x}px ${RIDE.y}px` }}>
         <defs>
           {gradient(`${ID}-amber`, [TONE.amberTop, [C.lead, 0.5], TONE.amberDeep])}
           {gradient(`${ID}-cloth`, [C.paper, [C.paper, 0.4], [TONE.clothLow, 0.85], TONE.clothFold])}
@@ -139,48 +140,64 @@ const teeth = (x0: number, x1: number, y: number, d: number, n: number) => {
   return pts.join(" ") + " Z";
 };
 
-// ---------------------------------------------------------------------------------------------------- 高力士's banner
-/** the banner hangs over 高力士's head and moves with him as the camera moves (track.ts, written by shots/segC.ts);
- *  GB is its shape at rest, BW x BH, placed each frame from where his head is (GB_REST without a world) */
-const BW = 490, BH = 110, GB_GAP = 34, GB_Y0 = 352;
-const GB_REST = { cx: 760, bottom: 540 };
-const gbBox = (f: number) => {
-  // over his head, its right end just past his head's middle (so it keeps left of the cup counter), and never up in
+// ---------------------------------------------------------------------------------------------------- the side banners
+/** THE SIDE CHARACTERS' BANNERS (beats.ts SIDE_BANNERS): a strip of the flag's cloth over the person's head, moving
+ *  with them as the camera moves (track.ts, written by the segments), their name in ink (never amber: the amber is
+ *  李白's) and a short title on a dark tag. 贺知章 in the night's memory gets the quiet version: no swing, no hem. */
+const SIDE: Record<string, { zh: string; en: string; tag: string; tagEn: string; rest: { cx: number; bottom: number }; quiet?: boolean }> = {
+  huan: { zh: "传旨太监", en: "Messenger", tag: "跑断腿", tagEn: "RUNS", rest: { cx: 420, bottom: 520 } },
+  gao: { zh: "高力士", en: "Gao Lishi", tag: "大宦官", tagEn: "EUNUCH", rest: { cx: 760, bottom: 540 } },
+  you: { zh: "酒友", en: "Pal", tag: "蹭酒的", tagEn: "FREELOADER", rest: { cx: 420, bottom: 560 } },
+  he: { zh: "贺知章", en: "He Zhizhang", tag: "金龟换酒", tagEn: "PAWNED HIS GOLD", rest: { cx: 520, bottom: 520 }, quiet: true },
+};
+const BH = 110, GB_GAP = 34, GB_Y0 = 352;
+const bwOf = (who: string) => { const d = SIDE[who]; return EN ? 490 : Math.max(380, 64 * [...d.zh].length + 34 * [...d.tag].length + 150); };
+const gbBox = (who: string, f: number) => {
+  // over the head, its right end just past the head's middle (so it keeps left of the cup counter), and never up in
   // the REC row or the counter's band (y0 >= GB_Y0)
-  const tr = tracked("gao", f), cx = tr ? tr.x : GB_REST.cx, bottom = tr ? tr.top - GB_GAP : GB_REST.bottom;
+  const d = SIDE[who], BW = bwOf(who), tr = tracked(who, f), cx = tr ? tr.x : d.rest.cx, bottom = tr ? tr.top - GB_GAP : d.rest.bottom;
   const x0 = Math.max(SCREEN.side + 10, Math.min(SCREEN.W - SCREEN.side - 40 - BW, cx + 60 - BW)), y1 = Math.max(GB_Y0 + BH, bottom);
   return { x0, y0: y1 - BH, x1: x0 + BW, y1 };
 };
-export const gaoBannerRect = (f: number): Rect | null => {
-  if (f < GAO_BANNER[0] || f > GAO_BANNER[1]) return null;
-  const GB = gbBox(f);
+const sideOn = (f: number) => SIDE_BANNERS.find((b) => f >= b.span[0] && f <= b.span[1]) ?? null;
+/** the box a side banner takes on frame f (film px), or null */
+export const sideBannerRect = (f: number): Rect | null => {
+  const b = sideOn(f);
+  if (!b) return null;
+  const GB = gbBox(b.who, f);
   return { x0: GB.x0 - 10, y0: GB.y0 - 20, x1: GB.x1 + 30, y1: GB.y1 + 34 };
 };
-/** 高力士's banner on the live shot: a strip of the flag's cloth with its hem, his name in ink (not amber: the amber is
- *  李白's), the tag 大宦官; it swings in from the left and tips out */
-export const GaoBanner: React.FC<{ f: number }> = ({ f }) => {
-  const L = life(f, GAO_BANNER[0], GAO_BANNER[1], 6, 7);
+/** kept for the callers that name 高力士's */
+export const gaoBannerRect = (f: number): Rect | null => (sideOn(f)?.who === "gao" ? sideBannerRect(f) : null);
+export const SideBanner: React.FC<{ f: number }> = ({ f }) => {
+  const b = sideOn(f);
+  if (!b) return null;
+  const d = SIDE[b.who], quiet = !!d.quiet;
+  const L = life(f, b.span[0], b.span[1], quiet ? 10 : 6, quiet ? 10 : 7);
   if (!L) return null;
-  const t = L.t, leave = easeIn(L.leave, 2), GB = gbBox(f);
-  const swing = sway(t, 0, -18, 20, 9) - 25 * leave, dx = 0, dy = -260 * (1 - easeOut(clamp01((t + 1) / 6))) - 200 * leave;
-  const op = 1 - clamp01((L.leave - 0.5) / 0.5);
+  const t = L.t, leave = easeIn(L.leave, 2), GB = gbBox(b.who, f);
+  const swing = quiet ? 0 : sway(t, 0, -18, 20, 9) - 25 * leave, dy = quiet ? 0 : -260 * (1 - easeOut(clamp01((t + 1) / 6))) - 200 * leave;
+  const op = quiet ? Math.min(easeOut(L.arrive), 1 - L.leave) * 0.92 : 1 - clamp01((L.leave - 0.5) / 0.5);
+  const tagW = (EN ? 16 : 34) * [...(EN ? d.tagEn : d.tag)].length + 40;
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
-      <svg width={1080} height={1800} viewBox="0 0 1080 1800" style={{ position: "absolute", left: 0, top: 0, opacity: op }}>
+      <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{ position: "absolute", left: 0, top: 0, opacity: op }}>
         <defs>
           {gradient(`${ID}-gb-cloth`, [C.paper, [TONE.clothLow, 0.85], TONE.clothFold])}
           {roughFilter(`${ID}-gb-edge`, SKIN.body.rough!, 2)}
         </defs>
-        <g transform={`translate(${dx.toFixed(1)},${dy.toFixed(1)}) rotate(${swing.toFixed(2)} ${(GB.x0 + GB.x1) / 2} ${GB.y0})`} filter={`url(#${ID}-gb-edge)`}>
-          <path d={teeth(GB.x0, GB.x1, GB.y1, 18, 8)} fill={C.accent} stroke={C.ink} strokeWidth={5} strokeLinejoin="round" />
-          <path d={tornBox(GB, { jag: 3, step: 40, seed: 7 })} fill={`url(#${ID}-gb-cloth)`} stroke={C.ink} strokeWidth={5} />
-          {glyph("gname", EN ? "Gao Lishi" : "高力士", GB.x0 + 34, (GB.y0 + GB.y1) / 2, EN ? 52 : 64, C.ink, { anchor: "start", ls: 4 })}
-          <g transform={`translate(${GB.x1 - 92},${(GB.y0 + GB.y1) / 2}) rotate(-4)`}>
-            <rect x={-70} y={-26} width={140} height={52} rx={10} fill={C.ink} />
-            {glyph("gtag", EN ? "EUNUCH" : "大宦官", 0, 0, EN ? 24 : 32, C.paper, { ls: 3 })}
+        <g transform={`translate(0,${dy.toFixed(1)}) rotate(${swing.toFixed(2)} ${(GB.x0 + GB.x1) / 2} ${GB.y0})`} filter={`url(#${ID}-gb-edge)`}>
+          {quiet ? null : <path d={teeth(GB.x0, GB.x1, GB.y1, 18, 8)} fill={C.accent} stroke={C.ink} strokeWidth={5} strokeLinejoin="round" />}
+          <path d={tornBox(GB, { jag: 3, step: 40, seed: 7 })} fill={quiet ? "rgba(27,33,72,0.78)" : `url(#${ID}-gb-cloth)`} stroke={C.ink} strokeWidth={5} />
+          {glyph(`g-${b.who}`, EN ? d.en : d.zh, GB.x0 + 34, (GB.y0 + GB.y1) / 2, EN ? 48 : 60, quiet ? C.paper : C.ink, { anchor: "start", ls: 4 })}
+          <g transform={`translate(${GB.x1 - 30 - tagW / 2},${(GB.y0 + GB.y1) / 2}) rotate(-4)`}>
+            <rect x={-tagW / 2} y={-26} width={tagW} height={52} rx={10} fill={quiet ? C.paper : C.ink} />
+            {glyph(`gt-${b.who}`, EN ? d.tagEn : d.tag, 0, 0, EN ? 22 : 30, quiet ? C.ink : C.paper, { ls: 3 })}
           </g>
         </g>
       </svg>
     </AbsoluteFill>
   );
 };
+/** the old name */
+export const GaoBanner = SideBanner;

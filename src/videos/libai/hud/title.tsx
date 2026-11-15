@@ -5,7 +5,7 @@
 //   白 big in wild amber cursive (each character lands on its own beat, tipsy), 的一天 small. A wine cup is set down on
 //   the cloth's corner and leaves its amber ring (the film's stamp), with one hiccup hop of the whole flag. It leaves by
 //   tipping over to the left. The only words are 采访李白的一天 (Jay, 14 Nov): the year and the place are on his card.
-//   TITLE_RECT  the box it takes (film px, 1080 x 1800).
+//   TITLE_RECT  the box it takes (film px, 1080 x 1920).
 import React from "react";
 import { AbsoluteFill } from "remotion";
 import { TITLE_SPAN } from "../beats";
@@ -21,7 +21,9 @@ const FLAG = { x0: 92, x1: 352, y0: POLE.y + 10, y1: 990 }, TOOTH = 26;
 const PIVOT = { x: (FLAG.x0 + FLAG.x1) / 2, y: POLE.y };
 /** the box it takes (the sway and the cup ring included; the pole's first metres come in from the frame's edge as part
  *  of the picture, outside the words' box) */
-export const TITLE_RECT: Rect = { x0: 60, y0: POLE.y - 24, x1: POLE.x1 + 16, y1: FLAG.y1 + TOOTH + 40 };
+/** 9:16 (15 Nov): the whole title sits 40 px further in and 60 px lower than on the 9:15 frame it was drawn for */
+const T916 = { x: 40, y: 60 };
+export const TITLE_RECT: Rect = { x0: 60 + T916.x, y0: POLE.y - 24 + T916.y, x1: POLE.x1 + 16 + T916.x, y1: FLAG.y1 + TOOTH + 40 + T916.y };
 
 /** the toothed hem (狗牙边) along the left, the bottom and the right of the cloth, as one path */
 const hemPath = () => {
@@ -81,7 +83,7 @@ export const TitleBlock: React.FC<{ f: number }> = ({ f }) => {
   const ink = SKIN.display.ink * big;
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
-      <svg width={1080} height={1800} viewBox="0 0 1080 1800" style={{ position: "absolute", left: 0, top: 0, opacity: op }}>
+      <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{ position: "absolute", left: 0, top: 0, opacity: op }}>
         <defs>
           {gradient(`${ID}-amber`, [TONE.amberTop, [C.lead, 0.5], TONE.amberDeep])}
           {gradient(`${ID}-cloth`, [C.paper, [C.paper, 0.35], [TONE.clothLow, 0.8], TONE.clothFold], "right")}
@@ -91,10 +93,10 @@ export const TitleBlock: React.FC<{ f: number }> = ({ f }) => {
           {grainFilter(`${ID}-grain`, { fx: 0.9, fy: 0.35, seed: 3, color: [120, 92, 50], amount: 0.16 })}
           <clipPath id={`${ID}-drop`}><rect x={FLAG.x0 - 40} y={FLAG.y0 - 4} width={FLAG.x1 - FLAG.x0 + 80} height={clothH + 4 + 46 * drop} /></clipPath>
         </defs>
-        <g transform={`translate(0,${dy.toFixed(2)})`}>
+        <g transform={`translate(${T916.x},${(T916.y + dy).toFixed(2)})`}>
           {/* the pole (it comes in from the left edge) with its knob */}
           <g transform={`translate(${(-POLE.x1 * (1 - poleIn)).toFixed(1)},0)`}>
-            <rect x={-10} y={POLE.y - POLE.th / 2} width={POLE.x1 + 10} height={POLE.th} rx={8} fill={`url(#${ID}-pole)`} stroke={C.ink} strokeWidth={5} />
+            <rect x={-10 - T916.x} y={POLE.y - POLE.th / 2} width={POLE.x1 + 10 + T916.x} height={POLE.th} rx={8} fill={`url(#${ID}-pole)`} stroke={C.ink} strokeWidth={5} />
             <circle cx={POLE.x1} cy={POLE.y} r={15} fill={C.lead} stroke={C.ink} strokeWidth={5} />
           </g>
           {/* the flag swings about where it hangs */}

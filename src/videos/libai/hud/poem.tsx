@@ -48,13 +48,16 @@ const BUILT: Built[] = POEMS.map((p) => {
   return { ...p, R, from: R[0].from - 2, to: Math.min(last + HOLD + OUT, nextSpoken(last) - 2) };
 });
 const poemOn = (f: number) => BUILT.find((p) => f >= p.from && f <= p.to) ?? null;
-/** the brush's sound as each row of a (not soft) poem starts: [picture frame, clip, gain dB, what] (sound_events.ts) */
-export const POEM_SOUNDS: [number, string, number, string][] = BUILT.filter((p) => !p.soft).flatMap((p) => p.R.map((r, i): [number, string, number, string] => [r.at[0], "sfx_brush", -21, `${p.title} row ${i + 1}`]));
+/** the brush's sound: one SOFT stroke as each character of a (not soft) poem lands, three strokes in turn
+ *  (sfx_stroke1-3: low, breathy, no scratch; Jay, 15 Nov: "the scribbling is off since its softbrush?": the old
+ *  sfx_brush was a pen scribbling). [picture frame, clip, gain dB, what] (sound_events.ts) */
+export const POEM_SOUNDS: [number, string, number, string][] = BUILT.filter((p) => !p.soft).flatMap((p) => p.R.flatMap((r, ri) =>
+  r.chars.flatMap((c, i): [number, string, number, string][] => (c === GAP ? [] : [[r.at[i], `sfx_stroke${((i + ri) % 3) + 1}`, -15, `${p.title} row ${ri + 1} ${c}`]]))));
 /** a poem shows on picture frame f (the subtitle is hidden) */
 export const poemAt = (f: number) => poemOn(f) !== null;
 
 // layout: the last row sits on the subtitle band, an earlier row above it (words below y 950 stay left of x 930)
-const X0 = 150, X1 = 930, CX = (X0 + X1) / 2, ROW_Y = [1262, 1398], MAXW = X1 - X0 - 30;
+const X0 = 150, X1 = 890, CX = (X0 + X1) / 2, ROW_Y = [1262, 1398], MAXW = X1 - X0 - 30;
 const pxFor = (n: number) => Math.min(96, Math.floor(MAXW / (n * 1.04)));
 export const poemRect = (f: number): Rect | null => {
   const p = poemOn(f);
@@ -72,9 +75,8 @@ export const PoemFx: React.FC<{ f: number }> = ({ f }) => {
   const titleK = clamp01((f - p.from) / 6);
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
-      <svg width={1080} height={1800} viewBox="0 0 1080 1800" style={{ position: "absolute", left: 0, top: 0, opacity: 1 - (soft ? out : clamp01((out - 0.4) / 0.6)) }}>
+      <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{ position: "absolute", left: 0, top: 0, opacity: 1 - (soft ? out : clamp01((out - 0.4) / 0.6)) }}>
         <defs>
-          {roughFilter(`${ID}-brush`, SKIN.display.rough!, 2)}
           {roughFilter(`${ID}-band`, { fx: 0.012, fy: 0.12, scale: 9, seed: 21 }, 2)}
           {gradient(`${ID}-amber`, [[TONE.amberTop, 0], [C.lead, 0.5], [TONE.amberDeep, 1]], "right")}
         </defs>
@@ -94,7 +96,8 @@ export const PoemFx: React.FC<{ f: number }> = ({ f }) => {
                     <rect x={CX - w / 2 - 26} y={y - px * 0.28} width={(w + 52) * bandK} height={px * 0.62} rx={px * 0.3} fill={`url(#${ID}-amber)`} transform={`rotate(-2 ${CX} ${y})`} />
                   </g>
                 ) : null}
-                <g filter={`url(#${ID}-brush)`}>
+                {/* (no rough filter on the characters: Jay, 15 Nov: "for his poem the font is not crisp") */}
+                <g>
                   {set.map((c, i) => {
                     const t = f - r.at[i];
                     if (t < 0 || c.ch === GAP) return null;

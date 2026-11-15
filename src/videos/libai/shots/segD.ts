@@ -4,7 +4,7 @@
 //   look    D24     he looks down at the chest ...      laugh D25: 有钱了！ he bursts out laughing; 天生我材: the chest up high.
 //   stride  D27     喝酒！ he strides off past the lens (screen right). Fade through amber.
 import * as THREE from "three";
-import { SEGMENTS, FPS, lineId, type Segment, type CamPose } from "../story";
+import { SEGMENTS, FPS, lineId, capWord, easeInOutCubic, type Segment, type CamPose } from "../story";
 import { BEAT } from "../beats";
 import * as C from "../cam";
 import { LI, HUAN } from "../people";
@@ -14,6 +14,8 @@ import { V, rel, yawTo, lid, says, accent, heads, headPop, at, walkAlong, standi
 import { aim, ramp, held, mixCam, type St } from "./lb";
 
 const S = SEGMENTS[3], D = BEAT.D;
+/** the twirl starts on 千金 */
+const SPIN_AT = capWord("D25", "千金").from;
 const L23 = lineId("D23");
 const GATE = V(CX, 0, -4.3);
 const LI_AT = V(CX - 0.1, 0, -2.4);
@@ -46,7 +48,9 @@ const cam = (f: number): CamPose => {
 const chestAt = (f: number, liAt: THREE.Vector3, liF: number) => {
   const give = ramp(f, D.give - 4, D.give + 8);
   const huanHold = rel(HUAN_AT, HUAN_F, 0, 0.72, 0.3), liHold = rel(liAt, liF, 0, 0.7, 0.32), liHigh = rel(liAt, liF, -0.3, 1.0, 0.34);
-  const up = ramp(f, D.hold - 6, D.hold + 6) * (1 - ramp(f, lineId("D25").to, lineId("D25").to + 12));
+  // the chest up high from 天生我材, down to his chest while he twirls (else it swings through his head), up again after
+  const twirl = ramp(f, SPIN_AT - 6, SPIN_AT) * (1 - ramp(f, SPIN_AT + 30, SPIN_AT + 36));
+  const up = ramp(f, D.hold - 6, D.hold + 6) * (1 - ramp(f, lineId("D25").to, lineId("D25").to + 12)) * (1 - twirl);
   return { p: huanHold.lerp(liHold, give).lerp(liHigh, up), open: ramp(f, D.look - 6, D.look + 6), mine: give > 0.5 };
 };
 
@@ -64,7 +68,9 @@ export const SEG: Segment = {
     w.prop("gate").put(GATE, { open: 1 - ramp(f, D.shut[0], D.shut[1]) });
     // 李白
     const leg = walkAlong(STRIDE, 1.9, (f - D.stride - 4) / FPS);
-    const liF = f < D.stride + 4 ? 0 : leg.facing;
+    // 千金散尽还复来: a giddy turn right round on the spot, the chest held up (Jay, 15 Nov: more of his own movement)
+    const spin = f < D.stride + 4 ? Math.PI * 2 * easeInOutCubic(ramp(f, SPIN_AT, SPIN_AT + 30)) : 0;
+    const liF = (f < D.stride + 4 ? 0 : leg.facing) + spin;
     const ch = chestAt(f, leg.at, liF);
     const expr = at<NonNullable<St["expr"]>>(f, [[0, "neutral"], [D.give, "shock"], [D.shut[0] + 6, "deadpan"], [D.look, "focus"], [D.laugh - 4, "laugh"], [D.hold + 20, "grin"], [lineId("D26").from + 10, "happy"], [D.stride, "laugh"]]);
     const m = says("li", ["D25", "D27"], f, 3);

@@ -24,11 +24,13 @@
 // FACES NEVER TURN TO PROFILE (FACE_MAX 12 deg): turning away = a body turn / back view (turn: 1), the gaze, a tilt.
 import * as THREE from "three";
 import React from "react";
-import { rigWalk, rigSpeak, rigHeadAccent, rigHeadAdd, type Rig, type RigState, type RigHead, type RigPose } from "../../group/kit/rig3d";
+import { rigWalk, rigSpeak, rigSayEnv, rigHeadAccent, rigHeadAdd, type Rig, type RigState, type RigHead, type RigPose } from "../../group/kit/rig3d";
 import { lidAt } from "../../group/kit/cast";
 import { PEOPLE, LI, type Person } from "../people";
 import { STAND, EYE, FOV, type TaSeat } from "../layout";
 import type { World } from "../world";
+import { VOICE_ENV } from "../voice_env";
+import { EN } from "../lang";
 import { placeAt } from "../beats";
 import { FPS, clamp01, lerp, lin, smooth, hash, easeInCubic, easeOutCubic, easeInOutCubic, camMix, h, quote, type Quote, type V3Like, type CamPose, type Vec3, type Pose, type Place, type Speaker } from "../story";
 
@@ -54,13 +56,22 @@ export const lid = (t: number, id: number, sw: number[] = []) => lidAt(t, id, sw
  *  (0-based). Outside the quote (+- a few frames) it returns {}.   ...speak(quote("di", "A03"), f, 1) */
 export const speak = (q: Quote, f: number, id = 0, stress?: number[]): { mouth?: RigState["mouth"]; head?: RigHead; blink?: number } => {
   if (f < q.from - 6 || f > q.to + 10) return {};
-  const sp = rigSpeak(f / FPS, { from: q.start, to: q.end, syl: q.syl, stress }, id);
+  const ev = !EN ? ENV_OF.get(q.line) : undefined;
+  // the head's nod, lean and blinks start on the first real sound (a take can open on a breath); the mouth follows the
+  // voice's loudness frame by frame (voice_env.ts), so it opens on the syllables and shuts in the pauses
+  const start = ev ? (ev.from + ev.first) / FPS : q.start;
+  const sp = rigSpeak(f / FPS, { from: start, to: q.end, syl: q.syl, stress }, id);
+  if (ev) sp.mouth = rigSayEnv(f - ev.from, ev.env);
   const out: { mouth?: RigState["mouth"]; head?: RigHead; blink?: number } = {};
   if (sp.mouth) out.mouth = sp.mouth;
   if (sp.head) out.head = sp.head;
   if (sp.blink !== undefined) out.blink = sp.blink;
   return out;
 };
+const ENV_OF = new Map(Object.entries(VOICE_ENV).map(([n, [from, e]]) => {
+  const env = [...e].map((c) => +c / 9), first = Math.max(0, env.findIndex((x) => x >= 0.25));
+  return [+n, { from, env, first }] as const;
+}));
 /** THE LIP-SYNC OF SEVERAL LINES of one speaker (WP1): speak(quote(who, id), f, n) of each line id, merged (outside
  *  every line it is {}); quote() throws when a line is not that speaker's.  ...says("su", ["A02", "A04", "A05"], f, 1) */
 export const says = (who: Speaker, ids: string[], f: number, id = 0): ReturnType<typeof speak> => Object.assign({}, ...ids.map((l) => speak(quote(who, l), f, id)));

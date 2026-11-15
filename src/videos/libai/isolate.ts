@@ -9,51 +9,24 @@
 // frame, and the backdrop paints a thick amber ring round it with a thin ink edge, so he reads as a sticker cut
 // out of the frozen frame (his own ink outline inside the ring).
 //
-// The backdrop (skin.ts): night-indigo ink with the cloth's weave, rays of a slightly lighter indigo, and a big pale
-// moon right behind his head (the moon is the film's thread, and he has just asked the lens 「月亮？」), with a
-// wine-amber rim. Unlit (MeshBasicMaterial), no shadows. k 0..1 fades it with the freeze (Film.tsx).
+// The backdrop: only a night-indigo wash over the frozen frame, a little lighter round him (Jay, 15 Nov: the moon
+// that stood behind him was too much). Unlit, no shadows. k 0..1 fades it with the freeze (Film.tsx).
 import * as THREE from "three";
 import { C, TONE } from "./hud/skin";
 
-const TW = 720, TH = 1200;            // the texture (the frame's 1080 x 1800 at two thirds)
+const TW = 720, TH = 1280;            // the texture (the frame's 1080 x 1920 at two thirds)
 const MARGIN = 1.12;                  // the card is this much bigger than the frame at its depth
 const BEHIND = 0.42;                  // metres behind his head
 
 const draw = (g: CanvasRenderingContext2D, u: number, v: number) => {
   // u, v: his head's centre on the card, 0..1 from the top left
   const x = u * TW, y = v * TH;
-  // the frozen frame stays, dimmed under a night-indigo wash (Jay's reference, 14 Nov: the frame dimmed, him cut out in
-  // front of a pale circle)
+  // the frozen frame stays, dimmed under a night-indigo wash, a little lighter round him (Jay, 15 Nov: the moon behind
+  // him was too much and confused the morning; the earlier simple card was better). Nothing else: no moon, no rays.
   g.clearRect(0, 0, TW, TH);
-  const bg = g.createRadialGradient(x, y, 40, x, y, TH * 0.95);
-  bg.addColorStop(0, "rgba(44,53,112,0.70)"); bg.addColorStop(0.45, "rgba(27,33,72,0.78)"); bg.addColorStop(1, "rgba(11,14,38,0.88)");
+  const bg = g.createRadialGradient(x, y, 60, x, y, TH * 0.9);
+  bg.addColorStop(0, "rgba(27,33,72,0.42)"); bg.addColorStop(0.5, "rgba(20,25,58,0.66)"); bg.addColorStop(1, "rgba(11,14,38,0.84)");
   g.fillStyle = bg; g.fillRect(0, 0, TW, TH);
-  // rays from the moon, every other one a shade lighter
-  const R = Math.hypot(TW, TH);
-  for (let i = 0; i < 28; i++) {
-    if (i % 2) continue;
-    const a0 = (i / 28) * Math.PI * 2 + 0.06, a1 = ((i + 1) / 28) * Math.PI * 2 + 0.06;
-    g.beginPath(); g.moveTo(x, y); g.lineTo(x + R * Math.cos(a0), y + R * Math.sin(a0)); g.lineTo(x + R * Math.cos(a1), y + R * Math.sin(a1)); g.closePath();
-    g.fillStyle = "rgba(120,140,220,0.07)"; g.fill();
-  }
-  // the cloth's weave
-  g.globalAlpha = 0.04; g.fillStyle = C.paper;
-  for (let yy = 0; yy < TH; yy += 6) g.fillRect(0, yy, TW, 1);
-  for (let xx = 0; xx < TW; xx += 7) g.fillRect(xx, 0, 1, TH);
-  g.globalAlpha = 1;
-  // the moon behind his head: halo, amber rim, pale disc
-  const mr = TW * 0.36;
-  const halo = g.createRadialGradient(x, y, mr * 0.9, x, y, mr * 1.9);
-  halo.addColorStop(0, "rgba(243,229,195,0.30)"); halo.addColorStop(1, "rgba(243,229,195,0)");
-  g.fillStyle = halo; g.beginPath(); g.arc(x, y, mr * 1.9, 0, Math.PI * 2); g.fill();
-  g.fillStyle = TONE.amberTop; g.beginPath(); g.arc(x, y, mr + 10, 0, Math.PI * 2); g.fill();
-  const disc = g.createRadialGradient(x - mr * 0.3, y - mr * 0.3, 10, x, y, mr);
-  disc.addColorStop(0, "#fffaf0"); disc.addColorStop(1, C.paper);
-  g.fillStyle = disc; g.beginPath(); g.arc(x, y, mr, 0, Math.PI * 2); g.fill();
-  // two soft craters, low on the disc
-  g.fillStyle = "rgba(214,189,138,0.35)";
-  g.beginPath(); g.arc(x + mr * 0.42, y + mr * 0.38, mr * 0.16, 0, Math.PI * 2); g.fill();
-  g.beginPath(); g.arc(x - mr * 0.5, y + mr * 0.5, mr * 0.1, 0, Math.PI * 2); g.fill();
 };
 
 const RING = 24, EDGE = 5;            // the cut-out ring (his amber, so it reads on the pale moon and on the dark; wide enough to clear the head's own thick outline, which the flat mask does not have) and its ink edge, px of the 1080 frame
@@ -98,7 +71,7 @@ export class Isolation {
       uniforms: {
         map: { value: this.tex }, mask: { value: this.rt.texture }, opacity: { value: 0 }, margin: { value: MARGIN },
         ring: { value: new THREE.Color(C.lead) }, edge: { value: new THREE.Color(TONE.shadow.startsWith("rgba") ? "#0c0e22" : TONE.shadow) },
-        px: { value: new THREE.Vector2(1 / 1080, 1 / 1800) },
+        px: { value: new THREE.Vector2(1 / 1080, 1 / 1920) },
       },
     });
     this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), this.mat);

@@ -26,7 +26,7 @@ export const inked = (px: number, color: string, extra: React.CSSProperties = {}
   textShadow: `0 ${Math.max(2, Math.round(px * 0.06))}px 0 ${HC.shade}`, fontVariantNumeric: "tabular-nums", ...extra,
 } as React.CSSProperties);
 
-/** a screen box in film px (1080 x 1800) */
+/** a screen box in film px (1080 x 1920) */
 export type Rect = { x0: number; y0: number; x1: number; y1: number };
 /** the phone-safe area for anything that matters (layout.ts SCREEN): x 64..1016 above the button rail, x 64..925 below
  *  y 950, nothing above y 60 or below y 1500 */

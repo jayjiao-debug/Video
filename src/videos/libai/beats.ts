@@ -37,8 +37,10 @@ const A = {
 /** the title block 「采访李白的一天」 / 「744年 · 长安」 (frames 0-90) */
 /** 高力士's banner (hud/intro.tsx GaoBanner): on the live shot when C opens, before and under her first words */
 export const GAO_BANNER: Span = [seg("C").from + 6, lineId("C19").from + 64];   // about 3 s (Jay: the cards went by too fast)
+
 /** the themed title (hud/title.tsx): inside the cold open, from the REC beep to just before her first word */
-export const TITLE_SPAN: Span = [seg("A").from + 6, lineId("A01").from - 3];
+/** (it drops as she comes through the door curtain (hud/curtain.tsx), shows over the walk in and is gone as she knocks) */
+export const TITLE_SPAN: Span = [seg("A").from + 22, A.knock[0] - 2];
 
 // ---------------------------------------------------------------------------------------------------- B 辰时 the door
 const B = {
@@ -47,7 +49,7 @@ const B = {
   /** B13: he deflates a little */ deflate: from("B13"),
   /** B15: he raises the cup */ cup: word("B15", "所以"),
   /** the eunuch runs in from the street (B15's end to B16's start) */ run: [to("B15") - sec(0.4), from("B16") + sec(0.3)] as Span,
-  /** B17: he gets up ... wobbles ... and sits back down (after the line) */ rise: from("B17"), sitBack: to("B17") + sec(0.35),
+  /** B17: he gets up ... wobbles ... and sits back down (after the line) */ rise: from("B17"), sitBack: to("B17") + sec(0.55),
   /** B18's after: two eunuchs splash a basin of water in his face */ splash: to("B18") + sec(0.5),
   /** he blinks, dripping, and grins */ drip: to("B18") + sec(1.0),
   /** card 2 */ card: cardSpan("B18"),
@@ -112,6 +114,14 @@ const F = {
 
 /** THE BEATS, per scene */
 export const BEAT = { A, B, C, D, E, F };
+/** THE SIDE CHARACTERS' BANNERS (hud/intro.tsx SideBanner; Jay, 15 Nov: "give a short title to those side characters"):
+ *  each on the live shot when the person matters, about 2.5-3 s, over their head and moving with them (track.ts) */
+export const SIDE_BANNERS: { who: "gao" | "huan" | "you" | "he"; span: Span; scene: SceneId }[] = [
+  { who: "huan", span: [lineId("B16").from + 44, lineId("B16").from + 124], scene: "B" },   // he shouts 李翰林 off screen: the title waits until he is in the picture
+  { who: "gao", span: GAO_BANNER, scene: "C" },
+  { who: "you", span: [seg("E").from + 10, lineId("E28").from + 50], scene: "E" },
+  { who: "he", span: [F.memory[0] + 8, F.memory[0] + 86], scene: "F" },
+];
 
 // ---------------------------------------------------------------------------------------------------- the places
 /** the place of every frame as [place, first, last] runs (F's memory is the tavern) */

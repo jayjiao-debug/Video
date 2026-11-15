@@ -31,6 +31,7 @@ import { roundCap } from "../wanbi/acc/envoy";
 import { blush, BLUSH } from "../qin/acc/blush";
 import { napeHair, limbColours } from "./acc/figure";
 import type { Speaker } from "./voice";
+import { DAGE as DAGE_LOOK, dage } from "../group/kit/rigacc/dage";
 
 export { personalise };
 /** a Person (Wanbi's type) + the accessories hidden by default (a shot's own `hide` replaces this list) + the figure
@@ -148,6 +149,10 @@ export const VILLAGER3: Person = villager("villager3", friend(11), S_FAIR, COL.s
 export const VILLAGER4: Person = villager("villager4", classmate(29), S_WEATHER, COL.straw, bambooHat({ col: "#cdb57c" }));
 
 // ---------------------------------------------------------------------------------------------------- tables
+/** 大哥, the account's cameo (rigacc/dage.ts), hidden once per film: the 嘘 face and pose in every frame he is in. Not in
+ *  CAST (no card, no line, never in the line-ups): segB.ts alone calls him up. */
+export const DAGE: Person = { name: "dage", look: DAGE_LOOK, acc: () => dage(), expr: "hush" };
+
 /** every Person by its key */
 export const CAST = {
   li: LI, liRed: LI_RED, gao: GAO, huan: HUAN, emperor: EMPEROR, he: HE, you: YOU, keeper: KEEPER,

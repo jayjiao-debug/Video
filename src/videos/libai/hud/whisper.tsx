@@ -6,7 +6,7 @@
 // (whisperCapAt): the bubble REPLACES it, never both. Pose.captions === false (and the nocap input prop) hide the bubble
 // as they hide a subtitle; Pose.hud === false does not (a subtitle stays then too). The edges follow `noov`.
 //   <Whisper f words edges />   words: draw the bubble; edges: draw the vignette
-//   whisperLayout(screen, tune)   the bubble's geometry for one caption screen (px on 1080 x 1800)
+//   whisperLayout(screen, tune)   the bubble's geometry for one caption screen (px on 1080 x 1920)
 //   whisperRectAt(f)              the box the bubble takes on frame f (hud/index.ts hudRectsAt: "whisper"), or null
 // THE LOOK, in the vlog UI's skin (hud/vlog.tsx, hud/style.ts HC): one FrSans bold face; her speaker tint (HC.warm, the
 // reporter's subtitle colour) is the bubble's paper, edged with the subtitles' warm ink line (HC.ink) and their hard

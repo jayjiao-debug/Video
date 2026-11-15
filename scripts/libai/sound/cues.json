@@ -2,7 +2,7 @@
  "note": "采访李白的一天 sound plan. at = [line id, 'start'|'end', offset s] or [scene, 'from'|'to', offset]. Music never ducked: low and constant. Clips: qin-sfx-01/02, sudongpo-sound-01/02 and libai-sfx-01.",
  "beds": [
   {
-   "clip": "amb_market",
+   "clip": "amb_street",
    "at": [
     "A",
     "from",
@@ -15,7 +15,7 @@
    ],
    "gain": -30,
    "loop": true,
-   "note": "the street outside the tavern, faint"
+   "note": "the street outside the tavern, faint (the street with its roosters cut out: one crow only, at the start; Jay 14 Nov)"
   },
   {
    "clip": "mus_morning2",
@@ -35,7 +35,7 @@
    "note": "bouncy comic pipa through the tavern and the door"
   },
   {
-   "clip": "amb_market",
+   "clip": "amb_street",
    "at": [
     "B",
     "from",
@@ -49,7 +49,8 @@
    "gain": -23,
    "loop": true,
    "fade": 0.2,
-   "fade_out": 0.6
+   "fade_out": 0.6,
+   "note": "(the street with its roosters cut out: one crow only, at the start; Jay 14 Nov)"
   },
   {
    "clip": "mus_busy",
@@ -297,6 +298,20 @@
    "gain": -12
   },
   {
+   "clip": "amb_market",
+   "at": [
+    "A",
+    "from",
+    0.9
+   ],
+   "seek": 3.3,
+   "len": 2.2,
+   "gain": -24,
+   "fade": 0.1,
+   "fade_out": 0.4,
+   "note": "the one rooster crow: dawn (卯时)"
+  },
+  {
    "clip": "snore",
    "at": [
     "A",
@@ -348,6 +363,16 @@
    "gain": -16
   },
   {
+   "clip": "bundle_thud",
+   "at": [
+    "B17",
+    "end",
+    0.72
+   ],
+   "gain": -15,
+   "note": "he drops back onto the bench (segB LI_LANDS)"
+  },
+  {
    "clip": "splash_pop",
    "at": [
     "B18",
@@ -364,15 +389,6 @@
     1.0
    ],
    "gain": -16
-  },
-  {
-   "clip": "sfx_brush",
-   "at": [
-    "C20",
-    "start",
-    0
-   ],
-   "gain": -18
   },
   {
    "clip": "sfx_boot",

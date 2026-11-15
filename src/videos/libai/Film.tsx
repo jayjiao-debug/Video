@@ -28,6 +28,7 @@ import { W, H, FILM_TOTAL, CLOCK, SEGMENTS, huds, lineNo, type Pose, type Segmen
 import { TitleBlock, FactCard, VlogHud, Caption } from "./hud";
 import { LeadCard, GaoBanner, leadIsolation, leadHold } from "./hud/intro";
 import { Isolation } from "./isolate";
+import { DoorCurtain } from "./hud/curtain";
 import { LI } from "./people";
 import { aim, mixCam } from "./shots/lb";
 import { Whisper, whisperCapAt } from "./hud/whisper";
@@ -228,6 +229,7 @@ export const LibaiFilm: React.FC = () => {
         {world && P && !OVONLY ? <Inner world={world} P={P} onReady={onReady} /> : null}
       </ThreeCanvas>
       {P && !NOOV ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}><Whisper f={f} words={P.captions !== false && !NOCAP} /></AbsoluteFill> : null}
+      {P && !NOOV ? <DoorCurtain f={f} /> : null}
       {P && P.hud !== false && !NOHUD ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}><Hud f={f} P={P} /></AbsoluteFill> : null}
       {P?.overlays && !NOOV ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}>{P.overlays}</AbsoluteFill> : null}
       {P && P.hud !== false && !NOHUD && frozen ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}><LeadCard f={fz} /></AbsoluteFill> : null}

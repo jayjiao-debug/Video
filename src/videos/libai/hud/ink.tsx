@@ -53,8 +53,8 @@ export const InkWipe = (progress: number, seed = 3): React.ReactNode => {
   if (p <= 0 || p >= 1) return null;
   const id = `inkw${seed}`;
   // the covered part: [-inf, lead] while coming in, [trail, +inf] while going out; the edge leans (the top ahead)
-  const lead = p < FULL0 ? -360 + 1800 * smootherstep(p / FULL0) : 99999;
-  const trail = p > FULL1 ? -360 + 1800 * smootherstep((p - FULL1) / (1 - FULL1)) : -99999;
+  const lead = p < FULL0 ? -360 + 1920 * smootherstep(p / FULL0) : 99999;
+  const trail = p > FULL1 ? -360 + 1920 * smootherstep((p - FULL1) / (1 - FULL1)) : -99999;
   const edge = (x0: number, side: 1 | -1) => {
     const pts: string[] = [];
     for (let y = -120; y <= 2040; y += 60) {

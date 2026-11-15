@@ -13,6 +13,7 @@ import { SEGMENTS, FPS, lineId, capWord, quote, type Pose, type Segment, type Ca
 import { BEAT } from "../beats";
 import * as C from "../cam";
 import { LI } from "../people";
+import { RX } from "../layout";
 
 import { transitionAt } from "../hud";
 import type { World } from "../world";
@@ -48,12 +49,19 @@ const jarAt = (f: number) => {
   return { p: p.lerp(JAR_MOUTH, drink), tilt: -0.7 * drink, held: up > 0 || drink > 0 || f < A.wake + 10 };
 };
 
+/** WE WALK IN (Jay, 15 Nov: "intro can be us going into the tavern"): REC comes on at the tavern's door curtain (hud/curtain.tsx;
+ *  the doorway in the right wall), it parts and she walks in between the tables to him, the title over it, and stops at his table just before the
+ *  knocks. The 1.6 s it takes were added in front of the voice (voice_timing_v6: every line 48 frames later). */
+const DOOR = V(RX + 3.25, 1.5, 0.85), GO = 10, ARRIVE = A.knock[0] - 4;
 const cam = (f: number): CamPose => {
-  const wide = aim(CAM0, HEAD.clone().add(V(0, -0.1, 0)), 860, 680);
+  const wide0 = aim(CAM0, HEAD.clone().add(V(0, -0.1, 0)), 860, 680);
+  // she stands at the door curtain (hud/curtain.tsx) until it parts, then walks: a steady pace, eased at both ends
+  const u = Math.min(1, Math.max(0, (f - GO) / (ARRIVE - GO))), walkK = 0.5 * (u + u * u * (3 - 2 * u));
+  const wide = f < ARRIVE ? mixCam(aim(DOOR, V(T.at.x, 1.05, T.at.z + 0.55), 900, 560), wide0, walkK) : wide0;
   const close = aim(CAM_IN, HEAD.clone().add(V(0, -0.06, 0)), 800, 550);
   const inK = ramp(f, A.lean - 6, A.lean + 12) * (1 - ramp(f, L4.from - 9, L4.from - 3));
   let c = mixCam(wide, close, inK);
-  c = C.handheld(c, f, { mood: "calm", amp: 0.7 });
+  c = C.handheld(c, f, { mood: "calm", amp: 0.7, walk: [[GO - 4, 0], [GO + 6, 1], [ARRIVE - 12, 1], [ARRIVE, 0]] });
   for (const k of A.knock) c = C.jolt(c, f, k, { len: 4, amp: 0.7 });
   c = C.snap(c, f, word("A06", "早酒"), lineId("A07").from);
   return whisperLean(f, c, { at: HEAD });
