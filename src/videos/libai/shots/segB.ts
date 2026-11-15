@@ -10,7 +10,7 @@ import * as THREE from "three";
 import { SEGMENTS, FPS, lineId, capWord, type Pose, type Segment, type CamPose } from "../story";
 import { BEAT } from "../beats";
 import * as C from "../cam";
-import { LI, HUAN } from "../people";
+import { LI, HUAN, DAGE } from "../people";
 import { MX } from "../layout";
 import { benchSeat, FOOT_LIFT } from "../props";
 import { transitionAt } from "../hud";
@@ -40,6 +40,16 @@ const huanGo = B.run[0];
 const BASIN_END = rel(SEAT.at, SEAT.facing, 0.85, 0, 0.42);
 const BASIN_PATH = [V(MX - 0.6, 0, 10.5), V(MX + 0.7, 0, 7.0), BASIN_END];
 const basinGo = L17.from - 70;
+/** 大哥 (the account's cameo; Jay, 15 Nov: "Tavern door, 0:45"): behind the cloth stall's counter next door, by the
+ *  wine flag's pole, a finger to his lips. The pan to the messenger finds him; at the messenger's 李翰林！ he ducks
+ *  behind the counter and is gone before the messenger runs in (on screen about 1.3 s, the left edge of the frame).
+ *  He faces the street (the 0.25 m between the counter's back and the shop front is all the room there is) and the
+ *  camera sees him from his left: the default hand (dage.ts). */
+const DG = { at: V(MX + 3.42, 0, 2.6), facing: -Math.PI / 2 + 0.12, from: B.run[0] - 6, duck: L16.from + 6, down: 6 };
+const dageAt = (f: number) => {
+  const k = clamp01((f - DG.duck) / DG.down);
+  return DG.at.clone().setY(-0.9 * k * k);
+};
 /** THE CAMERA PLAN (one take):
  *    open     the whip lands on him on the bench, a little from below (he is about to boast), him right of centre
  *    翰林待诏  B11: snap zoom landing on the title, held through her question
@@ -119,7 +129,7 @@ const li = (f: number): St => {
 
 export const SEG: Segment = {
   id: "B", from: S.from, to: S.to,
-  enter() {}, exit(w) { setSeat(w.actor(LI), null); w.actor(HUAN).set({ visible: false }); w.actor(HUAN, "2").set({ visible: false }); },
+  enter() {}, exit(w) { setSeat(w.actor(LI), null); w.actor(HUAN).set({ visible: false }); w.actor(HUAN, "2").set({ visible: false }); w.actor(DAGE).set({ visible: false }); },
   pose(w, f) {
     w.setPlace("street");
     w.set.param("carcass", false);
@@ -149,6 +159,9 @@ export const SEG: Segment = {
     const brot = bl.facing;
     const bh = held("basin", basinAt, { rot: brot, open: tip });
     B2.set({ at: bl.at, facing: bl.facing, pose: bl.pose, hands: bh.hands, visible: f >= basinGo - 10, expr: f < B.splash ? "focus" : "grin", blink: lid(t, 7) });
+    // 大哥
+    const dg = f >= DG.from && f < DG.duck + DG.down + 1;
+    w.actor(DAGE).set(dg ? { at: dageAt(f), facing: DG.facing, pose: { kind: "shh", t }, expr: "hush", blink: lid(t, 9), visible: true } : { visible: false });
     w.update();
     trackHead(w, "huan", w.actor(HUAN), f);
     // the bowl goes where his hand got to (flung out for balance, the hand can fall short of the target)
