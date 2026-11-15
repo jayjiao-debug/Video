@@ -1,0 +1,24 @@
+{
+ "film": "libai",
+ "title": "采访李白的一天",
+ "composition": "LibaiFilm",
+ "branch": "claude/libai-polish",
+ "render": {
+  "crf": 16,
+  "gl": "angle",
+  "concurrency": "50%"
+ },
+ "langs": {
+  "zh": {},
+  "en": {
+   "props": {
+    "lang": "en"
+   }
+  }
+ },
+ "sound": {
+  "build": "node scripts/libai/sound/events.mjs {WORK}/sound/events.json && python3 scripts/libai/sound/build.py --timing {VOICE}/voice_timing.json --voice {VOICE}/voice_48k.wav --clips {CLIPS} --events {WORK}/sound/events.json --out {MIX}"
+ },
+ "gate": {},
+ "_note": "events.mjs's arguments are a guess: check scripts/libai/sound/events.mjs before the first studio run of libai"
+}

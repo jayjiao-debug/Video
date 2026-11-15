@@ -1,0 +1,10 @@
+{
+ "film": "hongmen",
+ "title": "鸿门宴",
+ "composition": "HongmenFilm",
+ "branch": "claude/film-kit",
+ "render": {"crf": 16, "gl": "angle", "concurrency": "50%"},
+ "langs": {"zh": {}, "en": {"props": {"lang": "en"}}},
+ "sound": {"build": "NAME=mix WORK={VER}/soundwork CLIPS={CLIPS} bash scripts/hongmen/sound/build.sh && cp {VER}/soundwork/mix_48k.wav {MIX}"},
+ "gate": {}
+}
