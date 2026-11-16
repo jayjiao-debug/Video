@@ -10,6 +10,7 @@ export STUDIO="${STUDIO:-$HOME/Claude/studio}"
 for d in "$STUDIO/node/bin" "$HOME/Claude/libai-render-test/node/bin" "$STUDIO/bin"; do [ -d "$d" ] && PATH="$d:$PATH"; done
 [ -d "$STUDIO/py/bin" ] && PATH="$STUDIO/py/bin:$PATH"     # the studio's python (numpy, scipy, faster-whisper) is "python3"
 PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+[ -d /opt/homebrew/opt/ffmpeg-full/bin ] && PATH="/opt/homebrew/opt/ffmpeg-full/bin:$PATH"   # rubberband + drawtext
 export PATH
 PY="$STUDIO/py/bin/python3"
 if [ ! -x "$PY" ]; then

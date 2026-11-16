@@ -48,6 +48,13 @@ def cmd_setup(a):
                 url = f"https://ffmpeg.martin-riedl.de/redirect/latest/macos/{'arm64' if arch == 'arm64' else 'amd64'}/release/{tool}.zip"
                 run(f"cd '{b}' && curl -fsSL -o {tool}.zip '{url}' && unzip -o -q {tool}.zip && rm {tool}.zip && chmod +x {tool} && (xattr -d com.apple.quarantine {tool} 2>/dev/null || true)")
             os.environ["PATH"] = b + os.pathsep + os.environ["PATH"]
+    # the film sound builds use rubberband (pitch) and the gate sheets may use drawtext: Homebrew's plain ffmpeg has neither
+    ff0 = subprocess.run([slib.which("ffmpeg") or "ffmpeg", "-hide_banner", "-filters"], capture_output=True, text=True).stdout
+    if " rubberband " not in ff0 and slib.which("brew"):
+        run(["brew", "install", "ffmpeg-full"], check=False)
+        full = "/opt/homebrew/opt/ffmpeg-full/bin"
+        if os.path.isdir(full):
+            os.environ["PATH"] = full + os.pathsep + os.environ["PATH"]
     for tool in ("ffmpeg", "ffprobe", "git", "node", "npm"):
         log(f"{tool}: {slib.which(tool) or 'MISSING'}")
     ff = subprocess.run([slib.which("ffmpeg") or "ffmpeg", "-hide_banner", "-filters"], capture_output=True, text=True).stdout
