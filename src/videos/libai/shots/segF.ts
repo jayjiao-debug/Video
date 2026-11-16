@@ -4,7 +4,7 @@
 //                     table for wine (the dissolves in and out are the HUD's TRANSITIONS).
 //   F38-F40  back at night. 谁说一个人？ he lifts his cup to the moon.
 //   F41      举杯邀明月: he lifts the cup to the moon, points at his shadow, at himself (the camera holds still).
-//   F42      he looks into his cup.   F43 我陪您喝一杯: her cup floats in from the lens and clinks his (no hand).
+//   F42      he looks into his cup.   F43 我陪您喝一杯: her cup comes up in front of the lens and she sips (no hand, no clink).
 //   F44      好。四个人。 he drinks; the camera rises slowly to the moon under cards 4 and 5; her camera switches off.
 import * as THREE from "three";
 import { trackHead } from "../track";
@@ -45,7 +45,7 @@ const SHADOW = rel(STONE_AT, FAC, 0.2, 0.7, 0.9);
  *    open     the join: E's last lamp cuts to the moon on the same spot of the screen; she lowers the lens from the
  *             moon to him alone on the stone under the tree, then holds
  *    memory   the ink-warm flashback in the tavern: held still
- *    F38-F44  held still: he toasts the moon, points at his shadow, her cup floats in and clinks his
+ *    F38-F44  held still: he toasts the moon, points at his shadow; her cup comes up in front of the lens and she sips
  *    end      the one slow move: after 四个人 the lens rises slowly to the moon under cards 4 and 5 */
 const cam = (f: number): CamPose => {
   const base = aim(CAM0, HEAD.clone().add(V(0, -0.2, 0)), 980);
@@ -58,6 +58,9 @@ const cam = (f: number): CamPose => {
     const l = V(...(base.look as [number, number, number])).lerp(V(...(aim(CAM0, MOON, 900).look as [number, number, number])), r);
     c = { pos: [p.x, p.y, p.z], look: [l.x, l.y, l.z], fov: base.fov };
   }
+  // her sip: the lens tips up a little with the cup and back
+  const s = sipOf(f);
+  if (s > 0) c = C.nudge(c, { pitch: 3 * s, up: 0.01 * s });
   return c;
 };
 
@@ -103,20 +106,34 @@ const cupAt = (f: number) => {
   const toast = ramp(f, F.toast, F.toast + 10) * (1 - ramp(f, F.cupLook - 12, F.cupLook));
   const look = ramp(f, F.cupLook, F.cupLook + 8) * (1 - ramp(f, F.cupIn - 6, F.cupIn + 4));
   const out = ramp(f, F.cupIn, F.cupIn + 10) * (1 - ramp(f, F.drink - 4, F.drink + 4));
-  const drink = ramp(f, F.drink, F.drink + 8) * (1 - ramp(f, F.drink + 40, F.drink + 52));
+  const drink = drinkK(f);
   const p = rel(SITP, FAC, -0.17, 0.78, 0.22);
   p.lerp(rel(SITP, FAC, -0.22, 1.18, 0.36), toast);
   p.lerp(rel(SITP, FAC, -0.05, 0.92, 0.3), look);
   p.lerp(rel(SITP, FAC, -0.06, 1.0, 0.38), out);
-  p.lerp(rel(SITP, FAC, -0.1, 1.12, 0.32), drink);
-  return { p, tilt: -1.0 * drink };
+  p.lerp(SIP_AT.clone().add(V(0, 0.01 * sipBob(f), 0)), drink);
+  // tipped toward his mouth (about the axis pointing at the lens), not toward the lens: the bowl no longer covers his face
+  return { p, tilt: 0, roll: (DRINK_ROLL + 0.08 * sipBob(f)) * drink };
 };
-/** her cup: floats in from below the lens to meet his (clink), stays */
-const herCup = (f: number) => {
-  const k = ramp(f, F.cupIn, F.clink);
-  const from = V(CAM0.x - 0.05, 0.75, CAM0.z - 0.6), to = rel(SITP, FAC, -0.04, 1.0, 0.47).add(V(0.09, 0, 0.02));
-  const bump = f >= F.clink && f < F.clink + 4 ? 0.01 : 0;
-  return from.lerp(to, k).add(V(0, bump, 0));
+/** HIS DRINK after 四个人 (Jay, 16 Nov: "give him a simple drink animation, then change to smile"): the bowl to the
+ *  corner of his mouth, tipped toward it, two sips, down, and a smile */
+const DRINK_LEN = 44, DRINK_ROLL = -0.95;
+const drinkK = (f: number) => smooth(ramp(f, F.drink, F.drink + 8)) * (1 - smooth(ramp(f, F.drink + DRINK_LEN - 10, F.drink + DRINK_LEN)));
+const sipBob = (f: number) => { const d = f - F.drink - 8; return d < 0 || d >= 24 ? 0 : Math.max(0, Math.sin((d / 12) * Math.PI * 2)); };
+const SIP_AT = rel(SITP, FAC, -0.13, 1.08, 0.3);
+/** HER CUP (Jay, 16 Nov: "move the cup back to just infront of Camera, and a motion like we gave a sip, no need to
+ *  cheers"): it rises into the bottom of her frame just in front of the lens, tips toward her as she sips (the lens dips
+ *  a little with it), then goes back down out of the frame. In camera space: [right, up, forward] metres, tip (rad) */
+const SIP = { up: [F.cupIn, F.cupIn + 12], sip: [F.clink - 4, F.clink + 16], down: [F.clink + 22, F.clink + 34] } as const;
+const sipOf = (f: number) => smooth(ramp(f, SIP.sip[0], SIP.sip[0] + 8)) * (1 - smooth(ramp(f, SIP.sip[1] - 6, SIP.sip[1])));
+const herCup = (f: number, c: CamPose) => {
+  const inK = smooth(ramp(f, SIP.up[0], SIP.up[1])) * (1 - smooth(ramp(f, SIP.down[0], SIP.down[1]))), s = sipOf(f);
+  if (inK <= 0) return null;
+  const p = V(...(c.pos as [number, number, number])), l = V(...(c.look as [number, number, number]));
+  const fwd = l.clone().sub(p).normalize(), right = fwd.clone().cross(V(0, 1, 0)).normalize(), up = right.clone().cross(fwd).normalize();
+  // (tipped toward her: its near rim drops and the far one rises, so the lens sees its side and foot, not the wine)
+  const at = p.clone().addScaledVector(fwd, 0.44 - 0.03 * s).addScaledVector(right, 0.03).addScaledVector(up, -0.4 + 0.19 * inK + 0.05 * s);
+  return { at, rot: [-0.6 * s, Math.atan2(-fwd.x, -fwd.z), 0] as [number, number, number] };
 };
 
 export const SEG: Segment = {
@@ -155,7 +172,7 @@ export const SEG: Segment = {
     w.prop("stone").put(STONE_AT, { rot: FAC });
     w.prop("blossomTree").put(TREE, { rot: 0.6, scale: 0.85 });
     w.prop("jar").put(JAR, { rot: 0.4 });
-    const expr = at<NonNullable<St["expr"]>>(f, [[0, "smile_closed"], [lineId("F35").from, "smile"], [lineId("F37").from, "smile_closed"], [lineId("F38").from, "sigh"], [lineId("F39").to, "smile"], [F.toast, "happy"], [F.moon, "smile_closed"], [F.cupLook, "sigh"], [L42.to, "sad"], [L43.from + 20, "smile"], [L44.from, "smile_closed"], [F.drink + 50, "happy"]]);
+    const expr = at<NonNullable<St["expr"]>>(f, [[0, "smile_closed"], [lineId("F35").from, "smile"], [lineId("F37").from, "smile_closed"], [lineId("F38").from, "sigh"], [lineId("F39").to, "smile"], [F.toast, "happy"], [F.moon, "smile_closed"], [F.cupLook, "sigh"], [L42.to, "sad"], [L43.from + 20, "smile"], [L44.from, "smile_closed"], [F.drink + DRINK_LEN - 6, "smile"]]);
     const m = says("li", ["F35", "F37", "F38", "F40", "F41", "F42", "F44"], f, 2);
     const cp = cupAt(f);
     setSeat(w.actor(LI_RED), SEAT, FAC);
@@ -167,8 +184,9 @@ export const SEG: Segment = {
     });
     w.update();
     // the cup goes where his hand got to (his lean-back posture can leave the hand short of the target on the toast)
-    w.prop("wineBowl").put(w.actor(LI_RED).handWorld(0), { grip: "hilt", rot: [cp.tilt, 0, 0] });
-    if (f >= F.cupIn) w.prop("wineBowl", "ji").put(herCup(f), { grip: "hilt" });
+    w.prop("wineBowl").put(w.actor(LI_RED).handWorld(0), { grip: "hilt", rot: [cp.tilt, 0, cp.roll ?? 0] });
+    const hc = herCup(f, camera);
+    if (hc) w.prop("wineBowl", "ji").put(hc.at, { rot: hc.rot });
     const off = f0 >= F.offClick;
     return {
       camera, overlays: frag(transitionAt(f0)?.node, switchOff(f0)), slate: "F night",

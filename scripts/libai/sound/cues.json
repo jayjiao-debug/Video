@@ -484,13 +484,13 @@
    "gain": -15
   },
   {
-   "clip": "sfx_clink",
+   "clip": "sfx_slurp",
    "at": [
     "F43",
     "end",
-    0.65
+    0.6
    ],
-   "gain": -12
+   "gain": -17
   },
   {
    "clip": "sfx_gulp",

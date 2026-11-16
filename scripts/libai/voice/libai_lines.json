@@ -29,7 +29,7 @@
  "end_card": {
   "zh": "762年新皇帝下诏请他做官，诏书到时他已去世。",
   "en": "In 762 a new emperor sent for him with a post. When the edict arrived, he had already died.",
-  "hold": 3.6
+  "hold": 3.2
  },
  "source": "script v1 (approved by Jay 2026-11-14)",
  "lines": [
@@ -266,7 +266,7 @@
     "他站不起来了！"
    ],
    "en": "He can't stand up!",
-   "after": 4.6,
+   "after": 4.2,
    "card": {
     "zh": "新唐书：召他进宫时已醉，左右用水泼他的脸。",
     "en": "New Book of Tang: when he was summoned he was already drunk; attendants splashed water on his face."
@@ -347,7 +347,7 @@
     "这是赏的金子。"
    ],
    "en": "His Majesty grants your leave to go home to the mountains. Here is gold.",
-   "pre": 1.6,
+   "pre": 0.6,
    "after": 0.6
   },
   {
@@ -635,7 +635,7 @@
     "en": "He left Chang'an that spring. His dream of office never came true."
    },
    "card_delay": 0.6,
-   "card_hold": 3.4
+   "card_hold": 3.0
   }
  ]
 }

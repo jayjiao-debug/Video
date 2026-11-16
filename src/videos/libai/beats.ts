@@ -103,7 +103,7 @@ const F = {
   /** F40: he lifts his cup to the moon */ toast: from("F40"),
   /** F41: the moon (明月), his shadow (对影), himself (三人) */ moon: word("F41", "举杯"), shadow: word("F41", "对影"), three: word("F41", "三人"),
   /** F42: he looks into the cup */ cupLook: from("F42"),
-  /** after F43: the invisible hand's cup floats in and clinks his */ cupIn: to("F43") + sec(0.1), clink: to("F43") + sec(0.7),
+  /** after F43: her cup comes up in front of the lens (cupIn) and she sips (clink: the sip; no clink since 16 Nov) */ cupIn: to("F43") + sec(0.1), clink: to("F43") + sec(0.7),
   /** F44's end: he drinks; the camera rises slowly to the moon */ drink: to("F44") + sec(0.3), rise: [to("F44") + sec(0.8), fOff] as Span,
   /** cards 4 and 5 */ card4: [c4.from, c4.to] as Span, card5: [c5.from, c5.to] as Span,
   /** HER CAMERA SWITCHES OFF: the click (REC lamp out, HUD frozen), the collapse to a line, the dot, black */
