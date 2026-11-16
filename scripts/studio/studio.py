@@ -85,8 +85,24 @@ def cmd_setup(a):
 
 
 def cmd_update(a):
-    run(["git", "-C", slib.TOOLS, "fetch", "--depth", "1", "origin"])
-    run(["git", "-C", slib.TOOLS, "reset", "--hard", "@{u}"])
+    """pull new tools: one branch, one commit deep. A full clone (every branch's history, 14 GB once) is shrunk."""
+    g = ["git", "-C", slib.TOOLS]
+    br = subprocess.run(g + ["rev-parse", "--abbrev-ref", "HEAD"], capture_output=True, text=True).stdout.strip() or "claude/pipeline-tools"
+    if br == "HEAD": br = "claude/pipeline-tools"
+    run(g + ["config", "remote.origin.fetch", f"+refs/heads/{br}:refs/remotes/origin/{br}"])
+    run(g + ["fetch", "--depth", "1", "origin", br])
+    run(g + ["reset", "--hard", f"origin/{br}"])
+    others = [r for r in subprocess.run(g + ["for-each-ref", "--format=%(refname)", "refs/remotes/", "refs/tags/", "refs/heads/"],
+                                         capture_output=True, text=True).stdout.split() if r not in (f"refs/remotes/origin/{br}", f"refs/heads/{br}")]
+    for r in others:
+        subprocess.run(g + ["update-ref", "-d", r])
+    if others:
+        log(f"dropped {len(others)} other branches and tags from the tools clone; packing it down")
+        run(g + ["reflog", "expire", "--expire=now", "--all"])
+        run(g + ["gc", "--prune=now", "--quiet"])
+    r = subprocess.run(["du", "-sh", os.path.join(slib.TOOLS, ".git")], capture_output=True, text=True).stdout.split()
+    log(f"tools at {subprocess.run(g + ['log', '-1', '--format=%h %s'], capture_output=True, text=True).stdout.strip()}"
+        + (f"; clone {r[0]}" if r else ""))
 
 
 # ------------------------------------------------------------------------------------------------ film config
