@@ -40,33 +40,22 @@ Steps, each with a clock-time estimate from its last run, all logged to `work/<f
 4. **mux** (fails if picture and sound differ by more than a frame), a **phone copy** (1080, small), a 540 **watch
    copy** and a **contact sheet**
 5. **the gate** (below). A FAIL stops here.
-6. **deliver** to `~/Claude/films/<film>/<version>/`
-
-Useful flags: `--frames 0-299` (a test range), `--mix file.wav` (a ready mix instead of the build), `--skip
-render,sound,stems,gate,deliver`, `--accept "why"` (deliver despite a FAIL; the reason is written into the delivery),
-`--reveal` (show it in Finder). One studio job runs at a time (`logs/studio.lock`). `studio status` shows what was made.
-
-## Voice, sound effects and music on the Mac (item 2)
-
-```bash
-~/Claude/studio/studio voice request.json --film newton     # or: ... voice - < request.json
-~/Claude/studio/studio voice request.json --dry-run         # check it and count the billed characters, no call
-```
-
-The request is exactly the voice-farm format (`tts`, `dialogue`, `sfx`, `music`, `voices`, `upload`, `transcribe`
-items; `voice/speak.py` is the farm's script with a local output folder). Clips, `report.json` (with Whisper's
-transcript and word times) and `run.txt` land in `~/Claude/studio/voice/<id>/`, linked into
-`work/<film>/voice/takes/<id>`. The report also says how many credits the request used and how many are left. No
-GitHub, no public branch, no approval stop. A cloud thread hands a request over in its Remote Control brief (paste
-the JSON) or in its commit; the summary table comes back in the session's reply.
-
-## Delivery (item 3)
-
-`~/Claude/films/<film>/<version>/`: `<film>_<v>_hd.mp4` (the master), `<film>_<v>_phone.mp4`, `<film>_<v>_sheet.jpg`,
+6. **deliver** to `~/Claude/films/<film>/<version>/`: `<film>_<v>_hd.mp4` (the master), `<film>_<v>_phone.mp4`, `<film>_<v>_sheet.jpg`,
 `review/` (the gate report and its sheets, the masked watch copy, what changed), `sound/` (the sound page, when made),
 `delivery.json`. `~/Claude/films/<film>/versions.md` lists every delivery with its commit; `latest` points at the
-newest. AirDrop from Finder for now. For a synced folder later, set one line in the shell profile:
-`export STUDIO_DELIVER="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Films"`.
+newest.
+
+**Google Drive.** When Google Drive for desktop is signed in on the Mac, `deliver` also copies the delivery into
+`My Drive/<channel>/<film>/<version>/`, waits for the upload (up to 15 minutes, `STUDIO_DRIVE_WAIT` seconds) and writes
+the Drive links of the folder, the master and the phone copy into `delivery.json` and `versions.md`; the run ends
+with one `DRIVE {...}` line a cloud thread can pass on. Channels stay apart by language: Chinese films (抖音, Juno)
+go in `My Drive/Juno/`, English films (YouTube, TinyEurekaFilms) in `My Drive/TinyEurekaFilms/`; a film config can
+say otherwise with `"drive": {"zh": "Juno", "en": "TinyEurekaFilms"}`. The links open for the Drive's own account
+(phone, laptop); sharing one wider is a separate step. `studio drive status`, `studio drive push <film> --version v7`
+(again, or later), `studio drive link <path>`. `--no-drive` or `STUDIO_DRIVE=off` keeps a delivery local.
+
+**Unattended.** For the Mac to work while nobody is with it: keep it from sleeping (System Settings > Energy), turn on
+"Start up automatically after a power failure", and have Google Drive and the Claude app open at login.
 
 ## The delivery gate (item 4)
 

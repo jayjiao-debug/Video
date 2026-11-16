@@ -16,6 +16,7 @@ import argparse, glob, json, os, re, shutil, subprocess, sys, time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import slib
+import drive as drivemod
 from slib import log, die, run, STUDIO, REPO, WORK, LIBRARY, VOICE, LOGS, DELIVER, HERE
 
 NODE_VERSION = "v22.12.0"
@@ -280,7 +281,7 @@ def cmd_film(a):
             log("the gate FAILED: nothing is delivered. Fix and run again, or deliver anyway with --accept \"<why>\"")
             sys.exit(1)
     if "deliver" not in skip:
-        deliver(film, tag, accept=a.accept, reveal=a.reveal)
+        deliver(film, tag, accept=a.accept, reveal=a.reveal, drive=not a.no_drive)
     log(f"all done in {slib.fmt_s(time.time() - t0)}")
 
 
@@ -318,7 +319,7 @@ def cmd_gate(a):
     sys.exit(gate(a.film, tag, cfg, a))
 
 
-def deliver(film, tag, accept=None, reveal=False):
+def deliver(film, tag, accept=None, reveal=False, drive=True):
     vdir = os.path.join(WORK, film, "versions", tag)
     g = slib.load_json(os.path.join(vdir, "gate", "gate.json"))
     master = os.path.join(vdir, "master.mp4")
@@ -355,13 +356,58 @@ def deliver(film, tag, accept=None, reveal=False):
     log(f"delivered to {out}: " + ", ".join(sorted(os.listdir(out))))
     if reveal and sys.platform == "darwin":
         subprocess.run(["open", "-R", os.path.join(out, f"{base}_phone.mp4")])
+    if drive:
+        to_drive(film, tag, out)
     return out
+
+
+def to_drive(film, tag, out):
+    """copy the delivery into its channel's Google Drive folder (drive.py); write the links into delivery.json and versions.md"""
+    suf = tag.rsplit("_", 1)[-1] if "_" in tag else ""
+    lang = suf if (len(suf) == 2 and suf.isalpha()) else "zh"
+    try:
+        channels = (film_config(film) or {}).get("drive")
+    except SystemExit:
+        channels = None
+    if not drivemod.root(lang, channels):
+        log("Drive: no Google Drive folder on this machine (or STUDIO_DRIVE=off): the film stays local only")
+        return None
+    try:
+        res = drivemod.push(out, film, tag, lang=lang, channels=channels, log=log)
+    except OSError as e:
+        log(f"Drive: copy failed ({e}); the local delivery is complete. Retry with: studio drive push {film} --version {tag}")
+        return None
+    note = slib.load_json(os.path.join(out, "delivery.json"), {}) or {}
+    note["drive"] = res
+    slib.save_json(os.path.join(out, "delivery.json"), note)
+    try:
+        drivemod._copy(os.path.join(out, "delivery.json"), os.path.join(res["drive_path"], "delivery.json"))
+    except OSError:
+        pass
+    if res.get("folder"):
+        with open(os.path.join(DELIVER, film, "versions.md"), "a", encoding="utf-8") as f:
+            f.write(f"  - {tag} on Google Drive ({res['channel']}): {res['folder']}" + (f" (phone copy {res['phone']})" if res.get("phone") else "") + "\n")
+        print("\nDRIVE " + json.dumps({"film": film, "version": tag, "channel": res["channel"], "folder": res["folder"], "phone": res.get("phone"), "hd": res.get("hd")}), flush=True)
+    return res
+
+
+def cmd_drive(a):
+    rest = a.rest or ["status"]
+    if rest[0] == "push":
+        p = argparse.ArgumentParser(prog="studio drive push"); p.add_argument("film"); p.add_argument("--version", required=True); p.add_argument("--lang", default="zh")
+        b = p.parse_args(rest[1:])
+        tag = b.version + ("" if b.lang == "zh" else f"_{b.lang}")
+        out = os.path.join(DELIVER, b.film, tag)
+        if not os.path.isdir(out): die(f"no delivery at {out}: run studio deliver first")
+        slib.set_log(os.path.join(WORK, b.film, "versions", tag, "log.txt"))
+        sys.exit(0 if (to_drive(b.film, tag, out) or {}).get("folder") else 1)
+    sys.exit(drivemod.main(rest))
 
 
 def cmd_deliver(a):
     tag = a.version + ("" if a.lang == "zh" else f"_{a.lang}")
     slib.set_log(os.path.join(WORK, a.film, "versions", tag, "log.txt"))
-    deliver(a.film, tag, accept=a.accept, reveal=a.reveal)
+    deliver(a.film, tag, accept=a.accept, reveal=a.reveal, drive=not a.no_drive)
 
 
 # ------------------------------------------------------------------------------------------------ voice
@@ -419,7 +465,7 @@ def cmd_soundpage(a):
 
 
 def cmd_status(a):
-    print(f"studio {STUDIO}\ntools  {slib.TOOLS}\nfilms  {DELIVER}")
+    print(f"studio {STUDIO}\ntools  {slib.TOOLS}\nfilms  {DELIVER}\ndrive  {drivemod.root('zh') or 'none (films stay local)'} (zh); {drivemod.root('en') or '-'} (en)")
     for t in ("node", "ffmpeg", "ffprobe", "git"):
         print(f"{t:8s}{slib.which(t) or 'MISSING'}")
     print("key     " + ("in the keychain" if keychain_key() else "not saved"))
@@ -448,11 +494,12 @@ def main():
     p.add_argument("--only", help="gate checks to run (default all)"); p.add_argument("--prev", help="the earlier version folder to compare with")
     p.add_argument("--accept", help="deliver even though the gate failed, with the reason (it is written into the delivery)")
     p.add_argument("--reveal", action="store_true", help="show the phone copy in Finder when delivered")
+    p.add_argument("--no-drive", action="store_true", help="deliver locally only, not to Google Drive")
     p.set_defaults(fn=cmd_film)
     for name, fn in (("gate", cmd_gate), ("deliver", cmd_deliver)):
         p = sp.add_parser(name); p.add_argument("film"); p.add_argument("--version", required=True); p.add_argument("--lang", default="zh")
         p.add_argument("--accept"); p.add_argument("--reveal", action="store_true"); p.add_argument("--only"); p.add_argument("--prev"); p.add_argument("--frames")
-        p.set_defaults(fn=fn)
+        p.add_argument("--no-drive", action="store_true"); p.set_defaults(fn=fn)
     p = sp.add_parser("voice"); p.add_argument("request", help="request.json (the voice-farm format), or - for stdin")
     p.add_argument("--film"); p.add_argument("--again", action="store_true"); p.add_argument("--dry-run", action="store_true"); p.add_argument("--no-whisper", action="store_true")
     p.set_defaults(fn=cmd_voice)
@@ -460,6 +507,8 @@ def main():
     p = sp.add_parser("soundpage"); p.add_argument("film"); p.add_argument("--version", required=True); p.add_argument("--lang", default="zh")
     p.add_argument("--deliver", action="store_true"); p.set_defaults(fn=cmd_soundpage)
     p = sp.add_parser("status"); p.add_argument("film", nargs="?"); p.set_defaults(fn=cmd_status)
+    p = sp.add_parser("drive", help="Google Drive: status | push <film> --version v7 | link <path>"); p.add_argument("rest", nargs=argparse.REMAINDER)
+    p.set_defaults(fn=cmd_drive)
     a = ap.parse_args()
     a.fn(a)
 
