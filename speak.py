@@ -71,6 +71,12 @@ for it in req["items"]:
             if r.ok: fn = f"{it['name']}.mp3"; open(f"out/{fn}", "wb").write(r.content); rec["file"] = fn; rec["bytes"] = len(r.content)
         except Exception as e: rec["error"] = str(e)[:300]
         log(json.dumps(rec, ensure_ascii=False)); report["clips"].append(rec); continue
+    if it.get("type") == "effects_catalog":   # list the audio_effects ids (filters, rooms, noise beds); free, no generation: {"type":"effects_catalog","name"}
+        r = requests.get(f"{API}/v1/audio-effects/catalog", headers=H, timeout=30)
+        rec = {"name": it["name"], "type": "effects_catalog", "status": r.status_code}
+        if r.ok: rec["catalog"] = r.json()
+        else: rec["error"] = r.text[:400]
+        log(json.dumps(rec, ensure_ascii=False)[:3000]); report["clips"].append(rec); continue
     if it.get("type") == "dialogue":   # several speakers in ONE generation (consistent voices, natural turn-taking):
         # {"type":"dialogue","name","lang"?,"model"?,"seed"?,"settings"?,"lines":[{"text","voice":{"owner","voice_id","name"}}]}
         ids_for = {}
@@ -119,10 +125,15 @@ for it in req["items"]:
         else: rec["error"] = r.text[:400]
         log(json.dumps({"name": rec["name"], "status": rec["status"], "n": len(rec.get("voices", []))})); report["clips"].append(rec); continue
     if it.get("type") == "sfx":   # ElevenLabs text-to-sound-effects: {"type":"sfx","name","text","duration"?,"influence"?,"loop"?,"model"?}
-        body = {"text": it["text"], "model_id": it.get("model", "eleven_text_to_sound_v2"), "prompt_influence": it.get("influence", 0.3)}
+        # model: the item's "model", else the request's "sfx_model", else v2 (the old default). eleven_text_to_sound_v3 follows
+        # multi-part prompts and human sounds (snore, sigh, sniff) better; if v3 is refused the item falls back to v2.
+        body = {"text": it["text"], "model_id": it.get("model", req.get("sfx_model", "eleven_text_to_sound_v2")), "prompt_influence": it.get("influence", 0.3)}
         if it.get("duration"): body["duration_seconds"] = it["duration"]
         if it.get("loop"): body["loop"] = True
         r = requests.post(f"{API}/v1/sound-generation?output_format=mp3_44100_128", headers=H, json=body, timeout=180)
+        if not r.ok and body["model_id"] != "eleven_text_to_sound_v2" and r.status_code in (400, 403, 404, 422):
+            log("sfx retry with eleven_text_to_sound_v2:", r.status_code, r.text[:200]); body["model_id"] = "eleven_text_to_sound_v2"
+            r = requests.post(f"{API}/v1/sound-generation?output_format=mp3_44100_128", headers=H, json=body, timeout=180)
         rec = {"name": it["name"], "type": "sfx", "text": it["text"], "model": body["model_id"], "status": r.status_code, "sfx": True}
         if r.ok: fn = f"{it['name']}.mp3"; open(f"out/{fn}", "wb").write(r.content); rec["file"] = fn; rec["bytes"] = len(r.content)
         else: rec["error"] = r.text[:400]
@@ -175,11 +186,14 @@ for it in req["items"]:
     if it.get("settings"): body["voice_settings"] = it["settings"]
     for k in ("seed", "previous_text", "next_text", "apply_text_normalization"):   # optional: continuity between separately generated lines
         if it.get(k) is not None: body[k] = it[k]
+    if it.get("audio_effects"):   # ElevenLabs' own voice processing, no extra cost: {"filter_preset_id","distance" 0-1,"environment_id","send_level","background_noise_id","pan"}; ids from an effects_catalog item
+        body["audio_effects"] = it["audio_effects"]
     url = f"{API}/v1/text-to-speech/{vid}?output_format=mp3_44100_128"
     r = requests.post(url, headers=H, json=body, timeout=120)
     if not r.ok and r.status_code in (400, 422):
         log("retry without language_code:", r.text[:200]); body.pop("language_code"); r = requests.post(url, headers=H, json=body, timeout=120)
     rec = {"name": it["name"], "lang": it["lang"], "text": it["text"], "voice": vname, "voice_id": vid, "model": body["model_id"], "status": r.status_code}
+    if it.get("audio_effects"): rec["audio_effects"] = it["audio_effects"]
     if r.ok:
         fn = f"{it['name']}.mp3"; open(f"out/{fn}", "wb").write(r.content); rec["file"] = fn; rec["bytes"] = len(r.content)
     else: rec["error"] = r.text[:400]
@@ -228,6 +242,24 @@ try:
             except Exception as e: rec["error"] = repr(e)[:300]
             report["clips"].append(rec)
 except Exception as e: report["whisper_error"] = str(e)
+# second check (request "scribe": true): ElevenLabs Scribe v3 transcript next to Whisper's, for voice clips only.
+# Scribe is much stronger on Chinese than Whisper-small (fewer same-sound swaps), so a wrong tone or syllable stands out.
+# Needs the key's Speech to Text permission; billed per audio minute (a film's lines are a few minutes).
+if req.get("scribe"):
+    for rec in report["clips"]:
+        if "file" not in rec or rec.get("sfx"): continue
+        try:
+            data = {"model_id": req.get("scribe_model", "scribe_v3"), "timestamps_granularity": "word", "tag_audio_events": "false"}
+            if rec.get("lang"): data["language_code"] = rec["lang"]
+            r = requests.post(f"{API}/v1/speech-to-text", headers=H, data=data, files={"file": (rec["file"], open(f"out/{rec['file']}", "rb"), "audio/mpeg")}, timeout=300)
+            if not r.ok and data["model_id"] != "scribe_v2" and r.status_code in (400, 404, 422):
+                data["model_id"] = "scribe_v2"; r = requests.post(f"{API}/v1/speech-to-text", headers=H, data=data, files={"file": (rec["file"], open(f"out/{rec['file']}", "rb"), "audio/mpeg")}, timeout=300)
+            if r.ok:
+                j = r.json(); rec["scribe"] = (j.get("text") or "").strip(); rec["scribe_model"] = data["model_id"]; rec["scribe_lang"] = j.get("language_code")
+                rec["scribe_words"] = [[w.get("text"), w.get("start"), w.get("end")] for w in j.get("words", []) if w.get("type") == "word"]
+            else: rec["scribe_error"] = f"{r.status_code} {r.text[:300]}"
+        except Exception as e: rec["scribe_error"] = repr(e)[:300]
+        log(rec["name"], "scribe:", rec.get("scribe", rec.get("scribe_error")))
 # check for sound effects (request: "tag": true): what does an AudioSet tagger (AST) hear in each clip?
 if req.get("tag"):
     try:
