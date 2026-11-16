@@ -48,7 +48,7 @@ const WALK = (() => { const d = V(HEAD.x - CAM0.x, 0, HEAD.z - CAM0.z).normalize
 const walkK = (f: number) => smooth(ramp(f, L43.from + 4, F.clink - 3)) * (1 - smooth(ramp(f, F.rise[0], F.rise[0] + 90)));
 const cam = (f: number): CamPose => {
   const wk = walkK(f), cam0 = CAM0.clone().addScaledVector(WALK, wk);
-  const base = aim(cam0, HEAD.clone().add(V(0, -0.2 - 0.12 * wk, 0)), 980);
+  const base = aim(cam0, HEAD.clone().add(V(0, -0.2 - 0.12 * wk, 0)), 980, 510 + 30 * wk);   // him a little left: the moon at x ~870
   // the join: she opens on E's last picture (him on the same spot, the moon where the lantern was: match.ts), holds a
   // beat, then glides to her place for the scene
   const down = smooth(ramp(f, S.from + 14, S.from + 74));
@@ -135,7 +135,7 @@ const herCup = (f: number, c: CamPose, his: THREE.Vector3) => {
   const rest = p.clone().addScaledVector(fwd, 0.46 - 0.04 * s).addScaledVector(right, 0.03).addScaledVector(up, -0.46 + 0.2 * inK + 0.09 * s);
   const cheers = smooth(ramp(f, SIP.out[0], SIP.out[1])) * (1 - smooth(ramp(f, SIP.back[0], SIP.back[1])));
   const bump = f >= F.clink && f < F.clink + 3 ? 0.01 : 0;
-  return { at: rest.lerp(his.clone().add(V(0.15, 0.01, 0.06)), cheers).add(V(0, bump, 0)), rot: [0.55 * s, Math.atan2(-fwd.x, -fwd.z), 0] as [number, number, number] };
+  return { at: rest.lerp(his.clone().add(V(0.16, 0.034, 0.06)), cheers).add(V(0, bump, 0)), rot: [0.55 * s, Math.atan2(-fwd.x, -fwd.z), 0] as [number, number, number] };
 };
 
 export const SEG: Segment = {
@@ -186,7 +186,9 @@ export const SEG: Segment = {
     });
     w.update();
     // the cup goes where his hand got to (his lean-back posture can leave the hand short of the target on the toast)
-    w.prop("wineBowl").put(w.actor(LI_RED).handWorld(0), { grip: "hilt", rot: [cp.tilt, 0, cp.roll ?? 0] });
+    // the bowl sits ON his hand (its foot a hand's radius along the bowl's own up), so the hand never shows through the foot
+    const bowlUp = V(0, 1, 0).applyEuler(new THREE.Euler(cp.tilt, 0, cp.roll ?? 0)).multiplyScalar(0.024);
+    w.prop("wineBowl").put(w.actor(LI_RED).handWorld(0).add(bowlUp), { grip: "hilt", rot: [cp.tilt, 0, cp.roll ?? 0] });
     const hc = herCup(f, camera, w.actor(LI_RED).handWorld(0));   // the cheers goes to his bowl, wherever his hand is
     if (hc) w.prop("wineBowl", "ji").put(hc.at, { rot: hc.rot });
     const off = f0 >= F.offClick;

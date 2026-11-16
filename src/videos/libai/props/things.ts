@@ -25,7 +25,7 @@ export const PC = {
   paper: "#efe4c6", silk: "#e8c860", silkLo: "#c49a3a", ink: "#2e2a33", lac: "#2e2a33", red: "#c8322c", redLo: "#a02a26",
   cloth: "#8a2e28", gold: "#e2b03a", pork: "#b8302a", porkHi: "#e2604a", fat: "#f2dcc8", ash: "#6a625e",
   shell: "#8a8278", shellLo: "#6a645e", pearl: "#ece4dc", oyster: "#d8c8b0", copper: "#b8823e", copperLo: "#8e6230",
-  celadon: "#9cbca4", celadonLo: "#7a9a84", wine: "#c89a4a",
+  celadon: "#9cbca4", celadonLo: "#7a9a84", wine: "#efe7d4",   // milky rice wine (Jay, 16 Nov: "more white color")
   flame: "#f6902a", flameHi: "#ffd866", flameLo: "#c9541c",
 } as const;
 
@@ -180,6 +180,7 @@ export const WINE_BOWL = { r: 0.075, h: 0.05 } as const;
 export const wineBowl = (K: Kit, g: THREE.Group) => {
   const P = new Part(K), cel = K.flat(PC.celadon, { rough: 0.25 });
   P.add(cel, turned([[0.03, 0], [0.032, 0.008], [0.06, 0.03], [WINE_BOWL.r, WINE_BOWL.h], [WINE_BOWL.r - 0.006, WINE_BOWL.h]], 28), 0.004);
+  P.add(cel, new THREE.CircleGeometry(0.031, 28).rotateX(Math.PI / 2).translate(0, 0.0005, 0), 0);   // its foot, closed (Jay, 16 Nov: the bottom was see-through)
   P.add(K.flat(PC.wine, { rough: 0.15 }), new THREE.CircleGeometry(WINE_BOWL.r - 0.012, 24).rotateX(-Math.PI / 2).translate(0, WINE_BOWL.h - 0.012, 0), 0);
   P.into(g, "wineBowl");
 };

@@ -38,7 +38,9 @@ export const MATCH_LAMP = proj(E_END, LAMP);
 
 // ---- F: the night (shots/segF.ts)
 export const STONE_AT = V(NX - 0.35, 0, -4.2);
-export const F_CAM0 = V(NX + 0.25, 1.25, -1.0);
+/** her place in F: 0.6 m left of where it was, so the moon sits inside the phone's frame (Jay, 16 Nov: "The moon is gonna
+ *  get cut out") */
+export const F_CAM0 = V(NX - 0.1, 1.25, -1.0);
 /** the moon's disc, exactly where the night set draws it (qin/sets/night.ts: the stand's eye + its direction x dist) */
 export const MOON = (() => {
   const m = NIGHT_SET.moon, az = (m.az * Math.PI) / 180, el = (m.el * Math.PI) / 180, e = NIGHT_STAND.cam.pos;

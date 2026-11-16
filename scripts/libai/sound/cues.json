@@ -447,27 +447,24 @@
    "gain": -18
   },
   {
-   "clip": "sfx_gate",
+   "clip": "sfx_gate_rumble",
    "at": [
     "D23",
     "end",
-    0.6
+    0.43
    ],
-   "len": 0.75,
-   "fade": 0.45,
-   "fade_out": 0.12,
-   "gain": -15,
-   "note": "the gate swings shut (beats.ts D.shut, 0.6 s): a rumble that grows (Jay, 16 Nov: loudest at the end and timed)"
+   "gain": -11,
+   "note": "the gate swings shut (beats.ts D.shut, 0.6 s): a deep grinding rumble that grows into the slam (synth/doom.py; Jay, 16 Nov: \"more doom, deep sounding\")"
   },
   {
-   "clip": "bundle_thud",
+   "clip": "sfx_gate_doom",
    "at": [
     "D23",
     "end",
-    1.17
+    1.18
    ],
-   "gain": -7,
-   "note": "the gate slams: on beats.ts D.shut[1], with the camera's jolt"
+   "gain": -6,
+   "note": "the gate slams: a deep boom with a hall tail, on beats.ts D.shut[1] with the camera's jolt (synth/doom.py)"
   },
   {
    "clip": "mus_hero_sting",
