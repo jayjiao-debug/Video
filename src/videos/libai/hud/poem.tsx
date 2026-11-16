@@ -6,8 +6,8 @@
 //   C20  云想衣裳花想容 / 春风拂槛露华浓      《清平调》 (he is writing it for the emperor)
 //   D25  天生我材必有用 / 千金散尽还复来      《将进酒》
 //   E31  三百六十日，日日醉如泥              《赠内》
-//   F41  花间一壶酒 / 独酌无相亲 ; 举杯邀明月 / 对影成三人   《月下独酌》 (the quiet scene: written softly, no stroke,
-//        no pop: the characters only ink in)
+//   F41  花间一壶酒 / 独酌无相亲 ; 举杯邀明月 / 对影成三人   《月下独酌》 (the same brushwork as the others since 16 Nov;
+//        the `soft` style, ink-in only, is kept in the code but unused)
 // Film.tsx hides the subtitle while a poem shows (poemAt); hud/index.ts registers its box for the overlay check.
 import React from "react";
 import { AbsoluteFill } from "remotion";
@@ -22,8 +22,9 @@ const POEMS: Poem[] = [
   { rows: [[20, 0], [20, 1]], title: "《清平调》" },
   { rows: [[25, 1], [25, 2]], title: "《将进酒》" },
   { rows: [[31, 2]], title: "《赠内》" },
-  { rows: [[41, 0], [41, 1]], title: "《月下独酌》", soft: true },
-  { rows: [[41, 2], [41, 3]], title: "《月下独酌》", soft: true },
+  // (no longer soft: Jay, 16 Nov: "This poem here make them the same like the ones in the prevoius, keep consistancy")
+  { rows: [[41, 0], [41, 1]], title: "《月下独酌》" },
+  { rows: [[41, 2], [41, 3]], title: "《月下独酌》" },
 ];
 const PUNCT = /[，。！？、；：,.!?…]/, GAP = "\u3000";
 type Row = { chars: string[]; at: number[]; from: number; end: number };

@@ -212,7 +212,7 @@ export function buildRoom(K: Kit) {
 
   // posts at the corners, flanking the big window, along the walls; the window and door frames
   const post = (x: number, z: number) => B.add(mTimber, boxM(x - 0.08, x + 0.08, 0, H - 0.2, z - 0.08, z + 0.08));
-  for (const [x, z] of [[F.x0 + 0.06, F.z0 + 0.06], [F.x1 - 0.06, F.z0 + 0.06], [F.x0 + 0.06, F.z1 - 0.06], [F.x1 - 0.06, F.z1 - 0.06], [Wn.x0 - 0.1, F.z0 + 0.06], [Wn.x1 + 0.1, F.z0 + 0.06], [F.x0 + 0.06, 0.6]] as [number, number][]) post(x, z);
+  for (const [x, z] of [[F.x0 + 0.06, F.z0 + 0.06], [F.x1 - 0.06, F.z0 + 0.06], [F.x0 + 0.06, F.z1 - 0.06], [F.x1 - 0.06, F.z1 - 0.06], [Wn.x0 - 0.22, F.z0 + 0.06], [Wn.x1 + 0.22, F.z0 + 0.06], [F.x0 + 0.06, 0.6]] as [number, number][]) post(x, z);
   const frame = (x0: number, x1: number, y0: number, y1: number, z: number, d: number, alongZ: boolean, sill: boolean) => {
     const bx = (a0: number, a1: number, b0: number, b1: number) => B.add(mTimber, alongZ ? boxM(z, z + d, b0, b1, a0, a1) : boxM(a0, a1, b0, b1, z, z + d));
     bx(x0 - 0.08, x1 + 0.08, y1, y1 + 0.09); bx(x0 - 0.08, x0, y0, y1); bx(x1, x1 + 0.08, y0, y1);

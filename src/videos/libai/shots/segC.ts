@@ -141,6 +141,11 @@ export const SEG: Segment = {
     const r = w.actor(LI), writing = f < L21.from - 6;
     if (writing) w.prop("brush").put(r.handWorld(0), { grip: "hilt", rot: brushHand(f).rot });
     else w.prop("brush").put(BRUSH_REST.clone().add(V(0, 0.012, 0)), { rot: BRUSH_FLAT });
+    // his face still wet from the water they threw on him (her C19: 您脸还湿着呢): a few drops run off his chin, fewer as
+    // he writes, gone by the second line of the poem (Jay, 16 Nov). The face is drawn toward the lens, so they run down
+    // the side of the head that faces her
+    const wet = 1 - ramp(f, L20.from, L20.from + 40);
+    if (wet > 0) w.prop("drips").put(r.headWorld(), { rot: yawTo(r.headWorld(), camera.pos), t: f / FPS, open: wet });
     if (f >= Cb.boot - 6) w.prop("boot").put(w.actor(GAO).handWorld(1), { grip: "hilt", rot: yawTo(V(), V(1, 0, 0)) });
     return { camera, post: W.post, overlays: C.whipSmear(W.smear, 1) ?? transitionAt(f)?.node, slate: "C 沉香亭" };
   },

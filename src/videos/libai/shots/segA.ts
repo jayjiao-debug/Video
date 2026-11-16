@@ -20,6 +20,7 @@ import type { World } from "../world";
 import { V, rel, lid, says, speak, accent, heads, headPop, at, ky } from "./common";
 import { aim, ramp, held, mixCam, tavern, LI_TABLE, DRINKER_PEOPLE, type St } from "./lb";
 import { whisperLean } from "../whisper";
+import { DRINK } from "../drunk";
 import { KEEPER } from "../people";
 
 const S = SEGMENTS[0], A = BEAT.A, T = LI_TABLE;
@@ -46,12 +47,21 @@ const SX_WIDE = 505, SX_CLOSE = 372;
 
 /** the jar: on the table in front of him (hugged), lifted to the lens on A04, back down, up to his mouth on the card */
 const JAR_TABLE = T.on(0, 0.1).add(V(0, 0.17 * 0.72, 0));
-const JAR_UP = rel(T.at, T.facing, -0.12, 0.72, 0.42), JAR_MOUTH = rel(T.at, T.facing, -0.24, 0.86, 0.34);
+const JAR_UP = rel(T.at, T.facing, -0.12, 0.72, 0.42);
+/** THE DRINK on card 1 (Jay, 16 Nov: "Can we do a drinking animation here"): he swings the jar up to his mouth, its
+ *  mouth at his lips and its bottom up to the left, tips his head back, three big gulps (the jar bobs, his head nods
+ *  with each), then down with a satisfied ahh. DRINK (drunk.ts): lift, drink, lower (frames into the card) */
+const GULP = DRINK.gulp, DRINK_A = -1.95;
+const LIPS = HEAD.clone().add(V(0.12, -0.15, 0.3));
+const drinkK = (f: number) => { const d = f - A.card[0]; return d < DRINK.up[0] || d > DRINK.down[1] ? 0 : ramp(d, DRINK.up[0], DRINK.up[1]) * (1 - ramp(d, DRINK.down[0], DRINK.down[1])); };
+const gulp = (f: number) => { const d = f - A.card[0] - DRINK.up[1]; return d < 0 || d >= DRINK.gulps * GULP ? 0 : Math.max(0, Math.sin((d / GULP) * Math.PI * 2)); };
 const jarAt = (f: number) => {
   const up = ramp(f, L4.from - 8, L4.from + 6) * (1 - ramp(f, L5.from + 4, L5.from + 18));
-  const drink = ramp(f, A.card[0] + 6, A.card[0] + 22) * (1 - ramp(f, A.card[1] - 22, A.card[1] - 8));
+  const k = drinkK(f), e = k * k * (3 - 2 * k), a = DRINK_A * e + 0.07 * gulp(f) * e;
+  // the jar's mouth (0.34 up its axis) on his lips: origin = lips - the axis turned by a about z
+  const at = LIPS.clone().sub(V(-0.34 * Math.sin(a), 0.34 * Math.cos(a), 0)).add(V(0, 0.012 * gulp(f), 0));
   const p = JAR_TABLE.clone().lerp(JAR_UP, up);
-  return { p: p.lerp(JAR_MOUTH, drink), tilt: -0.7 * drink, held: up > 0 || drink > 0 || f < A.wake + 10 };
+  return { p: e > 0 ? p.lerp(at, e).add(V(0, 0.05 * Math.sin(Math.PI * Math.min(1, e * 1.6)), 0)) : p, rot: (e > 0 ? [0, 0, a] : [0, 0, 0]) as [number, number, number], drink: e, held: up > 0 || k > 0 || f < A.wake + 10 };
 };
 
 /** WE WALK IN (Jay, 15 Nov: "intro can be us going into the tavern"): REC comes on at the tavern's door curtain (hud/curtain.tsx;
@@ -75,9 +85,9 @@ const cam = (f: number): CamPose => {
 const li = (w: World, f: number): St => {
   const t = f / FPS, asleep = f < A.wake;
   const wakeK = ramp(f, A.wake - 2, A.wake + 10);
-  const expr = at<NonNullable<St["expr"]>>(f, [[0, "sleep"], [A.wake, "dazed"], [A.wake + 22, "smile"], [A.lean, "happy"], [lineId("A03").from + 8, "shock"], [lineId("A03").to - 10, "grin"], [L4.from, "laugh"], [L5.from + 10, "smile"], [A.proud, "smug"], [lineId("A07").from, "happy"], [A.shrug, "grin"], [A.card[0], "happy"], [A.card[0] + 20, "smile_closed"]]);
+  const expr = at<NonNullable<St["expr"]>>(f, [[0, "sleep"], [A.wake, "dazed"], [A.wake + 22, "smile"], [A.lean, "happy"], [lineId("A03").from + 8, "shock"], [lineId("A03").to - 10, "grin"], [L4.from, "laugh"], [L5.from + 10, "smile"], [A.proud, "smug"], [lineId("A07").from, "happy"], [A.shrug, "grin"], [A.card[0], "happy"], [A.card[0] + DRINK.up[1] - 4, "smile_closed"], [A.card[0] + DRINK.down[0] + 4, "laugh"], [A.card[0] + DRINK.down[1] + 4, "happy"]]);
   const J = jarAt(f);
-  const jar = held("jar", J.p, { rot: [J.tilt, 0, J.tilt * 0.6] });
+  const jar = held("jar", J.p, { rot: J.rot });
   // the hands: hugging the jar / holding it up; A08 counting (right hand up), 一日 shrug (both out)
   let hands: St["hands"] = J.held ? jar.hands : [null, null];
   if (f >= L8.from && f < A.shrug) hands = [rel(T.at, T.facing, -0.26, 0.88, 0.3), jar.hands[1]];
@@ -87,13 +97,13 @@ const li = (w: World, f: number): St => {
     asleep ? { dy: -0.45 } : undefined, mouth.head,
     f >= A.wake ? accent("jolt", f, A.wake) : undefined, accent("lean", f, A.lean, { dur: 0.9, dir: 1 }),
     accent("laugh", f, L4.from, { dur: 0.8 }), headPop(f, A.proud), f >= A.proud && f < lineId("A07").from ? { tilt: 8 } : undefined,
-    f >= A.shrug && f < L8.to + 18 ? { tilt: -6 } : undefined, f >= A.knock[0] && f < A.wake ? accent("jolt", f, A.knock[1], { amp: 0.4 }) : undefined,
+    f >= A.shrug && f < L8.to + 18 ? { tilt: -6 } : undefined, J.drink ? { tilt: -9 * J.drink, dy: -0.012 * gulp(f) } : undefined, f >= A.knock[0] && f < A.wake ? accent("jolt", f, A.knock[1], { amp: 0.4 }) : undefined,
   );
   return {
     at: T.at.clone(), facing: T.facing, seat: T.seat, pose: { kind: "sit", t }, hands, expr, visible: true,
     // asleep he slumps forward over the jar on the table (the posture patch), then sits back up into his own lean
-    lean: { pitch: 26 * (1 - wakeK) - 5 * wakeK, roll: 3 },
-    lookDown: asleep ? 38 : 38 * (1 - wakeK) + (J.tilt ? 0 : 0), blink: asleep ? 1 : mouth.blink ?? lid(t, 2, [A.wake / FPS]),
+    lean: { pitch: 26 * (1 - wakeK) - 5 * wakeK - 7 * J.drink, roll: 3 },
+    lookDown: asleep ? 38 : 38 * (1 - wakeK) - 14 * J.drink, blink: asleep ? 1 : mouth.blink ?? lid(t, 2, [A.wake / FPS]),
     mouth: mouth.mouth, head, gaze: 0, armFront: J.held ? [true, true] : undefined,
   };
 };
@@ -115,7 +125,7 @@ export const SEG: Segment = {
     const jump = A.knock.some((k) => f >= k && f < k + 2) ? 0.012 : 0;
     w.prop("desk").put(T.at0.clone().add(V(0, jump, 0)), { rot: T.rot });
     const J = jarAt(f);
-    held("jar", J.p.clone().add(V(0, jump, 0)), { rot: [J.tilt, 0, J.tilt * 0.6] }).put(w);
+    held("jar", J.p.clone().add(V(0, jump, 0)), { rot: J.rot }).put(w);
     return { camera, post: W.post, overlays: C.whipSmear(W.smear, 1) ?? transitionAt(f)?.node, slate: "A tavern morning" };
   },
 };

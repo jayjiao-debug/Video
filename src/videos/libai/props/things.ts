@@ -643,13 +643,13 @@ export const splash = (K: Kit, g: THREE.Group): Hook => {
     m.opacity = 0.85 * (1 - k * 0.6); hi.opacity = 0.9 * (1 - k * 0.6);
   };
 };
-/** a black court boot (靴): a tall black shaft 0.3 m on a sole 0.26 long toward +z. Origin = the shaft's top; grip
- *  hilt (the origin: a hand holds it by the top, the boot hangs down -y) */
+/** a black court boot (靴): a tall black shaft 0.3 m on a rounded foot 0.21 long toward +z. Origin = the shaft's top;
+ *  grip hilt (the origin: a hand holds it by the top, the boot hangs down -y). (Jay, 16 Nov: "The boot still have some
+ *  blocks underneath it, please remove": the flat white sole box under the foot is gone; the foot is one round shape.) */
 export const boot = (K: Kit, g: THREE.Group) => {
-  const P = new Part(K), b = K.flat("#2e2a30", { rough: 0.5 }), sole = K.flat("#ece4d4", { rough: 0.8 });
+  const P = new Part(K), b = K.flat("#2e2a30", { rough: 0.5 });
   P.add(b, cylY(0.055, 0.3, -0.3, 14, 0.06), 0.004);
-  P.add(b, ball(V(0, -0.28, 0.08), 0.065, [0.9, 0.55, 1.6], 14), 0.004);
-  P.add(sole, box(0.1, 0.02, 0.26, 0, -0.33, 0.07), 0.003);
+  P.add(b, ball(V(0, -0.285, 0.07), 0.066, [0.9, 0.6, 1.6], 14), 0.004);
   P.into(g, "boot");
 };
 /** the little chest of gold (赐金): a red lacquer box 0.32 x 0.2, 0.16 high, gold studs; put({ open: 0..1 }) = its lid
@@ -658,12 +658,75 @@ export const CHEST = { w: 0.32, d: 0.2, h: 0.16, hand: 0.175 } as const;
 export const chest = (K: Kit, g: THREE.Group): Hook => {
   const P = new Part(K), lac = K.flat(PC.redLo, { rough: 0.35 }), gold = K.flat(PC.gold, { rough: 0.3 });
   P.add(lac, box(CHEST.w, CHEST.h - 0.03, CHEST.d, 0, (CHEST.h - 0.03) / 2, 0), 0.005);
-  for (let i = 0; i < 4; i++) P.add(gold, ingot(V(-0.09 + i * 0.06, CHEST.h - 0.025, (i % 2) * 0.03 - 0.015), 0.9), 0.003);
-  for (let i = 0; i < 3; i++) P.add(gold, ingot(V(-0.06 + i * 0.06, CHEST.h - 0.005, 0.0), 0.9), 0.003);
   P.into(g, "chest");
+  // the gold heaped inside rises above the rim, so with the lid shut it came through it (Jay, 16 Nov: "盒子上面穿模了"):
+  // it is only there while the lid is open (shut, nobody can see inside)
+  const heap = new THREE.Group(); g.add(heap);
+  const G = new Part(K);
+  for (let i = 0; i < 4; i++) G.add(gold, ingot(V(-0.09 + i * 0.06, CHEST.h - 0.025, (i % 2) * 0.03 - 0.015), 0.9), 0.003);
+  for (let i = 0; i < 3; i++) G.add(gold, ingot(V(-0.06 + i * 0.06, CHEST.h - 0.005, 0.0), 0.9), 0.003);
+  G.into(heap, "chest.gold");
   const lid = new THREE.Group(); lid.position.set(0, CHEST.h - 0.03, -CHEST.d / 2); g.add(lid);
   new Part(K).add(lac, box(CHEST.w + 0.01, 0.035, CHEST.d + 0.01, 0, 0.0175, CHEST.d / 2), 0.005).add(gold, box(0.05, 0.03, 0.01, 0, 0.0, CHEST.d + 0.008), 0.002).into(lid, "chest.lid");
-  return (o) => { lid.rotation.x = -(105 * Math.PI / 180) * clamp01(o.open ?? 0); };
+  return (o) => { const k = clamp01(o.open ?? 0); lid.rotation.x = -(105 * Math.PI / 180) * k; heap.visible = k > 0.12; };
+};
+/** THIN STEAM over a steamer basket (B, Jay 16 Nov: "add some thin steam coming from the buns behind him"): a few faint
+ *  pale wisps rising about 0.4 m and spreading as they go, each on its own clock. put({ t: seconds, open: 0..1 strength }).
+ *  Origin = the middle of the basket's top. Not a solid (glow-named). */
+export const steam = (K: Kit, g: THREE.Group): Hook => {
+  void K;
+  const tex = paint(32, 64, (c, w, h) => { const gr = c.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 2); gr.addColorStop(0, "rgba(255,250,240,0.8)"); gr.addColorStop(0.55, "rgba(255,250,240,0.28)"); gr.addColorStop(1, "rgba(255,250,240,0)"); c.fillStyle = gr; c.fillRect(0, 0, w, h); });
+  const wisps: THREE.Sprite[] = [];
+  for (let i = 0; i < 6; i++) { const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, opacity: 0 })); s.layers.set(NOINK); s.name = "steam.glow"; g.add(s); wisps.push(s); }
+  return (o) => {
+    const k = clamp01(o.open ?? 1), t = o.t ?? 0;
+    wisps.forEach((s, i) => {
+      const life = 2.4 + 0.5 * hash(i + 7), u = (((t + i * (life / wisps.length) + hash(i) * 0.4) / life) % 1 + 1) % 1;
+      const sway = 0.035 * Math.sin(TAU * (u * 0.8 + hash(i + 3))) * u;
+      s.visible = k > 0.01;
+      s.position.set((hash(i + 11) - 0.5) * 0.14 + sway, 0.02 + u * 0.42, (hash(i + 13) - 0.5) * 0.1);
+      s.scale.set(0.05 + 0.1 * u, 0.12 + 0.12 * u, 1);
+      (s.material as THREE.SpriteMaterial).opacity = k * 0.32 * Math.sin(Math.PI * Math.min(1, u * 1.15));
+    });
+  };
+};
+/** WATER RUNNING OFF HIS WET FACE (C, Jay 16 Nov: "add some water dripping off his face, not too much, just to match what
+ *  the interviewer is saying"): a few small drops that run down the lower face and fall off the chin, one at a time.
+ *  put(head centre, { rot: the head's yaw, t: seconds, open: 0..1 how wet }). Origin = the head's centre, +z toward the lens (the rig draws the face that way; its head is a sphere of
+ *  headR x 1.02 in depth and its drawing is wider, so the drops ride at 1.3).
+ *  Not a solid (spill-named). */
+/** r: the rig's head radius (cast.ts headR: 110 design units x 1.45/780 m) */
+export const DRIP = { r: 0.205 } as const;
+export const drips = (K: Kit, g: THREE.Group): Hook => {
+  const water = K.flat("#8fd3ff", { rough: 0.15 }), shine = new THREE.MeshBasicMaterial({ color: "#ffffff" });
+  const drops: { g: THREE.Group; a: number }[] = [];
+  // where each drop starts on the face (angle round the face from the front, + = to his left)
+  [-0.7, 0.45, -0.25, 0.75].forEach((a, i) => {
+    const dg = new THREE.Group(); g.add(dg);
+    new Part(K).add(water, ball(V(0, 0, 0), 0.02, [0.85, 1.25, 0.85], 10), 0.0035).into(dg, `drips.spill${i}`);
+    const hi = new THREE.Mesh(new THREE.SphereGeometry(0.0055, 6, 4).translate(-0.006, 0.008, 0.013), shine); hi.layers.set(NOINK); hi.name = `drips.spill${i}hi`; dg.add(hi);
+    drops.push({ g: dg, a });
+  });
+  return (o) => {
+    const k = clamp01(o.open ?? 1), t = o.t ?? 0, R = DRIP.r;
+    drops.forEach((d, i) => {
+      // each drop: 1.1 s running down the face from the cheek to the chin's edge, 0.45 s falling, then a pause
+      const cyc = 2.2 + 0.4 * i, u = (((t + i * 0.83) / cyc) % 1 + 1) % 1, run = 1.1 / cyc, fall = 0.45 / cyc;
+      const on = k > 0.05 && (i < Math.ceil(k * drops.length)) && u < run + fall;
+      d.g.visible = on;
+      if (!on) return;
+      if (u < run) {
+        const v = u / run, el = -0.15 - 0.75 * v * v;                          // down the face: from below the eyes to the chin
+        const a = d.a * (1 - 0.45 * v), c = Math.cos(el);
+        d.g.position.set(Math.sin(a) * c * R * 1.3, Math.sin(el) * R * 1.3, Math.cos(a) * c * R * 1.1);
+        d.g.scale.setScalar(0.8 + 0.3 * v);
+      } else {
+        const v = (u - run) / fall, a = d.a * 0.55, el = -0.9, c = Math.cos(el);
+        d.g.position.set(Math.sin(a) * c * R * 1.32, Math.sin(el) * R * 1.32 - 0.55 * v * v, Math.cos(a) * c * R * 1.12 + 0.02 * v);
+        d.g.scale.set(0.95, 1.1 + 0.4 * v, 0.95);
+      }
+    });
+  };
 };
 /** a gold ingot (元宝-ish lump) geometry: 0.05 long along x */
 function ingot(at: THREE.Vector3, s = 1) {

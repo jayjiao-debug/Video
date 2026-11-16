@@ -3,7 +3,7 @@
 // moves everything after the freeze later by its length, as Film.tsx does.
 import { FPS, FREEZE_AT_WORLD, FREEZE_N, seg } from "./story";
 import { BEAT, TITLE_SPAN, SIDE_BANNERS, TRANSITIONS } from "./beats";
-import { HICCUP_FRAMES } from "./drunk";
+import { HICCUP_FRAMES, DRINK_GULPS } from "./drunk";
 import { WHISPERS } from "./whisper";
 import { FX_SOUNDS } from "./hud/fx";
 import { POEM_SOUNDS } from "./hud/poem";
@@ -23,6 +23,7 @@ export const soundEvents = () => ({
     [TITLE_SPAN[0] + 3, "sfx_rustle", -17, "the wine flag drops and swings"],
     [TITLE_SPAN[0] + 31, "sfx_cup_tok", -16, "the cup is set down on the flag"],
     ...SIDE_BANNERS.filter((b) => b.who !== "he").map((b) => [b.span[0], "sfx_rustle", -18, `${b.who}'s banner`]),
+    ...DRINK_GULPS.map((f) => [f + 1, "sfx_gulp", -17, "李白 gulps from the jar (card 1)"]),
     ...HICCUP_FRAMES.filter((f) => f < seg("F").from).map((f) => [f, "sfx_hiccup", -20, "李白 hiccups"]),
     // the clock races: a soft whoosh (the two taps of the old clip read as footsteps: Jay, 15 Nov)
     ...TRANSITIONS.filter((t) => t.kind === "clock").map((t) => [t.from, "sfx_whoosh", -20, `clock race ${t.scenes!.join("->")}`]),

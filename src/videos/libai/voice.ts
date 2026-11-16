@@ -165,7 +165,7 @@ export const SEGMENT_RAW: [string, number, number, number, number][] = [
 export const CARD_RAW: [number, string, number, number, string, string][] = [
   [9, "A09", 833, 922, "旧唐书：李白嗜酒，天天和酒友醉在酒馆里。", "Old Book of Tang: Li Bai loved wine and was drunk in the taverns every day."],
   [18, "B18", 1617, 1706, "新唐书：召他进宫时已醉，左右用水泼他的脸。", "New Book of Tang: when he was summoned he was already drunk; attendants splashed water on his face."],
-  [22, "C22", 2362, 2457, "新唐书：高力士记仇，皇上想封他官，杨妃总拦。", "New Book of Tang: Gao Lishi held a grudge. Whenever the emperor wanted to give Li Bai a post, Consort Yang blocked it."],
+  [22, "C22", 2362, 2457, "新唐书：高力士记仇，皇上想封李白官，杨妃总拦。", "New Book of Tang: Gao Lishi held a grudge. Whenever the emperor wanted to give Li Bai a post, Consort Yang blocked it."],
   [44, "F44", 5148, 5249, "这年春天他离开长安。当官的梦，再没实现。", "He left Chang'an that spring. His dream of office never came true."],
   [44, "F44", 5250, 5357, "762年新皇帝下诏请他做官，诏书到时他已去世。", "In 762 a new emperor sent for him with a post. When the edict arrived, he had already died."],
 ];

@@ -52,6 +52,10 @@ export const drunkLayer = (f: number): { pitch: number; roll: number; head: Retu
 };
 /** his hiccups' frames (sound_events.ts gives each a small hic) */
 export const HICCUP_FRAMES = HICCUPS;
+/** THE DRINK on card 1 (shots/segA.ts; Jay, 16 Nov: "Can we do a drinking animation here"): frames into the card for the
+ *  lift and the lowering, three gulps of GULP frames between them; DRINK_GULPS: the picture frame each gulp starts (its sound) */
+export const DRINK = { up: [2, 14], down: [62, 76], gulp: 15, gulps: 3 } as const;
+export const DRINK_GULPS = Array.from({ length: DRINK.gulps }, (_, i) => BEAT.A.card[0] + DRINK.up[1] + i * DRINK.gulp);
 
 type Inner = { _update: (cam: unknown) => void };
 type Lean = { pitch?: number; roll?: number };

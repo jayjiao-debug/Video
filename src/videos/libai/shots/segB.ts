@@ -30,6 +30,8 @@ const BENCH = V(MX + 2.15, 0, 4.4), BROT = -Math.PI / 2;
 const SEAT = benchSeat(BENCH.clone().setY(-FOOT_LIFT.bench), BROT, 0);
 const TA = { top: SEAT.seat.top, floor: 0, back: 0.03, facing: SEAT.facing };
 const FLAG = V(MX + 2.3, 0, 3.15);
+/** the tops of the bun stall's steamer stacks (the market set's; measured by a raycast on picture 1100) */
+const STEAMERS = [V(MX + 3.04, 1.135, 3.75), V(MX + 3.04, 1.135, 4.76)];
 const HEAD = rel(SEAT.at, SEAT.facing, 0, 1.12, 0);
 /** the messenger: runs in from down the street to his left side, facing him */
 const HUAN_END = rel(SEAT.at, SEAT.facing, -0.9, 0, 0.4);
@@ -160,6 +162,8 @@ export const SEG: Segment = {
     w.prop("flag").put(FLAG);
     w.prop("jar", "door0").put(V(MX + 2.3, 0, 5.35), { scale: 1.1 });
     w.prop("jar", "door1").put(V(MX + 2.55, 0, 5.75), { scale: 1.0, rot: 0.6 });
+    // thin steam off the bun stall's two steamer stacks behind him (Jay, 16 Nov), each on its own clock
+    STEAMERS.forEach((p, i) => w.prop("steam", `s${i}`).put(p, { t: f / FPS + i * 1.3, open: 1 }));
     const t = f / FPS;
     setSeat(w.actor(LI), SEAT.seat, SEAT.facing);
     w.actor(LI).set(li(f));

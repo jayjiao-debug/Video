@@ -6,7 +6,7 @@
 //               drinks (card 1's swig, B15's cup). It comes back at the night's last cup, the one she shares with him
 //               (F43): it rolls up to 300 as it swings in (the whole evening), and his gulp makes it 301, 达标 (Jay, 15 Nov:
 //               "it should disappear then come back again when he takes that sip with the interviewer")
-//   WaitBar     等皇上叫…… a loading bar after 「所以我在这儿等」 (B15), crawling; the eunuch's 李翰林！ fills it
+//   WaitBar     等皇上叫…… a loading bar after 「所以我在这儿等」 (B15): races to 90% and sticks; the eunuch's 李翰林！ glides it to the end
 //   SoberStamp  the bucket of water lands: 醒酒 ✓ (his card's 今日目标, paid off)
 //   GrudgeMeter 高力士 glares into the lens: 记仇 +1, a little meter over him
 //   MoonOS      记者OS after 「哟，月亮？」: he takes her lens for the moon
@@ -176,13 +176,17 @@ const MoonOS: React.FC<{ f: number }> = ({ f }) => {
 
 // ---------------------------------------------------------------------------------------------------- the wait bar
 const WB = { x: 120, y: 1170, w: 560, h: 30 };
+const smooth = (x: number) => { const u = clamp01(x); return u * u * (3 - 2 * u); };
 const WaitBar: React.FC<{ f: number }> = ({ f }) => {
   const L = life(f, WAIT[0], WAIT[1], 6, 8);
   if (!L) return null;
-  const t = L.t, full = f >= WAIT_FULL, crawl = 0.03 * clamp01(t / 20), k = full ? easeOut(clamp01((f - WAIT_FULL + 1) / 5)) : crawl;
-  const bx = barBoxes(WB.w, WB.h, Math.max(crawl, k)), leave = easeIn(L.leave, 2);
+  // (Jay, 16 Nov: "fill up quickly then jump to the end of the bar, smooth animation") it races to 90% in about half a
+  // second, then sticks just short of the end (the wait); the eunuch's call glides it the rest of the way in 10 frames
+  const t = L.t, full = f >= WAIT_FULL, crawl = 0.9 * easeOut(clamp01(t / 16), 2) + 0.07 * clamp01((t - 16) / Math.max(1, WAIT_FULL - WAIT[0] - 16));
+  const k = full ? crawl + (1 - crawl) * smooth((f - WAIT_FULL + 1) / 10) : crawl;
+  const bx = barBoxes(WB.w, WB.h, k), leave = easeIn(L.leave, 2);
   const op = clamp01((t + 1) / 4) * (1 - leave), dy = 20 * (1 - easeOut(clamp01((t + 1) / 6))) + 40 * leave;
-  const pct = full ? (k >= 1 ? 100 : Math.round(3 + 97 * k)) : Math.max(1, Math.round(crawl * 100));
+  const pct = k >= 1 ? 100 : Math.min(99, Math.max(1, Math.round(k * 100)));
   const label = full ? (EN ? "He's calling!" : "叫了！") : (EN ? "Waiting for the emperor…" : "等皇上叫……");
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{ position: "absolute", left: 0, top: 0, opacity: op }}>

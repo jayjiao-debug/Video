@@ -45,7 +45,8 @@ export type PropName =
   | "cleaver" | "block" | "spine" | "coin" | "bone" | "stove" | "grill" | "wineBowl" | "stool" | "chopsticks" | "porkPot"
   | "ladder" | "lantern" | "bench" | "lychee" | "lycheeBunch" | "shell" | "rattanBed" | "scroll" | "desk" | "cushion"
   | "brush" | "inkstone" | "letter" | "trunk" | "robes" | "plough" | "boat" | "fire" | "oyster" | "stick" | "dog" | "horse"
-  | "jar" | "basin" | "splash" | "boot" | "chest" | "goldPile" | "gate" | "blossomTree" | "peony" | "flag" | "turtle" | "stone";
+  | "jar" | "basin" | "splash" | "boot" | "chest" | "goldPile" | "gate" | "blossomTree" | "peony" | "flag" | "turtle" | "stone"
+  | "steam" | "drips";
 /** what each prop is, where its origin is and which way its axes point (sizes at the film's scale) */
 export const PROP_INFO = {
   cleaver: "the butcher's cleaver (A): a broad steel blade 0.20 x 0.10 with its edge toward +x, a wooden handle 0.12 m along -y. Origin = the middle of the grip; +y = toward the blade's far end. Grip hilt (the origin)",
@@ -87,6 +88,8 @@ Object.assign(PROP_INFO, {
   basin: "a wooden basin of water r 0.2, 0.12 high; put({ open }) tips it forward (+z). Origin = under its middle; grip pair (x +-0.205, y 0.08)",
   splash: "a burst of water blobs flying toward +z; put({ open: 0..1 }) = its progress. Not solid (.spill)",
   boot: "a black court boot: shaft down -y from the origin (its top), foot toward +z. Grip hilt (the origin)",
+  steam: "thin steam over a steamer basket: faint wisps rising 0.4 m; put({ t, open: strength }). Origin = the basket top's middle. Not solid (.glow)",
+  drips: "water running down a wet face and dripping off the chin; put(head centre, { rot: head yaw, t, open: how wet }). Not solid (.spill)",
   chest: "the little red chest of gold 0.32 x 0.2, 0.16 high; put({ open }) lifts the lid. Origin = under its middle; grip pair (x +-0.175, y 0.08)",
   goldPile: "gold ingots and coins heaped on a table top, r 0.2; put({ open: 0..1 }) = how much is left. Origin = the table top",
   gate: "the palace gate: two red studded doors across a 2.7 m opening, 3.0 high, on a dark frame; put({ open }) swings them away (-z). Origin = the floor under the opening's middle; faces +z",
@@ -274,7 +277,7 @@ const BUILD: Record<PropName, Builder> = {
   stick: T.stick,
   dog: (K, g) => { const hk = dog(K, g); return (o, gg) => hk({ pose: o.pose, t: o.t, lookAt: o.lookAt, from: o.from, k: o.k } as DogO, gg); },
   horse: (K, g) => { const hk = horse(K, g, COATS.horse); return (o, gg) => hk({ t: o.t, pose: o.pose, rider: o.rider, amount: o.amount } as HorseO, gg); },
-  jar: T.jar, basin: T.basin, splash: T.splash, boot: T.boot, chest: T.chest, goldPile: T.goldPile, gate: T.gate, blossomTree: T.blossomTree, peony: T.peony, flag: T.flag, turtle: T.turtle, stone: T.stone,
+  jar: T.jar, basin: T.basin, splash: T.splash, boot: T.boot, chest: T.chest, goldPile: T.goldPile, gate: T.gate, blossomTree: T.blossomTree, peony: T.peony, flag: T.flag, turtle: T.turtle, stone: T.stone, steam: T.steam, drips: T.drips,
 };
 const _g = V();
 export function buildProps(M: Mats): Props {

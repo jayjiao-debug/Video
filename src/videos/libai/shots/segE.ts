@@ -30,13 +30,20 @@ const HEAD = rel(T.at, T.facing, 0, 0.98, 0);
  *             moon (the join) */
 /** CAM0: where she ends, looking up at the last lamp (the match cut to F's moon was measured from here: do not move
  *  it). CAM_HIM: where she stands for the scene, in front of him; SX puts his head on the centre line (head probe). */
-const CAM0 = V(T.at.x - 0.6, 1.38, T.at.z + 2.3), CAM_HIM = V(T.at.x - 0.2, 1.38, T.at.z + 2.3), SX = 500, PAN_YOU = 9;
-/** the friend sits at his left, on a cushion of his own */
-const YOU_SEAT = { ...T, at: rel(T.at, T.facing, 0.8, 0, -0.05), seat: { ...T.seat, top: rel(T.seat.top, T.facing, 0.8, 0, -0.05) }, facing: T.facing - 0.7 } as typeof T;
+const CAM0 = V(T.at.x - 0.6, 1.38, T.at.z + 2.3), CAM_HIM = V(T.at.x - 0.2, 1.38, T.at.z + 2.3), SX = 500;
+/** the friend sits at his left, on a cushion of his own: a step in front of the table behind them (Jay, 16 Nov: "the
+ *  person is clipping through the table": beside the end of his table now, clear of the corner of the one behind) */
+const YOU_OFF = [0.97, 0.52] as const;
+const YOU_SEAT = { ...T, at: rel(T.at, T.facing, YOU_OFF[0], 0, YOU_OFF[1]), seat: { ...T.seat, top: rel(T.seat.top, T.facing, YOU_OFF[0], 0, YOU_OFF[1]) }, facing: T.facing - 0.7 } as typeof T;
 const DOOR = ROOM.door;
-const YOU_UP = YOU_SEAT.at.clone().add(V(0.25, 0, 0.45)).setY(0);
-const YOU_OUT = [YOU_UP, V(RX + 2.2, 0, 0.6), DOOR, DOOR.clone().add(V(1.0, 0, 0))];
-const youGo = L33.to + 6, YOU_RISE = 9;
+/** he gets up while he says it (Jay, 16 Nov: "he also just vanishes at the end, make him walk"): off his cushion on his
+ *  knees, to his feet, and out on foot past the camera's right; she pans with him as he goes. END: the beat after his
+ *  line that the lamps and her last tilt are timed from (unchanged: the tilt lands on F's moon) */
+const youGo = capWord("E33", "我").from - 4, END = L33.to + 6;
+/** he walks across to the right wall and along it to the door, slow (it is evening) */
+const YOU_LEAVE = { go: youGo, up: [0.22, -0.12] as [number, number], via: [V(RX + 2.6, 0, -0.5)], speed: 1.1 };
+/** she follows him to the right wall, then holds as he walks out of her frame to the door */
+const FOLLOW_TO = youGo + 56;
 /** his own moves (Jay, 15 Nov): 谁都别跟我抢！ both arms flung out to the room; 我写诗告诉她了 a hand on his heart */
 const WIDE = [capWord("E28", "谁都").from - 3, lineId("E28").to + 14] as const, HEART = [capWord("E31", "我写诗").from - 3, capWord("E31", "三百").from + 4] as const;
 const liHands = (f: number): [THREE.Vector3 | null, THREE.Vector3 | null] => {
@@ -66,7 +73,8 @@ const LEAVERS: { go: number; up: THREE.Vector3 | [number, number]; via: THREE.Ve
 ];
 /** getting up from a floor cushion: he shuffles back off it on his knees (SHIFT frames), comes to his feet (RISE), walks */
 const SHIFT = 6, RISE = 8, WALK = 1.5;
-const getUp = (seatAt: THREE.Vector3, seatF: number, L: { go: number; up: THREE.Vector3 | [number, number]; via: THREE.Vector3[] }, f: number, id: number): St | null => {
+type Leave = { go: number; up: THREE.Vector3 | [number, number]; via: THREE.Vector3[]; speed?: number };
+const getUp = (seatAt: THREE.Vector3, seatF: number, L: Leave, f: number, id: number): St | null => {
   if (f < L.go) return null;
   const up = Array.isArray(L.up) ? rel(seatAt, seatF, L.up[0], 0, L.up[1]).setY(0) : L.up;
   const path = [up, ...L.via, DOOR_PRE, DOOR, DOOR_OUT], d = f - L.go;
@@ -75,11 +83,17 @@ const getUp = (seatAt: THREE.Vector3, seatF: number, L: { go: number; up: THREE.
     const p = seatAt.clone().setY(0).lerp(up, ramp(d, -1.5, SHIFT)), k = 1 - ramp(d, SHIFT, SHIFT + RISE);
     return { ...standing(p, seatF, f, id), ...kneel(k, p, 12), seat: undefined, expr: "happy" };
   }
-  const leg = walkAlong(path, WALK, (d - SHIFT - RISE) / FPS, { startFacing: seatF });
+  const leg = walkAlong(path, L.speed ?? WALK, (d - SHIFT - RISE) / FPS, { startFacing: seatF });
   return { ...standing(leg.at, leg.facing, f, id), seat: undefined, pose: leg.pose, expr: "happy", visible: !leg.arrived };
 };
 /** the first lamp goes out after the friend has gone; the last one burns low to the cut (it becomes F's moon) */
-const lampsOut = [youGo + 30, S.to + 1];
+const lampsOut = [END + 30, S.to + 1];
+/** where the friend is on frame f once he is up (for her pan): the same path getUp walks */
+const youAt = (f: number): THREE.Vector3 => {
+  const up = rel(YOU_SEAT.at, YOU_SEAT.facing, YOU_LEAVE.up[0], 0, YOU_LEAVE.up[1]).setY(0), d = f - youGo - SHIFT - RISE;
+  if (d <= 0) return YOU_SEAT.at.clone().setY(0).lerp(up, ramp(f - youGo, -1.5, SHIFT));
+  return walkAlong([up, ...YOU_LEAVE.via, DOOR_PRE, DOOR, DOOR_OUT], YOU_LEAVE.speed, d / FPS, { startFacing: YOU_SEAT.facing }).at.clone();
+};
 
 /** the last lamp to go out (lb.ts tavern: lamp1) and where it sits on screen as it dies (the moon sits there when F
  *  opens: shots/segF.ts MOON_SCREEN) */
@@ -92,10 +106,13 @@ const cam = (f: number): CamPose => {
   let c = aim(CAM_HIM, HEAD.clone().add(V(0.0, -0.12, 0)), 860, SX);
   c = C.snap(c, f, capWord("E28", "我请").from, lineId("E28").to + 24);
   c = C.snap(c, f, E.poem, lineId("E32").from - 4, { k: 0.75 });
-  if (f >= youGo) c = C.nudge(c, { yaw: PAN_YOU * ramp(f, youGo, youGo + 30) * (1 - ramp(f, youGo + 50, youGo + 75)) });
-  const up = ramp(f, youGo + 44, youGo + 66);
+  // she turns to the friend as he speaks, pans with him as he gets up and walks to the right wall, holds as he goes out of her frame to the door,
+  // and comes back to 李白 before her last tilt up to the lamp
+  const pan = ramp(f, L33.from - 8, L33.from + 16) * (1 - ramp(f, END + 4, END + 40));
+  if (pan) c = mixCam(c, aim(CAM_HIM, youAt(Math.min(f, FOLLOW_TO)).setY(1.2), 900, 600), pan);
+  const up = ramp(f, END + 44, END + 66);
   if (up) c = mixCam(c, aim(CAM0, LAST_LAMP, LAMP_SCREEN.sy, LAMP_SCREEN.sx), up);
-  c = C.handheld(c, f, { mood: f >= E.cheer - 4 && f < E.cheer + 40 ? "excited" : "calm", amp: f >= youGo ? 0.4 : 0.7 });
+  c = C.handheld(c, f, { mood: f >= E.cheer - 4 && f < E.cheer + 40 ? "excited" : "calm", amp: f >= END ? 0.4 : 0.7 });
   return whisperLean(f, c, { at: HEAD });
 };
 
@@ -116,7 +133,7 @@ export const SEG: Segment = {
         ?? (cheer ? { ...s, pose: { kind: "cheer", t: t + k * 0.2 }, expr: "laugh" } : { ...s, expr: k % 2 ? "laugh" : "happy" }),
     });
     // 李白, red-cheeked
-    const expr = at<NonNullable<St["expr"]>>(f, [[0, "grin"], [L28.from, "laugh"], [E.aside, "happy"], [lineId("E30").from, "smile"], [lineId("E31").from, "happy"], [E.poem, "smug"], [E.aside2, "smile_closed"], [L33.from, "smile"], [youGo + 20, "sigh"], [lampsOut[1], "smile_closed"]]);
+    const expr = at<NonNullable<St["expr"]>>(f, [[0, "grin"], [L28.from, "laugh"], [E.aside, "happy"], [lineId("E30").from, "smile"], [lineId("E31").from, "happy"], [E.poem, "smug"], [E.aside2, "smile_closed"], [L33.from, "smile"], [END + 20, "sigh"], [lampsOut[1], "smile_closed"]]);
     const m = says("li", ["E28", "E31"], f, 2);
     const pour = ramp(f, E.pour, E.pour + 14);
     const chestP = T.on(-0.05, 0.22).add(V(0, 0.08 + 0.07 * (1 - ramp(f, E.pour + 14, E.pour + 30)) * (f >= E.pour - 10 ? 1 : 0), 0)); // low and to the front: it must not hide his face
@@ -124,18 +141,15 @@ export const SEG: Segment = {
     const hc = held("chest", chestP, { rot: [-1.6 * pour, 0, 0], open: Math.max(pour, ramp(f, S.from, S.from + 1)) });
     w.actor(LI_RED).set({
       ...atTable(T, f, 1, {}), expr, mouth: m.mouth, blink: m.blink ?? lid(t, 2), hands: holding ? hc.hands : liHands(f),
-      head: heads(m.head, accent("laugh", f, L28.from, { dur: 0.8 }), headPop(f, E.poem), f >= E.poem && f < E.aside2 ? { tilt: 8 } : undefined, f >= youGo + 20 ? { dy: -0.06 } : undefined),
-      gaze: f >= L33.from - 6 && f < youGo + 60 ? 1 : 0,
+      head: heads(m.head, accent("laugh", f, L28.from, { dur: 0.8 }), headPop(f, E.poem), f >= E.poem && f < E.aside2 ? { tilt: 8 } : undefined, f >= END + 20 ? { dy: -0.06 } : undefined),
+      gaze: f >= L33.from - 6 && f < END + 60 ? 1 : 0,
     });
     // the friend
     const ym = says("you", ["E33"], f, 6);
     // he comes to his feet beside his cushion, then walks
-    const yd = f - youGo, yl = walkAlong(YOU_OUT, 1.3, (yd - YOU_RISE) / FPS, { startFacing: YOU_SEAT.facing });
-    const yp = YOU_UP;
-    const y = w.actor(YOU);
-    if (f < youGo) y.set({ ...atTable(YOU_SEAT, f, 6, {}), expr: f < L33.from ? "laugh" : "grin", mouth: ym.mouth, head: ym.head, blink: ym.blink ?? lid(t, 6), pose: cheer ? { kind: "cheer", t } : { kind: "sit", t } });
-    else if (yd < YOU_RISE) y.set({ ...standing(yp, YOU_SEAT.facing, f, 6), ...kneel(1 - ramp(yd, 2, YOU_RISE), yp, 12), seat: undefined, expr: "happy", visible: true });
-    else y.set({ ...standing(yl.at, yl.facing, f, 6), seat: undefined, pose: yl.pose, expr: "happy", visible: !yl.arrived, turn: yl.moving ? undefined : 0 });
+    const y = w.actor(YOU), yGo = getUp(YOU_SEAT.at, YOU_SEAT.facing, YOU_LEAVE, f, 6);
+    if (!yGo) y.set({ ...atTable(YOU_SEAT, f, 6, {}), expr: f < L33.from ? "laugh" : "grin", mouth: ym.mouth, head: ym.head, blink: ym.blink ?? lid(t, 6), pose: cheer ? { kind: "cheer", t } : { kind: "sit", t } });
+    else y.set({ ...yGo, expr: f < L33.to ? "grin" : "happy", mouth: ym.mouth, head: ym.head, blink: ym.blink ?? lid(t, 6) });
     w.update();
     trackHead(w, "you", y, f);
     w.prop("cushion", "you").put(YOU_SEAT.at, { rot: YOU_SEAT.facing });
