@@ -6,10 +6,14 @@ HERE="$(cd "$(dirname "$(readlink "$0" 2>/dev/null || echo "$0")")" && pwd)"
 case "$HERE" in /*) ;; *) HERE="$(cd "$(dirname "$0")" && pwd)";; esac
 export STUDIO_TOOLS="$(cd "$HERE/../.." && pwd)"
 export STUDIO="${STUDIO:-$HOME/Claude/studio}"
-# node: the studio's own, then the portable one from the first Mac render test, then the system's
-for d in "$STUDIO/node/bin" "$HOME/Claude/libai-render-test/node/bin" "$STUDIO/bin"; do [ -d "$d" ] && PATH="$d:$PATH"; done
-[ -d "$STUDIO/py/bin" ] && PATH="$STUDIO/py/bin:$PATH"     # the studio's python (numpy, scipy, faster-whisper) is "python3"
-PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+# first found wins: ffmpeg-full (rubberband + drawtext), the studio's python (numpy, scipy, faster-whisper) as
+# "python3", the studio's own node, its static ffmpeg, an old clone's portable node, then Homebrew and the system
+FRONT=""
+for d in /opt/homebrew/opt/ffmpeg-full/bin "$STUDIO/py/bin" "$STUDIO/node/bin" "$STUDIO/bin" \
+         "$HOME/Claude/libai-render-test/node/bin" /opt/homebrew/bin /usr/local/bin; do
+  [ -d "$d" ] && FRONT="$FRONT$d:"
+done
+PATH="$FRONT$PATH"
 export PATH
 PY="$STUDIO/py/bin/python3"
 if [ ! -x "$PY" ]; then

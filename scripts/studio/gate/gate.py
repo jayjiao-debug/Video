@@ -112,6 +112,8 @@ class Gate:
                 if not r.get("nOn"): continue
                 d = r.get("maxOn", 0)
                 lvl = "FAIL" if d >= self.rules["clip_fail_cm"] else "LOOK" if d >= self.rules["clip_look_cm"] else None
+                if lvl == "FAIL" and "float" in str(r.get("cat", "")):
+                    lvl = "LOOK"   # a prop off its support: held in a hand or thrown is fine, left hanging in the air is not (eye)
                 if not lvl: continue
                 f = int(r.get("fMax", 0)) - self.offset
                 ev = self.crop_evidence(f, r.get("s"), f"clip_{fn[:-5]}_{r.get('fMax')}.jpg") if 0 <= f else None

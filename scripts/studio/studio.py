@@ -16,6 +16,7 @@ import argparse, glob, json, os, re, shutil, subprocess, sys, time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import slib
+import drive as drivemod
 from slib import log, die, run, STUDIO, REPO, WORK, LIBRARY, VOICE, LOGS, DELIVER, HERE
 
 NODE_VERSION = "v22.12.0"
@@ -36,6 +37,14 @@ def cmd_setup(a):
         plat = "darwin-arm64" if arch == "arm64" else "darwin-x64"
         url = f"https://nodejs.org/dist/{NODE_VERSION}/node-{NODE_VERSION}-{plat}.tar.gz"
         run(f"curl -fsSL '{url}' | tar -xz -C '{STUDIO}' && rm -rf '{STUDIO}/node' && mv '{STUDIO}/node-{NODE_VERSION}-{plat}' '{STUDIO}/node'")
+    else:
+        # a portable node inside an old test clone (~/Claude/libai-render-test/node): copy it into the studio, so the
+        # old clones can be deleted to free disk
+        nd = os.path.dirname(os.path.dirname(os.path.realpath(slib.which("node"))))
+        claude = os.path.join(slib.HOME, "Claude")
+        if nd.startswith(claude + os.sep) and not nd.startswith(os.path.realpath(STUDIO)) and not os.path.isdir(os.path.join(STUDIO, "node")):
+            shutil.copytree(nd, os.path.join(STUDIO, "node"), symlinks=True)
+            log(f"copied node from {nd} into {STUDIO}/node")
     # ffmpeg + ffprobe (the film sound scripts call them by name)
     if not (slib.which("ffmpeg") and slib.which("ffprobe")):
         if slib.which("brew"):
@@ -48,6 +57,13 @@ def cmd_setup(a):
                 url = f"https://ffmpeg.martin-riedl.de/redirect/latest/macos/{'arm64' if arch == 'arm64' else 'amd64'}/release/{tool}.zip"
                 run(f"cd '{b}' && curl -fsSL -o {tool}.zip '{url}' && unzip -o -q {tool}.zip && rm {tool}.zip && chmod +x {tool} && (xattr -d com.apple.quarantine {tool} 2>/dev/null || true)")
             os.environ["PATH"] = b + os.pathsep + os.environ["PATH"]
+    # the film sound builds use rubberband (pitch) and the gate sheets may use drawtext: Homebrew's plain ffmpeg has neither
+    ff0 = subprocess.run([slib.which("ffmpeg") or "ffmpeg", "-hide_banner", "-filters"], capture_output=True, text=True).stdout
+    if " rubberband " not in ff0 and slib.which("brew"):
+        run(["brew", "install", "ffmpeg-full"], check=False)
+        full = "/opt/homebrew/opt/ffmpeg-full/bin"
+        if os.path.isdir(full):
+            os.environ["PATH"] = full + os.pathsep + os.environ["PATH"]
     for tool in ("ffmpeg", "ffprobe", "git", "node", "npm"):
         log(f"{tool}: {slib.which(tool) or 'MISSING'}")
     ff = subprocess.run([slib.which("ffmpeg") or "ffmpeg", "-hide_banner", "-filters"], capture_output=True, text=True).stdout
@@ -77,8 +93,24 @@ def cmd_setup(a):
 
 
 def cmd_update(a):
-    run(["git", "-C", slib.TOOLS, "fetch", "--depth", "1", "origin"])
-    run(["git", "-C", slib.TOOLS, "reset", "--hard", "@{u}"])
+    """pull new tools: one branch, one commit deep. A full clone (every branch's history, 14 GB once) is shrunk."""
+    g = ["git", "-C", slib.TOOLS]
+    br = subprocess.run(g + ["rev-parse", "--abbrev-ref", "HEAD"], capture_output=True, text=True).stdout.strip() or "claude/pipeline-tools"
+    if br == "HEAD": br = "claude/pipeline-tools"
+    run(g + ["config", "remote.origin.fetch", f"+refs/heads/{br}:refs/remotes/origin/{br}"])
+    run(g + ["fetch", "--depth", "1", "origin", br])
+    run(g + ["reset", "--hard", f"origin/{br}"])
+    others = [r for r in subprocess.run(g + ["for-each-ref", "--format=%(refname)", "refs/remotes/", "refs/tags/", "refs/heads/"],
+                                         capture_output=True, text=True).stdout.split() if r not in (f"refs/remotes/origin/{br}", f"refs/heads/{br}")]
+    for r in others:
+        subprocess.run(g + ["update-ref", "-d", r])
+    if others:
+        log(f"dropped {len(others)} other branches and tags from the tools clone; packing it down")
+        run(g + ["reflog", "expire", "--expire=now", "--all"])
+        run(g + ["gc", "--prune=now", "--quiet"])
+    r = subprocess.run(["du", "-sh", os.path.join(slib.TOOLS, ".git")], capture_output=True, text=True).stdout.split()
+    log(f"tools at {subprocess.run(g + ['log', '-1', '--format=%h %s'], capture_output=True, text=True).stdout.strip()}"
+        + (f"; clone {r[0]}" if r else ""))
 
 
 # ------------------------------------------------------------------------------------------------ film config
@@ -273,7 +305,7 @@ def cmd_film(a):
             log("the gate FAILED: nothing is delivered. Fix and run again, or deliver anyway with --accept \"<why>\"")
             sys.exit(1)
     if "deliver" not in skip:
-        deliver(film, tag, accept=a.accept, reveal=a.reveal)
+        deliver(film, tag, accept=a.accept, reveal=a.reveal, drive=not a.no_drive)
     log(f"all done in {slib.fmt_s(time.time() - t0)}")
 
 
@@ -311,7 +343,7 @@ def cmd_gate(a):
     sys.exit(gate(a.film, tag, cfg, a))
 
 
-def deliver(film, tag, accept=None, reveal=False):
+def deliver(film, tag, accept=None, reveal=False, drive=True):
     vdir = os.path.join(WORK, film, "versions", tag)
     g = slib.load_json(os.path.join(vdir, "gate", "gate.json"))
     master = os.path.join(vdir, "master.mp4")
@@ -348,13 +380,125 @@ def deliver(film, tag, accept=None, reveal=False):
     log(f"delivered to {out}: " + ", ".join(sorted(os.listdir(out))))
     if reveal and sys.platform == "darwin":
         subprocess.run(["open", "-R", os.path.join(out, f"{base}_phone.mp4")])
+    if drive:
+        to_drive(film, tag, out)
     return out
+
+
+def to_drive(film, tag, out):
+    """copy the delivery into its channel's Google Drive folder (drive.py); write the links into delivery.json and versions.md"""
+    suf = tag.rsplit("_", 1)[-1] if "_" in tag else ""
+    lang = suf if (len(suf) == 2 and suf.isalpha()) else "zh"
+    try:
+        channels = (film_config(film) or {}).get("drive")
+    except SystemExit:
+        channels = None
+    if not drivemod.root(lang, channels):
+        log("Drive: no Google Drive folder on this machine (or STUDIO_DRIVE=off): the film stays local only")
+        return None
+    try:
+        res = drivemod.push(out, film, tag, lang=lang, channels=channels, log=log)
+    except OSError as e:
+        log(f"Drive: copy failed ({e}); the local delivery is complete. Retry with: studio drive push {film} --version {tag}")
+        return None
+    note = slib.load_json(os.path.join(out, "delivery.json"), {}) or {}
+    note["drive"] = res
+    slib.save_json(os.path.join(out, "delivery.json"), note)
+    try:
+        drivemod._copy(os.path.join(out, "delivery.json"), os.path.join(res["drive_path"], "delivery.json"))
+    except OSError:
+        pass
+    if res.get("folder") and res.get("hd") and res.get("phone") and not KEEP_LOCAL:
+        free_local(film, tag)
+    if res.get("folder"):
+        with open(os.path.join(DELIVER, film, "versions.md"), "a", encoding="utf-8") as f:
+            f.write(f"  - {tag} on Google Drive ({res['channel']}): {res['folder']}" + (f" (phone copy {res['phone']})" if res.get("phone") else "") + "\n")
+        print("\nDRIVE " + json.dumps({"film": film, "version": tag, "channel": res["channel"], "folder": res["folder"], "phone": res.get("phone"), "hd": res.get("hd")}), flush=True)
+    return res
+
+
+# ------------------------------------------------------------------------------------------------ disk space
+# The Mac mini's disk is small: once Drive has a delivery, the big local copies go. Kept: the watch copy (the next
+# version's gate compares with it), the mix, the sheets, the gate report, job.json, the log and delivery.json.
+KEEP_LOCAL = os.environ.get("STUDIO_KEEP_LOCAL", "") not in ("", "0", "no")
+BIG_WORK = ("picture.mp4", "master.mp4", "phone.mp4", "stems", "gate/watch_phone_mask.mp4", "soundpage")
+
+
+def _size(p):
+    if os.path.isfile(p): return os.path.getsize(p)
+    return sum(os.path.getsize(os.path.join(d, f)) for d, _, fs in os.walk(p) for f in fs if os.path.isfile(os.path.join(d, f)))
+
+
+def _remove(paths, dry=False):
+    freed = 0
+    for p in paths:
+        if not os.path.lexists(p): continue
+        freed += _size(p)
+        if dry: continue
+        if os.path.isdir(p) and not os.path.islink(p): shutil.rmtree(p)
+        else: os.remove(p)
+    return freed
+
+
+def free_local(film, tag, dry=False, why="on Google Drive"):
+    """remove a version's big local files; the delivery folder keeps delivery.json, the sheet and the gate report"""
+    vdir = os.path.join(WORK, film, "versions", tag)
+    out = os.path.join(DELIVER, film, tag)
+    paths = [os.path.join(vdir, b) for b in BIG_WORK]
+    paths += glob.glob(os.path.join(out, "*.mp4")) + glob.glob(os.path.join(out, "review", "*.mp4"))
+    paths += [os.path.join(out, "sound")]
+    freed = _remove(paths, dry)
+    if freed:
+        log(f"{'would free' if dry else 'freed'} {freed / 1e9:.2f} GB of {film} {tag} ({why})")
+    return freed
+
+
+def cmd_clean(a):
+    """free disk: versions whose delivery is on Drive lose their local copies; test versions (never delivered) older
+    than --days lose their renders. Old checkouts and caches are listed, never removed."""
+    total = 0
+    cutoff = time.time() - a.days * 86400
+    for vdir in sorted(glob.glob(os.path.join(WORK, "*", "versions", "*"))):
+        film, tag = vdir.split(os.sep)[-3], os.path.basename(vdir)
+        note = slib.load_json(os.path.join(DELIVER, film, tag, "delivery.json"), {}) or {}
+        d = note.get("drive") or {}
+        if d.get("hd") and d.get("folder"):
+            total += free_local(film, tag, a.dry_run)
+        elif not note and os.path.getmtime(vdir) < cutoff:
+            total += free_local(film, tag, a.dry_run, why=f"a test, not delivered, older than {a.days} days")
+    log(f"{'would free' if a.dry_run else 'freed'} {total / 1e9:.2f} GB in all")
+    big = []
+    for p in glob.glob(os.path.join(slib.HOME, "Claude", "*")):
+        if os.path.realpath(p) in (os.path.realpath(STUDIO), os.path.realpath(DELIVER)) or not os.path.isdir(p): continue
+        big.append((_size(p), p))
+    if big:
+        print("other folders in ~/Claude (not touched):")
+        for sz, p in sorted(big, reverse=True)[:8]:
+            print(f"  {sz / 1e9:6.2f} GB  {p}")
+    try:
+        u = shutil.disk_usage(slib.HOME)
+        print(f"disk: {u.free / 1e9:.0f} GB free of {u.total / 1e9:.0f} GB")
+    except OSError:
+        pass
+
+
+def cmd_drive(a):
+    rest = a.rest or ["status"]
+    if rest[0] == "push":
+        p = argparse.ArgumentParser(prog="studio drive push"); p.add_argument("film"); p.add_argument("--version", required=True); p.add_argument("--lang", default="zh")
+        b = p.parse_args(rest[1:])
+        tag = b.version + ("" if b.lang == "zh" else f"_{b.lang}")
+        out = os.path.join(DELIVER, b.film, tag)
+        if not os.path.isdir(out): die(f"no delivery at {out}: run studio deliver first")
+        slib.set_log(os.path.join(WORK, b.film, "versions", tag, "log.txt"))
+        sys.exit(0 if (to_drive(b.film, tag, out) or {}).get("folder") else 1)
+    sys.exit(drivemod.main(rest))
 
 
 def cmd_deliver(a):
     tag = a.version + ("" if a.lang == "zh" else f"_{a.lang}")
     slib.set_log(os.path.join(WORK, a.film, "versions", tag, "log.txt"))
-    deliver(a.film, tag, accept=a.accept, reveal=a.reveal)
+    deliver(a.film, tag, accept=a.accept, reveal=a.reveal, drive=not a.no_drive)
 
 
 # ------------------------------------------------------------------------------------------------ voice
@@ -412,7 +556,7 @@ def cmd_soundpage(a):
 
 
 def cmd_status(a):
-    print(f"studio {STUDIO}\ntools  {slib.TOOLS}\nfilms  {DELIVER}")
+    print(f"studio {STUDIO}\ntools  {slib.TOOLS}\nfilms  {DELIVER}\ndrive  {drivemod.root('zh') or 'none (films stay local)'} (zh); {drivemod.root('en') or '-'} (en)")
     for t in ("node", "ffmpeg", "ffprobe", "git"):
         print(f"{t:8s}{slib.which(t) or 'MISSING'}")
     print("key     " + ("in the keychain" if keychain_key() else "not saved"))
@@ -441,11 +585,13 @@ def main():
     p.add_argument("--only", help="gate checks to run (default all)"); p.add_argument("--prev", help="the earlier version folder to compare with")
     p.add_argument("--accept", help="deliver even though the gate failed, with the reason (it is written into the delivery)")
     p.add_argument("--reveal", action="store_true", help="show the phone copy in Finder when delivered")
+    p.add_argument("--no-drive", action="store_true", help="deliver locally only, not to Google Drive")
+    p.add_argument("--keep-local", action="store_true", help="keep the big local copies after Drive has them")
     p.set_defaults(fn=cmd_film)
     for name, fn in (("gate", cmd_gate), ("deliver", cmd_deliver)):
         p = sp.add_parser(name); p.add_argument("film"); p.add_argument("--version", required=True); p.add_argument("--lang", default="zh")
         p.add_argument("--accept"); p.add_argument("--reveal", action="store_true"); p.add_argument("--only"); p.add_argument("--prev"); p.add_argument("--frames")
-        p.set_defaults(fn=fn)
+        p.add_argument("--no-drive", action="store_true"); p.add_argument("--keep-local", action="store_true"); p.set_defaults(fn=fn)
     p = sp.add_parser("voice"); p.add_argument("request", help="request.json (the voice-farm format), or - for stdin")
     p.add_argument("--film"); p.add_argument("--again", action="store_true"); p.add_argument("--dry-run", action="store_true"); p.add_argument("--no-whisper", action="store_true")
     p.set_defaults(fn=cmd_voice)
@@ -453,7 +599,13 @@ def main():
     p = sp.add_parser("soundpage"); p.add_argument("film"); p.add_argument("--version", required=True); p.add_argument("--lang", default="zh")
     p.add_argument("--deliver", action="store_true"); p.set_defaults(fn=cmd_soundpage)
     p = sp.add_parser("status"); p.add_argument("film", nargs="?"); p.set_defaults(fn=cmd_status)
+    p = sp.add_parser("clean", help="free disk: drop local copies of versions already on Drive, and old test renders")
+    p.add_argument("--days", type=int, default=7); p.add_argument("--dry-run", action="store_true"); p.set_defaults(fn=cmd_clean)
+    p = sp.add_parser("drive", help="Google Drive: status | push <film> --version v7 | link <path>"); p.add_argument("rest", nargs=argparse.REMAINDER)
+    p.set_defaults(fn=cmd_drive)
     a = ap.parse_args()
+    global KEEP_LOCAL
+    KEEP_LOCAL = KEEP_LOCAL or bool(getattr(a, "keep_local", False))
     a.fn(a)
 
 

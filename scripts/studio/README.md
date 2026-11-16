@@ -7,11 +7,12 @@ hand-over. The cloud threads write code and push commits; the Mac makes the film
 ## Setup (once)
 
 ```bash
-mkdir -p ~/Claude/studio && git clone --depth 1 -b claude/pipeline-tools https://github.com/jayjiao-debug/video ~/Claude/studio/tools
+mkdir -p ~/Claude/studio && git clone --depth 1 --single-branch -b claude/pipeline-tools https://github.com/jayjiao-debug/video ~/Claude/studio/tools
 bash ~/Claude/studio/tools/scripts/studio/studio setup
 ```
 
-Setup makes `~/Claude/studio/{repo,work,library,voice,logs,bin}` and `~/Claude/films`, finds or installs node (the
+Setup makes `~/Claude/studio/{repo,work,library,voice,logs,bin}`, copies a portable node it finds in an old
+clone into `~/Claude/studio/node` (so the old clones can be deleted), and `~/Claude/films`, finds or installs node (the
 portable one in `~/Claude/libai-render-test` is used if present), ffmpeg and ffprobe (Homebrew, or a static build in
 `~/Claude/studio/bin`), a Python venv `~/Claude/studio/py` (numpy, scipy, pillow, soundfile, requests,
 faster-whisper), and an empty film checkout that fetches one commit at a time. `~/Claude/studio/studio` is then the
@@ -26,9 +27,12 @@ security add-generic-password -U -a "$USER" -s elevenlabs -w
 ## The one command
 
 ```bash
-~/Claude/studio/studio film newton --ref claude/newton-day          # the next version number, Chinese
-~/Claude/studio/studio film newton --ref 1a2b3c4 --version v7 --lang en
+~/Claude/studio/studio film newton --ref claude/newton-day          # the next version number
+~/Claude/studio/studio film newton --ref 1a2b3c4 --version v7
 ```
+
+Films are Chinese, for 抖音 (Juno), from 16 Nov 2026: no English dubs and no YouTube steps. `--lang en` still works
+for an old film but is not part of the pipeline.
 
 Steps, each with a clock-time estimate from its last run, all logged to `work/<film>/versions/<v>/log.txt`:
 
@@ -40,33 +44,32 @@ Steps, each with a clock-time estimate from its last run, all logged to `work/<f
 4. **mux** (fails if picture and sound differ by more than a frame), a **phone copy** (1080, small), a 540 **watch
    copy** and a **contact sheet**
 5. **the gate** (below). A FAIL stops here.
-6. **deliver** to `~/Claude/films/<film>/<version>/`
-
-Useful flags: `--frames 0-299` (a test range), `--mix file.wav` (a ready mix instead of the build), `--skip
-render,sound,stems,gate,deliver`, `--accept "why"` (deliver despite a FAIL; the reason is written into the delivery),
-`--reveal` (show it in Finder). One studio job runs at a time (`logs/studio.lock`). `studio status` shows what was made.
-
-## Voice, sound effects and music on the Mac (item 2)
-
-```bash
-~/Claude/studio/studio voice request.json --film newton     # or: ... voice - < request.json
-~/Claude/studio/studio voice request.json --dry-run         # check it and count the billed characters, no call
-```
-
-The request is exactly the voice-farm format (`tts`, `dialogue`, `sfx`, `music`, `voices`, `upload`, `transcribe`
-items; `voice/speak.py` is the farm's script with a local output folder). Clips, `report.json` (with Whisper's
-transcript and word times) and `run.txt` land in `~/Claude/studio/voice/<id>/`, linked into
-`work/<film>/voice/takes/<id>`. The report also says how many credits the request used and how many are left. No
-GitHub, no public branch, no approval stop. A cloud thread hands a request over in its Remote Control brief (paste
-the JSON) or in its commit; the summary table comes back in the session's reply.
-
-## Delivery (item 3)
-
-`~/Claude/films/<film>/<version>/`: `<film>_<v>_hd.mp4` (the master), `<film>_<v>_phone.mp4`, `<film>_<v>_sheet.jpg`,
+6. **deliver** to `~/Claude/films/<film>/<version>/`: `<film>_<v>_hd.mp4` (the master), `<film>_<v>_phone.mp4`, `<film>_<v>_sheet.jpg`,
 `review/` (the gate report and its sheets, the masked watch copy, what changed), `sound/` (the sound page, when made),
 `delivery.json`. `~/Claude/films/<film>/versions.md` lists every delivery with its commit; `latest` points at the
-newest. AirDrop from Finder for now. For a synced folder later, set one line in the shell profile:
-`export STUDIO_DELIVER="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Films"`.
+newest.
+
+**Google Drive.** When Google Drive for desktop is signed in on the Mac, `deliver` also copies the delivery into
+`My Drive/<channel>/<film>/<version>/`, waits for the upload (up to 15 minutes, `STUDIO_DRIVE_WAIT` seconds) and writes
+the Drive links of the folder, the master and the phone copy into `delivery.json` and `versions.md`; the run ends
+with one `DRIVE {...}` line a cloud thread can pass on. Every film goes in `My Drive/Juno/` (the 抖音 channel), the
+default. `My Drive/TinyEurekaFilms/` is kept for the paused YouTube channel and only an English version would go
+there; a film config can say otherwise with `"drive": {"zh": "Juno", "en": "TinyEurekaFilms"}`. The links open for the Drive's own account
+(phone, laptop); sharing one wider is a separate step. `studio drive status`, `studio drive push <film> --version v7`
+(again, or later), `studio drive link <path>`. `--no-drive` or `STUDIO_DRIVE=off` keeps a delivery local.
+
+**Disk space.** The Mac's disk is small, so the cloud holds the films. Once Drive has a delivery (the folder, the
+master and the phone copy all have Drive ids), the studio deletes the big local copies: the render, the master, the
+phone copy, the stems and the masked watch copy in `work/`, and the videos and sound page in `~/Claude/films/`. It
+keeps the 540 watch copy (the next version's gate compares against it), the mix, the sheets, the gate report,
+`job.json`, the log and `delivery.json`. `--keep-local` (or `STUDIO_KEEP_LOCAL=1`) keeps everything. Make the sound
+page before delivering, because the stems go too. `studio clean` does the same for older versions already on Drive,
+and drops the renders of test versions never delivered that are older than a week (`--days`, `--dry-run`). It lists
+the other big folders in `~/Claude` and leaves them alone. Keep Google Drive on **streaming**, not mirroring, so Drive
+files take no disk until opened.
+
+**Unattended.** For the Mac to work while nobody is with it: keep it from sleeping (System Settings > Energy), turn on
+"Start up automatically after a power failure", and have Google Drive and the Claude app open at login.
 
 ## The delivery gate (item 4)
 
