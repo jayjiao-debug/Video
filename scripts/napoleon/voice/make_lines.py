@@ -1,91 +1,71 @@
 #!/usr/bin/env python3
-"""Writes napoleon_lines.json (the day engine's lines file) from the script table below (script_v1, 16 Nov 2026).
-"en" is the engine's second-language slot: for this film it carries FRENCH for the lines spoken in French (np, gd, dv)
-and a plain English gloss (never shown) for the reporter's Chinese lines."""
+"""Writes napoleon_lines.json (the day engine's lines file) from the script table below (script_v2, 16 Nov 2026: the
+spine is 「不可能」). Everyone speaks Chinese; "en" is a plain English gloss (never shown; the film is Chinese only).
+His few French words (Impossible, En avant) are part of his Chinese lines; the soldiers' Vive l'Empereur is a sound."""
 import json, os
-S = [  # who, zh, second row, {pre, after, card}
- ("A", "ji", "将军？您不是在桥上吗？", "General? Were you not on the bridge?", dict(pre=0.35, after=0.25)),
- ("A", "np", "把我画在桥上。", "Peignez-moi sur le pont.", dict(after=3.3)),   # 0.3 s, THE FREEZE (2.5 s: his card), 0.5 s
- ("A", "ji", "可您刚掉河里。", "But you just fell in the river.", dict(pre=0.5, after=0.3)),
- ("A", "np", "低一点。", "Plus bas.", dict(after=0.9)),
- ("A", "np", "从这儿看，我就在桥上。", "D'ici, je suis sur le pont.", dict(after=4.6, card_delay=1.5, card_hold=2.8,
-    card=dict(zh="真事：他举旗冲上了桥。没冲过去，被人群挤进了河里。", en="True: he charged the bridge with the flag, failed, and was pushed into the water."))),
- ("A", "ji", "能量个身高吗？", "May I measure your height?", dict(after=0.25)),
- ("A", "np", "上马。", "À cheval.", dict(after=3.2)),
- ("B", "ji", "这是……骡子？", "Is that a mule?", dict(pre=1.6, after=0.3)),
- ("B", "np", "马过不了这种路。", "Un cheval ne passe pas ici.", dict(after=2.4)),
- ("B", "np", "你，这辈子想要什么？", "Toi. Que veux-tu, dans la vie ?", dict(after=0.4)),
- ("B", "gd", "一块地。一头牛。", "Une ferme. Une vache.", dict(after=0.4)),
- ("B", "np", "给你了。", "Tu l'auras.", dict(after=3.2, card_delay=0.3, card_hold=2.6,
-    card=dict(zh="真事：五个月后，他下令付给这位向导 1200 法郎。", en="True: five months later he ordered 1,200 francs paid to the guide."))),
- ("B", "ji", "他人还挺好……", "He is rather kind.", dict(after=0.4)),
- ("B", "np", "画师。画一匹烈马。我，要镇定。", "Peintre. Un cheval fougueux. Et moi, calme.", dict(after=0.3)),
- ("B", "ji", "可这是骡……", "But that is a mule.", dict(after=0.15)),
- ("B", "np", "没人会问伟人的画像像不像。", "Personne ne s'informe si les portraits des grands hommes sont ressemblants.", dict(after=2.0)),
- ("B", "ji", "身高？", "Your height?", dict(after=0.25)),
- ("B", "np", "我在马上。", "Je suis à cheval.", dict(after=2.6)),
- ("C", "ji", "教皇不给您戴吗？", "Does the Pope not crown you?", dict(pre=1.8, after=0.3)),
- ("C", "np", "我自己来。", "Je m'en charge.", dict(after=3.0)),
- ("C", "ji", "您母亲呢？", "Where is your mother?", dict(after=0.9)),
- ("C", "np", "……她在赌气。", "…Elle boude.", dict(after=0.5)),
- ("C", "np", "大卫。把我母亲画上去。那儿，正中间。", "David. Mettez ma mère. Là. Au milieu.", dict(after=0.25)),
- ("C", "dv", "是，陛下。", "Oui, Sire.", dict(after=1.8)),
- ("C", "ji", "这也行？", "Is that allowed?", dict(after=0.4)),
- ("C", "np", "低一点。", "Plus bas.", dict(after=0.9)),
- ("C", "ji", "现在能量了吗？", "May I measure now?", dict(after=0.3)),
- ("C", "np", "我在宝座上。", "Je suis sur un trône.", dict(after=2.6)),
- ("D", "ji", "您吃这么快？", "You eat this fast?", dict(pre=1.6, after=0.3)),
- ("D", "np", "……逗号。十二分钟。已经太久了。", "…virgule. Douze minutes. C'est déjà trop.", dict(after=2.0)),
- ("D", "ji", "这是您？", "Is this you?", dict(after=0.3)),
- ("D", "np", "英国人画的。", "Les Anglais.", dict(after=0.4)),
- ("D", "ji", "好小。", "So small.", dict(after=0.3)),
- ("D", "np", "五尺二寸！法国尺！", "Cinq pieds deux pouces ! Mesure française !", dict(after=4.4, card_delay=0.3, card_hold=4.0,
-    card=dict(zh="真事：法国的 5 尺 2 寸，约 1 米 68，比当时的法国男人还高一点。英国人按自己的尺子读成了“5 英尺 2”。", en="True: 5 pieds 2 pouces is about 1.68 m; read in English feet it became 5 ft 2."))),
- ("D", "ji", "那量一下？", "Shall we measure?", dict(after=0.25)),
- ("D", "np", "没空。去俄国。", "Pas le temps. La Russie.", dict(after=3.0)),
- ("E", "ji", "这段……怎么画？", "How shall this be painted?", dict(pre=3.0, after=2.6)),
- ("E", "np", "从伟大到可笑……只差一步。", "Du sublime au ridicule… il n'y a qu'un pas.", dict(after=3.6)),
- ("F", "ji", "陛下……", "Sire…", dict(pre=3.0, after=1.0)),
- ("F", "np", "画……", "Peignez…", dict(after=1.6)),
- ("F", "np", "……不。", "…Non.", dict(after=4.5)),
- ("G", "ji", "您在……种菜？", "You are gardening?", dict(pre=3.0, after=0.4)),
- ("G", "np", "豆子。比我的元帅听话。", "Des haricots. Ils obéissent mieux que mes maréchaux.", dict(after=1.0)),
- ("G", "ji", "还有画师吗？", "Are there painters still?", dict(after=0.8)),
- ("G", "np", "没有画师了。只剩你了。", "Plus de peintres. Il n'y a que vous.", dict(after=1.6)),
- ("G", "ji", "那……什么会留下？", "Then what will remain?", dict(after=0.9)),
- ("G", "np", "不是我那四十场胜仗。滑铁卢会把它们抹掉。", "Pas mes quarante batailles. Waterloo les effacera.", dict(after=0.7)),
- ("G", "np", "留下来的……是我的法典。", "Ce qui restera… c'est mon Code civil.", dict(after=5.0)),
- ("G", "np", "来吧。量。", "Allez. Mesurez.", dict(after=3.0)),
- ("G", "ji", "一米六八。不矮啊。", "One metre sixty-eight. Not short.", dict(after=0.4)),
- ("G", "np", "我一直这么说。", "Je l'ai toujours dit.", dict(after=0.8)),
- ("G", "np", "……低一点。", "…Plus bas.", dict(after=2.2)),
+C = lambda zh, en, d=0.3, h=2.8: dict(card_delay=d, card_hold=h, card=dict(zh=zh, en=en))
+S = [  # scene, who, zh, gloss, {pre, after, card}
+ ("A", "ji", "带大炮翻雪山？不可能。", "Cannon over the Alps? Impossible.", dict(pre=0.35, after=0.25)),
+ ("A", "np", "不可能？这个词，不是法语。", "Impossible? That word is not French.", dict(after=3.3)),   # 0.3 s, THE FREEZE (2.5 s: his card), 0.5 s
+ ("A", "ji", "您骑的……是骡子？", "You are riding... a mule?", dict(pre=0.4, after=0.3)),
+ ("A", "np", "马过不了这种路。", "A horse cannot pass here.", dict(after=0.35)),
+ ("A", "np", "画的时候，画成马。白的。", "In the painting, make it a horse. White.", dict(after=3.6, **C("真事：他翻山骑的是骡子。那幅白马名画是事后画的。", "True: he crossed on a mule; the painting came later.", 0.4, 2.9))),
+ ("A", "ji", "这不算造假吗？", "Is that not faking it?", dict(after=0.3)),
+ ("A", "np", "这叫战略。En avant！", "It is called strategy. En avant!", dict(after=3.3)),
+ ("B", "ji", "教皇都请来了。", "Even the Pope is here.", dict(pre=1.6, after=0.3)),
+ ("B", "np", "请他来看。", "Invited to watch.", dict(after=1.6)),
+ ("B", "ji", "等等，您自己戴？", "Wait, you crown yourself?", dict(after=1.2)),
+ ("B", "np", "我挣来的，我自己戴。", "I earned it. I put it on.", dict(after=3.4, **C("真事：1804年，他给自己戴上了皇冠。", "True: in 1804 he crowned himself.", 0.3, 2.6))),
+ ("C", "ji", "明天打仗，您不睡？", "Battle tomorrow and you do not sleep?", dict(pre=1.8, after=0.5)),
+ ("C", "np", "你。马伦哥那个。腿好了？", "You. From Marengo. Is the leg healed?", dict(after=0.3)),
+ ("C", "bg", "好了，陛下！", "Healed, Sire!", dict(after=0.6)),
+ ("C", "ji", "几万人，您都记得？", "Tens of thousands, and you remember?", dict(after=0.3)),
+ ("C", "np", "记不住名字，带不了兵。", "Forget their names and you cannot lead them.", dict(after=4.6, **C("真事：奥斯特里茨前夜，全军举着火把迎接他。", "True: on the eve of Austerlitz the army lit torches for him.", 1.0, 3.0))),
+ ("D", "ji", "您同时写三封信？", "Three letters at once?", dict(pre=1.6, after=0.25)),
+ ("D", "np", "四封。你也记。", "Four. You write too.", dict(after=1.2)),
+ ("D", "ji", "晚饭只吃十分钟？", "Dinner in ten minutes?", dict(after=0.3)),
+ ("D", "np", "八分钟。打牌。", "Eight. Cards.", dict(after=2.2)),
+ ("D", "ji", "陛下，您出老千。", "Sire, you are cheating.", dict(after=0.4)),
+ ("D", "np", "这也叫战略。", "This too is strategy.", dict(after=3.2, **C("真事：他打牌下棋都作弊，身边人都知道。", "True: he cheated at cards and chess, and everyone knew.", 0.3, 2.7))),
+ ("D", "ji", "英国人画您很矮。", "The English draw you very short.", dict(after=0.3)),
+ ("D", "np", "一米六八！比你们高！", "One metre sixty-eight! Taller than you!", dict(after=3.6, **C("真事：约 1 米 68，比当时法国男人的平均身高还高。", "True: about 1.68 m, above the French average of his day.", 0.3, 3.0))),
+ ("E", "ji", "陛下，回头吧。", "Sire, turn back.", dict(pre=3.0, after=3.2)),   # he says nothing and keeps walking (script E26: a silence, not a line)
+ ("E", "ji", "这也是战略？", "Is this strategy too?", dict(after=1.4)),
+ ("E", "np", "这……不叫战略。", "This... is not strategy.", dict(after=3.2)),
+ ("F", "ji", "他们是来抓您的。", "They are here to arrest you.", dict(pre=2.4, after=0.4)),
+ ("F", "np", "我知道。", "I know.", dict(after=1.8)),
+ ("F", "np", "谁想打死自己的皇帝，开枪。", "Whoever would kill his Emperor, fire.", dict(after=4.2, **C("真事：1815年3月7日，拉弗雷。没有人开枪。", "True: Laffrey, 7 March 1815. Nobody fired.", 1.4, 2.6))),
+ ("F", "ji", "这也行？！", "That works?!", dict(after=2.6)),
+ ("F", "ji", "还能翻盘吗？", "Can you still turn it round?", dict(pre=0.8, after=2.0)),
+ ("F", "np", "上马。", "Mount up.", dict(after=3.2)),
+ ("G", "ji", "您说过中国是睡狮？", "Did you call China a sleeping lion?", dict(pre=2.8, after=0.4)),
+ ("G", "np", "我说过吗？", "Did I?", dict(after=3.2, **C("传说：查无出处，最早见于一百多年后。", "Legend: no source; it first appears over a century later.", 0.3, 2.7))),
+ ("G", "ji", "还回法国吗？", "Will you go back to France?", dict(after=2.6)),
+ ("G", "np", "……不可能。", "...Impossible.", dict(after=2.6)),
+ ("G", "ji", "您终于说了。", "You finally said it.", dict(after=0.6)),
+ ("G", "np", "记下来。但法典，他们删不掉。", "Write it down. But the Code they cannot erase.", dict(after=4.0)),
 ]
 SCENES = {
- "A": dict(time="1796年 · 阿尔科莱", en="Arcole, 1796", place="arcole"),
- "B": dict(time="1800年 · 阿尔卑斯山", en="The Alps, 1800", place="alps"),
- "C": dict(time="1804年 · 巴黎圣母院", en="Notre-Dame, 1804", place="notredame"),
- "D": dict(time="约1805年 · 杜伊勒里宫", en="The Tuileries, about 1805", place="tuileries"),
+ "A": dict(time="1800年 · 阿尔卑斯山", en="The Alps, 1800", place="alps"),
+ "B": dict(time="1804年 · 巴黎圣母院", en="Notre-Dame, 1804", place="notredame"),
+ "C": dict(time="1805年 · 奥斯特里茨前夜", en="Eve of Austerlitz, 1805", place="camp"),
+ "D": dict(time="约1806年 · 杜伊勒里宫", en="The Tuileries, about 1806", place="tuileries"),
  "E": dict(time="1812年 · 俄国", en="Russia, 1812", place="russia"),
- "F": dict(time="1815年 · 滑铁卢", en="Waterloo, 1815", place="waterloo"),
+ "F": dict(time="1815年 · 拉弗雷", en="Laffrey, 1815", place="laffrey"),
  "G": dict(time="约1820年 · 圣赫勒拿岛", en="Saint Helena, about 1820", place="helena"),
 }
 lines = []
 for i, (sc, who, zh, en, o) in enumerate(S, 1):
     l = dict(n=i, id=f"{sc}{i:02d}", scene=sc, who=who, zh=zh, en=en, screens=[dict(zh=zh, en=en)])
     l.update(o); lines.append(l)
-j = dict(film="napoleon", version=1, source="script_v1.md (16 Nov 2026), premise A 画里的他",
+j = dict(film="napoleon", version=2, source="script_v2.md (16 Nov 2026), the spine is 不可能",
          title=dict(zh="采访拿破仑的一天", en="A Day Interviewing Napoleon"),
-         speakers=dict(ji="记者 (the camera, never seen)", np="拿破仑 Napoléon (French)", gd="向导 Dorsaz (French)", dv="大卫 David (French)"),
+         speakers=dict(ji="记者 (the camera, never seen)", np="拿破仑", bg="老兵 the grenadier"),
          scenes=SCENES, gap=0.2, lead=0.1,
-         engine=dict(spoken=dict(ji="zh", np="en", gd="en", dv="en"), places=[s["place"] for s in SCENES.values()], rate_en=2.6),
+         engine=dict(spoken=dict(ji="zh", np="zh", bg="zh"), places=[s["place"] for s in SCENES.values()] + ["waterloo"]),
          lines=lines)
-# the title: after A07 (「上马。」), over the join to the map
+# the title: after A07 (「这叫战略。En avant！」), as he rides on
 j["engine"].update(title_after="A07", title_delay=0.5, title_hold=2.2)
-# two rows too wide for one screen: split at the full stop
-SPLIT = {"C23": [("大卫。把我母亲画上去。", "David. Mettez ma mère."), ("那儿，正中间。", "Là. Au milieu.")],
-         "G47": [("不是我那四十场胜仗。", "Pas mes quarante batailles."), ("滑铁卢会把它们抹掉。", "Waterloo les effacera.")]}
-for l in lines:
-    if l["id"] in SPLIT: l["screens"] = [dict(zh=a, en=b) for a, b in SPLIT[l["id"]]]
 out = os.path.join(os.path.dirname(os.path.abspath(__file__)), "napoleon_lines.json")
 json.dump(j, open(out, "w", encoding="utf8"), ensure_ascii=False, indent=1)
 print(out, len(lines), "lines")
