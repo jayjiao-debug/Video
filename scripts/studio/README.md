@@ -11,7 +11,8 @@ mkdir -p ~/Claude/studio && git clone --depth 1 --single-branch -b claude/pipeli
 bash ~/Claude/studio/tools/scripts/studio/studio setup
 ```
 
-Setup makes `~/Claude/studio/{repo,work,library,voice,logs,bin}` and `~/Claude/films`, finds or installs node (the
+Setup makes `~/Claude/studio/{repo,work,library,voice,logs,bin}`, copies a portable node it finds in an old
+clone into `~/Claude/studio/node` (so the old clones can be deleted), and `~/Claude/films`, finds or installs node (the
 portable one in `~/Claude/libai-render-test` is used if present), ffmpeg and ffprobe (Homebrew, or a static build in
 `~/Claude/studio/bin`), a Python venv `~/Claude/studio/py` (numpy, scipy, pillow, soundfile, requests,
 faster-whisper), and an empty film checkout that fetches one commit at a time. `~/Claude/studio/studio` is then the
@@ -56,6 +57,16 @@ default. `My Drive/TinyEurekaFilms/` is kept for the paused YouTube channel and 
 there; a film config can say otherwise with `"drive": {"zh": "Juno", "en": "TinyEurekaFilms"}`. The links open for the Drive's own account
 (phone, laptop); sharing one wider is a separate step. `studio drive status`, `studio drive push <film> --version v7`
 (again, or later), `studio drive link <path>`. `--no-drive` or `STUDIO_DRIVE=off` keeps a delivery local.
+
+**Disk space.** The Mac's disk is small, so the cloud holds the films. Once Drive has a delivery (the folder, the
+master and the phone copy all have Drive ids), the studio deletes the big local copies: the render, the master, the
+phone copy, the stems and the masked watch copy in `work/`, and the videos and sound page in `~/Claude/films/`. It
+keeps the 540 watch copy (the next version's gate compares against it), the mix, the sheets, the gate report,
+`job.json`, the log and `delivery.json`. `--keep-local` (or `STUDIO_KEEP_LOCAL=1`) keeps everything. Make the sound
+page before delivering, because the stems go too. `studio clean` does the same for older versions already on Drive,
+and drops the renders of test versions never delivered that are older than a week (`--days`, `--dry-run`). It lists
+the other big folders in `~/Claude` and leaves them alone. Keep Google Drive on **streaming**, not mirroring, so Drive
+files take no disk until opened.
 
 **Unattended.** For the Mac to work while nobody is with it: keep it from sleeping (System Settings > Energy), turn on
 "Start up automatically after a power failure", and have Google Drive and the Claude app open at login.
