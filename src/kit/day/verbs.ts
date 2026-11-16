@@ -181,7 +181,10 @@ export function makeVerbs<Sp extends string>(spec: VerbSpec<Sp>) {
   const seated = (s: Seat, t: number, o: { rise?: number; hipY?: number; scale?: number; back?: number; facing?: number } = {}): Extra => {
     const k = clamp01(o.rise ?? 0), top = s.top.clone();
     if (k > 0) top.y = lerp(s.top.y, s.floor + ((o.hipY ?? 0.62) - 0.028) * (o.scale ?? 1), k);
-    return { at: V(s.top.x, s.floor, s.top.z), facing: o.facing ?? s.facing, pose: { kind: "sit", t }, seat: { top, floor: s.floor, back: o.back ?? s.back } };
+    // the rig's own seat fields come along when the seat has them (rig/seats.ts seatOn: front, backrest, a desk)
+    const R = s as Seat & Partial<Record<"front" | "backrest" | "backrestTop" | "deskEdge" | "deskTop", number>>;
+    const extra = Object.fromEntries((["front", "backrest", "backrestTop", "deskEdge", "deskTop"] as const).filter((k) => R[k] !== undefined).map((k) => [k, R[k]]));
+    return { at: V(s.top.x, s.floor, s.top.z), facing: o.facing ?? s.facing, pose: { kind: "sit", t }, seat: { top, floor: s.floor, back: o.back ?? s.back, ...extra } };
   };
   /** HANDS ON THE LAP for a sitter (spread over the state, after seated()): the rig's own lap rest is 2-3.4 cm inside the
    *  wide robes of the two kings (clearance "self" hand x robe), so the block-out pins them 4 cm forward and 4 cm up,

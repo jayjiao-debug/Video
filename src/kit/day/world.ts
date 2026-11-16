@@ -30,13 +30,16 @@ import type { Mats } from "../../videos/bt/pbr";
 import { NOINK } from "../fx/ink";
 import { RigCast, type Rig, type RigState } from "../../videos/group/kit/rig3d";
 import type { CastLight } from "../../videos/group/kit/cast";
-import { ipNum } from "../film/env";
+import { ipFlag, ipNum } from "../film/env";
+import { contactIssues } from "./rig/contact";
 import type { DaySet, BakedLight } from "./sets";
 import type { CamPose, PlaceLook, V3Like } from "./types";
 
 // Cover stills only (input props, all default to the film's own framing): zoom < 1 shows more around the same frame;
 // sx / sy move the picture right / down by that fraction of the frame (a lens shift, the perspective stays).
 const COVER_ZOOM = ipNum("zoom", 1, false), COVER_SX = ipNum("sx", 0), COVER_SY = ipNum("sy", 0);
+/** input prop contacts: true = run the contact check (rig/contact.ts) on every figure every frame and warn in the log */
+const CONTACTS = ipFlag("contacts");
 /** Cover stills only: the size of icons drawn over the picture in screen px (they do not shrink with zoom). 1 = the film. */
 export const COVER_OV = ipNum("ov", 1, false);
 
@@ -79,6 +82,8 @@ export type DayWorldSpec<P extends string, Person, S extends DaySet<P>, Pr exten
   onActor?(w: unknown, p: Person, r: Rig): void;
   /** called in update() for every figure before the cast solves (a film's per-frame rule: Newton's hair from noon) */
   onUpdate?(w: unknown, r: Rig, st: RigState): void;
+  /** the floor's height under a point, for the contact check (input prop contacts); default: the figure's own at.y */
+  floorAt?(x: number, z: number): number;
 };
 
 export class DayWorld<P extends string, Person, S extends DaySet<P>, Pr extends DayProps<N, X>, N extends string, X> {
@@ -92,6 +97,7 @@ export class DayWorld<P extends string, Person, S extends DaySet<P>, Pr extends 
   updated = false;
   protected rigs = new Map<string, Rig>();
   protected ids = new Map<Person, number>();
+  protected names = new Map<Rig, string>();
   private _v = V(); private _p = V(); private _look = V();
   constructor(readonly gl: THREE.WebGLRenderer, readonly camera: THREE.PerspectiveCamera, readonly spec: DayWorldSpec<P, Person, S, Pr, N, X>) {
     const t0 = now();
@@ -116,7 +122,7 @@ export class DayWorld<P extends string, Person, S extends DaySet<P>, Pr extends 
     if (id === undefined) { id = this.ids.size; this.ids.set(p, id); }
     const k = `${id}|${key}`;
     let r = this.rigs.get(k);
-    if (!r) { r = this.spec.addPerson(this.rc, p); r.group.scale.setScalar(1); this.rigs.set(k, r); this.hide(r); this.spec.onActor?.(this, p, r); }   // (never scaled: the rig's solver works in world space)
+    if (!r) { r = this.spec.addPerson(this.rc, p); r.group.scale.setScalar(1); this.rigs.set(k, r); this.names.set(r, `${(p as { name?: string }).name ?? `person${id}`}${key ? `|${key}` : ""}`); this.hide(r); this.spec.onActor?.(this, p, r); }   // (never scaled: the rig's solver works in world space)
     return r;
   }
   private hide(r: Rig) {
@@ -181,6 +187,7 @@ export class DayWorld<P extends string, Person, S extends DaySet<P>, Pr extends 
       this.spec.onUpdate?.(this, r, st);
     }
     this.rc.update(this.camera, this.spec.H); this.updated = true;
+    if (CONTACTS) for (const r of this.rigs.values()) for (const c of contactIssues(r, { name: this.names.get(r), floorAt: this.spec.floorAt })) console.warn(`[${this.spec.name}] f${this.f} contact: ${c.msg}`);
   }
   beginFrame(f: number) {
     this.f = f; this.t = f / this.spec.fps; this.updated = false;

@@ -41,6 +41,22 @@ Copy the starter film: `src/videos/day_template/` (composition `DayTemplate`) an
 | `hud/vlog.tsx` | her camera's recording UI: the breathing REC lamp, the timestamp (big slide-in per scene, the clock racing at clock joins), the battery on the clock, the switch-off | `makeVlog({ fps, scenes, stamp, segments, segmentAt, en, offAt?, joins?, wordFrom?, battery? })` |
 | `hud/phone.tsx` | the phone mask for review stills (input prop `mask`) | `<PhoneMask />` |
 
+## The rig layer (`rig/`)
+
+These sit on top of the shared rig (`src/videos/group/kit/rig3d.ts`, which gained the expression track `rigMood` and
+the seven emotes: speechless, gloom, rage, aghast, doze, scheming, laughcry; see its RIG3D.md). They are checked on
+real solved figures in node with `node scripts/kit/day/proof/run.mjs scripts/kit/day/rig/check.tsx`.
+
+| file | what | the call |
+|---|---|---|
+| `rig/personality.ts` | a character's personality profile, written once: resting face, blink rate, restless eyes, how much the head moves with the words, a resting lean, and the face for each kind of reaction. Face changes go through `rigMood`, so they never cut | `persona({ name, rest, energy, blinkK, restless, talkHead, lean, react, how }, VERBS)` returns `.idle(f, id)`, `.talk(q, f, id)`, `.mood(f, [[frame, reaction]])`, `.face(r)` |
+| `rig/poses.ts` | the pose library: named attitudes (stand, listen, think, proud, shy, tired, eager, sulk, explain, greet, cheer, hush, phone, offer, sit, desk, write) built from the rig's pose kinds and posture fields | `POSES.think(t)` and so on, spread into `r.set({ at, facing, ...POSES.think(t), ...persona.idle(f, id) })` |
+| `rig/seats.ts` | seat data on furniture: a piece says where it is sat on in its own frame; `seatOn` turns that into the seat for wherever the piece stands, chair back and desk included. `seated()` passes the rig's seat fields through | `chairSeat({ seat, d, backZ, backTop })`, `stoolSeat({ seat, d })`, `seatOn(spec, at, yaw, { floor, desk })` |
+| `rig/contact.ts` | the contact check: a foot sunk into or floating above the floor, a hand short of its target, and (only when asked) a sitter's hanging feet. The World runs it on every frame with the input prop `contacts: true` and warns in the log | `contactIssues(rig, { name, floorAt, tol, strictSeats })`; `DayWorld` spec `floorAt(x, z)` |
+
+The rig's legs are short by design. A stock figure keeps both feet on the floor only up to a seat about 0.34 m high
+(the check prints the table). On a 0.45 m chair the feet hang, which is the house look, not an error.
+
 The scripts are in `scripts/kit/day/`: `gen_timing.py`, `voice/assemble.py`, `voice/cut_lines.py`, `sound/build.py`
 and `sound/make_poweroff.py`. Each takes `--film`. The film's constants come from its lines file's `"engine"` block and
 its `cues.json`.

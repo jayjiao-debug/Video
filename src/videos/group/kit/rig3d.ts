@@ -569,8 +569,8 @@ const blobMat = (col: string) => {
 //     40 x 13.5u filled with ink with a row of separate teeth along its top edge, a bared-teeth box 26 x 17u, a small o.
 //   - extras: a sweat drop, a soft blush.
 // Each character strays a little from the pattern (spacing, sizes, tilts), the same way in every expression (seeded).
-type EyeK = "lid" | "slit" | "down" | "dot" | "happy" | "closed" | "dash" | "squeeze" | "ring" | "ringHalf" | "spiral";
-type MouthK = "tiny" | "frown" | "smirk" | "smirkWide" | "smile" | "smileWide" | "grin" | "laugh" | "o" | "O" | "wave" | "teeth" | "lick";
+type EyeK = "lid" | "slit" | "down" | "dot" | "happy" | "closed" | "dash" | "squeeze" | "ring" | "ringHalf" | "spiral" | "bead";
+type MouthK = "tiny" | "frown" | "smirk" | "smirkWide" | "smile" | "smileWide" | "grin" | "laugh" | "o" | "O" | "wave" | "teeth" | "lick" | "flat" | "jaw" | "wobble" | "laughD";
 /** The mouths of a character who is speaking (RigState.mouth; rigSay gives the sequence for a line). The reference's
  *  talk kit, measured on five characters (width x height in u): mouths two to four times the size of the resting
  *  one, dark boxes with round corners, white teeth, a pink tongue. They hang from the upper lip: the top edge rises a
@@ -588,7 +588,11 @@ export const RIG_MOUTHS: RigMouth[] = ["line", "pill", "strip", "small", "half",
 /** cock = one brow cocked (the one on the strong side): it goes up by that many u in a high arch, its inner end
  *  staying down by the nose; the other brow stays where it is. cheek = a cheekbone line on each side (cheekbone()):
  *  it cuts the round face into a jaw, on any head */
-type FaceDef = { eye: [EyeK, EyeK]; brow: [number, number]; mouth: MouthK; tilt?: number; bar?: boolean; raise?: number; skew?: number; cock?: number; cheek?: boolean; pupil?: number; sweat?: boolean; blush?: boolean };
+type FaceDef = { eye: [EyeK, EyeK]; brow: [number, number]; mouth: MouthK; tilt?: number; bar?: boolean; raise?: number; skew?: number; cock?: number; cheek?: boolean; pupil?: number; sweat?: boolean; blush?: boolean;
+  /** more marks: tears = a tear out of the outer corner of each eye; gloom = a blue shade on the brow and hanging
+   *  lines at the temple; vein = a red anger mark beside the eye; shade = the upper face in shadow; bubble = a bubble
+   *  of sleep. They sit where no hair covers them (the temple, the cheek): higher up a fringe hides them. */
+  tears?: boolean; gloom?: boolean; vein?: boolean; shade?: boolean; bubble?: boolean };
 const FACES: Record<Expr, FaceDef> = {
   neutral: { eye: ["lid", "lid"], brow: [0, -0.5], mouth: "tiny" },
   stern: { eye: ["lid", "lid"], brow: [3.2, -2.2], mouth: "frown", tilt: 9, bar: true, skew: 0 },
@@ -618,11 +622,49 @@ const FACES: Record<Expr, FaceDef> = {
   // "not a word" (for the "shh" pose): the face of "cool" with one brow cocked high and a cheekbone line on each
   // side (a cut jaw); the finger stands in front of the hint of a smile
   hush: { eye: ["slit", "slit"], brow: [1.0, -0.6], mouth: "smirkWide", tilt: 3, bar: true, skew: 0, cock: 7.5, cheek: true },
+  // ---- seven faces with the bite of a meme (2026-11-11; the owner chose them from a larger batch): a plain face and
+  // one mark that makes the point ----
+  // lost for words: two beads for eyes, a straight mouth, a drop of sweat
+  speechless: { eye: ["bead", "bead"], brow: [0.4, 0.4], mouth: "flat", raise: -1.5, skew: 0, sweat: true },
+  // under a cloud: a blue shade on the brow, hanging lines at the temple, eyes shut flat, a wobbling mouth
+  gloom: { eye: ["dash", "dash"], brow: [-2.8, 2.4], mouth: "wobble", skew: 0.3, gloom: true },
+  // fury: the stern face steeper, teeth clenched, a red anger mark beside the eye
+  rage: { eye: ["lid", "lid"], brow: [4.4, -3.4], mouth: "teeth", tilt: 13, bar: true, skew: 0, vein: true },
+  // the jaw on the floor: ring eyes with pin pupils, the mouth open down to the chin
+  aghast: { eye: ["ring", "ring"], brow: [-1.6, 0.4], mouth: "jaw", raise: 3, pupil: 1.5, skew: 0.3 },
+  // nodding off: one eye shut, the other a slit, a bubble of sleep
+  doze: { eye: ["dash", "slit"], brow: [0.2, 1], mouth: "o", skew: 0.4, bubble: true },
+  // up to no good: the stern eyes over a closed smirk, the upper face in shadow
+  scheming: { eye: ["lid", "lid"], brow: [3.6, -2.8], mouth: "smirkWide", tilt: 11, bar: true, skew: 0, shade: true },
+  // laughing to tears: happy eyes, a tear out of the outer corner of each, a wide open mouth
+  laughcry: { eye: ["happy", "happy"], brow: [-1.6, 0.8], mouth: "laughD", raise: 2, tears: true },
 };
+const VEIN = "#e2343c", GLOOM = "#3d4a6b";
 /** a blink in two steps: half (lid 0.5) and shut (lid 1) */
 const blinkEye = (k: EyeK, lid: number): EyeK =>
   lid >= 1 ? (k === "happy" || k === "squeeze" || k === "spiral" || k === "closed" ? k : "dash")
     : lid > 0 ? (k === "dot" ? "lid" : k === "lid" || k === "down" ? "slit" : k === "ring" ? "ringHalf" : k) : k;
+/** A face put together from the parts of several expressions (RigState.expr; rigMood gives one for each frame of a
+ *  change from one expression to the next): the eyes of `eyes` (with its lid slope and pupil), the mouth of `mouth`,
+ *  the brows somewhere between those of `brows` and of `browsTo` (k: 0 = brows, 1 = browsTo, past 1 = beyond it, an
+ *  overshoot), and the marks (sweat, blush, cheekbone lines) of `marks` (default: the mouth's). The brows of a
+ *  made-up face keep the height their own expression gives them: they do not dip with the lids.
+ *  A plain name is the whole face of that expression, as always. */
+export type RigFace = { eyes: Expr; mouth: Expr; brows: Expr; browsTo?: Expr; k?: number; marks?: Expr };
+const faceDef = (e: Expr) => {
+  const d = FACES[e];
+  if (!d) throw new Error(`rig3d: there is no expression "${e}" (there are: ${Object.keys(FACES).join(", ")})`);
+  return d;
+};
+/** a made-up face as its simplest self (a plain name when all its parts are one expression's) and as a cache key */
+const faceNorm = (e: Expr | RigFace): Expr | RigFace => {
+  if (typeof e === "string") return e;
+  const k = e.browsTo && e.browsTo !== e.brows ? Math.round((e.k ?? 0) * 100) / 100 : 0, marks = e.marks ?? e.mouth;
+  if (k === 0 && e.eyes === e.mouth && e.eyes === e.brows && e.eyes === marks) return e.eyes;
+  if (k === 1 && e.eyes === e.mouth && e.eyes === e.browsTo && e.eyes === marks) return e.eyes;
+  return { eyes: e.eyes, mouth: e.mouth, brows: e.brows, marks, ...(k ? { browsTo: e.browsTo, k } : {}) };
+};
+const faceKey = (e: Expr | RigFace) => (typeof e === "string" ? e : `${e.eyes}/${e.mouth}/${e.brows}>${e.browsTo ?? ""}@${e.k ?? 0}/${e.marks ?? ""}`);
 export type P2 = [number, number];
 const quadPts = (a: P2, c: P2, b: P2, n = 22): P2[] => {
   const o: P2[] = [];
@@ -644,9 +686,11 @@ const PEN = 3.3;
 /** design u -> canvas u (the head's outline is about 1 % wider than the ball's diameter the canvas spans) */
 const FACE_FS = 0.99;
 /** the face, front on, on a canvas that spans the head ball's diameter (W px). gaze -1..1 slides the pupils. */
-const drawFace = (p: Pen, W: number, L: Look, expr: Expr, lid: number, brim: boolean, gaze: number, hand: number, fa: FaceAcc = faceAccOf(L, []), talk?: RigMouth, underOnly = false) => {
-  const F = FACES[expr], sd = L.seed, u = (W / 100) * FACE_FS, g = p.g;
-  if (!F) throw new Error(`rig3d: there is no expression "${expr}" (there are: ${Object.keys(FACES).join(", ")})`);
+const drawFace = (p: Pen, W: number, L: Look, expr: Expr | RigFace, lid: number, brim: boolean, gaze: number, hand: number, fa: FaceAcc = faceAccOf(L, []), talk?: RigMouth, underOnly = false) => {
+  // F = the eyes' expression, FM = the mouth's, FX = the marks'; mix = a made-up face (RigFace), null = a plain one
+  const mix = typeof expr === "string" ? null : expr, name = typeof expr === "string" ? expr : expr.eyes;
+  const F = faceDef(name), FM = mix ? faceDef(mix.mouth) : F, FX = mix ? faceDef(mix.marks ?? mix.mouth) : F;
+  const sd = L.seed, u = (W / 100) * FACE_FS, g = p.g;
   const jit = (k: number, a: number) => (2 * rnd(sd, 60 + k) - 1) * a * hand;
   const cx = W / 2 + jit(0, 0.7) * u, E = W / 2 - (brim ? 0 : 1.5) * u;        // the eye line (lower under a hat brim)
   const strong = rnd(sd, 71) < 0.5 ? -1 : 1;                                   // the side of the higher brow and the smirk
@@ -659,7 +703,7 @@ const drawFace = (p: Pen, W: number, L: Look, expr: Expr, lid: number, brim: boo
   const lipY = fa.lens ? 15 : 12.4, mouthY = fa.lip ? lipY + 9.5 : 18.7;
   // accessories drawn on the face (see Acc): under = before the eyes, brows and mouth; over = after everything
   const kit: FaceKit = {
-    look: L, expr, hand, sp, mouth: [jit(20, 1.1), mouthY], lip: lipY, lens: fa.lens, strong, shade: brim, cheek: !!F.cheek, PEN, INK, jit: (k, a) => jit(Math.max(k, 100), a),
+    look: L, expr: name, hand, sp, mouth: [jit(20, 1.1), mouthY], lip: lipY, lens: fa.lens, strong, shade: brim, cheek: !!FX.cheek, PEN, INK, jit: (k, a) => jit(Math.max(k, 100), a),
     line, fill, turned, arc: arcPts, quad: quadPts, g, u, px: (x, y) => [cx + x * u, E + y * u],
   };
   const hook = (fn: (f: FaceKit) => void) => { g.save(); fn(kit); g.restore(); p.rot = null; };
@@ -678,6 +722,7 @@ const drawFace = (p: Pen, W: number, L: Look, expr: Expr, lid: number, brim: boo
       case "dot": turned(x0, y0, jit(8 + i, 5), () => fill(arcPts(x0 + gaze * 2.2, y0, 4.95 * sc, 6.65 * sc), INK)); break;
       case "happy": line(arcPts(x0, y0 + 2.4, 7.7 * sc, 5.4 * sc, 190, 350)); break;
       case "closed": line(arcPts(x0, y0 - 1.4, 7.7 * sc, 3.8 * sc, 12, 168)); break;
+      case "bead": fill(arcPts(x0 + gaze * 2.2, y0 - 0.5, 2.7 * sc, 2.7 * sc), INK); break;
       case "dash": turned(x0, y0, rot * 0.5, () => line([[x0 - 7.6 * sc, y0], [x0 + 7.6 * sc, y0]])); break;
       case "squeeze": line([[x0 + s * 5 * sc, y0 - 5 * sc], [x0 - s * 5.2 * sc, y0], [x0 + s * 5 * sc, y0 + 5 * sc]]); break;
       case "ring": case "ringHalf": {
@@ -693,16 +738,34 @@ const drawFace = (p: Pen, W: number, L: Look, expr: Expr, lid: number, brim: boo
       }
       default: { const a: P2[] = []; for (let t = 2; t <= 30; t++) a.push([x0 + Math.cos(t * 0.5) * t * 0.3 * sc, y0 + Math.sin(t * 0.5) * t * 0.3 * sc]); line(a, PEN - 0.6); }
     }
+    if (FX.tears) {                                                            // a tear out of the eye's outer corner: a point there, swelling into a drop down and outward
+      const C: P2 = kind === "happy" ? [x0 + s * 7.6 * sc, y0 + 1.5] : kind === "squeeze" ? [x0 + s * 5 * sc, y0 + 5 * sc] : [x0 + s * 8.4 * sc, y0];
+      const a = rad(40), K: P2 = [C[0] + s * Math.sin(a) * 9.6, C[1] + Math.cos(a) * 9.6], ph = (Math.atan2(C[1] - K[1], C[0] - K[0]) * 180) / Math.PI;
+      fill([C, ...arcPts(K[0], K[1], 4.3, 4.3, ph + 62, ph + 298, 22)], SWEAT, 1.9);
+      line(arcPts(K[0], K[1], 2.2, 2.2, ph + 150, ph + 215, 6), 1.3, TEETH);
+    }
     // brow: one arc of the same pen
-    const open = kind === "dot" || kind === "happy" || kind === "squeeze" || kind === "spiral";
-    let bh = F.bar ? 10.5 : kind === "ring" || kind === "ringHalf" ? 19.5 : open ? 21 : kind === "down" ? 13.7 : kind === "dash" || kind === "closed" ? 14.5 : 17;
-    bh += (F.raise ?? 0) + (s === strong ? 0.5 : -0.5) * (F.skew ?? 1.4) * hand + jit(10 + i, 0.4);
-    if (brim) bh = Math.min(bh, 16.5);
-    const [dI, dO] = F.brow, bl = 7.75 * (1 + jit(12 + i, 0.06)), by = y0 - bh, arch = F.bar ? 0.4 : 2 + jit(14 + i, 0.5);
-    const a: P2 = [x0 - s * bl, by + dI], b: P2 = [x0 + s * bl, by + dO];
-    const ck = s === strong && !brim ? F.cock ?? 0 : 0;
-    if (ck) line(quadPts(a, [x0 + s * 0.12 * bl, by - 1.9 * ck], [x0 + s * 1.06 * bl, by + dO - 0.35 * ck]), F.bar ? PEN + 0.9 : PEN);
-    else line(quadPts(a, [x0 + jit(16 + i, 1.2), (a[1] + b[1]) / 2 - 2 * arch], b), F.bar ? PEN + 0.9 : PEN);
+    // (the brow of expression B over an eye of kind k: its two ends, the point it bends toward, its width)
+    const browOf = (B: FaceDef, k: EyeK): [P2, P2, P2, number] => {
+      const open = k === "dot" || k === "happy" || k === "squeeze" || k === "spiral";
+      let bh = B.bar ? 10.5 : k === "ring" || k === "ringHalf" ? 19.5 : open ? 21 : k === "down" ? 13.7 : k === "dash" || k === "closed" ? 14.5 : 17;
+      bh += (B.raise ?? 0) + (s === strong ? 0.5 : -0.5) * (B.skew ?? 1.4) * hand + jit(10 + i, 0.4);
+      if (brim) bh = Math.min(bh, 16.5);
+      const [dI, dO] = B.brow, bl = 7.75 * (1 + jit(12 + i, 0.06)), by = y0 - bh, arch = B.bar ? 0.4 : 2 + jit(14 + i, 0.5);
+      const a: P2 = [x0 - s * bl, by + dI], b: P2 = [x0 + s * bl, by + dO];
+      const ck = s === strong && !brim ? B.cock ?? 0 : 0;
+      if (ck) return [a, [x0 + s * 0.12 * bl, by - 1.9 * ck], [x0 + s * 1.06 * bl, by + dO - 0.35 * ck], B.bar ? PEN + 0.9 : PEN];
+      return [a, [x0 + jit(16 + i, 1.2), (a[1] + b[1]) / 2 - 2 * arch], b, B.bar ? PEN + 0.9 : PEN];
+    };
+    let bw = browOf(F, kind);
+    if (mix) {
+      const B0 = faceDef(mix.brows), q0 = browOf(B0, B0.eye[i]), k = mix.browsTo ? mix.k ?? 0 : 0;
+      if (k) {
+        const B1 = faceDef(mix.browsTo!), q1 = browOf(B1, B1.eye[i]), m = (a: P2, b: P2): P2 => [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k];
+        bw = [m(q0[0], q1[0]), m(q0[1], q1[1]), m(q0[2], q1[2]), q0[3] + (q1[3] - q0[3]) * clamp(k, 0, 1)];
+      } else bw = q0;
+    }
+    line(quadPts(bw[0], bw[1], bw[2]), bw[3]);
   }
   // mouth
   const mx = jit(20, 1.1), my = mouthY, ms = 1 + jit(21, 0.05);
@@ -724,7 +787,7 @@ const drawFace = (p: Pen, W: number, L: Look, expr: Expr, lid: number, brim: boo
   // resting mouth's (it hangs from the upper lip and never reaches the chin); teeth = [top, bottom] rows (u high,
   // 0 = none; "all" = the teeth fill it, one dark line between the rows); tongue = [half width, half height, its
   // middle above the box's bottom edge]. The whole mouth bends with the mood.
-  const mood = F.mouth === "smile" || F.mouth === "smileWide" || F.mouth === "grin" || F.mouth === "laugh" || F.mouth === "lick" ? 1 : F.mouth === "frown" || F.mouth === "teeth" ? -0.75 : 0;
+  const mood = FM.mouth === "smile" || FM.mouth === "smileWide" || FM.mouth === "grin" || FM.mouth === "laugh" || FM.mouth === "lick" ? 1 : FM.mouth === "frown" || FM.mouth === "teeth" ? -0.75 : 0;
   const talkMouth = (hw0: number, h0: number, r0: number, rise: number, teeth: [number, number] | "all", tongue: [number, number, number] | null) => {
     const hw = hw0 * ms, top = my - 2.3 - rise, h = Math.max(Math.min(h0, 40.6 - top), 0.62 * h0), k = h / h0, r = Math.min(r0 * k, h / 2, hw), rim = 2.6;
     const bend = (x: number) => -mood * 2.4 * ((x - mx) / hw) ** 2;                       // corners up on a smiling face
@@ -763,7 +826,7 @@ const drawFace = (p: Pen, W: number, L: Look, expr: Expr, lid: number, brim: boo
       }
       return;
     }
-    switch (F.mouth) {
+    switch (FM.mouth) {
       case "tiny": fill([...quadPts([mx - 4.6, my + 0.2], [mx - 0.4, my - 3.9], [mx + 4.6, my - 0.3], 12), ...quadPts([mx + 4.6, my - 0.3], [mx + 0.6, my + 4.3], [mx - 4.6, my + 0.2], 12).slice(1, -1)], INK, 0.7); break;
       case "frown": line(quadPts([mx - 6.5 * ms, my + 1.8], [mx, my - 5], [mx + 6.5 * ms, my + 1.8])); break;
       case "smirk": line(quadPts([mx - strong * 5.6, my + 1.3], [mx + strong * 1, my + 4.6], [mx + strong * 5.9, my - 3.3])); break;
@@ -789,15 +852,42 @@ const drawFace = (p: Pen, W: number, L: Look, expr: Expr, lid: number, brim: boo
         break;
       }
       case "lick": line(quadPts([mx - 6.9 * ms, my - 1.6], [mx, my + 5.4], [mx + 6.9 * ms, my - 1.6])); fill(arcPts(mx + strong * 6.3, my + 3.6, 3.3, 4.3), TONGUE, 2.2); break;
+      case "flat": line([[mx - 6.8 * ms, my + 0.8], [mx + 6.8 * ms, my + 0.8]]); break;
+      case "wobble": { const a: P2[] = []; for (let k = 0; k <= 16; k++) { const t = k / 16; a.push([mx - 6.4 + 12.8 * t, my + 2.6 - 6.4 * t * (1 - t) + 1.15 * Math.sin(k * 1.18)]); } line(a); break; }
+      case "jaw": {                                                            // open down to the chin: a tall box, a band of teeth at the top, the tongue at the bottom
+        const hw = 9.2 * ms, y0 = my - 4.5, y1 = 39.5, r = 6.5, box: P2[] = [];
+        for (const [qx, qy, a0] of [[1, -1, -90], [1, 1, 0], [-1, 1, 90], [-1, -1, 180]]) box.push(...arcPts(mx + qx * (hw - r), (qy > 0 ? y1 : y0) - qy * r, r, r, a0, a0 + 90, 8));
+        fill(box, INK);
+        p.clip(pts(box), () => { fill([[mx - hw, y0], [mx + hw, y0], [mx + hw, y0 + 4.4], [mx - hw, y0 + 4.4]], TEETH); fill(arcPts(mx, y1 - 1.5, hw * 0.78, 6.2), TONGUE); });
+        break;
+      }
+      case "laughD": {                                                         // a straight top edge, a round bottom: a band of teeth under the edge, the tongue at the bottom
+        const hw = 12.5 * ms, top = my - 5.5, dp = 15, shape: P2[] = [[mx - hw, top], [mx + hw, top], ...arcPts(mx, top + 0.6, hw, dp, 0, 180, 24)];
+        fill(shape, INK, 2.2);
+        p.clip(pts(shape), () => { fill([[mx - hw, top], [mx + hw, top], [mx + hw, top + 3.8], [mx - hw, top + 3.8]], TEETH); fill(arcPts(mx, top + dp - 0.4, hw * 0.62, 5.6), TONGUE); });
+        break;
+      }
     }
   });
-  if (F.cheek) for (const s of [-1, 1]) line(cheekbone(s), CHEEK_PEN);
-  if (F.blush) for (const s of [-1, 1]) {
+  if (FX.cheek) for (const s of [-1, 1]) line(cheekbone(s), CHEEK_PEN);
+  if (FX.blush) for (const s of [-1, 1]) {
     const bx = cx + s * 20.5 * u, by = E + 9.6 * u, r = 6.6 * u, gr = g.createRadialGradient(0, 0, 0, 0, 0, r);
     gr.addColorStop(0, "rgba(238,118,140,0.5)"); gr.addColorStop(0.55, "rgba(238,118,140,0.3)"); gr.addColorStop(1, "rgba(238,118,140,0)");
     g.save(); g.globalCompositeOperation = "destination-over"; g.translate(bx, by); g.scale(1, 0.6); g.fillStyle = gr; g.beginPath(); g.arc(0, 0, r, 0, 7); g.fill(); g.restore();
   }
-  if (F.sweat) turned(-strong * 35, -11, -strong * 14, () => fill([[-strong * 35 + 0.6, -19], ...arcPts(-strong * 35, -11, 3.3, 3.7, -52, 232, 20)], SWEAT, 2.2));
+  if (FX.vein) for (const [qx, qy] of [[1, 1], [1, -1], [-1, 1], [-1, -1]]) line(quadPts([strong * 35 + qx * 1.4, -9 + qy * 5.6], [strong * 35 + qx * 1.4, -9 + qy * 1.4], [strong * 35 + qx * 5.6, -9 + qy * 1.4], 8), 2.4, VEIN);
+  if (FX.bubble) {
+    const bx = strong * 9.5, by = 9.5, r = 7.6;
+    g.save(); g.globalAlpha = 0.9; fill(arcPts(bx, by, r, r), "#cfeaff", 1.7); g.restore();
+    line(arcPts(bx, by, r - 2.6, r - 2.6, 200, 255, 8), 1.6, TEETH);
+  }
+  if (FX.gloom || FX.shade) {                                                  // a shade from the top of the face down past the brows, under the lines
+    const y0 = E - 50 * u, y1 = E + (FX.shade ? 5 : 7) * u, gr = g.createLinearGradient(0, y0, 0, y1), c = FX.shade ? "26,20,40" : "61,74,107";
+    gr.addColorStop(0, `rgba(${c},${FX.shade ? 0.66 : 0.6})`); gr.addColorStop(0.6, `rgba(${c},${FX.shade ? 0.46 : 0.42})`); gr.addColorStop(1, `rgba(${c},0)`);
+    g.save(); g.globalCompositeOperation = "destination-over"; g.fillStyle = gr; g.fillRect(0, y0, W, y1 - y0); g.restore();
+    if (FX.gloom) [25.5, 29.5, 33.5, 37.5].forEach((x, k) => line([[strong * x, -24 + k * 1.5], [strong * x, -7 + 4.5 * Math.sin(k * 2.1 + 1)]], 1.9, GLOOM));
+  }
+  if (FX.sweat) turned(-strong * 35, -11, -strong * 14, () => fill([[-strong * 35 + 0.6, -19], ...arcPts(-strong * 35, -11, 3.3, 3.7, -52, 232, 20)], SWEAT, 2.2));
   if (L.glasses && fa.own) {
     const r = 12.2, gc = L.glassCol ?? "#2a2230";
     for (const s of [-1, 1]) {
@@ -830,10 +920,10 @@ const faceEdge = (c: HTMLCanvasElement, under: (g: CanvasRenderingContext2D) => 
 const faceCache = new Map<string, THREE.CanvasTexture>();
 /** the face drawing for one look / expression / lid state / gaze step: a canvas that spans the head ball's diameter.
  *  True LRU; three lid states and five gaze steps only. */
-const faceTex = (L: Look, expr: Expr, lid: number, brim: boolean, hand = 1, gaze = 0, fa: FaceAcc = faceAccOf(L, []), talk?: RigMouth) => {
-  const lq = lid >= 1 ? 1 : lid > 0 ? 0.5 : 0, gq = Math.round(clamp(gaze, -1, 1) * 2) / 2;
+const faceTex = (L: Look, expr0: Expr | RigFace, lid: number, brim: boolean, hand = 1, gaze = 0, fa: FaceAcc = faceAccOf(L, []), talk?: RigMouth) => {
+  const lq = lid >= 1 ? 1 : lid > 0 ? 0.5 : 0, gq = Math.round(clamp(gaze, -1, 1) * 2) / 2, expr = faceNorm(expr0);
   // (accessories that draw on the face are handed the whole look: two looks that share a seed may differ in what they read)
-  const key = `${L.seed}|${expr}|${lq}|${gq}|${brim ? 1 : 0}|${L.glasses ?? ""}|${L.glassCol ?? ""}|${hand}|${fa.own ? 1 : 0}|${fa.key}${fa.under.length || fa.over.length ? "|" + JSON.stringify(L) : ""}${talk ? "|say:" + talk : ""}`;
+  const key = `${L.seed}|${faceKey(expr)}|${lq}|${gq}|${brim ? 1 : 0}|${L.glasses ?? ""}|${L.glassCol ?? ""}|${hand}|${fa.own ? 1 : 0}|${fa.key}${fa.under.length || fa.over.length ? "|" + JSON.stringify(L) : ""}${talk ? "|say:" + talk : ""}`;
   let t = faceCache.get(key);
   if (t) { faceCache.delete(key); faceCache.set(key, t); return t; }
   const wob = { amp: FACE_PX * 0.0045 * hand, seed: L.seed };
@@ -849,7 +939,7 @@ const faceTex = (L: Look, expr: Expr, lid: number, brim: boolean, hand = 1, gaze
 };
 
 /** the face drawing as a canvas (expression sheets, QA); acc = accessories drawn on the face */
-export const rigFaceCanvas = (L: Look, expr: Expr, o: { lid?: number; brim?: boolean; hand?: number; gaze?: number; acc?: Acc[]; mouth?: RigMouth } = {}) =>
+export const rigFaceCanvas = (L: Look, expr: Expr | RigFace, o: { lid?: number; brim?: boolean; hand?: number; gaze?: number; acc?: Acc[]; mouth?: RigMouth } = {}) =>
   faceTex(L, expr, o.lid ?? 0, !!o.brim, o.hand ?? 1, o.gaze ?? 0, faceAccOf(L, o.acc ?? []), o.mouth).image as HTMLCanvasElement;
 /** One spoken line: from .. to in seconds; syl = its syllables (Chinese: one a character; default: 5.5 a second);
  *  stress = the syllables said loudest (0 = the first): their mouth is the widest; seed = which mouths it picks (give
@@ -955,6 +1045,85 @@ export const rigSpeak = (t: number, lines: RigLine | RigLine[], id = 0, fps = 30
     for (const k of ln.stress ?? []) hs.push(rigHeadAccent("pop", (f - (f0 + Math.round(k * fd))) / fps, {}, fps));
     for (const fb of [f0 - 3, f1 + 2]) if (f >= fb && f < fb + 3) out.blink = f === fb + 1 ? 1 : 0.5;
   });
+  out.head = rigHeadAdd(...hs);
+  return out;
+};
+// ===== a change of expression, acted out =====
+// The reference never cuts from one face to the next cold, and it never morphs one into the other either: the faces
+// stay separate drawings, and the change is covered. Measured on it (30 frames a second): the eyes go half shut for a
+// frame or two and shut for a frame or two, the mouth is exchanged while they are shut, and the new face is there as
+// they open (2 to 4 frames in all); the brows start 2 to 3 frames earlier; the head dips before the change and pops
+// with it; the new face lands on the stressed word. rigMood does that for any two expressions. Nothing is written per
+// expression or per pair: the way a face changes is read from its parts (rigMoodHow), so a new expression added to
+// FACES gets its changes for free.
+/** how lively a face is, read from its parts: 0 = lowered or shut eyes over a small mouth .. 4 = alarm */
+const EYE_E: Record<EyeK, number> = { ring: 2, ringHalf: 2, spiral: 2, squeeze: 1.5, happy: 1, dot: 1, lid: 1, down: 0, slit: 0, closed: 0, dash: 0, bead: 0 };
+const MOUTH_E: Record<MouthK, number> = { O: 2, laugh: 2, grin: 2, teeth: 2, smile: 1, smileWide: 1, lick: 1, wave: 1, smirk: 1, smirkWide: 1, tiny: 0, frown: 0, o: 0, jaw: 2, laughD: 2, flat: 0, wobble: 0 };
+const faceEnergy = (e: Expr) => { const F = faceDef(e); return Math.max(EYE_E[F.eye[0]], EYE_E[F.eye[1]]) + MOUTH_E[F.mouth]; };
+/** The ways a face changes:
+ *    blink  the usual one: a blink covers it. Half shut, shut, and the new face as the eyes open (3 frames); the mouth
+ *           changes while they are shut; the brows slide over, starting 3 frames early and overshooting; the head dips
+ *           before and pops with the new face.
+ *    take   a start (alarm, shock): the eyes shut and the head ducks for 2 frames, then everything is there at once
+ *           and the head jolts up; the brows fly past their place and come back.
+ *    sink   a face that goes quiet (sad, a sigh, deadpan, sleep): the lids come down and stay down for 4 frames, the
+ *           brows drift over 9 frames, the head sinks a little and comes back slowly. No pop.
+ *    cut    nothing: the new face is there on its frame (a change hidden in a turn of the head or behind something). */
+export type RigMoodHow = "blink" | "take" | "sink" | "cut";
+/** one entry of a character's expressions over time: from `at` (seconds) on the face is `expr`. how = the way it
+ *  changes into it (default: rigMoodHow reads it from the new face); amp = how strong the head's part is (0 = none;
+ *  default 1, for a blink 0.45 to 1 by how different the two faces are) */
+export type RigMoodKey = { at: number; expr: Expr; how?: RigMoodHow; amp?: number };
+/** the way a face changes into `to` when nothing else is asked for: wide ring eyes, spirals or a round open mouth =
+ *  a take; a face with no liveliness at all = a sink; anything else = a blink */
+export const rigMoodHow = (from: Expr, to: Expr): RigMoodHow => {
+  const T = faceDef(to);
+  if (T.eye.some((k) => k === "ring" || k === "spiral") || T.mouth === "O" || T.mouth === "jaw") return "take";
+  return faceEnergy(to) === 0 && faceEnergy(from) > 0 ? "sink" : "blink";
+};
+/** A character's expressions over time, with every change acted out (see RigMoodHow). keys = what the face is from
+ *  when on (the first entry holds from the start); t = seconds. A pure function of t: any frame can be asked for on
+ *  its own. Put the answer into the state: expr as it is; blink before your own (blink: m.blink ?? ownBlink: it is
+ *  only given around a change); head together with whatever else moves the head (rigHeadAdd(m.head, speak.head)).
+ *  `at` is the frame the new face is there (put it on the stressed word); what covers the change comes before it.
+ *  Away from a change the answer is the plain expression, so those frames are what they always were. */
+export const rigMood = (t: number, keys: RigMoodKey[], fps = 30): { expr: Expr | RigFace; blink?: number; head?: RigHead } => {
+  const f = Math.floor(t * fps + 1e-6), ks = [...keys].sort((a, b) => a.at - b.at);
+  let cur = ks[0].expr;
+  for (const k of ks) if (f >= Math.round(k.at * fps)) cur = k.expr;
+  const out: { expr: Expr | RigFace; blink?: number; head?: RigHead } = { expr: cur }, hs: (RigHead | undefined)[] = [];
+  const shuts = (F: FaceDef) => F.eye.some((k) => blinkEye(k, 1) !== k);            // eyes that have a shut form of their own
+  for (let j = 1; j < ks.length; j++) {
+    const K = ks[j], from = ks[j - 1].expr, to = K.expr, how = K.how ?? rigMoodHow(from, to);
+    if (from === to || how === "cut") continue;
+    const d = f - Math.round(K.at * fps), cA = shuts(faceDef(from)), cB = shuts(faceDef(to));
+    const amp = K.amp ?? (how === "blink" ? clamp(0.45 + 0.2 * Math.abs(faceEnergy(to) - faceEnergy(from)), 0, 1) : 1);
+    // seq = the eyes of each frame of the cover, from frame d0 on: [whose, how far shut]; the mouth and the marks
+    // change on frame dm; bk = the brows' way over, [frame, k]
+    let seq: [Expr, number][], d0: number, dm: number, bk: [number, number][];
+    if (how === "blink") {
+      d0 = -3; dm = cA ? -1 : cB ? -2 : 0;
+      seq = cA ? [[from, 0.5], [from, 1], [to, 1]] : cB ? [[from, 0], [to, 1], [to, 0.5]] : [];
+      bk = [[-4, 0], [-3, 0.15], [-2, 0.4], [-1, 0.75], [0, 1.15], [1, 1.06], [2, 1]];
+      if (d >= -4 && d <= 6) hs.push({ dy: amp * keyed(d, [[-4, 0], [-3, -0.03], [-2, -0.06], [-1, -0.06], [0, 0.03], [2, 0.02], [5, 0]]), squash: amp * keyed(d, [[-4, 0], [-2, 0.05], [-1, 0.05], [0, -0.02], [3, 0]]) }, rigHeadAccent("pop", d / fps, { amp }, fps));
+    } else if (how === "take") {
+      d0 = -2; dm = 0;
+      seq = cA ? [[from, 0.5], [from, 1]] : [];
+      bk = [[-3, 0], [-2, 0.2], [-1, 0.4], [0, 1.3], [1, 1.2], [2, 1.08], [4, 1]];
+      if (d >= -3 && d < 0) hs.push({ dy: -amp * keyed(d, [[-3, 0], [-2, 0.04], [-1, 0.06]]), squash: amp * keyed(d, [[-3, 0], [-2, 0.05], [-1, 0.07]]) });   // (a deeper duck brings the head down onto the arms)
+      hs.push(rigHeadAccent("jolt", d / fps, { amp }, fps), rigHeadAccent("pop", d / fps, { amp: 0.6 * amp }, fps));
+    } else {
+      d0 = -4; dm = 0;
+      seq = cA ? [[from, 0.5], [from, 0.5], [from, 1], [from, 1], [to, 1], [to, 1], [to, 0.5], [to, 0.5]] : cB ? [[from, 0], [from, 0], [from, 0], [from, 0], [to, 1], [to, 1], [to, 0.5], [to, 0.5]] : [];
+      bk = [[-4, 0], [-2, 0.12], [0, 0.45], [2, 0.82], [4, 0.97], [5, 1]];
+      if (d >= -4 && d <= 18) hs.push({ dy: -amp * keyed(d, [[-4, 0], [0, 0.05], [4, 0.08], [10, 0.06], [18, 0]]) });
+    }
+    const dEnd = Math.max(bk[bk.length - 1][0], d0 + seq.length);
+    if (d < Math.min(d0, bk[0][0] + 1) || d > dEnd + 2) continue;
+    const eye = d >= d0 && d < d0 + seq.length ? seq[d - d0] : ([d < (seq.length ? d0 : dm) ? from : to, 0] as [Expr, number]);
+    if (d < dEnd) out.expr = { eyes: eye[0], mouth: d < dm ? from : to, brows: from, browsTo: to, k: Math.round(keyed(d, bk) * 100) / 100 };
+    if (d >= d0) out.blink = eye[1];                                                // (open for 3 frames after: the new face is not blinked away)
+  }
   out.head = rigHeadAdd(...hs);
   return out;
 };
@@ -1375,7 +1544,9 @@ export type RigState = {
    *  the arm that holds the phone, "shh" for the arm at the lips. */
   armFront?: [boolean | undefined, boolean | undefined];
   hands?: [V3 | null, V3 | null];
-  expr?: Expr; blink?: number; visible?: boolean;
+  /** an expression's name, or a face put together from the parts of several (RigFace; rigMood gives the faces of a
+   *  change from one expression to the next) */
+  expr?: Expr | RigFace; blink?: number; visible?: boolean;
   /** a speaking mouth for this frame, instead of the expression's own (see RigMouth; rigSay(t, lines) gives the
    *  sequence for a spoken line, rigSpeak the mouth, the head and the blinks together). Only while the character
    *  itself speaks: the reference never moves a mouth under the narrator. */
