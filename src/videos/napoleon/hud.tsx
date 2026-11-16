@@ -6,7 +6,7 @@ import { CAPTIONS, captionAt, captionRuns, TRAILING_PUNCT } from "./captions";
 import { FPS, SCENES, SCENE_STAMP, SEGMENTS, segmentAt, type Speaker } from "./story";
 import { EN } from "../../kit/film/lang";
 
-export const SPEAKER_COL: Record<Speaker, string> = { ji: HC.warm, np: HC.goldPale, gd: HC.white, dv: HC.white };
+export const SPEAKER_COL: Record<Speaker, string> = { ji: HC.warm, np: HC.goldPale, bg: HC.white };
 export const CAP = makeCaption({ captions: CAPTIONS, captionAt, captionRuns, trailingPunct: TRAILING_PUNCT, speakerCol: SPEAKER_COL });
 export const VLOG = makeVlog({ fps: FPS, scenes: SCENES, stamp: SCENE_STAMP!, segments: SEGMENTS, segmentAt, en: EN });
 export const { Caption } = CAP;

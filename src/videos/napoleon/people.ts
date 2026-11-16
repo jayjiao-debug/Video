@@ -12,7 +12,7 @@
 // At a glance: he is the smallest figure with the biggest hat; green is his and nobody else wears it.
 import type { Look } from "../group/kit/toon";
 import { addPerson, type Person } from "../wanbi/people";
-import { uniform, greatcoat, sacre, gownLoose, bicorne, laurel, strawHat, EMPIRE } from "./acc/empire";
+import { uniform, greatcoat, sacre, gownLoose, bicorne, laurel, strawHat, mitre, crownWorn, EMPIRE } from "./acc/empire";
 
 export { addPerson, type Person };
 
@@ -40,6 +40,20 @@ export const NP_SNOW = consul("npSnow", 1);
 export const NP_SACRE: Person = {
   name: "npSacre", scale: SCALE, expr: "smug", look: face({ topCol: EMPIRE.crimson, botCol: EMPIRE.white, legCol: EMPIRE.white, shoes: EMPIRE.white, width: 1.06 }),
   acc: () => [sacre(), laurel()],
+};
+/** the same, the crown on (scene B swaps to him on the frame the crown lands) */
+export const NP_CROWNED: Person = { ...NP_SACRE, name: "npCrowned", acc: () => [sacre(), crownWorn()] };
+/** Pius VII: white, the mitre; his hands stay in the air */
+export const POPE: Person = {
+  name: "pope", scale: 1.0, expr: "nervous",
+  look: { seed: 1742, skin: "#f1d6c0", top: "jacket", topCol: "#f4efe2", bottom: "shorts", botCol: "#f4efe2", legCol: "#f4efe2", shoes: "#a02c3a", hair: "short", hairCol: "#d8d4cc", part: 1, width: 1.0 },
+  acc: () => [gownLoose({ col: "#f4efe2" }), mitre()],
+};
+/** an old grenadier of the Guard (C: the one he knows by name) */
+export const VETERAN: Person = {
+  name: "veteran", scale: 1.1, expr: "grin",
+  look: { seed: 1777, skin: "#e6b894", top: "jacket", topCol: EMPIRE.blue, bottom: "shorts", botCol: EMPIRE.white, legCol: EMPIRE.black, shoes: EMPIRE.black, hair: "short", hairCol: "#8a8478", part: -1, width: 1.16 },
+  acc: () => [uniform({ col: EMPIRE.blue, lapel: EMPIRE.white, piping: EMPIRE.red, collar: EMPIRE.red, button: "#c8b890" }), bicorne({ wide: 0.8, tall: 0.8 })],
 };
 const green = (name: string, hat: boolean): Person => ({
   name, scale: SCALE, expr: "stern", look: face({ topCol: EMPIRE.green, width: 1.06 }),
@@ -78,7 +92,7 @@ export const SECRETARY: Person = {
 
 export const PEOPLE = {
   npGeneral: NP_GENERAL, npGeneralWet: NP_GENERAL_WET, npConsul: NP_CONSUL, npSnow: NP_SNOW, npSacre: NP_SACRE, npGreen: NP_GREEN, npGreenHat: NP_GREEN_HAT, npHelena: NP_HELENA,
-  dorsaz: DORSAZ, david: DAVID, grenadier: GRENADIER, secretary: SECRETARY,
+  dorsaz: DORSAZ, david: DAVID, grenadier: GRENADIER, secretary: SECRETARY, npCrowned: NP_CROWNED, pope: POPE, veteran: VETERAN,
 } satisfies Record<string, Person>;
 export const ALL_PEOPLE: Person[] = Object.values(PEOPLE);
 /** his five figures in life order */

@@ -10,6 +10,6 @@ import { addPerson, type Person } from "./people";
 
 export class World extends DayWorld<Place, Person, NapoleonSet, Props, PropName, Prop> {
   constructor(gl: THREE.WebGLRenderer, camera: THREE.PerspectiveCamera) {
-    super(gl, camera, { name: "napoleon", fps: FPS, W, H, lensFov, buildSets, buildProps, addPerson, bakedLight: BAKED_LIGHT, firstPlace: "arcole" });
+    super(gl, camera, { name: "napoleon", fps: FPS, W, H, lensFov, buildSets, buildProps, addPerson, bakedLight: BAKED_LIGHT, firstPlace: "alps" });
   }
 }

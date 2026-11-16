@@ -1,39 +1,55 @@
-// SCENE A, Arcole, 15 Nov 1796 (script_v1.md A01-A07). She is on the near bank; across the water two grenadiers have
-// just hauled him out, soaked, the flag still in his fist. BLOCKING for the look stills: the camera comes down from the
-// bridge to him (A01), holds on him for A02 and THE FREEZE (his card, story.ts FREEZE), then she crouches on
-// 「Plus bas.」 until the bridge sits behind his legs (A05), and he walks off on 「À cheval.」 (the title lands there).
-import { line, seg, quote, TITLE_BLOCK } from "../story";
+// SCENE A, the Alps, May 1800 (script_v2 A01-A07). A snow path under a rock wall; grenadiers drag a cannon lashed in a
+// tree trunk; he rides past her on a MULE in the grey coat and the hat. 「不可能？这个词，不是法语。」 then THE FREEZE
+// (his card). She looks down at the mule (A03), the famous painting flashes over it (A05), he rides on (A07: the title).
+import { seg, TITLE_BLOCK, FREEZE } from "../story";
 import type { Segment } from "../story";
 import { povCam } from "../cam";
-import { V, standing, speak, saying, yawTo } from "./common";
-import { NP_GENERAL_WET, GRENADIER } from "../people";
-import { ISLAND } from "../sets";
+import { V, standing, speak, saying, seated, yawTo, L0, L1, ramp, fig } from "./common";
+import { NP_CONSUL, GRENADIER } from "../people";
+import { ISLAND, ALPS } from "../sets";
+import { seatOf } from "../props";
 
-const S = seg("A"), X = ISLAND.arcole;
-export const A_AT = V(X + 0.15, 0, -1.9);
+const S = seg("A"), X = ISLAND.alps, Z = ALPS.pathZ;
+/** the mule on frame f: where it stands and its yaw (0 = facing her right) */
+export const muleAt = (f: number) => {
+  const stop = FREEZE.at, go = L1("A07") + 8;
+  const x = f <= stop ? X - 6.2 + 6.3 * ramp(f, S.from - 20, stop) : X + 0.1 + 9 * Math.pow(Math.max(0, (f - go) / 110), 1.6);
+  const yaw = -0.3 * ramp(f, stop - 40, stop) * (1 - ramp(f, go, go + 30));
+  const moving = f < stop - 2 || f > go;
+  return { at: V(x, 0, Z), yaw, moving };
+};
 export const SEG: Segment = {
   id: "A", from: S.from, to: S.to,
   enter() {}, exit() {},
   pose(w, f) {
-    w.setPlace("arcole");
-    const me = V(X, 1.5, 2.0);
+    w.setPlace("alps");
+    const m = muleAt(f), t = f / 30;
+    w.prop("mule").put(m.at, { yaw: m.yaw, t, walk: m.moving ? 1 : 0 });
     const q = saying("np", f);
-    const gone = Math.max(0, (f - (line("A07").to + 12)) / 30);            // he walks off to her right after 「À cheval.」
-    const at = V(A_AT.x + 1.6 * gone * gone, 0, A_AT.z - 0.6 * gone);
-    w.actor(NP_GENERAL_WET).set({ ...standing(at, gone > 0 ? Math.PI / 2 : yawTo(at, me), f, 1), ...(q ? speak(q, f, 1) : {}) });
-    w.actor(GRENADIER, "a").set(standing(V(X - 0.85, 0, -2.5), yawTo(V(X - 0.85, 0, -2.5), at), f, 2));
-    w.actor(GRENADIER, "b").set(standing(V(X + 1.25, 0, -2.8), yawTo(V(X + 1.25, 0, -2.8), at), f, 3));
-    w.prop("flag").put(V(at.x - 0.36, 0, at.z + 0.05), { yaw: Math.PI - 0.35, tilt: 0.1, t: f / 30 });
-    const a2 = quote("np", "A02"), a4 = line("A04"), a5 = line("A05");
+    const expr = f >= L0("A05") && f <= L1("A05") + 30 ? "smug" : f >= L0("A07") ? "cool" : "stern";
+    w.actor(NP_CONSUL).set({ ...standing(m.at, m.yaw + Math.PI / 2, f, 1), ...seated(seatOf(m.at, m.yaw), t), expr, ...(q ? speak(q, f, 1) : {}) } as never);
+    // the cannon and the two who drag it, well behind him; they stop when he stops and stare
+    const cx = m.at.x - 5.2 - (f > FREEZE.at ? 0 : 0), hauling = m.moving && f < FREEZE.at;
+    const cAt = V(Math.min(cx, X - 5.0), 0, Z - 0.5);
+    w.prop("cannon").put(cAt, { yaw: 0 });
+    [[1.9, 0.35], [2.5, -0.35]].forEach(([dx, dz], i) => {
+      const p = V(cAt.x + dx, 0, cAt.z + dz);
+      w.actor(GRENADIER, `h${i}`).set({ ...standing(p, Math.PI / 2, f, 4 + i), ...(hauling ? { pose: { kind: "haul", t, amount: 0.8 } } : {}), expr: hauling ? "pained" : "nervous" } as never);
+    });
+    void fig; void yawTo;
+    const head = [m.at.x - 0.1, 1.98, Z + 0.15] as [number, number, number];
+    const muleHead = [m.at.x + 0.55, 1.55, Z + 0.2] as [number, number, number];
     const camera = povCam(f, [
-      { f: S.from, pos: [X, 1.5, 2.2], look: [X + 2.4, 1.9, -5.2], fov: 56 },
-      { f: line("A01").to, pos: [X, 1.5, 2.0], look: [X + 0.15, 1.25, -1.9], fov: 46 },
-      { f: a2.to + 9, pos: [X, 1.5, 1.9], look: [X + 0.15, 0.86, -1.9], fov: 46 },
-      { f: a4.from, pos: [X, 1.5, 1.9], look: [X + 0.15, 0.9, -1.9], fov: 44 },
-      { f: a4.to + 14, pos: [X, 0.3, 1.9], look: [X + 0.15, 1.1, -1.9], fov: 50 },
-      { f: a5.to + 60, pos: [X, 0.3, 1.9], look: [X + 0.15, 1.15, -1.9], fov: 48 },
-      { f: line("A07").from, pos: [X, 1.5, 1.9], look: [X + 0.15, 1.3, -1.9], fov: 46 },
-      { f: TITLE_BLOCK.from, pos: [X, 1.5, 2.0], look: [X + 1.2, 1.7, -5.2], fov: 54 },
+      { f: S.from, pos: [X, 1.5, 2.3], look: [X - 4.6, 1.2, Z], fov: 58 },
+      { f: L1("A01"), pos: [X, 1.5, 2.3], look: [X - 2.8, 1.5, Z], fov: 54 },
+      { f: FREEZE.at, pos: [X, 1.5, 2.2], look: [X, 1.6, Z], fov: 45 },
+      { f: L0("A03") - 6, pos: [X, 1.5, 2.2], look: [X, 1.6, Z], fov: 45 },
+      { f: L0("A03") + 10, pos: [X + 0.4, 1.45, 2.2], look: muleHead, fov: 50 },
+      { f: L1("A03") + 6, pos: [X + 0.4, 1.45, 2.2], look: muleHead, fov: 50 },
+      { f: L0("A04") + 10, pos: [X + 0.2, 1.5, 2.2], look: [head[0] + 0.25, 1.8, head[2]], fov: 48 },
+      { f: L1("A06") + 4, pos: [X + 0.2, 1.5, 2.2], look: [head[0] + 0.25, 1.75, head[2]], fov: 48 },
+      { f: L1("A07") + 8, pos: [X, 1.5, 2.2], look: [X + 0.2, 1.6, Z], fov: 50 },
+      { f: TITLE_BLOCK.from + 20, pos: [X + 0.3, 1.5, 2.3], look: [X + 3.4, 1.5, Z], fov: 56 },
     ], { walk: 0 });
     return { camera };
   },

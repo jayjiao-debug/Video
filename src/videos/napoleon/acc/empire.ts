@@ -273,3 +273,29 @@ export const strawHat = (o: { col?: string; band?: string } = {}): Acc => {
     },
   };
 };
+
+/** THE POPE's mitre: tall, white, a gold band and a gold stripe up the front */
+export const mitre = (): Acc => ({
+  name: "mitre", slots: ["hat", "crown"], key: "mitre", hat: { rim: 30, hair: "keep", shade: false },
+  build(b) {
+    b.tilt(0, -6);
+    const rows: [number, number, number, number][] = [[0.66, 0.6, 0.5, 0], [0.7, 0.56, 0.8, 0], [0.66, 0.4, 1.3, 0], [0.4, 0.2, 1.8, 0], [0, 0, 2.05, 0]];
+    const g = rowsGeo(b.toM, rows, 1.6, 44);
+    const map = b.tex(256, 256, (cg) => {
+      cg.fillStyle = "#ffffff"; cg.fillRect(0, 0, 256, 256);
+      cg.fillStyle = EMPIRE.gold; cg.fillRect(0, 214, 256, 22); cg.fillRect(118, 0, 20, 256);
+    }, "mitre");
+    b.solid("head", g, { col: "#f4efe2", map, ink: 0.009 });
+  },
+});
+/** THE CROWN he puts on his own head (worn only from that frame: the prop is in his hands before) */
+export const crownWorn = (): Acc => ({
+  name: "crownWorn", slots: ["crown"], key: "crownWorn", noHairProps: true,
+  build(b) {
+    b.tilt(0, -8);
+    const rows: [number, number, number, number][] = [[0.62, 0.62, 0.62, 0], [0.7, 0.7, 0.8, 0], [0.74, 0.74, 1.02, 0], [0.5, 0.5, 1.2, 0], [0, 0, 1.26, 0]];
+    b.solid("head", rowsGeo(b.toM, rows, 1, 40), { col: EMPIRE.gold, ink: 0.008 });
+    const ball = new THREE.SphereGeometry(0.09 * b.R, 10, 8);
+    b.put(b.solid("head", ball, { col: EMPIRE.crimson, ink: 0.005 }), 0, 1.3, 0);
+  },
+});

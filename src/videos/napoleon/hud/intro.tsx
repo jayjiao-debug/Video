@@ -1,26 +1,23 @@
 // hud/intro.tsx: THE LEAD'S INTRO CARD of the Napoleon film (the format's rule: on his FIRST APPEARANCE, right after the
-// hook; it BUILDS piece by piece and is never a still). The picture freezes (story.ts FREEZE, 2.5 s) on him soaked on
-// the bank with the flag; the cut-out pass (Film.tsx iso) keeps him in colour and washes Arcole to an engraving's
-// green and parchment. Over that, in the Empire skin, in this order (t = frames into the freeze):
-//    0  a flash; the picture outside his portrait darkens
-//    1  THE GILT OVAL FRAME draws itself round him, from the bottom up both sides; its crowned N is stamped on top (11)
-//    3  the green band wheels in under the portrait; 「今日采访对象」 marches in on its crimson ribbon (5)
-//    8  拿 · 破 · 仑 stamped in gold, one drum hit each (8, 11, 14); the year and place march in beside it (17, 20)
-//   22  the bulletin sheet unrolls; three stats fill with bees one by one (25, 31, 37): 胜仗 5, 修图 5, 耐心 1
-//   40  the London caricature scratches itself onto the sheet's corner (the enemy's version: the film's question)
-//   44  the wax seal 小伍长 is stamped top right (le petit caporal, his soldiers' name for him)
-//   50  the day's target wheels in: 今日目标：量一次身高, then its counter 0/1 (55): the film pays it off in G
-//   the bees' wings and the counter keep moving to the end; it leaves on a flash, as it came.
+// hook; it BUILDS piece by piece and is never a still). The picture freezes (story.ts FREEZE, 2.5 s) on him on the mule
+// in the hat and the grey coat, just after 「这个词，不是法语。」; the cut-out pass (Film.tsx) keeps him and the mule in
+// colour and washes the Alps to an engraving. Over that, in the Empire skin (t = frames into the freeze):
+//    0  a flash; the picture outside his portrait darkens          1  THE GILT OVAL FRAME draws itself; its crowned N (11)
+//    3  the green band wheels in; 「今日采访对象」 marches in (5)     8  拿 · 破 · 仑 stamped in gold; year and place (17, 20)
+//   22  the bulletin sheet unrolls; three stats fill with bees (25, 31, 37): 胜仗 5, 自信 5, 耐心 1
+//   40  his dictionary: 「不可能」 is written and struck out          44  the wax seal 小伍长
+//   50  the day's target: 今日目标：听他说「不可能」, then its counter 0/1 (55): scene G pays it off
+//   it leaves on a flash, as it came.
 import React from "react";
 import { AbsoluteFill } from "remotion";
 import { clamp01, easeOut, glyph, part, ring, roughFilter, slap, type Rect } from "../../../kit/overlay";
 import { FREEZE } from "../story";
-import { Bee, CrownedN, DIDONE, EM, LittleBoney, SKIN, SkinDefs, march, wheel } from "./skin";
+import { Bee, CrownedN, DIDONE, EM, SKIN, SkinDefs, march, wheel } from "./skin";
 
 export const LEAD_RECT: Rect = { x0: 110, y0: 960, x1: 890, y1: 1480 };
 /** the oval portrait round him (Film.tsx lifts him about its centre) */
 export const OVAL = { cx: 540, cy: 690, rx: 292, ry: 338 };
-const STATS: [string, number][] = [["胜仗", 5], ["修图", 5], ["耐心", 1]];
+const STATS: [string, number][] = [["胜仗", 5], ["自信", 5], ["耐心", 1]];
 const ovalD = (rx: number, ry: number) => { const { cx, cy } = OVAL; return `M${cx},${cy + ry} A${rx},${ry} 0 0 1 ${cx},${cy - ry} A${rx},${ry} 0 0 1 ${cx},${cy + ry} Z`; };
 /** one half of the oval from the bottom to the top (side -1 left, 1 right), for the draw-on */
 const half = (side: 1 | -1) => { const { cx, cy, rx, ry } = OVAL; return `M${cx},${cy + ry} A${rx},${ry} 0 0 ${side < 0 ? 1 : 0} ${cx},${cy - ry}`; };
@@ -70,7 +67,7 @@ export const LeadCard: React.FC<{ t: number }> = ({ t }) => {
               <rect x={128} y={1150 + 9} width={770} height={240} fill={EM.shadow} />
               <rect x={128} y={1150} width={770} height={240} fill={EM.cream} stroke={EM.ink} strokeWidth={6} />
               <path d="M150,1196 H876 M150,1202 H876" stroke={EM.ink} strokeWidth={1.6} opacity={0.5} />
-              <text x={513} y={1190} textAnchor="middle" fontFamily={DIDONE} fontWeight={700} fontSize={18} letterSpacing={8} fill={EM.ink} opacity={0.75}>ARMÉE D'ITALIE · AN V</text>
+              <text x={513} y={1190} textAnchor="middle" fontFamily={DIDONE} fontWeight={700} fontSize={18} letterSpacing={8} fill={EM.ink} opacity={0.75}>ARMÉE DE RÉSERVE · AN VIII</text>
             </g>
             {STATS.map(([lab, n], r) => {
               const at = 25 + 6 * r, m = march(t, at, 5, -40);
@@ -86,11 +83,11 @@ export const LeadCard: React.FC<{ t: number }> = ({ t }) => {
                 </g>
               );
             })}
-            {/* the enemy's version of him */}
+            {/* his dictionary: the one word struck out */}
             {boney > 0 ? (
-              <g transform="translate(748,1376)">
-                <g transform="scale(0.82)"><LittleBoney k={boney} /></g>
-                <g opacity={clamp01((t - 49) / 4)} transform="rotate(-6)">{glyph("lb", "伦敦画的他", -108, -150, 25, EM.crimsonDeep, { anchor: "middle" })}<path d="M-70,-136 q16,10 30,6" fill="none" stroke={EM.crimsonDeep} strokeWidth={2.5} strokeLinecap="round" /></g>
+              <g transform="translate(724,1296) rotate(-3)">
+                <g opacity={clamp01(boney * 3)}>{glyph("dl", "他的字典", 0, -50, 26, EM.greenDeep, { ls: 3 })}{glyph("dw", "不可能", 0, 4, 54, EM.ink, { ls: 4 })}</g>
+                <path d="M-104,10 L104,-4" fill="none" stroke={EM.crimson} strokeWidth={9} strokeLinecap="round" strokeDasharray={210} strokeDashoffset={210 * (1 - clamp01((boney - 0.45) * 3))} />
               </g>
             ) : null}
           </g>
@@ -116,8 +113,8 @@ export const LeadCard: React.FC<{ t: number }> = ({ t }) => {
             </g>
           );
         })}
-        {d1.o > 0 ? <g opacity={d1.o} transform={`rotate(-2 60 1092) translate(${d1.x.toFixed(1)},${d1.y.toFixed(1)})`}>{glyph("d1", "1796年 · 阿尔科莱", 568, 1068, 33, EM.cream, { anchor: "start", ls: 2 })}</g> : null}
-        {d2.o > 0 ? <g opacity={d2.o} transform={`rotate(-2 60 1092) translate(${d2.x.toFixed(1)},${d2.y.toFixed(1)})`}>{glyph("d2", "27岁 · 共和国将军", 568, 1114, 30, EM.goldLight, { anchor: "start", ls: 2 })}</g> : null}
+        {d1.o > 0 ? <g opacity={d1.o} transform={`rotate(-2 60 1092) translate(${d1.x.toFixed(1)},${d1.y.toFixed(1)})`}>{glyph("d1", "1800年 · 阿尔卑斯山", 568, 1068, 32, EM.cream, { anchor: "start", ls: 2 })}</g> : null}
+        {d2.o > 0 ? <g opacity={d2.o} transform={`rotate(-2 60 1092) translate(${d2.x.toFixed(1)},${d2.y.toFixed(1)})`}>{glyph("d2", "30岁 · 第一执政", 568, 1114, 30, EM.goldLight, { anchor: "start", ls: 2 })}</g> : null}
         {/* 今日采访对象 */}
         {tag.o > 0 ? (
           <g opacity={tag.o} transform={`translate(${(292 + tag.x).toFixed(1)},${(986 + tag.y).toFixed(1)}) rotate(-4)`}>
@@ -143,14 +140,14 @@ export const LeadCard: React.FC<{ t: number }> = ({ t }) => {
         {/* the day's target and its counter */}
         {goal.o > 0 ? (
           <g opacity={goal.o} transform={`rotate(${(goal.rot - 2).toFixed(2)} 140 1436) translate(140,1436) scale(${goal.k.toFixed(3)},1) translate(-140,-1436)`}>
-            <rect x={140} y={1402 + 7} width={560} height={68} rx={10} fill={EM.shadow} />
-            <rect x={140} y={1402} width={560} height={68} rx={10} fill="url(#ncGilt)" stroke={EM.ink} strokeWidth={6} />
-            {glyph("g1", "今日目标：", 162, 1436, 40, EM.ink, { anchor: "start" })}
-            {glyph("g2", "量一次身高", 372, 1436, 44, EM.crimsonDeep, { anchor: "start", ls: 2 })}
+            <rect x={140} y={1402 + 7} width={590} height={68} rx={10} fill={EM.shadow} />
+            <rect x={140} y={1402} width={590} height={68} rx={10} fill="url(#ncGilt)" stroke={EM.ink} strokeWidth={6} />
+            {glyph("g1", "今日目标：", 158, 1436, 38, EM.ink, { anchor: "start" })}
+            {glyph("g2", "听他说「不可能」", 354, 1436, 42, EM.crimsonDeep, { anchor: "start" })}
           </g>
         ) : null}
         {count > 0 ? (
-          <g transform={`rotate(-2 140 1436) translate(790,1436) scale(${(count * (1 + 0.04 * Math.sin((t - 55) * 0.7))).toFixed(3)})`}>
+          <g transform={`rotate(-2 140 1436) translate(812,1436) scale(${(count * (1 + 0.04 * Math.sin((t - 55) * 0.7))).toFixed(3)})`}>
             <rect x={-72} y={-34} width={144} height={68} rx={10} fill={EM.cream} stroke={EM.ink} strokeWidth={6} />
             <path d="M-58,-34 v14 M-44,-34 v9 M-30,-34 v14 M-16,-34 v9" stroke={EM.ink} strokeWidth={3} />
             <text x={10} y={15} textAnchor="middle" fontFamily={DIDONE} fontWeight={700} fontSize={46} fill={EM.crimsonDeep}>0/1</text>
