@@ -62,13 +62,13 @@ export const SEG: Segment = {
       if (cheat || f >= L0("D21")) w.prop("card", "ace").put(mix(V(hand.x + 0.02, TOP + 0.006, hand.z + 0.03), V(hand.x + 0.12, TOP + 0.006, hand.z + 0.14), ramp(f, L1("D21"), L1("D21") + 10)), { yaw: 0.5 });
     }
     if (f >= L0("D23") - 14) w.prop("print").put(V(X + TX + 0.12, TOP + 0.012, TZ + 0.05), { yaw: -0.2 });
-    const tabLook = [X + TX - 0.1, TOP, TZ - 0.2] as [number, number, number];
+    const tabLook = [X + TX - 0.1, TOP - 0.3, TZ - 0.2] as [number, number, number];
     const camera = povCam(f, [
       { f: S.from, pos: [X, 1.5, 2.4], look: [X, 1.08, -3.6], fov: 60 },
       { f: L0("D18") + 16, pos: [X, 1.5, 2.2], look: [X + pace * 0.6, 1.18, -3.3], fov: 50 },
       { f: toDesk + 24, pos: [X, 1.5, 2.0], look: [X + 0.7, 1.15, -2.4], fov: 50 },
-      { f: toDesk + 56, pos: [X, 1.5, 2.0], look: [X - 0.45, 1.1, -1.8], fov: 46 },
-      { f: L1("D19") + 26, pos: [X, 1.5, 1.8], look: [X - 0.5, 1.05, -1.8], fov: 40 },
+      { f: toDesk + 56, pos: [X, 1.5, 2.0], look: [X - 0.62, 1.1, -1.8], fov: 46 },
+      { f: L1("D19") + 26, pos: [X, 1.5, 1.8], look: [X - 0.62, 1.05, -1.8], fov: 42 },
       { f: toTable + 46, pos: [X + 0.3, 1.5, 1.5], look: [X + TX - 0.2, 1.18, TZ - 0.6], fov: 50 },
       { f: L0("D21") - 8, pos: [X + 0.3, 1.5, 1.5], look: [X + TX - 0.2, 1.18, TZ - 0.6], fov: 50 },
       { f: L0("D21") + 8, pos: [X + 0.5, 1.55, 1.1], look: tabLook, fov: 34 },

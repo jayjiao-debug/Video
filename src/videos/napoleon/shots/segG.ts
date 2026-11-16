@@ -32,12 +32,12 @@ export const SEG: Segment = {
     const expr = f >= L0("G39") ? "smile_closed" : f >= L0("G37") - 6 ? "sad" : k2 > 0.5 ? "gloom" : f >= L0("G35") ? "deadpan" : "neutral";
     w.actor(NP_HELENA).set({
       ...standing(NP, facing, f, 1), ...alive(t, 1), expr, ...(q ? speak(q, f, 1) : {}), 
-      ...(watering ? { hands: [can, null] } : hat > 0.05 ? { hands: [V(NP.x + 0.3, 1.95, NP.z + 0.1), null], armFront: [true, undefined] } : {}),
+      ...(watering ? { hands: [can, null] } : hat > 0.05 ? { hands: [V(NP.x + 0.3, 1.5, NP.z + 0.12), null], armFront: [true, undefined] } : {}),
     } as never);
     const camera = povCam(f, [
       { f: S.from, pos: [X - 0.6, 1.5, 2.6], look: [X - 2, 1.38, -30], fov: 62 },
       { f: L0("G34") + 10, pos: [X, 1.5, 2.0], look: [NP.x + 0.2, 1.08, NP.z], fov: 50 },
-      { f: L1("G35") + 20, pos: [X, 1.5, 1.7], look: [NP.x, 0.98, NP.z], fov: 44 },
+      { f: L1("G35") + 20, pos: [X, 1.5, 1.7], look: [NP.x, 0.88, NP.z], fov: 44 },
       { f: L1("G36") + 30, pos: [X + 2.3, 1.5, 0.6], look: [NP.x - 0.6, 1.3, NP.z - 0.9], fov: 46 },
       { f: L0("G37") + 10, pos: [X + 2.3, 1.5, 0.6], look: [NP.x - 0.4, 1.3, NP.z - 0.6], fov: 42 },
       { f: L1("G37") + 20, pos: [X + 0.3, 1.5, 1.4], look: [NP.x, 1.28, NP.z], fov: 40 },

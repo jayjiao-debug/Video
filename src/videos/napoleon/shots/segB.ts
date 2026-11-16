@@ -34,7 +34,7 @@ export const SEG: Segment = {
       { f: take0, pos: [X, 1.5, 1.6], look: [X + 0.3, 1.08, -2.4], fov: 48 },
       { f: lift0 + 18, pos: [X - 0.1, 1.5, 1.4], look: [NP.x + 0.1, 1.2, NP.z], fov: 42 },
       { f: on + 30, pos: [X - 0.1, 1.5, 1.2], look: [NP.x + 0.2, 1.12, NP.z], fov: 40 },
-      { f: L1("B11") + 40, pos: [X + 0.1, 1.5, 1.3], look: [X + 0.35, 0.98, -2.4], fov: 46 },
+      { f: L1("B11") + 40, pos: [X + 0.1, 1.5, 1.3], look: [X + 0.35, 0.88, -2.4], fov: 46 },
     ], {});
     return { camera };
   },
