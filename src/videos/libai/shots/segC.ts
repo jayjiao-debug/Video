@@ -146,7 +146,7 @@ export const SEG: Segment = {
     // the side of the head that faces her
     const wet = 1 - ramp(f, L20.from, L20.from + 40);
     if (wet > 0) w.prop("drips").put(r.headWorld(), { rot: yawTo(r.headWorld(), camera.pos), t: f / FPS, open: wet });
-    if (f >= Cb.boot - 6) w.prop("boot").put(w.actor(GAO).handWorld(1), { grip: "hilt", rot: yawTo(V(), V(1, 0, 0)) });
+    if (f >= Cb.boot - 6) w.prop("boot").put(w.actor(GAO).handWorld(1), { grip: "hilt", rot: yawTo(V(), V(1, 0, 0)), scale: 0.6 });   // (Jay, 16 Nov: "The boot is too large")
     return { camera, post: W.post, overlays: C.whipSmear(W.smear, 1) ?? transitionAt(f)?.node, slate: "C 沉香亭" };
   },
 };

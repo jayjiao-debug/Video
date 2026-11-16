@@ -453,8 +453,21 @@
     "end",
     0.6
    ],
-   "gain": -11,
-   "note": "the gate starts to shut once the messenger is through (beats.ts D.shut)"
+   "len": 0.75,
+   "fade": 0.45,
+   "fade_out": 0.12,
+   "gain": -15,
+   "note": "the gate swings shut (beats.ts D.shut, 0.6 s): a rumble that grows (Jay, 16 Nov: loudest at the end and timed)"
+  },
+  {
+   "clip": "bundle_thud",
+   "at": [
+    "D23",
+    "end",
+    1.17
+   ],
+   "gain": -7,
+   "note": "the gate slams: on beats.ts D.shut[1], with the camera's jolt"
   },
   {
    "clip": "mus_hero_sting",
@@ -484,13 +497,23 @@
    "gain": -15
   },
   {
-   "clip": "sfx_slurp",
+   "clip": "sfx_clink",
    "at": [
     "F43",
     "end",
-    0.6
+    0.65
    ],
-   "gain": -17
+   "gain": -12
+  },
+  {
+   "clip": "sfx_slurp",
+   "at": [
+    "F44",
+    "end",
+    2.15
+   ],
+   "gain": -18,
+   "note": "her sip, after he has drunk (segF SIP)"
   },
   {
    "clip": "sfx_gulp",

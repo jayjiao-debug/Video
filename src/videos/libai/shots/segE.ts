@@ -14,6 +14,7 @@ import { transitionAt } from "../hud";
 import { V, rel, yawTo, lid, says, accent, heads, headPop, at, walkAlong, standing, kneel } from "./common";
 import { aim, ramp, held, mixCam, tavern, LI_TABLE, DRINKER_PEOPLE, atTable, type St } from "./lb";
 import { whisperLean } from "../whisper";
+import { E_END } from "./match";
 import { KEEPER } from "../people";
 
 const S = SEGMENTS[4], E = BEAT.E, T = LI_TABLE;
@@ -26,8 +27,8 @@ const HEAD = rel(T.at, T.facing, 0, 0.98, 0);
  *    E29      her whisper (the gold heap on the table in front of him, nearly gone)
  *    E31      三百六十日: snap zoom landing on 三百, held to her question; E32 her whisper
  *    E33      his friend gets up and goes: she pans with him to the door and back
- *    lamps    the lamps go out one by one: she tilts up to the last lamp as it dies; the cut to F matches it to the
- *             moon (the join) */
+ *    lamps    the lamps go out one by one: she pulls him to the lower left with the last lamp up to his right; the
+ *             cut to F lands him on himself and the lamp on the moon (the join: shots/match.ts) */
 /** CAM0: where she ends, looking up at the last lamp (the match cut to F's moon was measured from here: do not move
  *  it). CAM_HIM: where she stands for the scene, in front of him; SX puts his head on the centre line (head probe). */
 const CAM0 = V(T.at.x - 0.6, 1.38, T.at.z + 2.3), CAM_HIM = V(T.at.x - 0.2, 1.38, T.at.z + 2.3), SX = 500;
@@ -95,13 +96,7 @@ const youAt = (f: number): THREE.Vector3 => {
   return walkAlong([up, ...YOU_LEAVE.via, DOOR_PRE, DOOR, DOOR_OUT], YOU_LEAVE.speed, d / FPS, { startFacing: YOU_SEAT.facing }).at.clone();
 };
 
-/** the last lamp to go out (lb.ts tavern: lamp1) and where it sits on screen as it dies (the moon sits there when F
- *  opens: shots/segF.ts MOON_SCREEN) */
-export const LAST_LAMP = V(RX + 1.25, 2.55, -1.25);
-export const LAMP_SCREEN = { sx: 640, sy: 520 };
-/** where the lantern's BODY lands with that aim (measured on the still of picture 3745: x 637, film y 570; aim() works on
- *  the 1920 reference, film y + 60): segF puts the moon's disc there */
-export const LAMP_BODY = { sx: 637, sy: 630 };
+/** the last lamp to go out is lb.ts lamp1; her last move frames him and it as F will open on him and the moon (match.ts) */
 const cam = (f: number): CamPose => {
   let c = aim(CAM_HIM, HEAD.clone().add(V(0.0, -0.12, 0)), 860, SX);
   c = C.snap(c, f, capWord("E28", "我请").from, lineId("E28").to + 24);
@@ -111,7 +106,7 @@ const cam = (f: number): CamPose => {
   const pan = ramp(f, L33.from - 8, L33.from + 16) * (1 - ramp(f, END + 4, END + 40));
   if (pan) c = mixCam(c, aim(CAM_HIM, youAt(Math.min(f, FOLLOW_TO)).setY(1.2), 900, 600), pan);
   const up = ramp(f, END + 44, END + 66);
-  if (up) c = mixCam(c, aim(CAM0, LAST_LAMP, LAMP_SCREEN.sy, LAMP_SCREEN.sx), up);
+  if (up) c = mixCam(c, E_END, up);
   c = C.handheld(c, f, { mood: f >= E.cheer - 4 && f < E.cheer + 40 ? "excited" : "calm", amp: f >= END ? 0.4 : 0.7 });
   return whisperLean(f, c, { at: HEAD });
 };

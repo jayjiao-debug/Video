@@ -347,7 +347,7 @@
     "这是赏的金子。"
    ],
    "en": "His Majesty grants your leave to go home to the mountains. Here is gold.",
-   "pre": 0.6,
+   "pre": 0.9,
    "after": 0.6
   },
   {
@@ -362,7 +362,7 @@
     "您这是，被请出来了？"
    ],
    "en": "Mr Li... did they just show you out?",
-   "after": 1.0
+   "after": 0.25
   },
   {
    "n": 25,
