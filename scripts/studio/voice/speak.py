@@ -1,0 +1,296 @@
+"""Generate the clips of a request with ElevenLabs ON THIS MAC, then transcribe each with Whisper as a check.
+
+  speak.py <request.json> <out dir> [--dry-run] [--no-whisper]
+
+The same request format and the same output (clips, report.json) as the voice-farm branch's speak.py, so every film
+script that read out/<id>/ on voice-output reads <out dir> instead. Run through `studio voice`, which takes the key
+from the macOS keychain (item 2 of the pipeline review): nothing goes through GitHub, nothing is public.
+Differences from the farm: the output folder is an argument; "transcribe" items read src "out/<id>/<file>" from the
+studio's voice folder (~/Claude/studio/voice/<id>/<file>); the credits used are counted from the account before and
+after (report["credits_used"]); --dry-run checks the request and counts the billed characters without calling anyone.
+"""
+import json, os, re, sys
+ARGS = [x for x in sys.argv[1:] if not x.startswith("--")]
+DRY = "--dry-run" in sys.argv
+NO_WHISPER = "--no-whisper" in sys.argv
+OUT = os.path.abspath(ARGS[1] if len(ARGS) > 1 else os.environ.get("VOICE_OUT", "out"))
+VOICE_ROOT = os.path.dirname(OUT)
+os.makedirs(OUT, exist_ok=True)
+def outp(fn): return os.path.join(OUT, fn)
+KEY = os.environ.get("ELEVENLABS_API_KEY", "")
+H = {"xi-api-key": KEY}
+API = "https://api.elevenlabs.io"
+req = json.load(open(ARGS[0] if ARGS else "request.json", encoding="utf-8"))
+report = {"id": req["id"], "clips": []}
+SONGS = {}
+def log(*a): print(*a, flush=True)
+def billed_chars(it):
+    if it.get("type") == "dialogue": return sum(len(l["text"]) for l in it["lines"])
+    if it.get("type") in ("transcribe", "voices", "upload"): return 0
+    return len(it.get("text", ""))
+if DRY:
+    kinds = {}
+    for it in req["items"]: kinds[it.get("type", "tts")] = kinds.get(it.get("type", "tts"), 0) + 1
+    tags = sum(len(m) for it in req["items"] for t in ([l["text"] for l in it.get("lines", [])] + [it.get("text", "")]) for m in re.findall(r"\[[^\]]*\]", t))
+    n = sum(billed_chars(it) for it in req["items"])
+    log(json.dumps({"id": req["id"], "items": kinds, "billed_characters": n, "of_which_audio_tags": tags,
+                    "music_seconds": sum(it.get("ms", 0) for it in req["items"] if it.get("type") == "music") / 1000,
+                    "sfx_seconds": sum(it.get("duration", 0) or 0 for it in req["items"] if it.get("type") == "sfx")}, ensure_ascii=False))
+    sys.exit(0)
+import requests
+if not KEY: log("NO KEY: save it once in the keychain: security add-generic-password -U -a \"$USER\" -s elevenlabs -w"); sys.exit(1)
+
+# account + models
+try:
+    u = requests.get(f"{API}/v1/user/subscription", headers=H, timeout=30).json()
+    report["plan"] = {k: u.get(k) for k in ("tier", "character_count", "character_limit", "status")}
+except Exception as e: report["plan"] = str(e)
+log("plan:", report["plan"])
+models = requests.get(f"{API}/v1/models", headers=H, timeout=30).json()
+ids = [m.get("model_id") for m in models] if isinstance(models, list) else []
+if not ids: log("models response:", str(models)[:300])
+report["models"] = ids
+log("models:", ids)
+def pick_model():
+    for pref in req.get("model_prefs", []):
+        if pref in ids: return pref
+    for m in ids:
+        if "v4" in m and "turbo" not in m and "flash" not in m: return m
+    for m in ("eleven_v3", "eleven_multilingual_v2"):
+        if m in ids: return m
+    return "eleven_multilingual_v2"
+MODEL = pick_model(); report["model"] = MODEL; log("model:", MODEL)
+
+# voices: own library (premade) with labels; optionally the shared library per language
+own = requests.get(f"{API}/v2/voices?page_size=100", headers=H, timeout=30).json().get("voices", [])
+report["own_voices"] = [{"id": v["voice_id"], "name": v["name"], "labels": v.get("labels"), "category": v.get("category")} for v in own]
+def find_shared(lang, accent, gender, age=None, search=None, use_case=None, pick=0):
+    try:
+        p = {"page_size": 20, "language": lang, "sort": "usage_character_count_1y"}
+        if accent: p["accent"] = accent
+        if gender: p["gender"] = gender
+        if age: p["age"] = age
+        if search: p["search"] = search
+        if use_case: p["use_cases"] = use_case
+        r = requests.get(f"{API}/v1/shared-voices", headers=H, params=p, timeout=30).json()
+        vs = r.get("voices", [])
+        for v in vs[pick:]:
+            a = requests.post(f"{API}/v1/voices/add/{v['public_owner_id']}/{v['voice_id']}", headers=H, json={"new_name": f"{lang}-{v['name']}"[:40]}, timeout=30)
+            if a.ok: return a.json().get("voice_id", v["voice_id"]), f"shared:{v['name']} ({v.get('accent')}, {v.get('language')})"
+            log("add shared failed", a.status_code, a.text[:200]); break
+    except Exception as e: log("shared search failed", e)
+    return None, None
+def find_own(accent, gender):
+    for v in own:
+        lb = {k: str(x).lower() for k, x in (v.get("labels") or {}).items()}
+        if accent and accent in lb.get("accent", "") and (not gender or lb.get("gender") == gender): return v["voice_id"], f"own:{v['name']} {lb}"
+    for v in own:
+        lb = {k: str(x).lower() for k, x in (v.get("labels") or {}).items()}
+        if not gender or lb.get("gender") == gender: return v["voice_id"], f"own:{v['name']} {lb}"
+    return own[0]["voice_id"], f"own:{own[0]['name']}"
+
+KEPT = {}   # library voice id -> the id it has in the account, for items with "keep": true
+TR = []     # "transcribe" items, checked with Whisper after generation
+for it in req["items"]:
+    if it.get("type") == "transcribe":   # no ElevenLabs call: Whisper on a slice of an earlier output {"type":"transcribe","name","src":"out/<id>/<file>","start"?,"end"?,"lang"?}
+        TR.append(it); continue
+    if it.get("url"):   # fetch a public, openly licensed recording (e.g. First Sounds, CC BY) instead of synthesising
+        rec = {"name": it["name"], "lang": it.get("lang", ""), "text": it.get("text", ""), "url": it["url"]}
+        try:
+            r = requests.get(it["url"], timeout=60, headers={"User-Agent": "Mozilla/5.0 (voice-farm)"})
+            rec["status"] = r.status_code
+            if r.ok: fn = f"{it['name']}.mp3"; open(outp(fn), "wb").write(r.content); rec["file"] = fn; rec["bytes"] = len(r.content)
+        except Exception as e: rec["error"] = str(e)[:300]
+        log(json.dumps(rec, ensure_ascii=False)); report["clips"].append(rec); continue
+    if it.get("type") == "dialogue":   # several speakers in ONE generation (consistent voices, natural turn-taking):
+        # {"type":"dialogue","name","lang"?,"model"?,"seed"?,"settings"?,"lines":[{"text","voice":{"owner","voice_id","name"}}]}
+        ids_for = {}
+        rec = {"name": it["name"], "type": "dialogue", "lang": it.get("lang", ""), "lines": [l["text"] for l in it["lines"]]}
+        try:
+            for l in it["lines"]:
+                ad = l["voice"]
+                if ad["voice_id"] in KEPT: ids_for[ad["voice_id"]] = KEPT[ad["voice_id"]]; continue
+                a = requests.post(f"{API}/v1/voices/add/{ad['owner']}/{ad['voice_id']}", headers=H, json={"new_name": ("s-" + ad.get("name", ""))[:40]}, timeout=30)
+                if not a.ok: raise RuntimeError(f"add {ad.get('name')} failed {a.status_code} {a.text[:200]}")
+                KEPT[ad["voice_id"]] = ids_for[ad["voice_id"]] = a.json().get("voice_id", ad["voice_id"])
+            inputs = [{"text": l["text"], "voice_id": ids_for[l["voice"]["voice_id"]]} for l in it["lines"]]
+            tried = []
+            for mdl in [it.get("model", "eleven_v4"), "eleven_v3"]:
+                if mdl in tried: continue
+                tried.append(mdl)
+                body = {"inputs": inputs, "model_id": mdl}
+                if it.get("lang"): body["language_code"] = it["lang"]
+                if it.get("settings"): body["settings"] = it["settings"]
+                if it.get("seed") is not None: body["seed"] = it["seed"]
+                r = requests.post(f"{API}/v1/text-to-dialogue/with-timestamps?output_format=mp3_44100_128", headers=H, json=body, timeout=600)
+                if not r.ok and "language_code" in body:
+                    log("dialogue retry without language_code:", r.status_code, r.text[:200]); body.pop("language_code")
+                    r = requests.post(f"{API}/v1/text-to-dialogue/with-timestamps?output_format=mp3_44100_128", headers=H, json=body, timeout=600)
+                rec["status"] = r.status_code; rec["model"] = mdl
+                if r.ok: break
+                log("dialogue failed with", mdl, r.status_code, r.text[:300]); rec.setdefault("errors", []).append(f"{mdl}: {r.status_code} {r.text[:300]}")
+            if r.ok:
+                import base64
+                j = r.json(); fn = f"{it['name']}.mp3"
+                open(outp(fn), "wb").write(base64.b64decode(j["audio_base64"])); rec["file"] = fn
+                rec["voice_segments"] = j.get("voice_segments")     # per input line: start/end seconds
+                al = j.get("alignment") or {}
+                rec["alignment"] = {k: al.get(k) for k in ("characters", "character_start_times_seconds", "character_end_times_seconds")}
+        except Exception as e: rec["error"] = str(e)[:400]
+        log(json.dumps({k: v for k, v in rec.items() if k not in ("alignment",)}, ensure_ascii=False)[:2000]); report["clips"].append(rec); continue
+    if it.get("type") == "voices":   # list voices of the shared library (no generation): {"type":"voices","name","lang","accent"?,"gender"?,"age"?,"use_case"?,"search"?,"n"?}
+        p = {"page_size": it.get("n", 30), "language": it.get("lang", "zh"), "sort": it.get("sort", "usage_character_count_1y")}
+        for k_src, k_dst in (("accent", "accent"), ("gender", "gender"), ("age", "age"), ("search", "search"), ("use_case", "use_cases"), ("category", "category")):
+            if it.get(k_src): p[k_dst] = it[k_src]
+        r = requests.get(f"{API}/v1/shared-voices", headers=H, params=p, timeout=30)
+        rec = {"name": it["name"], "type": "voices", "status": r.status_code, "query": p}
+        if r.ok:
+            keys = ("name", "voice_id", "public_owner_id", "accent", "language", "gender", "age", "descriptive", "use_case", "category", "description", "usage_character_count_1y", "cloned_by_count", "preview_url")
+            rec["voices"] = [{k: v.get(k) for k in keys} for v in r.json().get("voices", [])]
+        else: rec["error"] = r.text[:400]
+        log(json.dumps({"name": rec["name"], "status": rec["status"], "n": len(rec.get("voices", []))})); report["clips"].append(rec); continue
+    if it.get("type") == "sfx":   # ElevenLabs text-to-sound-effects: {"type":"sfx","name","text","duration"?,"influence"?,"loop"?,"model"?}
+        body = {"text": it["text"], "model_id": it.get("model", "eleven_text_to_sound_v2"), "prompt_influence": it.get("influence", 0.3)}
+        if it.get("duration"): body["duration_seconds"] = it["duration"]
+        if it.get("loop"): body["loop"] = True
+        r = requests.post(f"{API}/v1/sound-generation?output_format=mp3_44100_128", headers=H, json=body, timeout=180)
+        rec = {"name": it["name"], "type": "sfx", "text": it["text"], "model": body["model_id"], "status": r.status_code, "sfx": True}
+        if r.ok: fn = f"{it['name']}.mp3"; open(outp(fn), "wb").write(r.content); rec["file"] = fn; rec["bytes"] = len(r.content)
+        else: rec["error"] = r.text[:400]
+        log(json.dumps(rec, ensure_ascii=False)); report["clips"].append(rec); continue
+    if it.get("type") == "upload":   # ElevenLabs Music upload (for audio-reference conditioning): {"type":"upload","name","file","extract_plan"?}
+        files = {"file": (os.path.basename(it["file"]), open(it["file"], "rb"), "audio/mpeg")}
+        data = {}
+        if it.get("extract_plan"): data["extract_composition_plan"] = it["extract_plan"]
+        r = requests.post(f"{API}/v1/music/upload", headers=H, files=files, data=data, timeout=600)
+        rec = {"name": it["name"], "type": "upload", "file_in": it["file"], "status": r.status_code}
+        if r.ok:
+            j = r.json(); SONGS[it["name"]] = j.get("song_id"); rec["song_id"] = j.get("song_id"); rec["composition_plan"] = j.get("composition_plan")
+        else: rec["error"] = r.text[:600]
+        log(json.dumps(rec, ensure_ascii=False)[:3000]); report["clips"].append(rec); continue
+    if it.get("type") == "music":   # ElevenLabs Music: {"type":"music","name","text" (prompt) | "plan" (composition plan),"ms"?,"model"?,"instrumental"?}
+        body = {}
+        if it.get("plan"): body["composition_plan"] = json.loads(re.sub(r'"@([A-Za-z0-9_]+)"', lambda m: json.dumps(SONGS.get(m.group(1), m.group(0))), json.dumps(it["plan"])))
+        else:
+            body["prompt"] = it["text"]; body["music_length_ms"] = int(it.get("ms", 30000))
+            if it.get("instrumental", True): body["force_instrumental"] = True
+        mm = it.get("model") or next((m for m in ids if m and "music" in m), None)
+        if mm: body["model_id"] = mm
+        url = f"{API}/v1/music?output_format=mp3_44100_192"
+        r = requests.post(url, headers=H, json=body, timeout=900)
+        if not r.ok and "model_id" in body:
+            log("music retry without model_id:", r.status_code, r.text[:300]); body.pop("model_id"); r = requests.post(url, headers=H, json=body, timeout=900)
+        if not r.ok and "force_instrumental" in body:
+            log("music retry without force_instrumental:", r.status_code, r.text[:300]); body.pop("force_instrumental"); r = requests.post(url, headers=H, json=body, timeout=900)
+        rec = {"name": it["name"], "type": "music", "text": it.get("text", ""), "model": body.get("model_id"), "status": r.status_code, "sfx": True}
+        if r.ok: fn = f"{it['name']}.mp3"; open(outp(fn), "wb").write(r.content); rec["file"] = fn; rec["bytes"] = len(r.content)
+        else: rec["error"] = r.text[:600]
+        log(json.dumps(rec, ensure_ascii=False)); report["clips"].append(rec); continue
+    vid, vname = (it.get("voice_id"), it.get("voice_id"))
+    added = None
+    if it.get("add"):   # a shared-library voice by its ids {"owner","voice_id","name"}: add it to the account, speak, remove it again
+        ad = it["add"]
+        if it.get("keep"):   # "keep": true = many items with one library voice: add it once, remove it when the run ends
+            if ad["voice_id"] in KEPT: vid = KEPT[ad["voice_id"]]; vname = "shared:" + ad.get("name", "").strip(); a = None
+            else: a = requests.post(f"{API}/v1/voices/add/{ad['owner']}/{ad['voice_id']}", headers=H, json={"new_name": ("s-" + ad.get("name", it["name"]))[:40]}, timeout=30)
+            if a is not None and a.ok: vid = KEPT[ad["voice_id"]] = a.json().get("voice_id", ad["voice_id"]); vname = "shared:" + ad.get("name", "").strip()
+        else:
+            a = requests.post(f"{API}/v1/voices/add/{ad['owner']}/{ad['voice_id']}", headers=H, json={"new_name": ("s-" + ad.get("name", it["name"]))[:40]}, timeout=30)
+            if a.ok: vid = added = a.json().get("voice_id", ad["voice_id"]); vname = "shared:" + ad.get("name", "")
+        if a is not None and not a.ok:
+            rec = {"name": it["name"], "lang": it.get("lang", ""), "text": it["text"], "voice": ad.get("name", ""), "status": a.status_code, "error": "add failed: " + a.text[:300]}
+            log(json.dumps(rec, ensure_ascii=False)); report["clips"].append(rec); continue
+    if not vid and it.get("shared", True): vid, vname = find_shared(it["lang"], it.get("accent"), it.get("gender"), it.get("age"), it.get("search"), it.get("use_case"), it.get("pick", 0))
+    if not vid: vid, vname = find_own(it.get("accent"), it.get("gender"))
+    body = {"text": it["text"], "model_id": it.get("model", MODEL), "language_code": it["lang"]}
+    if it.get("settings"): body["voice_settings"] = it["settings"]
+    for k in ("seed", "previous_text", "next_text", "apply_text_normalization"):   # optional: continuity between separately generated lines
+        if it.get(k) is not None: body[k] = it[k]
+    url = f"{API}/v1/text-to-speech/{vid}?output_format=mp3_44100_128"
+    r = requests.post(url, headers=H, json=body, timeout=120)
+    if not r.ok and r.status_code in (400, 422):
+        log("retry without language_code:", r.text[:200]); body.pop("language_code"); r = requests.post(url, headers=H, json=body, timeout=120)
+    rec = {"name": it["name"], "lang": it["lang"], "text": it["text"], "voice": vname, "voice_id": vid, "model": body["model_id"], "status": r.status_code}
+    if r.ok:
+        fn = f"{it['name']}.mp3"; open(outp(fn), "wb").write(r.content); rec["file"] = fn; rec["bytes"] = len(r.content)
+    else: rec["error"] = r.text[:400]
+    if added and it.get("remove", True):
+        try: rec["removed"] = requests.delete(f"{API}/v1/voices/{added}", headers=H, timeout=30).status_code
+        except Exception as e: rec["removed"] = str(e)[:100]
+    log(json.dumps(rec, ensure_ascii=False)); report["clips"].append(rec)
+for pub, got in KEPT.items():   # the library voices kept for the whole run go back now
+    try: report.setdefault("removed", {})[pub] = requests.delete(f"{API}/v1/voices/{got}", headers=H, timeout=30).status_code
+    except Exception as e: report.setdefault("removed", {})[pub] = str(e)[:100]
+if KEPT: log("removed kept voices:", report.get("removed"))
+
+# check: what does Whisper hear?
+try:
+    if NO_WHISPER: raise RuntimeError("skipped (--no-whisper)")
+    from faster_whisper import WhisperModel
+    wm = WhisperModel("small", device="cpu", compute_type="int8")
+    for rec in report["clips"]:
+        if "file" not in rec: continue
+        if rec.get("sfx"):   # no transcript for sound effects, only the length
+            import soundfile as _sf
+            try: rec["seconds"] = round(_sf.info(outp(rec['file'])).duration, 2)
+            except Exception: pass
+            continue
+        segs, info = wm.transcribe(outp(rec['file']), beam_size=5, word_timestamps=bool(req.get("words")))
+        segs = list(segs)
+        if req.get("words"):   # request "words": true = where each word sits in the clip: [word, start s, end s]
+            rec["words"] = [[w.word.strip(), round(w.start, 3), round(w.end, 3)] for s in segs for w in (s.words or [])]
+        rec["heard"] = "".join(s.text for s in segs).strip(); rec["heard_lang"] = info.language
+        rec["heard_lang_p"] = round(info.language_probability, 3); rec["seconds"] = round(info.duration, 2)
+    if TR:   # per-line check: transcribe each slice twice, with the language detected and with the expected one
+        from faster_whisper.audio import decode_audio
+        cache = {}
+        for it in TR:
+            rec = {"name": it["name"], "type": "transcribe", "src": it["src"], "start": it.get("start", 0), "end": it.get("end"), "lang": it.get("lang", "")}
+            try:
+                if it["src"] not in cache:
+                    p = os.path.join(VOICE_ROOT, re.sub(r"^out/", "", it["src"]))   # a clip made on this Mac earlier
+                    if not os.path.exists(p): raise FileNotFoundError(p)
+                    cache[it["src"]] = decode_audio(p, sampling_rate=16000)
+                x = cache[it["src"]]; a0 = int(float(it.get("start", 0)) * 16000); a1 = int(float(it["end"]) * 16000) if it.get("end") else len(x)
+                segs, info = wm.transcribe(x[a0:a1], beam_size=5)
+                rec["heard_auto"] = "".join(s.text for s in segs).strip(); rec["heard_lang"] = info.language; rec["heard_lang_p"] = round(info.language_probability, 3)
+                if it.get("lang"):
+                    segs, info = wm.transcribe(x[a0:a1], beam_size=5, language=it["lang"])
+                    rec["heard"] = "".join(s.text for s in segs).strip()
+            except Exception as e: rec["error"] = repr(e)[:300]
+            report["clips"].append(rec)
+except Exception as e: report["whisper_error"] = str(e)
+# check for sound effects (request: "tag": true): what does an AudioSet tagger (AST) hear in each clip?
+if req.get("tag"):
+    try:
+        import numpy as np, soundfile as sf, torch
+        from scipy.signal import resample_poly
+        from transformers import ASTFeatureExtractor, ASTForAudioClassification
+        name = "MIT/ast-finetuned-audioset-10-10-0.4593"
+        fe = ASTFeatureExtractor.from_pretrained(name); am = ASTForAudioClassification.from_pretrained(name).eval()
+        for rec in report["clips"]:
+            if "file" not in rec or not rec.get("sfx"): continue
+            try:
+                x, sr = sf.read(outp(rec['file']), dtype="float32", always_2d=True); x = x.mean(axis=1)
+                rec["seconds"] = round(len(x) / sr, 2)
+                if sr != 16000: x = resample_poly(x, 16000, sr).astype("float32")
+                with torch.no_grad(): p = torch.sigmoid(am(**fe(x, sampling_rate=16000, return_tensors="pt")).logits)[0]
+                top = torch.topk(p, 8)
+                rec["tags"] = [[am.config.id2label[int(i)], round(float(v), 3)] for v, i in zip(top.values, top.indices)]
+                log(rec["name"], rec["tags"])
+            except Exception as e: rec["tag_error"] = repr(e)[:300]
+    except Exception as e: report["tag_error"] = repr(e)[:500]; log("tag error", report["tag_error"])
+try:
+    u2 = requests.get(f"{API}/v1/user/subscription", headers=H, timeout=30).json()
+    if isinstance(report.get("plan"), dict) and u2.get("character_count") is not None:
+        report["credits_used"] = u2["character_count"] - (report["plan"].get("character_count") or 0)
+        report["credits_left"] = (u2.get("character_limit") or 0) - u2["character_count"]
+        log("credits used by this request:", report["credits_used"], "left this month:", report["credits_left"])
+except Exception as e: log("credit count failed", e)
+json.dump(report, open(outp("report.json"), "w"), ensure_ascii=False, indent=2)
+# a short table for the thread: name, seconds, what Whisper heard against what was asked
+for rec in report["clips"]:
+    if rec.get("type") in ("voices", "upload"): continue
+    asked = rec.get("text") or " / ".join(rec.get("lines", []))
+    log(f"  {rec.get('name')}: {rec.get('seconds', '?')} s  status {rec.get('status', '-')}  asked: {asked[:60]}  heard: {str(rec.get('heard', ''))[:60]}" + (f"  ERROR {rec['error'][:120]}" if rec.get("error") else ""))
+log(json.dumps(report["clips"], ensure_ascii=False, indent=1))

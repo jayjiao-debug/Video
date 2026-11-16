@@ -1,0 +1,519 @@
+{
+ "note": "采访李白的一天 sound plan. at = [line id, 'start'|'end', offset s] or [scene, 'from'|'to', offset]. Music never ducked: low and constant. Clips: qin-sfx-01/02, sudongpo-sound-01/02 and libai-sfx-01.",
+ "beds": [
+  {
+   "clip": "amb_street",
+   "at": [
+    "A",
+    "from",
+    0
+   ],
+   "until": [
+    "A",
+    "to",
+    0
+   ],
+   "gain": -33,
+   "loop": true,
+   "note": "the street outside the tavern, faint (the street with its roosters cut out: one crow only, at the start; Jay 14 Nov) (no lows, 3 dB down: the 6 s loop thumped: Jay 15 Nov)",
+   "filter": "highpass=f=300,highpass=f=300"
+  },
+  {
+   "clip": "mus_morning2",
+   "at": [
+    "A01",
+    "start",
+    -0.4
+   ],
+   "until": [
+    "B16",
+    "start",
+    -1.0
+   ],
+   "gain": -23,
+   "fade": 0.6,
+   "fade_out": 0.4,
+   "note": "bouncy comic pipa through the tavern and the door (no lows: its bass beat, 72 Hz every 0.58 s from 15 s in, sounded like someone walking: Jay 15 Nov)",
+   "filter": "highpass=f=190,highpass=f=190"
+  },
+  {
+   "clip": "amb_street",
+   "at": [
+    "B",
+    "from",
+    0
+   ],
+   "until": [
+    "B",
+    "to",
+    0
+   ],
+   "gain": -26,
+   "loop": true,
+   "fade": 0.2,
+   "fade_out": 0.6,
+   "note": "(the street with its roosters cut out: one crow only, at the start; Jay 14 Nov) (no lows, 3 dB down: the 6 s loop thumped: Jay 15 Nov)",
+   "filter": "highpass=f=300,highpass=f=300"
+  },
+  {
+   "clip": "mus_busy",
+   "at": [
+    "B16",
+    "start",
+    -1.0
+   ],
+   "until": [
+    "B18",
+    "end",
+    0.4
+   ],
+   "gain": -23,
+   "fade": 0.1,
+   "fade_out": 0.2,
+   "note": "the messenger's hurry"
+  },
+  {
+   "clip": "mus_morning2",
+   "at": [
+    "B18",
+    "end",
+    1.6
+   ],
+   "until": [
+    "B",
+    "to",
+    0
+   ],
+   "gain": -23,
+   "seek": 20.0,
+   "fade": 0.4,
+   "fade_out": 0.6,
+   "filter": "highpass=f=190,highpass=f=190",
+   "note": "(no lows: its bass beat, 72 Hz every 0.58 s from 15 s in, sounded like someone walking: Jay 15 Nov)"
+  },
+  {
+   "clip": "amb_terrace",
+   "at": [
+    "C",
+    "from",
+    0
+   ],
+   "until": [
+    "C",
+    "to",
+    0
+   ],
+   "gain": -24,
+   "loop": true,
+   "fade": 0.5,
+   "fade_out": 0.5
+  },
+  {
+   "clip": "mus_pomp",
+   "at": [
+    "C",
+    "from",
+    0.2
+   ],
+   "until": [
+    "C19",
+    "start",
+    0.5
+   ],
+   "gain": -22,
+   "fade": 0.3,
+   "fade_out": 1.0
+  },
+  {
+   "clip": "mus_sneak",
+   "at": [
+    "C19",
+    "start",
+    0.3
+   ],
+   "until": [
+    "C21",
+    "end",
+    0.6
+   ],
+   "gain": -24,
+   "fade": 0.8,
+   "fade_out": 0.5
+  },
+  {
+   "clip": "drone_tense",
+   "at": [
+    "C21",
+    "end",
+    2.5
+   ],
+   "until": [
+    "C22",
+    "start",
+    0
+   ],
+   "gain": -22,
+   "fade": 0.2,
+   "fade_out": 0.4
+  },
+  {
+   "clip": "mus_sneak",
+   "at": [
+    "C22",
+    "end",
+    0.2
+   ],
+   "until": [
+    "C",
+    "to",
+    0
+   ],
+   "gain": -24,
+   "seek": 4.0,
+   "fade": 0.3,
+   "fade_out": 0.6
+  },
+  {
+   "clip": "amb_court",
+   "at": [
+    "D",
+    "from",
+    0
+   ],
+   "until": [
+    "D",
+    "to",
+    0
+   ],
+   "gain": -24,
+   "loop": true,
+   "fade": 0.5,
+   "fade_out": 0.5
+  },
+  {
+   "clip": "mus_comic",
+   "at": [
+    "D25",
+    "start",
+    1.0
+   ],
+   "until": [
+    "D",
+    "to",
+    0
+   ],
+   "gain": -23,
+   "fade": 0.3,
+   "fade_out": 0.6
+  },
+  {
+   "clip": "amb_evening",
+   "at": [
+    "E",
+    "from",
+    0
+   ],
+   "until": [
+    "E33",
+    "end",
+    1.5
+   ],
+   "gain": -26,
+   "loop": true,
+   "fade": 0.5,
+   "fade_out": 1.5
+  },
+  {
+   "clip": "mus_comic",
+   "at": [
+    "E",
+    "from",
+    0.2
+   ],
+   "until": [
+    "E33",
+    "end",
+    1.8
+   ],
+   "gain": -23,
+   "seek": 18.0,
+   "fade": 0.6,
+   "fade_out": 2.0
+  },
+  {
+   "clip": "amb_night",
+   "at": [
+    "F",
+    "from",
+    0
+   ],
+   "until": [
+    "F",
+    "to",
+    0
+   ],
+   "gain": -22,
+   "loop": true,
+   "fade": 1.0,
+   "fade_out": 0.05
+  },
+  {
+   "clip": "mus_sad",
+   "at": [
+    "F34",
+    "start",
+    -2.0
+   ],
+   "until": [
+    "F44",
+    "end",
+    0.5
+   ],
+   "gain": -24,
+   "fade": 2.0,
+   "fade_out": 1.5,
+   "note": "solo guqin under the night"
+  },
+  {
+   "clip": "mus_museum",
+   "at": [
+    "F44",
+    "end",
+    0.4
+   ],
+   "until": [
+    "F",
+    "to",
+    -4.1666666666666625
+   ],
+   "gain": -22,
+   "fade": 0.8,
+   "fade_out": 2.0,
+   "note": "bittersweet under the two last cards; it thins and dims out before the camera switches off (Jay 15 Nov)"
+  },
+  {
+   "clip": "mus_museum",
+   "at": [
+    "F",
+    "to",
+    -6.1666666666666625
+   ],
+   "until": [
+    "F",
+    "to",
+    -1.5666666666666629
+   ],
+   "gain": -22,
+   "fade": 2.0,
+   "fade_out": 2.6,
+   "note": "the same music, thinned (no lows), fading to nothing as the REC lamp goes out",
+   "filter": "highpass=f=700,highpass=f=700",
+   "sync": [
+    "F44",
+    "end",
+    0.4
+   ]
+  }
+ ],
+ "hits": [
+  {
+   "clip": "rec_beep",
+   "at": [
+    "A",
+    "from",
+    0.2
+   ],
+   "gain": -12
+  },
+  {
+   "clip": "amb_market",
+   "at": [
+    "A",
+    "from",
+    0.9
+   ],
+   "seek": 3.3,
+   "len": 2.2,
+   "gain": -24,
+   "fade": 0.1,
+   "fade_out": 0.4,
+   "note": "the one rooster crow: dawn (卯时)"
+  },
+  {
+   "clip": "snore",
+   "at": [
+    "A",
+    "from",
+    0.3
+   ],
+   "until": [
+    "A01",
+    "start",
+    -1.0
+   ],
+   "gain": -16,
+   "fade_out": 0.2
+  },
+  {
+   "clip": "sfx_knock",
+   "at": [
+    "A01",
+    "start",
+    -0.95
+   ],
+   "gain": -14,
+   "note": "three soft knocks (Jay 15 Nov: a tad softer; the picture shows them: hud/fx.tsx KnockFx)"
+  },
+  {
+   "clip": "sfx_gulp",
+   "at": [
+    "A09",
+    "end",
+    1.2
+   ],
+   "gain": -14
+  },
+  {
+   "clip": "whoosh",
+   "at": [
+    "A",
+    "to",
+    -0.15
+   ],
+   "gain": -14
+  },
+  {
+   "clip": "sting_tai",
+   "at": [
+    "B16",
+    "start",
+    -0.9
+   ],
+   "gain": -16
+  },
+  {
+   "clip": "bundle_thud",
+   "at": [
+    "B17",
+    "end",
+    0.72
+   ],
+   "gain": -15,
+   "note": "he drops back onto the bench (segB LI_LANDS)"
+  },
+  {
+   "clip": "splash_pop",
+   "at": [
+    "B18",
+    "end",
+    0.45
+   ],
+   "gain": -10
+  },
+  {
+   "clip": "sting_luo",
+   "at": [
+    "B18",
+    "end",
+    1.0
+   ],
+   "gain": -16
+  },
+  {
+   "clip": "sfx_boot",
+   "at": [
+    "C21",
+    "end",
+    1.45
+   ],
+   "gain": -12
+  },
+  {
+   "clip": "sfx_taiko",
+   "at": [
+    "C21",
+    "end",
+    2.65
+   ],
+   "gain": -14
+  },
+  {
+   "clip": "sting_oops",
+   "at": [
+    "C22",
+    "start",
+    -0.1
+   ],
+   "gain": -18
+  },
+  {
+   "clip": "sfx_gate",
+   "at": [
+    "D23",
+    "end",
+    0.6
+   ],
+   "gain": -11,
+   "note": "the gate starts to shut once the messenger is through (beats.ts D.shut)"
+  },
+  {
+   "clip": "mus_hero_sting",
+   "at": [
+    "D25",
+    "start",
+    -0.2
+   ],
+   "gain": -19
+  },
+  {
+   "clip": "sfx_pour_gold",
+   "at": [
+    "E28",
+    "start",
+    -0.8
+   ],
+   "gain": -13
+  },
+  {
+   "clip": "sfx_cheer",
+   "at": [
+    "E28",
+    "end",
+    -0.15
+   ],
+   "gain": -15
+  },
+  {
+   "clip": "sfx_clink",
+   "at": [
+    "F43",
+    "end",
+    0.65
+   ],
+   "gain": -12
+  },
+  {
+   "clip": "sfx_gulp",
+   "at": [
+    "F44",
+    "end",
+    0.35
+   ],
+   "gain": -16
+  },
+  {
+   "clip": "card_ding",
+   "at": [
+    "F44",
+    "end",
+    4.019999999999982
+   ],
+   "gain": -18,
+   "note": "the end card"
+  }
+ ],
+ "cards": {
+  "clip": "card_ding",
+  "gain": -18
+ }
+}

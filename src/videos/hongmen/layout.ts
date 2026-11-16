@@ -13,6 +13,7 @@
 // A 9:16 frame is NARROW: at fov 46 it is only 0.48 m wide per metre of distance. No camera can hold all six seats
 // with readable heads (a rig head is 0.47 m wide): Zhang Liang's seat is outside every north framing on purpose.
 import * as THREE from "three";
+import * as KIT_SIZES from "../../kit/props/sizes";
 
 export type Vec3 = [number, number, number];
 /** a camera: structurally a story CamPose */
@@ -100,7 +101,7 @@ export const SHIELD = { r: 0.32, atSeat: V(-0.55, 0, -1.18), onFloor: V(0.17, 0,
 
 // ------------------------------------------------------------------------------------------------- floor marks
 /** the small gift table with the jade (lines 19, 21): on the floor in FRONT of Xiang Yu's table, w along x, d along z, top at h */
-export const TRAY = { at: V(0.36, 0, 0.58), w: 0.28, d: 0.44, h: 0.20 };
+export const TRAY = { at: V(0.36, 0, 0.58), ...KIT_SIZES.TRAY };          // (w 0.28, d 0.44, h 0.20: the kit's tray, src/kit/props/sizes.ts)
 export const MARKS = {
   /** Fan Kuai standing in front of Xiang Yu to be praised (line 15, first half) and kneel-sunk there at his chopping
    *  board (line 15, second half: facing west toward the shield and Xiang Yu); he leaves from here at line 16 */
@@ -259,7 +260,7 @@ export const CARD = {
     /** the wall piece: its centre on the ground, w along x, d along z; the tower sits on its middle */
     wall: { at: V(KX + 5.35, 0, -1.0), w: 1.7, d: 0.5, h: 1.0 }, tower: { w: 0.9, d: 0.56, h: 0.5, roof: 0.3 }, arch: { w: 0.46, h: 0.62 },
     /** the flag pole's foot on the wall top (the right end of the wall) and the pole's length; the flag flies to the right */
-    socket: V(KX + 6.08, 1.0, -0.92), pole: 1.15, flag: { w: 0.62, h: 0.4 },
+    socket: V(KX + 6.08, 1.0, -0.92), pole: KIT_SIZES.FLAG.pole, flag: { ...KIT_SIZES.FLAG.flag },     // (1.15; 0.62 x 0.4: src/kit/props/sizes.ts)
     /** he may walk in from the right (liuFrom -> liu, 1.15 m) with the flag, or stand there from the first frame */
     liu: V(KX + 6.47, 0, -0.74), liuFrom: V(KX + 7.6, 0, -0.5),
   },

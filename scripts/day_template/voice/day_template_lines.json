@@ -1,0 +1,144 @@
+{
+  "film": "day_template",
+  "version": 1,
+  "source": "the starter film of the day engine (src/kit/day/README.md): two scenes, one place, two voices; copy this folder to start a new 采访XX的一天 film",
+  "title": {
+    "zh": "采访某人的一天",
+    "en": "A Day Interviewing Someone"
+  },
+  "subtitle": {
+    "zh": "引擎样片",
+    "en": "an engine starter"
+  },
+  "speakers": {
+    "ji": "记者 (the camera, never seen)",
+    "gu": "嘉宾 the guest"
+  },
+  "scenes": {
+    "A": {
+      "time": "清晨",
+      "en": "Early morning",
+      "place": "study"
+    },
+    "B": {
+      "time": "上午",
+      "en": "Late morning",
+      "place": "study"
+    }
+  },
+  "gap": 0.2,
+  "lead": 0.1,
+  "engine": {
+    "spoken": {
+      "ji": "zh",
+      "gu": "en"
+    },
+    "places": [
+      "study"
+    ]
+  },
+  "lines": [
+    {
+      "n": 1,
+      "id": "A01",
+      "scene": "A",
+      "who": "ji",
+      "zh": "早上好！",
+      "en": "Good morning!",
+      "screens": [
+        {
+          "zh": "早上好！",
+          "en": "Good morning!"
+        }
+      ],
+      "pre": 2.1,
+      "after": 0.3
+    },
+    {
+      "n": 2,
+      "id": "A02",
+      "scene": "A",
+      "who": "gu",
+      "zh": "这么早？",
+      "en": "This early?",
+      "screens": [
+        {
+          "zh": "这么早？",
+          "en": "This early?"
+        }
+      ],
+      "after": 0.3
+    },
+    {
+      "n": 3,
+      "id": "A03",
+      "scene": "A",
+      "who": "ji",
+      "zh": "今天我跟着您，看您怎么过一天。",
+      "en": "Today I follow you, to see how you spend a day.",
+      "screens": [
+        {
+          "zh": "今天我跟着您，看您怎么过一天。",
+          "en": "Today I follow you, to see how you spend a day."
+        }
+      ],
+      "after": 2.6,
+      "card_hold": 2.4,
+      "card_delay": 0.2,
+      "card": {
+        "zh": "这是一张事实卡：每条都要有出处。",
+        "en": "This is a fact card: every one needs a source."
+      }
+    },
+    {
+      "n": 4,
+      "id": "B01",
+      "scene": "B",
+      "who": "ji",
+      "zh": "您在写什么？",
+      "en": "What are you writing?",
+      "screens": [
+        {
+          "zh": "您在写什么？",
+          "en": "What are you writing?"
+        }
+      ],
+      "pre": 0.6,
+      "after": 0.3
+    },
+    {
+      "n": 5,
+      "id": "B02",
+      "scene": "B",
+      "who": "gu",
+      "zh": "一个答案。",
+      "en": "An answer.",
+      "screens": [
+        {
+          "zh": "一个答案。",
+          "en": "An answer."
+        }
+      ],
+      "after": 0.4
+    },
+    {
+      "n": 6,
+      "id": "B03",
+      "scene": "B",
+      "who": "ji",
+      "zh": "好，我们下一场见。",
+      "en": "Right. See you in the next scene.",
+      "screens": [
+        {
+          "zh": "好，我们下一场见。",
+          "en": "Right. See you in the next scene."
+        }
+      ],
+      "after": 1.0
+    }
+  ],
+  "title_span_s": [
+    0.1,
+    2.0
+  ]
+}

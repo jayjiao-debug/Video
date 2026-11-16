@@ -1,0 +1,14 @@
+{
+ "film": "newton",
+ "title": "采访牛顿的一天",
+ "composition": "NewtonFilm",
+ "branch": "claude/newton-day",
+ "render": {"crf": 16, "gl": "angle", "concurrency": "50%"},
+ "langs": {"zh": {}, "en": {"props": {"lang": "en"}}},
+ "sound": {
+  "build": "python3 scripts/newton/sound/build.py --timing {VOICE}/voice_timing.json --voice {VOICE}/voice_48k.wav --clips {CLIPS} --out {MIX}",
+  "stems": "python3 scripts/newton/sound/build.py --timing {VOICE}/voice_timing.json --voice {VOICE}/voice_48k.wav --clips {CLIPS} --out {STEM} --only {GROUP} --nosafety",
+  "groups": ["voice", "music", "amb", "sfx"]
+ },
+ "gate": {}
+}

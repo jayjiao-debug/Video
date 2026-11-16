@@ -1,0 +1,211 @@
+// THE DAY ENGINE's World: the places (makeSets), the props and the cast of rig figures, built ONCE per page. Taken from
+// Newton's world.ts (the four day films carry the same class; Newton's is the newest, with the lens's aspect() for
+// covers and the cover-still lens shift). A film's world.ts is a few lines:
+//
+//   export class World extends DayWorld<Place, Person, NewtonSet, Props, PropName, Prop, Pose> {
+//     constructor(gl, camera) { super(gl, camera, { name: "newton", fps: FPS, W, H, lensFov, buildSets, buildProps, addPerson, bakedLight: BAKED_LIGHT, firstPlace: "room" }); }
+//   }
+//
+// The contract (what a shot may call), in this order inside a shot:
+//   w.setPlace(place, { light? })   FIRST in every shot: shows that place only and gives the figures its light. `light`
+//                       lays fields over the place's figure light for this frame; the three baked values cannot change.
+//   w.set.param(name, value)        the per-frame dressing of the place that shows (beginFrame resets every param).
+//                       THE FIGURES' LIGHT FOLLOWS THE PARAMS: set them BEFORE w.update()
+//   w.setCamera(cam)    then the camera (any CamPose); the engine re-applies the pose's camera
+//   w.actor(person, key?)   the rig figure of a Person: created on first use, then the same figure every time; `key`
+//                       gives a second figure of the same Person. beginFrame hides every figure: set({ ..., visible: true })
+//   w.update()          solves every figure for the current camera and light (after setting them; before reading hands)
+//   w.prop(name, key?)  a prop: .put(at, opts); hidden again next frame
+//   w.project(p) -> { x, y, z, front, on }   world point -> W x H px (front = in front of the camera)
+//   w.f, w.t            the real frame and its time in seconds (shots take their time from their own f argument)
+//   w.place             the place set this frame (null before setPlace)
+//   w.M                 bt/pbr materials with the first place's fill, for a segment's own meshes; w.root to add them to
+// The frame: beginFrame(f) [no place, figures hidden, every set param at its default, every prop hidden] -> the shot ->
+// endFrame(P) [camera, set.setView, set.setFocus, set.animate(P.clock ?? t, f), the robes' ground, update if the shot
+// did not].
+// THE ROBES' GROUND (garb.ts reads group.userData.hmGround every frame): a figure's hanging cloth stops at the seat's
+// floor for a sitter and at `at.y` for a standing figure (never below 0). The World sets it in update().
+import * as THREE from "three";
+import type { Mats } from "../../videos/bt/pbr";
+import { NOINK } from "../fx/ink";
+import { RigCast, type Rig, type RigState } from "../../videos/group/kit/rig3d";
+import type { CastLight } from "../../videos/group/kit/cast";
+import { ipFlag, ipNum } from "../film/env";
+import { contactIssues } from "./rig/contact";
+import type { DaySet, BakedLight } from "./sets";
+import type { CamPose, PlaceLook, V3Like } from "./types";
+
+// Cover stills only (input props, all default to the film's own framing): zoom < 1 shows more around the same frame;
+// sx / sy move the picture right / down by that fraction of the frame (a lens shift, the perspective stays).
+const COVER_ZOOM = ipNum("zoom", 1, false), COVER_SX = ipNum("sx", 0), COVER_SY = ipNum("sy", 0);
+/** input prop contacts: true = run the contact check (rig/contact.ts) on every figure every frame and warn in the log */
+const CONTACTS = ipFlag("contacts");
+/** Cover stills only: the size of icons drawn over the picture in screen px (they do not shrink with zoom). 1 = the film. */
+export const COVER_OV = ipNum("ov", 1, false);
+
+const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
+const toV = (p: V3Like) => (Array.isArray(p) ? V(p[0], p[1], p[2]) : p.clone());
+const now = () => (typeof performance !== "undefined" ? performance.now() : 0); // timing logs only, never pixels
+
+/** group/kit/rig3d applyLight (module-private there): the four uniforms a RigCast's figures are lit by */
+export const applyLight = (rc: RigCast, L: CastLight) => {
+  const U = rc.U;
+  U.uKey.value.set(...L.key).normalize();
+  const t = U.uTint.value.set(1 - L.tintK + L.tint[0] * L.tintK, 1 - L.tintK + L.tint[1] * L.tintK, 1 - L.tintK + L.tint[2] * L.tintK);
+  t.multiplyScalar(1 / Math.max(0.2126 * t.x + 0.7152 * t.y + 0.0722 * t.z, 0.05));
+  U.uGain.value = L.gain;
+  const s = U.uShade.value.set(...(L.shade ?? [1.04, 0.95, 1.34]));
+  s.multiplyScalar(1 / Math.max(0.2126 * s.x + 0.7152 * s.y + 0.0722 * s.z, 0.05));
+  rc.light = L;
+};
+
+/** what the World needs of a film's props layer (props/index.ts) */
+export interface DayProps<N extends string, Pr> { group: THREE.Group; prop(name: N, key?: string): Pr; begin(): void }
+export type Projected = { x: number; y: number; z: number; front: boolean; on: boolean };
+/** the pose fields the World reads at endFrame */
+export type WorldPose = { camera: CamPose; focus?: [number, number]; clock?: number };
+
+export type DayWorldSpec<P extends string, Person, S extends DaySet<P>, Pr extends DayProps<N, X>, N extends string, X> = {
+  /** the film's name, for logs and errors ("newton") */
+  name: string;
+  fps: number; W: number; H: number;
+  /** the frame's real vertical fov for a CamPose fov (timeline.ts makeLens; the identity at 9:16) */
+  lensFov: (fov: number) => number;
+  buildSets(gl: THREE.WebGLRenderer): S;
+  buildProps(M: Mats): Pr;
+  addPerson(rc: RigCast, p: Person): Rig;
+  /** the baked light values (sets.ts BAKED_LIGHT) */
+  bakedLight: BakedLight;
+  /** the place whose fill lights w.M and the props, and whose figure light builds the cast */
+  firstPlace: P;
+  /** called once for every new figure (Newton marks his figures for the hair swap) */
+  onActor?(w: unknown, p: Person, r: Rig): void;
+  /** called in update() for every figure before the cast solves (a film's per-frame rule: Newton's hair from noon) */
+  onUpdate?(w: unknown, r: Rig, st: RigState): void;
+  /** the floor's height under a point, for the contact check (input prop contacts); default: the figure's own at.y */
+  floorAt?(x: number, z: number): number;
+};
+
+export class DayWorld<P extends string, Person, S extends DaySet<P>, Pr extends DayProps<N, X>, N extends string, X> {
+  readonly root = new THREE.Group();
+  readonly set: S;
+  readonly props: Pr;
+  readonly rc: RigCast;
+  readonly M: Mats;
+  f = 0; t = 0;
+  place: P | null = null;
+  updated = false;
+  protected rigs = new Map<string, Rig>();
+  protected ids = new Map<Person, number>();
+  protected names = new Map<Rig, string>();
+  private _v = V(); private _p = V(); private _look = V();
+  constructor(readonly gl: THREE.WebGLRenderer, readonly camera: THREE.PerspectiveCamera, readonly spec: DayWorldSpec<P, Person, S, Pr, N, X>) {
+    const t0 = now();
+    this.root.name = `${spec.name}-world`;
+    camera.layers.enable(NOINK);
+    this.set = spec.buildSets(gl);
+    this.root.add(this.set.group);
+    const t1 = now();
+    this.M = this.set.mats(spec.firstPlace);
+    this.props = spec.buildProps(this.M);
+    this.root.add(this.props.group);
+    const people = new THREE.Group(); people.name = "people"; this.root.add(people);
+    // ONE cast for every place: its light follows the place (setPlace). The values a figure bakes when it is first
+    // built are the same in every place (BAKED_LIGHT), so it does not matter which frame builds it.
+    this.rc = new RigCast(people, { light: { ...this.set.look(spec.firstPlace).cast, ...spec.bakedLight } });
+    this.set.setPlace(null);
+    console.log(`[${spec.name}] world built in ${Math.round(now() - t0)} ms (sets ${Math.round(t1 - t0)})`);
+  }
+  /** the rig figure of this Person (the same one every call); key = "" by default, another key = another figure */
+  actor(p: Person, key = ""): Rig {
+    let id = this.ids.get(p);
+    if (id === undefined) { id = this.ids.size; this.ids.set(p, id); }
+    const k = `${id}|${key}`;
+    let r = this.rigs.get(k);
+    if (!r) { r = this.spec.addPerson(this.rc, p); r.group.scale.setScalar(1); this.rigs.set(k, r); this.names.set(r, `${(p as { name?: string }).name ?? `person${id}`}${key ? `|${key}` : ""}`); this.hide(r); this.spec.onActor?.(this, p, r); }   // (never scaled: the rig's solver works in world space)
+    return r;
+  }
+  private hide(r: Rig) {
+    const s = r.state as unknown as Record<string, unknown>;
+    for (const key of Object.keys(s)) delete s[key];
+    Object.assign(s, { at: V(0, -50, 0), facing: 0, pose: { kind: "idle" }, visible: false } as RigState);
+  }
+  /** FIRST in every shot. Shows this place only and lights the figures for it. */
+  setPlace(p: P, o: { light?: Partial<CastLight> } = {}) {
+    this.place = p;
+    this.light = o.light ?? {};
+    this.set.setPlace(p);
+    this.applyPlaceLight();
+  }
+  private light: Partial<CastLight> = {};
+  /** the figures' light: the place's look, its light for the current params and frame (cast), the shot's own fields */
+  private applyPlaceLight() {
+    if (!this.place) return;
+    applyLight(this.rc, { ...this.set.look(this.place).cast, ...this.set.cast(this.t, this.f), ...this.light, ...this.spec.bakedLight });
+  }
+  /** the look of the place set this frame (background, AO, bloom, grade): the film shell and the previews read it */
+  look(): PlaceLook { return this.set.look(this.place ?? this.spec.firstPlace); }
+  /** a prop: w.prop("plate").put(at, opts); key = another instance of it */
+  prop(name: N, key?: string): X { return this.props.prop(name, key); }
+  /** the lens's aspect: the film's own, or the drawing buffer's shape when a preview renders another shape (the 4:3 /
+   *  3:4 covers): the same vertical field of view, nothing stretched. At the film's shape this is exactly W / H. */
+  private aspect() {
+    const { W, H } = this.spec;
+    const b = this.gl.getDrawingBufferSize(this._buf), r = b.y > 0 ? b.x / b.y : W / H;
+    return Math.abs(r - W / H) > 0.01 ? r : W / H;
+  }
+  private readonly _buf = new THREE.Vector2();
+  setCamera(c: CamPose) {
+    const cam = this.camera;
+    cam.up.set(...(c.up ?? [0, 1, 0]));
+    cam.position.copy(toV(c.pos));
+    this._look.copy(toV(c.look));
+    cam.lookAt(this._look); cam.rotateZ(c.roll ?? 0);
+    cam.fov = this.spec.lensFov(c.fov); cam.near = c.near ?? 0.03; cam.far = c.far ?? 600; cam.aspect = this.aspect();
+    cam.zoom = COVER_ZOOM;
+    cam.updateProjectionMatrix(); cam.updateMatrixWorld(true);
+    if (COVER_SX || COVER_SY) {
+      const e = cam.projectionMatrix.elements; e[8] -= 2 * COVER_SX; e[9] += 2 * COVER_SY;
+      cam.projectionMatrixInverse.copy(cam.projectionMatrix).invert();
+    }
+  }
+  project(p: V3Like): Projected {
+    const { W, H } = this.spec;
+    const v = this._v.copy(toV(p)), cam = this.camera;
+    const z = -this._p.copy(v).applyMatrix4(cam.matrixWorldInverse).z;
+    v.project(cam);
+    const x = (v.x * 0.5 + 0.5) * W, y = (0.5 - v.y * 0.5) * H, front = z > cam.near;
+    return { x, y, z, front, on: front && x >= 0 && x <= W && y >= 0 && y <= H };
+  }
+  /** solve every figure for the current camera and light. Call after setting the figures, before reading hands. */
+  update() {
+    if (!this.place) throw new Error(`[${this.spec.name}] f${this.f}: w.update() before w.setPlace(place): the figures' light is the place's`);
+    this.applyPlaceLight();             // the params set since setPlace move the figures' light
+    for (const r of this.rigs.values()) {
+      const st = r.state;
+      r.group.userData.hmGround = st.visible === false ? 0 : st.seat ? (st.seat.floor ?? 0) : Math.max(0, st.at.y);
+      this.spec.onUpdate?.(this, r, st);
+    }
+    this.rc.update(this.camera, this.spec.H); this.updated = true;
+    if (CONTACTS) for (const r of this.rigs.values()) for (const c of contactIssues(r, { name: this.names.get(r), floorAt: this.spec.floorAt })) console.warn(`[${this.spec.name}] f${this.f} contact: ${c.msg}`);
+  }
+  beginFrame(f: number) {
+    this.f = f; this.t = f / this.spec.fps; this.updated = false;
+    for (const r of this.rigs.values()) this.hide(r);
+    this.place = null; this.light = {};   // (the set keeps showing the last place until the shot's setPlace: no flash)
+    this.set.reset();                  // every set param back to its default
+    this.props.begin();                // every prop hidden
+  }
+  endFrame(P: WorldPose) {
+    if (!this.place) throw new Error(`[${this.spec.name}] f${this.f}: the shot did not call w.setPlace(place) (it must be the first call of every shot)`);
+    this.setCamera(P.camera);
+    this.set.setView(this.camera.position);
+    this.set.setFocus(P.focus ?? [this._look.x, this._look.z]);
+    this.set.animate(P.clock ?? this.t, this.f);
+    if (!this.updated) this.update();
+  }
+  /** scene.background for this frame */
+  bg() { return this.look().bg; }
+}
+/** helper for segments: screen point of a world point as {x, y} */
+export const pt = (w: { project(p: V3Like): Projected }, p: V3Like) => { const q = w.project(p); return { x: q.x, y: q.y }; };

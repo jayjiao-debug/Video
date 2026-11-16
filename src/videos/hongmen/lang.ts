@@ -3,13 +3,9 @@
 // number) is the Chinese film's.
 // Segment and overlay builders keep their OWN on-screen strings next to their shots with L(zh, en); nobody edits this
 // file after the skeleton. TXT holds only the strings that more than one builder shows.
-import { IP } from "./env";
-
-export type Lang = "zh" | "en";
-export const LANG: Lang = IP.lang === "en" ? "en" : "zh";
-export const EN = LANG === "en";
-/** pick by language */
-export const L = <T,>(zh: T, en: T): T => (EN ? en : zh);
+// LANG / EN / L live in the shared kit (src/kit/film/lang.ts); the layout constants and TXT below are this film's.
+import { EN, L } from "../../kit/film/lang";
+export { LANG, EN, L, type Lang } from "../../kit/film/lang";
 
 /** Corner tags sit this far from the left edge (phones taller than 16:9 cut the sides of a 9:16 film: English type
  *  keeps 96 px from the edges; the Chinese film 44, as published before) */

@@ -1,0 +1,622 @@
+{
+ "film": "qin",
+ "speakers": {
+  "ji": "小记者",
+  "di": "秦始皇",
+  "xufu": "徐福",
+  "boshi": "博士",
+  "huanguan": "宦官"
+ },
+ "scenes": {
+  "A": {
+   "time": "卯时 05:00"
+  },
+  "B": {
+   "time": "辰时 08:00"
+  },
+  "C": {
+   "time": "巳时 10:00"
+  },
+  "D": {
+   "time": "午时 12:00"
+  },
+  "E": {
+   "time": "未时 14:00"
+  },
+  "F": {
+   "time": "戌时 20:00"
+  },
+  "G": {
+   "time": "公元前210年 七月 沙丘"
+  }
+ },
+ "lines": [
+  {
+   "n": 1,
+   "id": "A01",
+   "scene": "A",
+   "who": "ji",
+   "tts": "[nervous, excited] 嘘，大家小声点。这走廊，怎么每条都长得一样啊。",
+   "zh": "嘘，大家小声点。这走廊，怎么每条都长得一样啊。",
+   "after": 2.2,
+   "card": {
+    "zh": "史记：咸阳附近二百七十座宫殿，廊道相连。说出他在哪，死罪。",
+    "en": "Records of the Grand Historian: 270 palaces near the capital, all linked by corridors. Revealing where he was meant death."
+   }
+  },
+  {
+   "n": 2,
+   "id": "A02",
+   "scene": "A",
+   "who": "ji",
+   "tts": "[surprised] 诶，在那儿。",
+   "zh": "诶，在那儿。"
+  },
+  {
+   "n": 3,
+   "id": "A03",
+   "scene": "A",
+   "who": "di",
+   "tts": "[startled, shouting] 谁！",
+   "zh": "谁！",
+   "pre": 1.0
+  },
+  {
+   "n": 4,
+   "id": "A04",
+   "scene": "A",
+   "who": "di",
+   "tts": "[straining, grunting] 嗯——！",
+   "zh": "嗯——！",
+   "pre": 0.3
+  },
+  {
+   "n": 5,
+   "id": "A05",
+   "scene": "A",
+   "who": "ji",
+   "tts": "[nervous, stammering] 陛下，要、要不要帮您……",
+   "zh": "陛下，要、要不要帮您……"
+  },
+  {
+   "n": 6,
+   "id": "A06",
+   "scene": "A",
+   "who": "di",
+   "tts": "[sharp] 住口。",
+   "zh": "住口。"
+  },
+  {
+   "n": 7,
+   "id": "A07",
+   "scene": "A",
+   "who": "ji",
+   "tts": "[panicked, fast] 陛下饶命！我们不是刺客！我们是来给您拍纪录的，记录陛下的一天！",
+   "zh": "陛下饶命！我们不是刺客！我们是来给您拍纪录的，记录陛下的一天！"
+  },
+  {
+   "n": 8,
+   "id": "A08",
+   "scene": "A",
+   "who": "di",
+   "tts": "[suspicious] 记录朕？",
+   "zh": "记录朕？"
+  },
+  {
+   "n": 9,
+   "id": "A09",
+   "scene": "A",
+   "who": "ji",
+   "tts": "[eager, nervous] 是是是！让天下百姓都看看，陛下有多英明神武！",
+   "zh": "是是是！让天下百姓都看看，陛下有多英明神武！"
+  },
+  {
+   "n": 10,
+   "id": "A10",
+   "scene": "A",
+   "who": "di",
+   "tts": "[curious, flattered] 英明神武？",
+   "zh": "英明神武？"
+  },
+  {
+   "n": 11,
+   "id": "A11",
+   "scene": "A",
+   "who": "ji",
+   "tts": "[shy, sincere] 千古一帝。",
+   "zh": "千古一帝。"
+  },
+  {
+   "n": 12,
+   "id": "A12",
+   "scene": "A",
+   "who": "di",
+   "tts": "[clears throat, gruff, embarrassed] 咳。拍好看点。",
+   "zh": "咳。拍好看点。",
+   "pre": 0.5
+  },
+  {
+   "n": 13,
+   "id": "A13",
+   "scene": "A",
+   "who": "di",
+   "tts": "[gruff, proud] 跟上。朕今天，带你见见世面。",
+   "zh": "跟上。朕今天，带你见见世面。",
+   "pre": 0.3
+  },
+  {
+   "n": 14,
+   "id": "A14",
+   "scene": "A",
+   "who": "ji",
+   "tts": "[small happy laugh] 嘿嘿，遵命。",
+   "zh": "嘿嘿，遵命。",
+   "after": 1.8
+  },
+  {
+   "n": 15,
+   "id": "B01",
+   "scene": "B",
+   "who": "ji",
+   "tts": "[amazed] 哇，好多竹简……陛下，这是在称重吗？",
+   "zh": "哇，好多竹简……陛下，这是在称重吗？",
+   "pre": 0.8
+  },
+  {
+   "n": 16,
+   "id": "B02",
+   "scene": "B",
+   "who": "di",
+   "tts": "[flat, busy] 今天的，还差三十斤。",
+   "zh": "今天的，还差三十斤。"
+  },
+  {
+   "n": 17,
+   "id": "B03",
+   "scene": "B",
+   "who": "ji",
+   "tts": "[confused] 奏章……是论斤算的？",
+   "zh": "奏章……是论斤算的？"
+  },
+  {
+   "n": 18,
+   "id": "B04",
+   "scene": "B",
+   "who": "di",
+   "tts": "[proud] 嗯。",
+   "zh": "嗯。",
+   "after": 2.0,
+   "card": {
+    "zh": "史记：每天要批完一石竹简（约30公斤）才休息。（据当时方士所说）",
+    "en": "Records: he had to get through one 'stone' of bamboo reports (about 30 kg) a day before resting (so his alchemists said)."
+   }
+  },
+  {
+   "n": 19,
+   "id": "B05",
+   "scene": "B",
+   "who": "di",
+   "tts": "[smug] 你搬一捆试试。",
+   "zh": "你搬一捆试试。"
+  },
+  {
+   "n": 20,
+   "id": "B06",
+   "scene": "B",
+   "who": "ji",
+   "tts": "[straining] 是。唔……好沉……",
+   "zh": "是。唔……好沉……"
+  },
+  {
+   "n": 21,
+   "id": "B07",
+   "scene": "B",
+   "who": "di",
+   "tts": "[amused] 呵。",
+   "zh": "呵。"
+  },
+  {
+   "n": 22,
+   "id": "B08",
+   "scene": "B",
+   "who": "ji",
+   "tts": "[caring, a little out of breath] 陛下，您每天都这样吗？好辛苦啊。",
+   "zh": "陛下，您每天都这样吗？好辛苦啊。"
+  },
+  {
+   "n": 23,
+   "id": "B09",
+   "scene": "B",
+   "who": "di",
+   "tts": "[pauses, grudgingly pleased] 这句，留着。",
+   "zh": "这句，留着。",
+   "pre": 0.6
+  },
+  {
+   "n": 24,
+   "id": "C01",
+   "scene": "C",
+   "who": "ji",
+   "tts": "[curious] 陛下平时，有什么喜欢做的事吗？",
+   "zh": "陛下平时，有什么喜欢做的事吗？",
+   "pre": 1.4
+  },
+  {
+   "n": 25,
+   "id": "C02",
+   "scene": "C",
+   "who": "di",
+   "tts": "[proud, confident] 找神仙。",
+   "zh": "找神仙。"
+  },
+  {
+   "n": 26,
+   "id": "C03",
+   "scene": "C",
+   "who": "ji",
+   "tts": "[surprised] 神仙？",
+   "zh": "神仙？"
+  },
+  {
+   "n": 27,
+   "id": "C04",
+   "scene": "C",
+   "who": "xufu",
+   "tts": "[excited, oily] 陛下！仙药有消息了！只是……海里有条大鱼，挡着道。",
+   "zh": "陛下！仙药有消息了！只是……海里有条大鱼，挡着道。"
+  },
+  {
+   "n": 28,
+   "id": "C05",
+   "scene": "C",
+   "who": "di",
+   "tts": "[interested] 鱼？",
+   "zh": "鱼？"
+  },
+  {
+   "n": 29,
+   "id": "C06",
+   "scene": "C",
+   "who": "xufu",
+   "tts": "[hesitant] 好大一条。",
+   "zh": "好大一条。"
+  },
+  {
+   "n": 30,
+   "id": "C07",
+   "scene": "C",
+   "who": "di",
+   "tts": "[commanding] 拿弩来。",
+   "zh": "拿弩来。",
+   "card": {
+    "zh": "史记：他亲自带着连弩沿海守候，在之罘射死了一条大鱼。",
+    "en": "Records: he waited along the coast himself with a repeating crossbow, and shot a giant fish at Zhifu."
+   },
+   "after": 0.5,
+   "card_hold": 2.4
+  },
+  {
+   "n": 31,
+   "id": "C08",
+   "scene": "C",
+   "who": "ji",
+   "tts": "[to the audience, playful] 偷偷告诉大家，这个徐福，后来再也没回来。",
+   "zh": "偷偷告诉大家，这个徐福，后来再也没回来。",
+   "pre": 2.0
+  },
+  {
+   "n": 32,
+   "id": "C09",
+   "scene": "C",
+   "who": "di",
+   "tts": "[suspicious] 你在说什么？",
+   "zh": "你在说什么？"
+  },
+  {
+   "n": 33,
+   "id": "C10",
+   "scene": "C",
+   "who": "ji",
+   "tts": "[flustered, too cheerful] 没、没什么！祝徐先生一路顺风！",
+   "zh": "没、没什么！祝徐先生一路顺风！"
+  },
+  {
+   "n": 34,
+   "id": "D01",
+   "scene": "D",
+   "who": "di",
+   "tts": "[displeased] 丞相出个门，带这么多车？",
+   "zh": "丞相出个门，带这么多车？",
+   "pre": 0.2
+  },
+  {
+   "n": 35,
+   "id": "D02",
+   "scene": "D",
+   "who": "di",
+   "tts": "[scornful] 哼。",
+   "zh": "哼。"
+  },
+  {
+   "n": 36,
+   "id": "D03",
+   "scene": "D",
+   "who": "ji",
+   "tts": "[surprised, uneasy] 诶……车少了好多。",
+   "zh": "诶……车少了好多。",
+   "pre": 0.8
+  },
+  {
+   "n": 37,
+   "id": "D04",
+   "scene": "D",
+   "who": "di",
+   "tts": "[slow, cold] 昨天朕那句话，是谁传出去的？",
+   "zh": "昨天朕那句话，是谁传出去的？",
+   "pre": 0.3,
+   "card": {
+    "zh": "史记：没有人承认。那天在他身边的人，全部被处死。",
+    "en": "Records: nobody confessed. Everyone who stood beside him that day was executed."
+   }
+  },
+  {
+   "n": 38,
+   "id": "D05",
+   "scene": "D",
+   "who": "di",
+   "tts": "[cold, menacing] 你。昨天，在不在？",
+   "zh": "你。昨天，在不在？",
+   "pre": 2.6
+  },
+  {
+   "n": 39,
+   "id": "D06",
+   "scene": "D",
+   "who": "ji",
+   "tts": "[terrified, stammering] 不、不在。我什么都没拍到。",
+   "zh": "不、不在。我什么都没拍到。",
+   "after": 0.6
+  },
+  {
+   "n": 40,
+   "id": "E01",
+   "scene": "E",
+   "who": "di",
+   "tts": "[pleased, showing off] 来，给你看样东西。上回出巡。",
+   "zh": "来，给你看样东西。上回出巡。",
+   "pre": 0.8
+  },
+  {
+   "n": 41,
+   "id": "E02",
+   "scene": "E",
+   "who": "di",
+   "tts": "[grand] 这棵树，挡雨有功。封它，五大夫。",
+   "zh": "这棵树，挡雨有功。封它，五大夫。",
+   "pre": 0.6
+  },
+  {
+   "n": 42,
+   "id": "E03",
+   "scene": "E",
+   "who": "ji",
+   "tts": "[puzzled] 树……也能封官吗？",
+   "zh": "树……也能封官吗？",
+   "pre": 0.4
+  },
+  {
+   "n": 43,
+   "id": "E04",
+   "scene": "E",
+   "who": "di",
+   "tts": "[matter-of-fact] 朕说能，就能。",
+   "zh": "朕说能，就能。"
+  },
+  {
+   "n": 44,
+   "id": "E05",
+   "scene": "E",
+   "who": "di",
+   "tts": "[annoyed] 这山上供的，是什么神？",
+   "zh": "这山上供的，是什么神？",
+   "pre": 0.6
+  },
+  {
+   "n": 45,
+   "id": "E06",
+   "scene": "E",
+   "who": "boshi",
+   "tts": "[solemn] 回陛下，是尧的女儿，舜的妃子。",
+   "zh": "回陛下，是尧的女儿，舜的妃子。"
+  },
+  {
+   "n": 46,
+   "id": "E07",
+   "scene": "E",
+   "who": "di",
+   "tts": "[furious, shouting] 砍！全给朕砍了！",
+   "zh": "砍！全给朕砍了！",
+   "card": {
+    "zh": "史记：三千刑徒砍光整座山的树，只剩一片红土。",
+    "en": "Records: 3,000 convicts cut down every tree on the mountain, leaving bare red earth."
+   },
+   "after": 0.35,
+   "card_hold": 2.4
+  },
+  {
+   "n": 47,
+   "id": "E08",
+   "scene": "E",
+   "who": "ji",
+   "tts": "[to the audience, playful, nervous] 以后，千万别惹陛下。",
+   "zh": "以后，千万别惹陛下。",
+   "pre": 2.2
+  },
+  {
+   "n": 48,
+   "id": "F01",
+   "scene": "F",
+   "who": "di",
+   "tts": "[firm, plotting] 今晚，出去走走。不许声张。",
+   "zh": "今晚，出去走走。不许声张。",
+   "pre": 0.8
+  },
+  {
+   "n": 49,
+   "id": "F02",
+   "scene": "F",
+   "who": "ji",
+   "tts": "[surprised, worried] 陛下，只带四个人吗？",
+   "zh": "陛下，只带四个人吗？"
+  },
+  {
+   "n": 50,
+   "id": "F03",
+   "scene": "F",
+   "who": "di",
+   "tts": "[firm] 够了。",
+   "zh": "够了。"
+  },
+  {
+   "n": 51,
+   "id": "F04",
+   "scene": "F",
+   "who": "ji",
+   "tts": "[holding back a laugh] 陛下，您的珠子……露出来了。",
+   "zh": "陛下，您的珠子……露出来了。"
+  },
+  {
+   "n": 52,
+   "id": "F05",
+   "scene": "F",
+   "who": "di",
+   "tts": "[hissing] 嘘！",
+   "zh": "嘘！"
+  },
+  {
+   "n": 53,
+   "id": "F06",
+   "scene": "F",
+   "who": "ji",
+   "tts": "[scared, shouting] 啊！有人！",
+   "zh": "啊！有人！",
+   "pre": 0.5,
+   "card": {
+    "zh": "史记：兰池遇盗。武士杀了强盗，之后关中封锁搜查二十天。",
+    "en": "Records: bandits at Lanchi. His guards killed them; the region was then searched for twenty days."
+   }
+  },
+  {
+   "n": 54,
+   "id": "F07",
+   "scene": "F",
+   "who": "di",
+   "tts": "[composing himself, gruff] 刚才，朕没有吓到。",
+   "zh": "刚才，朕没有吓到。",
+   "pre": 2.6
+  },
+  {
+   "n": 55,
+   "id": "F08",
+   "scene": "F",
+   "who": "ji",
+   "tts": "[holding back a laugh] 是，陛下没有吓到。",
+   "zh": "是，陛下没有吓到。"
+  },
+  {
+   "n": 56,
+   "id": "F09",
+   "scene": "F",
+   "who": "di",
+   "tts": "[stern] 那段，删了。",
+   "zh": "那段，删了。",
+   "after": 0.8
+  },
+  {
+   "n": 57,
+   "id": "G01",
+   "scene": "G",
+   "who": "ji",
+   "tts": "[hopeful] 陛下？今天……还拍吗？",
+   "zh": "陛下？今天……还拍吗？",
+   "pre": 1.6
+  },
+  {
+   "n": 58,
+   "id": "G02",
+   "scene": "G",
+   "who": "huanguan",
+   "tts": "[flat, matter-of-fact] 准。",
+   "zh": "准。",
+   "silent": 0.55
+  },
+  {
+   "n": 59,
+   "id": "G03",
+   "scene": "G",
+   "who": "huanguan",
+   "tts": "[flat, matter-of-fact] 准。",
+   "zh": "准。",
+   "silent": 0.55
+  },
+  {
+   "n": 60,
+   "id": "G04",
+   "scene": "G",
+   "who": "ji",
+   "tts": "[sad] 那年夏天，陛下死在了出巡的路上。丞相瞒住了消息，百官每天照样往车里递奏章。",
+   "zh": "那年夏天，陛下死在了出巡的路上。丞相瞒住了消息，百官每天照样往车里递奏章。",
+   "pre": 0.4
+  },
+  {
+   "n": 61,
+   "id": "G05",
+   "scene": "G",
+   "who": "ji",
+   "tts": "[sad, matter-of-fact] 天太热，车里有了臭味。他们就往车上装了咸鱼，盖住味道。",
+   "zh": "天太热，车里有了臭味。他们就往车上装了咸鱼，盖住味道。"
+  },
+  {
+   "n": 62,
+   "id": "G06",
+   "scene": "G",
+   "who": "ji",
+   "tts": "[wistful] 陛下一直，想长生不老。",
+   "zh": "陛下一直，想长生不老。",
+   "pre": 0.3
+  },
+  {
+   "n": 63,
+   "id": "G07",
+   "scene": "G",
+   "who": "ji",
+   "tts": "[warm, a little sad] 他没活过五十岁。可他的兵马俑，站了两千多年。",
+   "zh": "他没活过五十岁。可他的兵马俑，站了两千多年。",
+   "pre": 0.8
+  },
+  {
+   "n": 64,
+   "id": "G08",
+   "scene": "G",
+   "who": "di",
+   "tts": "[off-screen, tired, kind] 这段，也删了。",
+   "zh": "这段，也删了。",
+   "pre": 1.2
+  },
+  {
+   "n": 65,
+   "id": "G09",
+   "scene": "G",
+   "who": "ji",
+   "tts": "[laughing a little, teary] 不删。",
+   "zh": "不删。",
+   "pre": 0.6,
+   "after": 2.2
+  }
+ ],
+ "gap": 0.04,
+ "lead": 0.1,
+ "trim": {
+  "B09": 1.74
+ }
+}

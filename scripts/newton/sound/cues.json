@@ -1,0 +1,2265 @@
+{
+ "note": "采访牛顿的一天 (formerly 跟着牛顿过一天) sound plan, v5 (script v5 revision 3, gate 2; the v5 voice: A01 cut, G01 split into G01a / G01b; /home/user/newton_work/film/sound/REMIX_v5.md). at = [line id, 'start'|'end', offset s], [scene, 'from'|'to', offset] (the PICTURE's own scene bounds, voice.ts SEGMENT_RAW, so scene-anchored cues land on the cut) or ['card:<line id>', 'from'|'to', offset] (the picture's CARD_RAW). 'sync' = the moment of the ORIGINAL clip (s) that lands on 'at' (the rap, the stroke, the thud), default its 'in'. gain in dB, ONE static gain per cue (music is never ducked: no automation, no sidechain; fades only at a cue's own start / end). loop = repeat the clip to fill [at, until]; in = seconds skipped at the clip's start; len = seconds of the clip a hit plays; rate = sampler-style speed (pitch and length together); pitch = semitones, length kept (rubberband); hp / lowshelf / lp = ONE fixed filter for the whole cue. Clips: /home/user/newton_work/film/sound/clips (voice farm run newton-v4-sound-01; rec_beep from qin-sfx-01; sfx_poweroff and sfx_card_A5 made by make_poweroff.py / retune_clip.py; ph_* = PLACEHOLDERS made by make_placeholders.py, each cue naming its sound-farm request under 'placeholder'). Every cue's 'label' names the script cell it lands; SYNC_POINTS.md lists the picture frames. Levels: every line at least 10 LU over the bed (voice track vs the bed rebuilt with a silent voice) in the full band AND in the phone band (450 Hz-9 kHz); mono mix about -19 LUFS, true peak -1.8 dBTP (build.py --gain, --ceiling -1.8), under -1 dBTP after the AAC mux. Her camera: rec_beep on frame 1, sfx_poweroff when it switches off (G to - 1.4 s = hud/vlog.tsx OFF_AT). | r2 (14 Nov, the sound review's notes): build.py's limiter is on the VOICE branch only and the sum passes a safety limiter that never engages (the build refuses a mix over -1.8 dBTP); 'fade_curve' (qsin) for mus_supper's two-bar splice; remix_v5/tools/fix_r2.py lists every change and its note. | 14 Nov late evening (the effects plan's FULL gaps: G1 1.2 s after the thud, G2 2.5 s after B03 = Newton's card and its 75-frame freeze, G3 0.5 s after B09; 5438 frames): mus_morning -> mus_morning_v5 (one loop-back of 6 beats with a 40 ms crossfade, kept by the owner on 14 Nov, in the intro); the freeze stops B's room tone and the quill for 75 frames; skin A's sounds (labels 'skin A'); tools: remix_v5/tools/fix_gaps.py, make_mm_v5.py. | r3 (14 Nov night): tick 1's nib on a music onset (B09 end + 0.223 s), Humphrey's banner slip -15 dB; Newton's card's seal presses on f939, the morning music's A -> G major turn inside the freeze (the picture only). | r4 (15 Nov, gate-5 note F1): the title's nib on 牛's first stroke (f187); the banner slip on the slip's landing (f310); Humphrey's descent on the picture's foot plants (one backward step f473, six steps down f481-f531); her E steps on the walk's footfalls (f2742, f2754, f2767).",
+ "whisper_dip": {
+  "db": -6,
+  "ramp": 0.2,
+  "also": [
+   "sfx_quill"
+  ],
+  "note": "THE WHISPER (Jay, 14 Nov; bible 'Talking to the audience': the edges darken, the room sound dips): over each of the reporter's whispered asides THE ROOM dips 6 dB, down over 0.2 s ending on her first word, back up over 0.2 s from the end of her voice, both ramps kept inside the line's picture scene. The room is the ambience beds (group amb: amb_* clips) and the cues named in \"also\": sfx_quill (in Newton's room the room you hear is the quill loop; director, 14 Nov). v5: the lines are the picture's list (src/videos/newton/whisper.ts WHISPER_LINES: A03 A06 B09 D01 D05 E07, as the v5 table has them), the times the voice timing's; in v5 the dip meets the birdsong (A03, A06), the quill (B09, E07) and the hall's tone (D01, D05). build.py applies it as a gain envelope on those cues where they meet a window (exactly 1 outside the windows); music, voice and every other effect are untouched: music is never ducked."
+ },
+ "beds": [
+  {
+   "label": "A birdsong (the stair window; on through the stop)",
+   "clip": "amb_stairs_birds",
+   "at": [
+    "A",
+    "from",
+    0
+   ],
+   "until": [
+    "A",
+    "to",
+    0
+   ],
+   "gain": 8,
+   "loop": true,
+   "fade": 0.05,
+   "fade_out": 0.3,
+   "note": "a 3.5 s loop cut from amb_stairs 3.2-7.2 s; birds from frame 0, under the whole landing; dips 6 dB under A03 and A06 (the whisper) | r2: +12 -> +8 dB so the quill reads over the birds (MAJOR 1); a 120 Hz 4-pole high-pass takes out the clip's 20-80 Hz rumble (POLISH 17)",
+   "hp": [
+    120,
+    4
+   ]
+  },
+  {
+   "label": "A cold open: the quill from f0, cut dead for the stop",
+   "clip": "sfx_quill",
+   "at": [
+    "A",
+    "from",
+    0
+   ],
+   "until": [
+    "A",
+    "from",
+    2.7
+   ],
+   "gain": 4,
+   "fade": 1.9,
+   "fade_out": 0.012,
+   "note": "STOP 1/5: only he and the quill freeze, 1.5-2.0 s (frames 45-59, story.ts COLD_OPEN_S.stop); the scratching ends in 12 ms on frame 45 while the birdsong and the music go on | r2: -9 -> +7 dB (MAJOR 1; director note 4): the quill at the music's level, so its dead stop at 1.5 s is heard (the mix drops 4.9 dB, 7.5 dB in the phone band, measured) | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): until [\"A\", \"from\", 1.5] -> [\"A\", \"from\", 2.7]: the intro (she walks up, 终于到了！, then the raps): the cold open's block of stop / burst / raps is 1.2 s later (story.ts COLD_OPEN_S); the quill is heard through his door while she walks up | 15 Nov (S lane, the owner's notes; notes6/S/NOTES.md): gain +7 -> +4 dB and a 1.9 s fade in (to story.ts COLD_OPEN_S.arrive): she walks up to his door, so the quill comes nearer with her, and A01a 终于到了！ (2.0-3.3 s at most) stands 10 LU over the bed (at +7 the bed under her line was -27.1 LUFS, 9 LU under a line of hers); the burst after the stop keeps +7"
+  },
+  {
+   "label": "A cold open: the fast burst after the stop",
+   "clip": "sfx_quill",
+   "at": [
+    "A",
+    "from",
+    3.2
+   ],
+   "until": [
+    "A",
+    "from",
+    3.85
+   ],
+   "gain": 7,
+   "rate": 1.35,
+   "in": 2.55,
+   "fade": 0.008,
+   "fade_out": 0.06,
+   "note": "frame 60 on: he scribbles on, 1.35x fast (sampler speed); he lifts the quill 14 frames (his reaction delay to a person) after the first rap: 2.65 s | r2: -9 -> +7 dB (MAJOR 1; director note 4): the quill at the music's level, so its dead stop at 1.5 s is heard (the mix drops 4.9 dB, 7.5 dB in the phone band, measured) | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"A\", \"from\", 2.0] -> [\"A\", \"from\", 3.2]: the intro (she walks up, 终于到了！, then the raps): the cold open's block of stop / burst / raps is 1.2 s later (story.ts COLD_OPEN_S) | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): until [\"A\", \"from\", 2.65] -> [\"A\", \"from\", 3.85]: the intro (she walks up, 终于到了！, then the raps): the cold open's block of stop / burst / raps is 1.2 s later (story.ts COLD_OPEN_S)"
+  },
+  {
+   "label": "A the morning bed (pizzicato + harpsichord)",
+   "clip": "mus_morning_v6",
+   "at": [
+    "A",
+    "from",
+    3.4
+   ],
+   "until": [
+    "B",
+    "to",
+    0
+   ],
+   "gain": -21.8,
+   "sync": 2.06,
+   "fade": 0,
+   "fade_out": 0.6,
+   "note": "sync: the clip's eighth-note onset at 2.06 s lands on the first rap (2.2 s), so the clip starts at 0.14 s (its first plucked note at 0.17 s, after the REC beep) and the second rap (2.49 s) falls on its bar-2 downbeat (clip 2.35 s); through card 2, fading 0.6 s into the B->C whip; v3 static gain kept | 14 Nov late evening (the full gaps, G1 + G2 + G3 = +4.2 s under it): mus_morning_v5.mp3 = mus_morning.mp3 with one loop-back of 6 beats with a 40 ms crossfade, kept by the owner on 14 Nov (6 beats = 3.46154 s; 104 bpm in 4/4, a bar 2.3077 s), all in the intro (tools/make_mm_v5.py): the stream plays the original to bar 4 beat 3 (clip 8.083 s) and jumps back 6 beats to bar 3's downbeat (4.621 s), so the plucked intro reads X Y X Y' X Y (Y' = bar 4's first half, a 2/4 bar; bar 4's second half and bar 3's first half are the same tonic arpeggio); no bar is played twice in a row; no stretch, no pitch shift. ONE join: 40 ms equal power at clip 8.070-8.110 s, 10 ms before bar 4 beat 3's pluck = film 8.21-8.25 s (under A03, after the title hold). Everything before it is the old file sample for sample (the D-major chord on rap 1, rap 2 on its eighth, the cold open, the title hold 5.90-7.80); the theme enters at film 12.84 s (r2 9.38); the written ending's last chord (clip 48.69 s, now 52.15) sounds at film 52.29 s (f1569), 0.91 s before the B -> C cut (f1596), its natural tail taking the rest into the cut under the same 0.6 s fade. Two whole bars (+4.615 s) would put the last chord 0.28 s after the cut; one bar alone would end it 2.0 s early, under card 2. | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"A\", \"from\", 2.2] -> [\"A\", \"from\", 3.4]: the intro (she walks up, 终于到了！, then the raps): the cold open's block of stop / burst / raps is 1.2 s later (story.ts COLD_OPEN_S): the clip's onset stays ON RAP 1 (rap 2 on its bar-2 downbeat); the lines from A01b on are 0.2 s later against it than in cut v5, B (card 1 is 1.1 s shorter) 0.9 s earlier: the bed's written ending now falls ON the B -> C cut, the sound lane re-fits it | 15 Nov (S lane, the owner's notes; notes6/S/NOTES.md): clip mus_morning_v5 -> mus_morning_v6 (the same edit with 4 beats added instead of 6: remix_v5/tools/make_mm_v5.py --beats 4, the same join at clip 8.070-8.110 s, now film 9.41-9.45 s under A03). The intro moved the cue 1.2 s later and the B -> C cut only 0.3 s, so v5's last chord fell ON the cut (53.495 s) under the fade; v6's falls at 52.34 s, 1.16 s before the cut (cut v5: 0.91 s)"
+  },
+  {
+   "label": "B room tone (to the freeze)",
+   "clip": "amb_room",
+   "at": [
+    "B",
+    "from",
+    0
+   ],
+   "until": [
+    "B03",
+    "end",
+    0.034
+   ],
+   "gain": -30,
+   "loop": true,
+   "fade": 0.3,
+   "fade_out": 0.012,
+   "note": "THE FREEZE (G2, EFFECTS_PLAN row 4; the full gap, 14 Nov late evening): the picture holds B03's last frame (f915) for Newton's card, f916-f990 (75 frames, 2.5 s), and runs again on f991. The room tone and the quill stop dead on the card's first frame (B03 end + 0.034 s) and come back with the picture (B03 end + 2.534 s = 33.034 s, 0.07 s before B04's voice), the loop picking up where it stopped; mus_morning runs on through it (static cue bounds, no stop, no duck). (src/videos/newton/freeze.ts, the effects build's, still has CARD_LEN 39: it must become 75)"
+  },
+  {
+   "label": "B room tone (after the freeze)",
+   "clip": "amb_room",
+   "at": [
+    "B03",
+    "end",
+    2.534
+   ],
+   "until": [
+    "B",
+    "to",
+    0
+   ],
+   "gain": -30,
+   "loop": true,
+   "fade": 0.03,
+   "fade_out": 0.3,
+   "note": "THE FREEZE (G2, EFFECTS_PLAN row 4; the full gap, 14 Nov late evening): the picture holds B03's last frame (f915) for Newton's card, f916-f990 (75 frames, 2.5 s), and runs again on f991. The room tone and the quill stop dead on the card's first frame (B03 end + 0.034 s) and come back with the picture (B03 end + 2.534 s = 33.034 s, 0.07 s before B04's voice), the loop picking up where it stopped; mus_morning runs on through it (static cue bounds, no stop, no duck). (src/videos/newton/freeze.ts, the effects build's, still has CARD_LEN 39: it must become 75)",
+   "in": 7.167
+  },
+  {
+   "label": "B the quill off-screen (insert, B01, B02)",
+   "clip": "sfx_quill",
+   "at": [
+    "B",
+    "from",
+    0.05
+   ],
+   "until": [
+    "B03",
+    "start",
+    -0.2
+   ],
+   "gain": -18,
+   "loop": true,
+   "fade": 0.3,
+   "fade_out": 0.4,
+   "note": "the quill scratching off-screen from the cut; it never stops"
+  },
+  {
+   "label": "B the quill at the desk (to the freeze)",
+   "clip": "sfx_quill",
+   "at": [
+    "B03",
+    "start",
+    -0.6
+   ],
+   "until": [
+    "B03",
+    "end",
+    0.034
+   ],
+   "gain": -11,
+   "loop": true,
+   "fade": 0.4,
+   "note": "she reaches the desk: the quill in shot to the end of B (dips 6 dB under B09, the whisper) | THE FREEZE (G2, EFFECTS_PLAN row 4; the full gap, 14 Nov late evening): the picture holds B03's last frame (f915) for Newton's card, f916-f990 (75 frames, 2.5 s), and runs again on f991. The room tone and the quill stop dead on the card's first frame (B03 end + 0.034 s) and come back with the picture (B03 end + 2.534 s = 33.034 s, 0.07 s before B04's voice), the loop picking up where it stopped; mus_morning runs on through it (static cue bounds, no stop, no duck). (src/videos/newton/freeze.ts, the effects build's, still has CARD_LEN 39: it must become 75)",
+   "fade_out": 0.012
+  },
+  {
+   "label": "B the quill at the desk (after the freeze)",
+   "clip": "sfx_quill",
+   "at": [
+    "B03",
+    "end",
+    2.534
+   ],
+   "until": [
+    "B",
+    "to",
+    0
+   ],
+   "gain": -11,
+   "loop": true,
+   "fade": 0.03,
+   "note": "she reaches the desk: the quill in shot to the end of B (dips 6 dB under B09, the whisper) | THE FREEZE (G2, EFFECTS_PLAN row 4; the full gap, 14 Nov late evening): the picture holds B03's last frame (f915) for Newton's card, f916-f990 (75 frames, 2.5 s), and runs again on f991. The room tone and the quill stop dead on the card's first frame (B03 end + 0.034 s) and come back with the picture (B03 end + 2.534 s = 33.034 s, 0.07 s before B04's voice), the loop picking up where it stopped; mus_morning runs on through it (static cue bounds, no stop, no duck). (src/videos/newton/freeze.ts, the effects build's, still has CARD_LEN 39: it must become 75)",
+   "fade_out": 0.4,
+   "in": 2.514
+  },
+  {
+   "label": "C room tone under the noon plate",
+   "clip": "amb_room",
+   "at": [
+    "C",
+    "from",
+    0
+   ],
+   "until": [
+    "C01",
+    "start",
+    0
+   ],
+   "gain": -30,
+   "loop": true,
+   "fade": 0.1,
+   "fade_out": 0.05
+  },
+  {
+   "label": "C mus_noon pass 1 (first note on the cut; the scored stop at C04)",
+   "clip": "mus_noon",
+   "at": [
+    "C",
+    "from",
+    0
+   ],
+   "until": [
+    "C04",
+    "end",
+    -0.02
+   ],
+   "gain": -17.5,
+   "sync": 0.035,
+   "fade": 0.02,
+   "fade_out": 0.025,
+   "note": "its first note (clip 0.035 s) ON the B->C cut. THE SCORED STOP: it ends at 55.925 s, just before the eighth note after its beat-12 note (clip 6.70 s), so the last note heard is that beat's, and comes back in pass 2 on his turn; the rest is 0.435 s (13 frames), no longer than his 15-frame freeze. A stop in the music, not a dip: no gain moves"
+  },
+  {
+   "label": "C garden: his gravel steps (fade in under the plate)",
+   "clip": "sfx_gravel",
+   "at": [
+    "C",
+    "from",
+    0.2
+   ],
+   "until": [
+    "C04",
+    "end",
+    -0.1
+   ],
+   "gain": -10,
+   "loop": true,
+   "fade": 0.8,
+   "fade_out": 0.02,
+   "note": "from under the noon plate; STOPS DEAD at the freeze (his voice breaks off on 'is' at 55.84 s = C04 end - 0.1 s)"
+  },
+  {
+   "label": "C garden room tone",
+   "clip": "amb_garden",
+   "at": [
+    "C01",
+    "start",
+    0
+   ],
+   "until": [
+    "C05",
+    "end",
+    0.3
+   ],
+   "gain": -27,
+   "loop": true,
+   "fade": 0.1,
+   "fade_out": 0.05
+  },
+  {
+   "label": "C garden birdsong (on through the freeze)",
+   "clip": "amb_stairs_birds",
+   "at": [
+    "C",
+    "from",
+    0.4
+   ],
+   "until": [
+    "C05",
+    "end",
+    0.3
+   ],
+   "gain": 8,
+   "loop": true,
+   "fade": 0.6,
+   "fade_out": 0.05,
+   "note": "amb_garden has no birds above 200 Hz: the stairs' birdsong loop; it goes on through C04's freeze (only he freezes) | r2: 120 Hz 4-pole high-pass: the loop's 20-80 Hz rumble out (POLISH 17)",
+   "hp": [
+    120,
+    4
+   ]
+  },
+  {
+   "label": "C mus_noon pass 2 (back on his turn)",
+   "clip": "mus_noon",
+   "at": [
+    "C04",
+    "end",
+    0.415
+   ],
+   "until": [
+    "C",
+    "to",
+    0
+   ],
+   "gain": -17.5,
+   "in": 7.2,
+   "sync": 7.24,
+   "fade": 0.02,
+   "fade_out": 0.6,
+   "note": "the clip's beat-13 note (7.24 s) ON his turn = the freeze's end (C04 end + 0.395 s = 56.34 s), with the gravel run; the same static gain as pass 1; on through the whip and the chair, fading 0.6 s into the C->D cut"
+  },
+  {
+   "label": "C she trots after him (gravel)",
+   "clip": "sfx_gravel",
+   "at": [
+    "C05",
+    "start",
+    0
+   ],
+   "until": [
+    "C05",
+    "end",
+    0.3
+   ],
+   "gain": -20,
+   "rate": 1.45,
+   "in": 1.0,
+   "loop": true,
+   "fade": 0.15,
+   "fade_out": 0.05
+  },
+  {
+   "label": "C his room: room tone",
+   "clip": "amb_room",
+   "at": [
+    "C05",
+    "end",
+    0.3
+   ],
+   "until": [
+    "C",
+    "to",
+    0
+   ],
+   "gain": -30,
+   "loop": true,
+   "fade": 0.1
+  },
+  {
+   "label": "C his room: the quill",
+   "clip": "sfx_quill",
+   "at": [
+    "C05",
+    "end",
+    0.35
+   ],
+   "until": [
+    "C",
+    "to",
+    0
+   ],
+   "gain": -8,
+   "loop": true,
+   "fade": 0.2
+  },
+  {
+   "label": "D the street",
+   "clip": "amb_street",
+   "at": [
+    "D",
+    "from",
+    0
+   ],
+   "until": [
+    "D01",
+    "start",
+    -0.4
+   ],
+   "gain": -21,
+   "loop": true,
+   "fade": 0.3,
+   "fade_out": 0.1,
+   "note": " | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): until [\"D\", \"from\", 2.1] -> [\"D01\", \"start\", -0.4]: the wipe is back: the street is 1.6 s longer in front of its old block, which is anchored on D01 now (D01 start - 2.5 s = the old scene start; beats.ts BEAT.D.go) | 15 Nov (S lane, the owner's notes; notes6/S/NOTES.md): in 10.41 (the clip is a 12.0 s loop): the clip's start falls on BEAT.D.go again (D from + 1.59 s = D01 start - 2.5 s), where it was in the owner's cut, so the street's three loud clops (clip 0.73 / 1.04 / 1.40 s, 20 dB over the street's own level) are heard where they were, after his two steps the wrong way (70.43 / 70.70 / 71.04 s). With the loop starting on the cut they fell on f2066, f2074 and f2085, inside the wipe and 16-20 dB over it. The 1.6 s in front (the wipe) play the clip's quiet end (10.41-12.0 s): the street is 7-17 dB under the wipe's two swishes",
+   "in": 10.41
+  },
+  {
+   "label": "D the Schools: the door's creak",
+   "clip": "sfx_big_door",
+   "at": [
+    "D01",
+    "start",
+    -0.4
+   ],
+   "until": [
+    "D01",
+    "start",
+    0.1
+   ],
+   "gain": -28,
+   "in": 1.55,
+   "sync": 1.62,
+   "fade": 0.01,
+   "fade_out": 0.08,
+   "note": "the tall door's last creaks (the ratchet, clip 1.62 s) ON the cut into the hall, ending 66.20 s as D01 begins (voice from 66.15 s) | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"D\", \"from\", 2.1] -> [\"D01\", \"start\", -0.4]: the wipe is back: the street is 1.6 s longer in front of its old block, which is anchored on D01 now (D01 start - 2.5 s = the old scene start; beats.ts BEAT.D.go) | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): until [\"D\", \"from\", 2.6] -> [\"D01\", \"start\", 0.1]: the wipe is back: the street is 1.6 s longer in front of its old block, which is anchored on D01 now (D01 start - 2.5 s = the old scene start; beats.ts BEAT.D.go)"
+  },
+  {
+   "label": "D the hall's room tone",
+   "clip": "amb_hall",
+   "at": [
+    "D01",
+    "start",
+    -0.4
+   ],
+   "until": [
+    "D",
+    "to",
+    0
+   ],
+   "gain": -10,
+   "loop": true,
+   "fade": 0.15,
+   "note": "dips 6 dB under D01 and D05 (the whisper) | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"D\", \"from\", 2.1] -> [\"D01\", \"start\", -0.4]: the wipe is back: the street is 1.6 s longer in front of its old block, which is anchored on D01 now (D01 start - 2.5 s = the old scene start; beats.ts BEAT.D.go)"
+  },
+  {
+   "label": "D mus_lecture (its composed rest under 'miss a lecture')",
+   "clip": "mus_lecture",
+   "at": [
+    "D01",
+    "start",
+    -2.5
+   ],
+   "until": [
+    "D",
+    "to",
+    0
+   ],
+   "gain": -26.0,
+   "in": 0.7,
+   "sync": 0.715,
+   "fade": 0.03,
+   "fade_out": 0.8,
+   "note": "a note onset (clip 0.715 s) ON the C->D cut; the clip's own rest (6.35-7.60 s) falls 69.24-70.49 s: from 'miss' (69.24 s) to D03's first sound (70.47 s), where it comes back. Written into the cue's alignment, not a level dip | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"D\", \"from\", 0] -> [\"D01\", \"start\", -2.5]: the wipe is back: the street is 1.6 s longer in front of its old block, which is anchored on D01 now (D01 start - 2.5 s = the old scene start; beats.ts BEAT.D.go): the clip's rest stays under 'miss a lecture'; the wipe's 1.6 s play on the street alone until the sound lane decides"
+  },
+  {
+   "label": "E room tone",
+   "clip": "amb_room",
+   "at": [
+    "E",
+    "from",
+    0
+   ],
+   "until": [
+    "E",
+    "to",
+    0
+   ],
+   "gain": -30,
+   "loop": true
+  },
+  {
+   "label": "E the fly",
+   "clip": "sfx_fly",
+   "at": [
+    "E",
+    "from",
+    0.2
+   ],
+   "until": [
+    "E01",
+    "end",
+    0.0
+   ],
+   "gain": -18,
+   "loop": true,
+   "fade": 0.3,
+   "fade_out": 0.6
+  },
+  {
+   "label": "E mus_supper, pass 1 (its first note on the cut)",
+   "clip": "mus_supper",
+   "at": [
+    "E",
+    "from",
+    0
+   ],
+   "sync": 0.02,
+   "until": [
+    "E",
+    "from",
+    5.0
+   ],
+   "gain": -22.5,
+   "fade": 0.02,
+   "fade_out": 0.417,
+   "fade_curve": "qsin",
+   "note": "r2 (MAJOR 3, MINOR 11): its first note (clip 0.02 s) on the D->E cut (it was 120 ms late); bars 1-3, to the bar-4 downbeat (clip 5.02 s = E from + 5.0 = 84.367 s, in the E02 -> E03 gap, 32 ms after fork clink 1), crossing to pass 2 over one beat (0.417 s at 144 bpm), equal power (qsin). -22 -> -22.5 dB (both passes, one static level): E07 now sits on the piece's fullest bars (7-8) and needs it for its 10 LU floor (full band)"
+  },
+  {
+   "label": "E mus_supper, pass 2 (bars 2-3 again, so its decay falls after E07, into whip 8)",
+   "clip": "mus_supper",
+   "in": 1.27,
+   "sync": 1.687,
+   "at": [
+    "E",
+    "from",
+    5.0
+   ],
+   "until": [
+    "E",
+    "to",
+    0
+   ],
+   "gain": -22.5,
+   "fade": 0.417,
+   "fade_out": 0.6,
+   "fade_curve": "qsin",
+   "note": "r2 (MAJOR 3 fix B): the bar-2 downbeat (clip 1.687 s) on the bar line pass 1 leaves (84.367 s), crossing in over the beat before it (clip 1.27-1.687); bar 3 (B flat) -> bar 2 (F) is the plagal step the piece already makes. Two bars (3.333 s) longer, so its composed decay (clip 13.35 s) starts at 96.03 s, after E07 (95.58), and runs into whip 8 with a 0.6 s fade; E07 sits on bars 7-8 (F major, steady), not on the decay, so nothing sounds ducked under the whisper"
+  },
+  {
+   "label": "E the quill again (to the look)",
+   "clip": "sfx_quill",
+   "at": [
+    "E02",
+    "end",
+    2.0
+   ],
+   "until": [
+    "E04",
+    "start",
+    -0.05
+   ],
+   "gain": -9,
+   "loop": true,
+   "fade": 0.4,
+   "fade_out": 0.04,
+   "note": "'The quill stops for the look' (LOOK 2/4 at E04)"
+  },
+  {
+   "label": "E the quill (E05)",
+   "clip": "sfx_quill",
+   "at": [
+    "E04",
+    "end",
+    0.1
+   ],
+   "until": [
+    "E06",
+    "start",
+    0
+   ],
+   "gain": -9,
+   "loop": true,
+   "in": 3.0,
+   "fade": 0.1,
+   "fade_out": 0.03,
+   "note": "stops for 'Hooke.': nothing on the crack"
+  },
+  {
+   "label": "E the quill (under E07)",
+   "clip": "sfx_quill",
+   "at": [
+    "E06",
+    "end",
+    0.4
+   ],
+   "until": [
+    "E07",
+    "end",
+    0.05
+   ],
+   "gain": -9,
+   "loop": true,
+   "in": 5.0,
+   "fade": 0.1,
+   "fade_out": 0.03,
+   "note": "after the crack (12 frames at most), under E07 (dipped 6 dB by the whisper)"
+  },
+  {
+   "label": "F garden: crickets",
+   "clip": "amb_night",
+   "at": [
+    "E",
+    "to",
+    -0.6
+   ],
+   "until": [
+    "F01",
+    "start",
+    -0.13
+   ],
+   "gain": 20,
+   "loop": true,
+   "fade": 0.6,
+   "fade_out": 0.06,
+   "note": "to the match cut on his candle (F01 start - 4 frames, beats.ts F.inside) | r2: pre-lapped (review masterclass 1): the crickets come in over E's last 0.6 s (95.87 s, after E07's whisper window) and are full on whip 8; he walks out into the night and the night is heard first"
+  },
+  {
+   "label": "F garden: gravel",
+   "clip": "sfx_gravel",
+   "at": [
+    "F",
+    "from",
+    0.05
+   ],
+   "until": [
+    "F01",
+    "start",
+    -0.13
+   ],
+   "gain": -11,
+   "loop": true,
+   "fade": 0.2,
+   "fade_out": 0.05
+  },
+  {
+   "label": "F the fire's roar (from the match cut to the turn)",
+   "clip": "amb_fire_long",
+   "at": [
+    "F01",
+    "start",
+    -0.13
+   ],
+   "until": [
+    "F07",
+    "end",
+    0
+   ],
+   "gain": -21,
+   "loop": true,
+   "fade": 0.06,
+   "fade_out": 0.7,
+   "note": "ON the match cut into the elaboratory; under the nocturne to the turn | r2: (MINOR 7): amb_fire_long (make_fire_bed.py: amb_furnace's grains in an order that never repeats) instead of the 10.03 s loop, whose loudest pop pair came back every 10.00 s; its own stretch of the file, so no stretch of fire is heard twice (clip 0-20.1 s)"
+  },
+  {
+   "label": "F the fire after the turn (only the fire)",
+   "clip": "amb_fire_long",
+   "at": [
+    "F07",
+    "end",
+    -0.7
+   ],
+   "until": [
+    "F16",
+    "end",
+    1.0
+   ],
+   "gain": -18.2,
+   "in": 22.0,
+   "loop": true,
+   "fade": 0.7,
+   "fade_out": 0.7,
+   "note": "THE TURN: as the nocturne drops out (its 0.7 s fade-out under F07's tail) the fire comes up 2.8 dB over the same 0.7 s and is the scene's only bed ('only the fire from here'), as loud as the 10 LU floor allows (F10 in the phone band); it sinks over the race (F16 end + 0.3 .. + 1.0 s) as the firelight goes to ember red | r2: (MINOR 7): amb_fire_long (make_fire_bed.py: amb_furnace's grains in an order that never repeats) instead of the 10.03 s loop, whose loudest pop pair came back every 10.00 s; its own stretch of the file, so no stretch of fire is heard twice (clip 22-53.8 s)"
+  },
+  {
+   "label": "F the nocturne (one pass, from match 9 to THE TURN)",
+   "clip": "mus_night",
+   "at": [
+    "F01",
+    "start",
+    -0.13
+   ],
+   "until": [
+    "F07",
+    "end",
+    -0.06
+   ],
+   "gain": -14.5,
+   "fade": 0.3,
+   "fade_out": 0.61,
+   "lowshelf": [
+    350,
+    -12
+   ],
+   "note": "r2 (MAJOR 2): ONE pass. Its first strong onset (clip 0.98 s) lands on match 9 (F01 start - 0.13 = 97.55 s); 96 bpm, so a beat falls on 'longer' (116.925 s, 40 ms into the word); the 0.61 s fade-out starts on that beat and ends on the next one (117.535 s, clip 20.965), 15 ms before the clip's next note (clip 20.98), so the score withdraws across 'longer' and is gone as he finishes it (review masterclass 2). Pass 2 (a restart from the clip's soft intro at 112.6 s that took the music 2-10 dB under the fire 4 s before the turn) is gone. -13 -> -14.5 dB for the floors; low shelf 350 Hz -12 dB kept",
+   "sync": 0.98
+  },
+  {
+   "label": "F crickets through the door (F05-F07)",
+   "clip": "amb_night",
+   "at": [
+    "F05",
+    "start",
+    -0.3
+   ],
+   "until": [
+    "F07",
+    "end",
+    0
+   ],
+   "gain": 4,
+   "loop": true,
+   "fade": 1.0,
+   "fade_out": 0.8,
+   "note": "gone by F08: 'only the fire from here'"
+  },
+  {
+   "label": "F charcoal scratching",
+   "clip": "sfx_quill",
+   "at": [
+    "F06",
+    "start",
+    -0.3
+   ],
+   "until": [
+    "F07",
+    "start",
+    0
+   ],
+   "gain": -16,
+   "rate": 0.75,
+   "loop": true,
+   "fade": 0.15,
+   "fade_out": 0.1,
+   "note": "the quill loop at 0.75x (coarser, lower): charcoal on the board; stops at the turn"
+  },
+  {
+   "label": "F he pokes the fire (after F11)",
+   "clip": "sfx_poke",
+   "at": [
+    "F11",
+    "end",
+    0.1
+   ],
+   "until": [
+    "F12",
+    "start",
+    -0.1
+   ],
+   "gain": -21,
+   "fade": 0,
+   "fade_out": 0.15,
+   "note": "as v4"
+  },
+  {
+   "label": "F the mother music (theorbo and bass viol, D minor; the two cello bows are inside it)",
+   "clip": "mus_mother",
+   "at": [
+    "F08",
+    "end",
+    0
+   ],
+   "until": [
+    "F16",
+    "end",
+    0.3
+   ],
+   "gain": -18,
+   "fade": 2.0,
+   "fade_out": 2.6,
+   "note": "owner's note 7 (15 Nov): soft music under Newton talking about his mother, F09-F16. ONE clip, ONE static gain (music is never ducked): scripts/newton/sound/make_mother.py composes it on the voice timing (every plucked note and every bow anchored on a line, each note checked to fall in a pause of the voice) and synthesises it; it starts in the silence after F08 守谁？ (2.0 s fade in), ends with the old cello's end (F16 end + 0.3, 2.6 s fade out: F16 ends on the fire, the clock's stroke 0.7 s later). It REPLACES the four mus_cello cues (D3 and D5, two bows: F14 end + 0.05 .. F15 end - 0.2 at -21 / -24 dB and F15 end - 0.3 .. F16 end + 0.3 at -25 / -28 dB): the same two bows, same anchors, same levels, are inside the clip (the clip is 3 dB under them, hence -18). The sparser alternative is clips/mus_mother_alt.mp3 (same anchors, same gain; not in the mix). After any change of F08-F16's timing: make_mother.py again (make_mother.py --check says whether the clip is stale)"
+  },
+  {
+   "label": "G the fire (embers' crackle)",
+   "clip": "amb_fire_long",
+   "at": [
+    "F16",
+    "end",
+    0.3
+   ],
+   "until": [
+    "G04",
+    "end",
+    0.3
+   ],
+   "gain": -18,
+   "in": 54.25,
+   "loop": true,
+   "fade": 0.7,
+   "fade_out": 0.06,
+   "note": "the fire after the race (three hours on), at F's level, with the embers' low glow under it, to the match cut to his room (G04 end + 0.3 s); the bed the laugh's swell comes in over | r2: (MINOR 7): amb_fire_long (make_fire_bed.py: amb_furnace's grains in an order that never repeats) instead of the 10.03 s loop, whose loudest pop pair came back every 10.00 s; its own stretch of the file, so no stretch of fire is heard twice (clip 54.25 s on, where F's stretch leaves off; of the offsets clear of F's stretch it gives G03, whose phone-band floor binds under mus_laugh's tail, the most room: 10.8 / 10.4 LU on the final build, after hot_syllables.py dropped its 0.5 dB lift)"
+  },
+  {
+   "label": "G the embers (low glow)",
+   "clip": "amb_embers",
+   "at": [
+    "F16",
+    "end",
+    0.3
+   ],
+   "until": [
+    "G04",
+    "end",
+    0.3
+   ],
+   "gain": -22,
+   "loop": true,
+   "fade": 0.7,
+   "fade_out": 0.06
+  },
+  {
+   "label": "G mus_laugh: the swell (its last two bars and its single plucked note)",
+   "clip": "mus_laugh",
+   "at": [
+    "G02",
+    "end",
+    0.08
+   ],
+   "until": [
+    "G04",
+    "end",
+    0.3
+   ],
+   "gain": -9.5,
+   "in": 15.5,
+   "sync": 15.545,
+   "fade": 1.25,
+   "fade_out": 0.3,
+   "lowshelf": [
+    250,
+    -9
+   ],
+   "note": "the clip's last two bars: the bar line at clip 15.545 s as the laugh ends (G02 end + 0.08 s = 161.45 s), coming in over 1.25 s (two beats) to full on the sack's thump (beat 3, 162.70 s): the swell, never ducked; the bar at clip 18.045 s (163.95 s) under card 4; its own ending, the single plucked note on clip 20.545 s, lands at 166.45 s, 0.32 s before 'Good night.', and G03 / G04 have only its decay under them (clip 20.9-24 s, 25-50 dB down). Static gain +3.2 dB over v3b: the swell is no longer capped by G03"
+  },
+  {
+   "label": "G crickets through the open door",
+   "clip": "amb_night",
+   "at": [
+    "G02",
+    "end",
+    1.33
+   ],
+   "until": [
+    "G04",
+    "end",
+    0.3
+   ],
+   "gain": 10,
+   "loop": true,
+   "fade": 0.8,
+   "fade_out": 0.06
+  },
+  {
+   "label": "G his candle going away: gravel",
+   "clip": "sfx_gravel",
+   "at": [
+    "G03",
+    "end",
+    0.2
+   ],
+   "until": [
+    "G04",
+    "end",
+    0.3
+   ],
+   "gain": -24,
+   "loop": true,
+   "in": 2.0,
+   "fade": 0.4,
+   "fade_out": 0.06
+  },
+  {
+   "label": "G his room (after the match cut on the plate)",
+   "clip": "amb_room",
+   "at": [
+    "G04",
+    "end",
+    0.3
+   ],
+   "until": [
+    "G",
+    "to",
+    -1.1
+   ],
+   "gain": -28,
+   "loop": true,
+   "fade": 0.06,
+   "fade_out": 0.3,
+   "note": "r2: +6 dB (MINOR 10) | 15 Nov (S lane, the owner's notes; notes6/S/NOTES.md): until [\"G\", \"to\", -0.3] -> [\"G\", \"to\", -1.1], fade_out 0.5 -> 0.3: the camera's own sound goes with its picture. The room and the crickets ran on under the black to the film's last frame (a chirp at -25 dBFS on f5443, 7 frames after the dot had gone, more on f5449 and f5455, louder there than the switch-off's own tail); now they fade over the squeeze and the line (f5420-5428, from the click on [\"G\", \"to\", -1.4]) and what is heard on the black is the tube"
+  },
+  {
+   "label": "G crickets, faint, through his open door",
+   "clip": "amb_night",
+   "at": [
+    "G04",
+    "end",
+    0.3
+   ],
+   "until": [
+    "G",
+    "to",
+    -1.1
+   ],
+   "gain": 22,
+   "loop": true,
+   "fade": 0.06,
+   "fade_out": 0.3,
+   "note": "r2: +6 dB (MINOR 10): the ending was 23.5 dB under the body, a dropout on a phone | 15 Nov (S lane, the owner's notes; notes6/S/NOTES.md): until [\"G\", \"to\", 0] -> [\"G\", \"to\", -1.1], fade_out 1.0 -> 0.3: the camera's own sound goes with its picture. The room and the crickets ran on under the black to the film's last frame (a chirp at -25 dBFS on f5443, 7 frames after the dot had gone, more on f5449 and f5455, louder there than the switch-off's own tail); now they fade over the squeeze and the line (f5420-5428, from the click on [\"G\", \"to\", -1.4]) and what is heard on the black is the tube"
+  }
+ ],
+ "hits": [
+  {
+   "label": "A REC beep (frame 1)",
+   "clip": "rec_beep",
+   "at": [
+    "A",
+    "from",
+    0.033
+   ],
+   "gain": -17,
+   "note": "her camera starts recording on frame 1 (the REC lamp lit): 1 kHz, audible about 50 ms"
+  },
+  {
+   "label": "A her step 1 of 4 up to his door (the last stair tread)",
+   "clip": "sfx_stairs_up",
+   "at": [
+    "A",
+    "from",
+    0.3
+   ],
+   "gain": -5.5,
+   "in": 0.512,
+   "sync": 0.5302,
+   "len": 0.16,
+   "rate": 0.88,
+   "fade": 0.004,
+   "fade_out": 0.05,
+   "note": "the intro (owner's note 1): her footsteps on the old boards, on story.ts COLD_OPEN_S.steps (BEAT.A.walkSteps f9 / 22 / 35 / 50), slowing with the beats (0.42, 0.45, 0.50 s apart). Four different steps of sfx_stairs_up (not the three Newton's walk to the door uses 3 s later; his are at -20 dB, hers are the camera's own feet). No low-pass: on a phone speaker the step is its tap (the first try, under a 2.6 kHz low-pass at -15 dB, sat 5-10 dB under the quill in the phone band). The levels fall step by step into the stop (the loudest 100 ms -27.9, -29.1, -30.3, -32.3 LUFS; the raps are -20.5 and -19.7) and in the phone band (450 Hz-9 kHz) each step stands 7-14 dB over the bed at its own moment; the loudest scratch or chirp within 120 ms is as loud as steps 1 and 4 and 4-12 dB under steps 2 and 3 (at 3 dB less every step was one tap among the quill's): the darkest of the clip's seven steps, a little slower (rate 0.88): the tread is hollow"
+  },
+  {
+   "label": "A her step 2 of 4 (the landing's boards)",
+   "clip": "sfx_stairs_up",
+   "at": [
+    "A",
+    "from",
+    0.72
+   ],
+   "gain": -7.5,
+   "in": 0.795,
+   "sync": 0.8116,
+   "len": 0.17,
+   "rate": 0.96,
+   "fade": 0.004,
+   "fade_out": 0.05,
+   "note": "the intro (owner's note 1): her footsteps on the old boards, on story.ts COLD_OPEN_S.steps (BEAT.A.walkSteps f9 / 22 / 35 / 50), slowing with the beats (0.42, 0.45, 0.50 s apart). Four different steps of sfx_stairs_up (not the three Newton's walk to the door uses 3 s later; his are at -20 dB, hers are the camera's own feet). No low-pass: on a phone speaker the step is its tap (the first try, under a 2.6 kHz low-pass at -15 dB, sat 5-10 dB under the quill in the phone band). The levels fall step by step into the stop (the loudest 100 ms -27.9, -29.1, -30.3, -32.3 LUFS; the raps are -20.5 and -19.7) and in the phone band (450 Hz-9 kHz) each step stands 7-14 dB over the bed at its own moment; the loudest scratch or chirp within 120 ms is as loud as steps 1 and 4 and 4-12 dB under steps 2 and 3 (at 3 dB less every step was one tap among the quill's)"
+  },
+  {
+   "label": "A her step 3 of 4",
+   "clip": "sfx_stairs_up",
+   "at": [
+    "A",
+    "from",
+    1.17
+   ],
+   "gain": -10.0,
+   "in": 0.975,
+   "sync": 0.9928,
+   "len": 0.17,
+   "rate": 1.0,
+   "fade": 0.004,
+   "fade_out": 0.05,
+   "note": "the intro (owner's note 1): her footsteps on the old boards, on story.ts COLD_OPEN_S.steps (BEAT.A.walkSteps f9 / 22 / 35 / 50), slowing with the beats (0.42, 0.45, 0.50 s apart). Four different steps of sfx_stairs_up (not the three Newton's walk to the door uses 3 s later; his are at -20 dB, hers are the camera's own feet). No low-pass: on a phone speaker the step is its tap (the first try, under a 2.6 kHz low-pass at -15 dB, sat 5-10 dB under the quill in the phone band). The levels fall step by step into the stop (the loudest 100 ms -27.9, -29.1, -30.3, -32.3 LUFS; the raps are -20.5 and -19.7) and in the phone band (450 Hz-9 kHz) each step stands 7-14 dB over the bed at its own moment; the loudest scratch or chirp within 120 ms is as loud as steps 1 and 4 and 4-12 dB under steps 2 and 3 (at 3 dB less every step was one tap among the quill's)"
+  },
+  {
+   "label": "A her step 4 of 4: the stop",
+   "clip": "sfx_stairs_up",
+   "at": [
+    "A",
+    "from",
+    1.67
+   ],
+   "gain": -12.5,
+   "in": 0.212,
+   "sync": 0.2282,
+   "len": 0.16,
+   "rate": 0.92,
+   "fade": 0.004,
+   "fade_out": 0.05,
+   "note": "the intro (owner's note 1): her footsteps on the old boards, on story.ts COLD_OPEN_S.steps (BEAT.A.walkSteps f9 / 22 / 35 / 50), slowing with the beats (0.42, 0.45, 0.50 s apart). Four different steps of sfx_stairs_up (not the three Newton's walk to the door uses 3 s later; his are at -20 dB, hers are the camera's own feet). No low-pass: on a phone speaker the step is its tap (the first try, under a 2.6 kHz low-pass at -15 dB, sat 5-10 dB under the quill in the phone band). The levels fall step by step into the stop (the loudest 100 ms -27.9, -29.1, -30.3, -32.3 LUFS; the raps are -20.5 and -19.7) and in the phone band (450 Hz-9 kHz) each step stands 7-14 dB over the bed at its own moment; the loudest scratch or chirp within 120 ms is as loud as steps 1 and 4 and 4-12 dB under steps 2 and 3 (at 3 dB less every step was one tap among the quill's): her last foot lands short and takes her weight (segA: f50-57); the board creaks under it"
+  },
+  {
+   "label": "A the board creaks under her as she stops",
+   "clip": "sfx_board_creak",
+   "at": [
+    "A",
+    "from",
+    1.745
+   ],
+   "gain": -22,
+   "note": "the intro (owner's note 1): one small creak as her weight settles (f52-57, between her last step and BEAT.A.arrive); synthesised (scripts/newton/sound/make_creak.py: stick-slip, 0.19 s, 390 / 870 Hz), not the hinge's creak (sfx_big_door, 3.72 s). Ends 1.93 s, before A01a (2.0 s). -22 dB: small, 4 dB over the bed at its moment in the phone band, 3 dB under it full band"
+  },
+  {
+   "label": "A rap 1 (the invisible hand)",
+   "clip": "sfx_knock",
+   "at": [
+    "A",
+    "from",
+    3.4
+   ],
+   "gain": -7,
+   "len": 0.24,
+   "fade_out": 0.1,
+   "note": "the clip's first rap only (0-0.095 s); story.ts COLD_OPEN_S.knock = 2.2 s = frame 66: the frame nods forward a hair, the leaf swings wider | r2: (director note 4): -13 -> -8 dB and an 80 Hz 4-pole high-pass (the clip's subsonic swing): at least 3 dB over the quill burst it cuts into | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"A\", \"from\", 2.2] -> [\"A\", \"from\", 3.4]: the intro (she walks up, 终于到了！, then the raps): the cold open's block of stop / burst / raps is 1.2 s later (story.ts COLD_OPEN_S) | 15 Nov (S lane, the owner's notes; notes6/S/NOTES.md): KNUCKLES ON OAK. The clip is 'a hard object on an old oak door': 48 % of the rap's energy was over 1.6 kHz (centroid 2.0 kHz) and its tail was cut 13 dB down at 95 ms. Now a low shelf (+7 dB under 450 Hz) and a 2.8 kHz low-pass (centroid 0.94 kHz, a third of the energy at 200-400 Hz: the door's body) and the rap rings out (len 0.095 -> 0.24 s, fade 0.10: the 80 Hz high-pass already takes the clip's subsonic swing); gain -8 -> -7 dB (the same loudness, 1 dB more for the phone band)",
+   "hp": [
+    80,
+    4
+   ],
+   "lowshelf": [
+    450,
+    7
+   ],
+   "lp": [
+    2800
+   ]
+  },
+  {
+   "label": "A rap 2",
+   "clip": "sfx_knock",
+   "at": [
+    "A",
+    "from",
+    3.69
+   ],
+   "gain": -6.5,
+   "len": 0.24,
+   "fade_out": 0.1,
+   "note": "the clip's second rap (its attack at 0.105 s) 0.29 s after the first (one eighth of the morning bed): frame 75 | r2: the knock itself (clip 0-0.095 s, as rap 1); it played the clip from 0.095 s, which is rap 1's tail and a swing under 40 Hz, 16 dB under rap 1 in loudness. -13 -> -8 dB, 80 Hz high-pass, as rap 1 | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"A\", \"from\", 2.49] -> [\"A\", \"from\", 3.69]: the intro (she walks up, 终于到了！, then the raps): the cold open's block of stop / burst / raps is 1.2 s later (story.ts COLD_OPEN_S) | 15 Nov (S lane, the owner's notes; notes6/S/NOTES.md): KNUCKLES ON OAK. The clip is 'a hard object on an old oak door': 48 % of the rap's energy was over 1.6 kHz (centroid 2.0 kHz) and its tail was cut 13 dB down at 95 ms. Now a low shelf (+7 dB under 450 Hz) and a 2.8 kHz low-pass (centroid 0.94 kHz, a third of the energy at 200-400 Hz: the door's body) and the rap rings out (len 0.095 -> 0.24 s, fade 0.10: the 80 Hz high-pass already takes the clip's subsonic swing); gain -8 -> -6.5 dB (the same loudness, 1 dB more for the phone band); rap 2 at rate 0.94 and 0.5 dB more: the second knock a little firmer and lower (its mark on the door is the bigger one), not the same sample twice",
+   "hp": [
+    80,
+    4
+   ],
+   "lowshelf": [
+    450,
+    7
+   ],
+   "lp": [
+    2800
+   ],
+   "rate": 0.94
+  },
+  {
+   "label": "A pluck on rap 1 (D4)",
+   "clip": "sfx_pluck",
+   "at": [
+    "A",
+    "from",
+    3.4
+   ],
+   "gain": 0,
+   "note": "D4 over the bed's D-major chord (clip 2.06 s) | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"A\", \"from\", 2.2] -> [\"A\", \"from\", 3.4]: the intro (she walks up, 终于到了！, then the raps): the cold open's block of stop / burst / raps is 1.2 s later (story.ts COLD_OPEN_S)"
+  },
+  {
+   "label": "A pluck on rap 2 (A4)",
+   "clip": "sfx_pluck",
+   "at": [
+    "A",
+    "from",
+    3.69
+   ],
+   "gain": -2,
+   "rate": 1.4983,
+   "note": "the same pluck a fifth up (sampler speed 1.498 = +7 semitones): A4, in the bed's chord at clip 2.35 s (G4 A4 F#4) | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"A\", \"from\", 2.49] -> [\"A\", \"from\", 3.69]: the intro (she walks up, 终于到了！, then the raps): the cold open's block of stop / burst / raps is 1.2 s later (story.ts COLD_OPEN_S)"
+  },
+  {
+   "label": "A hinge creak: the leaf swings wider",
+   "clip": "sfx_big_door",
+   "at": [
+    "A",
+    "from",
+    3.72
+   ],
+   "gain": -32,
+   "in": 0.1,
+   "len": 0.65,
+   "rate": 1.25,
+   "fade": 0.06,
+   "fade_out": 0.12,
+   "note": "the big door's slow creak, 1.25x (a smaller door), 0.52 s from the second rap | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"A\", \"from\", 2.52] -> [\"A\", \"from\", 3.72]: the intro (she walks up, 终于到了！, then the raps): the cold open's block of stop / burst / raps is 1.2 s later (story.ts COLD_OPEN_S)"
+  },
+  {
+   "label": "A step 1 of 3 on bare boards (he comes to the door)",
+   "clip": "sfx_stairs_up",
+   "at": [
+    "A02",
+    "start",
+    -1.55
+   ],
+   "gain": -20,
+   "in": 0.04,
+   "len": 0.16,
+   "sync": 0.06,
+   "fade_out": 0.03,
+   "note": "one footfall from sfx_stairs_up; he walks into a still frame toward the lens: 3.05 / 3.50 / 3.95 s (A02 start - 1.55 / - 1.10 / - 0.65), there 0.5 s before 'Good night.'"
+  },
+  {
+   "label": "A step 2 of 3 on bare boards (he comes to the door)",
+   "clip": "sfx_stairs_up",
+   "at": [
+    "A02",
+    "start",
+    -1.1
+   ],
+   "gain": -20,
+   "in": 0.38,
+   "len": 0.14,
+   "sync": 0.4,
+   "fade_out": 0.03,
+   "note": "one footfall from sfx_stairs_up; he walks into a still frame toward the lens: 3.05 / 3.50 / 3.95 s (A02 start - 1.55 / - 1.10 / - 0.65), there 0.5 s before 'Good night.'"
+  },
+  {
+   "label": "A step 3 of 3 on bare boards (he comes to the door)",
+   "clip": "sfx_stairs_up",
+   "at": [
+    "A02",
+    "start",
+    -0.65
+   ],
+   "gain": -20,
+   "in": 0.66,
+   "len": 0.14,
+   "sync": 0.68,
+   "fade_out": 0.03,
+   "note": "one footfall from sfx_stairs_up; he walks into a still frame toward the lens: 3.05 / 3.50 / 3.95 s (A02 start - 1.55 / - 1.10 / - 0.65), there 0.5 s before 'Good night.'"
+  },
+  {
+   "label": "A the hinge's last creak (under 'Good night.')",
+   "clip": "sfx_big_door",
+   "at": [
+    "A02",
+    "start",
+    -0.3
+   ],
+   "gain": -34,
+   "in": 0.4,
+   "len": 0.75,
+   "rate": 1.25,
+   "fade": 0.05,
+   "fade_out": 0.2,
+   "note": "his hand on the door: 4.30-4.90 s, 'Good night.' (voice from 4.65 s) over its last part"
+  },
+  {
+   "label": "A door swing (air)",
+   "clip": "sfx_whoosh",
+   "at": [
+    "A02",
+    "end",
+    0.28
+   ],
+   "gain": -30,
+   "in": 0.15,
+   "sync": 0.24,
+   "rate": 0.6,
+   "lp": [
+    900
+   ],
+   "note": "the whoosh's main burst at 0.6x through a 900 Hz low-pass: the leaf swinging at her, peak 0.12 s before the thud"
+  },
+  {
+   "label": "A THUD (he shuts the door himself)",
+   "clip": "sfx_door_shut",
+   "at": [
+    "A02",
+    "end",
+    0.4
+   ],
+   "gain": -15,
+   "sync": 0.235,
+   "note": "the clip's thud (its attack at 0.235 s; the latch ticks 35 ms before it) ON A02 end + 0.4 s = 5.90 s (beats.ts BEAT.A.doorShut); the camera's one jolt lands here. (v4 started the clip on its anchor: its thud came 0.26 s after the picture's)"
+  },
+  {
+   "label": "A a pigeon flaps off the sill",
+   "clip": "sfx_pigeon",
+   "at": [
+    "A02",
+    "end",
+    0.6
+   ],
+   "gain": -24,
+   "sync": 0.22
+  },
+  {
+   "label": "A Humphrey slips out: latch, creak, the door's click",
+   "clip": "sfx_door_crack",
+   "at": [
+    "A04",
+    "start",
+    -0.25
+   ],
+   "gain": -24,
+   "in": 0.28,
+   "sync": 1.13,
+   "note": "the clip from its first creak (0.28 s, = A03 end); its closing click (1.13 s) at A04 start - 0.25 s = 9.78 s"
+  },
+  {
+   "label": "A slippers on the boards",
+   "clip": "sfx_stairs_down",
+   "at": [
+    "A03",
+    "end",
+    0.35
+   ],
+   "gain": -34,
+   "in": 0.4,
+   "len": 0.65,
+   "lp": [
+    1200
+   ],
+   "fade_out": 0.15,
+   "note": "two shuffles from sfx_stairs_down through a 1.2 kHz low-pass (slippers, not shoes): 9.32 / 9.66 s"
+  },
+  {
+   "label": "A Humphrey's step back down onto the stair head (on his foot plant)",
+   "clip": "sfx_stairs_down",
+   "at": [
+    "A05",
+    "end",
+    0.388
+   ],
+   "gain": -29,
+   "in": 1.331,
+   "sync": 1.338,
+   "len": 0.14,
+   "fade": 0.003,
+   "fade_out": 0.03,
+   "note": "HUMPHREY'S DESCENT (r4, 15 Nov, gate-5 note F1): the picture backs him one step down from BEAT.A.humphreyDown (A05 end + 0.10 s = f464), the foot landing behind him on f473, and turns him on f476 to go on down at 1.35 m/s, a foot plant every 10 frames from f481 (segA humphreyStage: backWalk 0.55 m/s, then rigWalk 1.35 m/s; checked on picture-only stills f455-520). One footfall from sfx_stairs_down on each plant. Until r3 the whole 3 s clip played from f464, its loudest step on f478 while he still stood at the top | this one: the backward step, f473 (clip 1.331-1.471 s, the step's attack at 1.338 s), softer than the descent: he backs down carefully, facing her"
+  },
+  {
+   "label": "A Humphrey goes down the stairs: step 1 of 6 (on his foot plant)",
+   "clip": "sfx_stairs_down",
+   "at": [
+    "A05",
+    "end",
+    0.655
+   ],
+   "gain": -26,
+   "in": 0.44,
+   "sync": 0.446,
+   "len": 0.145,
+   "fade": 0.003,
+   "fade_out": 0.03,
+   "note": "HUMPHREY'S DESCENT (r4, 15 Nov, gate-5 note F1): the picture backs him one step down from BEAT.A.humphreyDown (A05 end + 0.10 s = f464), the foot landing behind him on f473, and turns him on f476 to go on down at 1.35 m/s, a foot plant every 10 frames from f481 (segA humphreyStage: backWalk 0.55 m/s, then rigWalk 1.35 m/s; checked on picture-only stills f455-520). One footfall from sfx_stairs_down on each plant. Until r3 the whole 3 s clip played from f464, its loudest step on f478 while he still stood at the top | this one: step 1 of 6 down, f481 (clip 0.44-0.585 s, the step's attack at 0.446 s, gain -26: the steps fade about 2.5 dB each as he goes down the flight, he is out of the frame from f480)"
+  },
+  {
+   "label": "A Humphrey goes down the stairs: step 2 of 6 (on his foot plant)",
+   "clip": "sfx_stairs_down",
+   "at": [
+    "A05",
+    "end",
+    0.988
+   ],
+   "gain": -25.5,
+   "in": 0.982,
+   "sync": 0.986,
+   "len": 0.11,
+   "fade": 0.003,
+   "fade_out": 0.03,
+   "note": "HUMPHREY'S DESCENT (r4, 15 Nov, gate-5 note F1): the picture backs him one step down from BEAT.A.humphreyDown (A05 end + 0.10 s = f464), the foot landing behind him on f473, and turns him on f476 to go on down at 1.35 m/s, a foot plant every 10 frames from f481 (segA humphreyStage: backWalk 0.55 m/s, then rigWalk 1.35 m/s; checked on picture-only stills f455-520). One footfall from sfx_stairs_down on each plant. Until r3 the whole 3 s clip played from f464, its loudest step on f478 while he still stood at the top | this one: step 2 of 6 down, f491 (clip 0.982-1.092 s, the step's attack at 0.986 s, gain -25.5: the steps fade about 2.5 dB each as he goes down the flight)"
+  },
+  {
+   "label": "A Humphrey goes down the stairs: step 3 of 6 (on his foot plant)",
+   "clip": "sfx_stairs_down",
+   "at": [
+    "A05",
+    "end",
+    1.322
+   ],
+   "gain": -30,
+   "in": 1.243,
+   "sync": 1.25,
+   "len": 0.085,
+   "fade": 0.003,
+   "fade_out": 0.03,
+   "note": "HUMPHREY'S DESCENT (r4, 15 Nov, gate-5 note F1): the picture backs him one step down from BEAT.A.humphreyDown (A05 end + 0.10 s = f464), the foot landing behind him on f473, and turns him on f476 to go on down at 1.35 m/s, a foot plant every 10 frames from f481 (segA humphreyStage: backWalk 0.55 m/s, then rigWalk 1.35 m/s; checked on picture-only stills f455-520). One footfall from sfx_stairs_down on each plant. Until r3 the whole 3 s clip played from f464, its loudest step on f478 while he still stood at the top | this one: step 3 of 6 down, f501 (clip 1.243-1.328 s, the step's attack at 1.25 s, gain -30: the steps fade about 2.5 dB each as he goes down the flight)"
+  },
+  {
+   "label": "A Humphrey goes down the stairs: step 4 of 6 (on his foot plant)",
+   "clip": "sfx_stairs_down",
+   "at": [
+    "A05",
+    "end",
+    1.655
+   ],
+   "gain": -30,
+   "in": 0.762,
+   "sync": 0.768,
+   "len": 0.11,
+   "fade": 0.003,
+   "fade_out": 0.03,
+   "note": "HUMPHREY'S DESCENT (r4, 15 Nov, gate-5 note F1): the picture backs him one step down from BEAT.A.humphreyDown (A05 end + 0.10 s = f464), the foot landing behind him on f473, and turns him on f476 to go on down at 1.35 m/s, a foot plant every 10 frames from f481 (segA humphreyStage: backWalk 0.55 m/s, then rigWalk 1.35 m/s; checked on picture-only stills f455-520). One footfall from sfx_stairs_down on each plant. Until r3 the whole 3 s clip played from f464, its loudest step on f478 while he still stood at the top | this one: step 4 of 6 down, f511 (clip 0.762-0.872 s, the step's attack at 0.768 s, gain -30: the steps fade about 2.5 dB each as he goes down the flight)"
+  },
+  {
+   "label": "A Humphrey goes down the stairs: step 5 of 6 (on his foot plant)",
+   "clip": "sfx_stairs_down",
+   "at": [
+    "A05",
+    "end",
+    1.988
+   ],
+   "gain": -26.5,
+   "in": 1.795,
+   "sync": 1.801,
+   "len": 0.08,
+   "fade": 0.003,
+   "fade_out": 0.03,
+   "note": "HUMPHREY'S DESCENT (r4, 15 Nov, gate-5 note F1): the picture backs him one step down from BEAT.A.humphreyDown (A05 end + 0.10 s = f464), the foot landing behind him on f473, and turns him on f476 to go on down at 1.35 m/s, a foot plant every 10 frames from f481 (segA humphreyStage: backWalk 0.55 m/s, then rigWalk 1.35 m/s; checked on picture-only stills f455-520). One footfall from sfx_stairs_down on each plant. Until r3 the whole 3 s clip played from f464, its loudest step on f478 while he still stood at the top | this one: step 5 of 6 down, f521 (clip 1.795-1.875 s, the step's attack at 1.801 s, gain -26.5: the steps fade about 2.5 dB each as he goes down the flight)"
+  },
+  {
+   "label": "A Humphrey goes down the stairs: step 6 of 6 (on his foot plant)",
+   "clip": "sfx_stairs_down",
+   "at": [
+    "A05",
+    "end",
+    2.322
+   ],
+   "gain": -30.5,
+   "in": 1.559,
+   "sync": 1.565,
+   "len": 0.07,
+   "fade": 0.003,
+   "fade_out": 0.03,
+   "note": "HUMPHREY'S DESCENT (r4, 15 Nov, gate-5 note F1): the picture backs him one step down from BEAT.A.humphreyDown (A05 end + 0.10 s = f464), the foot landing behind him on f473, and turns him on f476 to go on down at 1.35 m/s, a foot plant every 10 frames from f481 (segA humphreyStage: backWalk 0.55 m/s, then rigWalk 1.35 m/s; checked on picture-only stills f455-520). One footfall from sfx_stairs_down on each plant. Until r3 the whole 3 s clip played from f464, its loudest step on f478 while he still stood at the top | this one: step 6 of 6 down, f531 (clip 1.559-1.629 s, the step's attack at 1.565 s, gain -30.5: the steps fade about 2.5 dB each as he goes down the flight)"
+  },
+  {
+   "label": "A his bed creaks behind the door (after 次)",
+   "clip": "sfx_big_door",
+   "at": [
+    "A06",
+    "end",
+    -0.2
+   ],
+   "gain": -30,
+   "in": 0.15,
+   "len": 0.4,
+   "rate": 0.8,
+   "lp": [
+    1500
+   ],
+   "fade": 0.04,
+   "fade_out": 0.15,
+   "note": "in the gap after 次 (her voice ends 17.70 s), not on the word: the big door's creak at 0.8x through a 1.5 kHz low-pass (a wooden bed frame behind a shut door), 17.96-18.46 s | r2: (MINOR 8): at A06 end - 0.2 = 17.76 s, just after her voice ends (17.75; the voice fix moved 次 onto its heard sound)"
+  },
+  {
+   "label": "A one muffled snore (PLACEHOLDER)",
+   "clip": "ph_snore",
+   "at": [
+    "A06",
+    "end",
+    -0.15
+   ],
+   "gain": -15,
+   "placeholder": "sfx_snore: 'One muffled snore of an old man asleep behind a closed wooden door, heard from the landing outside: a single slow snore on the in-breath with a dull rattle, then one short breath out. Nothing else.' Its loudest moment no later than 0.45 s after it starts. 1.5 s",
+   "note": "18.06 s on; its loudest at 18.55 s and its breath out under card 1's ding (18.36 s, burst 18.67 s): 'the snore's tail'. The whisper lean releases on it | r2: (MINOR 8): -24 -> -15 dB (the review asked -18; measured there it was still 7 dB under the music and birds), at A06 end - 0.15 = 17.81 s: its body falls inside the still-dipped room (the birds come back 17.96-18.16) and peaks at 18.30, before card 1's swish (about 18.41) and ding"
+  },
+  {
+   "label": "B the college bell on the cut",
+   "clip": "sfx_bell",
+   "at": [
+    "B",
+    "from",
+    0
+   ],
+   "gain": -1,
+   "note": "ON the A->B cut (clock join 1)"
+  },
+  {
+   "label": "B the cover's clink (the plate insert)",
+   "clip": "sfx_lid",
+   "at": [
+    "B",
+    "from",
+    0.15
+   ],
+   "gain": -24,
+   "sync": 0.17,
+   "note": "lid lifted, steam; Humphrey's line starts 0.6 s into the insert"
+  },
+  {
+   "label": "B the flick: a small dry swish",
+   "clip": "sfx_wipe",
+   "at": [
+    "B01",
+    "end",
+    0.08
+   ],
+   "gain": -26,
+   "in": 0.42,
+   "len": 0.3,
+   "rate": 1.3,
+   "fade": 0.02,
+   "fade_out": 0.06,
+   "note": "FLICK 1/4, two fingers at his hip after 'dinner' (its voice ends 24.32 s): the handkerchief clip's second stroke, 1.3x: 24.40-24.63 s"
+  },
+  {
+   "label": "B Humphrey sighs (PLACEHOLDER)",
+   "clip": "ph_sigh",
+   "at": [
+    "B01",
+    "end",
+    0.32
+   ],
+   "gain": -26,
+   "placeholder": "sfx_sigh_humphrey: 'A young man's tired, resigned sigh, one breath out through the mouth, close by, no words, no voice tone.' 1.0 s",
+   "note": "24.64 s, after the flick, before her 「他说马上来！」 | r2: -30 -> -26 dB (MINOR 8): it was 7 dB under the bed"
+  },
+  {
+   "label": "B Humphrey's steps to the door",
+   "clip": "sfx_stairs_down",
+   "at": [
+    "B01",
+    "end",
+    0.6
+   ],
+   "gain": -34,
+   "in": 0.4,
+   "len": 1.4,
+   "lp": [
+    1500
+   ],
+   "fade_out": 0.3,
+   "note": "24.92 s on, going away (1.5 kHz low-pass)"
+  },
+  {
+   "label": "B the door clicks shut after B02",
+   "clip": "sfx_door_crack",
+   "at": [
+    "B02",
+    "end",
+    0.15
+   ],
+   "gain": -24,
+   "in": 1.05,
+   "sync": 1.13,
+   "len": 0.5
+  },
+  {
+   "label": "B her step 1 of 3 to the desk",
+   "clip": "sfx_stairs_up",
+   "at": [
+    "B03",
+    "start",
+    -0.35
+   ],
+   "gain": -34,
+   "in": 0.2,
+   "len": 0.14,
+   "sync": 0.22,
+   "fade_out": 0.03,
+   "note": "she turns and walks to the desk's corner, landing on 写 (28.75 s)"
+  },
+  {
+   "label": "B her step 2 of 3 to the desk",
+   "clip": "sfx_stairs_up",
+   "at": [
+    "B03",
+    "start",
+    0.15
+   ],
+   "gain": -34,
+   "in": 0.2,
+   "len": 0.14,
+   "sync": 0.22,
+   "fade_out": 0.03,
+   "note": "she turns and walks to the desk's corner, landing on 写 (28.75 s)"
+  },
+  {
+   "label": "B her step 3 of 3 to the desk",
+   "clip": "sfx_stairs_up",
+   "at": [
+    "B03",
+    "start",
+    0.65
+   ],
+   "gain": -34,
+   "in": 0.2,
+   "len": 0.14,
+   "sync": 0.22,
+   "fade_out": 0.03,
+   "note": "she turns and walks to the desk's corner, landing on 写 (28.75 s)"
+  },
+  {
+   "label": "B noon: the college clock's first stroke under card 2's last 0.3 s",
+   "clip": "sfx_clock_two",
+   "at": [
+    "card:B09",
+    "to",
+    -0.3
+   ],
+   "gain": -20,
+   "note": "the clip's two strokes (0 / 0.77 s): 48.53 / 49.30 s; she whips to the sound (join 2) | r2: (POLISH 12): 0.9834x = -29 cents, the strike partial on D5 with mus_noon (length +1.7 %; the second stroke 0.793 s after the first)",
+   "rate": 0.9834
+  },
+  {
+   "label": "B->C the strokes go on (3rd and 4th)",
+   "clip": "sfx_clock_two",
+   "at": [
+    "card:B09",
+    "to",
+    1.286
+   ],
+   "gain": -24,
+   "len": 3.5,
+   "fade_out": 2.0,
+   "note": "the clip again 1.56 s later: strokes 3 and 4 at 50.09 / 50.86 s over the plate and the garden, 4 dB further off | r2: (POLISH 12): retuned like the first; 2 x 0.793 s after stroke 1, so the four strokes stay evenly spaced (stroke 3 at about 50.12 s, on mus_noon's beat 2)",
+   "rate": 0.9834
+  },
+  {
+   "label": "B->C whip 2: whoosh",
+   "clip": "sfx_whoosh",
+   "at": [
+    "B",
+    "to",
+    0
+   ],
+   "gain": -25,
+   "in": 0.15,
+   "sync": 0.24,
+   "note": "the whoosh's main burst ON the cut (the whip in B's last 6 frames)"
+  },
+  {
+   "label": "C the gravel run (his turn)",
+   "clip": "sfx_gravel_run",
+   "at": [
+    "C04",
+    "end",
+    0.395
+   ],
+   "gain": -20,
+   "sync": 0.09,
+   "note": "his first running step ON the turn, 15 frames after the freeze began"
+  },
+  {
+   "label": "C whip 4 up the range front: whoosh",
+   "clip": "sfx_whoosh",
+   "at": [
+    "C05",
+    "end",
+    0.29
+   ],
+   "gain": -25,
+   "in": 0.15,
+   "sync": 0.24,
+   "note": "its main burst ON the cut (C05 end + 0.3 s, beats.ts C.whipCut)"
+  },
+  {
+   "label": "C the chair's scrape: her push 1 of 3",
+   "clip": "sfx_chair",
+   "at": [
+    "C06",
+    "start",
+    -0.72
+   ],
+   "gain": -24,
+   "in": 0.02,
+   "len": 0.26,
+   "fade": 0.02,
+   "fade_out": 0.06,
+   "note": "the drag in three pushes, one per step of hers (59.03 / 59.32 / 59.61 s): the chair moves only while the lens moves"
+  },
+  {
+   "label": "C the chair's scrape: her push 2 of 3",
+   "clip": "sfx_chair",
+   "at": [
+    "C06",
+    "start",
+    -0.43
+   ],
+   "gain": -24,
+   "in": 0.02,
+   "len": 0.26,
+   "fade": 0.02,
+   "fade_out": 0.06,
+   "note": "the drag in three pushes, one per step of hers (59.03 / 59.32 / 59.61 s): the chair moves only while the lens moves"
+  },
+  {
+   "label": "C the chair's scrape: her push 3 of 3",
+   "clip": "sfx_chair",
+   "at": [
+    "C06",
+    "start",
+    -0.14
+   ],
+   "gain": -24,
+   "in": 0.02,
+   "len": 0.26,
+   "fade": 0.02,
+   "fade_out": 0.06,
+   "note": "the drag in three pushes, one per step of hers (59.03 / 59.32 / 59.61 s): the chair moves only while the lens moves"
+  },
+  {
+   "label": "C the chair knocks against his knees (on 坐)",
+   "clip": "sfx_knock",
+   "at": [
+    "C06",
+    "start",
+    0.135
+   ],
+   "gain": -24,
+   "len": 0.09,
+   "rate": 0.7,
+   "lp": [
+    1500
+   ],
+   "fade_out": 0.02,
+   "note": "ON 坐 (her voice from 59.80 s): the first rap at 0.7x through a 1.5 kHz low-pass, a dull wooden knock"
+  },
+  {
+   "label": "C the skid (his calves shove the chair back)",
+   "clip": "sfx_chair",
+   "at": [
+    "C07",
+    "end",
+    0.1
+   ],
+   "gain": -22,
+   "in": 0.02,
+   "len": 0.62,
+   "rate": 1.4,
+   "fade": 0.02,
+   "fade_out": 0.05,
+   "note": "after 'No time.' (voice ends 62.33 s): the drag at 1.4x, 62.49-62.93 s"
+  },
+  {
+   "label": "C the knock on the lens (the jolt)",
+   "clip": "sfx_knock",
+   "at": [
+    "C07",
+    "end",
+    0.65
+   ],
+   "gain": -14,
+   "len": 0.12,
+   "rate": 1.15,
+   "fade_out": 0.03,
+   "note": "the one JOLT: 62.95 s | r2: (POLISH 15): C07 end + 0.65 = 63.04 s (f1891), on mus_noon's beat 25; the picture's jolt follows (SYNC_POINTS)"
+  },
+  {
+   "label": "C the knock on the lens: body",
+   "clip": "sfx_door_shut",
+   "at": [
+    "C07",
+    "end",
+    0.65
+   ],
+   "gain": -26,
+   "sync": 0.25,
+   "rate": 1.4,
+   "note": "the door thud 1.4x under the knock, for the jolt's weight | r2: (POLISH 15): C07 end + 0.65 = 63.04 s (f1891), on mus_noon's beat 25; the picture's jolt follows (SYNC_POINTS)"
+  },
+  {
+   "label": "D his footfall out of the gate, on the cut",
+   "clip": "sfx_steps_echo",
+   "at": [
+    "D",
+    "from",
+    0.0
+   ],
+   "gain": -27,
+   "in": 0.62,
+   "sync": 0.65,
+   "len": 0.3,
+   "fade_out": 0.15,
+   "note": "the wipe's staging (D lane, 15 Nov): he strides out of the arch up to her lens, two footfalls, f2043 (the cut) and f2055 (BEAT.D.wipeIn); the same step as his two the wrong way (f2095, f2107), this one 5 dB under them (it lands with the cut)"
+  },
+  {
+   "label": "D his second footfall: he stops at her lens (the cloth darts in)",
+   "clip": "sfx_steps_echo",
+   "at": [
+    "D",
+    "from",
+    0.4
+   ],
+   "gain": -24,
+   "in": 0.62,
+   "sync": 0.65,
+   "len": 0.3,
+   "fade_out": 0.15,
+   "note": "f2055 = BEAT.D.wipeIn, 6 frames before stroke 1"
+  },
+  {
+   "label": "D the handkerchief wipe: two strokes (the invisible hand)",
+   "clip": "sfx_wipe",
+   "at": [
+    "D",
+    "from",
+    0.6
+   ],
+   "gain": -16,
+   "note": "the owner, 15 Nov: the face wipe is back. The whole clip (0.836 s = 25 frames): its two swishes are its frames 0-6 and, louder, 13-19 = beats.ts BEAT.D.wipe1 / wipe2 (the ink a smudge from wipe + 3, clean from wipe + 16); level as cut 2ecee1c had it (-20 dB), the sound lane polishes | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): new cue | 15 Nov (S lane, the owner's notes; notes6/S/NOTES.md): gain -20 -> -16 dB and a 15 ms fade in (the clip starts inside its first swish). Swish 1 on f2061-2063 (its peak f2063.5, BEAT.D.smudge 2064), swish 2 on f2074-2080 (peak f2077.7, BEAT.D.clean 2077), gone on f2082: the strokes are BEAT.D.wipe1 [2061, 2067] and wipe2 [2074, 2080]",
+   "fade": 0.015
+  },
+  {
+   "label": "D his step 1 of 2 the wrong way",
+   "clip": "sfx_steps_echo",
+   "at": [
+    "D01",
+    "start",
+    -2.35
+   ],
+   "gain": -22,
+   "in": 0.62,
+   "sync": 0.65,
+   "len": 0.3,
+   "fade_out": 0.15,
+   "note": "two strides out of the gate the wrong way: 63.75 / 64.15 s; then the footsteps STOP DEAD (D from + 0.8 s = 64.40 s) for his stop, 15 frames | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"D\", \"from\", 0.15] -> [\"D01\", \"start\", -2.35]: the wipe is back: the street is 1.6 s longer in front of its old block, which is anchored on D01 now (D01 start - 2.5 s = the old scene start; beats.ts BEAT.D.go)"
+  },
+  {
+   "label": "D his step 2 of 2 the wrong way",
+   "clip": "sfx_steps_echo",
+   "at": [
+    "D01",
+    "start",
+    -1.95
+   ],
+   "gain": -22,
+   "in": 0.62,
+   "sync": 0.65,
+   "len": 0.3,
+   "fade_out": 0.15,
+   "note": "two strides out of the gate the wrong way: 63.75 / 64.15 s; then the footsteps STOP DEAD (D from + 0.8 s = 64.40 s) for his stop, 15 frames | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"D\", \"from\", 0.55] -> [\"D01\", \"start\", -1.95]: the wipe is back: the street is 1.6 s longer in front of its old block, which is anchored on D01 now (D01 start - 2.5 s = the old scene start; beats.ts BEAT.D.go)"
+  },
+  {
+   "label": "D one hurried step back into the whip",
+   "clip": "sfx_steps_echo",
+   "at": [
+    "D01",
+    "start",
+    -0.65
+   ],
+   "gain": -20,
+   "in": 0.62,
+   "sync": 0.65,
+   "len": 0.25,
+   "fade_out": 0.12,
+   "note": "turned on his heel (eyes to his notes), the first stride back: 65.45 s; whip 6 starts on it | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"D\", \"from\", 1.85] -> [\"D01\", \"start\", -0.65]: the wipe is back: the street is 1.6 s longer in front of its old block, which is anchored on D01 now (D01 start - 2.5 s = the old scene start; beats.ts BEAT.D.go)"
+  },
+  {
+   "label": "D whip 6: whoosh",
+   "clip": "sfx_whoosh",
+   "at": [
+    "D01",
+    "start",
+    -0.4
+   ],
+   "gain": -25,
+   "in": 0.15,
+   "sync": 0.24,
+   "note": "its main burst ON the cut into the Schools: D from + 2.1 s = 65.70 s (frame 1971) | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"D\", \"from\", 2.1] -> [\"D01\", \"start\", -0.4]: the wipe is back: the street is 1.6 s longer in front of its old block, which is anchored on D01 now (D01 start - 2.5 s = the old scene start; beats.ts BEAT.D.go)"
+  },
+  {
+   "label": "D footsteps echo in the hall",
+   "clip": "sfx_steps_echo",
+   "at": [
+    "D01",
+    "start",
+    -0.25
+   ],
+   "gain": -30,
+   "in": 1.25,
+   "sync": 1.3,
+   "len": 0.6,
+   "fade_out": 0.35,
+   "note": " | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"D\", \"from\", 2.25] -> [\"D01\", \"start\", -0.25]: the wipe is back: the street is 1.6 s longer in front of its old block, which is anchored on D01 now (D01 start - 2.5 s = the old scene start; beats.ts BEAT.D.go)"
+  },
+  {
+   "label": "D paper rustle (he lays out his notes)",
+   "clip": "sfx_paper",
+   "at": [
+    "D01",
+    "end",
+    -0.05
+   ],
+   "gain": -15
+  },
+  {
+   "label": "D his lecture, a muffled echo (PLACEHOLDER)",
+   "clip": "ph_lecture",
+   "at": [
+    "D05",
+    "end",
+    0.12
+   ],
+   "gain": -30,
+   "len": 0.53,
+   "fade_out": 0.03,
+   "placeholder": "sfx_lecture_echo: 'An old Englishman lecturing to an empty stone lecture hall, heard from the back of the hall: one steady voice, the words blurred by the long echo so that none can be made out.' 2.0 s (the stand-in is his own D02 / D04 takes behind a 420 Hz low-pass with the hall's echo)",
+   "note": "after D05 (76.51 s), as he turns to the benches; stops before her second clap | r2: (POLISH 16): 0.53 s with a 30 ms fade-out, ending on clap 1 (D06 start - 1.45): the clap cuts him off"
+  },
+  {
+   "label": "D clap 1",
+   "clip": "sfx_clap_a",
+   "at": [
+    "D06",
+    "start",
+    -1.45
+   ],
+   "gain": -10.2,
+   "note": "sound only; her body jolts on each: 77.04 s | 15 Nov (S lane, the owner's notes; notes6/S/NOTES.md): clip sfx_clap -> sfx_clap_a (scripts/newton/sound/make_clap.py): a synthesised cupped-palm clap in the empty hall. The farm's clip was 60 ms of steady band noise with a 13 ms rise and a reverb wash (it fell 10 dB in 190 ms): no impact. The new one: three micro-impacts inside 25 ms, 0.5-1 ms rise, -10 dB in 17-24 ms, energy peak 1.6-2.5 kHz with the palms' body at 680-790 Hz, the hall's slap at 140 ms and its 1.3 s tail 30 dB down. sync 0.010 = the clip's 10 ms of silence, so the first contact is on the anchor (the anchor is unchanged)",
+   "sync": 0.01
+  },
+  {
+   "label": "D clap 2",
+   "clip": "sfx_clap_b",
+   "at": [
+    "D06",
+    "start",
+    -0.7
+   ],
+   "gain": -9.7,
+   "note": "77.79 s | 15 Nov (S lane, the owner's notes; notes6/S/NOTES.md): clip sfx_clap -> sfx_clap_b (scripts/newton/sound/make_clap.py): a synthesised cupped-palm clap in the empty hall. The farm's clip was 60 ms of steady band noise with a 13 ms rise and a reverb wash (it fell 10 dB in 190 ms): no impact. The new one: three micro-impacts inside 25 ms, 0.5-1 ms rise, -10 dB in 17-24 ms, energy peak 1.6-2.5 kHz with the palms' body at 680-790 Hz, the hall's slap at 140 ms and its 1.3 s tail 30 dB down. sync 0.010 = the clip's 10 ms of silence, so the first contact is on the anchor (the anchor is unchanged)",
+   "sync": 0.01
+  },
+  {
+   "label": "E fork clink 1",
+   "clip": "sfx_fork",
+   "at": [
+    "E02",
+    "end",
+    0.25
+   ],
+   "gain": -22
+  },
+  {
+   "label": "E chewing",
+   "clip": "sfx_chew",
+   "at": [
+    "E02",
+    "end",
+    0.55
+   ],
+   "gain": -6
+  },
+  {
+   "label": "E fork clink 2",
+   "clip": "sfx_fork",
+   "at": [
+    "E02",
+    "end",
+    1.25
+   ],
+   "gain": -23
+  },
+  {
+   "label": "E her step 1 of 2 in to the plate",
+   "clip": "sfx_stairs_up",
+   "at": [
+    "E03",
+    "start",
+    -0.35
+   ],
+   "gain": -36,
+   "in": 0.2,
+   "len": 0.14,
+   "sync": 0.22,
+   "fade_out": 0.03,
+   "note": " | HER STEPS IN E (r4, 15 Nov, gate-5 note F1): her footfalls are the picture's lens dips (segE footBob): the step in to the plate (M4) on f2701 and f2715, the turn and walk to his desk (M5, f2734-2768, landing on 朋) on f2742, f2754 and f2767. Until r3 the third step was E03 start + 0.55 s (f2728), inside the still plate hold"
+  },
+  {
+   "label": "E her step 2 of 2 in to the plate",
+   "clip": "sfx_stairs_up",
+   "at": [
+    "E03",
+    "start",
+    0.1
+   ],
+   "gain": -36,
+   "in": 0.2,
+   "len": 0.14,
+   "sync": 0.22,
+   "fade_out": 0.03,
+   "note": " | HER STEPS IN E (r4, 15 Nov, gate-5 note F1): her footfalls are the picture's lens dips (segE footBob): the step in to the plate (M4) on f2701 and f2715, the turn and walk to his desk (M5, f2734-2768, landing on 朋) on f2742, f2754 and f2767. Until r3 the third step was E03 start + 0.55 s (f2728), inside the still plate hold"
+  },
+  {
+   "label": "E her step 1 of 3 to his desk",
+   "clip": "sfx_stairs_up",
+   "at": [
+    "E03",
+    "start",
+    1.017
+   ],
+   "gain": -36,
+   "in": 0.2,
+   "len": 0.14,
+   "sync": 0.22,
+   "fade_out": 0.03,
+   "note": " | HER STEPS IN E (r4, 15 Nov, gate-5 note F1): her footfalls are the picture's lens dips (segE footBob): the step in to the plate (M4) on f2701 and f2715, the turn and walk to his desk (M5, f2734-2768, landing on 朋) on f2742, f2754 and f2767. Until r3 the third step was E03 start + 0.55 s (f2728), inside the still plate hold | this one: f2742"
+  },
+  {
+   "label": "E her step 2 of 3 to his desk",
+   "clip": "sfx_stairs_up",
+   "at": [
+    "E03",
+    "start",
+    1.417
+   ],
+   "gain": -36,
+   "in": 0.2,
+   "len": 0.14,
+   "sync": 0.22,
+   "fade_out": 0.03,
+   "note": " | HER STEPS IN E (r4, 15 Nov, gate-5 note F1): her footfalls are the picture's lens dips (segE footBob): the step in to the plate (M4) on f2701 and f2715, the turn and walk to his desk (M5, f2734-2768, landing on 朋) on f2742, f2754 and f2767. Until r3 the third step was E03 start + 0.55 s (f2728), inside the still plate hold | this one: f2754"
+  },
+  {
+   "label": "E her step 3 of 3 to his desk",
+   "clip": "sfx_stairs_up",
+   "at": [
+    "E03",
+    "start",
+    1.85
+   ],
+   "gain": -36,
+   "in": 0.2,
+   "len": 0.14,
+   "sync": 0.22,
+   "fade_out": 0.03,
+   "note": " | HER STEPS IN E (r4, 15 Nov, gate-5 note F1): her footfalls are the picture's lens dips (segE footBob): the step in to the plate (M4) on f2701 and f2715, the turn and walk to his desk (M5, f2734-2768, landing on 朋) on f2742, f2754 and f2767. Until r3 the third step was E03 start + 0.55 s (f2728), inside the still plate hold | this one: f2767"
+  },
+  {
+   "label": "E the quill set down",
+   "clip": "sfx_knock",
+   "at": [
+    "E07",
+    "end",
+    0.05
+   ],
+   "gain": -30,
+   "len": 0.06,
+   "rate": 1.9,
+   "fade_out": 0.02,
+   "note": "a small tap: 95.63 s"
+  },
+  {
+   "label": "E his step 1 of 2 out with his candle",
+   "clip": "sfx_stairs_up",
+   "at": [
+    "E07",
+    "end",
+    0.25
+   ],
+   "gain": -28,
+   "in": 0.2,
+   "len": 0.14,
+   "sync": 0.22,
+   "fade_out": 0.03
+  },
+  {
+   "label": "E his step 2 of 2 out with his candle",
+   "clip": "sfx_stairs_up",
+   "at": [
+    "E07",
+    "end",
+    0.6
+   ],
+   "gain": -28,
+   "in": 0.2,
+   "len": 0.14,
+   "sync": 0.22,
+   "fade_out": 0.03
+  },
+  {
+   "label": "E->F whip 8: whoosh",
+   "clip": "sfx_whoosh",
+   "at": [
+    "E",
+    "to",
+    0
+   ],
+   "gain": -25,
+   "in": 0.15,
+   "sync": 0.24,
+   "note": "ON the E->F cut: he walks out of the close with his candle, she whips after him"
+  },
+  {
+   "label": "F the shovel (Humphrey at the heap)",
+   "clip": "sfx_shovel",
+   "at": [
+    "F01",
+    "start",
+    -0.13
+   ],
+   "gain": -33,
+   "sync": 0.1,
+   "note": "on the match cut, as we come in"
+  },
+  {
+   "label": "F the shovel under card 3",
+   "clip": "sfx_shovel",
+   "at": [
+    "F02",
+    "end",
+    0.4
+   ],
+   "gain": -24,
+   "note": "as v4 | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"F02\", \"end\", 0.7] -> [\"F02\", \"end\", 0.4]: card 3 is 2.6 s and its gap 1.1 s shorter: the two throws 33 frames apart inside it (beats.ts BEAT.F.shovel; segF's throw needs 32)"
+  },
+  {
+   "label": "F the second shovelful under card 3",
+   "clip": "sfx_shovel",
+   "at": [
+    "F03",
+    "start",
+    -1.2
+   ],
+   "gain": -27,
+   "note": "as v4 | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"F03\", \"start\", -1.4] -> [\"F03\", \"start\", -1.2]: card 3 is 2.6 s and its gap 1.1 s shorter: the two throws 33 frames apart inside it (beats.ts BEAT.F.shovel; segF's throw needs 32)"
+  },
+  {
+   "label": "F the empty sack",
+   "clip": "sfx_sack",
+   "at": [
+    "F05",
+    "end",
+    0.12
+   ],
+   "gain": -32,
+   "in": 0.12,
+   "len": 0.5,
+   "rate": 1.15,
+   "fade_out": 0.15
+  },
+  {
+   "label": "F Humphrey's steps out",
+   "clip": "sfx_steps_echo",
+   "at": [
+    "F05",
+    "end",
+    0.25
+   ],
+   "gain": -34,
+   "in": 0.6,
+   "sync": 0.65,
+   "len": 1.5,
+   "fade_out": 0.4
+  },
+  {
+   "label": "F the candlestick on the iron",
+   "clip": "sfx_lid",
+   "at": [
+    "F05",
+    "end",
+    0.55
+   ],
+   "gain": -30,
+   "sync": 0.17,
+   "rate": 0.6
+  },
+  {
+   "label": "F the stool (he sits, the only time)",
+   "clip": "sfx_chair",
+   "at": [
+    "F05",
+    "end",
+    0.95
+   ],
+   "gain": -30,
+   "in": 0.28,
+   "len": 0.3,
+   "rate": 0.85,
+   "fade": 0.02,
+   "fade_out": 0.08
+  },
+  {
+   "label": "F the fire spits (F14)",
+   "clip": "sfx_spit",
+   "at": [
+    "F14",
+    "end",
+    0.15
+   ],
+   "gain": -18
+  },
+  {
+   "label": "F->G the town clock's first stroke (the race lands)",
+   "clip": "sfx_clock_two",
+   "at": [
+    "F16",
+    "end",
+    1.0
+   ],
+   "gain": -10,
+   "note": "JOIN 10: the REC clock races to 02:00 from F16 end + 0.3 s for about 0.7 s and lands ON this stroke (147.50 s, frame 4425); the clip's second stroke 0.77 s later (148.27 s) | r2: (MINOR 6; director note 5): -18 -> -10 dB (the review asked -12, the director +8 dB): stroke 1 at about -29 LUFS momentary, near stroke 2 + the board, so the race lands on a stroke that is heard (it was about level with the fire); retuned like noon's (POLISH 12): the second stroke 0.793 s later",
+   "rate": 0.9834
+  },
+  {
+   "label": "G the board's knock and skid (on the second stroke)",
+   "clip": "sfx_board",
+   "at": [
+    "F16",
+    "end",
+    1.793
+   ],
+   "gain": -17,
+   "sync": 0.15,
+   "note": "the board's first knock ON the second stroke (148.27 s) | r2: on the retuned second stroke, F16 end + 1.793 s (was + 1.77)"
+  },
+  {
+   "label": "G her sniff (PLACEHOLDER)",
+   "clip": "ph_sniff",
+   "at": [
+    "G01a",
+    "start",
+    -0.75
+   ],
+   "gain": -30,
+   "placeholder": "sfx_sniff_lin: 'A young woman sniffs once through her nose, short and quick, close to the microphone, late at night.' 0.5 s",
+   "note": "as she comes up onto one knee with the board: 149.25 s"
+  },
+  {
+   "label": "G the sack's thump (Humphrey in the doorway)",
+   "clip": "sfx_sack",
+   "at": [
+    "G02",
+    "end",
+    1.33
+   ],
+   "gain": -17,
+   "sync": 0.03,
+   "note": "ON beat 3 of mus_laugh (162.70 s): 1.33 s after the laugh's line ends, the camera dead still till then; the pan to the doorway starts on it (20 frames)"
+  },
+  {
+   "label": "G the 2 a.m. bite: fork clink",
+   "clip": "sfx_fork",
+   "at": [
+    "G04",
+    "end",
+    1.2
+   ],
+   "gain": -24,
+   "note": "as v4"
+  },
+  {
+   "label": "G the knock's pluck, once (the candle goes out)",
+   "clip": "sfx_pluck",
+   "at": [
+    "G",
+    "to",
+    -1.775
+   ],
+   "gain": 3,
+   "note": "the knock's D4 pluck alone (the music resolved before 'Good night.'): 173.33 s, the candle goes out on it, 0.375 s before the camera switches off | r2: 0 -> +3 dB (MINOR 10)"
+  },
+  {
+   "label": "G the candle snuffed (PLACEHOLDER)",
+   "clip": "ph_snuff",
+   "at": [
+    "G",
+    "to",
+    -1.725
+   ],
+   "gain": -26,
+   "placeholder": "sfx_candle_snuff: 'A candle snuffed out with a small brass snuffer in a silent room: a short puff and the tiny hiss of the wick dying, very close.' 0.8 s",
+   "note": "0.05 s after the pluck"
+  },
+  {
+   "label": "G her camera switches off",
+   "clip": "sfx_poweroff_crt",
+   "at": [
+    "G",
+    "to",
+    -1.4
+   ],
+   "gain": -16,
+   "note": "hud/vlog.tsx OFF_AT = TOTAL - 42 = frame 5211: the click 0.375 s after the pluck; the power-down sweep 0.8 s later on the end black | r2: -18 -> -12 dB (MINOR 10): the film's last sound, the REC beep's mirror | 15 Nov (S lane, the owner's notes; notes6/S/NOTES.md): clip sfx_poweroff -> sfx_poweroff_crt (make_poweroff.py 0.033 0.533: the same sound, its tube collapse moved up to the click). The G lane's switch-off (hud/poweroff.tsx) squeezes the picture ON the click's frame (f5420-5424), line to dot f5425-5429, the dot fades f5430-5435, black from f5436; the old clip's collapse (thump, falling whine, static) started 0.80 s after its click (f5444, on black) and the film's end cut it 30 dB down. Now: click f5420, thump and whine from f5421, the whine ends and the dot's tick falls on f5436, the static is gone (under -60 dBFS in the clip) by f5449, the clip ends on f5454, 8 frames before the film's last frame. gain -12 -> -16 dB: click and collapse now sound together (the loudest 100 ms was -20.0 LUFS at -12 dB, the old collapse's -25.9; now -24.0)"
+  },
+  {
+   "label": "A skin A: the title's nib, on 牛's first stroke",
+   "clip": "sfx_quill",
+   "at": [
+    "A02",
+    "end",
+    0.735
+   ],
+   "gain": -1,
+   "in": 2.993,
+   "sync": 3.0,
+   "len": 0.11,
+   "fade": 0.004,
+   "fade_out": 0.025,
+   "hp": [
+    1200,
+    2
+   ],
+   "note": "SKIN A 「手稿」 (EFFECTS_PLAN row 1, Sound column: 'the skin's one title sound, inside the thud. Not over the pigeon (6.10)'): one dry nib stroke from the quill clip (r4: the stroke at clip 3.000 s: the nib touches down crisply, its 2-10 kHz peak 12-18 ms in, a short drag, quiet again after 90 ms), 110 ms, on f187 (A02 end + 0.735 s = 6.235 s): the frame 牛 starts writing (hud/ms/when.ts title: from the thud f184 = A02 end + 0.64 s, the leaf slapped on at t0, the orbit from t2, 牛 from t3), after the thud's attack (5.90 s) and the pigeon's flap (6.10 s); a 1.2 kHz high-pass keeps it dry. G1 opens after it: A02 and the thud do not move | r4 (15 Nov; skin r3 note 3, gate-5 note F1): A02 end + 0.47 s (f179, inside the thud's body, 5 frames before the leaf is on screen) -> + 0.735 s (f187): the nib is heard when there is a nib. On f187 the r3 piece (clip 6.765 s, -6 dB) did not read: its scratch rises over 70 ms (heard from f188-189) and the pigeon's flaps cover f187 (2-10 kHz +0.0 dB over the rest, skin_check); the crisper stroke at -1 dB reads about +6 dB and stays more than 20 dB under A02"
+  },
+  {
+   "label": "A skin A: Humphrey's banner, one paper slip",
+   "clip": "sfx_paper",
+   "at": [
+    "A03",
+    "end",
+    0.205
+   ],
+   "gain": -15,
+   "in": 0.2,
+   "sync": 0.28,
+   "len": 0.17,
+   "fade": 0.01,
+   "fade_out": 0.05,
+   "note": "SKIN A 「手稿」 (EFFECTS_PLAN row 2, Sound column: 'one short palette sound, under A04'): a 0.17 s paper slip from sfx_paper (clip 0.20-0.37 s, its crisp crack at 0.28 s = the sync) as the banner is laid in (hud/ms/when.ts + fit_A: from BEAT.A.humphreyOut + 4 = A03 end + 4 frames = f308, the slip laid down over MOTION.slap = 3 frames, flat on t2 = f310): the rustle from 10.255 s (f308, as the slip shows), the crack on f310 (10.335 s) as it lands, gone by 10.43 s: after A03's voice (10.13 s) and long before A04's (11.23 s), under the latch and creak of his door (its click is f329) | r3 (14 Nov night, the owner): -10 -> -15 dB | r4 (15 Nov, gate-5 note F1 and skin r3 note 4): A04 start - 0.20 s with the sync on the rustle (f331, 23 frames after the banner was in) -> A03 end + 0.205 s with the sync on the crack (f310)"
+  },
+  {
+   "label": "B skin A: Newton's card, a page turn on its first frame",
+   "clip": "sfx_paper",
+   "at": [
+    "B03",
+    "end",
+    0.034
+   ],
+   "gain": -6,
+   "in": 0.84,
+   "sync": 0.84,
+   "len": 0.25,
+   "fade": 0.01,
+   "fade_out": 0.05,
+   "note": "SKIN A 「手稿」 (EFFECTS_PLAN row 4, Sound column: 'the card's one sound on f915' (plan numbering; the card's first frame is f916 on this timing)): a page turn from sfx_paper (clip 0.84-1.09 s: the swish rising to its flap at 1.05 s) from the card's first frame (B03 end + 0.034 s = f916), its flap 0.21 s later as the page-turn wipe finishes (hud/ms/when.ts card beats: wipe t0-5); the room tone and the quill stop on the same frame, the music runs on under it"
+  },
+  {
+   "label": "B skin A: meter tick 1, the nib on the cross",
+   "clip": "sfx_quill",
+   "at": [
+    "B09",
+    "end",
+    0.223
+   ],
+   "gain": 9,
+   "in": 2.655,
+   "sync": 2.665,
+   "len": 0.085,
+   "fade": 0.004,
+   "fade_out": 0.02,
+   "hp": [
+    1500,
+    4
+   ],
+   "note": "SKIN A 「手稿」 (EFFECTS_PLAN row 6, Sound column: 'the meter's tick sound, once'): a nib tick from the quill clip (the nib touching down at clip 2.665 s and a short scratch), 85 ms, on the cross's first frame (hud/ms/when.ts tick1: B09.to + 5, the cross from t2 = f1471 = B09 end + 0.223 s, on an onset of the morning music), in G3 after 「没笑。」 and 0.38 s before card 2's ding; not dipped (the whisper dip takes the quill BED only) | r3 (14 Nov night): B09 end + 0.123 -> + 0.223 s with the picture's tick1 (B09.to + 2 -> + 5), so the nib lands on a music onset"
+  },
+  {
+   "label": "C skin A: 拒收, the stamp's thump inside the knock on the lens",
+   "clip": "sfx_sack",
+   "at": [
+    "C07",
+    "end",
+    0.65
+   ],
+   "gain": -25,
+   "in": 0.0,
+   "sync": 0.015,
+   "len": 0.11,
+   "rate": 1.25,
+   "fade": 0.003,
+   "fade_out": 0.03,
+   "lp": [
+    2500
+   ],
+   "note": "SKIN A 「手稿」 (EFFECTS_PLAN row 7, Sound column: 'a stamp thump tucked inside the chair's knock, not on top of it'): the sack's first thump (clip 0-0.11 s, 1.25x: tighter, a rubber stamp on paper), its attack on the knock's (C07 end + 0.65 s = f2017, the jolt), under the knock and its body, through a 2.5 kHz low-pass: it thickens the knock instead of making a second hit; hud/ms/when.ts keys the stamp's jolt to the same moment (C07 end + 0.65 s, the knock on the lens since r2, POLISH 15)"
+  },
+  {
+   "label": "D skin A: meter tick 2, the nib on the cross",
+   "clip": "sfx_quill",
+   "at": [
+    "D05",
+    "end",
+    0.11
+   ],
+   "gain": 9,
+   "in": 2.655,
+   "sync": 2.665,
+   "len": 0.085,
+   "fade": 0.004,
+   "fade_out": 0.02,
+   "hp": [
+    1500,
+    4
+   ],
+   "note": "SKIN A 「手稿」 (EFFECTS_PLAN row 8, Sound column: 'the meter's tick sound'): the same nib tick as tick 1, on the cross's first frame (hud/ms/when.ts tick2: D05.to + 1, the cross from t2 = f2421 = D05 end + 0.11 s), before the claps; a screen sound: it does not jolt with clap 1"
+  }
+ ],
+ "cards": {
+  "clip": "sfx_card_A5",
+  "gain": -22,
+  "note": "the fact-card ding at each card's line end (+ card_delay + 0.1 s): sfx_card retuned to A5 (v3b, retune_clip.py), its loudest moment 0.31 s in | r2: -28 -> -22 dB (MINOR 9; the owner's rule: effects at the music's RMS, +1 to +4 dB peak)"
+ }
+}

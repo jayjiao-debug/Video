@@ -1,0 +1,1 @@
+9b91383636ef5f6b  Film.tsx post section (post defaults .. first frame of the page) as preview/film_cut_core.ts copies it (the same code as Hongmen's, comments aside); rewrite AFTER porting a change: KIT_CONFIG=src/videos/wanbi/kit.json node scripts/kit/cut/deps.mjs /tmp/d.json, then the chain.sha it writes

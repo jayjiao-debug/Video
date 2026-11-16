@@ -1,0 +1,8 @@
+{"font": "../../../public/bt/sans700.ttf",
+ "_about": "Hongmen's first English thumbnails (frame 1158): Shorts 9:16 with the type in the top third, and a 16:9 cut from the 4:3 render (crop to 16:9, then a uniform resize). python3 scripts/kit/cover/cover.py scripts/hongmen/cover/spec_en.json",
+ "covers": [
+  {"bg": "/home/user/hm_work/cover/tall916_1158.png", "target": "shorts916", "layout": "top",
+   "hook": ["ONLY ONE MAN DIED", "AND HE WASN'T THERE"], "title": "The Hongmen Feast · 206 BC", "out": "/home/user/hm_work/cover/out/thumb_916_en_1158.png"},
+  {"bg": "/home/user/hm_work/cover/wide_1158.png", "crop": [0, 135, 1440, 945], "size": [1280, 720], "target": "youtube169", "layout": "bottom",
+   "hook": ["ONLY ONE MAN DIED", "AND HE WASN'T THERE"], "title": "The Hongmen Feast · 206 BC", "out": "/home/user/hm_work/cover/out/thumb_169_en.png"}
+ ]}
