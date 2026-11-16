@@ -1,0 +1,502 @@
+{
+ "sounds": {
+  "sword_in": {
+   "file": "sword_thunk_2.mp3",
+   "anchor": "peak",
+   "rel": -10,
+   "max_s": 0.6,
+   "tail_ms": 80
+  },
+  "stone": {
+   "file": "stone_drop_1.mp3",
+   "anchor": "onset",
+   "rel": -10,
+   "max_s": 1.3,
+   "tail_ms": 200,
+   "drive": 4
+  },
+  "pat": {
+   "file": "slap_1.mp3",
+   "anchor": "onset",
+   "rel": -15,
+   "max_s": 0.15,
+   "tail_ms": 40
+  },
+  "pop": {
+   "file": "pop_1.mp3",
+   "anchor": "onset",
+   "rel": -12,
+   "max_s": 0.25,
+   "tail_ms": 40
+  },
+  "knock": {
+   "file": "knock_2.mp3",
+   "anchor": "onset",
+   "rel": -10,
+   "max_s": 0.2,
+   "tail_ms": 50
+  },
+  "shing": {
+   "file": "sword_out_a_1.mp3",
+   "anchor": "peak",
+   "rel": -9,
+   "max_s": 1.0,
+   "tail_ms": 150
+  },
+  "stamp": {
+   "file": "stamp_2.mp3",
+   "anchor": "onset",
+   "rel": -9,
+   "max_s": 0.35,
+   "tail_ms": 60,
+   "st": -3
+  },
+  "thud": {
+   "file": "body_thud_1.mp3",
+   "anchor": "onset",
+   "rel": -11,
+   "max_s": 0.45,
+   "tail_ms": 80,
+   "drive": 3
+  },
+  "cheer": {
+   "file": "cheer_b_2.mp3",
+   "anchor": "start",
+   "rel": -14,
+   "tail_ms": 60,
+   "from_s": 0.1
+  },
+  "kneel": {
+   "file": "kneel_b_1.mp3",
+   "anchor": "start",
+   "rel": -14,
+   "max_s": 1.3,
+   "tail_ms": 150
+  },
+  "crown": {
+   "file": "crown_1.mp3",
+   "anchor": "onset",
+   "rel": -9,
+   "max_s": 1.2,
+   "tail_ms": 250
+  },
+  "rewind": {
+   "file": "rewind_2.mp3",
+   "anchor": "start",
+   "rel": -11,
+   "max_s": 0.4,
+   "tail_ms": 50
+  },
+  "thunk": {
+   "file": "stamp_2.mp3",
+   "anchor": "onset",
+   "rel": -13,
+   "max_s": 0.3,
+   "tail_ms": 60,
+   "st": -5
+  },
+  "crack": {
+   "file": "boulder_2.mp3",
+   "anchor": "onset",
+   "rel": -9,
+   "max_s": 0.8,
+   "tail_ms": 150
+  },
+  "whump": {
+   "file": "kneel_2.mp3",
+   "anchor": "onset",
+   "rel": -14,
+   "max_s": 0.6,
+   "tail_ms": 150,
+   "drive": 3
+  },
+  "field": {
+   "file": "field_2.mp3",
+   "anchor": "start",
+   "bed": true,
+   "rel": -19,
+   "from_s": 0.6,
+   "max_s": 6.4,
+   "even": 0.8,
+   "tail_ms": 60,
+   "tame": 12
+  },
+  "lords": {
+   "file": "murmur_2.mp3",
+   "anchor": "start",
+   "bed": true,
+   "rel": -24,
+   "even": 0.8,
+   "tail_ms": 80
+  },
+  "birds": {
+   "file": "birds_1.mp3",
+   "anchor": "start",
+   "bed": true,
+   "rel": -25,
+   "tail_ms": 100
+  },
+  "clap": {
+   "file": "clap_2.mp3",
+   "anchor": "onset",
+   "rel": -15,
+   "max_s": 0.8,
+   "tail_ms": 200
+  },
+  "murmur": {
+   "file": "murmur_1.mp3",
+   "anchor": "start",
+   "bed": true,
+   "rel": -20,
+   "even": 0.8,
+   "tail_ms": 80
+  },
+  "angry": {
+   "file": "angry_3.mp3",
+   "anchor": "start",
+   "bed": true,
+   "rel": -12,
+   "from_s": 0.9,
+   "even": 0.8,
+   "tail_ms": 60
+  },
+  "furious": {
+   "file": "angry_1.mp3",
+   "anchor": "start",
+   "bed": true,
+   "rel": -15,
+   "st": -3,
+   "from_s": 0.3,
+   "even": 0.8,
+   "tail_ms": 80
+  }
+ },
+ "cues": [
+  {
+   "s": "sword_in",
+   "f": 66,
+   "note": "hook: the sword slides back into the anvil (home)"
+  },
+  {
+   "s": "thunk",
+   "f": 66,
+   "db": 0,
+   "note": "... and stops in the stone"
+  },
+  {
+   "s": "stone",
+   "f": 232,
+   "note": "the stone drops into the yard"
+  },
+  {
+   "s": "crack",
+   "f": 232,
+   "note": "... the crunch on the paving"
+  },
+  {
+   "s": "field",
+   "f": 452,
+   "dur_f": 154,
+   "in_f": 2,
+   "out_f": 3,
+   "note": "bed: the tournament crowd behind the fence (the field, f452 to the cut to the house f606)"
+  },
+  {
+   "s": "pat",
+   "f": 554,
+   "note": "Kay slaps his scabbard"
+  },
+  {
+   "s": "pat",
+   "f": 560,
+   "st": -1,
+   "note": "... again"
+  },
+  {
+   "s": "pop",
+   "f": 568,
+   "note": "! it is empty"
+  },
+  {
+   "s": "knock",
+   "f": 618,
+   "note": "Arthur knocks at the lodging"
+  },
+  {
+   "s": "knock",
+   "f": 622,
+   "st": 0.6,
+   "db": -1
+  },
+  {
+   "s": "knock",
+   "f": 626,
+   "st": -0.5,
+   "db": -0.5
+  },
+  {
+   "s": "cheer",
+   "f": 640,
+   "dur_f": 19,
+   "in_f": 1,
+   "out_f": 2,
+   "note": "cut to the crowd at the field cheering (f640-658)"
+  },
+  {
+   "s": "pop",
+   "f": 675,
+   "st": 3,
+   "db": -1,
+   "note": "! he remembers the stone"
+  },
+  {
+   "s": "cheer",
+   "f": 762,
+   "dur_f": 17,
+   "in_f": 1,
+   "out_f": 2,
+   "st": 1,
+   "db": -1,
+   "note": "cut to the guards cheering at the field (f762-778)"
+  },
+  {
+   "s": "shing",
+   "f": 808,
+   "note": "pull 1 (free f808)"
+  },
+  {
+   "s": "field",
+   "f": 843,
+   "dur_f": 184,
+   "in_f": 2,
+   "out_f": 3,
+   "note": "bed: the field again, Kay and his father (f843 to the cut to the yard f1027)"
+  },
+  {
+   "s": "sword_in",
+   "f": 1066,
+   "note": "Arthur puts it back for his father"
+  },
+  {
+   "s": "thunk",
+   "f": 1066,
+   "db": 0,
+   "note": "... and stops in the stone"
+  },
+  {
+   "s": "stamp",
+   "f": 1162,
+   "note": "stamp: 不动 (Ector)"
+  },
+  {
+   "s": "stamp",
+   "f": 1212,
+   "note": "stamp: 不动 (Kay)"
+  },
+  {
+   "s": "thud",
+   "f": 1215,
+   "db": -2,
+   "note": "Kay lands on his back"
+  },
+  {
+   "s": "shing",
+   "f": 1236,
+   "st": 0.5,
+   "note": "pull 2 (free f1236)"
+  },
+  {
+   "s": "lords",
+   "f": 1265,
+   "dur_f": 96,
+   "in_f": 3,
+   "out_f": 3,
+   "note": "bed: the lords crowd the yard, low talk (f1265-1361)"
+  },
+  {
+   "s": "shing",
+   "f": 1327,
+   "st": -0.5,
+   "note": "pull 3 (free f1327)"
+  },
+  {
+   "s": "furious",
+   "f": 1361,
+   "dur_f": 93,
+   "in_f": 2,
+   "out_f": 4,
+   "note": "bed: the lords are furious, angry voices, lower and smaller than the commons later (f1361 to the walk-off f1454)"
+  },
+  {
+   "s": "stamp",
+   "f": 1459,
+   "note": "stamp: 改天再拔"
+  },
+  {
+   "s": "sword_in",
+   "f": 1466,
+   "db": -4,
+   "note": "he slides it back in"
+  },
+  {
+   "s": "thunk",
+   "f": 1466,
+   "db": -4,
+   "note": "... and stops in the stone"
+  },
+  {
+   "s": "shing",
+   "f": 1518,
+   "st": 0.3,
+   "note": "pull 4 (free f1518)"
+  },
+  {
+   "s": "stamp",
+   "f": 1553,
+   "note": "stamp: 又拖"
+  },
+  {
+   "s": "birds",
+   "f": 1565,
+   "dur_f": 68,
+   "in_f": 4,
+   "out_f": 4,
+   "note": "bed: spring, birdsong (f1565-1633)"
+  },
+  {
+   "s": "shing",
+   "f": 1598,
+   "st": -0.3,
+   "note": "pull 5 (free f1598)"
+  },
+  {
+   "s": "clap",
+   "f": 1612,
+   "note": "the commoners clap the fifth pull"
+  },
+  {
+   "s": "stamp",
+   "f": 1636,
+   "note": "stamp: 还拖"
+  },
+  {
+   "s": "murmur",
+   "f": 1648,
+   "dur_f": 42,
+   "in_f": 3,
+   "out_f": 6,
+   "note": "bed: the whole town waits (f1648 until the cheer)"
+  },
+  {
+   "s": "shing",
+   "f": 1681,
+   "st": 0.8,
+   "db": 1,
+   "note": "pull 6 (free f1681)"
+  },
+  {
+   "s": "cheer",
+   "f": 1688,
+   "dur_f": 29,
+   "in_f": 4,
+   "out_f": 2,
+   "note": "the commons cheer the sixth pull (they turn angry at f1717)"
+  },
+  {
+   "s": "angry",
+   "f": 1717,
+   "dur_f": 89,
+   "in_f": 2,
+   "out_f": 2,
+   "note": "bed: the commons shout (f1717 to the kneeling f1806)"
+  },
+  {
+   "s": "kneel",
+   "f": 1807,
+   "note": "everybody kneels (the wave from f1807)"
+  },
+  {
+   "s": "whump",
+   "f": 1812,
+   "note": "... knees on the ground"
+  },
+  {
+   "s": "thud",
+   "f": 1843,
+   "db": -4,
+   "st": -2,
+   "note": "the last lord drops"
+  },
+  {
+   "s": "crown",
+   "f": 1884,
+   "note": "the crown lands"
+  },
+  {
+   "s": "cheer",
+   "f": 1889,
+   "dur_f": 17,
+   "in_f": 3,
+   "out_f": 2,
+   "note": "everybody up and cheering, cut by the rewind at f1905"
+  },
+  {
+   "s": "rewind",
+   "f": 1905,
+   "note": "rewind"
+  },
+  {
+   "s": "field",
+   "f": 1908,
+   "dur_f": 83,
+   "off_s": 2.5,
+   "in_f": 2,
+   "out_f": 10,
+   "note": "bed: back at the field for the punchline (f1908 to the end)"
+  },
+  {
+   "s": "pat",
+   "f": 1936,
+   "note": "Kay pats his hip again"
+  },
+  {
+   "s": "pat",
+   "f": 1940,
+   "st": -1
+  },
+  {
+   "s": "pat",
+   "f": 1943,
+   "st": 1
+  },
+  {
+   "s": "pat",
+   "f": 1946,
+   "st": 0
+  },
+  {
+   "s": "pop",
+   "f": 1947,
+   "note": "! (as at f568)"
+  },
+  {
+   "s": "pop",
+   "f": 1958,
+   "st": -4,
+   "db": -1,
+   "note": "the empty scabbard"
+  },
+  {
+   "s": "pat",
+   "f": 1983,
+   "db": -2,
+   "note": "one more hopeless pat"
+  },
+  {
+   "s": "pat",
+   "f": 1988,
+   "db": -2,
+   "st": -1
+  }
+ ]
+}

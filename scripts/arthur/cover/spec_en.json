@@ -1,0 +1,7 @@
+{"font": "../../../public/bt/sans700.ttf",
+ "covers": [
+  {"src": "c916_f138.png", "crop": [0, 0, 1080, 1920], "size": [1080, 1920], "out": "arthur_cover_en_9x16.png",
+   "scrim": {"side": "top", "px": 560, "a": 0.38},
+   "lines": [{"t": "PULLED IT OUT.", "px": 120, "col": "white"}, {"t": "PUT IT BACK?", "px": 138, "col": "gold"}],
+   "anchor": {"cx": 540, "top": 128}, "gap": 34}
+ ]}

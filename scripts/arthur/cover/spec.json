@@ -1,0 +1,15 @@
+{"font": "../../../public/bt/sans700.ttf",
+ "covers": [
+  {"src": "c916_f138.png", "crop": [0, 0, 1080, 1920], "size": [1080, 1920], "out": "arthur_cover_9x16.png",
+   "scrim": {"side": "top", "px": 560, "a": 0.38},
+   "lines": [{"t": "拔出石中剑", "px": 138, "col": "white"}, {"t": "又插了回去？", "px": 165, "col": "gold"}],
+   "anchor": {"cx": 540, "top": 122}, "gap": 26},
+  {"src": "c34_f138.png", "crop": [0, 20, 1080, 1460], "size": [1080, 1440], "out": "arthur_cover_3x4.png",
+   "scrim": {"side": "top", "px": 460, "a": 0.38},
+   "lines": [{"t": "拔出石中剑", "px": 124, "col": "white"}, {"t": "又插了回去？", "px": 146, "col": "gold"}],
+   "anchor": {"cx": 540, "top": 88}, "gap": 18},
+  {"src": "c43_f138.png", "crop": [0, 790, 1620, 2005], "size": [1440, 1080], "out": "arthur_cover_4x3.png",
+   "scrim": {"side": "left", "px": 760, "a": 0.34},
+   "lines": [{"t": "拔出", "px": 160, "col": "white"}, {"t": "石中剑", "px": 160, "col": "white"}, {"t": "又插了", "px": 160, "col": "gold"}, {"t": "回去？", "px": 160, "col": "gold"}],
+   "anchor": {"cx": 340, "top": 182}, "gap": 30}
+ ]}

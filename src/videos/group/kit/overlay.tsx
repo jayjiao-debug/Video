@@ -575,8 +575,9 @@ export const GuessLine: React.FC<GuessLineProps> = ({ at, out, x = 540, y = 420,
 };
 
 // ================================================================================================ 7. Stamp + StepCounter
-export type StampProps = { at: number; out?: number; x?: number; y?: number; scale?: number; text?: string; rot?: number; size?: number; color?: string; frame?: number };
-export const Stamp: React.FC<StampProps> = ({ at, out, x = 540, y = 820, scale = 1, text = "测不出效果", rot = -8, size = 118, color = COL.stamp, frame }) => {
+/** cw = the width one character takes in the box, in ems (1.08 for full-width characters; about 0.72 for Latin capitals) */
+export type StampProps = { at: number; out?: number; x?: number; y?: number; scale?: number; text?: string; rot?: number; size?: number; color?: string; cw?: number; frame?: number };
+export const Stamp: React.FC<StampProps> = ({ at, out, x = 540, y = 820, scale = 1, text = "测不出效果", rot = -8, size = 118, color = COL.stamp, cw = 1.08, frame }) => {
   useOverlayFont();
   const id = useSvgId();
   const f = useF(frame);
@@ -586,7 +587,7 @@ export const Stamp: React.FC<StampProps> = ({ at, out, x = 540, y = 820, scale =
   const bleed = eOut((f - imp) / 10);
   const jolt = f >= imp && f < imp + 6 ? Math.sin((f - imp) * 2.6) * 7 * (1 - (f - imp) / 6) : 0;
   const n = [...text].length;
-  const W = n * size * 1.08 + 96, H = size * 1.62;
+  const W = n * size * cw + 96, H = size * 1.62;
   const holes = Array.from({ length: 150 }, (_, i) => ({ x: (random(`st-x${i}`) - 0.5) * W, y: (random(`st-y${i}`) - 0.5) * H, r: 1 + random(`st-r${i}`) * 3.2 }));
   const spat = Array.from({ length: 9 }, (_, i) => {
     const a = random(`sp-a${i}`) * Math.PI * 2;
