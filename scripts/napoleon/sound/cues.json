@@ -68,7 +68,7 @@
     "to",
     0
    ],
-   "gain": -14,
+   "gain": -16,
    "fade": 0.05,
    "fade_out": 1.2
   },
@@ -85,7 +85,7 @@
     "to",
     0
    ],
-   "gain": -6,
+   "gain": -12,
    "loop": true,
    "fade": 0.3,
    "fade_out": 0.4
@@ -103,7 +103,7 @@
     "to",
     0
    ],
-   "gain": -15,
+   "gain": -17,
    "fade": 0.05,
    "fade_out": 1.2
   },
@@ -190,7 +190,7 @@
     "to",
     0
    ],
-   "gain": -3,
+   "gain": -15,
    "loop": true,
    "fade": 0.3,
    "fade_out": 0.4
@@ -279,7 +279,7 @@
     "to",
     0
    ],
-   "gain": -6,
+   "gain": -15,
    "loop": true,
    "fade": 0.3,
    "fade_out": 0.4
@@ -297,7 +297,7 @@
     "start",
     -0.3
    ],
-   "gain": -12,
+   "gain": -15,
    "loop": true,
    "fade": 0.3,
    "fade_out": 0.3
@@ -315,7 +315,7 @@
     "to",
     0
    ],
-   "gain": -13,
+   "gain": -16,
    "fade": 0.05,
    "fade_out": 1.2
   }
@@ -502,7 +502,7 @@
     "end",
     1.2
    ],
-   "gain": -8
+   "gain": -10
   },
   {
    "label": "D dinner arrives and is gone",
@@ -563,7 +563,7 @@
     "end",
     1.45
    ],
-   "gain": -8
+   "gain": -11
   },
   {
    "label": "F the cheer",
@@ -573,7 +573,7 @@
     "end",
     2.1
    ],
-   "gain": -8
+   "gain": -11
   },
   {
    "label": "F the stamp: 一百天后 · 滑铁卢",
@@ -583,7 +583,7 @@
     "end",
     0.73
    ],
-   "gain": -6
+   "gain": -9
   },
   {
    "label": "F he rides off",
