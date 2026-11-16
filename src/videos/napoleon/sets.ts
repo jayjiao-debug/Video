@@ -90,7 +90,7 @@ const BUILD: Record<Place, (K: Kit) => PlaceBuild> = {
     box("path", "#eef2f6", x - 40, x + 40, -0.6, 0, -3.4, 12, false);
     box("wall", "#77818e", x - 40, x + 40, 0, 14, -9, -4.1, false);
     for (let i = 0; i < 16; i++) { const bx = x - 30 + i * 4 + 2 * h01(i, 1); const m = box(`rock${i}`, ["#7f8996", "#99a3af", "#8a94a0"][i % 3], bx, bx + 2.2 + 1.6 * h01(i, 2), 0, 3 + 6 * h01(i, 3), -4.4 - 0.4 * h01(i, 4), -3.3 - 0.5 * h01(i, 5)); m.rotation.z = (h01(i, 12) - 0.5) * 0.16; ball(`cap${i}`, "#f4f7fa", bx + 1.3, 3.1 + 6 * h01(i, 3), -3.8, 1.3, 0.25); }
-    for (let i = 0; i < 9; i++) ball(`drift${i}`, "#f4f7fa", x - 16 + i * 4 + h01(i, 6), 0, -3.1, 1.2 + 0.6 * h01(i, 7), 0.32);
+    for (let i = 0; i < 9; i++) ball(`drift${i}`, "#f4f7fa", x - 16 + i * 4 + h01(i, 6), 0, -3.7, 0.9 + 0.4 * h01(i, 7), 0.32);
     for (let i = 0; i < 7; i++) cone(`peak${i}`, i % 2 ? "#dfe6ee" : "#c3cfdc", x - 36 + i * 12, 4, -40 - (i % 2) * 10, 13, 20 + (i % 3) * 6, 6);
     for (let i = 0; i < 14; i++) ball(`edge${i}`, "#e4eaf0", x - 14 + i * 2.1, -0.02, 2.9 + 0.3 * h01(i, 8), 0.5 + 0.3 * h01(i, 9), 0.3);
   }),
@@ -137,9 +137,7 @@ const BUILD: Record<Place, (K: Kit) => PlaceBuild> = {
     for (let i = 0; i < 16; i++) cone(`fir${i}`, "#55655e", x - 30 + i * 4 + 2 * h01(i, 1), 0, -15 - 9 * h01(i, 2), 1.3, 5 + 2 * h01(i, 3), 7);
     for (let i = 0; i < 10; i++) ball(`drift${i}`, "#f6f7f9", x - 14 + i * 3 + h01(i, 4), 0, -5 - 3 * h01(i, 5), 1.4, 0.22);
     // what the retreat leaves: a wheel, a cannon barrel in the snow, crosses
-    const wheel = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.05, 8, 20).rotateX(1.2).translate(x - 2.6, 0.18, -3.4), K.flat("#4a3a2c", { rough: 1 })); wheel.name = "wheel"; wheel.castShadow = true; g.add(wheel);
     box("barrel", "#3c3e44", x + 2.2, x + 3.6, 0.02, 0.24, -4.3, -4.06).rotation.y = 0.2;
-    for (let i = 0; i < 26; i++) { const sx = x - 40 + i * 3.2, sz = -11 - 0.4 * (i % 3); box(`col${i}`, "#3c4048", sx, sx + 0.3, 0, 1.5 + 0.2 * h01(i, 6), sz, sz + 0.25, false); }
   }),
   laffrey: place("laffrey", (g, K, x, { box, cone, ball }) => {
     box("ground", "#7f9a58", x - 60, x + 60, -0.5, 0, -60, 12, false);
@@ -153,7 +151,7 @@ const BUILD: Record<Place, (K: Kit) => PlaceBuild> = {
     box("ground", "#5a5040", x - 60, x + 60, -0.5, 0, -60, 12, false);
     const ridge = new THREE.Mesh(new THREE.SphereGeometry(40, 40, 12).scale(1, 0.1, 0.4).translate(x, -1.2, -28), K.flat("#4a4236", { rough: 1 })); ridge.name = "ridge"; g.add(ridge);
     const sun = new THREE.Mesh(new THREE.SphereGeometry(4.5, 24, 16).translate(x + 12, 5, -70), glow([2.2, 0.9, 0.4])); sun.name = "sun"; g.add(sun);
-    for (let i = 0; i < 9; i++) ball(`smoke${i}`, i % 2 ? "#6a5a54" : "#75645c", x - 18 + 36 * h01(i, 1), 2 + 3 * h01(i, 2), -20 - 8 * h01(i, 3), 2.5 + 2 * h01(i, 4), 0.55);
+    for (let i = 0; i < 9; i++) ball(`smoke${i}`, i % 2 ? "#806258" : "#866a5e", x - 26 + 52 * h01(i, 1), 1.2 + 1.6 * h01(i, 2), -30 - 10 * h01(i, 3), 2.2 + 1.5 * h01(i, 4), 0.4);
     box("broken", "#3a3028", x - 3.4, x - 2.0, 0, 0.5, -4.2, -3.9).rotation.z = 0.2;
     const wheel = new THREE.Mesh(new THREE.TorusGeometry(0.55, 0.05, 8, 20).rotateY(0.6).translate(x - 2.4, 0.5, -4.4), K.flat("#3a3028", { rough: 1 })); wheel.name = "wheel"; g.add(wheel);
   }),

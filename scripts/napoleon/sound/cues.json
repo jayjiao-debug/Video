@@ -1,0 +1,625 @@
+{
+ "note": "Napoleon v2 sound plan (first pass, 16 Nov). Music is never ducked; one static gain per cue. Gains are first guesses, to be set by ear and the gate on the Mac. E has no music on purpose (script: only wind).",
+ "beds": [
+  {
+   "label": "A wind",
+   "clip": "amb_alps_wind",
+   "at": [
+    "A",
+    "from",
+    0
+   ],
+   "until": [
+    "A",
+    "to",
+    0
+   ],
+   "gain": -4,
+   "loop": true,
+   "fade": 0.3,
+   "fade_out": 0.4
+  },
+  {
+   "label": "A the mule walks in",
+   "clip": "sfx_mule_walk",
+   "at": [
+    "A",
+    "from",
+    0
+   ],
+   "until": [
+    "A02",
+    "end",
+    0.3
+   ],
+   "gain": -6,
+   "loop": true,
+   "fade": 0.4,
+   "fade_out": 0.25
+  },
+  {
+   "label": "A the log dragged",
+   "clip": "sfx_drag_log",
+   "at": [
+    "A",
+    "from",
+    0
+   ],
+   "until": [
+    "A02",
+    "end",
+    0.3
+   ],
+   "gain": -12,
+   "loop": true,
+   "fade": 0.4,
+   "fade_out": 0.3
+  },
+  {
+   "label": "A the march, from his answer to the end of the title",
+   "clip": "mus_march",
+   "at": [
+    "A04",
+    "start",
+    -0.3
+   ],
+   "until": [
+    "A",
+    "to",
+    0
+   ],
+   "gain": -14,
+   "fade": 0.05,
+   "fade_out": 1.2
+  },
+  {
+   "label": "B the cathedral",
+   "clip": "amb_cathedral",
+   "at": [
+    "B",
+    "from",
+    0
+   ],
+   "until": [
+    "B",
+    "to",
+    0
+   ],
+   "gain": -6,
+   "loop": true,
+   "fade": 0.3,
+   "fade_out": 0.4
+  },
+  {
+   "label": "B organ and choir",
+   "clip": "mus_coronation",
+   "at": [
+    "B",
+    "from",
+    0.2
+   ],
+   "until": [
+    "B",
+    "to",
+    0
+   ],
+   "gain": -15,
+   "fade": 0.05,
+   "fade_out": 1.2
+  },
+  {
+   "label": "C the fire",
+   "clip": "amb_camp_night",
+   "at": [
+    "C",
+    "from",
+    0
+   ],
+   "until": [
+    "C",
+    "to",
+    0
+   ],
+   "gain": -5,
+   "loop": true,
+   "fade": 0.3,
+   "fade_out": 0.4
+  },
+  {
+   "label": "C strings, from his answer into the torches",
+   "clip": "mus_camp",
+   "at": [
+    "C16",
+    "start",
+    -0.5
+   ],
+   "until": [
+    "C",
+    "to",
+    0
+   ],
+   "gain": -13,
+   "fade": 0.05,
+   "fade_out": 1.2
+  },
+  {
+   "label": "D the office",
+   "clip": "amb_palace",
+   "at": [
+    "D",
+    "from",
+    0
+   ],
+   "until": [
+    "D",
+    "to",
+    0
+   ],
+   "gain": -8,
+   "loop": true,
+   "fade": 0.3,
+   "fade_out": 0.4
+  },
+  {
+   "label": "D fortepiano",
+   "clip": "mus_fortepiano",
+   "at": [
+    "D",
+    "from",
+    0.3
+   ],
+   "until": [
+    "D23",
+    "start",
+    -0.4
+   ],
+   "gain": -16,
+   "fade": 0.05,
+   "fade_out": 1.2
+  },
+  {
+   "label": "E the blizzard (no music in E)",
+   "clip": "amb_blizzard",
+   "at": [
+    "E",
+    "from",
+    0
+   ],
+   "until": [
+    "E",
+    "to",
+    0
+   ],
+   "gain": -3,
+   "loop": true,
+   "fade": 0.3,
+   "fade_out": 0.4
+  },
+  {
+   "label": "E his steps",
+   "clip": "sfx_snow_steps",
+   "at": [
+    "E",
+    "from",
+    0.5
+   ],
+   "until": [
+    "E27",
+    "start",
+    -0.2
+   ],
+   "gain": -8,
+   "loop": true,
+   "fade": 0.3,
+   "fade_out": 0.3
+  },
+  {
+   "label": "F Laffrey, the meadow",
+   "clip": "amb_meadow",
+   "at": [
+    "F",
+    "from",
+    0
+   ],
+   "until": [
+    "F31",
+    "end",
+    0.7
+   ],
+   "gain": -8,
+   "loop": true,
+   "fade": 0.3,
+   "fade_out": 0.4
+  },
+  {
+   "label": "F Waterloo",
+   "clip": "amb_after_battle",
+   "at": [
+    "F31",
+    "end",
+    1.1
+   ],
+   "until": [
+    "F",
+    "to",
+    0
+   ],
+   "gain": -6,
+   "loop": true,
+   "fade": 0.3,
+   "fade_out": 0.4
+  },
+  {
+   "label": "F the low drum",
+   "clip": "mus_low_drum",
+   "at": [
+    "F32",
+    "start",
+    -1.0
+   ],
+   "until": [
+    "F",
+    "to",
+    0
+   ],
+   "gain": -12,
+   "fade": 0.05,
+   "fade_out": 1.2
+  },
+  {
+   "label": "G the island",
+   "clip": "amb_sea_island",
+   "at": [
+    "G",
+    "from",
+    0
+   ],
+   "until": [
+    "G",
+    "to",
+    0
+   ],
+   "gain": -6,
+   "loop": true,
+   "fade": 0.3,
+   "fade_out": 0.4
+  },
+  {
+   "label": "G watering",
+   "clip": "sfx_water_can",
+   "at": [
+    "G",
+    "from",
+    0.8
+   ],
+   "until": [
+    "G35",
+    "start",
+    -0.3
+   ],
+   "gain": -12,
+   "loop": true,
+   "fade": 0.3,
+   "fade_out": 0.3
+  },
+  {
+   "label": "G the cello, from the pause before he says it",
+   "clip": "mus_cello",
+   "at": [
+    "G36",
+    "end",
+    0.8
+   ],
+   "until": [
+    "G",
+    "to",
+    0
+   ],
+   "gain": -13,
+   "fade": 0.05,
+   "fade_out": 1.2
+  }
+ ],
+ "hits": [
+  {
+   "label": "A the freeze: drum roll and hit under his card",
+   "clip": "sfx_drum_roll_hit",
+   "at": [
+    "A02",
+    "end",
+    0.3
+   ],
+   "gain": -8
+  },
+  {
+   "label": "A the name is stamped (three hits)",
+   "clip": "sfx_stamp",
+   "at": [
+    "A02",
+    "end",
+    0.57
+   ],
+   "gain": -10
+  },
+  {
+   "label": "A stamp 2",
+   "clip": "sfx_stamp",
+   "at": [
+    "A02",
+    "end",
+    0.67
+   ],
+   "gain": -10
+  },
+  {
+   "label": "A stamp 3",
+   "clip": "sfx_stamp",
+   "at": [
+    "A02",
+    "end",
+    0.77
+   ],
+   "gain": -10
+  },
+  {
+   "label": "A the wax seal",
+   "clip": "sfx_stamp",
+   "at": [
+    "A02",
+    "end",
+    1.77
+   ],
+   "gain": -9,
+   "rate": 0.85
+  },
+  {
+   "label": "A the mule answers her",
+   "clip": "sfx_mule_snort",
+   "at": [
+    "A03",
+    "end",
+    0.15
+   ],
+   "gain": -8
+  },
+  {
+   "label": "A the painting slaps on",
+   "clip": "sfx_frame_slap",
+   "at": [
+    "A05",
+    "start",
+    0.47
+   ],
+   "gain": -8
+  },
+  {
+   "label": "A he rides on",
+   "clip": "sfx_gallop_off",
+   "at": [
+    "A07",
+    "end",
+    0.3
+   ],
+   "gain": -7
+  },
+  {
+   "label": "A the title: one drum hit per character",
+   "clip": "sfx_drum_hit",
+   "at": [
+    "A07",
+    "end",
+    0.73
+   ],
+   "gain": -9
+  },
+  {
+   "label": "A title 2",
+   "clip": "sfx_drum_hit",
+   "at": [
+    "A07",
+    "end",
+    0.87
+   ],
+   "gain": -9
+  },
+  {
+   "label": "A title 3",
+   "clip": "sfx_drum_hit",
+   "at": [
+    "A07",
+    "end",
+    1.0
+   ],
+   "gain": -9
+  },
+  {
+   "label": "B he takes the crown",
+   "clip": "sfx_crown_lift",
+   "at": [
+    "B09",
+    "end",
+    0.2
+   ],
+   "gain": -9
+  },
+  {
+   "label": "B the crowd gasps as it lands",
+   "clip": "sfx_crowd_gasp",
+   "at": [
+    "B10",
+    "end",
+    0.5
+   ],
+   "gain": -9
+  },
+  {
+   "label": "C the ear",
+   "clip": "sfx_ear_pinch",
+   "at": [
+    "C13",
+    "start",
+    0.3
+   ],
+   "gain": -10
+  },
+  {
+   "label": "C the first torch",
+   "clip": "sfx_torch_light",
+   "at": [
+    "C16",
+    "end",
+    0.47
+   ],
+   "gain": -9
+  },
+  {
+   "label": "C torch 2",
+   "clip": "sfx_torch_light",
+   "at": [
+    "C16",
+    "end",
+    0.7
+   ],
+   "gain": -10,
+   "rate": 1.1
+  },
+  {
+   "label": "C torch 3",
+   "clip": "sfx_torch_light",
+   "at": [
+    "C16",
+    "end",
+    0.93
+   ],
+   "gain": -10,
+   "rate": 0.92
+  },
+  {
+   "label": "C the army",
+   "clip": "sfx_army_cheer",
+   "at": [
+    "C16",
+    "end",
+    1.2
+   ],
+   "gain": -8
+  },
+  {
+   "label": "D dinner arrives and is gone",
+   "clip": "sfx_plate",
+   "at": [
+    "D19",
+    "end",
+    -0.2
+   ],
+   "gain": -9
+  },
+  {
+   "label": "D the cards",
+   "clip": "sfx_card_snap",
+   "at": [
+    "D20",
+    "end",
+    0.8
+   ],
+   "gain": -10
+  },
+  {
+   "label": "D the hidden card slides out",
+   "clip": "sfx_card_snap",
+   "at": [
+    "D21",
+    "end",
+    0.1
+   ],
+   "gain": -9,
+   "rate": 0.9
+  },
+  {
+   "label": "D the London print",
+   "clip": "sfx_paper_slap",
+   "at": [
+    "D23",
+    "start",
+    -0.4
+   ],
+   "gain": -9
+  },
+  {
+   "label": "D he stands very straight",
+   "clip": "sfx_drum_hit",
+   "at": [
+    "D24",
+    "start",
+    0.0
+   ],
+   "gain": -10
+  },
+  {
+   "label": "F the muskets drop",
+   "clip": "sfx_muskets_down",
+   "at": [
+    "F30",
+    "end",
+    1.45
+   ],
+   "gain": -8
+  },
+  {
+   "label": "F the cheer",
+   "clip": "sfx_line_cheer",
+   "at": [
+    "F30",
+    "end",
+    2.1
+   ],
+   "gain": -8
+  },
+  {
+   "label": "F the stamp: 一百天后 · 滑铁卢",
+   "clip": "sfx_big_stamp",
+   "at": [
+    "F31",
+    "end",
+    0.73
+   ],
+   "gain": -6
+  },
+  {
+   "label": "F he rides off",
+   "clip": "sfx_horse_off",
+   "at": [
+    "F33",
+    "end",
+    0.5
+   ],
+   "gain": -8
+  },
+  {
+   "label": "G the counter turns 1/1",
+   "clip": "sfx_counter_ding",
+   "at": [
+    "G37",
+    "end",
+    -0.05
+   ],
+   "gain": -9
+  },
+  {
+   "label": "G his drum figure, once, slowly",
+   "clip": "mus_figure_slow",
+   "at": [
+    "G37",
+    "end",
+    0.6
+   ],
+   "gain": -12,
+   "group": "music"
+  }
+ ],
+ "cards": {
+  "clip": "sfx_stamp",
+  "gain": -12,
+  "note": "each fact card: the medal is struck"
+ }
+}

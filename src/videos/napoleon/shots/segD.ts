@@ -20,7 +20,7 @@ export const SEG: Segment = {
     // the clerks write without looking up; each jumps when he points at him
     TUILERIES.clerks.forEach(([cx, cz], i) => {
       const p = V(X + cx, 0, cz), hit = Math.sin(t * 2.1 + i * 2.1) > 0.75 && f < L0("D19");
-      w.actor(SECRETARY, `k${i}`).set({ at: p, facing: 0, pose: { kind: "write", t: t * (1.6 + 0.2 * i) }, seat: { top: V(p.x, 0.46, p.z), floor: 0, back: 0.03 }, expr: hit ? "shock" : "nervous", ...alive(t, 10 + i) } as never);
+      w.actor(SECRETARY, `k${i}`).set({ visible: true, at: p, facing: 0, pose: { kind: "write", t: t * (1.6 + 0.2 * i) }, seat: { top: V(p.x, 0.46, p.z), floor: 0, back: 0.03 }, expr: hit ? "shock" : "nervous", ...alive(t, 10 + i) } as never);
     });
     // 1 he paces along the desks, 2 to his desk for dinner, 3 to the card table
     const toDesk = L0("D19") - 30, toTable = L1("D20") - 6;
@@ -44,7 +44,7 @@ export const SEG: Segment = {
     const cheat = f >= L1("D20") + 40 && f < L0("D23") - 10;
     const hand = V(X + TX - 0.2, TOP + 0.05, TZ - 0.28);
     const expr = f >= L0("D24") ? "rage" : f >= L0("D23") ? "huff" : f >= L0("D22") - 4 ? "smug" : f >= L0("D21") ? "deadpan" : f >= toTable ? "scheming" : "stern";
-    w.actor(NP_GREEN).set({ ...st, ...alive(t, 1), expr, ...(q ? speak(q, f, 1) : {}), ...(cheat ? { hands: [hand, null], armFront: [true, undefined] } : {}), ...(tall > 0 ? { head: { dy: 0.12 * tall, scale: 1 + 0.05 * tall } } : {}) } as never);
+    w.actor(NP_GREEN).set({ visible: true, ...st, ...alive(t, 1), expr, ...(q ? speak(q, f, 1) : {}), ...(cheat ? { hands: [hand, null], armFront: [true, undefined] } : {}), ...(tall > 0 ? { head: { dy: 0.12 * tall, scale: 1 + 0.05 * tall } } : {}) } as never);
     // dinner: a servant brings the plate; it is empty before he has let go
     const serve0 = L0("D19") - 10, plateAt = V(X - 0.2 - 0.45, 0.79, -2.45);
     if (f >= serve0 && f < toTable + 50) {

@@ -1,0 +1,272 @@
+{
+ "film": "napoleon",
+ "note": "Sound clips wanted for script v2 (16 Nov). Not generated yet: needs the owner's OK to spend credits. kind: sfx = ElevenLabs sound effects, music = ElevenLabs music. Check the studio library first for an approved sound of the same kind before generating.",
+ "clips": [
+  {
+   "name": "amb_alps_wind",
+   "kind": "sfx",
+   "seconds": 10,
+   "loop": true,
+   "prompt": "High mountain pass, steady cold wind over snow, no voices, no music, seamless loop"
+  },
+  {
+   "name": "amb_cathedral",
+   "kind": "sfx",
+   "seconds": 10,
+   "loop": true,
+   "prompt": "Inside a huge stone cathedral full of silent people, soft room tone, faint rustle of robes, long reverb, no music, seamless loop"
+  },
+  {
+   "name": "amb_camp_night",
+   "kind": "sfx",
+   "seconds": 10,
+   "loop": true,
+   "prompt": "Army bivouac at night 1805, a campfire crackling close, low murmur of soldiers far away, no music, seamless loop"
+  },
+  {
+   "name": "amb_palace",
+   "kind": "sfx",
+   "seconds": 10,
+   "loop": true,
+   "prompt": "Quiet palace office 1806, a mantel clock ticking, three quill pens scratching on paper, no voices, no music, seamless loop"
+  },
+  {
+   "name": "amb_blizzard",
+   "kind": "sfx",
+   "seconds": 10,
+   "loop": true,
+   "prompt": "Russian winter steppe, hard wind and blowing snow, bleak, no voices, no music, seamless loop"
+  },
+  {
+   "name": "amb_meadow",
+   "kind": "sfx",
+   "seconds": 10,
+   "loop": true,
+   "prompt": "Alpine meadow road in early spring, light breeze, a few birds, calm, no music, seamless loop"
+  },
+  {
+   "name": "amb_after_battle",
+   "kind": "sfx",
+   "seconds": 10,
+   "loop": true,
+   "prompt": "A battlefield at dusk after the fighting, wind, a few distant cannon thuds, crows, no voices, no music, seamless loop"
+  },
+  {
+   "name": "amb_sea_island",
+   "kind": "sfx",
+   "seconds": 10,
+   "loop": true,
+   "prompt": "Small island garden above the sea, slow waves far below, wind in leaves, a distant gull, no music, seamless loop"
+  },
+  {
+   "name": "sfx_mule_walk",
+   "kind": "sfx",
+   "seconds": 4,
+   "loop": false,
+   "prompt": "A mule walking on packed snow and rock, hooves and small harness bells, close"
+  },
+  {
+   "name": "sfx_mule_snort",
+   "kind": "sfx",
+   "seconds": 2,
+   "loop": false,
+   "prompt": "A mule snorts once, short, a little funny"
+  },
+  {
+   "name": "sfx_drag_log",
+   "kind": "sfx",
+   "seconds": 4,
+   "loop": false,
+   "prompt": "Soldiers hauling a heavy log over snow with ropes, grunts and scraping"
+  },
+  {
+   "name": "sfx_drum_roll_hit",
+   "kind": "sfx",
+   "seconds": 2,
+   "loop": false,
+   "prompt": "A short military snare drum roll ending in one sharp hit, 1800, dry"
+  },
+  {
+   "name": "sfx_drum_hit",
+   "kind": "sfx",
+   "seconds": 1,
+   "loop": false,
+   "prompt": "One sharp field drum hit, dry, close"
+  },
+  {
+   "name": "sfx_stamp",
+   "kind": "sfx",
+   "seconds": 1,
+   "loop": false,
+   "prompt": "A heavy seal stamped hard onto paper on a wooden desk, one thud with a little ring"
+  },
+  {
+   "name": "sfx_frame_slap",
+   "kind": "sfx",
+   "seconds": 1,
+   "loop": false,
+   "prompt": "A framed painting slapped onto a wall, a wooden clack with a quick whoosh before it"
+  },
+  {
+   "name": "sfx_gallop_off",
+   "kind": "sfx",
+   "seconds": 4,
+   "loop": false,
+   "prompt": "One mule trotting away on snow with harness bells, fading into the distance"
+  },
+  {
+   "name": "sfx_crown_lift",
+   "kind": "sfx",
+   "seconds": 2,
+   "loop": false,
+   "prompt": "A heavy gold crown lifted from a velvet cushion, soft metallic shimmer"
+  },
+  {
+   "name": "sfx_crowd_gasp",
+   "kind": "sfx",
+   "seconds": 2,
+   "loop": false,
+   "prompt": "A large crowd in a cathedral gasps at once, long reverb"
+  },
+  {
+   "name": "sfx_ear_pinch",
+   "kind": "sfx",
+   "seconds": 1,
+   "loop": false,
+   "prompt": "A light cartoon pinch, a small soft pop"
+  },
+  {
+   "name": "sfx_torch_light",
+   "kind": "sfx",
+   "seconds": 2,
+   "loop": false,
+   "prompt": "A straw torch catching fire, a soft whoomp and crackle"
+  },
+  {
+   "name": "sfx_army_cheer",
+   "kind": "sfx",
+   "seconds": 6,
+   "loop": false,
+   "prompt": "Thousands of French soldiers at night cheering Vive l'Empereur, swelling from a few voices to a roar, outdoors"
+  },
+  {
+   "name": "sfx_plate",
+   "kind": "sfx",
+   "seconds": 2,
+   "loop": false,
+   "prompt": "A china plate set on a wooden desk, then cutlery scraping very fast, comic, ending in one clink"
+  },
+  {
+   "name": "sfx_card_snap",
+   "kind": "sfx",
+   "seconds": 1,
+   "loop": false,
+   "prompt": "A playing card snapped down on a felt table"
+  },
+  {
+   "name": "sfx_paper_slap",
+   "kind": "sfx",
+   "seconds": 1,
+   "loop": false,
+   "prompt": "A sheet of paper slapped onto a table"
+  },
+  {
+   "name": "sfx_snow_steps",
+   "kind": "sfx",
+   "seconds": 6,
+   "loop": false,
+   "prompt": "One man walking slowly through deep snow, heavy tired steps, wind"
+  },
+  {
+   "name": "sfx_muskets_down",
+   "kind": "sfx",
+   "seconds": 3,
+   "loop": false,
+   "prompt": "A line of soldiers lowering their muskets one after another, wood and metal clatter, outdoors"
+  },
+  {
+   "name": "sfx_line_cheer",
+   "kind": "sfx",
+   "seconds": 4,
+   "loop": false,
+   "prompt": "About fifty soldiers shout Vive l'Empereur and cheer, hats thrown, outdoors, close"
+  },
+  {
+   "name": "sfx_big_stamp",
+   "kind": "sfx",
+   "seconds": 2,
+   "loop": false,
+   "prompt": "A huge rubber stamp slammed down, a deep boom with a short tail, dramatic and a little comic"
+  },
+  {
+   "name": "sfx_horse_off",
+   "kind": "sfx",
+   "seconds": 5,
+   "loop": false,
+   "prompt": "A horse walks, then trots away slowly on soft ground, fading"
+  },
+  {
+   "name": "sfx_water_can",
+   "kind": "sfx",
+   "seconds": 3,
+   "loop": false,
+   "prompt": "A tin watering can pouring a gentle stream of water onto soil"
+  },
+  {
+   "name": "sfx_counter_ding",
+   "kind": "sfx",
+   "seconds": 2,
+   "loop": false,
+   "prompt": "A small brass bell struck once, clear, warm, with a short ring"
+  },
+  {
+   "name": "mus_march",
+   "kind": "music",
+   "seconds": 30,
+   "loop": false,
+   "prompt": "A jaunty French military march of 1800 for fife and field drum only, confident, light, a clear four-note drum figure at the start, no vocals"
+  },
+  {
+   "name": "mus_coronation",
+   "kind": "music",
+   "seconds": 20,
+   "loop": false,
+   "prompt": "A solemn coronation chord progression for cathedral organ and distant choir, slow, grand, 1804, no vocals with words"
+  },
+  {
+   "name": "mus_camp",
+   "kind": "music",
+   "seconds": 25,
+   "loop": false,
+   "prompt": "Warm low strings and a soft snare, proud and tender, building slowly to a glowing swell, early 19th century feel, no vocals"
+  },
+  {
+   "name": "mus_fortepiano",
+   "kind": "music",
+   "seconds": 30,
+   "loop": false,
+   "prompt": "A brisk, busy classical fortepiano piece in the style of 1806 Paris, playful, fast fingers, a little mischievous, solo instrument, no vocals"
+  },
+  {
+   "name": "mus_low_drum",
+   "kind": "music",
+   "seconds": 8,
+   "loop": false,
+   "prompt": "A single low muffled funeral drum, one slow stroke every two seconds, nothing else"
+  },
+  {
+   "name": "mus_cello",
+   "kind": "music",
+   "seconds": 30,
+   "loop": false,
+   "prompt": "One solo cello, slow, plain and dignified, a lonely island at sunset, ending on a held note, no other instruments"
+  },
+  {
+   "name": "mus_figure_slow",
+   "kind": "music",
+   "seconds": 5,
+   "loop": false,
+   "prompt": "A four-note field drum figure played once, very slowly and softly, like a memory"
+  }
+ ]
+}

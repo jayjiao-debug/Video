@@ -22,7 +22,7 @@ export const SEG: Segment = {
     const q = saying("np", f), lit = L1("C16") + 14;
     const turn = ramp(f, L0("C16") - 6, L0("C16") + 8);
     w.actor(NP_CONSUL).set({
-      at: leg.at, facing: leg.arrived ? yawTo(STOP, VT) * (1 - turn) + yawTo(STOP, ME) * turn : leg.facing, pose: leg.pose, ...alive(t, 1),
+      visible: true, at: leg.at, facing: leg.arrived ? yawTo(STOP, VT) * (1 - turn) + yawTo(STOP, ME) * turn : leg.facing, pose: leg.pose, ...alive(t, 1),
       expr: f >= L0("C13") && f < L0("C15") ? "smile" : f > lit + 30 ? "smile_closed" : "stern", ...(q ? speak(q, f, 1) : {}),
       ...(pinch > 0.05 ? { hands: [V(VT.x + 0.3 - 0.06 * pinch, 1.5, VT.z + 0.12), null], armFront: [true, undefined] } : {}),
     } as never);
@@ -43,7 +43,8 @@ export const SEG: Segment = {
     const camera = povCam(f, [
       { f: S.from, pos: [X + 0.6, 1.5, 2.2], look: [X + 4.5, 1.18, -2.6], fov: 56 },
       { f: arrive, pos: [X, 1.5, 1.7], look: [X - 0.05, 1.18, -2.1], fov: 50 },
-      { f: L1("C14") + 6, pos: [X - 0.1, 1.5, 1.5], look: [X - 0.1, 1.23, -2.1], fov: 46 },
+      { f: L0("C13") + 10, pos: [X - 0.05, 1.5, 1.7], look: [X - 0.06, 1.2, -2.15], fov: 50 },
+      { f: L1("C14") + 6, pos: [X - 0.05, 1.5, 1.7], look: [X - 0.06, 1.2, -2.15], fov: 50 },
       { f: L0("C16"), pos: [X, 1.5, 1.6], look: [X + 0.1, 1.28, -2.0], fov: 44 },
       { f: lit, pos: [X, 1.5, 1.7], look: [X + 0.1, 1.28, -2.0], fov: 46 },
       { f: lit + 70, pos: [X, 1.5, 2.6], look: [X, 2.6, -8], fov: 62 },

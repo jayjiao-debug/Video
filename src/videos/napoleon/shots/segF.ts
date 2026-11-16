@@ -26,14 +26,14 @@ export const SEG: Segment = {
       const leg = walkAlong([V(XL + 0.5, 0, -0.9), V(XL, 0, -3.4)], 1.1, (f - go) / 30, { endFacing: Math.PI, startFacing: Math.PI });
       const open = ramp(f, L0("F30") - 10, L0("F30") + 6);
       w.actor(NP_CONSUL).set({
-        at: leg.at, facing: Math.PI, pose: leg.pose, turn: 1, ...alive(t, 1), expr: "stern", ...(q ? speak(q, f, 1) : {}),
+        visible: true, at: leg.at, facing: Math.PI, pose: leg.pose, turn: 1, ...alive(t, 1), expr: "stern", ...(q ? speak(q, f, 1) : {}),
         ...(open > 0.05 ? { hands: [V(leg.at.x - 0.34 * open - 0.1, 1.05 + 0.1 * open, leg.at.z - 0.05), V(leg.at.x + 0.34 * open + 0.1, 1.05 + 0.1 * open, leg.at.z - 0.05)] } : {}),
       } as never);
       const k = ramp(f, drop, drop + 12), cheer = f > drop + 16;
       for (let i = 0; i < 7; i++) {
         const p = V(XL - 3 + i * 1.0, 0, LINE_Z - 0.25 * (i % 2)), d = ramp(f, drop + i * 2, drop + 10 + i * 2);
         fig(w, GRENADIER, `r${i}`, p, 0, f, 3 + i, undefined, { expr: cheer ? "happy" : d > 0.3 ? "relief" : "nervous", ...(cheer ? { pose: { kind: "cheer", t: t + i * 0.2 } } : {}) });
-        if (!cheer) w.prop("musket", `r${i}`).put(V(p.x + 0.22, 1.25 - 0.55 * d, p.z + 0.35), { yaw: -Math.PI / 2, tilt: -1.0 * d });
+        if (!cheer) w.prop("musket", `r${i}`).put(V(p.x + 0.24, 0.98 - 0.4 * d, p.z + 0.3), { yaw: -Math.PI / 2, tilt: -1.0 * d });
       }
       void k;
       const camera = povCam(f, [

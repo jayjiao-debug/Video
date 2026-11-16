@@ -150,7 +150,7 @@
    "card_delay": 0.4,
    "card_hold": 2.9,
    "card": {
-    "zh": "真事：他翻山骑的是骡子。那幅白马名画是事后画的。",
+    "zh": "真事：他翻山骑的是骡子。白马是事后画的。",
     "en": "True: he crossed on a mule; the painting came later."
    }
   },
@@ -329,7 +329,7 @@
    "card_delay": 1.0,
    "card_hold": 3.0,
    "card": {
-    "zh": "真事：奥斯特里茨前夜，全军举着火把迎接他。",
+    "zh": "真事：那一夜，全军举着火把迎接他。",
     "en": "True: on the eve of Austerlitz the army lit torches for him."
    }
   },
@@ -426,7 +426,7 @@
    "card_delay": 0.3,
    "card_hold": 2.7,
    "card": {
-    "zh": "真事：他打牌下棋都作弊，身边人都知道。",
+    "zh": "真事：他打牌下棋都作弊，人人都知道。",
     "en": "True: he cheated at cards and chess, and everyone knew."
    }
   },
@@ -462,7 +462,7 @@
    "card_delay": 0.3,
    "card_hold": 3.0,
    "card": {
-    "zh": "真事：约 1 米 68，比当时法国男人的平均身高还高。",
+    "zh": "真事：约 1 米 68，高于当时法国男人的平均。",
     "en": "True: about 1.68 m, above the French average of his day."
    }
   },
