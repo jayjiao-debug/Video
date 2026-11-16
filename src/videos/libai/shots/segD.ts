@@ -1,0 +1,97 @@
+// SEGMENT D, lines D23-D27: 未时, outside the palace gate (Qin's colonnade with a gate across it). beats.ts BEAT.D.
+//   give    D23     the messenger eunuch hands him the little red chest of gold (这是赏的金子), facing him to the line's end.
+//   shut    D23 end the eunuch goes back in; the great gate shuts behind 李白.
+//   look    D24     he looks down at the chest ...      laugh D25: 有钱了！ he bursts out laughing; 天生我材: the chest up high.
+//   stride  D27     喝酒！ he strides off past the lens (screen right). Fade through amber.
+import * as THREE from "three";
+import { SEGMENTS, FPS, lineId, capWord, easeInOutCubic, type Segment, type CamPose } from "../story";
+import { BEAT } from "../beats";
+import * as C from "../cam";
+import { LI, HUAN } from "../people";
+import { CX } from "../layout";
+import { transitionAt } from "../hud";
+import { V, rel, yawTo, lid, says, accent, heads, headPop, at, walkAlong, standing } from "./common";
+import { aim, ramp, held, mixCam, type St } from "./lb";
+
+const S = SEGMENTS[3], D = BEAT.D;
+/** the twirl starts on 千金 */
+const SPIN_AT = capWord("D25", "千金").from;
+const L23 = lineId("D23");
+const GATE = V(CX, 0, -4.3);
+const LI_AT = V(CX - 0.1, 0, -2.4);
+const HUAN_AT = V(CX + 0.65, 0, -2.75), HUAN_F = yawTo(HUAN_AT, LI_AT) + 0.4;
+const HUAN_BACK = [HUAN_AT, V(CX + 0.08, 0, -3.7), V(CX, 0, -6.0)];
+/** the messenger leaves when his line's last syllable is out */
+const HUAN_GO = L23.to - 5;
+/** THE CAMERA PLAN (one take):
+ *    open     the gate behind him, the eunuch handing over the little chest; held
+ *    shut     the great gate slams behind him: a jolt
+ *    look     D24's end: he looks down at the chest, so she looks too (a snap down to it), and back up with him
+ *    有钱了    D25: snap zoom landing on his laugh, held through 天生我材 (the chest up high) to her question
+ *    stride   喝酒！ he strides off past the lens: she pans with him */
+const CAM0 = V(CX + 0.4, 1.38, 0.55);
+/** the stride: from his mark past the lens on its right */
+const STRIDE = [LI_AT, V(CX + 0.7, 0, -1.0), V(CX + 1.2, 0, 1.2)];
+
+const CHEST_LOOK = LI_AT.clone().add(V(0.15, 0.72, 0.3));
+const cam = (f: number): CamPose => {
+  let c = aim(CAM0, LI_AT.clone().add(V(0.15, 1.05, 0)), 820, 560);
+  // D24's end: down to the chest with his look, back up for the laugh
+  const dn = ramp(f, D.look - 5, D.look) * (1 - ramp(f, D.laugh - 8, D.laugh - 2));
+  if (dn) c = mixCam(c, aim(CAM0, CHEST_LOOK, 960, 560), 0.8 * dn);
+  c = C.handheld(c, f, { mood: f >= D.laugh && f < D.stride ? "excited" : "calm", amp: 0.7 });
+  c = C.jolt(c, f, D.shut[1], { len: 8, amp: 1.8 });
+  c = C.snap(c, f, D.laugh, lineId("D26").from + 4);
+  if (f >= D.stride) c = C.nudge(c, { yaw: 22 * ramp(f, D.stride + 6, D.stride + 30) });
+  return c;
+};
+
+/** the chest: in the eunuch's hands until the give, then his; up high on 天生 */
+const chestAt = (f: number, liAt: THREE.Vector3, liF: number) => {
+  const give = ramp(f, D.give - 4, D.give + 8);
+  const huanHold = rel(HUAN_AT, HUAN_F, 0, 0.72, 0.3), liHold = rel(liAt, liF, 0, 0.7, 0.32), liHigh = rel(liAt, liF, -0.3, 1.0, 0.34);
+  // the chest up high from 天生我材, down to his chest while he twirls (else it swings through his head), up again after
+  const twirl = ramp(f, SPIN_AT - 6, SPIN_AT) * (1 - ramp(f, SPIN_AT + 30, SPIN_AT + 36));
+  const up = ramp(f, D.hold - 6, D.hold + 6) * (1 - ramp(f, lineId("D25").to, lineId("D25").to + 12)) * (1 - twirl);
+  return { p: huanHold.lerp(liHold, give).lerp(liHigh, up), open: ramp(f, D.look - 6, D.look + 6), mine: give > 0.5 };
+};
+
+export const SEG: Segment = {
+  id: "D", from: S.from, to: S.to,
+  enter() {}, exit(w) { w.actor(HUAN).set({ visible: false }); },
+  pose(w, f) {
+    w.setPlace("corridor");
+    w.set.param("dawn", 0.0);
+    // the join from C: the first 4 frames whip in
+    const W = C.whip(cam(f), f, S.from - 4, { dir: 1, out: 4, in: 4 });
+    const camera = W.cam;
+    w.setCamera(camera);
+    const t = f / FPS;
+    w.prop("gate").put(GATE, { open: 1 - ramp(f, D.shut[0], D.shut[1]) });
+    // 李白
+    const leg = walkAlong(STRIDE, 1.9, (f - D.stride - 4) / FPS);
+    // 千金散尽还复来: a giddy turn right round on the spot, the chest held up (Jay, 15 Nov: more of his own movement)
+    const spin = f < D.stride + 4 ? Math.PI * 2 * easeInOutCubic(ramp(f, SPIN_AT, SPIN_AT + 30)) : 0;
+    const liF = (f < D.stride + 4 ? 0 : leg.facing) + spin;
+    const ch = chestAt(f, leg.at, liF);
+    const expr = at<NonNullable<St["expr"]>>(f, [[0, "neutral"], [D.give, "shock"], [D.shut[0] + 6, "deadpan"], [D.look, "focus"], [D.laugh - 4, "laugh"], [D.hold + 20, "grin"], [lineId("D26").from + 10, "happy"], [D.stride, "laugh"]]);
+    const m = says("li", ["D25", "D27"], f, 3);
+    const hc = held("chest", ch.p, { rot: liF, open: ch.open });
+    w.actor(LI).set({
+      ...standing(leg.at, liF, f, 1), pose: leg.pose, expr, mouth: m.mouth, blink: m.blink ?? lid(t, 1),
+      head: heads(m.head, accent("jolt", f, D.shut[1] - 2, { amp: 0.6 }), accent("laugh", f, D.laugh, { dur: 1.2 }), headPop(f, D.hold)),
+      lookDown: f >= D.look && f < D.laugh ? 22 : 0, hands: ch.mine ? hc.hands : [null, null],
+    });
+    // the messenger
+    // he says his whole line to 李白's face, THEN turns and scurries back in (Jay, 15 Nov: "doesnt finish talking
+    // completely and starts walking away": he used to turn on 这是, 1.2 s before the line's end); the gate shuts behind him
+    const back = walkAlong(HUAN_BACK, 2.6, (f - HUAN_GO) / FPS);
+    const hm = says("huan", ["D23"], f, 5);
+    const hh = held("chest", ch.p, { rot: HUAN_F });
+    w.actor(HUAN).set({ ...standing(back.at, f < HUAN_GO ? HUAN_F : back.facing, f, 5), pose: back.pose, expr: "smile", mouth: hm.mouth, head: hm.head, blink: hm.blink ?? lid(t, 5), hands: ch.mine ? [null, null] : hh.hands, visible: f < D.shut[1] });
+    w.update();
+    hc.put(w);
+    return { camera, post: W.post, overlays: C.whipSmear(W.smear, 1) ?? transitionAt(f)?.node, slate: "D palace gate" };
+  },
+};
+void L23;
