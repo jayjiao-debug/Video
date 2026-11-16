@@ -1,0 +1,535 @@
+plan: {'tier': 'creator', 'character_count': 60921, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "catalog", "type": "effects_catalog", "status": 200, "catalog": {"filter_presets": [{"filter_preset_id": "old_radio", "name": "Old Radio", "description": "1940s broadcast — narrow band, lo-fi, with a hint of distortion."}, {"filter_preset_id": "robot", "name": "Robot", "description": "Metallic, modulated, slightly broken — a classic sci-fi voice."}, {"filter_preset_id": "cheap_microphone", "name": "Cheap Microphone", "description": "Low-end USB / built-in laptop mic — limited bandwidth, mild distortion."}, {"filter_preset_id": "phone", "name": "Phone", "description": "Standard phone band with presence peaks for intelligibility."}, {"filter_preset_id": "low_quality_phone", "name": "Low Quality Phone", "description": "Narrow, muffled band like a poor connection."}, {"filter_preset_id": "bright_phone", "name": "Bright Phone", "description": "Wider, brighter band."}], "environments": [{"environment_id": "small_room", "name": "Small Room", "description": "Tight, dampened space — bedroom, small studio, closet booth."}, {"environment_id": "big_room", "name": "Big Room", "description": "Spacious room with broad early reflections and a natural tail."}, {"environment_id": "hall", "name": "Hall", "description": "Expansive hall with wide reflections and a long, even decay."}, {"environment_id": "tunnel", "name": "Tunnel", "description": "Enclosed concrete tunnel with a long, hollow, resonant tail."}, {"environment_id": "street", "name": "Street", "description": "Open street with sparse reflections off nearby buildings."}, {"environment_id": "valley", "name": "Valley", "description": "Wide open valley with distant, diffuse returns."}, {"environment_id": "forest", "name": "Forest", "description": "Dense forest with soft, scattered reflections and almost no tail."}], "background_noises": [{"background_noise_id": "call_center", "name": "Call center", "description": null}, {"background_noise_id": "cafe", "name": "Café", "description": null}, {"background_noise_id": "city", "name": "City", "description": null}, {"background_noise_id": "keyboard", "name": "Keyboard", "description": null}]}}
+{"name": "snore_v2", "type": "sfx", "text": "One muffled snore of an old man asleep behind a closed wooden door: a fluttering inhale snore and a short breath out. No music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "snore_v2.mp3", "bytes": 24702}
+{"name": "snore_v3", "type": "sfx", "text": "One muffled snore of an old man asleep behind a closed wooden door: a fluttering inhale snore and a short breath out. No music.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "snore_v3.mp3", "bytes": 24702}
+{"name": "sigh_v2", "type": "sfx", "text": "A tired young man's sigh, one breath out through the mouth, close and dry. No music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sigh_v2.mp3", "bytes": 17179}
+{"name": "sigh_v3", "type": "sfx", "text": "A tired young man's sigh, one breath out through the mouth, close and dry. No music.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "sigh_v3.mp3", "bytes": 17179}
+{"name": "line_plain", "lang": "zh", "text": "[whispering] 牛顿在讲课，可是教室里一个学生都没有。", "voice": "shared:Lin", "voice_id": "I23uc91tu5zY2PA1tKEN", "model": "eleven_v4", "status": 200, "file": "line_plain.mp3", "bytes": 65244}
+{"name": "line_hall", "lang": "zh", "text": "[whispering] 牛顿在讲课，可是教室里一个学生都没有。", "voice": "shared:Lin", "voice_id": "I23uc91tu5zY2PA1tKEN", "model": "eleven_v4", "status": 200, "audio_effects": {"environment_id": "hall", "distance": 0.6}, "file": "line_hall.mp3", "bytes": 112474}
+removed kept voices: {'I23uc91tu5zY2PA1tKEN': 200}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+line_plain scribe: 牛顿在讲课，可是教室里一个学生都没有。
+line_hall scribe: 牛顿在讲课，可是教室里一个学生都没有。
+/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/transformers/audio_utils.py:860: UserWarning: At least one mel filter has all zero values. The value for `num_mel_filters` (128) may be set too high. Or, the value for `num_frequency_bins` (257) may be set too low.
+  warnings.warn(
+Loading weights:   0%|          | 0/203 [00:00<?, ?it/s]Loading weights: 100%|██████████| 203/203 [00:00<00:00, 6491.49it/s]
+snore_v2 [['Burping, eructation', 0.774], ['Sound effect', 0.212], ['Grunt', 0.062], ['Speech', 0.023], ['Snoring', 0.017], ['Sigh', 0.016], ['Male speech, man speaking', 0.016], ['Music', 0.015]]
+snore_v3 [['Snort', 0.476], ['Snoring', 0.262], ['Speech', 0.176], ['Gasp', 0.06], ['Male speech, man speaking', 0.032], ['Breathing', 0.032], ['Sigh', 0.024], ['Music', 0.016]]
+sigh_v2 [['Sigh', 0.815], ['Male speech, man speaking', 0.111], ['Sound effect', 0.073], ['Gasp', 0.062], ['Speech', 0.06], ['Groan', 0.049], ['Grunt', 0.015], ['Music', 0.011]]
+sigh_v3 [['Sigh', 0.803], ['Sound effect', 0.123], ['Gasp', 0.09], ['Speech', 0.076], ['Male speech, man speaking', 0.063], ['Groan', 0.039], ['Music', 0.025], ['Grunt', 0.016]]
+[
+ {
+  "name": "catalog",
+  "type": "effects_catalog",
+  "status": 200,
+  "catalog": {
+   "filter_presets": [
+    {
+     "filter_preset_id": "old_radio",
+     "name": "Old Radio",
+     "description": "1940s broadcast — narrow band, lo-fi, with a hint of distortion."
+    },
+    {
+     "filter_preset_id": "robot",
+     "name": "Robot",
+     "description": "Metallic, modulated, slightly broken — a classic sci-fi voice."
+    },
+    {
+     "filter_preset_id": "cheap_microphone",
+     "name": "Cheap Microphone",
+     "description": "Low-end USB / built-in laptop mic — limited bandwidth, mild distortion."
+    },
+    {
+     "filter_preset_id": "phone",
+     "name": "Phone",
+     "description": "Standard phone band with presence peaks for intelligibility."
+    },
+    {
+     "filter_preset_id": "low_quality_phone",
+     "name": "Low Quality Phone",
+     "description": "Narrow, muffled band like a poor connection."
+    },
+    {
+     "filter_preset_id": "bright_phone",
+     "name": "Bright Phone",
+     "description": "Wider, brighter band."
+    }
+   ],
+   "environments": [
+    {
+     "environment_id": "small_room",
+     "name": "Small Room",
+     "description": "Tight, dampened space — bedroom, small studio, closet booth."
+    },
+    {
+     "environment_id": "big_room",
+     "name": "Big Room",
+     "description": "Spacious room with broad early reflections and a natural tail."
+    },
+    {
+     "environment_id": "hall",
+     "name": "Hall",
+     "description": "Expansive hall with wide reflections and a long, even decay."
+    },
+    {
+     "environment_id": "tunnel",
+     "name": "Tunnel",
+     "description": "Enclosed concrete tunnel with a long, hollow, resonant tail."
+    },
+    {
+     "environment_id": "street",
+     "name": "Street",
+     "description": "Open street with sparse reflections off nearby buildings."
+    },
+    {
+     "environment_id": "valley",
+     "name": "Valley",
+     "description": "Wide open valley with distant, diffuse returns."
+    },
+    {
+     "environment_id": "forest",
+     "name": "Forest",
+     "description": "Dense forest with soft, scattered reflections and almost no tail."
+    }
+   ],
+   "background_noises": [
+    {
+     "background_noise_id": "call_center",
+     "name": "Call center",
+     "description": null
+    },
+    {
+     "background_noise_id": "cafe",
+     "name": "Café",
+     "description": null
+    },
+    {
+     "background_noise_id": "city",
+     "name": "City",
+     "description": null
+    },
+    {
+     "background_noise_id": "keyboard",
+     "name": "Keyboard",
+     "description": null
+    }
+   ]
+  }
+ },
+ {
+  "name": "snore_v2",
+  "type": "sfx",
+  "text": "One muffled snore of an old man asleep behind a closed wooden door: a fluttering inhale snore and a short breath out. No music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "snore_v2.mp3",
+  "bytes": 24702,
+  "seconds": 1.48,
+  "tags": [
+   [
+    "Burping, eructation",
+    0.774
+   ],
+   [
+    "Sound effect",
+    0.212
+   ],
+   [
+    "Grunt",
+    0.062
+   ],
+   [
+    "Speech",
+    0.023
+   ],
+   [
+    "Snoring",
+    0.017
+   ],
+   [
+    "Sigh",
+    0.016
+   ],
+   [
+    "Male speech, man speaking",
+    0.016
+   ],
+   [
+    "Music",
+    0.015
+   ]
+  ]
+ },
+ {
+  "name": "snore_v3",
+  "type": "sfx",
+  "text": "One muffled snore of an old man asleep behind a closed wooden door: a fluttering inhale snore and a short breath out. No music.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "snore_v3.mp3",
+  "bytes": 24702,
+  "seconds": 1.48,
+  "tags": [
+   [
+    "Snort",
+    0.476
+   ],
+   [
+    "Snoring",
+    0.262
+   ],
+   [
+    "Speech",
+    0.176
+   ],
+   [
+    "Gasp",
+    0.06
+   ],
+   [
+    "Male speech, man speaking",
+    0.032
+   ],
+   [
+    "Breathing",
+    0.032
+   ],
+   [
+    "Sigh",
+    0.024
+   ],
+   [
+    "Music",
+    0.016
+   ]
+  ]
+ },
+ {
+  "name": "sigh_v2",
+  "type": "sfx",
+  "text": "A tired young man's sigh, one breath out through the mouth, close and dry. No music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sigh_v2.mp3",
+  "bytes": 17179,
+  "seconds": 1.0,
+  "tags": [
+   [
+    "Sigh",
+    0.815
+   ],
+   [
+    "Male speech, man speaking",
+    0.111
+   ],
+   [
+    "Sound effect",
+    0.073
+   ],
+   [
+    "Gasp",
+    0.062
+   ],
+   [
+    "Speech",
+    0.06
+   ],
+   [
+    "Groan",
+    0.049
+   ],
+   [
+    "Grunt",
+    0.015
+   ],
+   [
+    "Music",
+    0.011
+   ]
+  ]
+ },
+ {
+  "name": "sigh_v3",
+  "type": "sfx",
+  "text": "A tired young man's sigh, one breath out through the mouth, close and dry. No music.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "sigh_v3.mp3",
+  "bytes": 17179,
+  "seconds": 1.0,
+  "tags": [
+   [
+    "Sigh",
+    0.803
+   ],
+   [
+    "Sound effect",
+    0.123
+   ],
+   [
+    "Gasp",
+    0.09
+   ],
+   [
+    "Speech",
+    0.076
+   ],
+   [
+    "Male speech, man speaking",
+    0.063
+   ],
+   [
+    "Groan",
+    0.039
+   ],
+   [
+    "Music",
+    0.025
+   ],
+   [
+    "Grunt",
+    0.016
+   ]
+  ]
+ },
+ {
+  "name": "line_plain",
+  "lang": "zh",
+  "text": "[whispering] 牛顿在讲课，可是教室里一个学生都没有。",
+  "voice": "shared:Lin",
+  "voice_id": "I23uc91tu5zY2PA1tKEN",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "line_plain.mp3",
+  "bytes": 65244,
+  "heard": "扭盾在讲课可是教室里一个学生都没有",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.995,
+  "seconds": 4.0,
+  "scribe": "牛顿在讲课，可是教室里一个学生都没有。",
+  "scribe_model": "scribe_v3",
+  "scribe_lang": "zho",
+  "scribe_words": [
+   [
+    "牛",
+    0.24,
+    0.38
+   ],
+   [
+    "顿",
+    0.38,
+    0.58
+   ],
+   [
+    "在",
+    0.58,
+    0.74
+   ],
+   [
+    "讲",
+    0.74,
+    1.0
+   ],
+   [
+    "课",
+    1.0,
+    1.22
+   ],
+   [
+    "，",
+    1.22,
+    1.74
+   ],
+   [
+    "可",
+    1.74,
+    1.84
+   ],
+   [
+    "是",
+    1.84,
+    1.98
+   ],
+   [
+    "教",
+    1.98,
+    2.2
+   ],
+   [
+    "室",
+    2.2,
+    2.38
+   ],
+   [
+    "里",
+    2.38,
+    2.66
+   ],
+   [
+    "一",
+    2.66,
+    2.84
+   ],
+   [
+    "个",
+    2.84,
+    3.0
+   ],
+   [
+    "学",
+    3.0,
+    3.16
+   ],
+   [
+    "生",
+    3.18,
+    3.32
+   ],
+   [
+    "都",
+    3.32,
+    3.48
+   ],
+   [
+    "没",
+    3.48,
+    3.62
+   ],
+   [
+    "有",
+    3.62,
+    3.82
+   ],
+   [
+    "。",
+    3.82,
+    3.82
+   ]
+  ]
+ },
+ {
+  "name": "line_hall",
+  "lang": "zh",
+  "text": "[whispering] 牛顿在讲课，可是教室里一个学生都没有。",
+  "voice": "shared:Lin",
+  "voice_id": "I23uc91tu5zY2PA1tKEN",
+  "model": "eleven_v4",
+  "status": 200,
+  "audio_effects": {
+   "environment_id": "hall",
+   "distance": 0.6
+  },
+  "file": "line_hall.mp3",
+  "bytes": 112474,
+  "heard": "扭斷在讲课可是教室里一个学生都没有",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.993,
+  "seconds": 6.96,
+  "scribe": "牛顿在讲课，可是教室里一个学生都没有。",
+  "scribe_model": "scribe_v3",
+  "scribe_lang": "zho",
+  "scribe_words": [
+   [
+    "牛",
+    0.26,
+    0.38
+   ],
+   [
+    "顿",
+    0.38,
+    0.58
+   ],
+   [
+    "在",
+    0.58,
+    0.74
+   ],
+   [
+    "讲",
+    0.74,
+    1.02
+   ],
+   [
+    "课",
+    1.16,
+    1.24
+   ],
+   [
+    "，",
+    1.24,
+    1.72
+   ],
+   [
+    "可",
+    1.74,
+    1.84
+   ],
+   [
+    "是",
+    1.84,
+    1.98
+   ],
+   [
+    "教",
+    1.98,
+    2.2
+   ],
+   [
+    "室",
+    2.2,
+    2.36
+   ],
+   [
+    "里",
+    2.36,
+    2.7
+   ],
+   [
+    "一",
+    2.72,
+    2.84
+   ],
+   [
+    "个",
+    2.92,
+    3.0
+   ],
+   [
+    "学",
+    3.0,
+    3.18
+   ],
+   [
+    "生",
+    3.18,
+    3.32
+   ],
+   [
+    "都",
+    3.34,
+    3.48
+   ],
+   [
+    "没",
+    3.48,
+    3.64
+   ],
+   [
+    "有",
+    3.64,
+    3.76
+   ],
+   [
+    "。",
+    3.76,
+    3.76
+   ]
+  ]
+ }
+]
