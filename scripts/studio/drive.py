@@ -33,7 +33,7 @@ def my_drive():
 
 def channel_of(lang, channels=None):
     ch = dict(CHANNELS); ch.update(channels or {})
-    return ch.get(lang) or ch["en"]
+    return ch.get(lang) or ch["zh"]   # Juno is the default channel
 
 
 def root(lang="zh", channels=None):

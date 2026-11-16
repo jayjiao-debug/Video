@@ -26,9 +26,12 @@ security add-generic-password -U -a "$USER" -s elevenlabs -w
 ## The one command
 
 ```bash
-~/Claude/studio/studio film newton --ref claude/newton-day          # the next version number, Chinese
-~/Claude/studio/studio film newton --ref 1a2b3c4 --version v7 --lang en
+~/Claude/studio/studio film newton --ref claude/newton-day          # the next version number
+~/Claude/studio/studio film newton --ref 1a2b3c4 --version v7
 ```
+
+Films are Chinese, for 抖音 (Juno), from 16 Nov 2026: no English dubs and no YouTube steps. `--lang en` still works
+for an old film but is not part of the pipeline.
 
 Steps, each with a clock-time estimate from its last run, all logged to `work/<film>/versions/<v>/log.txt`:
 
@@ -48,9 +51,9 @@ newest.
 **Google Drive.** When Google Drive for desktop is signed in on the Mac, `deliver` also copies the delivery into
 `My Drive/<channel>/<film>/<version>/`, waits for the upload (up to 15 minutes, `STUDIO_DRIVE_WAIT` seconds) and writes
 the Drive links of the folder, the master and the phone copy into `delivery.json` and `versions.md`; the run ends
-with one `DRIVE {...}` line a cloud thread can pass on. Channels stay apart by language: Chinese films (抖音, Juno)
-go in `My Drive/Juno/`, English films (YouTube, TinyEurekaFilms) in `My Drive/TinyEurekaFilms/`; a film config can
-say otherwise with `"drive": {"zh": "Juno", "en": "TinyEurekaFilms"}`. The links open for the Drive's own account
+with one `DRIVE {...}` line a cloud thread can pass on. Every film goes in `My Drive/Juno/` (the 抖音 channel), the
+default. `My Drive/TinyEurekaFilms/` is kept for the paused YouTube channel and only an English version would go
+there; a film config can say otherwise with `"drive": {"zh": "Juno", "en": "TinyEurekaFilms"}`. The links open for the Drive's own account
 (phone, laptop); sharing one wider is a separate step. `studio drive status`, `studio drive push <film> --version v7`
 (again, or later), `studio drive link <path>`. `--no-drive` or `STUDIO_DRIVE=off` keeps a delivery local.
 
