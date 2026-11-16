@@ -462,7 +462,7 @@
    "card_delay": 0.3,
    "card_hold": 3.0,
    "card": {
-    "zh": "真事：约 1 米 68，高于当时法国男人的平均。",
+    "zh": "真事：约1米68，高于当时法国男人的平均。",
     "en": "True: about 1.68 m, above the French average of his day."
    }
   },
@@ -560,7 +560,7 @@
    "card_delay": 1.4,
    "card_hold": 2.6,
    "card": {
-    "zh": "真事：1815年3月7日，拉弗雷。没有人开枪。",
+    "zh": "真事：1815年3月7日。没有一个人开枪。",
     "en": "True: Laffrey, 7 March 1815. Nobody fired."
    }
   },

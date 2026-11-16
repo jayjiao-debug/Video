@@ -47,8 +47,8 @@ export const SEG: Segment = {
       { f: L1("C14") + 6, pos: [X - 0.05, 1.5, 1.7], look: [X - 0.06, 1.2, -2.15], fov: 50 },
       { f: L0("C16"), pos: [X, 1.5, 1.6], look: [X + 0.1, 1.28, -2.0], fov: 44 },
       { f: lit, pos: [X, 1.5, 1.7], look: [X + 0.1, 1.28, -2.0], fov: 46 },
-      { f: lit + 70, pos: [X, 1.5, 2.6], look: [X, 2.6, -8], fov: 62 },
-      { f: S.to, pos: [X, 1.5, 2.9], look: [X, 3.0, -8], fov: 64 },
+      { f: lit + 40, pos: [X, 1.5, 2.6], look: [X, 3.5, -8], fov: 62 },
+      { f: S.to, pos: [X, 1.5, 2.9], look: [X, 3.7, -8], fov: 64 },
     ], {});
     return { camera };
   },

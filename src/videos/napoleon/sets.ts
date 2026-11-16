@@ -90,7 +90,7 @@ const BUILD: Record<Place, (K: Kit) => PlaceBuild> = {
     box("path", "#eef2f6", x - 40, x + 40, -0.6, 0, -3.4, 12, false);
     box("wall", "#77818e", x - 40, x + 40, 0, 14, -9, -4.1, false);
     for (let i = 0; i < 16; i++) { const bx = x - 30 + i * 4 + 2 * h01(i, 1); const m = box(`rock${i}`, ["#7f8996", "#99a3af", "#8a94a0"][i % 3], bx, bx + 2.2 + 1.6 * h01(i, 2), 0, 3 + 6 * h01(i, 3), -4.4 - 0.4 * h01(i, 4), -3.3 - 0.5 * h01(i, 5)); m.rotation.z = (h01(i, 12) - 0.5) * 0.16; ball(`cap${i}`, "#f4f7fa", bx + 1.3, 3.1 + 6 * h01(i, 3), -3.8, 1.3, 0.25); }
-    for (let i = 0; i < 9; i++) ball(`drift${i}`, "#f4f7fa", x - 16 + i * 4 + h01(i, 6), 0, -3.7, 0.9 + 0.4 * h01(i, 7), 0.32);
+    for (let i = 0; i < 9; i++) ball(`drift${i}`, "#f4f7fa", x - 16 + i * 4 + h01(i, 6), 0, -5.0, 0.9 + 0.4 * h01(i, 7), 0.32);
     for (let i = 0; i < 7; i++) cone(`peak${i}`, i % 2 ? "#dfe6ee" : "#c3cfdc", x - 36 + i * 12, 4, -40 - (i % 2) * 10, 13, 20 + (i % 3) * 6, 6);
     for (let i = 0; i < 14; i++) ball(`edge${i}`, "#e4eaf0", x - 14 + i * 2.1, -0.02, 2.9 + 0.3 * h01(i, 8), 0.5 + 0.3 * h01(i, 9), 0.3);
   }),

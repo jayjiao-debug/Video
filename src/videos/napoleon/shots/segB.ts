@@ -15,16 +15,16 @@ export const SEG: Segment = {
   pose(w, f) {
     w.setPlace("notredame");
     const take0 = L1("B09") + 6, take1 = take0 + 16, lift0 = L0("B10") + 6, on = L1("B10") + 22;
-    const held = V(PO.x - 0.22, 1.02, PO.z + 0.3);                                   // the crown in the Pope's hands
-    const mine = V(NP.x + 0.04, 1.02, NP.z + 0.3), up = V(NP.x, 1.5, NP.z + 0.34), headTop = V(NP.x, 1.72, NP.z);
+    const held = V(PO.x - 0.22, 0.72, PO.z + 0.3);                                   // the crown in the Pope's hands
+    const mine = V(NP.x + 0.04, 0.72, NP.z + 0.3), up = V(NP.x, 1.34, NP.z + 0.3), headTop = V(NP.x, 1.27, NP.z);
     const kTake = ramp(f, take0, take1), kLift = ramp(f, lift0, lift0 + 18), kOn = ramp(f, on - 10, on);
     const crown = mix(mix(mix(held, mine, kTake), up, kLift), headTop, kOn);
     const crowned = f >= on;
-    if (!crowned) w.prop("crown").put(crown, { yaw: 0.3 });
+    w.prop("crown").put(crown, { yaw: 0.3 * (1 - kOn) });
     const hands = kTake > 0.05 && !crowned ? [V(crown.x - 0.16, crown.y + 0.02, crown.z), V(crown.x + 0.16, crown.y + 0.02, crown.z)] : undefined;
-    const np = crowned ? NP_CROWNED : NP_SACRE;
+    const np = NP_SACRE;   // the laurel stays on under the crown, as it did that day
     fig(w, np, "", NP, yawTo(NP, ME) + 0.25 * (1 - ramp(f, lift0, lift0 + 12)), f, 1, "np", { expr: crowned ? "smug" : kTake > 0 ? "cool" : "stern", ...(hands ? { hands, armFront: [true, true] } : {}) });
-    w.actor(crowned ? NP_SACRE : NP_CROWNED).set({ visible: false } as never);
+    w.actor(NP_CROWNED).set({ visible: false } as never);
     fig(w, POPE, "", PO, yawTo(PO, NP) * 0.6 + yawTo(PO, ME) * 0.4, f, 2, undefined, { expr: kTake > 0.5 ? (crowned ? "speechless" : "shock") : "neutral", hands: [V(held.x - 0.16, held.y + 0.02, held.z), V(held.x + 0.16, held.y + 0.02, held.z)], armFront: [true, true] });
     const dv = V(X - 2.5, 0, -3.3); fig(w, DAVID, "", dv, yawTo(dv, NP), f, 3, undefined, { pose: { kind: "write", t: f / 30 }, expr: "focus" });
     [[-3.2, -5.2], [2.9, -5.0], [3.6, -3.8]].forEach(([x, z], i) => { const p = V(X + x, 0, z); fig(w, SECRETARY, `c${i}`, p, yawTo(p, NP), f, 5 + i, undefined, { expr: crowned ? "shock" : "neutral" }); });
@@ -32,9 +32,9 @@ export const SEG: Segment = {
       { f: S.from, pos: [X, 1.5, 2.6], look: [X + 0.3, 2.6, -8], fov: 62 },
       { f: L0("B08") + 20, pos: [X, 1.5, 1.8], look: [X + 0.3, 1.13, -2.4], fov: 52 },
       { f: take0, pos: [X, 1.5, 1.6], look: [X + 0.3, 1.08, -2.4], fov: 48 },
-      { f: lift0 + 18, pos: [X - 0.1, 1.5, 1.4], look: [NP.x + 0.1, 1.53, NP.z], fov: 42 },
-      { f: on + 30, pos: [X - 0.1, 1.5, 1.2], look: [NP.x + 0.2, 1.33, NP.z], fov: 40 },
-      { f: L1("B11") + 40, pos: [X + 0.1, 1.5, 1.3], look: [X + 0.35, 1.28, -2.4], fov: 46 },
+      { f: lift0 + 18, pos: [X - 0.1, 1.5, 1.4], look: [NP.x + 0.1, 1.2, NP.z], fov: 42 },
+      { f: on + 30, pos: [X - 0.1, 1.5, 1.2], look: [NP.x + 0.2, 1.12, NP.z], fov: 40 },
+      { f: L1("B11") + 40, pos: [X + 0.1, 1.5, 1.3], look: [X + 0.35, 0.98, -2.4], fov: 46 },
     ], {});
     return { camera };
   },

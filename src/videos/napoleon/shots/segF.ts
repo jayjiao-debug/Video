@@ -10,7 +10,7 @@ import { NP_CONSUL, GRENADIER } from "../people";
 import { ISLAND } from "../sets";
 import { seatOf } from "../props";
 
-const S = seg("F"), XL = ISLAND.laffrey, XW = ISLAND.waterloo;
+const S = seg("F"), XL = ISLAND.laffrey, XW = ISLAND.waterloo, ME_L = V(XL + 1.2, 1.5, 0.4);
 /** the first frame of Waterloo (the stamp covers the change) */
 export const WATERLOO_AT = L1("F31") + 34;
 export const STAMP_AT = L1("F31") + 22;
@@ -22,12 +22,12 @@ export const SEG: Segment = {
     const t = f / 30, q = saying("np", f);
     if (f < WATERLOO_AT) {
       w.setPlace("laffrey");
-      const go = L1("F28") + 10, drop = L1("F30") + 44;
-      const leg = walkAlong([V(XL + 0.5, 0, -0.9), V(XL, 0, -3.4)], 1.1, (f - go) / 30, { endFacing: Math.PI, startFacing: Math.PI });
-      const open = ramp(f, L0("F30") - 10, L0("F30") + 6);
+      const go = L1("F29") + 4, drop = L1("F30") + 44;
+      const leg = walkAlong([V(XL + 0.5, 0, -0.9), V(XL, 0, -3.4)], 1.5, (f - go) / 30, { endFacing: Math.PI, startFacing: Math.PI });
+      const open = ramp(f, L0("F30") - 10, L0("F30") + 6) * (1 - ramp(f, drop + 20, drop + 30));
       w.actor(NP_CONSUL).set({
-        visible: true, at: leg.at, facing: Math.PI, pose: leg.pose, turn: 1, ...alive(t, 1), expr: "stern", ...(q ? speak(q, f, 1) : {}),
-        ...(open > 0.05 ? { hands: [V(leg.at.x - 0.34 * open - 0.1, 1.05 + 0.1 * open, leg.at.z - 0.05), V(leg.at.x + 0.34 * open + 0.1, 1.05 + 0.1 * open, leg.at.z - 0.05)] } : {}),
+        visible: true, at: leg.at, facing: f < go ? yawTo(leg.at, V(XL + 0.2, 1.5, 2.4)) : Math.PI + (yawTo(leg.at, ME_L) - Math.PI) * ramp(f, drop + 30, drop + 44), pose: leg.pose, ...(f >= go && f < drop + 30 ? { turn: 1 } : {}), ...alive(t, 1), expr: "stern", ...(q ? speak(q, f, 1) : {}),
+        ...(open > 0.05 ? { hands: [V(leg.at.x + 0.34 * open + 0.1, 0.8 + 0.06 * open, leg.at.z - 0.16), V(leg.at.x - 0.34 * open - 0.1, 0.8 + 0.06 * open, leg.at.z - 0.16)] } : {}),
       } as never);
       const k = ramp(f, drop, drop + 12), cheer = f > drop + 16;
       for (let i = 0; i < 7; i++) {
@@ -41,7 +41,7 @@ export const SEG: Segment = {
         { f: go + 40, pos: [XL + 0.9, 1.5, 1.6], look: [XL - 0.2, 1.08, -4], fov: 50 },
         { f: L0("F30"), pos: [XL + 1.3, 1.5, 0.2], look: [XL - 0.3, 1.13, -4.2], fov: 46 },
         { f: drop, pos: [XL + 1.4, 1.5, -0.2], look: [XL - 0.3, 1.13, -4.4], fov: 42 },
-        { f: drop + 40, pos: [XL + 1.2, 1.5, 0.4], look: [XL - 0.2, 1.18, -4.6], fov: 52 },
+        { f: drop + 40, pos: [XL + 1.2, 1.5, 0.4], look: [XL - 0.2, 0.92, -4.6], fov: 52 },
       ], {});
       return { camera };
     }

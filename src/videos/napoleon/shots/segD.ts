@@ -34,25 +34,26 @@ export const SEG: Segment = {
       const p = V(X + pace, 0, -3.3);
       st = point ? { at: p, facing: yawTo(p, ME), pose: { kind: "point", t, arm: 0 } } : { at: p, facing: dir * Math.PI / 2, pose: { kind: "walk", phase: ((f - S.from) / 22) % 1, stride: 0.2 } };
     } else if (f < toTable) {
-      const leg = walkAlong([V(X + pace, 0, -3.3), V(X + 1.2, 0, -2.6), V(X + 1.0, 0, -1.75), DESK], 2.2, (f - toDesk) / 30, { endFacing: 0 });
+      const leg = walkAlong([V(X + 1.6 * Math.sin((toDesk - S.from) / 34), 0, -3.3), V(X + 1.3, 0, -3.35), V(X + 1.3, 0, -1.85), DESK], 3.2, (f - toDesk) / 30, { endFacing: 0 });
       st = { at: leg.at, facing: leg.facing, pose: leg.pose };
     } else {
       const leg = walkAlong([DESK, V(X + 0.2, 0, -1.2), TABLE], 2.0, (f - toTable) / 30, { endFacing: yawTo(TABLE, ME) });
       st = { at: leg.at, facing: leg.facing, pose: leg.pose };
     }
     const tall = ramp(f, L0("D24") - 2, L0("D24") + 6);
+    const eat = f >= L1("D19") - 4 && f < L1("D19") + 24 ? V(X - 0.62, 1.08, -1.74) : null;
     const cheat = f >= L1("D20") + 40 && f < L0("D23") - 10;
     const hand = V(X + TX - 0.2, TOP + 0.05, TZ - 0.28);
     const expr = f >= L0("D24") ? "rage" : f >= L0("D23") ? "huff" : f >= L0("D22") - 4 ? "smug" : f >= L0("D21") ? "deadpan" : f >= toTable ? "scheming" : "stern";
-    w.actor(NP_GREEN).set({ visible: true, ...st, ...alive(t, 1), expr, ...(q ? speak(q, f, 1) : {}), ...(cheat ? { hands: [hand, null], armFront: [true, undefined] } : {}), ...(tall > 0 ? { head: { dy: 0.12 * tall, scale: 1 + 0.05 * tall } } : {}) } as never);
+    w.actor(NP_GREEN).set({ visible: true, ...st, ...alive(t, 1), expr, ...(q ? speak(q, f, 1) : {}), ...(cheat ? { hands: [hand, null], armFront: [true, undefined] } : eat ? { hands: [eat, null], armFront: [true, undefined] } : {}), ...(tall > 0 ? { head: { dy: 0.12 * tall, scale: 1 + 0.05 * tall } } : {}) } as never);
     // dinner: a servant brings the plate; it is empty before he has let go
-    const serve0 = L0("D19") - 10, plateAt = V(X - 0.2 - 0.45, 0.79, -2.45);
+    const serve0 = L0("D19") - 30;
     if (f >= serve0 && f < toTable + 50) {
-      const leg = walkAlong([V(X - 5, 0, -1.6), V(X - 1.3, 0, -2.2)], 2.0, (f - serve0) / 30, { endFacing: Math.PI / 2 });
-      const sAt = leg.at, carried = !leg.arrived;
+      const leg = walkAlong([V(X - 5, 0, -1.6), V(X - 1.0, 0, -1.8)], 2.0, (f - serve0) / 30, { endFacing: Math.PI / 2 });
+      const sAt = leg.at;
       fig(w, SECRETARY, "sv", sAt, leg.facing, f, 7, undefined, { pose: leg.pose, expr: leg.arrived ? "shock" : "neutral" });
       const full = 1 - ramp(f, L1("D19") + 4, L1("D19") + 22);
-      w.prop("plate").put(carried ? V(sAt.x + 0.3, 1.1, sAt.z + 0.1) : plateAt, { full });
+      w.prop("plate").put(V(sAt.x + 0.34, 1.02, sAt.z + 0.06), { full });
     }
     // the cards and the print on the little table
     if (f >= toTable) {
@@ -65,8 +66,9 @@ export const SEG: Segment = {
     const camera = povCam(f, [
       { f: S.from, pos: [X, 1.5, 2.4], look: [X, 1.08, -3.6], fov: 60 },
       { f: L0("D18") + 16, pos: [X, 1.5, 2.2], look: [X + pace * 0.6, 1.18, -3.3], fov: 50 },
-      { f: toDesk + 30, pos: [X, 1.5, 2.0], look: [X - 0.3, 1.2, -2.0], fov: 46 },
-      { f: L1("D19") + 26, pos: [X, 1.5, 1.8], look: [X - 0.5, 1.0, -2.2], fov: 40 },
+      { f: toDesk + 24, pos: [X, 1.5, 2.0], look: [X + 0.7, 1.15, -2.4], fov: 50 },
+      { f: toDesk + 56, pos: [X, 1.5, 2.0], look: [X - 0.45, 1.1, -1.8], fov: 46 },
+      { f: L1("D19") + 26, pos: [X, 1.5, 1.8], look: [X - 0.5, 1.05, -1.8], fov: 40 },
       { f: toTable + 46, pos: [X + 0.3, 1.5, 1.5], look: [X + TX - 0.2, 1.18, TZ - 0.6], fov: 50 },
       { f: L0("D21") - 8, pos: [X + 0.3, 1.5, 1.5], look: [X + TX - 0.2, 1.18, TZ - 0.6], fov: 50 },
       { f: L0("D21") + 8, pos: [X + 0.5, 1.55, 1.1], look: tabLook, fov: 34 },
@@ -75,8 +77,8 @@ export const SEG: Segment = {
       { f: L0("D23") - 12, pos: [X + 0.3, 1.5, 1.4], look: [TABLE.x, 1.28, TABLE.z], fov: 42 },
       { f: L0("D23") + 4, pos: [X + 0.6, 1.55, 1.0], look: [X + TX + 0.12, TOP, TZ + 0.05], fov: 30 },
       { f: L1("D23") + 2, pos: [X + 0.6, 1.55, 1.0], look: [X + TX + 0.12, TOP, TZ + 0.05], fov: 30 },
-      { f: L0("D24") + 6, pos: [X + 0.3, 1.2, 1.5], look: [TABLE.x, 1.38, TABLE.z], fov: 44 },
-      { f: S.to, pos: [X + 0.3, 1.2, 1.6], look: [TABLE.x, 1.38, TABLE.z], fov: 46 },
+      { f: L0("D24") + 6, pos: [X + 0.3, 1.2, 1.5], look: [TABLE.x, 1.02, TABLE.z], fov: 44 },
+      { f: S.to, pos: [X + 0.3, 1.2, 1.6], look: [TABLE.x, 1.02, TABLE.z], fov: 46 },
     ], {});
     return { camera };
   },

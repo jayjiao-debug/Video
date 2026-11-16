@@ -1,0 +1,13 @@
+{
+  "film": "napoleon",
+  "composition": "NapoleonFilm",
+  "dir": "src/videos/napoleon",
+  "story": "story.ts",
+  "hooks": "kit.world.ts",
+  "entries": { "overlay": "Film.tsx", "segFile": "shots/seg{SEG}" },
+  "tsc": ["Film.tsx", "kit.world.ts"],
+  "domOnly": ["hud/"],
+  "langs": ["zh"],
+  "work": "/home/user/napoleon_work",
+  "qa": { "clearanceOut": "/home/user/napoleon_work/qa/clearance" }
+}

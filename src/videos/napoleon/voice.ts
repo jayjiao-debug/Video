@@ -154,8 +154,8 @@ export const CARD_RAW: [number, string, number, number, string, string][] = [
   [11, "B11", 1254, 1331, "真事：1804年，他给自己戴上了皇冠。", "True: in 1804 he crowned himself."],
   [16, "C16", 1836, 1925, "真事：那一夜，全军举着火把迎接他。", "True: on the eve of Austerlitz the army lit torches for him."],
   [22, "D22", 2461, 2541, "真事：他打牌下棋都作弊，人人都知道。", "True: he cheated at cards and chess, and everyone knew."],
-  [24, "D24", 2683, 2772, "真事：约 1 米 68，高于当时法国男人的平均。", "True: about 1.68 m, above the French average of his day."],
-  [30, "F30", 3657, 3734, "真事：1815年3月7日，拉弗雷。没有人开枪。", "True: Laffrey, 7 March 1815. Nobody fired."],
+  [24, "D24", 2683, 2772, "真事：约1米68，高于当时法国男人的平均。", "True: about 1.68 m, above the French average of his day."],
+  [30, "F30", 3657, 3734, "真事：1815年3月7日。没有一个人开枪。", "True: Laffrey, 7 March 1815. Nobody fired."],
   [35, "G35", 4349, 4429, "传说：查无出处，最早见于一百多年后。", "Legend: no source; it first appears over a century later."],
 ];
 /** the title block (PLAN 5): [first frame, last frame (inclusive), title zh, title en, subtitle zh, subtitle en]: on the
