@@ -8,7 +8,7 @@
 //   F44      好。四个人。 he drinks, then she sips (her cup tips toward the lens); the camera rises slowly to the moon under cards 4 and 5; her camera switches off.
 import * as THREE from "three";
 import { trackHead } from "../track";
-import { SEGMENTS, FPS, lineId, capWord, clamp01, lerp, smooth, h, type Segment, type CamPose } from "../story";
+import { SEGMENTS, FPS, lineId, capWord, smooth, h, type Segment, type CamPose } from "../story";
 import { BEAT } from "../beats";
 import * as C from "../cam";
 import { LI, LI_RED, HE } from "../people";
@@ -70,35 +70,6 @@ const MT = LI_TABLE;
 const HE_AT = rel(MT.at, MT.facing, 0.75, 0, 0.35), HE_F = yawTo(HE_AT, MT.at) - 0.3;
 const memoryCam = (f: number): CamPose => { void f; return aim(V(MT.at.x + 0.3, 1.36, MT.at.z + 2.1), rel(MT.at, MT.facing, 0.35, 0.95, 0), 840); };
 const PAPER = (f: number) => h("div", { key: "memPaper", style: { position: "absolute", left: 0, top: 0, width: 1080, height: 1920, background: "rgba(236,214,170,0.38)", boxShadow: "inset 0 0 220px 80px rgba(120,90,50,0.55)", opacity: 1, pointerEvents: "none" }, "data-f": f });
-
-// ------------------------------------------------------------------------------------------------ the end
-const OFF_MID = 960;
-const offBlack = (key: string, top: number, height: number) => h("div", { key, style: { position: "absolute", left: 0, top, width: 1080, height, background: "#000" } });
-const offLine = (hw: number, hh: number, a: number) => h("div", { key: "offLine", style: {
-  position: "absolute", left: 540 - hw, top: OFF_MID - hh, width: 2 * hw, height: 2 * hh, borderRadius: hh, background: "#fffaf0", opacity: a,
-  boxShadow: "0 0 10px 3px rgba(255,242,222,0.9), 0 0 34px 8px rgba(255,226,190,0.32)" } });
-const switchOff = (f: number) => {
-  const [c0, c1] = F.collapse, d0 = F.dot[0];
-  if (f < c0) return null;
-  if (f >= F.black) return offBlack("offBlack", 0, 1920);
-  const kids: ReturnType<typeof h>[] = [];
-  if (f <= c1) {
-    const k = (f - c0 + 1) / (c1 - c0 + 1), hh = Math.max(3, OFF_MID * (1 - smooth(k)));
-    const edge = 0.04 + 0.45 * k * k * k, mid = 0.08 + 0.8 * k * k * k, grey = 0.2 * k;
-    kids.push(
-      h("div", { key: "offGrey", style: { position: "absolute", left: 0, top: OFF_MID - hh, width: 1080, height: 2 * hh, background: `rgba(128,124,120,${grey.toFixed(3)})` } }),
-      h("div", { key: "offVeil", style: { position: "absolute", left: 0, top: OFF_MID - hh, width: 1080, height: 2 * hh,
-        background: `linear-gradient(to bottom, rgba(255,246,232,${edge.toFixed(3)}) 0%, rgba(255,246,232,${mid.toFixed(3)}) 50%, rgba(255,246,232,${edge.toFixed(3)}) 100%)` } }),
-      offBlack("offTop", 0, OFF_MID - hh), offBlack("offBottom", OFF_MID + hh, 1920 - OFF_MID - hh),
-    );
-    const la = clamp01((60 - hh) / 50);
-    if (la > 0) kids.push(offLine(540, 3, la));
-  } else {
-    const n = f - d0, u = smooth(Math.min(1, (n + 1) / 6)), a = n < 6 ? 1 : 1 - (n - 5) / 5;
-    kids.push(offBlack("offAll", 0, 1920), offLine(lerp(540, 7, u), lerp(3, 7, u * u), a));
-  }
-  return h("div", { key: "switchOff", style: { position: "absolute", left: 0, top: 0, width: 1080, height: 1920, overflow: "hidden" } }, ...kids);
-};
 
 // ------------------------------------------------------------------------------------------------ 李白 at night
 /** his hip on the stone (the seat is 0.17 m in front of the stone's middle) */
@@ -193,7 +164,7 @@ export const SEG: Segment = {
     if (hc) w.prop("wineBowl", "ji").put(hc.at, { rot: hc.rot });
     const off = f0 >= F.offClick;
     return {
-      camera, overlays: frag(transitionAt(f0)?.node, switchOff(f0)), slate: "F night",
+      camera, overlays: frag(transitionAt(f0)?.node), slate: "F night",   // the switch-off itself: hud/poweroff.tsx (wraps the film)
       ...(f0 >= F.collapse[0] ? { captions: false } : {}), ...(f0 >= F.black ? { hud: false } : {}), ...(off ? { clock: F.offClick / FPS } : {}),
     };
   },

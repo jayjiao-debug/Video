@@ -250,12 +250,13 @@
    "until": [
     "F",
     "to",
-    0
+    -0.3
    ],
    "gain": -22,
    "loop": true,
    "fade": 1.0,
-   "fade_out": 0.05
+   "fade_out": 1.6,
+   "note": "the night; it dims away with the switch-off (Jay, 16 Nov: not abrupt)"
   },
   {
    "clip": "mus_sad",
@@ -266,8 +267,8 @@
    ],
    "until": [
     "F44",
-    "end",
-    0.5
+    "start",
+    -1.0
    ],
    "gain": -24,
    "fade": 2.0,
@@ -278,41 +279,18 @@
    "clip": "mus_museum",
    "at": [
     "F44",
-    "end",
-    0.4
+    "start",
+    -2.0
    ],
    "until": [
     "F",
     "to",
-    -4.1666666666666625
-   ],
-   "gain": -22,
-   "fade": 0.8,
-   "fade_out": 2.0,
-   "note": "bittersweet under the two last cards; it thins and dims out before the camera switches off (Jay 15 Nov)"
-  },
-  {
-   "clip": "mus_museum",
-   "at": [
-    "F",
-    "to",
-    -6.1666666666666625
-   ],
-   "until": [
-    "F",
-    "to",
-    -1.5666666666666629
+    -2.6
    ],
    "gain": -22,
    "fade": 2.0,
-   "fade_out": 2.6,
-   "note": "the same music, thinned (no lows), fading to nothing as the REC lamp goes out",
-   "filter": "highpass=f=700,highpass=f=700",
-   "sync": [
-    "F44",
-    "end",
-    0.4
-   ]
+   "fade_out": 4.5,
+   "note": "bittersweet under his drink and the two last cards; it starts fading as he drinks and is gone about 1 s before the camera switches off (Jay, 16 Nov: \"music should start to fade out before the final switch so not very abrupt\")"
   }
  ],
  "hits": [

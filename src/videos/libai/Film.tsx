@@ -29,6 +29,7 @@ import { TitleBlock, FactCard, VlogHud, Caption } from "./hud";
 import { LeadCard, GaoBanner, leadIsolation, leadHold } from "./hud/intro";
 import { Isolation } from "./isolate";
 import { DoorCurtain } from "./hud/curtain";
+import { PowerOff } from "./hud/poweroff";
 import { LI } from "./people";
 import { aim, mixCam } from "./shots/lb";
 import { Whisper, whisperCapAt } from "./hud/whisper";
@@ -224,6 +225,7 @@ export const LibaiFilm: React.FC = () => {
   const onReady = useCallback(() => continueRender(handle), [handle]);
   React.useEffect(() => { if (OVONLY && world) continueRender(handle); }, [world, handle]); // ovonly has no <Inner> to release the world handle
   return (
+    <PowerOff f={f}>{/* THE SWITCH-OFF wraps everything: the whole frame folds into the middle (hud/poweroff.tsx) */}
     <AbsoluteFill style={{ background: OVONLY ? "transparent" : "#0d0e16" }}>
       <ThreeCanvas width={W} height={H} shadows="percentage" gl={GL_OPTS} camera={CAM_OPTS} onCreated={onCreated} style={OVONLY ? { visibility: "hidden" } : undefined}>
         {world && P && !OVONLY ? <Inner world={world} P={P} onReady={onReady} /> : null}
@@ -237,5 +239,6 @@ export const LibaiFilm: React.FC = () => {
       {P?.top && !NOOV ? <AbsoluteFill style={{ pointerEvents: "none" }}>{P.top}</AbsoluteFill> : null}
       {P && SLATE ? <Slate f={f} fz={fz} P={P} /> : null}
     </AbsoluteFill>
+    </PowerOff>
   );
 };
