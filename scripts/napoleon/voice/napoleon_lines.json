@@ -1,0 +1,891 @@
+{
+ "film": "napoleon",
+ "version": 1,
+ "source": "script_v1.md (16 Nov 2026), premise A 画里的他",
+ "title": {
+  "zh": "采访拿破仑的一天",
+  "en": "A Day Interviewing Napoleon"
+ },
+ "speakers": {
+  "ji": "记者 (the camera, never seen)",
+  "np": "拿破仑 Napoléon (French)",
+  "gd": "向导 Dorsaz (French)",
+  "dv": "大卫 David (French)"
+ },
+ "scenes": {
+  "A": {
+   "time": "1796年 · 阿尔科莱",
+   "en": "Arcole, 1796",
+   "place": "arcole"
+  },
+  "B": {
+   "time": "1800年 · 阿尔卑斯山",
+   "en": "The Alps, 1800",
+   "place": "alps"
+  },
+  "C": {
+   "time": "1804年 · 巴黎圣母院",
+   "en": "Notre-Dame, 1804",
+   "place": "notredame"
+  },
+  "D": {
+   "time": "约1805年 · 杜伊勒里宫",
+   "en": "The Tuileries, about 1805",
+   "place": "tuileries"
+  },
+  "E": {
+   "time": "1812年 · 俄国",
+   "en": "Russia, 1812",
+   "place": "russia"
+  },
+  "F": {
+   "time": "1815年 · 滑铁卢",
+   "en": "Waterloo, 1815",
+   "place": "waterloo"
+  },
+  "G": {
+   "time": "约1820年 · 圣赫勒拿岛",
+   "en": "Saint Helena, about 1820",
+   "place": "helena"
+  }
+ },
+ "gap": 0.2,
+ "lead": 0.1,
+ "engine": {
+  "spoken": {
+   "ji": "zh",
+   "np": "en",
+   "gd": "en",
+   "dv": "en"
+  },
+  "places": [
+   "arcole",
+   "alps",
+   "notredame",
+   "tuileries",
+   "russia",
+   "waterloo",
+   "helena"
+  ],
+  "rate_en": 2.6,
+  "title_after": "A07",
+  "title_delay": 0.5,
+  "title_hold": 2.2
+ },
+ "lines": [
+  {
+   "n": 1,
+   "id": "A01",
+   "scene": "A",
+   "who": "ji",
+   "zh": "将军？您不是在桥上吗？",
+   "en": "General? Were you not on the bridge?",
+   "screens": [
+    {
+     "zh": "将军？您不是在桥上吗？",
+     "en": "General? Were you not on the bridge?"
+    }
+   ],
+   "pre": 0.35,
+   "after": 0.25
+  },
+  {
+   "n": 2,
+   "id": "A02",
+   "scene": "A",
+   "who": "np",
+   "zh": "把我画在桥上。",
+   "en": "Peignez-moi sur le pont.",
+   "screens": [
+    {
+     "zh": "把我画在桥上。",
+     "en": "Peignez-moi sur le pont."
+    }
+   ],
+   "after": 3.3
+  },
+  {
+   "n": 3,
+   "id": "A03",
+   "scene": "A",
+   "who": "ji",
+   "zh": "可您刚掉河里。",
+   "en": "But you just fell in the river.",
+   "screens": [
+    {
+     "zh": "可您刚掉河里。",
+     "en": "But you just fell in the river."
+    }
+   ],
+   "pre": 0.5,
+   "after": 0.3
+  },
+  {
+   "n": 4,
+   "id": "A04",
+   "scene": "A",
+   "who": "np",
+   "zh": "低一点。",
+   "en": "Plus bas.",
+   "screens": [
+    {
+     "zh": "低一点。",
+     "en": "Plus bas."
+    }
+   ],
+   "after": 0.9
+  },
+  {
+   "n": 5,
+   "id": "A05",
+   "scene": "A",
+   "who": "np",
+   "zh": "从这儿看，我就在桥上。",
+   "en": "D'ici, je suis sur le pont.",
+   "screens": [
+    {
+     "zh": "从这儿看，我就在桥上。",
+     "en": "D'ici, je suis sur le pont."
+    }
+   ],
+   "after": 4.6,
+   "card_delay": 1.5,
+   "card_hold": 2.8,
+   "card": {
+    "zh": "真事：他举旗冲上了桥。没冲过去，被人群挤进了河里。",
+    "en": "True: he charged the bridge with the flag, failed, and was pushed into the water."
+   }
+  },
+  {
+   "n": 6,
+   "id": "A06",
+   "scene": "A",
+   "who": "ji",
+   "zh": "能量个身高吗？",
+   "en": "May I measure your height?",
+   "screens": [
+    {
+     "zh": "能量个身高吗？",
+     "en": "May I measure your height?"
+    }
+   ],
+   "after": 0.25
+  },
+  {
+   "n": 7,
+   "id": "A07",
+   "scene": "A",
+   "who": "np",
+   "zh": "上马。",
+   "en": "À cheval.",
+   "screens": [
+    {
+     "zh": "上马。",
+     "en": "À cheval."
+    }
+   ],
+   "after": 3.2
+  },
+  {
+   "n": 8,
+   "id": "B08",
+   "scene": "B",
+   "who": "ji",
+   "zh": "这是……骡子？",
+   "en": "Is that a mule?",
+   "screens": [
+    {
+     "zh": "这是……骡子？",
+     "en": "Is that a mule?"
+    }
+   ],
+   "pre": 1.6,
+   "after": 0.3
+  },
+  {
+   "n": 9,
+   "id": "B09",
+   "scene": "B",
+   "who": "np",
+   "zh": "马过不了这种路。",
+   "en": "Un cheval ne passe pas ici.",
+   "screens": [
+    {
+     "zh": "马过不了这种路。",
+     "en": "Un cheval ne passe pas ici."
+    }
+   ],
+   "after": 2.4
+  },
+  {
+   "n": 10,
+   "id": "B10",
+   "scene": "B",
+   "who": "np",
+   "zh": "你，这辈子想要什么？",
+   "en": "Toi. Que veux-tu, dans la vie ?",
+   "screens": [
+    {
+     "zh": "你，这辈子想要什么？",
+     "en": "Toi. Que veux-tu, dans la vie ?"
+    }
+   ],
+   "after": 0.4
+  },
+  {
+   "n": 11,
+   "id": "B11",
+   "scene": "B",
+   "who": "gd",
+   "zh": "一块地。一头牛。",
+   "en": "Une ferme. Une vache.",
+   "screens": [
+    {
+     "zh": "一块地。一头牛。",
+     "en": "Une ferme. Une vache."
+    }
+   ],
+   "after": 0.4
+  },
+  {
+   "n": 12,
+   "id": "B12",
+   "scene": "B",
+   "who": "np",
+   "zh": "给你了。",
+   "en": "Tu l'auras.",
+   "screens": [
+    {
+     "zh": "给你了。",
+     "en": "Tu l'auras."
+    }
+   ],
+   "after": 3.2,
+   "card_delay": 0.3,
+   "card_hold": 2.6,
+   "card": {
+    "zh": "真事：五个月后，他下令付给这位向导 1200 法郎。",
+    "en": "True: five months later he ordered 1,200 francs paid to the guide."
+   }
+  },
+  {
+   "n": 13,
+   "id": "B13",
+   "scene": "B",
+   "who": "ji",
+   "zh": "他人还挺好……",
+   "en": "He is rather kind.",
+   "screens": [
+    {
+     "zh": "他人还挺好……",
+     "en": "He is rather kind."
+    }
+   ],
+   "after": 0.4
+  },
+  {
+   "n": 14,
+   "id": "B14",
+   "scene": "B",
+   "who": "np",
+   "zh": "画师。画一匹烈马。我，要镇定。",
+   "en": "Peintre. Un cheval fougueux. Et moi, calme.",
+   "screens": [
+    {
+     "zh": "画师。画一匹烈马。我，要镇定。",
+     "en": "Peintre. Un cheval fougueux. Et moi, calme."
+    }
+   ],
+   "after": 0.3
+  },
+  {
+   "n": 15,
+   "id": "B15",
+   "scene": "B",
+   "who": "ji",
+   "zh": "可这是骡……",
+   "en": "But that is a mule.",
+   "screens": [
+    {
+     "zh": "可这是骡……",
+     "en": "But that is a mule."
+    }
+   ],
+   "after": 0.15
+  },
+  {
+   "n": 16,
+   "id": "B16",
+   "scene": "B",
+   "who": "np",
+   "zh": "没人会问伟人的画像像不像。",
+   "en": "Personne ne s'informe si les portraits des grands hommes sont ressemblants.",
+   "screens": [
+    {
+     "zh": "没人会问伟人的画像像不像。",
+     "en": "Personne ne s'informe si les portraits des grands hommes sont ressemblants."
+    }
+   ],
+   "after": 2.0
+  },
+  {
+   "n": 17,
+   "id": "B17",
+   "scene": "B",
+   "who": "ji",
+   "zh": "身高？",
+   "en": "Your height?",
+   "screens": [
+    {
+     "zh": "身高？",
+     "en": "Your height?"
+    }
+   ],
+   "after": 0.25
+  },
+  {
+   "n": 18,
+   "id": "B18",
+   "scene": "B",
+   "who": "np",
+   "zh": "我在马上。",
+   "en": "Je suis à cheval.",
+   "screens": [
+    {
+     "zh": "我在马上。",
+     "en": "Je suis à cheval."
+    }
+   ],
+   "after": 2.6
+  },
+  {
+   "n": 19,
+   "id": "C19",
+   "scene": "C",
+   "who": "ji",
+   "zh": "教皇不给您戴吗？",
+   "en": "Does the Pope not crown you?",
+   "screens": [
+    {
+     "zh": "教皇不给您戴吗？",
+     "en": "Does the Pope not crown you?"
+    }
+   ],
+   "pre": 1.8,
+   "after": 0.3
+  },
+  {
+   "n": 20,
+   "id": "C20",
+   "scene": "C",
+   "who": "np",
+   "zh": "我自己来。",
+   "en": "Je m'en charge.",
+   "screens": [
+    {
+     "zh": "我自己来。",
+     "en": "Je m'en charge."
+    }
+   ],
+   "after": 3.0
+  },
+  {
+   "n": 21,
+   "id": "C21",
+   "scene": "C",
+   "who": "ji",
+   "zh": "您母亲呢？",
+   "en": "Where is your mother?",
+   "screens": [
+    {
+     "zh": "您母亲呢？",
+     "en": "Where is your mother?"
+    }
+   ],
+   "after": 0.9
+  },
+  {
+   "n": 22,
+   "id": "C22",
+   "scene": "C",
+   "who": "np",
+   "zh": "……她在赌气。",
+   "en": "…Elle boude.",
+   "screens": [
+    {
+     "zh": "……她在赌气。",
+     "en": "…Elle boude."
+    }
+   ],
+   "after": 0.5
+  },
+  {
+   "n": 23,
+   "id": "C23",
+   "scene": "C",
+   "who": "np",
+   "zh": "大卫。把我母亲画上去。那儿，正中间。",
+   "en": "David. Mettez ma mère. Là. Au milieu.",
+   "screens": [
+    {
+     "zh": "大卫。把我母亲画上去。",
+     "en": "David. Mettez ma mère."
+    },
+    {
+     "zh": "那儿，正中间。",
+     "en": "Là. Au milieu."
+    }
+   ],
+   "after": 0.25
+  },
+  {
+   "n": 24,
+   "id": "C24",
+   "scene": "C",
+   "who": "dv",
+   "zh": "是，陛下。",
+   "en": "Oui, Sire.",
+   "screens": [
+    {
+     "zh": "是，陛下。",
+     "en": "Oui, Sire."
+    }
+   ],
+   "after": 1.8
+  },
+  {
+   "n": 25,
+   "id": "C25",
+   "scene": "C",
+   "who": "ji",
+   "zh": "这也行？",
+   "en": "Is that allowed?",
+   "screens": [
+    {
+     "zh": "这也行？",
+     "en": "Is that allowed?"
+    }
+   ],
+   "after": 0.4
+  },
+  {
+   "n": 26,
+   "id": "C26",
+   "scene": "C",
+   "who": "np",
+   "zh": "低一点。",
+   "en": "Plus bas.",
+   "screens": [
+    {
+     "zh": "低一点。",
+     "en": "Plus bas."
+    }
+   ],
+   "after": 0.9
+  },
+  {
+   "n": 27,
+   "id": "C27",
+   "scene": "C",
+   "who": "ji",
+   "zh": "现在能量了吗？",
+   "en": "May I measure now?",
+   "screens": [
+    {
+     "zh": "现在能量了吗？",
+     "en": "May I measure now?"
+    }
+   ],
+   "after": 0.3
+  },
+  {
+   "n": 28,
+   "id": "C28",
+   "scene": "C",
+   "who": "np",
+   "zh": "我在宝座上。",
+   "en": "Je suis sur un trône.",
+   "screens": [
+    {
+     "zh": "我在宝座上。",
+     "en": "Je suis sur un trône."
+    }
+   ],
+   "after": 2.6
+  },
+  {
+   "n": 29,
+   "id": "D29",
+   "scene": "D",
+   "who": "ji",
+   "zh": "您吃这么快？",
+   "en": "You eat this fast?",
+   "screens": [
+    {
+     "zh": "您吃这么快？",
+     "en": "You eat this fast?"
+    }
+   ],
+   "pre": 1.6,
+   "after": 0.3
+  },
+  {
+   "n": 30,
+   "id": "D30",
+   "scene": "D",
+   "who": "np",
+   "zh": "……逗号。十二分钟。已经太久了。",
+   "en": "…virgule. Douze minutes. C'est déjà trop.",
+   "screens": [
+    {
+     "zh": "……逗号。十二分钟。已经太久了。",
+     "en": "…virgule. Douze minutes. C'est déjà trop."
+    }
+   ],
+   "after": 2.0
+  },
+  {
+   "n": 31,
+   "id": "D31",
+   "scene": "D",
+   "who": "ji",
+   "zh": "这是您？",
+   "en": "Is this you?",
+   "screens": [
+    {
+     "zh": "这是您？",
+     "en": "Is this you?"
+    }
+   ],
+   "after": 0.3
+  },
+  {
+   "n": 32,
+   "id": "D32",
+   "scene": "D",
+   "who": "np",
+   "zh": "英国人画的。",
+   "en": "Les Anglais.",
+   "screens": [
+    {
+     "zh": "英国人画的。",
+     "en": "Les Anglais."
+    }
+   ],
+   "after": 0.4
+  },
+  {
+   "n": 33,
+   "id": "D33",
+   "scene": "D",
+   "who": "ji",
+   "zh": "好小。",
+   "en": "So small.",
+   "screens": [
+    {
+     "zh": "好小。",
+     "en": "So small."
+    }
+   ],
+   "after": 0.3
+  },
+  {
+   "n": 34,
+   "id": "D34",
+   "scene": "D",
+   "who": "np",
+   "zh": "五尺二寸！法国尺！",
+   "en": "Cinq pieds deux pouces ! Mesure française !",
+   "screens": [
+    {
+     "zh": "五尺二寸！法国尺！",
+     "en": "Cinq pieds deux pouces ! Mesure française !"
+    }
+   ],
+   "after": 4.4,
+   "card_delay": 0.3,
+   "card_hold": 4.0,
+   "card": {
+    "zh": "真事：法国的 5 尺 2 寸，约 1 米 68，比当时的法国男人还高一点。英国人按自己的尺子读成了“5 英尺 2”。",
+    "en": "True: 5 pieds 2 pouces is about 1.68 m; read in English feet it became 5 ft 2."
+   }
+  },
+  {
+   "n": 35,
+   "id": "D35",
+   "scene": "D",
+   "who": "ji",
+   "zh": "那量一下？",
+   "en": "Shall we measure?",
+   "screens": [
+    {
+     "zh": "那量一下？",
+     "en": "Shall we measure?"
+    }
+   ],
+   "after": 0.25
+  },
+  {
+   "n": 36,
+   "id": "D36",
+   "scene": "D",
+   "who": "np",
+   "zh": "没空。去俄国。",
+   "en": "Pas le temps. La Russie.",
+   "screens": [
+    {
+     "zh": "没空。去俄国。",
+     "en": "Pas le temps. La Russie."
+    }
+   ],
+   "after": 3.0
+  },
+  {
+   "n": 37,
+   "id": "E37",
+   "scene": "E",
+   "who": "ji",
+   "zh": "这段……怎么画？",
+   "en": "How shall this be painted?",
+   "screens": [
+    {
+     "zh": "这段……怎么画？",
+     "en": "How shall this be painted?"
+    }
+   ],
+   "pre": 3.0,
+   "after": 2.6
+  },
+  {
+   "n": 38,
+   "id": "E38",
+   "scene": "E",
+   "who": "np",
+   "zh": "从伟大到可笑……只差一步。",
+   "en": "Du sublime au ridicule… il n'y a qu'un pas.",
+   "screens": [
+    {
+     "zh": "从伟大到可笑……只差一步。",
+     "en": "Du sublime au ridicule… il n'y a qu'un pas."
+    }
+   ],
+   "after": 3.6
+  },
+  {
+   "n": 39,
+   "id": "F39",
+   "scene": "F",
+   "who": "ji",
+   "zh": "陛下……",
+   "en": "Sire…",
+   "screens": [
+    {
+     "zh": "陛下……",
+     "en": "Sire…"
+    }
+   ],
+   "pre": 3.0,
+   "after": 1.0
+  },
+  {
+   "n": 40,
+   "id": "F40",
+   "scene": "F",
+   "who": "np",
+   "zh": "画……",
+   "en": "Peignez…",
+   "screens": [
+    {
+     "zh": "画……",
+     "en": "Peignez…"
+    }
+   ],
+   "after": 1.6
+  },
+  {
+   "n": 41,
+   "id": "F41",
+   "scene": "F",
+   "who": "np",
+   "zh": "……不。",
+   "en": "…Non.",
+   "screens": [
+    {
+     "zh": "……不。",
+     "en": "…Non."
+    }
+   ],
+   "after": 4.5
+  },
+  {
+   "n": 42,
+   "id": "G42",
+   "scene": "G",
+   "who": "ji",
+   "zh": "您在……种菜？",
+   "en": "You are gardening?",
+   "screens": [
+    {
+     "zh": "您在……种菜？",
+     "en": "You are gardening?"
+    }
+   ],
+   "pre": 3.0,
+   "after": 0.4
+  },
+  {
+   "n": 43,
+   "id": "G43",
+   "scene": "G",
+   "who": "np",
+   "zh": "豆子。比我的元帅听话。",
+   "en": "Des haricots. Ils obéissent mieux que mes maréchaux.",
+   "screens": [
+    {
+     "zh": "豆子。比我的元帅听话。",
+     "en": "Des haricots. Ils obéissent mieux que mes maréchaux."
+    }
+   ],
+   "after": 1.0
+  },
+  {
+   "n": 44,
+   "id": "G44",
+   "scene": "G",
+   "who": "ji",
+   "zh": "还有画师吗？",
+   "en": "Are there painters still?",
+   "screens": [
+    {
+     "zh": "还有画师吗？",
+     "en": "Are there painters still?"
+    }
+   ],
+   "after": 0.8
+  },
+  {
+   "n": 45,
+   "id": "G45",
+   "scene": "G",
+   "who": "np",
+   "zh": "没有画师了。只剩你了。",
+   "en": "Plus de peintres. Il n'y a que vous.",
+   "screens": [
+    {
+     "zh": "没有画师了。只剩你了。",
+     "en": "Plus de peintres. Il n'y a que vous."
+    }
+   ],
+   "after": 1.6
+  },
+  {
+   "n": 46,
+   "id": "G46",
+   "scene": "G",
+   "who": "ji",
+   "zh": "那……什么会留下？",
+   "en": "Then what will remain?",
+   "screens": [
+    {
+     "zh": "那……什么会留下？",
+     "en": "Then what will remain?"
+    }
+   ],
+   "after": 0.9
+  },
+  {
+   "n": 47,
+   "id": "G47",
+   "scene": "G",
+   "who": "np",
+   "zh": "不是我那四十场胜仗。滑铁卢会把它们抹掉。",
+   "en": "Pas mes quarante batailles. Waterloo les effacera.",
+   "screens": [
+    {
+     "zh": "不是我那四十场胜仗。",
+     "en": "Pas mes quarante batailles."
+    },
+    {
+     "zh": "滑铁卢会把它们抹掉。",
+     "en": "Waterloo les effacera."
+    }
+   ],
+   "after": 0.7
+  },
+  {
+   "n": 48,
+   "id": "G48",
+   "scene": "G",
+   "who": "np",
+   "zh": "留下来的……是我的法典。",
+   "en": "Ce qui restera… c'est mon Code civil.",
+   "screens": [
+    {
+     "zh": "留下来的……是我的法典。",
+     "en": "Ce qui restera… c'est mon Code civil."
+    }
+   ],
+   "after": 5.0
+  },
+  {
+   "n": 49,
+   "id": "G49",
+   "scene": "G",
+   "who": "np",
+   "zh": "来吧。量。",
+   "en": "Allez. Mesurez.",
+   "screens": [
+    {
+     "zh": "来吧。量。",
+     "en": "Allez. Mesurez."
+    }
+   ],
+   "after": 3.0
+  },
+  {
+   "n": 50,
+   "id": "G50",
+   "scene": "G",
+   "who": "ji",
+   "zh": "一米六八。不矮啊。",
+   "en": "One metre sixty-eight. Not short.",
+   "screens": [
+    {
+     "zh": "一米六八。不矮啊。",
+     "en": "One metre sixty-eight. Not short."
+    }
+   ],
+   "after": 0.4
+  },
+  {
+   "n": 51,
+   "id": "G51",
+   "scene": "G",
+   "who": "np",
+   "zh": "我一直这么说。",
+   "en": "Je l'ai toujours dit.",
+   "screens": [
+    {
+     "zh": "我一直这么说。",
+     "en": "Je l'ai toujours dit."
+    }
+   ],
+   "after": 0.8
+  },
+  {
+   "n": 52,
+   "id": "G52",
+   "scene": "G",
+   "who": "np",
+   "zh": "……低一点。",
+   "en": "…Plus bas.",
+   "screens": [
+    {
+     "zh": "……低一点。",
+     "en": "…Plus bas."
+    }
+   ],
+   "after": 2.2
+  }
+ ]
+}

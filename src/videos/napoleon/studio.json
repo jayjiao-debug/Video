@@ -1,0 +1,7 @@
+{
+  "film": "napoleon",
+  "note": "the Mac studio's commands for this film (scripts/studio). Placeholders: {VOICE} the voice folder on the Mac, {CLIPS} the sound clips, {MIX} the output wav, {STEM} and {GROUP} for stems. Key names to confirm against scripts/studio when it lands in the repo.",
+  "timing": "python3 scripts/kit/day/gen_timing.py --film napoleon {VOICE}/voice_timing.json",
+  "sound": "python3 scripts/kit/day/sound/build.py --film napoleon --voice {VOICE} --clips {CLIPS} --out {MIX}",
+  "stem": "python3 scripts/kit/day/sound/build.py --film napoleon --voice {VOICE} --clips {CLIPS} --out {STEM} --only {GROUP} --nosafety"
+}
