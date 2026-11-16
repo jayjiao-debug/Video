@@ -34,7 +34,7 @@ const PEONIES = [V(TX - 1.35, 0, -1.6), V(TX + 1.75, 0, -1.9), V(TX - 1.0, 0, 0.
  *    boot     held, still (the room goes silent while 高力士 kneels)
  *    glare    高力士 turns and glares into the lens: snap in on him, landing on the glare, held a second
  *    C22      back to the two of them for her whisper (whisper.ts: the lean, he carries on); card 3; the whip out */
-const CAM0 = V(TX + 0.5, 1.36, 1.75);
+const CAM0 = V(TX + 1.0, 1.36, 1.75);
 /** HE WRITES ON THE PAGE (Jay, 15 Nov: "he is holding the brush wrong, also he isnt writing on the page but instead the
  *  table": the rig's own writing hand worked at the desk's near edge, 0.2 m short of the sheet, and the brush stood in
  *  his fist tip up). The sheet now lies in front of him, within reach; his right hand is pinned over the cell being
@@ -70,12 +70,18 @@ const brushHand = (f: number) => {
 };
 const GAO_HEAD = V(TX + 0.95, 1.5, -1.05);
 
+/** C21: how far she turns with his look toward 高力士 (deg): 5 pushed 李白 to the frame's edge */
+const TURN = 0;
 const cam = (f: number): CamPose => {
-  const two = aim(CAM0, HEAD.clone().add(V(0.32, -0.1, 0)), 880, 520);
+  // (Jay, 16 Nov: "the camera is off center from the character": the pair sits in the middle of the frame, 李白 near
+  //  x 350 and 高力士 near x 800 for the whole scene, from half a metre further right so the pair fills the middle;
+  //  before, from C21 on she turned 5 deg toward 高力士 and 李白 sat
+  //  at x 180, against the left edge)
+  const two = aim(CAM0, HEAD.clone().add(V(0.32, -0.1, 0)), 880, 535);
   let c = C.slowPush(two, f, L20.from, L20.to, 0.35);
   // C21: with his look toward 高力士
   const turn = ramp(f, Cb.foot - 8, Cb.foot + 10);
-  if (turn) c = C.nudge(c, { yaw: 5 * turn });
+  if (turn) c = C.nudge(c, { yaw: TURN * turn });
   // the glare: onto 高力士's face, landing on the glare, then back for her whisper
   const g = ramp(f, Cb.glare - 5, Cb.glare) * (1 - ramp(f, lineId("C22").from - 14, lineId("C22").from - 2));
   if (g) c = mixCam(c, { ...aim(CAM0, GAO_HEAD, 760, 560), fov: c.fov * 0.7 }, g);

@@ -20,14 +20,17 @@ const S = SEGMENTS[4], E = BEAT.E, T = LI_TABLE;
 const L28 = lineId("E28"), L33 = lineId("E33");
 const HEAD = rel(T.at, T.facing, 0, 0.98, 0);
 /** THE CAMERA PLAN (one take):
- *    open     the full tavern at evening, him at his table right of centre, the gold coming out of the chest
+ *    open     the full tavern at evening, him at his table on the centre line (Jay, 16 Nov: "the camera is off center
+ *             from the character"), the gold coming out of the chest
  *    今天我请  E28: snap zoom landing on 我请, held through the cheer
  *    E29      her whisper (the gold heap on the table in front of him, nearly gone)
  *    E31      三百六十日: snap zoom landing on 三百, held to her question; E32 her whisper
  *    E33      his friend gets up and goes: she pans with him to the door and back
  *    lamps    the lamps go out one by one: she tilts up to the last lamp as it dies; the cut to F matches it to the
  *             moon (the join) */
-const CAM0 = V(T.at.x - 0.6, 1.38, T.at.z + 2.3);
+/** CAM0: where she ends, looking up at the last lamp (the match cut to F's moon was measured from here: do not move
+ *  it). CAM_HIM: where she stands for the scene, in front of him; SX puts his head on the centre line (head probe). */
+const CAM0 = V(T.at.x - 0.6, 1.38, T.at.z + 2.3), CAM_HIM = V(T.at.x - 0.2, 1.38, T.at.z + 2.3), SX = 500, PAN_YOU = 9;
 /** the friend sits at his left, on a cushion of his own */
 const YOU_SEAT = { ...T, at: rel(T.at, T.facing, 0.8, 0, -0.05), seat: { ...T.seat, top: rel(T.seat.top, T.facing, 0.8, 0, -0.05) }, facing: T.facing - 0.7 } as typeof T;
 const DOOR = ROOM.door;
@@ -86,10 +89,10 @@ export const LAMP_SCREEN = { sx: 640, sy: 520 };
  *  the 1920 reference, film y + 60): segF puts the moon's disc there */
 export const LAMP_BODY = { sx: 637, sy: 630 };
 const cam = (f: number): CamPose => {
-  let c = aim(CAM0, HEAD.clone().add(V(0.0, -0.12, 0)), 860, 640);
+  let c = aim(CAM_HIM, HEAD.clone().add(V(0.0, -0.12, 0)), 860, SX);
   c = C.snap(c, f, capWord("E28", "我请").from, lineId("E28").to + 24);
   c = C.snap(c, f, E.poem, lineId("E32").from - 4, { k: 0.75 });
-  if (f >= youGo) c = C.nudge(c, { yaw: 14 * ramp(f, youGo, youGo + 30) * (1 - ramp(f, youGo + 50, youGo + 75)) });
+  if (f >= youGo) c = C.nudge(c, { yaw: PAN_YOU * ramp(f, youGo, youGo + 30) * (1 - ramp(f, youGo + 50, youGo + 75)) });
   const up = ramp(f, youGo + 44, youGo + 66);
   if (up) c = mixCam(c, aim(CAM0, LAST_LAMP, LAMP_SCREEN.sy, LAMP_SCREEN.sx), up);
   c = C.handheld(c, f, { mood: f >= E.cheer - 4 && f < E.cheer + 40 ? "excited" : "calm", amp: f >= youGo ? 0.4 : 0.7 });

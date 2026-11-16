@@ -29,7 +29,7 @@ const L4 = lineId("A04"), L5 = lineId("A05"), L8 = lineId("A08");
 /** his head when seated upright (about) */
 const HEAD = rel(T.at, T.facing, 0, 0.98, 0.0);
 /** THE CAMERA PLAN (one take, still unless something gives her a reason):
- *    open     from his front left, him RIGHT of centre (the title's wine flag hangs on the left), the table filling the
+ *    open     from in front of him, him on the centre line (16 Nov), the table filling the
  *             foot of the frame; her breathing only. The knocks: a small jolt each.
  *    月亮      A02: he leans right up to the lens, so she leans in too: the scene's one extreme close (his card freezes
  *             on it).
@@ -37,7 +37,12 @@ const HEAD = rel(T.at, T.facing, 0, 0.98, 0.0);
  *    早酒      A06: snap zoom landing on 早酒, held to her next question.
  *    aside    A09: the whisper (whisper.ts): a small lean in and a tip, he carries on.
  *    card 1   held while he drinks; the last 4 frames whip right (the join). */
-const CAM0 = V(T.at.x - 0.62, 1.36, T.at.z + 1.95), CAM_IN = V(T.at.x - 0.06, 1.16, T.at.z + 0.72);
+const CAM0 = V(T.at.x - 0.2, 1.36, T.at.z + 1.95), CAM_IN = V(T.at.x - 0.06, 1.16, T.at.z + 0.72);
+/** CENTRED (Jay, 16 Nov: "the camera is off center from the character, creating that odd feeling"): she stands in
+ *  front of him, not half a metre to his side, and he sits on the frame's centre line. The screen x handed to aim() is
+ *  where his UPRIGHT SEAT's head point lands; his real head sits a little right of it (his lean), measured with the
+ *  head probe: these values put the head itself on x 540. */
+const SX_WIDE = 505, SX_CLOSE = 372;
 
 /** the jar: on the table in front of him (hugged), lifted to the lens on A04, back down, up to his mouth on the card */
 const JAR_TABLE = T.on(0, 0.1).add(V(0, 0.17 * 0.72, 0));
@@ -54,11 +59,11 @@ const jarAt = (f: number) => {
  *  knocks. The 1.6 s it takes were added in front of the voice (voice_timing_v6: every line 48 frames later). */
 const DOOR = V(RX + 3.25, 1.5, 0.85), GO = 10, ARRIVE = A.knock[0] - 4;
 const cam = (f: number): CamPose => {
-  const wide0 = aim(CAM0, HEAD.clone().add(V(0, -0.1, 0)), 860, 680);
+  const wide0 = aim(CAM0, HEAD.clone().add(V(0, -0.1, 0)), 860, SX_WIDE);
   // she stands at the door curtain (hud/curtain.tsx) until it parts, then walks: a steady pace, eased at both ends
   const u = Math.min(1, Math.max(0, (f - GO) / (ARRIVE - GO))), walkK = 0.5 * (u + u * u * (3 - 2 * u));
   const wide = f < ARRIVE ? mixCam(aim(DOOR, V(T.at.x, 1.05, T.at.z + 0.55), 900, 560), wide0, walkK) : wide0;
-  const close = aim(CAM_IN, HEAD.clone().add(V(0, -0.06, 0)), 800, 550);
+  const close = aim(CAM_IN, HEAD.clone().add(V(0, -0.06, 0)), 800, SX_CLOSE);
   const inK = ramp(f, A.lean - 6, A.lean + 12) * (1 - ramp(f, L4.from - 9, L4.from - 3));
   let c = mixCam(wide, close, inK);
   c = C.handheld(c, f, { mood: "calm", amp: 0.7, walk: [[GO - 4, 0], [GO + 6, 1], [ARRIVE - 12, 1], [ARRIVE, 0]] });

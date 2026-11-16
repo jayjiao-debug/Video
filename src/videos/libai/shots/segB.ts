@@ -16,7 +16,7 @@ import { benchSeat, FOOT_LIFT } from "../props";
 import { transitionAt } from "../hud";
 import type { World } from "../world";
 import { V, rel, yawTo, lid, says, accent, heads, headPop, at, walkAlong, seated } from "./common";
-import { aim, ramp, held, type St } from "./lb";
+import { aim, ramp, held, mixCam, type St } from "./lb";
 import { clamp01 } from "../story";
 import { setSeat } from "../../../kit/acc/garb";
 import { trackHead } from "../track";
@@ -51,19 +51,33 @@ const dageAt = (f: number) => {
   return DG.at.clone().setY(-0.9 * k * k);
 };
 /** THE CAMERA PLAN (one take):
- *    open     the whip lands on him on the bench, a little from below (he is about to boast), him right of centre
+ *    open     the whip lands on him on the bench, a little from below (he is about to boast), him on the centre line
+ *             (Jay, 16 Nov: "the camera is off center from the character"): she stands in front of him
  *    翰林待诏  B11: snap zoom landing on the title, held through her question
- *    run      the messenger runs in from the street: she pans left to meet him, and back to 李白 when he answers
+ *    run      the messenger runs in from the street: she pans left to meet him (大哥 at the frame's left edge), then
+ *             steps back and to the side as he arrives so BOTH men stand inside the frame (before, the two faces were
+ *             cut by its two edges), and back to 李白 when he answers
  *    splash   the second eunuch lifts the basin: she steps back (the place does something to him), the water hits
  *             (a jolt), then a snap in on his dripping grin
  *    card 2   held; the scene ends on the clock race (the join to C) */
-const CAM0 = rel(SEAT.at, SEAT.facing, 0.3, 1.24, 2.05);
+const CAM0 = rel(SEAT.at, SEAT.facing, 0.1, 1.24, 2.05);
+/** the aim's screen x that puts his HEAD on the centre line (measured with the head probe) */
+const SX = 498;
+/** the two-shot when the messenger has arrived: from further back, between the two men */
+const CAM_PAIR = rel(SEAT.at, SEAT.facing, -0.4, 1.3, 2.95), PAIR_MID = rel(SEAT.at, SEAT.facing, -0.47, 1.22, 0.2);
+/** the messenger is at his mark 8.37 m of path later (HUAN_SPEED) */
+const HUAN_ARRIVE = huanGo + Math.round((8.37 / HUAN_SPEED) * FPS);
 
+/** the pan to the street (deg): 大哥 lands at the frame's left edge, as before */
+const PAN = 15.8;
 const cam = (f: number): CamPose => {
-  let c = aim(CAM0, HEAD.clone().add(V(0, -0.38, 0)), 1010, 580);
+  let c = aim(CAM0, HEAD.clone().add(V(0, -0.38, 0)), 1010, SX);
   // the run: a pan left to meet the messenger, then back when 李白 answers
-  const k = ramp(f, B.run[0] - 4, B.run[0] + 12) * (1 - ramp(f, L17.from - 16, L17.from - 2));
-  if (k) c = C.nudge(c, { yaw: -11 * k });
+  const back17 = 1 - ramp(f, L17.from - 16, L17.from - 2);
+  const k = ramp(f, B.run[0] - 4, B.run[0] + 12) * back17;
+  if (k) c = C.nudge(c, { yaw: -PAN * k });
+  const pair = ramp(f, HUAN_ARRIVE - 34, HUAN_ARRIVE - 8) * back17;
+  if (pair) c = mixCam(c, aim(CAM_PAIR, PAIR_MID, 640, 540), pair);
   // the splash: she steps back as the basin comes up, then pushes in again on the grin
   const back = ramp(f, B.splash - 18, B.splash - 6) * (1 - ramp(f, B.drip - 6, B.drip + 4));
   if (back) c = C.nudge(c, { fwd: -0.7 * back });

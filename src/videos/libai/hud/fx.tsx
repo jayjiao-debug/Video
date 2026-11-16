@@ -51,7 +51,9 @@ const GRUDGE = [Cb.glare + 4, lineId("C22").from + 10] as const;
 /** her three knocks (beats.ts A.knock): each 咚 pops up off the table's near left, where the invisible hand raps the
  *  wood (the still of frame 80: the table top fills x 240..1080, y 1290..1650 there), tipped a little, a flat ring
  *  spreading on the wood under it. Each lives 11 frames; the last is gone before A01's subtitle. */
-const KNOCK_AT: [number, number, number][] = [[340, 1392, -10], [480, 1348, 6], [620, 1396, -4]];
+/** on the free table top at his right hand side of the frame's left (16 Nov: the camera now stands in front of him, so the
+ *  jar he hugs fills the table's middle: the knocks land on the bare boards left of it) */
+const KNOCK_AT: [number, number, number][] = [[204, 1392, -10], [288, 1348, 6], [372, 1396, -4]];
 const KNOCK_LIFE = 11;
 const KnockFx: React.FC<{ f: number }> = ({ f }) => {
   if (f < A.knock[0] || f > A.knock[A.knock.length - 1] + KNOCK_LIFE) return null;
@@ -245,7 +247,7 @@ export const Fx: React.FC<{ f: number }> = ({ f }) => (
 
 /** the effects for the overlay check (checkOverlays): their spans and boxes */
 export const fxShown = (): Shown[] => [
-  { what: "knocks 咚", kind: "effect", from: A.knock[0], to: A.knock[A.knock.length - 1] + KNOCK_LIFE, rect: () => ({ x0: 250, y0: 1262, x1: 712, y1: 1486 }), scene: "A" },
+  { what: "knocks 咚", kind: "effect", from: A.knock[0], to: A.knock[A.knock.length - 1] + KNOCK_LIFE, rect: () => ({ x0: 114, y0: 1262, x1: 464, y1: 1486 }), scene: "A" },
   { what: "cup counter", kind: "effect", from: CUPS_IN, to: CUPS_OUT, rect: () => ({ x0: CC.x0 - 20, y0: CC.y0 - 10, x1: CC.x1 + 4, y1: CC.y1 + 60 }) },
   { what: "cup counter (the last cup)", kind: "effect", from: SIP_IN, to: SIP_OUT, rect: () => ({ x0: CC.x0 - 20, y0: CC.y0 - 10, x1: CC.x1 + 4, y1: CC.y1 + 60 }), scene: "F" },
   { what: "记者OS (the moon)", kind: "effect", from: MOON_OS[0], to: MOON_OS[1], rect: () => ({ x0: MO.x0 - 6, y0: MO.y0 - 24, x1: MO.x1 + 10, y1: MO.y1 + 60 }), scene: "A" },
