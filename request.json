@@ -1,15 +1,4 @@
 {
- "id": "el-upgrade-test-01",
- "model_prefs": ["eleven_v4"],
- "scribe": true,
- "tag": true,
- "items": [
-  {"type": "effects_catalog", "name": "catalog"},
-  {"type": "sfx", "name": "snore_v2", "model": "eleven_text_to_sound_v2", "duration": 1.5, "influence": 0.5, "text": "One muffled snore of an old man asleep behind a closed wooden door: a fluttering inhale snore and a short breath out. No music."},
-  {"type": "sfx", "name": "snore_v3", "model": "eleven_text_to_sound_v3", "duration": 1.5, "influence": 0.5, "text": "One muffled snore of an old man asleep behind a closed wooden door: a fluttering inhale snore and a short breath out. No music."},
-  {"type": "sfx", "name": "sigh_v2", "model": "eleven_text_to_sound_v2", "duration": 1.0, "influence": 0.5, "text": "A tired young man's sigh, one breath out through the mouth, close and dry. No music."},
-  {"type": "sfx", "name": "sigh_v3", "model": "eleven_text_to_sound_v3", "duration": 1.0, "influence": 0.5, "text": "A tired young man's sigh, one breath out through the mouth, close and dry. No music."},
-  {"name": "line_plain", "lang": "zh", "add": {"owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a", "voice_id": "I23uc91tu5zY2PA1tKEN", "name": "Lin"}, "keep": true, "seed": 7, "text": "[whispering] 牛顿在讲课，可是教室里一个学生都没有。"},
-  {"name": "line_hall", "lang": "zh", "add": {"owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a", "voice_id": "I23uc91tu5zY2PA1tKEN", "name": "Lin"}, "keep": true, "seed": 7, "audio_effects": {"environment_id": "hall", "distance": 0.6}, "text": "[whispering] 牛顿在讲课，可是教室里一个学生都没有。"}
- ]
+ "id": "client-vault-01",
+ "items": []
 }

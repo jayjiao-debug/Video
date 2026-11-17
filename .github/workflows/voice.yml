@@ -29,18 +29,22 @@ jobs:
         run: |
           mkdir -p out
           echo "key present: $([ -n "$ELEVENLABS_API_KEY" ] && echo yes || echo no)" >> out/log.txt
-          pip install -q requests faster-whisper soundfile >/dev/null 2>&1 || true
+          pip install -q requests faster-whisper soundfile pynacl >/dev/null 2>&1 || true
           if grep -q '"tag"' request.json; then
             pip install -q torch --index-url https://download.pytorch.org/whl/cpu >/dev/null 2>&1 || true
             pip install -q transformers scipy numpy >/dev/null 2>&1 || true
           fi
+          python vault.py pre 2>&1 | tee -a out/run.txt || echo "vault pre failed" >> out/log.txt
           python speak.py 2>&1 | tee -a out/run.txt || echo "speak exited non-zero" >> out/log.txt
+          python vault.py post 2>&1 | tee -a out/run.txt || echo "vault post failed" >> out/log.txt
       - name: publish
         if: always()
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           ID=$(python -c "import json;print(json.load(open('request.json'))['id'])")
+          # a request with seal_to must never publish a plain clip, even if sealing failed
+          if grep -q '"seal_to"' request.json; then find out -name '*.mp3' -delete; fi
           grep -rl "sk_" out && sed -i 's/sk_[A-Za-z0-9]*/sk_REDACTED/g' $(grep -rl "sk_" out) || true
           git clone -q --depth 1 --branch voice-output "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" /tmp/vo || (mkdir -p /tmp/vo && cd /tmp/vo && git init -q && git checkout -q -b voice-output && git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git")
           rm -rf "/tmp/vo/out/$ID"; mkdir -p "/tmp/vo/out/$ID"; cp -r out/. "/tmp/vo/out/$ID/"
