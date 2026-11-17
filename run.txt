@@ -1,0 +1,114 @@
+plan: {'tier': 'creator', 'character_count': 65363, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "whoosh", "type": "sfx", "text": "A short soft airy swoosh for a slide transition in a clean motion-graphics video. No music.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "whoosh.mp3", "bytes": 12163}
+sfx retry with eleven_text_to_sound_v2: 400 {"detail":{"status":"invalid_generation_settings","message":"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4."}}
+{"name": "pop", "type": "sfx", "text": "A soft rounded UI pop, like a bubble button appearing. Short and clean. No music.", "model": "eleven_text_to_sound_v2", "status": 400, "sfx": true, "error": "{\"detail\":{\"status\":\"invalid_generation_settings\",\"message\":\"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4.\"}}"}
+{"name": "drop", "type": "sfx", "text": "A light soft thud of a paper card landing on a desk, short, for a UI card appearing. No music.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "drop.mp3", "bytes": 8820}
+{"name": "ding", "type": "sfx", "text": "A bright soft single notification chime ding, pleasant and short. No music.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "ding.mp3", "bytes": 17179}
+{"name": "strike", "type": "sfx", "text": "A fast marker pen swipe across paper, one quick strike-through stroke. No music.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "strike.mp3", "bytes": 10492}
+{"name": "typing", "type": "sfx", "text": "Soft quick laptop keyboard typing, about eight keystrokes, close and clean. No music.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "typing.mp3", "bytes": 21358}
+{"name": "scribble", "type": "sfx", "text": "A red marker writing quickly on paper, a short handwritten scribble. No music.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "scribble.mp3", "bytes": 23030}
+{"name": "hit", "type": "sfx", "text": "A deep soft cinematic boom hit for a title reveal, short with a gentle tail. No music.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "hit.mp3", "bytes": 20105}
+{"name": "bed", "type": "music", "text": "Light upbeat minimal lo-fi electronic study background music: warm electric piano chords, soft plucks, gentle clean beat around 100 BPM. Motivating but calm, sparse, made to sit under a Chinese female voiceover. No vocals, no big drops.", "model": null, "status": 200, "sfx": true, "file": "bed.mp3", "bytes": 1009415}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "whoosh",
+  "type": "sfx",
+  "text": "A short soft airy swoosh for a slide transition in a clean motion-graphics video. No music.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "whoosh.mp3",
+  "bytes": 12163,
+  "seconds": 0.68
+ },
+ {
+  "name": "pop",
+  "type": "sfx",
+  "text": "A soft rounded UI pop, like a bubble button appearing. Short and clean. No music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 400,
+  "sfx": true,
+  "error": "{\"detail\":{\"status\":\"invalid_generation_settings\",\"message\":\"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4.\"}}"
+ },
+ {
+  "name": "drop",
+  "type": "sfx",
+  "text": "A light soft thud of a paper card landing on a desk, short, for a UI card appearing. No music.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "drop.mp3",
+  "bytes": 8820,
+  "seconds": 0.48
+ },
+ {
+  "name": "ding",
+  "type": "sfx",
+  "text": "A bright soft single notification chime ding, pleasant and short. No music.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "ding.mp3",
+  "bytes": 17179,
+  "seconds": 1.0
+ },
+ {
+  "name": "strike",
+  "type": "sfx",
+  "text": "A fast marker pen swipe across paper, one quick strike-through stroke. No music.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "strike.mp3",
+  "bytes": 10492,
+  "seconds": 0.6
+ },
+ {
+  "name": "typing",
+  "type": "sfx",
+  "text": "Soft quick laptop keyboard typing, about eight keystrokes, close and clean. No music.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "typing.mp3",
+  "bytes": 21358,
+  "seconds": 1.28
+ },
+ {
+  "name": "scribble",
+  "type": "sfx",
+  "text": "A red marker writing quickly on paper, a short handwritten scribble. No music.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "scribble.mp3",
+  "bytes": 23030,
+  "seconds": 1.36
+ },
+ {
+  "name": "hit",
+  "type": "sfx",
+  "text": "A deep soft cinematic boom hit for a title reveal, short with a gentle tail. No music.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "hit.mp3",
+  "bytes": 20105,
+  "seconds": 1.2
+ },
+ {
+  "name": "bed",
+  "type": "music",
+  "text": "Light upbeat minimal lo-fi electronic study background music: warm electric piano chords, soft plucks, gentle clean beat around 100 BPM. Motivating but calm, sparse, made to sit under a Chinese female voiceover. No vocals, no big drops.",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "bed.mp3",
+  "bytes": 1009415,
+  "seconds": 42.12
+ }
+]
+vault sealed 8 files
