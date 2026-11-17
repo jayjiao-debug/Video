@@ -183,6 +183,7 @@ for it in req["items"]:
     if not vid and it.get("shared", True): vid, vname = find_shared(it["lang"], it.get("accent"), it.get("gender"), it.get("age"), it.get("search"), it.get("use_case"), it.get("pick", 0))
     if not vid: vid, vname = find_own(it.get("accent"), it.get("gender"))
     body = {"text": it["text"], "model_id": it.get("model", MODEL), "language_code": it["lang"]}
+    if it["lang"] in ("", "auto"): body.pop("language_code")   # "auto": let the model decide per word (mixed-language lines)
     if it.get("settings"): body["voice_settings"] = it["settings"]
     for k in ("seed", "previous_text", "next_text", "apply_text_normalization"):   # optional: continuity between separately generated lines
         if it.get(k) is not None: body[k] = it[k]
@@ -250,7 +251,7 @@ if req.get("scribe"):
         if "file" not in rec or rec.get("sfx"): continue
         try:
             data = {"model_id": req.get("scribe_model", "scribe_v3"), "timestamps_granularity": "word", "tag_audio_events": "false"}
-            if rec.get("lang"): data["language_code"] = rec["lang"]
+            if rec.get("lang") and rec["lang"] != "auto": data["language_code"] = rec["lang"]
             r = requests.post(f"{API}/v1/speech-to-text", headers=H, data=data, files={"file": (rec["file"], open(f"out/{rec['file']}", "rb"), "audio/mpeg")}, timeout=300)
             if not r.ok and data["model_id"] != "scribe_v2" and r.status_code in (400, 404, 422):
                 data["model_id"] = "scribe_v2"; r = requests.post(f"{API}/v1/speech-to-text", headers=H, data=data, files={"file": (rec["file"], open(f"out/{rec['file']}", "rb"), "audio/mpeg")}, timeout=300)
