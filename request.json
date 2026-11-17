@@ -1,40 +1,9 @@
 {
- "id": "client01-demo-01",
+ "id": "client01-req1-tr",
  "own_branch": true,
- "model_prefs": [
-  "eleven_v4"
- ],
- "scribe": true,
- "words": true,
  "seal_to": "dbb5c9b28a1708b2bfc5add205f988d340df6f9e4245b45c8a9209cc342bb030",
- "clone": {
-  "name": "client01-narrator",
-  "samples": [
-   "vault/client01_s1.sealed",
-   "vault/client01_s2.sealed"
-  ],
-  "description": "Client own voice (consented) for narration",
-  "labels": {
-   "language": "zh",
-   "use_case": "narration"
-  },
-  "remove_background_noise": false,
-  "reuse": true
- },
- "items": [
-  {
-   "name": "demo_zh",
-   "lang": "zh",
-   "voice_id": "@clone",
-   "seed": 11,
-   "text": "主三科都差，先学哪科提分最快？先说结论：先学英语，再数学，最后稳住语文。背单词，绝不是让你从Abandon开始，死记硬背3500个词，而是直接背最高频的词汇。比如把要背的几页单词拍给AI，让它用联想法、口诀法帮你拆解出来。数学也一样：一道三角函数题，因为把sin和cos记混而做错，那你就用红笔大字写上：sin三十度等于二分之一，不是cos三十度！"
-  },
-  {
-   "name": "demo_auto",
-   "lang": "auto",
-   "voice_id": "@clone",
-   "seed": 11,
-   "text": "主三科都差，先学哪科提分最快？先说结论：先学英语，再数学，最后稳住语文。背单词，绝不是让你从Abandon开始，死记硬背3500个词，而是直接背最高频的词汇。比如把要背的几页单词拍给AI，让它用联想法、口诀法帮你拆解出来。数学也一样：一道三角函数题，因为把sin和cos记混而做错，那你就用红笔大字写上：sin三十度等于二分之一，不是cos三十度！"
-  }
- ]
+ "transcribe": [
+  "vault/client01_req1.sealed"
+ ],
+ "items": []
 }

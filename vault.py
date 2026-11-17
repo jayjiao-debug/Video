@@ -33,6 +33,22 @@ def pre():
     if not KEY: print("vault: no key"); return
     sk = vault_key()
     open("out/vault_pub.txt", "w").write(bytes(sk.public_key).hex() + "\n")
+    if req.get("transcribe"):   # sealed audio in -> sealed transcript out (needs seal_to)
+        box = SealedBox(sk); res = []
+        for p in req["transcribe"]:
+            raw = box.decrypt(open(p, "rb").read()); tmp = "/tmp/tr_in.mp3"; open(tmp, "wb").write(raw)
+            data = {"model_id": req.get("scribe_model", "scribe_v3"), "timestamps_granularity": "word", "tag_audio_events": "false"}
+            r = requests.post(f"{API}/v1/speech-to-text", headers=H, data=data, files={"file": ("in.mp3", open(tmp, "rb"), "audio/mpeg")}, timeout=300)
+            if not r.ok and r.status_code in (400, 404, 422):
+                data["model_id"] = "scribe_v2"; r = requests.post(f"{API}/v1/speech-to-text", headers=H, data=data, files={"file": ("in.mp3", open(tmp, "rb"), "audio/mpeg")}, timeout=300)
+            j = r.json() if r.ok else {}
+            res.append({"src": p, "status": r.status_code, "text": j.get("text"), "lang": j.get("language_code"),
+                        "words": [[w.get("text"), w.get("start"), w.get("end")] for w in j.get("words", []) if w.get("type") == "word"],
+                        "error": None if r.ok else r.text[:300]})
+            os.remove(tmp)
+        out = SealedBox(PublicKey(bytes.fromhex(req["seal_to"]))).encrypt(json.dumps(res, ensure_ascii=False).encode())
+        open("out/transcripts.json.sealed", "wb").write(out)
+        rep["transcribe"] = [{"src": x["src"], "status": x["status"]} for x in res]; print("vault transcribed", rep["transcribe"])
     c = req.get("clone")
     if not c: return
     name = c["name"]
