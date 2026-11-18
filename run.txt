@@ -1,0 +1,31 @@
+plan: {'tier': 'creator', 'character_count': 75263, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "bed_a", "type": "music", "text": "Warm premium lo-fi study background music for a motivational education video: soft felt piano and warm electric piano chords, gentle plucked guitar, light brushed beat around 100 BPM, subtle warm pad. Calm, hopeful and focused, sparse arrangement that sits under a fast Chinese female voiceover. No vocals, no big drops, no sudden changes.", "model": null, "status": 200, "sfx": true, "file": "bed_a.mp3", "bytes": 4561650}
+{"name": "bed_b", "type": "music", "text": "Warm premium lo-fi study background music for a motivational education video: soft felt piano and warm electric piano chords, gentle plucked guitar, light brushed beat around 100 BPM, subtle warm pad. Calm, hopeful and focused, sparse arrangement that sits under a fast Chinese female voiceover. No vocals, no big drops, no sudden changes. Slightly more lift and momentum, building gently toward a hopeful ending.", "model": null, "status": 200, "sfx": true, "file": "bed_b.mp3", "bytes": 5520239}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "bed_a",
+  "type": "music",
+  "text": "Warm premium lo-fi study background music for a motivational education video: soft felt piano and warm electric piano chords, gentle plucked guitar, light brushed beat around 100 BPM, subtle warm pad. Calm, hopeful and focused, sparse arrangement that sits under a fast Chinese female voiceover. No vocals, no big drops, no sudden changes.",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "bed_a.mp3",
+  "bytes": 4561650,
+  "seconds": 190.35
+ },
+ {
+  "name": "bed_b",
+  "type": "music",
+  "text": "Warm premium lo-fi study background music for a motivational education video: soft felt piano and warm electric piano chords, gentle plucked guitar, light brushed beat around 100 BPM, subtle warm pad. Calm, hopeful and focused, sparse arrangement that sits under a fast Chinese female voiceover. No vocals, no big drops, no sudden changes. Slightly more lift and momentum, building gently toward a hopeful ending.",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "bed_b.mp3",
+  "bytes": 5520239,
+  "seconds": 230.35
+ }
+]
+vault sealed 2 files
