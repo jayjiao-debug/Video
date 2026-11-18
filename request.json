@@ -1,36 +1,9 @@
 {
- "id": "client01-full-02",
+ "id": "client01-full-tr",
  "own_branch": true,
- "model_prefs": [
-  "eleven_v4"
- ],
- "scribe": true,
- "words": true,
  "seal_to": "dbb5c9b28a1708b2bfc5add205f988d340df6f9e4245b45c8a9209cc342bb030",
- "items": [
-  {
-   "name": "n07",
-   "lang": "zh",
-   "voice_id": "jbWlBCyxlOi9ReBhwDUd",
-   "seed": 11,
-   "settings": {
-    "speed": 1.2
-   },
-   "text": "先说结论，先学英语，再数学，最后稳住语文。",
-   "previous_text": "这种策略太功利，但实在好提分，毕竟是我陪跑带出来三届高三生总结出来的方法策略，但如果你想要根据自己的成绩定制更针对性的分析。可以直接进我主页粉丝群；我亲自帮你分析成绩，制定学习计划。",
-   "next_text": "因为英语是主三科里面最好提分的，不像数学有复杂的推导计算，也不像语文需要背很多文言文答题模板作文素材；只要你肯下笨功夫，只要多背单词，就一定可以拿到分数。"
-  },
-  {
-   "name": "n35",
-   "lang": "zh",
-   "voice_id": "jbWlBCyxlOi9ReBhwDUd",
-   "seed": 11,
-   "settings": {
-    "speed": 1.2
-   },
-   "text": "高三时间这么紧，每一科都要顾，我哪有那么多时间一点点去积累，去啃错题本。是的，我完全理解你的焦虑和紧迫感，这正是问题的关键所在。靠自己摸索，很容易陷入头痛医头，脚痛医脚的混乱状态，",
-   "previous_text": "好了，方法说了不少，但我知道你可能会想，学姐你说的轻巧，",
-   "next_text": "花的时间却不见效，最后把自己搞得更焦虑。"
-  }
- ]
+ "transcribe": [
+  "vault/client01_full_voice.sealed"
+ ],
+ "items": []
 }
