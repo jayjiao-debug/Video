@@ -1,9 +1,21 @@
 {
- "id": "client01-full-tr2",
+ "id": "client01-full-music",
  "own_branch": true,
  "seal_to": "dbb5c9b28a1708b2bfc5add205f988d340df6f9e4245b45c8a9209cc342bb030",
- "transcribe": [
-  "vault/client01_full_voice2.sealed"
- ],
- "items": []
+ "items": [
+  {
+   "type": "music",
+   "name": "bed_a",
+   "ms": 190000,
+   "instrumental": true,
+   "text": "Warm premium lo-fi study background music for a motivational education video: soft felt piano and warm electric piano chords, gentle plucked guitar, light brushed beat around 100 BPM, subtle warm pad. Calm, hopeful and focused, sparse arrangement that sits under a fast Chinese female voiceover. No vocals, no big drops, no sudden changes."
+  },
+  {
+   "type": "music",
+   "name": "bed_b",
+   "ms": 230000,
+   "instrumental": true,
+   "text": "Warm premium lo-fi study background music for a motivational education video: soft felt piano and warm electric piano chords, gentle plucked guitar, light brushed beat around 100 BPM, subtle warm pad. Calm, hopeful and focused, sparse arrangement that sits under a fast Chinese female voiceover. No vocals, no big drops, no sudden changes. Slightly more lift and momentum, building gently toward a hopeful ending."
+  }
+ ]
 }
