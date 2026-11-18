@@ -1,9 +1,9 @@
 {
- "id": "client01-full-tr",
+ "id": "client01-full-tr2",
  "own_branch": true,
  "seal_to": "dbb5c9b28a1708b2bfc5add205f988d340df6f9e4245b45c8a9209cc342bb030",
  "transcribe": [
-  "vault/client01_full_voice.sealed"
+  "vault/client01_full_voice2.sealed"
  ],
  "items": []
 }
