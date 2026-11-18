@@ -45,7 +45,7 @@ jobs:
           ID=$(python -c "import json;print(json.load(open('request.json'))['id'])")
           # a request with seal_to must never publish a plain clip, even if sealing failed
           if grep -q '"seal_to"' request.json; then find out -name '*.mp3' -delete; fi
-          grep -rl "sk_" out && sed -i 's/sk_[A-Za-z0-9]*/sk_REDACTED/g' $(grep -rl "sk_" out) || true
+          grep -rlI "sk_" out && sed -i 's/sk_[A-Za-z0-9]*/sk_REDACTED/g' $(grep -rlI "sk_" out) || true
           if grep -q '"own_branch"' request.json; then   # light publish: a fresh branch per request, no clone of voice-output
             mkdir -p /tmp/ob && cp -r out/. /tmp/ob/ && cd /tmp/ob && git init -q && git checkout -q -b "vo-$ID"
             git config user.name "voice-farm"; git config user.email "voice-farm@users.noreply.github.com"
