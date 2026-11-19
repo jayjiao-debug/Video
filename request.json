@@ -1,21 +1,39 @@
 {
- "id": "client01-full-music",
+ "id": "client01-v3-fix",
  "own_branch": true,
+ "model_prefs": [
+  "eleven_v4"
+ ],
+ "scribe": true,
+ "words": true,
+ "sfx_model": "eleven_text_to_sound_v3",
  "seal_to": "dbb5c9b28a1708b2bfc5add205f988d340df6f9e4245b45c8a9209cc342bb030",
  "items": [
   {
-   "type": "music",
-   "name": "bed_a",
-   "ms": 190000,
-   "instrumental": true,
-   "text": "Warm premium lo-fi study background music for a motivational education video: soft felt piano and warm electric piano chords, gentle plucked guitar, light brushed beat around 100 BPM, subtle warm pad. Calm, hopeful and focused, sparse arrangement that sits under a fast Chinese female voiceover. No vocals, no big drops, no sudden changes."
+   "name": "n03",
+   "lang": "zh",
+   "voice_id": "jbWlBCyxlOi9ReBhwDUd",
+   "seed": 11,
+   "settings": {
+    "speed": 1.2
+   },
+   "text": "因为我会分享我在高三后期总分提了将近200分。从最低原来300分到高三后期稳定在600分以上，逆袭上二幺幺的，不择手段抢分策略。",
+   "previous_text": "那恭喜你刷到我这条视频。",
+   "next_text": "包括主三科都在及格线边徘徊，到底应该先学哪科？"
   },
   {
-   "type": "music",
-   "name": "bed_b",
-   "ms": 230000,
-   "instrumental": true,
-   "text": "Warm premium lo-fi study background music for a motivational education video: soft felt piano and warm electric piano chords, gentle plucked guitar, light brushed beat around 100 BPM, subtle warm pad. Calm, hopeful and focused, sparse arrangement that sits under a fast Chinese female voiceover. No vocals, no big drops, no sudden changes. Slightly more lift and momentum, building gently toward a hopeful ending."
+   "type": "sfx",
+   "name": "friction_a",
+   "duration": 0.7,
+   "influence": 0.6,
+   "text": "A short fast friction swipe, like a hand sliding quickly across rough paper or fabric, crisp scratchy whoosh for a video transition. No music."
+  },
+  {
+   "type": "sfx",
+   "name": "friction_b",
+   "duration": 0.6,
+   "influence": 0.6,
+   "text": "Quick rough rubbing swish, one fast stroke of friction on a textured surface, short and punchy, used for a title card cut. No music."
   }
  ]
 }
