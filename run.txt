@@ -1,0 +1,103 @@
+plan: {'tier': 'creator', 'character_count': 97082, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "riser", "type": "sfx", "text": "A short bright upward whoosh riser that builds quickly, for text flying up in a motion graphics video. No music.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "riser.mp3", "bytes": 15089}
+{"name": "stamp", "type": "sfx", "text": "A heavy rubber stamp slamming down on paper on a desk, one solid thud with a tiny paper rattle. No music.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "stamp.mp3", "bytes": 10492}
+{"name": "tick", "type": "sfx", "text": "A fast mechanical stopwatch ticking quickly, about eight ticks, clean and close. No music.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "tick.mp3", "bytes": 23030}
+{"name": "sparkle", "type": "sfx", "text": "A short magical sparkle shimmer with soft bells, for a reward or celebration moment. No music.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "sparkle.mp3", "bytes": 17179}
+{"name": "paper", "type": "sfx", "text": "A sheet of paper slapping down onto a wooden desk, quick and crisp. No music.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "paper.mp3", "bytes": 8820}
+{"name": "boom", "type": "sfx", "text": "A deep soft cinematic boom impact with a short rumble tail, for a big title slam. No music.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "boom.mp3", "bytes": 20105}
+{"name": "swipe", "type": "sfx", "text": "A very fast whip pan swish, short airy transition, clean. No music.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "swipe.mp3", "bytes": 8820}
+{"name": "confetti", "type": "sfx", "text": "A small confetti popper burst followed by light paper flutter. No music.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "confetti.mp3", "bytes": 17179}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "riser",
+  "type": "sfx",
+  "text": "A short bright upward whoosh riser that builds quickly, for text flying up in a motion graphics video. No music.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "riser.mp3",
+  "bytes": 15089,
+  "seconds": 0.88
+ },
+ {
+  "name": "stamp",
+  "type": "sfx",
+  "text": "A heavy rubber stamp slamming down on paper on a desk, one solid thud with a tiny paper rattle. No music.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "stamp.mp3",
+  "bytes": 10492,
+  "seconds": 0.6
+ },
+ {
+  "name": "tick",
+  "type": "sfx",
+  "text": "A fast mechanical stopwatch ticking quickly, about eight ticks, clean and close. No music.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "tick.mp3",
+  "bytes": 23030,
+  "seconds": 1.36
+ },
+ {
+  "name": "sparkle",
+  "type": "sfx",
+  "text": "A short magical sparkle shimmer with soft bells, for a reward or celebration moment. No music.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "sparkle.mp3",
+  "bytes": 17179,
+  "seconds": 1.0
+ },
+ {
+  "name": "paper",
+  "type": "sfx",
+  "text": "A sheet of paper slapping down onto a wooden desk, quick and crisp. No music.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "paper.mp3",
+  "bytes": 8820,
+  "seconds": 0.48
+ },
+ {
+  "name": "boom",
+  "type": "sfx",
+  "text": "A deep soft cinematic boom impact with a short rumble tail, for a big title slam. No music.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "boom.mp3",
+  "bytes": 20105,
+  "seconds": 1.2
+ },
+ {
+  "name": "swipe",
+  "type": "sfx",
+  "text": "A very fast whip pan swish, short airy transition, clean. No music.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "swipe.mp3",
+  "bytes": 8820,
+  "seconds": 0.48
+ },
+ {
+  "name": "confetti",
+  "type": "sfx",
+  "text": "A small confetti popper burst followed by light paper flutter. No music.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "confetti.mp3",
+  "bytes": 17179,
+  "seconds": 1.0
+ }
+]
+vault sealed 8 files
