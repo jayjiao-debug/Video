@@ -1,39 +1,64 @@
 {
- "id": "client01-v3-fix",
+ "id": "client01-motion-sfx",
  "own_branch": true,
- "model_prefs": [
-  "eleven_v4"
- ],
- "scribe": true,
- "words": true,
  "sfx_model": "eleven_text_to_sound_v3",
  "seal_to": "dbb5c9b28a1708b2bfc5add205f988d340df6f9e4245b45c8a9209cc342bb030",
  "items": [
   {
-   "name": "n03",
-   "lang": "zh",
-   "voice_id": "jbWlBCyxlOi9ReBhwDUd",
-   "seed": 11,
-   "settings": {
-    "speed": 1.2
-   },
-   "text": "因为我会分享我在高三后期总分提了将近200分。从最低原来300分到高三后期稳定在600分以上，逆袭上二幺幺的，不择手段抢分策略。",
-   "previous_text": "那恭喜你刷到我这条视频。",
-   "next_text": "包括主三科都在及格线边徘徊，到底应该先学哪科？"
+   "type": "sfx",
+   "name": "riser",
+   "text": "A short bright upward whoosh riser that builds quickly, for text flying up in a motion graphics video. No music.",
+   "duration": 0.9,
+   "influence": 0.55
   },
   {
    "type": "sfx",
-   "name": "friction_a",
-   "duration": 0.7,
-   "influence": 0.6,
-   "text": "A short fast friction swipe, like a hand sliding quickly across rough paper or fabric, crisp scratchy whoosh for a video transition. No music."
-  },
-  {
-   "type": "sfx",
-   "name": "friction_b",
+   "name": "stamp",
+   "text": "A heavy rubber stamp slamming down on paper on a desk, one solid thud with a tiny paper rattle. No music.",
    "duration": 0.6,
-   "influence": 0.6,
-   "text": "Quick rough rubbing swish, one fast stroke of friction on a textured surface, short and punchy, used for a title card cut. No music."
+   "influence": 0.55
+  },
+  {
+   "type": "sfx",
+   "name": "tick",
+   "text": "A fast mechanical stopwatch ticking quickly, about eight ticks, clean and close. No music.",
+   "duration": 1.4,
+   "influence": 0.55
+  },
+  {
+   "type": "sfx",
+   "name": "sparkle",
+   "text": "A short magical sparkle shimmer with soft bells, for a reward or celebration moment. No music.",
+   "duration": 1.0,
+   "influence": 0.55
+  },
+  {
+   "type": "sfx",
+   "name": "paper",
+   "text": "A sheet of paper slapping down onto a wooden desk, quick and crisp. No music.",
+   "duration": 0.5,
+   "influence": 0.55
+  },
+  {
+   "type": "sfx",
+   "name": "boom",
+   "text": "A deep soft cinematic boom impact with a short rumble tail, for a big title slam. No music.",
+   "duration": 1.2,
+   "influence": 0.55
+  },
+  {
+   "type": "sfx",
+   "name": "swipe",
+   "text": "A very fast whip pan swish, short airy transition, clean. No music.",
+   "duration": 0.5,
+   "influence": 0.55
+  },
+  {
+   "type": "sfx",
+   "name": "confetti",
+   "text": "A small confetti popper burst followed by light paper flutter. No music.",
+   "duration": 1.0,
+   "influence": 0.55
   }
  ]
 }
