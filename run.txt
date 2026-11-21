@@ -1,0 +1,103 @@
+plan: {'tier': 'creator', 'character_count': 98847, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "tap_a", "type": "sfx", "text": "A soft muted wooden tap, like a small wooden tile placed gently on a felt table. Warm, low, very short, no high frequencies. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "tap_a.mp3", "bytes": 8820}
+{"name": "tap_b", "type": "sfx", "text": "A soft muted wooden tap, like a small wooden tile placed gently on a felt table. Warm, low, very short, no high frequencies. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "tap_b.mp3", "bytes": 8820}
+{"name": "tap_c", "type": "sfx", "text": "A soft muted wooden tap, like a small wooden tile placed gently on a felt table. Warm, low, very short, no high frequencies. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "tap_c.mp3", "bytes": 8820}
+{"name": "flip_a", "type": "sfx", "text": "A single playing card flipped over with a soft papery snap, close and warm. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "flip_a.mp3", "bytes": 8820}
+{"name": "flip_b", "type": "sfx", "text": "A single playing card flipped over with a soft papery snap, close and warm. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "flip_b.mp3", "bytes": 8820}
+{"name": "shutter_a", "type": "sfx", "text": "A smartphone camera shutter click, single, clean. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "shutter_a.mp3", "bytes": 8820}
+{"name": "block_a", "type": "sfx", "text": "A wooden block placed down on a wooden table, hollow warm knock. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "block_a.mp3", "bytes": 8820}
+{"name": "block_b", "type": "sfx", "text": "A wooden block placed down on a wooden table, hollow warm knock. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "block_b.mp3", "bytes": 8820}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "tap_a",
+  "type": "sfx",
+  "text": "A soft muted wooden tap, like a small wooden tile placed gently on a felt table. Warm, low, very short, no high frequencies. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "tap_a.mp3",
+  "bytes": 8820,
+  "seconds": 0.48
+ },
+ {
+  "name": "tap_b",
+  "type": "sfx",
+  "text": "A soft muted wooden tap, like a small wooden tile placed gently on a felt table. Warm, low, very short, no high frequencies. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "tap_b.mp3",
+  "bytes": 8820,
+  "seconds": 0.48
+ },
+ {
+  "name": "tap_c",
+  "type": "sfx",
+  "text": "A soft muted wooden tap, like a small wooden tile placed gently on a felt table. Warm, low, very short, no high frequencies. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "tap_c.mp3",
+  "bytes": 8820,
+  "seconds": 0.48
+ },
+ {
+  "name": "flip_a",
+  "type": "sfx",
+  "text": "A single playing card flipped over with a soft papery snap, close and warm. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "flip_a.mp3",
+  "bytes": 8820,
+  "seconds": 0.48
+ },
+ {
+  "name": "flip_b",
+  "type": "sfx",
+  "text": "A single playing card flipped over with a soft papery snap, close and warm. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "flip_b.mp3",
+  "bytes": 8820,
+  "seconds": 0.48
+ },
+ {
+  "name": "shutter_a",
+  "type": "sfx",
+  "text": "A smartphone camera shutter click, single, clean. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "shutter_a.mp3",
+  "bytes": 8820,
+  "seconds": 0.48
+ },
+ {
+  "name": "block_a",
+  "type": "sfx",
+  "text": "A wooden block placed down on a wooden table, hollow warm knock. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "block_a.mp3",
+  "bytes": 8820,
+  "seconds": 0.48
+ },
+ {
+  "name": "block_b",
+  "type": "sfx",
+  "text": "A wooden block placed down on a wooden table, hollow warm knock. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "block_b.mp3",
+  "bytes": 8820,
+  "seconds": 0.48
+ }
+]
+vault sealed 8 files
