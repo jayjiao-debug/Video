@@ -1,5 +1,5 @@
 {
- "id": "client01-sfx-v4",
+ "id": "client01-sfx-v4b",
  "own_branch": true,
  "sfx_model": "eleven_text_to_sound_v3",
  "seal_to": "dbb5c9b28a1708b2bfc5add205f988d340df6f9e4245b45c8a9209cc342bb030",
@@ -8,34 +8,20 @@
    "type": "sfx",
    "name": "tap_a",
    "text": "A soft muted wooden tap, like a small wooden tile placed gently on a felt table. Warm, low, very short, no high frequencies. No music, no voice.",
-   "duration": 0.4,
+   "duration": 0.5,
    "influence": 0.55
   },
   {
    "type": "sfx",
    "name": "tap_b",
    "text": "A soft muted wooden tap, like a small wooden tile placed gently on a felt table. Warm, low, very short, no high frequencies. No music, no voice.",
-   "duration": 0.4,
+   "duration": 0.5,
    "influence": 0.55
   },
   {
    "type": "sfx",
    "name": "tap_c",
    "text": "A soft muted wooden tap, like a small wooden tile placed gently on a felt table. Warm, low, very short, no high frequencies. No music, no voice.",
-   "duration": 0.4,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "card_a",
-   "text": "A playing card sliding and landing softly on a felt card table, short and papery, warm. No music, no voice.",
-   "duration": 0.5,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "card_b",
-   "text": "A playing card sliding and landing softly on a felt card table, short and papery, warm. No music, no voice.",
    "duration": 0.5,
    "influence": 0.55
   },
@@ -43,251 +29,20 @@
    "type": "sfx",
    "name": "flip_a",
    "text": "A single playing card flipped over with a soft papery snap, close and warm. No music, no voice.",
-   "duration": 0.4,
+   "duration": 0.5,
    "influence": 0.55
   },
   {
    "type": "sfx",
    "name": "flip_b",
    "text": "A single playing card flipped over with a soft papery snap, close and warm. No music, no voice.",
-   "duration": 0.4,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "paper_a",
-   "text": "A sheet of thick paper sliding and landing on a wooden desk, soft papery swish and gentle thud. No music, no voice.",
-   "duration": 0.6,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "paper_b",
-   "text": "A sheet of thick paper sliding and landing on a wooden desk, soft papery swish and gentle thud. No music, no voice.",
-   "duration": 0.6,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "pile_a",
-   "text": "A small stack of papers and cards tumbling down onto a desk one after another, soft rustling clatter. No music, no voice.",
-   "duration": 1.2,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "book_a",
-   "text": "A heavy hardcover book dropped flat onto a wooden desk, deep solid thud, warm low end. No music, no voice.",
-   "duration": 0.6,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "book_b",
-   "text": "A heavy hardcover book dropped flat onto a wooden desk, deep solid thud, warm low end. No music, no voice.",
-   "duration": 0.6,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "pen_a",
-   "text": "A pencil writing quickly on paper, a short scribble stroke, close and natural. No music, no voice.",
-   "duration": 0.9,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "pen_b",
-   "text": "A pencil writing quickly on paper, a short scribble stroke, close and natural. No music, no voice.",
-   "duration": 0.9,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "marker_a",
-   "text": "A marker pen drawing one quick straight line on paper, a single swipe stroke. No music, no voice.",
    "duration": 0.5,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "whoosh_a",
-   "text": "A soft airy whoosh passing by, smooth and low, for a gentle camera move in a documentary motion graphic. No music, no voice.",
-   "duration": 0.7,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "whoosh_b",
-   "text": "A soft airy whoosh passing by, smooth and low, for a gentle camera move in a documentary motion graphic. No music, no voice.",
-   "duration": 0.7,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "whoosh_c",
-   "text": "A soft airy whoosh passing by, smooth and low, for a gentle camera move in a documentary motion graphic. No music, no voice.",
-   "duration": 0.7,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "whip_a",
-   "text": "A fast camera whip pan swish, airy and smooth, not harsh. No music, no voice.",
-   "duration": 0.5,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "whip_b",
-   "text": "A fast camera whip pan swish, airy and smooth, not harsh. No music, no voice.",
-   "duration": 0.5,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "impact_a",
-   "text": "A deep soft cinematic impact thump with low sub bass and a short tail, clean and warm, not distorted. No music, no voice.",
-   "duration": 1.2,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "impact_b",
-   "text": "A deep soft cinematic impact thump with low sub bass and a short tail, clean and warm, not distorted. No music, no voice.",
-   "duration": 1.2,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "roll_a",
-   "text": "A mechanical counter rolling quickly, a fast series of soft clicks speeding up then stopping with a final click, like an odometer. No music, no voice.",
-   "duration": 0.9,
    "influence": 0.55
   },
   {
    "type": "sfx",
    "name": "shutter_a",
    "text": "A smartphone camera shutter click, single, clean. No music, no voice.",
-   "duration": 0.4,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "message_a",
-   "text": "A soft warm chat message notification, a gentle low two-note wooden blip, not high-pitched. No music, no voice.",
-   "duration": 0.6,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "typing_a",
-   "text": "Fast typing on a phone touchscreen keyboard, soft taps, about one second. No music, no voice.",
-   "duration": 1.2,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "lock_a",
-   "text": "A metal padlock shackle snapping shut, a solid satisfying click. No music, no voice.",
-   "duration": 0.5,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "gears_a",
-   "text": "Mechanical gears turning and meshing, a short smooth ratchet whirr. No music, no voice.",
-   "duration": 1.2,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "thunder_a",
-   "text": "A sharp close thunder crack followed by a short low rumble, dramatic. No music, no voice.",
-   "duration": 1.8,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "dice_a",
-   "text": "A single die rolling and tumbling on a wooden table, then settling. No music, no voice.",
-   "duration": 1.0,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "shatter_a",
-   "text": "A thin pane of glass cracking and shattering, quick, bright but not harsh. No music, no voice.",
-   "duration": 1.2,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "heartbeat_a",
-   "text": "Two slow heavy heartbeats, deep and soft, tense. No music, no voice.",
-   "duration": 1.4,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "swell_a",
-   "text": "A gentle warm upward swell rising for about one second, soft airy tone, ends cleanly. No music, no voice.",
-   "duration": 1.0,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "swell_b",
-   "text": "A gentle warm upward swell rising for about one second, soft airy tone, ends cleanly. No music, no voice.",
-   "duration": 1.0,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "correct_a",
-   "text": "A soft warm marimba two-note rising chime for a correct answer, low and gentle, not bright. No music, no voice.",
-   "duration": 0.7,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "wrong_a",
-   "text": "A soft low muted wooden 'bonk' for a wrong answer, short and dull. No music, no voice.",
-   "duration": 0.5,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "shimmer_a",
-   "text": "A soft warm shimmer of low chimes, gentle sparkle for a small reward moment, not high-pitched. No music, no voice.",
-   "duration": 1.0,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "footsteps_a",
-   "text": "Light footsteps walking up wooden stairs, six steps, steady. No music, no voice.",
-   "duration": 2.0,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "sign_a",
-   "text": "A pen quickly signing a signature on paper with a final flourish. No music, no voice.",
-   "duration": 1.3,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "unfold_a",
-   "text": "A large paper map being unfolded and opened out, crisp paper crackle. No music, no voice.",
-   "duration": 0.9,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "dart_a",
-   "text": "A dart hitting a dartboard, a solid thock. No music, no voice.",
    "duration": 0.5,
    "influence": 0.55
   },
@@ -295,41 +50,13 @@
    "type": "sfx",
    "name": "block_a",
    "text": "A wooden block placed down on a wooden table, hollow warm knock. No music, no voice.",
-   "duration": 0.4,
+   "duration": 0.5,
    "influence": 0.55
   },
   {
    "type": "sfx",
    "name": "block_b",
    "text": "A wooden block placed down on a wooden table, hollow warm knock. No music, no voice.",
-   "duration": 0.4,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "deal_a",
-   "text": "Several playing cards dealt quickly onto a table, four soft snaps in a row. No music, no voice.",
-   "duration": 1.0,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "tick_a",
-   "text": "A mechanical stopwatch ticking steadily, eight soft ticks. No music, no voice.",
-   "duration": 1.6,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "crumple_a",
-   "text": "A sheet of paper crumpled into a ball quickly, then tossed. No music, no voice.",
-   "duration": 0.8,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "chalk_a",
-   "text": "A sharp red pen circling something on paper, one quick round stroke. No music, no voice.",
    "duration": 0.5,
    "influence": 0.55
   }
