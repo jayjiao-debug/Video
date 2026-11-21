@@ -1,0 +1,563 @@
+plan: {'tier': 'creator', 'character_count': 98455, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+sfx retry with eleven_text_to_sound_v2: 400 {"detail":{"status":"invalid_generation_settings","message":"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4."}}
+{"name": "tap_a", "type": "sfx", "text": "A soft muted wooden tap, like a small wooden tile placed gently on a felt table. Warm, low, very short, no high frequencies. No music, no voice.", "model": "eleven_text_to_sound_v2", "status": 400, "sfx": true, "error": "{\"detail\":{\"status\":\"invalid_generation_settings\",\"message\":\"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4.\"}}"}
+sfx retry with eleven_text_to_sound_v2: 400 {"detail":{"status":"invalid_generation_settings","message":"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4."}}
+{"name": "tap_b", "type": "sfx", "text": "A soft muted wooden tap, like a small wooden tile placed gently on a felt table. Warm, low, very short, no high frequencies. No music, no voice.", "model": "eleven_text_to_sound_v2", "status": 400, "sfx": true, "error": "{\"detail\":{\"status\":\"invalid_generation_settings\",\"message\":\"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4.\"}}"}
+sfx retry with eleven_text_to_sound_v2: 400 {"detail":{"status":"invalid_generation_settings","message":"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4."}}
+{"name": "tap_c", "type": "sfx", "text": "A soft muted wooden tap, like a small wooden tile placed gently on a felt table. Warm, low, very short, no high frequencies. No music, no voice.", "model": "eleven_text_to_sound_v2", "status": 400, "sfx": true, "error": "{\"detail\":{\"status\":\"invalid_generation_settings\",\"message\":\"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4.\"}}"}
+{"name": "card_a", "type": "sfx", "text": "A playing card sliding and landing softly on a felt card table, short and papery, warm. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "card_a.mp3", "bytes": 8820}
+{"name": "card_b", "type": "sfx", "text": "A playing card sliding and landing softly on a felt card table, short and papery, warm. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "card_b.mp3", "bytes": 8820}
+sfx retry with eleven_text_to_sound_v2: 400 {"detail":{"status":"invalid_generation_settings","message":"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4."}}
+{"name": "flip_a", "type": "sfx", "text": "A single playing card flipped over with a soft papery snap, close and warm. No music, no voice.", "model": "eleven_text_to_sound_v2", "status": 400, "sfx": true, "error": "{\"detail\":{\"status\":\"invalid_generation_settings\",\"message\":\"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4.\"}}"}
+sfx retry with eleven_text_to_sound_v2: 400 {"detail":{"status":"invalid_generation_settings","message":"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4."}}
+{"name": "flip_b", "type": "sfx", "text": "A single playing card flipped over with a soft papery snap, close and warm. No music, no voice.", "model": "eleven_text_to_sound_v2", "status": 400, "sfx": true, "error": "{\"detail\":{\"status\":\"invalid_generation_settings\",\"message\":\"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4.\"}}"}
+{"name": "paper_a", "type": "sfx", "text": "A sheet of thick paper sliding and landing on a wooden desk, soft papery swish and gentle thud. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "paper_a.mp3", "bytes": 10492}
+{"name": "paper_b", "type": "sfx", "text": "A sheet of thick paper sliding and landing on a wooden desk, soft papery swish and gentle thud. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "paper_b.mp3", "bytes": 10492}
+{"name": "pile_a", "type": "sfx", "text": "A small stack of papers and cards tumbling down onto a desk one after another, soft rustling clatter. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "pile_a.mp3", "bytes": 20105}
+{"name": "book_a", "type": "sfx", "text": "A heavy hardcover book dropped flat onto a wooden desk, deep solid thud, warm low end. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "book_a.mp3", "bytes": 10492}
+{"name": "book_b", "type": "sfx", "text": "A heavy hardcover book dropped flat onto a wooden desk, deep solid thud, warm low end. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "book_b.mp3", "bytes": 10492}
+{"name": "pen_a", "type": "sfx", "text": "A pencil writing quickly on paper, a short scribble stroke, close and natural. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "pen_a.mp3", "bytes": 15089}
+{"name": "pen_b", "type": "sfx", "text": "A pencil writing quickly on paper, a short scribble stroke, close and natural. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "pen_b.mp3", "bytes": 15089}
+{"name": "marker_a", "type": "sfx", "text": "A marker pen drawing one quick straight line on paper, a single swipe stroke. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "marker_a.mp3", "bytes": 8820}
+{"name": "whoosh_a", "type": "sfx", "text": "A soft airy whoosh passing by, smooth and low, for a gentle camera move in a documentary motion graphic. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "whoosh_a.mp3", "bytes": 12163}
+{"name": "whoosh_b", "type": "sfx", "text": "A soft airy whoosh passing by, smooth and low, for a gentle camera move in a documentary motion graphic. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "whoosh_b.mp3", "bytes": 12163}
+{"name": "whoosh_c", "type": "sfx", "text": "A soft airy whoosh passing by, smooth and low, for a gentle camera move in a documentary motion graphic. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "whoosh_c.mp3", "bytes": 12163}
+{"name": "whip_a", "type": "sfx", "text": "A fast camera whip pan swish, airy and smooth, not harsh. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "whip_a.mp3", "bytes": 8820}
+{"name": "whip_b", "type": "sfx", "text": "A fast camera whip pan swish, airy and smooth, not harsh. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "whip_b.mp3", "bytes": 8820}
+{"name": "impact_a", "type": "sfx", "text": "A deep soft cinematic impact thump with low sub bass and a short tail, clean and warm, not distorted. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "impact_a.mp3", "bytes": 20105}
+{"name": "impact_b", "type": "sfx", "text": "A deep soft cinematic impact thump with low sub bass and a short tail, clean and warm, not distorted. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "impact_b.mp3", "bytes": 20105}
+{"name": "roll_a", "type": "sfx", "text": "A mechanical counter rolling quickly, a fast series of soft clicks speeding up then stopping with a final click, like an odometer. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "roll_a.mp3", "bytes": 15089}
+sfx retry with eleven_text_to_sound_v2: 400 {"detail":{"status":"invalid_generation_settings","message":"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4."}}
+{"name": "shutter_a", "type": "sfx", "text": "A smartphone camera shutter click, single, clean. No music, no voice.", "model": "eleven_text_to_sound_v2", "status": 400, "sfx": true, "error": "{\"detail\":{\"status\":\"invalid_generation_settings\",\"message\":\"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4.\"}}"}
+{"name": "message_a", "type": "sfx", "text": "A soft warm chat message notification, a gentle low two-note wooden blip, not high-pitched. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "message_a.mp3", "bytes": 10492}
+{"name": "typing_a", "type": "sfx", "text": "Fast typing on a phone touchscreen keyboard, soft taps, about one second. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "typing_a.mp3", "bytes": 20105}
+{"name": "lock_a", "type": "sfx", "text": "A metal padlock shackle snapping shut, a solid satisfying click. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "lock_a.mp3", "bytes": 8820}
+{"name": "gears_a", "type": "sfx", "text": "Mechanical gears turning and meshing, a short smooth ratchet whirr. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "gears_a.mp3", "bytes": 20105}
+{"name": "thunder_a", "type": "sfx", "text": "A sharp close thunder crack followed by a short low rumble, dramatic. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "thunder_a.mp3", "bytes": 29300}
+{"name": "dice_a", "type": "sfx", "text": "A single die rolling and tumbling on a wooden table, then settling. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "dice_a.mp3", "bytes": 17179}
+{"name": "shatter_a", "type": "sfx", "text": "A thin pane of glass cracking and shattering, quick, bright but not harsh. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "shatter_a.mp3", "bytes": 20105}
+{"name": "heartbeat_a", "type": "sfx", "text": "Two slow heavy heartbeats, deep and soft, tense. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "heartbeat_a.mp3", "bytes": 23030}
+{"name": "swell_a", "type": "sfx", "text": "A gentle warm upward swell rising for about one second, soft airy tone, ends cleanly. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "swell_a.mp3", "bytes": 17179}
+{"name": "swell_b", "type": "sfx", "text": "A gentle warm upward swell rising for about one second, soft airy tone, ends cleanly. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "swell_b.mp3", "bytes": 17179}
+{"name": "correct_a", "type": "sfx", "text": "A soft warm marimba two-note rising chime for a correct answer, low and gentle, not bright. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "correct_a.mp3", "bytes": 12163}
+{"name": "wrong_a", "type": "sfx", "text": "A soft low muted wooden 'bonk' for a wrong answer, short and dull. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "wrong_a.mp3", "bytes": 8820}
+{"name": "shimmer_a", "type": "sfx", "text": "A soft warm shimmer of low chimes, gentle sparkle for a small reward moment, not high-pitched. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "shimmer_a.mp3", "bytes": 17179}
+{"name": "footsteps_a", "type": "sfx", "text": "Light footsteps walking up wooden stairs, six steps, steady. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "footsteps_a.mp3", "bytes": 33061}
+{"name": "sign_a", "type": "sfx", "text": "A pen quickly signing a signature on paper with a final flourish. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "sign_a.mp3", "bytes": 21358}
+{"name": "unfold_a", "type": "sfx", "text": "A large paper map being unfolded and opened out, crisp paper crackle. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "unfold_a.mp3", "bytes": 15089}
+{"name": "dart_a", "type": "sfx", "text": "A dart hitting a dartboard, a solid thock. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "dart_a.mp3", "bytes": 8820}
+sfx retry with eleven_text_to_sound_v2: 400 {"detail":{"status":"invalid_generation_settings","message":"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4."}}
+{"name": "block_a", "type": "sfx", "text": "A wooden block placed down on a wooden table, hollow warm knock. No music, no voice.", "model": "eleven_text_to_sound_v2", "status": 400, "sfx": true, "error": "{\"detail\":{\"status\":\"invalid_generation_settings\",\"message\":\"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4.\"}}"}
+sfx retry with eleven_text_to_sound_v2: 400 {"detail":{"status":"invalid_generation_settings","message":"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4."}}
+{"name": "block_b", "type": "sfx", "text": "A wooden block placed down on a wooden table, hollow warm knock. No music, no voice.", "model": "eleven_text_to_sound_v2", "status": 400, "sfx": true, "error": "{\"detail\":{\"status\":\"invalid_generation_settings\",\"message\":\"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4.\"}}"}
+{"name": "deal_a", "type": "sfx", "text": "Several playing cards dealt quickly onto a table, four soft snaps in a row. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "deal_a.mp3", "bytes": 17179}
+{"name": "tick_a", "type": "sfx", "text": "A mechanical stopwatch ticking steadily, eight soft ticks. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "tick_a.mp3", "bytes": 26792}
+{"name": "crumple_a", "type": "sfx", "text": "A sheet of paper crumpled into a ball quickly, then tossed. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "crumple_a.mp3", "bytes": 13835}
+{"name": "chalk_a", "type": "sfx", "text": "A sharp red pen circling something on paper, one quick round stroke. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "chalk_a.mp3", "bytes": 8820}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "tap_a",
+  "type": "sfx",
+  "text": "A soft muted wooden tap, like a small wooden tile placed gently on a felt table. Warm, low, very short, no high frequencies. No music, no voice.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 400,
+  "sfx": true,
+  "error": "{\"detail\":{\"status\":\"invalid_generation_settings\",\"message\":\"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4.\"}}"
+ },
+ {
+  "name": "tap_b",
+  "type": "sfx",
+  "text": "A soft muted wooden tap, like a small wooden tile placed gently on a felt table. Warm, low, very short, no high frequencies. No music, no voice.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 400,
+  "sfx": true,
+  "error": "{\"detail\":{\"status\":\"invalid_generation_settings\",\"message\":\"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4.\"}}"
+ },
+ {
+  "name": "tap_c",
+  "type": "sfx",
+  "text": "A soft muted wooden tap, like a small wooden tile placed gently on a felt table. Warm, low, very short, no high frequencies. No music, no voice.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 400,
+  "sfx": true,
+  "error": "{\"detail\":{\"status\":\"invalid_generation_settings\",\"message\":\"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4.\"}}"
+ },
+ {
+  "name": "card_a",
+  "type": "sfx",
+  "text": "A playing card sliding and landing softly on a felt card table, short and papery, warm. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "card_a.mp3",
+  "bytes": 8820,
+  "seconds": 0.48
+ },
+ {
+  "name": "card_b",
+  "type": "sfx",
+  "text": "A playing card sliding and landing softly on a felt card table, short and papery, warm. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "card_b.mp3",
+  "bytes": 8820,
+  "seconds": 0.48
+ },
+ {
+  "name": "flip_a",
+  "type": "sfx",
+  "text": "A single playing card flipped over with a soft papery snap, close and warm. No music, no voice.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 400,
+  "sfx": true,
+  "error": "{\"detail\":{\"status\":\"invalid_generation_settings\",\"message\":\"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4.\"}}"
+ },
+ {
+  "name": "flip_b",
+  "type": "sfx",
+  "text": "A single playing card flipped over with a soft papery snap, close and warm. No music, no voice.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 400,
+  "sfx": true,
+  "error": "{\"detail\":{\"status\":\"invalid_generation_settings\",\"message\":\"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4.\"}}"
+ },
+ {
+  "name": "paper_a",
+  "type": "sfx",
+  "text": "A sheet of thick paper sliding and landing on a wooden desk, soft papery swish and gentle thud. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "paper_a.mp3",
+  "bytes": 10492,
+  "seconds": 0.6
+ },
+ {
+  "name": "paper_b",
+  "type": "sfx",
+  "text": "A sheet of thick paper sliding and landing on a wooden desk, soft papery swish and gentle thud. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "paper_b.mp3",
+  "bytes": 10492,
+  "seconds": 0.6
+ },
+ {
+  "name": "pile_a",
+  "type": "sfx",
+  "text": "A small stack of papers and cards tumbling down onto a desk one after another, soft rustling clatter. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "pile_a.mp3",
+  "bytes": 20105,
+  "seconds": 1.2
+ },
+ {
+  "name": "book_a",
+  "type": "sfx",
+  "text": "A heavy hardcover book dropped flat onto a wooden desk, deep solid thud, warm low end. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "book_a.mp3",
+  "bytes": 10492,
+  "seconds": 0.6
+ },
+ {
+  "name": "book_b",
+  "type": "sfx",
+  "text": "A heavy hardcover book dropped flat onto a wooden desk, deep solid thud, warm low end. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "book_b.mp3",
+  "bytes": 10492,
+  "seconds": 0.6
+ },
+ {
+  "name": "pen_a",
+  "type": "sfx",
+  "text": "A pencil writing quickly on paper, a short scribble stroke, close and natural. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "pen_a.mp3",
+  "bytes": 15089,
+  "seconds": 0.88
+ },
+ {
+  "name": "pen_b",
+  "type": "sfx",
+  "text": "A pencil writing quickly on paper, a short scribble stroke, close and natural. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "pen_b.mp3",
+  "bytes": 15089,
+  "seconds": 0.88
+ },
+ {
+  "name": "marker_a",
+  "type": "sfx",
+  "text": "A marker pen drawing one quick straight line on paper, a single swipe stroke. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "marker_a.mp3",
+  "bytes": 8820,
+  "seconds": 0.48
+ },
+ {
+  "name": "whoosh_a",
+  "type": "sfx",
+  "text": "A soft airy whoosh passing by, smooth and low, for a gentle camera move in a documentary motion graphic. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "whoosh_a.mp3",
+  "bytes": 12163,
+  "seconds": 0.68
+ },
+ {
+  "name": "whoosh_b",
+  "type": "sfx",
+  "text": "A soft airy whoosh passing by, smooth and low, for a gentle camera move in a documentary motion graphic. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "whoosh_b.mp3",
+  "bytes": 12163,
+  "seconds": 0.68
+ },
+ {
+  "name": "whoosh_c",
+  "type": "sfx",
+  "text": "A soft airy whoosh passing by, smooth and low, for a gentle camera move in a documentary motion graphic. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "whoosh_c.mp3",
+  "bytes": 12163,
+  "seconds": 0.68
+ },
+ {
+  "name": "whip_a",
+  "type": "sfx",
+  "text": "A fast camera whip pan swish, airy and smooth, not harsh. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "whip_a.mp3",
+  "bytes": 8820,
+  "seconds": 0.48
+ },
+ {
+  "name": "whip_b",
+  "type": "sfx",
+  "text": "A fast camera whip pan swish, airy and smooth, not harsh. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "whip_b.mp3",
+  "bytes": 8820,
+  "seconds": 0.48
+ },
+ {
+  "name": "impact_a",
+  "type": "sfx",
+  "text": "A deep soft cinematic impact thump with low sub bass and a short tail, clean and warm, not distorted. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "impact_a.mp3",
+  "bytes": 20105,
+  "seconds": 1.2
+ },
+ {
+  "name": "impact_b",
+  "type": "sfx",
+  "text": "A deep soft cinematic impact thump with low sub bass and a short tail, clean and warm, not distorted. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "impact_b.mp3",
+  "bytes": 20105,
+  "seconds": 1.2
+ },
+ {
+  "name": "roll_a",
+  "type": "sfx",
+  "text": "A mechanical counter rolling quickly, a fast series of soft clicks speeding up then stopping with a final click, like an odometer. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "roll_a.mp3",
+  "bytes": 15089,
+  "seconds": 0.88
+ },
+ {
+  "name": "shutter_a",
+  "type": "sfx",
+  "text": "A smartphone camera shutter click, single, clean. No music, no voice.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 400,
+  "sfx": true,
+  "error": "{\"detail\":{\"status\":\"invalid_generation_settings\",\"message\":\"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4.\"}}"
+ },
+ {
+  "name": "message_a",
+  "type": "sfx",
+  "text": "A soft warm chat message notification, a gentle low two-note wooden blip, not high-pitched. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "message_a.mp3",
+  "bytes": 10492,
+  "seconds": 0.6
+ },
+ {
+  "name": "typing_a",
+  "type": "sfx",
+  "text": "Fast typing on a phone touchscreen keyboard, soft taps, about one second. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "typing_a.mp3",
+  "bytes": 20105,
+  "seconds": 1.2
+ },
+ {
+  "name": "lock_a",
+  "type": "sfx",
+  "text": "A metal padlock shackle snapping shut, a solid satisfying click. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "lock_a.mp3",
+  "bytes": 8820,
+  "seconds": 0.48
+ },
+ {
+  "name": "gears_a",
+  "type": "sfx",
+  "text": "Mechanical gears turning and meshing, a short smooth ratchet whirr. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "gears_a.mp3",
+  "bytes": 20105,
+  "seconds": 1.2
+ },
+ {
+  "name": "thunder_a",
+  "type": "sfx",
+  "text": "A sharp close thunder crack followed by a short low rumble, dramatic. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "thunder_a.mp3",
+  "bytes": 29300,
+  "seconds": 1.76
+ },
+ {
+  "name": "dice_a",
+  "type": "sfx",
+  "text": "A single die rolling and tumbling on a wooden table, then settling. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "dice_a.mp3",
+  "bytes": 17179,
+  "seconds": 1.0
+ },
+ {
+  "name": "shatter_a",
+  "type": "sfx",
+  "text": "A thin pane of glass cracking and shattering, quick, bright but not harsh. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "shatter_a.mp3",
+  "bytes": 20105,
+  "seconds": 1.2
+ },
+ {
+  "name": "heartbeat_a",
+  "type": "sfx",
+  "text": "Two slow heavy heartbeats, deep and soft, tense. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "heartbeat_a.mp3",
+  "bytes": 23030,
+  "seconds": 1.36
+ },
+ {
+  "name": "swell_a",
+  "type": "sfx",
+  "text": "A gentle warm upward swell rising for about one second, soft airy tone, ends cleanly. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "swell_a.mp3",
+  "bytes": 17179,
+  "seconds": 1.0
+ },
+ {
+  "name": "swell_b",
+  "type": "sfx",
+  "text": "A gentle warm upward swell rising for about one second, soft airy tone, ends cleanly. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "swell_b.mp3",
+  "bytes": 17179,
+  "seconds": 1.0
+ },
+ {
+  "name": "correct_a",
+  "type": "sfx",
+  "text": "A soft warm marimba two-note rising chime for a correct answer, low and gentle, not bright. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "correct_a.mp3",
+  "bytes": 12163,
+  "seconds": 0.68
+ },
+ {
+  "name": "wrong_a",
+  "type": "sfx",
+  "text": "A soft low muted wooden 'bonk' for a wrong answer, short and dull. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "wrong_a.mp3",
+  "bytes": 8820,
+  "seconds": 0.48
+ },
+ {
+  "name": "shimmer_a",
+  "type": "sfx",
+  "text": "A soft warm shimmer of low chimes, gentle sparkle for a small reward moment, not high-pitched. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "shimmer_a.mp3",
+  "bytes": 17179,
+  "seconds": 1.0
+ },
+ {
+  "name": "footsteps_a",
+  "type": "sfx",
+  "text": "Light footsteps walking up wooden stairs, six steps, steady. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "footsteps_a.mp3",
+  "bytes": 33061,
+  "seconds": 2.0
+ },
+ {
+  "name": "sign_a",
+  "type": "sfx",
+  "text": "A pen quickly signing a signature on paper with a final flourish. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "sign_a.mp3",
+  "bytes": 21358,
+  "seconds": 1.28
+ },
+ {
+  "name": "unfold_a",
+  "type": "sfx",
+  "text": "A large paper map being unfolded and opened out, crisp paper crackle. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "unfold_a.mp3",
+  "bytes": 15089,
+  "seconds": 0.88
+ },
+ {
+  "name": "dart_a",
+  "type": "sfx",
+  "text": "A dart hitting a dartboard, a solid thock. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "dart_a.mp3",
+  "bytes": 8820,
+  "seconds": 0.48
+ },
+ {
+  "name": "block_a",
+  "type": "sfx",
+  "text": "A wooden block placed down on a wooden table, hollow warm knock. No music, no voice.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 400,
+  "sfx": true,
+  "error": "{\"detail\":{\"status\":\"invalid_generation_settings\",\"message\":\"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4.\"}}"
+ },
+ {
+  "name": "block_b",
+  "type": "sfx",
+  "text": "A wooden block placed down on a wooden table, hollow warm knock. No music, no voice.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 400,
+  "sfx": true,
+  "error": "{\"detail\":{\"status\":\"invalid_generation_settings\",\"message\":\"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4.\"}}"
+ },
+ {
+  "name": "deal_a",
+  "type": "sfx",
+  "text": "Several playing cards dealt quickly onto a table, four soft snaps in a row. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "deal_a.mp3",
+  "bytes": 17179,
+  "seconds": 1.0
+ },
+ {
+  "name": "tick_a",
+  "type": "sfx",
+  "text": "A mechanical stopwatch ticking steadily, eight soft ticks. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "tick_a.mp3",
+  "bytes": 26792,
+  "seconds": 1.6
+ },
+ {
+  "name": "crumple_a",
+  "type": "sfx",
+  "text": "A sheet of paper crumpled into a ball quickly, then tossed. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "crumple_a.mp3",
+  "bytes": 13835,
+  "seconds": 0.8
+ },
+ {
+  "name": "chalk_a",
+  "type": "sfx",
+  "text": "A sharp red pen circling something on paper, one quick round stroke. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "chalk_a.mp3",
+  "bytes": 8820,
+  "seconds": 0.48
+ }
+]
+vault sealed 39 files
