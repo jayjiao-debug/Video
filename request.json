@@ -1,181 +1,196 @@
 {
- "id": "romeo-vo-02-retakes",
+ "id": "romeo-sfx-01",
  "own_branch": true,
- "model_prefs": [
-  "eleven_v4"
- ],
- "words": true,
+ "sfx_model": "eleven_text_to_sound_v3",
  "items": [
   {
-   "type": "dialogue",
-   "name": "rt_A01_s2584",
-   "model": "eleven_v4",
-   "seed": 2584,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[curious, warm] 罗密欧，为朱丽叶哭呢？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    }
-   ]
+   "type": "sfx",
+   "name": "sfx_glass_break_1",
+   "text": "A small camera smashes into a glass bottle in someone's hand: one sharp crash of breaking glass with bright tinkling shards falling, close, dry, no music.",
+   "duration": 1.6,
+   "influence": 0.45
   },
   {
-   "type": "dialogue",
-   "name": "rt_B03_s2584",
-   "model": "eleven_v4",
-   "seed": 2584,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[innocently curious] 那罗瑟琳呢？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    }
-   ]
+   "type": "sfx",
+   "name": "sfx_glass_break_2",
+   "text": "A small camera smashes into a glass bottle in someone's hand: one sharp crash of breaking glass with bright tinkling shards falling, close, dry, no music.",
+   "duration": 1.6,
+   "influence": 0.45
   },
   {
-   "type": "dialogue",
-   "name": "rt_B06_s2584",
-   "model": "eleven_v4",
-   "seed": 2584,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[urgent, bossy] Go! Ask his name.",
-     "voice": {
-      "owner": "76c9cb1aa5bde66e61587de2b16dd92ca167852393360a9c1f7e567f229a31b4",
-      "voice_id": "rCmVtv8cYU60uhlsOo1M",
-      "name": "Ana"
-     }
-    }
-   ]
+   "type": "sfx",
+   "name": "sfx_cam_floor_1",
+   "text": "A small handheld video camera drops and clatters onto a hard stone floor: one hard plastic and metal impact, a small bounce and a short scrape, close, dry.",
+   "duration": 1.2,
+   "influence": 0.45
   },
   {
-   "type": "dialogue",
-   "name": "rt_B06_s4181",
-   "model": "eleven_v4",
-   "seed": 4181,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[urgent, bossy] Go! Ask his name.",
-     "voice": {
-      "owner": "76c9cb1aa5bde66e61587de2b16dd92ca167852393360a9c1f7e567f229a31b4",
-      "voice_id": "rCmVtv8cYU60uhlsOo1M",
-      "name": "Ana"
-     }
-    }
-   ]
+   "type": "sfx",
+   "name": "sfx_cam_floor_2",
+   "text": "A small handheld video camera drops and clatters onto a hard stone floor: one hard plastic and metal impact, a small bounce and a short scrape, close, dry.",
+   "duration": 1.2,
+   "influence": 0.45
   },
   {
-   "type": "dialogue",
-   "name": "rt_D04_s2584",
-   "model": "eleven_v4",
-   "seed": 2584,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[amused, surprised] 那您还给他们证婚？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    }
-   ]
+   "type": "sfx",
+   "name": "sfx_glitch_1",
+   "text": "A broken digital video camera malfunctioning: short electronic glitch stutters and crackling buzz, then a thin dying electronic whine that cuts to silence.",
+   "duration": 1.6,
+   "influence": 0.45
   },
   {
-   "type": "dialogue",
-   "name": "rt_H02_s2584",
-   "model": "eleven_v4",
-   "seed": 2584,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[tender, quiet] Beauty's ensign yet is crimson in thy lips, and in thy cheeks.",
-     "voice": {
-      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
-      "voice_id": "kmSVBPu7loj4ayNinwWM",
-      "name": "Archie"
-     }
-    }
-   ]
+   "type": "sfx",
+   "name": "sfx_glitch_2",
+   "text": "A broken digital video camera malfunctioning: short electronic glitch stutters and crackling buzz, then a thin dying electronic whine that cuts to silence.",
+   "duration": 1.6,
+   "influence": 0.45
   },
   {
-   "type": "dialogue",
-   "name": "rt_H02_s4181",
-   "model": "eleven_v4",
-   "seed": 4181,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[tender, quiet] Beauty's ensign yet is crimson in thy lips, and in thy cheeks.",
-     "voice": {
-      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
-      "voice_id": "kmSVBPu7loj4ayNinwWM",
-      "name": "Archie"
-     }
-    }
-   ]
+   "type": "sfx",
+   "name": "sfx_toss_1",
+   "text": "A small camera thrown hard through the air past the microphone: one quick airy whoosh with a fast spinning flutter, no impact.",
+   "duration": 0.6,
+   "influence": 0.45
   },
   {
-   "type": "dialogue",
-   "name": "rt_I04_s2584",
-   "model": "eleven_v4",
-   "seed": 2584,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[tiny, sheepish, after a pause] 拍不了了。我送。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    }
-   ]
+   "type": "sfx",
+   "name": "sfx_toss_2",
+   "text": "A small camera thrown hard through the air past the microphone: one quick airy whoosh with a fast spinning flutter, no impact.",
+   "duration": 0.6,
+   "influence": 0.45
   },
   {
-   "type": "dialogue",
-   "name": "rt_I04_s4181",
-   "model": "eleven_v4",
-   "seed": 4181,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[tiny, sheepish, after a pause] 拍不了了。我送。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    }
-   ]
+   "type": "sfx",
+   "name": "sfx_skid_1",
+   "text": "Leather shoes skidding to a sudden stop on a smooth stone floor: one quick comic scuffing slide.",
+   "duration": 0.6,
+   "influence": 0.45
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_skid_2",
+   "text": "Leather shoes skidding to a sudden stop on a smooth stone floor: one quick comic scuffing slide.",
+   "duration": 0.6,
+   "influence": 0.45
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_hammer_1",
+   "text": "A hammer nailing a wooden plank across a window outdoors: two quick solid hammer blows on wood.",
+   "duration": 1.0,
+   "influence": 0.45
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_hammer_2",
+   "text": "A hammer nailing a wooden plank across a window outdoors: two quick solid hammer blows on wood.",
+   "duration": 1.0,
+   "influence": 0.45
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_paper_tear_1",
+   "text": "One long slow dry tear of thick parchment paper, close.",
+   "duration": 0.7,
+   "influence": 0.45
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_paper_tear_2",
+   "text": "One long slow dry tear of thick parchment paper, close.",
+   "duration": 0.7,
+   "influence": 0.45
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_paper_flap_1",
+   "text": "One dry flap of a folded paper letter snapping open, close, very short.",
+   "duration": 0.4,
+   "influence": 0.45
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_paper_flap_2",
+   "text": "One dry flap of a folded paper letter snapping open, close, very short.",
+   "duration": 0.4,
+   "influence": 0.45
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_paper_crack",
+   "text": "A strip of heavy paper snapped taut in the air: one sharp crisp papery crack, very short.",
+   "duration": 0.4,
+   "influence": 0.45
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_wax_thunk_1",
+   "text": "A wax seal pressed down hard onto a paper letter on a wooden desk: one soft, low, heavy thunk, close, dry.",
+   "duration": 0.5,
+   "influence": 0.45
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_wax_thunk_2",
+   "text": "A wax seal pressed down hard onto a paper letter on a wooden desk: one soft, low, heavy thunk, close, dry.",
+   "duration": 0.5,
+   "influence": 0.45
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_wax_tick",
+   "text": "A small seal tapped onto soft wax: one tiny dry tick, close, very short.",
+   "duration": 0.3,
+   "influence": 0.45
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_wax_tock",
+   "text": "A knuckle rapped twice on hard set wax: a soft tock tock, close.",
+   "duration": 0.5,
+   "influence": 0.45
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_quill_dabs",
+   "text": "Three quick dabs of a quill pen on paper, each a short scratchy tap, rising.",
+   "duration": 0.6,
+   "influence": 0.45
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_quill_stroke",
+   "text": "One quick hard stroke of a quill pen across paper: a short scratch.",
+   "duration": 0.4,
+   "influence": 0.45
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_paper_fold",
+   "text": "A paper letter folded with two fast crisp creases, close.",
+   "duration": 0.5,
+   "influence": 0.45
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_unroll",
+   "text": "An old parchment scroll unrolled quickly on a table with a dry crackle, close.",
+   "duration": 0.7,
+   "influence": 0.45
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_hug",
+   "text": "Two people hug tightly: a soft rustle of heavy velvet and wool clothes, close and gentle.",
+   "duration": 1.0,
+   "influence": 0.45
+  },
+  {
+   "type": "sfx",
+   "name": "amb_feast",
+   "text": "A Renaissance masked ball in a big stone hall: lively crowd chatter and laughter, cups clinking, shuffling dance steps on stone, no music, steady.",
+   "duration": 8.0,
+   "influence": 0.45
   }
  ]
 }
