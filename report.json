@@ -1,0 +1,1817 @@
+{
+  "id": "romeo-vo-01-check",
+  "clips": [
+    {
+      "name": "chk_A01",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_A_s1597.mp3",
+      "start": 0.01,
+      "end": 2.27,
+      "lang": "zh",
+      "heard_auto": "羅妙,為朱莉夜哭呢?",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.939,
+      "heard": "羅妙,為朱莉夜哭呢?"
+    },
+    {
+      "name": "chk_A02",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_A_s1597.mp3",
+      "start": 2.37,
+      "end": 4.85,
+      "lang": "en",
+      "heard_auto": "Who is Juliet?",
+      "heard_lang": "en",
+      "heard_lang_p": 0.923,
+      "heard": "Who is Juliet?"
+    },
+    {
+      "name": "chk_A03",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_A_s1597.mp3",
+      "start": 5.26,
+      "end": 9.33,
+      "lang": "en",
+      "heard_auto": "Rosalind! She hath foresworn to love!",
+      "heard_lang": "en",
+      "heard_lang_p": 0.984,
+      "heard": "Rosalind! She hath foresworn to love!"
+    },
+    {
+      "name": "chk_A04",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_A_s1597.mp3",
+      "start": 9.35,
+      "end": 11.32,
+      "lang": "en",
+      "heard_auto": "Good friend, bear her this.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.975,
+      "heard": "Good friend, bear her this."
+    },
+    {
+      "name": "chk_A05",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_A_s1597.mp3",
+      "start": 11.43,
+      "end": 13.09,
+      "lang": "zh",
+      "heard_auto": "我只拍不插手",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.997,
+      "heard": "我只拍不插手"
+    },
+    {
+      "name": "chk_B01",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_B_s1597.mp3",
+      "start": 0.08,
+      "end": 2.84,
+      "lang": "zh",
+      "heard_auto": "为了罗瑟琳混进仇家舞会",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.994,
+      "heard": "为了罗瑟琳混进仇家舞会"
+    },
+    {
+      "name": "chk_B02",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_B_s1597.mp3",
+      "start": 3.06,
+      "end": 5.325,
+      "lang": "en",
+      "heard_auto": "Did my heart love till now?",
+      "heard_lang": "en",
+      "heard_lang_p": 0.981,
+      "heard": "Did my heart love till now?"
+    },
+    {
+      "name": "chk_B03",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_B_s1597.mp3",
+      "start": 5.49,
+      "end": 6.855,
+      "lang": "zh",
+      "heard_auto": "那罗斯林呢?",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.985,
+      "heard": "那罗斯林呢?"
+    },
+    {
+      "name": "chk_B04",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_B_s1597.mp3",
+      "start": 6.95,
+      "end": 7.46,
+      "lang": "en",
+      "heard_auto": "Who?",
+      "heard_lang": "en",
+      "heard_lang_p": 0.974,
+      "heard": "Who?"
+    },
+    {
+      "name": "chk_B05",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_B_s1597.mp3",
+      "start": 7.64,
+      "end": 9.3,
+      "lang": "zh",
+      "heard_auto": "朱莉葉 看上誰了",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.997,
+      "heard": "朱莉葉 看上誰了"
+    },
+    {
+      "name": "chk_B06",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_B_s1597.mp3",
+      "start": 9.38,
+      "end": 10.665,
+      "lang": "en",
+      "heard_auto": "Don't ask his name!",
+      "heard_lang": "en",
+      "heard_lang_p": 0.984,
+      "heard": "Don't ask his name!"
+    },
+    {
+      "name": "chk_B07",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_B_s1597.mp3",
+      "start": 10.86,
+      "end": 11.73,
+      "lang": "zh",
+      "heard_auto": "我只拍",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.997,
+      "heard": "我只拍"
+    },
+    {
+      "name": "chk_B08",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_B_s1597.mp3",
+      "start": 11.99,
+      "end": 14.0,
+      "lang": "zh",
+      "heard_auto": "他是他家世仇的獨子",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.997,
+      "heard": "他是他家世仇的獨子"
+    },
+    {
+      "name": "chk_C01",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_C_s1597.mp3",
+      "start": 0.03,
+      "end": 5.25,
+      "lang": "en",
+      "heard_auto": "Oh Romeo, Romeo, wherefore art thou Romeo?",
+      "heard_lang": "en",
+      "heard_lang_p": 0.965,
+      "heard": "Oh Romeo, Romeo, wherefore art thou Romeo?"
+    },
+    {
+      "name": "chk_C02",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_C_s1597.mp3",
+      "start": 5.45,
+      "end": 6.73,
+      "lang": "zh",
+      "heard_auto": "對方哪裡好",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.975,
+      "heard": "對方哪裡好"
+    },
+    {
+      "name": "chk_C03",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_C_s1597.mp3",
+      "start": 6.87,
+      "end": 9.85,
+      "lang": "en",
+      "heard_auto": "It is the East, and Juliet is the Sun!",
+      "heard_lang": "en",
+      "heard_lang_p": 0.992,
+      "heard": "It is the East, and Juliet is the Sun!"
+    },
+    {
+      "name": "chk_C04",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_C_s1597.mp3",
+      "start": 9.92,
+      "end": 11.38,
+      "lang": "zh",
+      "heard_auto": "现在是半夜",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.984,
+      "heard": "现在是半夜"
+    },
+    {
+      "name": "chk_C05",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_C_s1597.mp3",
+      "start": 11.54,
+      "end": 16.63,
+      "lang": "en",
+      "heard_auto": "My bounty is as boundless as the sea, my love as deep.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.99,
+      "heard": "My bounty is as boundless as the sea, my love as deep."
+    },
+    {
+      "name": "chk_C06",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_C_s1597.mp3",
+      "start": 16.7,
+      "end": 18.355,
+      "lang": "zh",
+      "heard_auto": "才认知三小时吧",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "heard": "才认知三小时吧"
+    },
+    {
+      "name": "chk_C07",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_C_s1597.mp3",
+      "start": 18.45,
+      "end": 21.75,
+      "lang": "en",
+      "heard_auto": "It is too rash, too unadvised, too sudden.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.987,
+      "heard": "It is too rash, too unadvised, too sudden."
+    },
+    {
+      "name": "chk_C08",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_C_s1597.mp3",
+      "start": 22.11,
+      "end": 24.8,
+      "lang": "en",
+      "heard_auto": "Oh, Romeo. Romeo.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.948,
+      "heard": "Oh, Romeo. Romeo."
+    },
+    {
+      "name": "chk_C09",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_C_s1597.mp3",
+      "start": 24.94,
+      "end": 28.275,
+      "lang": "en",
+      "heard_auto": "Lady, by yonder blessed moon I swear.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.996,
+      "heard": "Lady, by yonder blessed moon I swear."
+    },
+    {
+      "name": "chk_C10",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_C_s1597.mp3",
+      "start": 28.3,
+      "end": 31.29,
+      "lang": "en",
+      "heard_auto": "Oh swear not by the moon, the inconstant moon!",
+      "heard_lang": "en",
+      "heard_lang_p": 0.997,
+      "heard": "Oh swear not by the moon, the inconstant moon!"
+    },
+    {
+      "name": "chk_C11",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_C_s1597.mp3",
+      "start": 31.45,
+      "end": 33.905,
+      "lang": "en",
+      "heard_auto": "By purpose marriage. Send me word tomorrow.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.992,
+      "heard": "By purpose marriage. Send me word tomorrow."
+    },
+    {
+      "name": "chk_C12",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_C_s1597.mp3",
+      "start": 33.97,
+      "end": 35.28,
+      "lang": "en",
+      "heard_auto": "at the hour of nine!",
+      "heard_lang": "en",
+      "heard_lang_p": 0.987,
+      "heard": "at the hour of nine!"
+    },
+    {
+      "name": "chk_D01",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_D_s1597.mp3",
+      "start": 0.0,
+      "end": 1.885,
+      "lang": "en",
+      "heard_auto": "Wasst thou with Rosaline?",
+      "heard_lang": "en",
+      "heard_lang_p": 0.963,
+      "heard": "Wasst thou with Rosaline?"
+    },
+    {
+      "name": "chk_D02",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_D_s1597.mp3",
+      "start": 2.16,
+      "end": 3.74,
+      "lang": "en",
+      "heard_auto": "I have forgot that name.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.993,
+      "heard": "I have forgot that name."
+    },
+    {
+      "name": "chk_D03",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_D_s1597.mp3",
+      "start": 3.89,
+      "end": 8.92,
+      "lang": "en",
+      "heard_auto": "Young men's love then lies not truly in their hearts, but in their eyes.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.993,
+      "heard": "Young men's love then lies not truly in their hearts, but in their eyes."
+    },
+    {
+      "name": "chk_D04",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_D_s1597.mp3",
+      "start": 9.09,
+      "end": 10.895,
+      "lang": "zh",
+      "heard_auto": "那這婚妮還重",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.995,
+      "heard": "那這婚妮還重"
+    },
+    {
+      "name": "chk_D05",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_D_s1597.mp3",
+      "start": 10.96,
+      "end": 15.56,
+      "lang": "en",
+      "heard_auto": "Wisely and slow, they stumble that run fast.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.994,
+      "heard": "Wisely and slow, they stumble that run fast."
+    },
+    {
+      "name": "chk_D06",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_D_s1597.mp3",
+      "start": 16.01,
+      "end": 19.44,
+      "lang": "en",
+      "heard_auto": "These violent delights have violent ends.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.99,
+      "heard": "These violent delights have violent ends."
+    },
+    {
+      "name": "chk_E01",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_E_s1597.mp3",
+      "start": 0.04,
+      "end": 1.255,
+      "lang": "zh",
+      "heard_auto": "For me oh",
+      "heard_lang": "en",
+      "heard_lang_p": 0.493,
+      "heard": "for me oh"
+    },
+    {
+      "name": "chk_E02",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_E_s1597.mp3",
+      "start": 1.255,
+      "end": 4.31,
+      "lang": "en",
+      "heard_auto": "Oh, I am fortune's fool.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.985,
+      "heard": "Oh, I am fortune's fool."
+    },
+    {
+      "name": "chk_E03",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_E_s1597.mp3",
+      "start": 4.45,
+      "end": 6.81,
+      "lang": "zh",
+      "heard_auto": "他刚杀了朱立叶的表哥",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.995,
+      "heard": "他刚杀了朱立叶的表哥"
+    },
+    {
+      "name": "chk_F01",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_F_s1597.mp3",
+      "start": 0.21,
+      "end": 2.42,
+      "lang": "zh",
+      "heard_auto": "爸媽要他後天嫁別人",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.994,
+      "heard": "爸媽要他後天嫁別人"
+    },
+    {
+      "name": "chk_F02",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_F_s1597.mp3",
+      "start": 2.62,
+      "end": 8.48,
+      "lang": "en",
+      "heard_auto": "Take thou this vial. No warmth, no breath shall testify thou livest.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.989,
+      "heard": "Take thou this vial. No warmth, no breath shall testify thou livest."
+    },
+    {
+      "name": "chk_F03",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_F_s1597.mp3",
+      "start": 8.81,
+      "end": 13.6,
+      "lang": "en",
+      "heard_auto": "two and forty hours, and then awake as from a pleasant sleep.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.987,
+      "heard": "two and forty hours, and then awake as from a pleasant sleep."
+    },
+    {
+      "name": "chk_F04",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_F_s1597.mp3",
+      "start": 13.67,
+      "end": 17.0,
+      "lang": "en",
+      "heard_auto": "Give me! Give me! Oh, tell not me of fear!",
+      "heard_lang": "en",
+      "heard_lang_p": 0.99,
+      "heard": "Give me! Give me! Oh, tell not me of fear!"
+    },
+    {
+      "name": "chk_F05",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_F_s1597.mp3",
+      "start": 17.25,
+      "end": 18.67,
+      "lang": "zh",
+      "heard_auto": "罗密欧知道吗",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.974,
+      "heard": "罗密欧知道吗"
+    },
+    {
+      "name": "chk_F06",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_F_s1597.mp3",
+      "start": 18.79,
+      "end": 21.69,
+      "lang": "en",
+      "heard_auto": "shall Romeo by my letters know our drift.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.99,
+      "heard": "shall Romeo by my letters know our drift."
+    },
+    {
+      "name": "chk_F07",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_F_s1597.mp3",
+      "start": 22.01,
+      "end": 24.67,
+      "lang": "en",
+      "heard_auto": "Thou wilt thou bear this to Romeo?",
+      "heard_lang": "en",
+      "heard_lang_p": 0.979,
+      "heard": "Thou wilt thou bear this to Romeo?"
+    },
+    {
+      "name": "chk_F08",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_F_s1597.mp3",
+      "start": 24.915,
+      "end": 26.2,
+      "lang": "zh",
+      "heard_auto": "我只拍",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.957,
+      "heard": "我只拍"
+    },
+    {
+      "name": "chk_F09",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_F_s1597.mp3",
+      "start": 26.37,
+      "end": 30.45,
+      "lang": "en",
+      "heard_auto": "Romeo, I come, this do I drink to thee.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.987,
+      "heard": "Romeo, I come, this do I drink to thee."
+    },
+    {
+      "name": "chk_G01",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_G_s1597.mp3",
+      "start": 0.1,
+      "end": 2.98,
+      "lang": "zh",
+      "heard_auto": "先到的消息朱莉也死了",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.977,
+      "heard": "先到的消息朱莉也死了"
+    },
+    {
+      "name": "chk_G02",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_G_s1597.mp3",
+      "start": 3.2,
+      "end": 5.14,
+      "lang": "en",
+      "heard_auto": "Then I defy you, stars!",
+      "heard_lang": "en",
+      "heard_lang_p": 0.989,
+      "heard": "Then I defy you, stars!"
+    },
+    {
+      "name": "chk_G03",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_G_s1597.mp3",
+      "start": 5.47,
+      "end": 7.59,
+      "lang": "en",
+      "heard_auto": "Has thou no letters to me from the friar?",
+      "heard_lang": "en",
+      "heard_lang_p": 0.983,
+      "heard": "Has thou no letters to me from the friar?"
+    },
+    {
+      "name": "chk_G04",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_G_s1597.mp3",
+      "start": 7.855,
+      "end": 8.76,
+      "lang": "zh",
+      "heard_auto": "male",
+      "heard_lang": "en",
+      "heard_lang_p": 0.446,
+      "heard": "沒有"
+    },
+    {
+      "name": "chk_G05",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_G_s1597.mp3",
+      "start": 9.01,
+      "end": 9.89,
+      "lang": "en",
+      "heard_auto": "No matter.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.972,
+      "heard": "No matter."
+    },
+    {
+      "name": "chk_G06",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_G_s1597.mp3",
+      "start": 10.03,
+      "end": 11.15,
+      "lang": "zh",
+      "heard_auto": "等等 她沒",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.903,
+      "heard": "等等 她沒"
+    },
+    {
+      "name": "chk_G07",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_G_s1597.mp3",
+      "start": 11.41,
+      "end": 13.52,
+      "lang": "zh",
+      "heard_auto": "他沒死他沒聽完",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.982,
+      "heard": "他沒死他沒聽完"
+    },
+    {
+      "name": "chk_H01",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_H_s1597.mp3",
+      "start": 0.0,
+      "end": 3.09,
+      "lang": "en",
+      "heard_auto": "Death has had no power yet upon thy beauty.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.996,
+      "heard": "Death has had no power yet upon thy beauty."
+    },
+    {
+      "name": "chk_H02",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_H_s1597.mp3",
+      "start": 3.55,
+      "end": 7.64,
+      "lang": "en",
+      "heard_auto": "Beauty's end sign yet is crimson in my lips and in my cheeks.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.983,
+      "heard": "Beauty's end sign yet is crimson in my lips and in my cheeks."
+    },
+    {
+      "name": "chk_H03",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_H_s1597.mp3",
+      "start": 7.69,
+      "end": 10.2,
+      "lang": "zh",
+      "heard_auto": "紅的是因為他活著",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.993,
+      "heard": "紅的是因為他活著"
+    },
+    {
+      "name": "chk_H04",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_H_s1597.mp3",
+      "start": 10.26,
+      "end": 11.64,
+      "lang": "en",
+      "heard_auto": "Here's to my love.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.964,
+      "heard": "Here's to my love."
+    },
+    {
+      "name": "chk_H05",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_H_s1597.mp3",
+      "start": 11.78,
+      "end": 14.48,
+      "lang": "zh",
+      "heard_auto": "我只拍不差不拍了",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.996,
+      "heard": "我只拍不差不拍了"
+    },
+    {
+      "name": "chk_I01",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_I_s1597.mp3",
+      "start": 0.0,
+      "end": 2.05,
+      "lang": "en",
+      "heard_auto": "Where is my Romeo?",
+      "heard_lang": "en",
+      "heard_lang_p": 0.948,
+      "heard": "Where is my Romeo?"
+    },
+    {
+      "name": "chk_I02",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_I_s1597.mp3",
+      "start": 2.05,
+      "end": 4.38,
+      "lang": "en",
+      "heard_auto": "Did the friar's letter not reach thee?",
+      "heard_lang": "en",
+      "heard_lang_p": 0.987,
+      "heard": "Did the friar's letter not reach thee?"
+    },
+    {
+      "name": "chk_I03",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_I_s1597.mp3",
+      "start": 4.43,
+      "end": 5.37,
+      "lang": "en",
+      "heard_auto": "What letter?",
+      "heard_lang": "en",
+      "heard_lang_p": 0.973,
+      "heard": "What letter?"
+    },
+    {
+      "name": "chk_I04",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/dlg_I_s1597.mp3",
+      "start": 5.47,
+      "end": 7.68,
+      "lang": "zh",
+      "heard_auto": "他還不了了我送",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.971,
+      "heard": "他還不了了我送"
+    },
+    {
+      "name": "chk_also_C08",
+      "type": "transcribe",
+      "src": "../vo-romeo-vo-01/also_C08_s1597.mp3",
+      "start": 0,
+      "end": null,
+      "lang": "en",
+      "heard_auto": "Juliet. Juliet.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.925,
+      "heard": "Juliet. Juliet."
+    }
+  ],
+  "plan": {
+    "tier": "creator",
+    "character_count": 106255,
+    "character_limit": 123898,
+    "status": "active"
+  },
+  "models": [
+    "eleven_v4",
+    "eleven_v4_turbo",
+    "eleven_v3",
+    "eleven_v3_conversational",
+    "eleven_multilingual_v2",
+    "eleven_flash_v2_5",
+    "eleven_turbo_v2_5",
+    "eleven_turbo_v2",
+    "eleven_flash_v2",
+    "eleven_english_sts_v2",
+    "eleven_multilingual_sts_v2"
+  ],
+  "model": "eleven_v4",
+  "own_voices": [
+    {
+      "id": "q98Kxgzc0nMDSWQrcpa8",
+      "name": "Juno Frankenstein Creature",
+      "labels": {},
+      "category": "generated"
+    },
+    {
+      "id": "ljGjaiU0wAV9gLkUfavZ",
+      "name": "LuXun K1 (film)",
+      "labels": {},
+      "category": "generated"
+    },
+    {
+      "id": "jbWlBCyxlOi9ReBhwDUd",
+      "name": "client01-narrator",
+      "labels": {
+        "language": "zh",
+        "use_case": "narration"
+      },
+      "category": "cloned"
+    },
+    {
+      "id": "tOuLUAIdXShmWH7PEUrU",
+      "name": "zh-Julia - Young, Smooth and Neutral",
+      "labels": {
+        "language": "zh",
+        "gender": "female",
+        "use_case": "conversational",
+        "descriptive": "confident",
+        "accent": "standard",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "Ca5bKgudqKJzq8YRFoAz",
+      "name": "zh-Coco Li - Calm, Young and Trustworthy",
+      "labels": {
+        "language": "zh",
+        "gender": "female",
+        "use_case": "narrative_story",
+        "descriptive": "chill",
+        "accent": "standard",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "M0TrFmFeBJS9H4xzdk8Z",
+      "name": "zh-Steven Gor - Low, Calm and Soothing",
+      "labels": {
+        "language": "zh",
+        "gender": "male",
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "accent": "standard",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ZJsn5HnrE3eUbep2ia8D",
+      "name": "zh-Qiao Feng - Warm, Clear & Friendly",
+      "labels": {
+        "language": "zh",
+        "gender": "male",
+        "use_case": "entertainment_tv",
+        "descriptive": "casual",
+        "accent": "standard",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "54Cze5LrTSyLgbO6Fhlc",
+      "name": "zh-Caty - Droll, Wry and Dry",
+      "labels": {
+        "language": "en",
+        "descriptive": "sassy",
+        "use_case": "characters_animation",
+        "gender": "female",
+        "accent": "american",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "lt7GBaCoAHWbT7JSZ5Xs",
+      "name": "zh-Xinghe Jiang - Magnetic Conversationa",
+      "labels": {
+        "language": "zh",
+        "gender": "male",
+        "use_case": "conversational",
+        "descriptive": "calm",
+        "accent": "standard",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "TPIitICAZ8CqlGZ81AKm",
+      "name": "zh-Elen Kuragina – Golden & Dangerous",
+      "labels": {
+        "language": "ru",
+        "gender": "female",
+        "use_case": "characters_animation",
+        "descriptive": "excited",
+        "accent": "standard",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "1qEiC6qsybMkmnNdVMbK",
+      "name": "hi-Monika Sogam - Calm and Natural",
+      "labels": {
+        "language": "hi",
+        "gender": "female",
+        "use_case": "narrative_story",
+        "descriptive": "professional",
+        "accent": "standard",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "u0TsaWvt0v8migutHM3M",
+      "name": "ar-Ghizlane - Smooth, Distinctive and Ca",
+      "labels": {
+        "language": "ar",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "accent": "modern standard",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ko0CPqOV7GGUcPkJMPej",
+      "name": "it-Vera - Calm, Influential and Balanced",
+      "labels": {
+        "language": "it",
+        "descriptive": "confident",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "accent": "milanese",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "iw7467blzNLEVe32avRC",
+      "name": "pt-Alcione - Soft, Energetic and Tender",
+      "labels": {
+        "language": "pt",
+        "gender": "female",
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "accent": "brazilian",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "qHkrJuifPpn95wK3rm2A",
+      "name": "es-Andrea - Polite, Cheerful and Calm",
+      "labels": {
+        "language": "es",
+        "gender": "female",
+        "use_case": "conversational",
+        "descriptive": "casual",
+        "accent": "latin american",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "JYyJjNPfmNJdaby8LdZs",
+      "name": "es-Marlene - Melodic, Pleasant and Brigh",
+      "labels": {
+        "language": "es",
+        "descriptive": "cute",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "accent": "mexican",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "CaJslL1xziwefCeTNzHv",
+      "name": "es-Cristina Campos - Friendly and Soft",
+      "labels": {
+        "language": "es",
+        "descriptive": "casual",
+        "use_case": "conversational",
+        "gender": "female",
+        "accent": "latin american",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "2rigMbVWLdqtBSCahJFX",
+      "name": "es-Tatiana Martin - Wise-speaking, calm",
+      "labels": {
+        "language": "es",
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "accent": "latin american",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "KYiVPerWcenyBTIvWbfY",
+      "name": "hi-Sia - Friendly, Helpful and Reassurin",
+      "labels": {
+        "language": "hi",
+        "gender": "female",
+        "use_case": "conversational",
+        "descriptive": "pleasant",
+        "accent": "standard",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "OtEfb2LVzIE45wdYe54M",
+      "name": "hi-Zara - Soft, Professional and Gentle",
+      "labels": {
+        "language": "hi",
+        "descriptive": "classy",
+        "use_case": "conversational",
+        "gender": "female",
+        "accent": "standard",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "XTa3iQyMA6f1qrI4F6kZ",
+      "name": "ar-Sara - Soft, Expressive, and Warm",
+      "labels": {
+        "language": "ar",
+        "gender": "female",
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "accent": "modern standard",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "gfKKsLN1k0oYYN9n2dXX",
+      "name": "it-Violetta - Ringing, Bright and Joyful",
+      "labels": {
+        "language": "it",
+        "descriptive": "professional",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "accent": "standard",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "33B4UnXyTNbgLmdEDh5P",
+      "name": "pt-Keren - Sweet, Vibrant and Rhythmic",
+      "labels": {
+        "language": "pt",
+        "gender": "female",
+        "use_case": "narrative_story",
+        "descriptive": "excited",
+        "accent": "brazilian",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "5vkxOzoz40FrElmLP4P7",
+      "name": "es-Gaby - Friendly, Expressive and Vibra",
+      "labels": {
+        "language": "es",
+        "descriptive": "casual",
+        "use_case": "conversational",
+        "gender": "female",
+        "accent": "peruvian",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "9Godp7dNohUvXk6qp0gS",
+      "name": "es-Regina - Contact Center",
+      "labels": {
+        "language": "es",
+        "gender": "female",
+        "use_case": "conversational",
+        "descriptive": "casual",
+        "accent": "mexican",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "kPzsL2i3teMYv0FxEYQ6",
+      "name": "en-Brittney - Social Media Voice - Fun, ",
+      "labels": {
+        "language": "en",
+        "gender": "female",
+        "use_case": "social_media",
+        "descriptive": "upbeat",
+        "accent": "american",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "vZZLclMx4wouUtKBRfZn",
+      "name": "zh-Jin - Clear, Warm and Casual",
+      "labels": {
+        "language": "zh",
+        "gender": "male",
+        "use_case": "narrative_story",
+        "descriptive": "casual",
+        "accent": "standard",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "PaZ8laODC1yRxHTPYJFh",
+      "name": "el-Christos - Casual, Calm and Serious",
+      "labels": {
+        "language": "el",
+        "gender": "male",
+        "use_case": "narrative_story",
+        "descriptive": "confident",
+        "accent": "standard",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "QpnXVbX7RkmUGDwpJh5v",
+      "name": "el-Talos",
+      "labels": {
+        "language": "el",
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "accent": "standard",
+        "age": "old"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "n0vzWypeCK1NlWPVwhOc",
+      "name": "el-Theos - Narrational, Assertive and Wa",
+      "labels": {
+        "language": "el",
+        "gender": "male",
+        "use_case": "narrative_story",
+        "descriptive": "professional",
+        "accent": "standard",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "2OcnG4mH3jIMtWz3vKus",
+      "name": "zh-Wolf Spencer - Rough and Deep",
+      "labels": {
+        "language": "de",
+        "gender": "male",
+        "use_case": "characters_animation",
+        "descriptive": "professional",
+        "accent": "standard",
+        "age": "old"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "APSIkVZudNbPAwyPoeVO",
+      "name": "zh-Sage - Soothing & Gentle",
+      "labels": {
+        "language": "zh",
+        "gender": "female",
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "accent": "standard",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "5mZxJZhSmJTjL7GoYfYI",
+      "name": "zh-Karo Yang - Clear, Lively and Energet",
+      "labels": {
+        "language": "zh",
+        "gender": "male",
+        "use_case": "social_media",
+        "descriptive": "pleasant",
+        "accent": "standard",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "Iqi0ix5WGtiSXX9VDZB4",
+      "name": "zh-Helen Sun - Smooth, Clear and Mature",
+      "labels": {
+        "language": "zh",
+        "gender": "female",
+        "use_case": "informative_educational",
+        "descriptive": "formal",
+        "accent": "standard",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hkfHEbBvdQFNX4uWHqRF",
+      "name": "zh-Stacy - Young, Sweet and Cute",
+      "labels": {
+        "language": "zh",
+        "descriptive": "pleasant",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "accent": "standard",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "SF9uvIlY93SJRMdV5jeP",
+      "name": "en-Andrew Griffin - Football Commentator",
+      "labels": {
+        "language": "en",
+        "descriptive": "calm",
+        "use_case": "conversational",
+        "gender": "male",
+        "accent": "american",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "OYTbf65OHHFELVut7v2H",
+      "name": "en-Hope - Natural, Clear and Calm",
+      "labels": {
+        "language": "en",
+        "descriptive": "crisp",
+        "use_case": "conversational",
+        "gender": "female",
+        "accent": "american",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "U5UjeJMsOvyhYhXfZdvZ",
+      "name": "en-Adam - Classic Scottish Storyteller",
+      "labels": {
+        "language": "en",
+        "gender": "male",
+        "use_case": "narrative_story",
+        "descriptive": "crisp",
+        "accent": "scottish",
+        "age": "old"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "keLVje3aBMuRpxuu0bqO",
+      "name": "en-Crofty - Energetic Radio Host",
+      "labels": {
+        "language": "en",
+        "use_case": "advertisement",
+        "descriptive": "professional",
+        "accent": "scottish",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "yj30vwTGJxSHezdAGsv9",
+      "name": "en-Jessa - Easygoing and Effortless",
+      "labels": {
+        "language": "en",
+        "gender": "female",
+        "use_case": "narrative_story",
+        "descriptive": "casual",
+        "accent": "american",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "h1i3CVVBUuF6s46cxUGG",
+      "name": "en-Andy Lin - Gentle and Friendly Narrat",
+      "labels": {
+        "language": "en",
+        "descriptive": "gentle",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "accent": "chinese",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ZthjuvLPty3kTMaNKVKb",
+      "name": "en-Peter",
+      "labels": {
+        "language": "en",
+        "descriptive": "confident",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "accent": "american",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "W71zT1VwIFFx3mMGH2uZ",
+      "name": "it-MarcoTrox - Warm, Balanced and Polish",
+      "labels": {
+        "language": "it",
+        "gender": "male",
+        "use_case": "narrative_story",
+        "descriptive": "intense",
+        "accent": "standard",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "gUbIduqGzBP438teh4ZA",
+      "name": "en-Lewis - Friendly, Calm, and Full",
+      "labels": {
+        "language": "en",
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "accent": "scottish",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "MFZUKuGQUsGJPQjTS4wC",
+      "name": "en-Jon - Warm & Grounded Storyteller",
+      "labels": {
+        "language": "en",
+        "gender": "male",
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "accent": "american",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "MI36FIkp9wRP7cpWKPTl",
+      "name": "zh-Evan Zhao - Warm, Calm and Trustworth",
+      "labels": {
+        "language": "zh",
+        "descriptive": "gentle",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "accent": "beijing mandarin",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hZTuv9Zqrq4yHYrEmF1r",
+      "name": "zh-Adam Li -  Deep, Steady and Calm",
+      "labels": {
+        "language": "zh",
+        "gender": "male",
+        "use_case": "narrative_story",
+        "descriptive": "deep",
+        "accent": "singapore mandarin",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "YxbjaPemDJV2xlfvkiIG",
+      "name": "zh-Yun - Elegant, Sweet and Gentle",
+      "labels": {
+        "language": "zh",
+        "gender": "female",
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "accent": "standard",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "NxUQ5SgevJvRsX9HsM0O",
+      "name": "en-Wenchang - Chinese accent",
+      "labels": {
+        "language": "en",
+        "gender": "male",
+        "use_case": "informative_educational",
+        "descriptive": "chill",
+        "accent": "chinese",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6OzrBCQf8cjERkYgzSg8",
+      "name": "en-Young Jamal",
+      "labels": {
+        "language": "en",
+        "descriptive": "chill",
+        "use_case": "social_media",
+        "gender": "male",
+        "accent": "american",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "iLVmqjzCGGvqtMCk6vVQ",
+      "name": "en-Antonio - Lively, Engaging and Energe",
+      "labels": {
+        "language": "en",
+        "descriptive": "calm",
+        "use_case": "conversational",
+        "gender": "male",
+        "accent": "italian",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "y6p0SvBlfEe2MH4XN7BP",
+      "name": "en-Hugh - Rhythmic and Engaging Storytel",
+      "labels": {
+        "language": "en",
+        "descriptive": "casual",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "accent": "scottish",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "NOpBlnGInO9m6vDvFkFC",
+      "name": "en-Spuds Oxley - Grandpa ",
+      "labels": {
+        "language": "en",
+        "gender": "male",
+        "use_case": "narrative_story",
+        "descriptive": "gentle",
+        "accent": "american",
+        "age": "old"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6vTyAgAT8PncODBcLjRf",
+      "name": "fr-Claire - Warm, Pretty and Charming",
+      "labels": {
+        "language": "fr",
+        "gender": "female",
+        "use_case": "narrative_story",
+        "descriptive": "casual",
+        "accent": "standard",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "aQROLel5sQbj1vuIVi6B",
+      "name": "fr-Nicolas - Narrator",
+      "labels": {
+        "language": "fr",
+        "descriptive": "professional",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "accent": "parisian",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "v3V1d2rk6528UrLKRuy8",
+      "name": "de-Susi - Effortless and Confident",
+      "labels": {
+        "language": "de",
+        "gender": "female",
+        "use_case": "conversational",
+        "descriptive": "calm",
+        "accent": "standard",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "FTNCalFNG5bRnkkaP5Ug",
+      "name": "de-Otto - Casual and Normal",
+      "labels": {
+        "language": "de",
+        "gender": "male",
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "accent": "standard",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ymDCYd8puC7gYjxIamPt",
+      "name": "ru-Marina - Soft, Clear and Warm",
+      "labels": {
+        "language": "ru",
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "accent": "standard",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "3EuKHIEZbSzrHGNmdYsx",
+      "name": "ru-Nikolay - Confident, Clear and Engagi",
+      "labels": {
+        "language": "ru",
+        "descriptive": "confident",
+        "use_case": "social_media",
+        "gender": "male",
+        "accent": "standard",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "n1PvBOwxb8X6m7tahp2h",
+      "name": "Michael C. Vincent - Suspenseful Storyteller",
+      "labels": {
+        "language": "en",
+        "descriptive": "serious",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "accent": "american",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6FiCmD8eY5VyjOdG5Zjk",
+      "name": "Adam - Deep English Story Voice",
+      "labels": {
+        "language": "en",
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "accent": "american",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "UgBBYS2sOqTuMpoF3BR0",
+      "name": "Mark - Natural Conversations",
+      "labels": {
+        "language": "en",
+        "descriptive": "casual",
+        "use_case": "conversational",
+        "gender": "male",
+        "accent": "american",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "RABOvaPec1ymXz02oDQi",
+      "name": "Anika - Sweet, Lively and Warm",
+      "labels": {
+        "language": "hi",
+        "gender": "female",
+        "use_case": "social_media",
+        "descriptive": "upbeat",
+        "accent": "standard",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hpp4J3VqNfWAUOO0d1Us",
+      "name": "Bella - Professional, Bright, Warm",
+      "labels": {
+        "descriptive": "professional",
+        "language": "en",
+        "gender": "female",
+        "use_case": "informative_educational",
+        "accent": "american",
+        "age": "middle_aged"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "CwhRBWXzGAHq8TQ4Fs17",
+      "name": "Roger - Laid-Back, Casual, Resonant",
+      "labels": {
+        "descriptive": "classy",
+        "language": "en",
+        "gender": "male",
+        "use_case": "conversational",
+        "accent": "american",
+        "age": "middle_aged"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "EXAVITQu4vr4xnSDxMaL",
+      "name": "Sarah - Mature, Reassuring, Confident",
+      "labels": {
+        "descriptive": "professional",
+        "language": "en",
+        "gender": "female",
+        "use_case": "entertainment_tv",
+        "accent": "american",
+        "age": "young"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "FGY2WhTYpPnrIDTdsKH5",
+      "name": "Laura - Enthusiast, Quirky Attitude",
+      "labels": {
+        "descriptive": "sassy",
+        "language": "en",
+        "gender": "female",
+        "use_case": "social_media",
+        "accent": "american",
+        "age": "young"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "IKne3meq5aSn9XLyUdCD",
+      "name": "Charlie - Deep, Confident, Energetic",
+      "labels": {
+        "descriptive": "hyped",
+        "language": "en",
+        "gender": "male",
+        "use_case": "conversational",
+        "accent": "australian",
+        "age": "young"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "JBFqnCBsd6RMkjVDRZzb",
+      "name": "George - Warm, Captivating Storyteller",
+      "labels": {
+        "descriptive": "mature",
+        "language": "en",
+        "gender": "male",
+        "use_case": "narrative_story",
+        "accent": "british",
+        "age": "middle_aged"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "N2lVS1w4EtoT3dr4eOWO",
+      "name": "Callum - Husky Trickster",
+      "labels": {
+        "language": "en",
+        "gender": "male",
+        "use_case": "characters_animation",
+        "accent": "american",
+        "age": "middle_aged"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "SAz9YHcvj6GT2YYXdXww",
+      "name": "River - Relaxed, Neutral, Informative",
+      "labels": {
+        "descriptive": "calm",
+        "language": "en",
+        "gender": "neutral",
+        "use_case": "conversational",
+        "accent": "american",
+        "age": "middle_aged"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "SOYHLrjzK2X1ezoPC6cr",
+      "name": "Harry - Fierce Warrior",
+      "labels": {
+        "descriptive": "rough",
+        "language": "en",
+        "gender": "male",
+        "use_case": "characters_animation",
+        "accent": "american",
+        "age": "young"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "TX3LPaxmHKxFdv7VOQHJ",
+      "name": "Liam - Energetic, Social Media Creator",
+      "labels": {
+        "descriptive": "confident",
+        "language": "en",
+        "gender": "male",
+        "use_case": "social_media",
+        "accent": "american",
+        "age": "young"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "Xb7hH8MSUJpSbSDYk0k2",
+      "name": "Alice - Clear, Engaging Educator",
+      "labels": {
+        "descriptive": "professional",
+        "language": "en",
+        "gender": "female",
+        "use_case": "informative_educational",
+        "accent": "british",
+        "age": "middle_aged"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "XrExE9yKIg1WjnnlVkGX",
+      "name": "Matilda - Knowledgable, Professional",
+      "labels": {
+        "descriptive": "upbeat",
+        "language": "en",
+        "gender": "female",
+        "use_case": "informative_educational",
+        "accent": "american",
+        "age": "middle_aged"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "bIHbv24MWmeRgasZH58o",
+      "name": "Will - Relaxed Optimist",
+      "labels": {
+        "descriptive": "chill",
+        "language": "en",
+        "gender": "male",
+        "use_case": "conversational",
+        "accent": "american",
+        "age": "young"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "cgSgspJ2msm6clMCkdW9",
+      "name": "Jessica - Playful, Bright, Warm",
+      "labels": {
+        "descriptive": "cute",
+        "language": "en",
+        "gender": "female",
+        "use_case": "conversational",
+        "accent": "american",
+        "age": "young"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "cjVigY5qzO86Huf0OWal",
+      "name": "Eric - Smooth, Trustworthy",
+      "labels": {
+        "descriptive": "classy",
+        "language": "en",
+        "gender": "male",
+        "use_case": "conversational",
+        "accent": "american",
+        "age": "middle_aged"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "iP95p4xoKVk53GoZ742B",
+      "name": "Chris - Charming, Down-to-Earth",
+      "labels": {
+        "descriptive": "casual",
+        "language": "en",
+        "gender": "male",
+        "use_case": "conversational",
+        "accent": "american",
+        "age": "middle_aged"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "nPczCjzI2devNBz1zQrb",
+      "name": "Brian - Deep, Resonant and Comforting",
+      "labels": {
+        "descriptive": "classy",
+        "language": "en",
+        "gender": "male",
+        "use_case": "social_media",
+        "accent": "american",
+        "age": "middle_aged"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "onwK4e9ZLuTAKqWW03F9",
+      "name": "Daniel - Steady Broadcaster",
+      "labels": {
+        "descriptive": "formal",
+        "language": "en",
+        "gender": "male",
+        "use_case": "informative_educational",
+        "accent": "british",
+        "age": "middle_aged"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pFZP5JQG7iQjIQuC4Bku",
+      "name": "Lily - Velvety Actress",
+      "labels": {
+        "descriptive": "confident",
+        "language": "en",
+        "gender": "female",
+        "use_case": "informative_educational",
+        "accent": "british",
+        "age": "middle_aged"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pNInz6obpgDQGcFmaJgB",
+      "name": "Adam - Dominant, Firm",
+      "labels": {
+        "language": "en",
+        "gender": "male",
+        "use_case": "social_media",
+        "accent": "american",
+        "age": "middle_aged"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pqHfZKP75CvOlQylNhV4",
+      "name": "Bill - Wise, Mature, Balanced",
+      "labels": {
+        "descriptive": "crisp",
+        "language": "en",
+        "gender": "male",
+        "use_case": "advertisement",
+        "accent": "american",
+        "age": "old"
+      },
+      "category": "premade"
+    }
+  ]
+}
