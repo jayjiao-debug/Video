@@ -1,64 +1,10 @@
 {
- "id": "client01-sfx-v4b",
+ "id": "romeo-voices-01",
  "own_branch": true,
- "sfx_model": "eleven_text_to_sound_v3",
- "seal_to": "dbb5c9b28a1708b2bfc5add205f988d340df6f9e4245b45c8a9209cc342bb030",
  "items": [
-  {
-   "type": "sfx",
-   "name": "tap_a",
-   "text": "A soft muted wooden tap, like a small wooden tile placed gently on a felt table. Warm, low, very short, no high frequencies. No music, no voice.",
-   "duration": 0.5,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "tap_b",
-   "text": "A soft muted wooden tap, like a small wooden tile placed gently on a felt table. Warm, low, very short, no high frequencies. No music, no voice.",
-   "duration": 0.5,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "tap_c",
-   "text": "A soft muted wooden tap, like a small wooden tile placed gently on a felt table. Warm, low, very short, no high frequencies. No music, no voice.",
-   "duration": 0.5,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "flip_a",
-   "text": "A single playing card flipped over with a soft papery snap, close and warm. No music, no voice.",
-   "duration": 0.5,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "flip_b",
-   "text": "A single playing card flipped over with a soft papery snap, close and warm. No music, no voice.",
-   "duration": 0.5,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "shutter_a",
-   "text": "A smartphone camera shutter click, single, clean. No music, no voice.",
-   "duration": 0.5,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "block_a",
-   "text": "A wooden block placed down on a wooden table, hollow warm knock. No music, no voice.",
-   "duration": 0.5,
-   "influence": 0.55
-  },
-  {
-   "type": "sfx",
-   "name": "block_b",
-   "text": "A wooden block placed down on a wooden table, hollow warm knock. No music, no voice.",
-   "duration": 0.5,
-   "influence": 0.55
-  }
+  {"type": "voices", "name": "en_m_young", "lang": "en", "accent": "british", "gender": "male", "age": "young", "n": 15},
+  {"type": "voices", "name": "en_f_young", "lang": "en", "accent": "british", "gender": "female", "age": "young", "n": 15},
+  {"type": "voices", "name": "en_m_old", "lang": "en", "accent": "british", "gender": "male", "age": "old", "n": 15},
+  {"type": "voices", "name": "en_m_middle", "lang": "en", "accent": "british", "gender": "male", "age": "middle_aged", "n": 10}
  ]
 }
