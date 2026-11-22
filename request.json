@@ -1,5 +1,5 @@
 {
- "id": "romeo-audition-01",
+ "id": "romeo-vo-01",
  "own_branch": true,
  "model_prefs": [
   "eleven_v4"
@@ -8,7 +8,7 @@
  "items": [
   {
    "type": "dialogue",
-   "name": "aud_ro_Axell",
+   "name": "dlg_A_s1597",
    "model": "eleven_v4",
    "seed": 1597,
    "settings": {
@@ -16,7 +16,7 @@
    },
    "lines": [
     {
-     "text": "[curious] 那罗瑟琳呢？",
+     "text": "[curious, warm] 罗密欧，为朱丽叶哭呢？",
      "voice": {
       "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
       "voice_id": "I23uc91tu5zY2PA1tKEN",
@@ -24,73 +24,11 @@
      }
     },
     {
-     "text": "[sobbing dramatically] Rosaline! She hath forsworn to love!",
+     "text": "[sniffling, completely blank] ...Who is Juliet?",
      "voice": {
-      "owner": "70f5a5480e10b0bfc6be976e983454dd45959b0912e28c385f7b15fd46e2cdbb",
-      "voice_id": "2mltbVQP21Fq8XgIfRQJ",
-      "name": "Axell"
-     }
-    },
-    {
-     "text": "[whispering, then bursting out] It is the east, and Juliet is the sun!",
-     "voice": {
-      "owner": "70f5a5480e10b0bfc6be976e983454dd45959b0912e28c385f7b15fd46e2cdbb",
-      "voice_id": "2mltbVQP21Fq8XgIfRQJ",
-      "name": "Axell"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "aud_ro_Astro",
-   "model": "eleven_v4",
-   "seed": 1597,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[curious] 那罗瑟琳呢？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[sobbing dramatically] Rosaline! She hath forsworn to love!",
-     "voice": {
-      "owner": "70f5a5480e10b0bfc6be976e983454dd45959b0912e28c385f7b15fd46e2cdbb",
-      "voice_id": "B5vjwBxGgp4GLTiUjDxM",
-      "name": "Astro"
-     }
-    },
-    {
-     "text": "[whispering, then bursting out] It is the east, and Juliet is the sun!",
-     "voice": {
-      "owner": "70f5a5480e10b0bfc6be976e983454dd45959b0912e28c385f7b15fd46e2cdbb",
-      "voice_id": "B5vjwBxGgp4GLTiUjDxM",
-      "name": "Astro"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "aud_ro_Archie",
-   "model": "eleven_v4",
-   "seed": 1597,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[curious] 那罗瑟琳呢？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
+      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
+      "voice_id": "kmSVBPu7loj4ayNinwWM",
+      "name": "Archie"
      }
     },
     {
@@ -102,18 +40,26 @@
      }
     },
     {
-     "text": "[whispering, then bursting out] It is the east, and Juliet is the sun!",
+     "text": "[eager, still sniffling] Good friend, bear her this!",
      "voice": {
       "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
       "voice_id": "kmSVBPu7loj4ayNinwWM",
       "name": "Archie"
      }
+    },
+    {
+     "text": "[firm, matter-of-fact] 我只拍，不插手。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
     }
    ]
   },
   {
    "type": "dialogue",
-   "name": "aud_ju_Emmaline",
+   "name": "dlg_B_s1597",
    "model": "eleven_v4",
    "seed": 1597,
    "settings": {
@@ -121,7 +67,7 @@
    },
    "lines": [
     {
-     "text": "[curious] 那罗瑟琳呢？",
+     "text": "[whispers] 为了罗瑟琳，混进仇家舞会。",
      "voice": {
       "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
       "voice_id": "I23uc91tu5zY2PA1tKEN",
@@ -129,34 +75,15 @@
      }
     },
     {
-     "text": "[urgent, bossy] Go ask his name.",
+     "text": "[awestruck, breathless] Did my heart love till now?",
      "voice": {
-      "owner": "2d45e341c1672ec1b7a9c952a12dc504a49a8b21a672441a7a5f4e9fa1ee4029",
-      "voice_id": "nDJIICjR9zfJExIFeSCN",
-      "name": "Emmaline"
+      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
+      "voice_id": "kmSVBPu7loj4ayNinwWM",
+      "name": "Archie"
      }
     },
     {
-     "text": "[primly, very serious] It is too rash, too unadvised, too sudden.",
-     "voice": {
-      "owner": "2d45e341c1672ec1b7a9c952a12dc504a49a8b21a672441a7a5f4e9fa1ee4029",
-      "voice_id": "nDJIICjR9zfJExIFeSCN",
-      "name": "Emmaline"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "aud_ju_Amelia",
-   "model": "eleven_v4",
-   "seed": 1597,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[curious] 那罗瑟琳呢？",
+     "text": "[innocently curious] 那罗瑟琳呢？",
      "voice": {
       "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
       "voice_id": "I23uc91tu5zY2PA1tKEN",
@@ -164,34 +91,15 @@
      }
     },
     {
-     "text": "[urgent, bossy] Go ask his name.",
+     "text": "[distracted, not listening] Who?",
      "voice": {
-      "owner": "9265ac49c437181ced8d508db9b8248e1b839589ba453afca0db0f9d60ff389a",
-      "voice_id": "ZF6FPAbjXT4488VcRRnw",
-      "name": "Amelia"
+      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
+      "voice_id": "kmSVBPu7loj4ayNinwWM",
+      "name": "Archie"
      }
     },
     {
-     "text": "[primly, very serious] It is too rash, too unadvised, too sudden.",
-     "voice": {
-      "owner": "9265ac49c437181ced8d508db9b8248e1b839589ba453afca0db0f9d60ff389a",
-      "voice_id": "ZF6FPAbjXT4488VcRRnw",
-      "name": "Amelia"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "aud_ju_Ana",
-   "model": "eleven_v4",
-   "seed": 1597,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[curious] 那罗瑟琳呢？",
+     "text": "[teasing, friendly] 朱丽叶，看上谁了？",
      "voice": {
       "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
       "voice_id": "I23uc91tu5zY2PA1tKEN",
@@ -207,18 +115,133 @@
      }
     },
     {
+     "text": "[flat, polite but firm] 我只拍。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[whispers] 他是她家世仇的独子。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "dlg_C_s1597",
+   "model": "eleven_v4",
+   "seed": 1597,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[sighing, dreamy] O Romeo, Romeo! Wherefore art thou Romeo?",
+     "voice": {
+      "owner": "76c9cb1aa5bde66e61587de2b16dd92ca167852393360a9c1f7e567f229a31b4",
+      "voice_id": "rCmVtv8cYU60uhlsOo1M",
+      "name": "Ana"
+     }
+    },
+    {
+     "text": "[whispers] 对方哪里好？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[whispering, then bursting out] It is the east, and Juliet is the sun!",
+     "voice": {
+      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
+      "voice_id": "kmSVBPu7loj4ayNinwWM",
+      "name": "Archie"
+     }
+    },
+    {
+     "text": "[whispers, deadpan] 现在是半夜。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[softly, dreamy] My bounty is as boundless as the sea, my love as deep.",
+     "voice": {
+      "owner": "76c9cb1aa5bde66e61587de2b16dd92ca167852393360a9c1f7e567f229a31b4",
+      "voice_id": "rCmVtv8cYU60uhlsOo1M",
+      "name": "Ana"
+     }
+    },
+    {
+     "text": "[deadpan, teasing] 才认识三小时吧？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
      "text": "[primly, very serious] It is too rash, too unadvised, too sudden.",
      "voice": {
       "owner": "76c9cb1aa5bde66e61587de2b16dd92ca167852393360a9c1f7e567f229a31b4",
       "voice_id": "rCmVtv8cYU60uhlsOo1M",
       "name": "Ana"
      }
+    },
+    {
+     "text": "[lovesick sigh] Romeo... Romeo...",
+     "voice": {
+      "owner": "76c9cb1aa5bde66e61587de2b16dd92ca167852393360a9c1f7e567f229a31b4",
+      "voice_id": "rCmVtv8cYU60uhlsOo1M",
+      "name": "Ana"
+     }
+    },
+    {
+     "text": "[earnest, hand on heart] Lady, by yonder blessed moon I swear—",
+     "voice": {
+      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
+      "voice_id": "kmSVBPu7loj4ayNinwWM",
+      "name": "Archie"
+     }
+    },
+    {
+     "text": "[cutting in, quick] O, swear not by the moon, the inconstant moon!",
+     "voice": {
+      "owner": "76c9cb1aa5bde66e61587de2b16dd92ca167852393360a9c1f7e567f229a31b4",
+      "voice_id": "rCmVtv8cYU60uhlsOo1M",
+      "name": "Ana"
+     }
+    },
+    {
+     "text": "[brisk, decisive] Thy purpose marriage, send me word tomorrow!",
+     "voice": {
+      "owner": "76c9cb1aa5bde66e61587de2b16dd92ca167852393360a9c1f7e567f229a31b4",
+      "voice_id": "rCmVtv8cYU60uhlsOo1M",
+      "name": "Ana"
+     }
+    },
+    {
+     "text": "[instantly, thrilled] At the hour of nine!",
+     "voice": {
+      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
+      "voice_id": "kmSVBPu7loj4ayNinwWM",
+      "name": "Archie"
+     }
     }
    ]
   },
   {
    "type": "dialogue",
-   "name": "aud_fr_Oliver",
+   "name": "dlg_D_s1597",
    "model": "eleven_v4",
    "seed": 1597,
    "settings": {
@@ -226,7 +249,31 @@
    },
    "lines": [
     {
-     "text": "[curious] 那罗瑟琳呢？",
+     "text": "[dry, knowing] Wast thou with Rosaline?",
+     "voice": {
+      "owner": "34c483aaa9f266050bb548d8a3495b18c266f138401947fae23df13770cb6f7b",
+      "voice_id": "0lp4RIz96WD1RUtvEu3Q",
+      "name": "Grandfather"
+     }
+    },
+    {
+     "text": "[stiffly] I have forgot that name.",
+     "voice": {
+      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
+      "voice_id": "kmSVBPu7loj4ayNinwWM",
+      "name": "Archie"
+     }
+    },
+    {
+     "text": "[wry, amused] Young men's love then lies not truly in their hearts, but in their eyes.",
+     "voice": {
+      "owner": "34c483aaa9f266050bb548d8a3495b18c266f138401947fae23df13770cb6f7b",
+      "voice_id": "0lp4RIz96WD1RUtvEu3Q",
+      "name": "Grandfather"
+     }
+    },
+    {
+     "text": "[amused, surprised] 那这婚您还证？",
      "voice": {
       "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
       "voice_id": "I23uc91tu5zY2PA1tKEN",
@@ -234,42 +281,7 @@
      }
     },
     {
-     "text": "[wry, amused] Young men's love then lies not truly in their hearts, but in their eyes.",
-     "voice": {
-      "owner": "4e120f88d43f125a4c1f56885db63990e17568c80c5cca2f9f3a6459230fbeb1",
-      "voice_id": "L1aJrPa7pLJEyYlh3Ilq",
-      "name": "Oliver"
-     }
-    },
-    {
-     "text": "[quietly, ominous] These violent delights have violent ends.",
-     "voice": {
-      "owner": "4e120f88d43f125a4c1f56885db63990e17568c80c5cca2f9f3a6459230fbeb1",
-      "voice_id": "L1aJrPa7pLJEyYlh3Ilq",
-      "name": "Oliver"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "aud_fr_Grandfather",
-   "model": "eleven_v4",
-   "seed": 1597,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[curious] 那罗瑟琳呢？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[wry, amused] Young men's love then lies not truly in their hearts, but in their eyes.",
+     "text": "[slow, wise] Wisely and slow; they stumble that run fast.",
      "voice": {
       "owner": "34c483aaa9f266050bb548d8a3495b18c266f138401947fae23df13770cb6f7b",
       "voice_id": "0lp4RIz96WD1RUtvEu3Q",
@@ -288,7 +300,7 @@
   },
   {
    "type": "dialogue",
-   "name": "aud_fr_Cornelius",
+   "name": "dlg_E_s1597",
    "model": "eleven_v4",
    "seed": 1597,
    "settings": {
@@ -296,7 +308,7 @@
    },
    "lines": [
     {
-     "text": "[curious] 那罗瑟琳呢？",
+     "text": "[quietly, uneasy] 罗密欧？",
      "voice": {
       "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
       "voice_id": "I23uc91tu5zY2PA1tKEN",
@@ -304,19 +316,282 @@
      }
     },
     {
-     "text": "[wry, amused] Young men's love then lies not truly in their hearts, but in their eyes.",
+     "text": "[hollow, shaken] O, I am fortune's fool!",
      "voice": {
-      "owner": "a72a436938f959ab051e6a27b035db67a4b75945b4d6e8c86ed40e6e946a2e11",
-      "voice_id": "6sFKzaJr574YWVu4UuJF",
-      "name": "Cornelius"
+      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
+      "voice_id": "kmSVBPu7loj4ayNinwWM",
+      "name": "Archie"
      }
     },
     {
-     "text": "[quietly, ominous] These violent delights have violent ends.",
+     "text": "[whispers, shaken] 他刚杀了朱丽叶的表哥。",
      "voice": {
-      "owner": "a72a436938f959ab051e6a27b035db67a4b75945b4d6e8c86ed40e6e946a2e11",
-      "voice_id": "6sFKzaJr574YWVu4UuJF",
-      "name": "Cornelius"
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "dlg_F_s1597",
+   "model": "eleven_v4",
+   "seed": 1597,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[whispers] 爸妈要她后天嫁别人。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[low, careful] Take thou this vial. No warmth, no breath, shall testify thou livest.",
+     "voice": {
+      "owner": "34c483aaa9f266050bb548d8a3495b18c266f138401947fae23df13770cb6f7b",
+      "voice_id": "0lp4RIz96WD1RUtvEu3Q",
+      "name": "Grandfather"
+     }
+    },
+    {
+     "text": "[low, reassuring] Two and forty hours, and then awake as from a pleasant sleep.",
+     "voice": {
+      "owner": "34c483aaa9f266050bb548d8a3495b18c266f138401947fae23df13770cb6f7b",
+      "voice_id": "0lp4RIz96WD1RUtvEu3Q",
+      "name": "Grandfather"
+     }
+    },
+    {
+     "text": "[fierce, impatient] Give me, give me! O, tell not me of fear!",
+     "voice": {
+      "owner": "76c9cb1aa5bde66e61587de2b16dd92ca167852393360a9c1f7e567f229a31b4",
+      "voice_id": "rCmVtv8cYU60uhlsOo1M",
+      "name": "Ana"
+     }
+    },
+    {
+     "text": "[worried] 罗密欧知道吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[busy, writing] Shall Romeo by my letters know our drift.",
+     "voice": {
+      "owner": "34c483aaa9f266050bb548d8a3495b18c266f138401947fae23df13770cb6f7b",
+      "voice_id": "0lp4RIz96WD1RUtvEu3Q",
+      "name": "Grandfather"
+     }
+    },
+    {
+     "text": "[gently, hopeful] Thou. Wilt thou bear this to Romeo?",
+     "voice": {
+      "owner": "34c483aaa9f266050bb548d8a3495b18c266f138401947fae23df13770cb6f7b",
+      "voice_id": "0lp4RIz96WD1RUtvEu3Q",
+      "name": "Grandfather"
+     }
+    },
+    {
+     "text": "[small, hesitant] ……我只拍。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[softly, brave] Romeo, I come! This do I drink to thee.",
+     "voice": {
+      "owner": "76c9cb1aa5bde66e61587de2b16dd92ca167852393360a9c1f7e567f229a31b4",
+      "voice_id": "rCmVtv8cYU60uhlsOo1M",
+      "name": "Ana"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "dlg_G_s1597",
+   "model": "eleven_v4",
+   "seed": 1597,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[whispers] 先到的消息：朱丽叶死了。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[raw, defiant] Then I defy you, stars!",
+     "voice": {
+      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
+      "voice_id": "kmSVBPu7loj4ayNinwWM",
+      "name": "Archie"
+     }
+    },
+    {
+     "text": "[desperate hope] Hast thou no letters to me from the friar?",
+     "voice": {
+      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
+      "voice_id": "kmSVBPu7loj4ayNinwWM",
+      "name": "Archie"
+     }
+    },
+    {
+     "text": "[barely audible] ……没有。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[flat, empty] No matter.",
+     "voice": {
+      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
+      "voice_id": "kmSVBPu7loj4ayNinwWM",
+      "name": "Archie"
+     }
+    },
+    {
+     "text": "[urgent, cut off] 等等，她没——",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[whispers, voice cracking] 她没死。他没听完。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "dlg_H_s1597",
+   "model": "eleven_v4",
+   "seed": 1597,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[soft, wondering] Death hath had no power yet upon thy beauty.",
+     "voice": {
+      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
+      "voice_id": "kmSVBPu7loj4ayNinwWM",
+      "name": "Archie"
+     }
+    },
+    {
+     "text": "[tender, quiet] Beauty's ensign yet is crimson in thy lips and in thy cheeks.",
+     "voice": {
+      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
+      "voice_id": "kmSVBPu7loj4ayNinwWM",
+      "name": "Archie"
+     }
+    },
+    {
+     "text": "[desperate, voice shaking] 红的，是因为她活着！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[calm, tender] Here's to my love!",
+     "voice": {
+      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
+      "voice_id": "kmSVBPu7loj4ayNinwWM",
+      "name": "Archie"
+     }
+    },
+    {
+     "text": "[breaking] 我只拍，不插……[shouting] 不拍了！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "dlg_I_s1597",
+   "model": "eleven_v4",
+   "seed": 1597,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[waking, drowsy, soft] Where is my Romeo?",
+     "voice": {
+      "owner": "76c9cb1aa5bde66e61587de2b16dd92ca167852393360a9c1f7e567f229a31b4",
+      "voice_id": "rCmVtv8cYU60uhlsOo1M",
+      "name": "Ana"
+     }
+    },
+    {
+     "text": "[puzzled] Did the friar's letter not reach thee?",
+     "voice": {
+      "owner": "76c9cb1aa5bde66e61587de2b16dd92ca167852393360a9c1f7e567f229a31b4",
+      "voice_id": "rCmVtv8cYU60uhlsOo1M",
+      "name": "Ana"
+     }
+    },
+    {
+     "text": "[blank] What letter?",
+     "voice": {
+      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
+      "voice_id": "kmSVBPu7loj4ayNinwWM",
+      "name": "Archie"
+     }
+    },
+    {
+     "text": "[tiny, sheepish] ……拍不了了。我送。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "also_C08_s1597",
+   "model": "eleven_v4",
+   "seed": 1597,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[lovesick sigh] Juliet... Juliet...",
+     "voice": {
+      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
+      "voice_id": "kmSVBPu7loj4ayNinwWM",
+      "name": "Archie"
      }
     }
    ]
