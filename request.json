@@ -1,10 +1,325 @@
 {
- "id": "romeo-voices-01",
+ "id": "romeo-audition-01",
  "own_branch": true,
+ "model_prefs": [
+  "eleven_v4"
+ ],
+ "words": true,
  "items": [
-  {"type": "voices", "name": "en_m_young", "lang": "en", "accent": "british", "gender": "male", "age": "young", "n": 15},
-  {"type": "voices", "name": "en_f_young", "lang": "en", "accent": "british", "gender": "female", "age": "young", "n": 15},
-  {"type": "voices", "name": "en_m_old", "lang": "en", "accent": "british", "gender": "male", "age": "old", "n": 15},
-  {"type": "voices", "name": "en_m_middle", "lang": "en", "accent": "british", "gender": "male", "age": "middle_aged", "n": 10}
+  {
+   "type": "dialogue",
+   "name": "aud_ro_Axell",
+   "model": "eleven_v4",
+   "seed": 1597,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[curious] 那罗瑟琳呢？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[sobbing dramatically] Rosaline! She hath forsworn to love!",
+     "voice": {
+      "owner": "70f5a5480e10b0bfc6be976e983454dd45959b0912e28c385f7b15fd46e2cdbb",
+      "voice_id": "2mltbVQP21Fq8XgIfRQJ",
+      "name": "Axell"
+     }
+    },
+    {
+     "text": "[whispering, then bursting out] It is the east, and Juliet is the sun!",
+     "voice": {
+      "owner": "70f5a5480e10b0bfc6be976e983454dd45959b0912e28c385f7b15fd46e2cdbb",
+      "voice_id": "2mltbVQP21Fq8XgIfRQJ",
+      "name": "Axell"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "aud_ro_Astro",
+   "model": "eleven_v4",
+   "seed": 1597,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[curious] 那罗瑟琳呢？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[sobbing dramatically] Rosaline! She hath forsworn to love!",
+     "voice": {
+      "owner": "70f5a5480e10b0bfc6be976e983454dd45959b0912e28c385f7b15fd46e2cdbb",
+      "voice_id": "B5vjwBxGgp4GLTiUjDxM",
+      "name": "Astro"
+     }
+    },
+    {
+     "text": "[whispering, then bursting out] It is the east, and Juliet is the sun!",
+     "voice": {
+      "owner": "70f5a5480e10b0bfc6be976e983454dd45959b0912e28c385f7b15fd46e2cdbb",
+      "voice_id": "B5vjwBxGgp4GLTiUjDxM",
+      "name": "Astro"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "aud_ro_Archie",
+   "model": "eleven_v4",
+   "seed": 1597,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[curious] 那罗瑟琳呢？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[sobbing dramatically] Rosaline! She hath forsworn to love!",
+     "voice": {
+      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
+      "voice_id": "kmSVBPu7loj4ayNinwWM",
+      "name": "Archie"
+     }
+    },
+    {
+     "text": "[whispering, then bursting out] It is the east, and Juliet is the sun!",
+     "voice": {
+      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
+      "voice_id": "kmSVBPu7loj4ayNinwWM",
+      "name": "Archie"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "aud_ju_Emmaline",
+   "model": "eleven_v4",
+   "seed": 1597,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[curious] 那罗瑟琳呢？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[urgent, bossy] Go ask his name.",
+     "voice": {
+      "owner": "2d45e341c1672ec1b7a9c952a12dc504a49a8b21a672441a7a5f4e9fa1ee4029",
+      "voice_id": "nDJIICjR9zfJExIFeSCN",
+      "name": "Emmaline"
+     }
+    },
+    {
+     "text": "[primly, very serious] It is too rash, too unadvised, too sudden.",
+     "voice": {
+      "owner": "2d45e341c1672ec1b7a9c952a12dc504a49a8b21a672441a7a5f4e9fa1ee4029",
+      "voice_id": "nDJIICjR9zfJExIFeSCN",
+      "name": "Emmaline"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "aud_ju_Amelia",
+   "model": "eleven_v4",
+   "seed": 1597,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[curious] 那罗瑟琳呢？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[urgent, bossy] Go ask his name.",
+     "voice": {
+      "owner": "9265ac49c437181ced8d508db9b8248e1b839589ba453afca0db0f9d60ff389a",
+      "voice_id": "ZF6FPAbjXT4488VcRRnw",
+      "name": "Amelia"
+     }
+    },
+    {
+     "text": "[primly, very serious] It is too rash, too unadvised, too sudden.",
+     "voice": {
+      "owner": "9265ac49c437181ced8d508db9b8248e1b839589ba453afca0db0f9d60ff389a",
+      "voice_id": "ZF6FPAbjXT4488VcRRnw",
+      "name": "Amelia"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "aud_ju_Ana",
+   "model": "eleven_v4",
+   "seed": 1597,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[curious] 那罗瑟琳呢？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[urgent, bossy] Go ask his name.",
+     "voice": {
+      "owner": "76c9cb1aa5bde66e61587de2b16dd92ca167852393360a9c1f7e567f229a31b4",
+      "voice_id": "rCmVtv8cYU60uhlsOo1M",
+      "name": "Ana"
+     }
+    },
+    {
+     "text": "[primly, very serious] It is too rash, too unadvised, too sudden.",
+     "voice": {
+      "owner": "76c9cb1aa5bde66e61587de2b16dd92ca167852393360a9c1f7e567f229a31b4",
+      "voice_id": "rCmVtv8cYU60uhlsOo1M",
+      "name": "Ana"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "aud_fr_Oliver",
+   "model": "eleven_v4",
+   "seed": 1597,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[curious] 那罗瑟琳呢？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[wry, amused] Young men's love then lies not truly in their hearts, but in their eyes.",
+     "voice": {
+      "owner": "4e120f88d43f125a4c1f56885db63990e17568c80c5cca2f9f3a6459230fbeb1",
+      "voice_id": "L1aJrPa7pLJEyYlh3Ilq",
+      "name": "Oliver"
+     }
+    },
+    {
+     "text": "[quietly, ominous] These violent delights have violent ends.",
+     "voice": {
+      "owner": "4e120f88d43f125a4c1f56885db63990e17568c80c5cca2f9f3a6459230fbeb1",
+      "voice_id": "L1aJrPa7pLJEyYlh3Ilq",
+      "name": "Oliver"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "aud_fr_Grandfather",
+   "model": "eleven_v4",
+   "seed": 1597,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[curious] 那罗瑟琳呢？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[wry, amused] Young men's love then lies not truly in their hearts, but in their eyes.",
+     "voice": {
+      "owner": "34c483aaa9f266050bb548d8a3495b18c266f138401947fae23df13770cb6f7b",
+      "voice_id": "0lp4RIz96WD1RUtvEu3Q",
+      "name": "Grandfather"
+     }
+    },
+    {
+     "text": "[quietly, ominous] These violent delights have violent ends.",
+     "voice": {
+      "owner": "34c483aaa9f266050bb548d8a3495b18c266f138401947fae23df13770cb6f7b",
+      "voice_id": "0lp4RIz96WD1RUtvEu3Q",
+      "name": "Grandfather"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "aud_fr_Cornelius",
+   "model": "eleven_v4",
+   "seed": 1597,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[curious] 那罗瑟琳呢？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[wry, amused] Young men's love then lies not truly in their hearts, but in their eyes.",
+     "voice": {
+      "owner": "a72a436938f959ab051e6a27b035db67a4b75945b4d6e8c86ed40e6e946a2e11",
+      "voice_id": "6sFKzaJr574YWVu4UuJF",
+      "name": "Cornelius"
+     }
+    },
+    {
+     "text": "[quietly, ominous] These violent delights have violent ends.",
+     "voice": {
+      "owner": "a72a436938f959ab051e6a27b035db67a4b75945b4d6e8c86ed40e6e946a2e11",
+      "voice_id": "6sFKzaJr574YWVu4UuJF",
+      "name": "Cornelius"
+     }
+    }
+   ]
+  }
  ]
 }
