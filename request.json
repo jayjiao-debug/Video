@@ -1,600 +1,484 @@
 {
- "id": "romeo-vo-01",
+ "id": "romeo-vo-01-check",
  "own_branch": true,
- "model_prefs": [
-  "eleven_v4"
- ],
- "words": true,
  "items": [
   {
-   "type": "dialogue",
-   "name": "dlg_A_s1597",
-   "model": "eleven_v4",
-   "seed": 1597,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[curious, warm] 罗密欧，为朱丽叶哭呢？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[sniffling, completely blank] ...Who is Juliet?",
-     "voice": {
-      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
-      "voice_id": "kmSVBPu7loj4ayNinwWM",
-      "name": "Archie"
-     }
-    },
-    {
-     "text": "[sobbing dramatically] Rosaline! She hath forsworn to love!",
-     "voice": {
-      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
-      "voice_id": "kmSVBPu7loj4ayNinwWM",
-      "name": "Archie"
-     }
-    },
-    {
-     "text": "[eager, still sniffling] Good friend, bear her this!",
-     "voice": {
-      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
-      "voice_id": "kmSVBPu7loj4ayNinwWM",
-      "name": "Archie"
-     }
-    },
-    {
-     "text": "[firm, matter-of-fact] 我只拍，不插手。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    }
-   ]
+   "type": "transcribe",
+   "name": "chk_A01",
+   "src": "../vo-romeo-vo-01/dlg_A_s1597.mp3",
+   "start": 0.01,
+   "end": 2.27,
+   "lang": "zh"
   },
   {
-   "type": "dialogue",
-   "name": "dlg_B_s1597",
-   "model": "eleven_v4",
-   "seed": 1597,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[whispers] 为了罗瑟琳，混进仇家舞会。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[awestruck, breathless] Did my heart love till now?",
-     "voice": {
-      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
-      "voice_id": "kmSVBPu7loj4ayNinwWM",
-      "name": "Archie"
-     }
-    },
-    {
-     "text": "[innocently curious] 那罗瑟琳呢？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[distracted, not listening] Who?",
-     "voice": {
-      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
-      "voice_id": "kmSVBPu7loj4ayNinwWM",
-      "name": "Archie"
-     }
-    },
-    {
-     "text": "[teasing, friendly] 朱丽叶，看上谁了？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[urgent, bossy] Go ask his name.",
-     "voice": {
-      "owner": "76c9cb1aa5bde66e61587de2b16dd92ca167852393360a9c1f7e567f229a31b4",
-      "voice_id": "rCmVtv8cYU60uhlsOo1M",
-      "name": "Ana"
-     }
-    },
-    {
-     "text": "[flat, polite but firm] 我只拍。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[whispers] 他是她家世仇的独子。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    }
-   ]
+   "type": "transcribe",
+   "name": "chk_A02",
+   "src": "../vo-romeo-vo-01/dlg_A_s1597.mp3",
+   "start": 2.37,
+   "end": 4.85,
+   "lang": "en"
   },
   {
-   "type": "dialogue",
-   "name": "dlg_C_s1597",
-   "model": "eleven_v4",
-   "seed": 1597,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[sighing, dreamy] O Romeo, Romeo! Wherefore art thou Romeo?",
-     "voice": {
-      "owner": "76c9cb1aa5bde66e61587de2b16dd92ca167852393360a9c1f7e567f229a31b4",
-      "voice_id": "rCmVtv8cYU60uhlsOo1M",
-      "name": "Ana"
-     }
-    },
-    {
-     "text": "[whispers] 对方哪里好？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[whispering, then bursting out] It is the east, and Juliet is the sun!",
-     "voice": {
-      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
-      "voice_id": "kmSVBPu7loj4ayNinwWM",
-      "name": "Archie"
-     }
-    },
-    {
-     "text": "[whispers, deadpan] 现在是半夜。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[softly, dreamy] My bounty is as boundless as the sea, my love as deep.",
-     "voice": {
-      "owner": "76c9cb1aa5bde66e61587de2b16dd92ca167852393360a9c1f7e567f229a31b4",
-      "voice_id": "rCmVtv8cYU60uhlsOo1M",
-      "name": "Ana"
-     }
-    },
-    {
-     "text": "[deadpan, teasing] 才认识三小时吧？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[primly, very serious] It is too rash, too unadvised, too sudden.",
-     "voice": {
-      "owner": "76c9cb1aa5bde66e61587de2b16dd92ca167852393360a9c1f7e567f229a31b4",
-      "voice_id": "rCmVtv8cYU60uhlsOo1M",
-      "name": "Ana"
-     }
-    },
-    {
-     "text": "[lovesick sigh] Romeo... Romeo...",
-     "voice": {
-      "owner": "76c9cb1aa5bde66e61587de2b16dd92ca167852393360a9c1f7e567f229a31b4",
-      "voice_id": "rCmVtv8cYU60uhlsOo1M",
-      "name": "Ana"
-     }
-    },
-    {
-     "text": "[earnest, hand on heart] Lady, by yonder blessed moon I swear—",
-     "voice": {
-      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
-      "voice_id": "kmSVBPu7loj4ayNinwWM",
-      "name": "Archie"
-     }
-    },
-    {
-     "text": "[cutting in, quick] O, swear not by the moon, the inconstant moon!",
-     "voice": {
-      "owner": "76c9cb1aa5bde66e61587de2b16dd92ca167852393360a9c1f7e567f229a31b4",
-      "voice_id": "rCmVtv8cYU60uhlsOo1M",
-      "name": "Ana"
-     }
-    },
-    {
-     "text": "[brisk, decisive] Thy purpose marriage, send me word tomorrow!",
-     "voice": {
-      "owner": "76c9cb1aa5bde66e61587de2b16dd92ca167852393360a9c1f7e567f229a31b4",
-      "voice_id": "rCmVtv8cYU60uhlsOo1M",
-      "name": "Ana"
-     }
-    },
-    {
-     "text": "[instantly, thrilled] At the hour of nine!",
-     "voice": {
-      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
-      "voice_id": "kmSVBPu7loj4ayNinwWM",
-      "name": "Archie"
-     }
-    }
-   ]
+   "type": "transcribe",
+   "name": "chk_A03",
+   "src": "../vo-romeo-vo-01/dlg_A_s1597.mp3",
+   "start": 5.26,
+   "end": 9.33,
+   "lang": "en"
   },
   {
-   "type": "dialogue",
-   "name": "dlg_D_s1597",
-   "model": "eleven_v4",
-   "seed": 1597,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[dry, knowing] Wast thou with Rosaline?",
-     "voice": {
-      "owner": "34c483aaa9f266050bb548d8a3495b18c266f138401947fae23df13770cb6f7b",
-      "voice_id": "0lp4RIz96WD1RUtvEu3Q",
-      "name": "Grandfather"
-     }
-    },
-    {
-     "text": "[stiffly] I have forgot that name.",
-     "voice": {
-      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
-      "voice_id": "kmSVBPu7loj4ayNinwWM",
-      "name": "Archie"
-     }
-    },
-    {
-     "text": "[wry, amused] Young men's love then lies not truly in their hearts, but in their eyes.",
-     "voice": {
-      "owner": "34c483aaa9f266050bb548d8a3495b18c266f138401947fae23df13770cb6f7b",
-      "voice_id": "0lp4RIz96WD1RUtvEu3Q",
-      "name": "Grandfather"
-     }
-    },
-    {
-     "text": "[amused, surprised] 那这婚您还证？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[slow, wise] Wisely and slow; they stumble that run fast.",
-     "voice": {
-      "owner": "34c483aaa9f266050bb548d8a3495b18c266f138401947fae23df13770cb6f7b",
-      "voice_id": "0lp4RIz96WD1RUtvEu3Q",
-      "name": "Grandfather"
-     }
-    },
-    {
-     "text": "[quietly, ominous] These violent delights have violent ends.",
-     "voice": {
-      "owner": "34c483aaa9f266050bb548d8a3495b18c266f138401947fae23df13770cb6f7b",
-      "voice_id": "0lp4RIz96WD1RUtvEu3Q",
-      "name": "Grandfather"
-     }
-    }
-   ]
+   "type": "transcribe",
+   "name": "chk_A04",
+   "src": "../vo-romeo-vo-01/dlg_A_s1597.mp3",
+   "start": 9.35,
+   "end": 11.32,
+   "lang": "en"
   },
   {
-   "type": "dialogue",
-   "name": "dlg_E_s1597",
-   "model": "eleven_v4",
-   "seed": 1597,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[quietly, uneasy] 罗密欧？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[hollow, shaken] O, I am fortune's fool!",
-     "voice": {
-      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
-      "voice_id": "kmSVBPu7loj4ayNinwWM",
-      "name": "Archie"
-     }
-    },
-    {
-     "text": "[whispers, shaken] 他刚杀了朱丽叶的表哥。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    }
-   ]
+   "type": "transcribe",
+   "name": "chk_A05",
+   "src": "../vo-romeo-vo-01/dlg_A_s1597.mp3",
+   "start": 11.43,
+   "end": 13.09,
+   "lang": "zh"
   },
   {
-   "type": "dialogue",
-   "name": "dlg_F_s1597",
-   "model": "eleven_v4",
-   "seed": 1597,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[whispers] 爸妈要她后天嫁别人。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[low, careful] Take thou this vial. No warmth, no breath, shall testify thou livest.",
-     "voice": {
-      "owner": "34c483aaa9f266050bb548d8a3495b18c266f138401947fae23df13770cb6f7b",
-      "voice_id": "0lp4RIz96WD1RUtvEu3Q",
-      "name": "Grandfather"
-     }
-    },
-    {
-     "text": "[low, reassuring] Two and forty hours, and then awake as from a pleasant sleep.",
-     "voice": {
-      "owner": "34c483aaa9f266050bb548d8a3495b18c266f138401947fae23df13770cb6f7b",
-      "voice_id": "0lp4RIz96WD1RUtvEu3Q",
-      "name": "Grandfather"
-     }
-    },
-    {
-     "text": "[fierce, impatient] Give me, give me! O, tell not me of fear!",
-     "voice": {
-      "owner": "76c9cb1aa5bde66e61587de2b16dd92ca167852393360a9c1f7e567f229a31b4",
-      "voice_id": "rCmVtv8cYU60uhlsOo1M",
-      "name": "Ana"
-     }
-    },
-    {
-     "text": "[worried] 罗密欧知道吗？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[busy, writing] Shall Romeo by my letters know our drift.",
-     "voice": {
-      "owner": "34c483aaa9f266050bb548d8a3495b18c266f138401947fae23df13770cb6f7b",
-      "voice_id": "0lp4RIz96WD1RUtvEu3Q",
-      "name": "Grandfather"
-     }
-    },
-    {
-     "text": "[gently, hopeful] Thou. Wilt thou bear this to Romeo?",
-     "voice": {
-      "owner": "34c483aaa9f266050bb548d8a3495b18c266f138401947fae23df13770cb6f7b",
-      "voice_id": "0lp4RIz96WD1RUtvEu3Q",
-      "name": "Grandfather"
-     }
-    },
-    {
-     "text": "[small, hesitant] ……我只拍。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[softly, brave] Romeo, I come! This do I drink to thee.",
-     "voice": {
-      "owner": "76c9cb1aa5bde66e61587de2b16dd92ca167852393360a9c1f7e567f229a31b4",
-      "voice_id": "rCmVtv8cYU60uhlsOo1M",
-      "name": "Ana"
-     }
-    }
-   ]
+   "type": "transcribe",
+   "name": "chk_B01",
+   "src": "../vo-romeo-vo-01/dlg_B_s1597.mp3",
+   "start": 0.08,
+   "end": 2.84,
+   "lang": "zh"
   },
   {
-   "type": "dialogue",
-   "name": "dlg_G_s1597",
-   "model": "eleven_v4",
-   "seed": 1597,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[whispers] 先到的消息：朱丽叶死了。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[raw, defiant] Then I defy you, stars!",
-     "voice": {
-      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
-      "voice_id": "kmSVBPu7loj4ayNinwWM",
-      "name": "Archie"
-     }
-    },
-    {
-     "text": "[desperate hope] Hast thou no letters to me from the friar?",
-     "voice": {
-      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
-      "voice_id": "kmSVBPu7loj4ayNinwWM",
-      "name": "Archie"
-     }
-    },
-    {
-     "text": "[barely audible] ……没有。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[flat, empty] No matter.",
-     "voice": {
-      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
-      "voice_id": "kmSVBPu7loj4ayNinwWM",
-      "name": "Archie"
-     }
-    },
-    {
-     "text": "[urgent, cut off] 等等，她没——",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[whispers, voice cracking] 她没死。他没听完。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    }
-   ]
+   "type": "transcribe",
+   "name": "chk_B02",
+   "src": "../vo-romeo-vo-01/dlg_B_s1597.mp3",
+   "start": 3.06,
+   "end": 5.325,
+   "lang": "en"
   },
   {
-   "type": "dialogue",
-   "name": "dlg_H_s1597",
-   "model": "eleven_v4",
-   "seed": 1597,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[soft, wondering] Death hath had no power yet upon thy beauty.",
-     "voice": {
-      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
-      "voice_id": "kmSVBPu7loj4ayNinwWM",
-      "name": "Archie"
-     }
-    },
-    {
-     "text": "[tender, quiet] Beauty's ensign yet is crimson in thy lips and in thy cheeks.",
-     "voice": {
-      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
-      "voice_id": "kmSVBPu7loj4ayNinwWM",
-      "name": "Archie"
-     }
-    },
-    {
-     "text": "[desperate, voice shaking] 红的，是因为她活着！",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[calm, tender] Here's to my love!",
-     "voice": {
-      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
-      "voice_id": "kmSVBPu7loj4ayNinwWM",
-      "name": "Archie"
-     }
-    },
-    {
-     "text": "[breaking] 我只拍，不插……[shouting] 不拍了！",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    }
-   ]
+   "type": "transcribe",
+   "name": "chk_B03",
+   "src": "../vo-romeo-vo-01/dlg_B_s1597.mp3",
+   "start": 5.49,
+   "end": 6.855,
+   "lang": "zh"
   },
   {
-   "type": "dialogue",
-   "name": "dlg_I_s1597",
-   "model": "eleven_v4",
-   "seed": 1597,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[waking, drowsy, soft] Where is my Romeo?",
-     "voice": {
-      "owner": "76c9cb1aa5bde66e61587de2b16dd92ca167852393360a9c1f7e567f229a31b4",
-      "voice_id": "rCmVtv8cYU60uhlsOo1M",
-      "name": "Ana"
-     }
-    },
-    {
-     "text": "[puzzled] Did the friar's letter not reach thee?",
-     "voice": {
-      "owner": "76c9cb1aa5bde66e61587de2b16dd92ca167852393360a9c1f7e567f229a31b4",
-      "voice_id": "rCmVtv8cYU60uhlsOo1M",
-      "name": "Ana"
-     }
-    },
-    {
-     "text": "[blank] What letter?",
-     "voice": {
-      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
-      "voice_id": "kmSVBPu7loj4ayNinwWM",
-      "name": "Archie"
-     }
-    },
-    {
-     "text": "[tiny, sheepish] ……拍不了了。我送。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    }
-   ]
+   "type": "transcribe",
+   "name": "chk_B04",
+   "src": "../vo-romeo-vo-01/dlg_B_s1597.mp3",
+   "start": 6.95,
+   "end": 7.46,
+   "lang": "en"
   },
   {
-   "type": "dialogue",
-   "name": "also_C08_s1597",
-   "model": "eleven_v4",
-   "seed": 1597,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[lovesick sigh] Juliet... Juliet...",
-     "voice": {
-      "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
-      "voice_id": "kmSVBPu7loj4ayNinwWM",
-      "name": "Archie"
-     }
-    }
-   ]
+   "type": "transcribe",
+   "name": "chk_B05",
+   "src": "../vo-romeo-vo-01/dlg_B_s1597.mp3",
+   "start": 7.64,
+   "end": 9.3,
+   "lang": "zh"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_B06",
+   "src": "../vo-romeo-vo-01/dlg_B_s1597.mp3",
+   "start": 9.38,
+   "end": 10.665,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_B07",
+   "src": "../vo-romeo-vo-01/dlg_B_s1597.mp3",
+   "start": 10.86,
+   "end": 11.73,
+   "lang": "zh"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_B08",
+   "src": "../vo-romeo-vo-01/dlg_B_s1597.mp3",
+   "start": 11.99,
+   "end": 14.0,
+   "lang": "zh"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_C01",
+   "src": "../vo-romeo-vo-01/dlg_C_s1597.mp3",
+   "start": 0.03,
+   "end": 5.25,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_C02",
+   "src": "../vo-romeo-vo-01/dlg_C_s1597.mp3",
+   "start": 5.45,
+   "end": 6.73,
+   "lang": "zh"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_C03",
+   "src": "../vo-romeo-vo-01/dlg_C_s1597.mp3",
+   "start": 6.87,
+   "end": 9.85,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_C04",
+   "src": "../vo-romeo-vo-01/dlg_C_s1597.mp3",
+   "start": 9.92,
+   "end": 11.38,
+   "lang": "zh"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_C05",
+   "src": "../vo-romeo-vo-01/dlg_C_s1597.mp3",
+   "start": 11.54,
+   "end": 16.63,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_C06",
+   "src": "../vo-romeo-vo-01/dlg_C_s1597.mp3",
+   "start": 16.7,
+   "end": 18.355,
+   "lang": "zh"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_C07",
+   "src": "../vo-romeo-vo-01/dlg_C_s1597.mp3",
+   "start": 18.45,
+   "end": 21.75,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_C08",
+   "src": "../vo-romeo-vo-01/dlg_C_s1597.mp3",
+   "start": 22.11,
+   "end": 24.8,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_C09",
+   "src": "../vo-romeo-vo-01/dlg_C_s1597.mp3",
+   "start": 24.94,
+   "end": 28.275,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_C10",
+   "src": "../vo-romeo-vo-01/dlg_C_s1597.mp3",
+   "start": 28.3,
+   "end": 31.29,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_C11",
+   "src": "../vo-romeo-vo-01/dlg_C_s1597.mp3",
+   "start": 31.45,
+   "end": 33.905,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_C12",
+   "src": "../vo-romeo-vo-01/dlg_C_s1597.mp3",
+   "start": 33.97,
+   "end": 35.28,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_D01",
+   "src": "../vo-romeo-vo-01/dlg_D_s1597.mp3",
+   "start": 0.0,
+   "end": 1.885,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_D02",
+   "src": "../vo-romeo-vo-01/dlg_D_s1597.mp3",
+   "start": 2.16,
+   "end": 3.74,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_D03",
+   "src": "../vo-romeo-vo-01/dlg_D_s1597.mp3",
+   "start": 3.89,
+   "end": 8.92,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_D04",
+   "src": "../vo-romeo-vo-01/dlg_D_s1597.mp3",
+   "start": 9.09,
+   "end": 10.895,
+   "lang": "zh"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_D05",
+   "src": "../vo-romeo-vo-01/dlg_D_s1597.mp3",
+   "start": 10.96,
+   "end": 15.56,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_D06",
+   "src": "../vo-romeo-vo-01/dlg_D_s1597.mp3",
+   "start": 16.01,
+   "end": 19.44,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_E01",
+   "src": "../vo-romeo-vo-01/dlg_E_s1597.mp3",
+   "start": 0.04,
+   "end": 1.255,
+   "lang": "zh"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_E02",
+   "src": "../vo-romeo-vo-01/dlg_E_s1597.mp3",
+   "start": 1.255,
+   "end": 4.31,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_E03",
+   "src": "../vo-romeo-vo-01/dlg_E_s1597.mp3",
+   "start": 4.45,
+   "end": 6.81,
+   "lang": "zh"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_F01",
+   "src": "../vo-romeo-vo-01/dlg_F_s1597.mp3",
+   "start": 0.21,
+   "end": 2.42,
+   "lang": "zh"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_F02",
+   "src": "../vo-romeo-vo-01/dlg_F_s1597.mp3",
+   "start": 2.62,
+   "end": 8.48,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_F03",
+   "src": "../vo-romeo-vo-01/dlg_F_s1597.mp3",
+   "start": 8.81,
+   "end": 13.6,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_F04",
+   "src": "../vo-romeo-vo-01/dlg_F_s1597.mp3",
+   "start": 13.67,
+   "end": 17.0,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_F05",
+   "src": "../vo-romeo-vo-01/dlg_F_s1597.mp3",
+   "start": 17.25,
+   "end": 18.67,
+   "lang": "zh"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_F06",
+   "src": "../vo-romeo-vo-01/dlg_F_s1597.mp3",
+   "start": 18.79,
+   "end": 21.69,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_F07",
+   "src": "../vo-romeo-vo-01/dlg_F_s1597.mp3",
+   "start": 22.01,
+   "end": 24.67,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_F08",
+   "src": "../vo-romeo-vo-01/dlg_F_s1597.mp3",
+   "start": 24.915,
+   "end": 26.2,
+   "lang": "zh"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_F09",
+   "src": "../vo-romeo-vo-01/dlg_F_s1597.mp3",
+   "start": 26.37,
+   "end": 30.45,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_G01",
+   "src": "../vo-romeo-vo-01/dlg_G_s1597.mp3",
+   "start": 0.1,
+   "end": 2.98,
+   "lang": "zh"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_G02",
+   "src": "../vo-romeo-vo-01/dlg_G_s1597.mp3",
+   "start": 3.2,
+   "end": 5.14,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_G03",
+   "src": "../vo-romeo-vo-01/dlg_G_s1597.mp3",
+   "start": 5.47,
+   "end": 7.59,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_G04",
+   "src": "../vo-romeo-vo-01/dlg_G_s1597.mp3",
+   "start": 7.855,
+   "end": 8.76,
+   "lang": "zh"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_G05",
+   "src": "../vo-romeo-vo-01/dlg_G_s1597.mp3",
+   "start": 9.01,
+   "end": 9.89,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_G06",
+   "src": "../vo-romeo-vo-01/dlg_G_s1597.mp3",
+   "start": 10.03,
+   "end": 11.15,
+   "lang": "zh"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_G07",
+   "src": "../vo-romeo-vo-01/dlg_G_s1597.mp3",
+   "start": 11.41,
+   "end": 13.52,
+   "lang": "zh"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_H01",
+   "src": "../vo-romeo-vo-01/dlg_H_s1597.mp3",
+   "start": 0.0,
+   "end": 3.09,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_H02",
+   "src": "../vo-romeo-vo-01/dlg_H_s1597.mp3",
+   "start": 3.55,
+   "end": 7.64,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_H03",
+   "src": "../vo-romeo-vo-01/dlg_H_s1597.mp3",
+   "start": 7.69,
+   "end": 10.2,
+   "lang": "zh"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_H04",
+   "src": "../vo-romeo-vo-01/dlg_H_s1597.mp3",
+   "start": 10.26,
+   "end": 11.64,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_H05",
+   "src": "../vo-romeo-vo-01/dlg_H_s1597.mp3",
+   "start": 11.78,
+   "end": 14.48,
+   "lang": "zh"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_I01",
+   "src": "../vo-romeo-vo-01/dlg_I_s1597.mp3",
+   "start": 0.0,
+   "end": 2.05,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_I02",
+   "src": "../vo-romeo-vo-01/dlg_I_s1597.mp3",
+   "start": 2.05,
+   "end": 4.38,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_I03",
+   "src": "../vo-romeo-vo-01/dlg_I_s1597.mp3",
+   "start": 4.43,
+   "end": 5.37,
+   "lang": "en"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_I04",
+   "src": "../vo-romeo-vo-01/dlg_I_s1597.mp3",
+   "start": 5.47,
+   "end": 7.68,
+   "lang": "zh"
+  },
+  {
+   "type": "transcribe",
+   "name": "chk_also_C08",
+   "src": "../vo-romeo-vo-01/also_C08_s1597.mp3",
+   "lang": "en"
   }
  ]
 }
