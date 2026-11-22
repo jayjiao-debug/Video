@@ -1,0 +1,325 @@
+plan: {'tier': 'creator', 'character_count': 106546, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "sfx_glass_break_1", "type": "sfx", "text": "A small camera smashes into a glass bottle in someone's hand: one sharp crash of breaking glass with bright tinkling shards falling, close, dry, no music.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "sfx_glass_break_1.mp3", "bytes": 26792}
+{"name": "sfx_glass_break_2", "type": "sfx", "text": "A small camera smashes into a glass bottle in someone's hand: one sharp crash of breaking glass with bright tinkling shards falling, close, dry, no music.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "sfx_glass_break_2.mp3", "bytes": 26792}
+{"name": "sfx_cam_floor_1", "type": "sfx", "text": "A small handheld video camera drops and clatters onto a hard stone floor: one hard plastic and metal impact, a small bounce and a short scrape, close, dry.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "sfx_cam_floor_1.mp3", "bytes": 20105}
+{"name": "sfx_cam_floor_2", "type": "sfx", "text": "A small handheld video camera drops and clatters onto a hard stone floor: one hard plastic and metal impact, a small bounce and a short scrape, close, dry.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "sfx_cam_floor_2.mp3", "bytes": 20105}
+{"name": "sfx_glitch_1", "type": "sfx", "text": "A broken digital video camera malfunctioning: short electronic glitch stutters and crackling buzz, then a thin dying electronic whine that cuts to silence.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "sfx_glitch_1.mp3", "bytes": 26792}
+{"name": "sfx_glitch_2", "type": "sfx", "text": "A broken digital video camera malfunctioning: short electronic glitch stutters and crackling buzz, then a thin dying electronic whine that cuts to silence.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "sfx_glitch_2.mp3", "bytes": 26792}
+{"name": "sfx_toss_1", "type": "sfx", "text": "A small camera thrown hard through the air past the microphone: one quick airy whoosh with a fast spinning flutter, no impact.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "sfx_toss_1.mp3", "bytes": 10492}
+{"name": "sfx_toss_2", "type": "sfx", "text": "A small camera thrown hard through the air past the microphone: one quick airy whoosh with a fast spinning flutter, no impact.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "sfx_toss_2.mp3", "bytes": 10492}
+{"name": "sfx_skid_1", "type": "sfx", "text": "Leather shoes skidding to a sudden stop on a smooth stone floor: one quick comic scuffing slide.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "sfx_skid_1.mp3", "bytes": 10492}
+{"name": "sfx_skid_2", "type": "sfx", "text": "Leather shoes skidding to a sudden stop on a smooth stone floor: one quick comic scuffing slide.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "sfx_skid_2.mp3", "bytes": 10492}
+{"name": "sfx_hammer_1", "type": "sfx", "text": "A hammer nailing a wooden plank across a window outdoors: two quick solid hammer blows on wood.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "sfx_hammer_1.mp3", "bytes": 17179}
+{"name": "sfx_hammer_2", "type": "sfx", "text": "A hammer nailing a wooden plank across a window outdoors: two quick solid hammer blows on wood.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "sfx_hammer_2.mp3", "bytes": 17179}
+{"name": "sfx_paper_tear_1", "type": "sfx", "text": "One long slow dry tear of thick parchment paper, close.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "sfx_paper_tear_1.mp3", "bytes": 12163}
+{"name": "sfx_paper_tear_2", "type": "sfx", "text": "One long slow dry tear of thick parchment paper, close.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "sfx_paper_tear_2.mp3", "bytes": 12163}
+sfx retry with eleven_text_to_sound_v2: 400 {"detail":{"status":"invalid_generation_settings","message":"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4."}}
+{"name": "sfx_paper_flap_1", "type": "sfx", "text": "One dry flap of a folded paper letter snapping open, close, very short.", "model": "eleven_text_to_sound_v2", "status": 400, "sfx": true, "error": "{\"detail\":{\"status\":\"invalid_generation_settings\",\"message\":\"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4.\"}}"}
+sfx retry with eleven_text_to_sound_v2: 400 {"detail":{"status":"invalid_generation_settings","message":"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4."}}
+{"name": "sfx_paper_flap_2", "type": "sfx", "text": "One dry flap of a folded paper letter snapping open, close, very short.", "model": "eleven_text_to_sound_v2", "status": 400, "sfx": true, "error": "{\"detail\":{\"status\":\"invalid_generation_settings\",\"message\":\"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4.\"}}"}
+sfx retry with eleven_text_to_sound_v2: 400 {"detail":{"status":"invalid_generation_settings","message":"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4."}}
+{"name": "sfx_paper_crack", "type": "sfx", "text": "A strip of heavy paper snapped taut in the air: one sharp crisp papery crack, very short.", "model": "eleven_text_to_sound_v2", "status": 400, "sfx": true, "error": "{\"detail\":{\"status\":\"invalid_generation_settings\",\"message\":\"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4.\"}}"}
+{"name": "sfx_wax_thunk_1", "type": "sfx", "text": "A wax seal pressed down hard onto a paper letter on a wooden desk: one soft, low, heavy thunk, close, dry.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "sfx_wax_thunk_1.mp3", "bytes": 8820}
+{"name": "sfx_wax_thunk_2", "type": "sfx", "text": "A wax seal pressed down hard onto a paper letter on a wooden desk: one soft, low, heavy thunk, close, dry.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "sfx_wax_thunk_2.mp3", "bytes": 8820}
+sfx retry with eleven_text_to_sound_v2: 400 {"detail":{"status":"invalid_generation_settings","message":"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.3."}}
+{"name": "sfx_wax_tick", "type": "sfx", "text": "A small seal tapped onto soft wax: one tiny dry tick, close, very short.", "model": "eleven_text_to_sound_v2", "status": 400, "sfx": true, "error": "{\"detail\":{\"status\":\"invalid_generation_settings\",\"message\":\"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.3.\"}}"}
+{"name": "sfx_wax_tock", "type": "sfx", "text": "A knuckle rapped twice on hard set wax: a soft tock tock, close.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "sfx_wax_tock.mp3", "bytes": 8820}
+{"name": "sfx_quill_dabs", "type": "sfx", "text": "Three quick dabs of a quill pen on paper, each a short scratchy tap, rising.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "sfx_quill_dabs.mp3", "bytes": 10492}
+sfx retry with eleven_text_to_sound_v2: 400 {"detail":{"status":"invalid_generation_settings","message":"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4."}}
+{"name": "sfx_quill_stroke", "type": "sfx", "text": "One quick hard stroke of a quill pen across paper: a short scratch.", "model": "eleven_text_to_sound_v2", "status": 400, "sfx": true, "error": "{\"detail\":{\"status\":\"invalid_generation_settings\",\"message\":\"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4.\"}}"}
+{"name": "sfx_paper_fold", "type": "sfx", "text": "A paper letter folded with two fast crisp creases, close.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "sfx_paper_fold.mp3", "bytes": 8820}
+{"name": "sfx_unroll", "type": "sfx", "text": "An old parchment scroll unrolled quickly on a table with a dry crackle, close.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "sfx_unroll.mp3", "bytes": 12163}
+{"name": "sfx_hug", "type": "sfx", "text": "Two people hug tightly: a soft rustle of heavy velvet and wool clothes, close and gentle.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "sfx_hug.mp3", "bytes": 17179}
+{"name": "amb_feast", "type": "sfx", "text": "A Renaissance masked ball in a big stone hall: lively crowd chatter and laughter, cups clinking, shuffling dance steps on stone, no music, steady.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "amb_feast.mp3", "bytes": 129192}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "sfx_glass_break_1",
+  "type": "sfx",
+  "text": "A small camera smashes into a glass bottle in someone's hand: one sharp crash of breaking glass with bright tinkling shards falling, close, dry, no music.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_glass_break_1.mp3",
+  "bytes": 26792,
+  "seconds": 1.6
+ },
+ {
+  "name": "sfx_glass_break_2",
+  "type": "sfx",
+  "text": "A small camera smashes into a glass bottle in someone's hand: one sharp crash of breaking glass with bright tinkling shards falling, close, dry, no music.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_glass_break_2.mp3",
+  "bytes": 26792,
+  "seconds": 1.6
+ },
+ {
+  "name": "sfx_cam_floor_1",
+  "type": "sfx",
+  "text": "A small handheld video camera drops and clatters onto a hard stone floor: one hard plastic and metal impact, a small bounce and a short scrape, close, dry.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_cam_floor_1.mp3",
+  "bytes": 20105,
+  "seconds": 1.2
+ },
+ {
+  "name": "sfx_cam_floor_2",
+  "type": "sfx",
+  "text": "A small handheld video camera drops and clatters onto a hard stone floor: one hard plastic and metal impact, a small bounce and a short scrape, close, dry.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_cam_floor_2.mp3",
+  "bytes": 20105,
+  "seconds": 1.2
+ },
+ {
+  "name": "sfx_glitch_1",
+  "type": "sfx",
+  "text": "A broken digital video camera malfunctioning: short electronic glitch stutters and crackling buzz, then a thin dying electronic whine that cuts to silence.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_glitch_1.mp3",
+  "bytes": 26792,
+  "seconds": 1.6
+ },
+ {
+  "name": "sfx_glitch_2",
+  "type": "sfx",
+  "text": "A broken digital video camera malfunctioning: short electronic glitch stutters and crackling buzz, then a thin dying electronic whine that cuts to silence.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_glitch_2.mp3",
+  "bytes": 26792,
+  "seconds": 1.6
+ },
+ {
+  "name": "sfx_toss_1",
+  "type": "sfx",
+  "text": "A small camera thrown hard through the air past the microphone: one quick airy whoosh with a fast spinning flutter, no impact.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_toss_1.mp3",
+  "bytes": 10492,
+  "seconds": 0.6
+ },
+ {
+  "name": "sfx_toss_2",
+  "type": "sfx",
+  "text": "A small camera thrown hard through the air past the microphone: one quick airy whoosh with a fast spinning flutter, no impact.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_toss_2.mp3",
+  "bytes": 10492,
+  "seconds": 0.6
+ },
+ {
+  "name": "sfx_skid_1",
+  "type": "sfx",
+  "text": "Leather shoes skidding to a sudden stop on a smooth stone floor: one quick comic scuffing slide.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_skid_1.mp3",
+  "bytes": 10492,
+  "seconds": 0.6
+ },
+ {
+  "name": "sfx_skid_2",
+  "type": "sfx",
+  "text": "Leather shoes skidding to a sudden stop on a smooth stone floor: one quick comic scuffing slide.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_skid_2.mp3",
+  "bytes": 10492,
+  "seconds": 0.6
+ },
+ {
+  "name": "sfx_hammer_1",
+  "type": "sfx",
+  "text": "A hammer nailing a wooden plank across a window outdoors: two quick solid hammer blows on wood.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_hammer_1.mp3",
+  "bytes": 17179,
+  "seconds": 1.0
+ },
+ {
+  "name": "sfx_hammer_2",
+  "type": "sfx",
+  "text": "A hammer nailing a wooden plank across a window outdoors: two quick solid hammer blows on wood.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_hammer_2.mp3",
+  "bytes": 17179,
+  "seconds": 1.0
+ },
+ {
+  "name": "sfx_paper_tear_1",
+  "type": "sfx",
+  "text": "One long slow dry tear of thick parchment paper, close.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_paper_tear_1.mp3",
+  "bytes": 12163,
+  "seconds": 0.68
+ },
+ {
+  "name": "sfx_paper_tear_2",
+  "type": "sfx",
+  "text": "One long slow dry tear of thick parchment paper, close.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_paper_tear_2.mp3",
+  "bytes": 12163,
+  "seconds": 0.68
+ },
+ {
+  "name": "sfx_paper_flap_1",
+  "type": "sfx",
+  "text": "One dry flap of a folded paper letter snapping open, close, very short.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 400,
+  "sfx": true,
+  "error": "{\"detail\":{\"status\":\"invalid_generation_settings\",\"message\":\"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4.\"}}"
+ },
+ {
+  "name": "sfx_paper_flap_2",
+  "type": "sfx",
+  "text": "One dry flap of a folded paper letter snapping open, close, very short.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 400,
+  "sfx": true,
+  "error": "{\"detail\":{\"status\":\"invalid_generation_settings\",\"message\":\"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4.\"}}"
+ },
+ {
+  "name": "sfx_paper_crack",
+  "type": "sfx",
+  "text": "A strip of heavy paper snapped taut in the air: one sharp crisp papery crack, very short.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 400,
+  "sfx": true,
+  "error": "{\"detail\":{\"status\":\"invalid_generation_settings\",\"message\":\"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4.\"}}"
+ },
+ {
+  "name": "sfx_wax_thunk_1",
+  "type": "sfx",
+  "text": "A wax seal pressed down hard onto a paper letter on a wooden desk: one soft, low, heavy thunk, close, dry.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_wax_thunk_1.mp3",
+  "bytes": 8820,
+  "seconds": 0.48
+ },
+ {
+  "name": "sfx_wax_thunk_2",
+  "type": "sfx",
+  "text": "A wax seal pressed down hard onto a paper letter on a wooden desk: one soft, low, heavy thunk, close, dry.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_wax_thunk_2.mp3",
+  "bytes": 8820,
+  "seconds": 0.48
+ },
+ {
+  "name": "sfx_wax_tick",
+  "type": "sfx",
+  "text": "A small seal tapped onto soft wax: one tiny dry tick, close, very short.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 400,
+  "sfx": true,
+  "error": "{\"detail\":{\"status\":\"invalid_generation_settings\",\"message\":\"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.3.\"}}"
+ },
+ {
+  "name": "sfx_wax_tock",
+  "type": "sfx",
+  "text": "A knuckle rapped twice on hard set wax: a soft tock tock, close.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_wax_tock.mp3",
+  "bytes": 8820,
+  "seconds": 0.48
+ },
+ {
+  "name": "sfx_quill_dabs",
+  "type": "sfx",
+  "text": "Three quick dabs of a quill pen on paper, each a short scratchy tap, rising.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_quill_dabs.mp3",
+  "bytes": 10492,
+  "seconds": 0.6
+ },
+ {
+  "name": "sfx_quill_stroke",
+  "type": "sfx",
+  "text": "One quick hard stroke of a quill pen across paper: a short scratch.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 400,
+  "sfx": true,
+  "error": "{\"detail\":{\"status\":\"invalid_generation_settings\",\"message\":\"Invalid setting for duration_seconds received, expected to be greater or equal to 0.5 and less or equal to 30, received 0.4.\"}}"
+ },
+ {
+  "name": "sfx_paper_fold",
+  "type": "sfx",
+  "text": "A paper letter folded with two fast crisp creases, close.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_paper_fold.mp3",
+  "bytes": 8820,
+  "seconds": 0.48
+ },
+ {
+  "name": "sfx_unroll",
+  "type": "sfx",
+  "text": "An old parchment scroll unrolled quickly on a table with a dry crackle, close.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_unroll.mp3",
+  "bytes": 12163,
+  "seconds": 0.68
+ },
+ {
+  "name": "sfx_hug",
+  "type": "sfx",
+  "text": "Two people hug tightly: a soft rustle of heavy velvet and wool clothes, close and gentle.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_hug.mp3",
+  "bytes": 17179,
+  "seconds": 1.0
+ },
+ {
+  "name": "amb_feast",
+  "type": "sfx",
+  "text": "A Renaissance masked ball in a big stone hall: lively crowd chatter and laughter, cups clinking, shuffling dance steps on stone, no music, steady.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "amb_feast.mp3",
+  "bytes": 129192,
+  "seconds": 8.0
+ }
+]
