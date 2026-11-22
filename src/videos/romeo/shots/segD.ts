@@ -1,0 +1,129 @@
+// SCENE D · Monday afternoon, Friar Laurence's cell (认识第1天). The Friar sorts herbs at his bench; Romeo bursts in,
+// glowing; "Wast thou with Rosaline?" "I have forgot that name." and he shuffles in between the Friar and the lens; the
+// Friar leans round him to tell HER: young men love with their eyes. Her question (and you'll still marry them?); "they
+// stumble that run fast" and on "fast" Juliet sprints in through the bright doorway and skids to a stop. The two clasp
+// hands in front of him; she steps back wide: three small figures in the doorway light (no blessing close-up).
+// CAMERA PLAN:
+//   1  D01      the bench framing: the Friar at work, Romeo bursts in from the left                  (someone arrives)
+//   2  D02      hold: Romeo shuffles in front of the Friar                                           (the joke is the block)
+//   3  D03      hold as the Friar leans round him; SNAP ZOOM onto the Friar on "eyes"                 (the punch word)
+//   4  D04      ease back                                                                              (her question)
+//   5  D05      on "fast" a small pan left to catch Juliet skidding in                                 (someone arrives)
+//   6  D06      the step back wide: three small figures in the doorway light                          (the wedding, kept small)
+import * as THREE from "three";
+import { seg, type Segment } from "../story";
+import { povCam, type CamKey } from "../cam";
+import { V, standing, yawTo, walkAlong } from "./common";
+import { ROMEO, JULIET, FRIAR } from "../people";
+import { FriarBanner } from "../hud/index";
+import { P, wv, spot, camAt, faceAt, talk, wordAt, startOf, endOf, ky, accent, headBox, rel, REACT } from "./kit";
+import { h } from "./h";
+
+const S = seg("D");
+const BENCH = spot("cell", "friarBench"), DOOR = spot("cell", "door");
+const BENCH_CAM = camAt("cell", "bench", 0), WIDE_CAM = camAt("cell", "wide", 0);
+/** where Romeo stops after bursting in, and where he shuffles to (in the line from her lens to the Friar) */
+const RO_IN = P("cell", -0.45, 0, -1.15), RO_BLOCK = P("cell", 0.25, 0, -0.72);
+/** the Friar's step to lean round Romeo */
+const FR_LEAN = P("cell", 1.0, 0, -1.3);
+/** Juliet's sprint: in through the doorway, a skid, stops beside Romeo */
+const JU_PATH = [P("cell", -2.45, 0, -1.1), P("cell", -1.5, 0, -0.98), P("cell", -0.42, 0, -0.92)];
+/** the couple before the Friar: the middle between them, and the way they face (toward him) */
+const COUPLE = P("cell", 0.37, 0, -0.78), COUPLE_FACING = yawTo(COUPLE, FR_LEAN);
+/** the step back for the wedding: back by the front wall, the Friar and the pair in one frame, small */
+const WED_WIDE = { pos: wv("cell", [1.1, 1.55, 2.9]), look: wv("cell", [0.55, 1.0, -0.95]), fov: 50 };
+
+export const SEG: Segment = {
+  id: "D", from: S.from, to: S.to,
+  enter() {}, exit() {},
+  pose(w, f) {
+    w.setPlace("cell");
+    w.set.param("day", "monday");
+    const d01 = startOf("D01"), d02 = startOf("D02"), d03 = startOf("D03"), d05 = startOf("D05"), d06 = startOf("D06");
+    const tEyes = wordAt("D03", "eyes"), tFast = wordAt("D05", "fast");
+    // ---------------------------------------------------------------- the camera
+    const k = (fr: number, c: CamKey, o: Partial<CamKey> = {}): CamKey => ({ ...c, f: fr, ...o });
+    const benchLook = BENCH_CAM.look, frHead = wv("cell", [1.0, 1.22, -1.3]);
+    const camera = povCam(f, [
+      k(S.from, BENCH_CAM),
+      k(tEyes - 5, BENCH_CAM),
+      k(tEyes, BENCH_CAM, { look: frHead, fov: 31 }),                                   // SNAP ZOOM onto the Friar on "eyes"
+      k(endOf("D03") + 6, BENCH_CAM, { look: frHead, fov: 31 }),
+      k(startOf("D04") + 14, BENCH_CAM),                                                // eases back for her question
+      k(tFast - 6, BENCH_CAM),
+      k(tFast + 12, BENCH_CAM, { look: wv("cell", [-0.12, 1.1, -0.9]) }),              // a small pan left: Juliet skids in
+      k(d06 + 16, BENCH_CAM, { look: wv("cell", [-0.12, 1.1, -0.9]) }),
+      k(d06 + 62, WIDE_CAM, WED_WIDE),                                                  // she steps back wide: the three of them
+      k(S.to, WIDE_CAM, WED_WIDE),
+    ], { mood: "calm", amp: 0.5 });
+    w.setCamera(camera);
+
+    // ---------------------------------------------------------------- the Friar
+    const fr = w.actor(FRIAR);
+    const leanK = ky(f, [[d03 - 6, 0], [d03 + 12, 1], [endOf("D03") + 10, 1], [endOf("D03") + 26, 0.6]]);
+    const frAt = BENCH.at.clone().lerp(FR_LEAN, ky(f, [[d03 - 6, 0], [d03 + 12, 1]]));
+    const roHere = f >= S.from + 10;
+    const toLens = yawTo(frAt, wv("cell", BENCH_CAM.pos as number[]));
+    const frFacing = f < S.from + 12 ? BENCH.facing
+      : f < d03 - 6 ? yawTo(frAt, RO_IN)
+      : f < d06 ? toLens
+      : THREE.MathUtils.lerp(toLens, yawTo(frAt, COUPLE), ky(f, [[d06, 0], [d06 + 14, 1]]));
+    fr.set({
+      ...standing(frAt, frFacing, f, 3),
+      pose: { kind: "hold", t: f / 30 },
+      expr: faceAt(f, [[0, "weary"], [d01 - 4, "dry"], [d03 - 2, "warn"], [endOf("D04") + REACT, "weary"], [tFast + REACT, "worried"], [d06 - 2, "warn"], [endOf("D06") + REACT, "weary"]]),
+      ...talk("fr", f, 3),
+      lean: { roll: 9 * leanK, pitch: 4 * leanK },
+      head: accent("nod", f, tEyes) ?? undefined,
+      gaze: f >= d03 && f < endOf("D03") + 6 ? -0.5 : 0,
+    });
+
+    // ---------------------------------------------------------------- Romeo: bursts in, glowing; blocks the lens; the wedding
+    const ro = w.actor(ROMEO);
+    const inLeg = walkAlong([DOOR.at.clone().add(V(-0.3, 0, -0.2)), P("cell", -1.6, 0, -1.0), RO_IN], 3.0, (f - (S.from + 2)) / 30, { endFacing: yawTo(RO_IN, BENCH.at) });
+    const blockLeg = walkAlong([RO_IN, RO_BLOCK], 0.9, (f - (d02 - 3)) / 30, { endFacing: yawTo(RO_BLOCK, wv("cell", BENCH_CAM.pos as number[])) });
+    // he takes the right of the pair and she the left, so their two short walks never cross
+    const roW = rel(COUPLE, COUPLE_FACING, -0.34, 0, 0);
+    const wedLeg = walkAlong([RO_BLOCK, roW], 0.9, (f - d06) / 30, { endFacing: COUPLE_FACING });
+    const leg = f < d02 - 3 ? inLeg : f < d06 ? blockLeg : wedLeg;
+    // after Juliet arrives he turns to her
+    const roFacing = f >= tFast + 8 && f < d06 ? THREE.MathUtils.lerp(leg.facing, yawTo(leg.at, JU_PATH[2]), ky(f, [[tFast + 8, 0], [tFast + 18, 1]])) : leg.facing;
+    const meet = rel(COUPLE, COUPLE_FACING, 0, 0.62, 0.12);
+    const clasped = f >= d06 + 18;
+    ro.set({
+      ...standing(leg.at, roFacing, f, 1),
+      pose: leg.moving ? leg.pose : { kind: "idle", t: f / 30 },
+      hands: clasped ? [null, meet] : [null, null],
+      expr: faceAt(f, [[0, "dreamy"], [d02 - 2, "puppy"], [endOf("D02") + 8, "dreamy"]]),
+      ...talk("ro", f, 1),
+      head: accent("pop", f, tFast + 10) ?? undefined,
+      visible: roHere,
+      hide: ["letter"],
+    });
+
+    // ---------------------------------------------------------------- Juliet: sprints in on "fast", skids, the wedding
+    const ju = w.actor(JULIET);
+    const runFrom = tFast - 12;
+    const juLeg = walkAlong(JU_PATH, 4.2, (f - runFrom) / 30, { endFacing: yawTo(JU_PATH[2], RO_BLOCK) });
+    const juW = rel(COUPLE, COUPLE_FACING, 0.34, 0, 0);
+    const juWed = walkAlong([JU_PATH[2], juW], 0.9, (f - d06) / 30, { endFacing: COUPLE_FACING });
+    const jl = f < d06 ? juLeg : juWed;
+    const arriveAt = runFrom + Math.round((juLeg.left + juLeg.d) / 4.2 * 30);
+    const skid = ky(f, [[arriveAt - 4, 0], [arriveAt, 1], [arriveAt + 8, 0]]);
+    ju.set({
+      ...standing(jl.at.clone().add(rel(V(), jl.facing, 0, 0, 0.12 * skid)), jl.facing, f, 2),
+      pose: jl.moving ? jl.pose : { kind: "idle", t: f / 30 },
+      hands: clasped ? [meet, null] : [null, null],
+      expr: faceAt(f, [[0, "bossy"], [arriveAt + 6, "sure"], [d06 + 18, "swoon"]]),
+      lean: { pitch: -12 * skid },
+      visible: f >= runFrom,
+      hide: ["vial"],
+    });
+    w.update();
+
+    // ---------------------------------------------------------------- his banner travels with him
+    const bannerFrom = d01 + 2;
+    const overlays = f >= bannerFrom && f < bannerFrom + 105 ? h(FriarBanner, { f, from: bannerFrom, box: headBox(w, fr), side: "right" }) : undefined;
+    return { camera, overlays };
+  },
+};

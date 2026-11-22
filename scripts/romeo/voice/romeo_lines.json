@@ -1,0 +1,1166 @@
+{
+ "film": "romeo",
+ "version": 2,
+ "source": "script v2 (22 Nov 2026): /mnt/project-files/next-video/romeo-juliet/script_v2.md, from scripts/romeo/voice/make_lines.py",
+ "title": {
+  "zh": "采访罗密欧与朱丽叶的一天",
+  "en": "A Day Interviewing Romeo and Juliet"
+ },
+ "speakers": {
+  "ji": "记者 (the camera, never seen)",
+  "ro": "罗密欧 Romeo",
+  "ju": "朱丽叶 Juliet",
+  "fr": "劳伦斯神父 Friar Laurence"
+ },
+ "scenes": {
+  "A": {
+   "time": "星期日 清晨",
+   "en": "Sunday, dawn",
+   "place": "grove",
+   "label": "还不认识朱丽叶"
+  },
+  "B": {
+   "time": "星期日 夜",
+   "en": "Sunday night",
+   "place": "hall",
+   "label": "认识：0分钟"
+  },
+  "C": {
+   "time": "星期日 深夜",
+   "en": "Sunday, late night",
+   "place": "balcony",
+   "label": "认识：3小时"
+  },
+  "D": {
+   "time": "星期一 下午",
+   "en": "Monday afternoon",
+   "place": "cell",
+   "label": "认识第1天"
+  },
+  "E": {
+   "time": "星期一 傍晚",
+   "en": "Monday, dusk",
+   "place": "street",
+   "label": "婚礼后一小时"
+  },
+  "F": {
+   "time": "星期二",
+   "en": "Tuesday",
+   "place": "cell",
+   "label": "认识第2天 · 已婚 · 已分居"
+  },
+  "G": {
+   "time": "星期三 正午",
+   "en": "Wednesday noon",
+   "place": "mantua",
+   "label": "认识第3天"
+  },
+  "H": {
+   "time": "星期四 凌晨",
+   "en": "Thursday, before dawn",
+   "place": "tomb",
+   "label": "认识第4天"
+  },
+  "I": {
+   "time": "星期四 凌晨",
+   "en": "Thursday, before dawn",
+   "place": "tomb",
+   "label": "认识第4天"
+  }
+ },
+ "gap": 0.25,
+ "lead": 0.1,
+ "engine": {
+  "spoken": {
+   "ji": "zh",
+   "ro": "en",
+   "ju": "en",
+   "fr": "en"
+  },
+  "places": [
+   "balcony",
+   "cell",
+   "grove",
+   "hall",
+   "mantua",
+   "street",
+   "tomb"
+  ],
+  "title_after": "A02",
+  "title_delay": 0.15,
+  "title_hold": 1.6,
+  "rate_zh": 4.2,
+  "rate_en": 2.4
+ },
+ "lines": [
+  {
+   "n": 1,
+   "id": "A01",
+   "scene": "A",
+   "who": "ji",
+   "zh": "罗密欧，为朱丽叶哭呢？",
+   "en": "Romeo, crying over Juliet?",
+   "screens": [
+    {
+     "zh": "罗密欧，为朱丽叶哭呢？",
+     "en": "Romeo, crying over Juliet?"
+    }
+   ],
+   "emo": "bright, nosy, sure of herself",
+   "pic": "Frame 0, medium close: Romeo hugs a sycamore and bawls, crumpled poems all round him. Still. Subtitle on frame 0.",
+   "tts": "[curious, warm] 罗密欧，为朱丽叶哭呢？",
+   "pre": 0.15,
+   "after": 0.1
+  },
+  {
+   "n": 2,
+   "id": "A02",
+   "scene": "A",
+   "who": "ro",
+   "zh": "……朱丽叶是谁？",
+   "en": "…Who is Juliet?",
+   "screens": [
+    {
+     "zh": "……朱丽叶是谁？",
+     "en": "…Who is Juliet?"
+    }
+   ],
+   "emo": "stops dead, blank, one tear hanging",
+   "pic": "Snap zoom on his blank face by second 3. The lute stops. The REC label stamps in: 还不认识朱丽叶. The title lands in the gap: a folded letter drops in, is sealed with wax (采访 罗密欧与朱丽叶 的一天), and a small wax blob stamps 四 over 一.",
+   "tts": "[sniffling, completely blank] ...Who is Juliet?",
+   "after": 1.9
+  },
+  {
+   "n": 3,
+   "id": "A03",
+   "scene": "A",
+   "who": "ro",
+   "zh": "是罗瑟琳！她发誓这辈子不恋爱！",
+   "en": "Rosaline! She hath forsworn to love!",
+   "screens": [
+    {
+     "zh": "是罗瑟琳！她发誓这辈子不恋爱！",
+     "en": "Rosaline! She hath forsworn to love!"
+    }
+   ],
+   "emo": "bursting into sobs again",
+   "pic": "He flings an arm up; pages fly. His blue strip slams in and folds into a name tab: 罗密欧 · 恋爱脑.",
+   "tts": "[sobbing dramatically] Rosaline! She hath forsworn to love!"
+  },
+  {
+   "n": 4,
+   "id": "A04",
+   "scene": "A",
+   "who": "ro",
+   "zh": "好心人，替我把信送去！",
+   "en": "Good friend, bear her this!",
+   "screens": [
+    {
+     "zh": "好心人，替我把信送去！",
+     "en": "Good friend, bear her this!"
+    }
+   ],
+   "emo": "eager, sniffing, pushing the letter at the lens",
+   "pic": "He pushes a sealed love letter right at the lens.",
+   "tts": "[eager, still sniffling] Good friend, bear her this!"
+  },
+  {
+   "n": 5,
+   "id": "A05",
+   "scene": "A",
+   "who": "ji",
+   "zh": "我只拍，不插手。",
+   "en": "I only film. I don't interfere.",
+   "screens": [
+    {
+     "zh": "我只拍，不插手。",
+     "en": "I only film. I don't interfere."
+    }
+   ],
+   "emo": "flat",
+   "pic": "The letter droops. Her rule stamps in as a wax tally: 插手 0.",
+   "tts": "[firm, matter-of-fact] 我只拍，不插手。",
+   "after": 0.9
+  },
+  {
+   "n": 6,
+   "id": "B01",
+   "scene": "B",
+   "who": "ji",
+   "zh": "为了罗瑟琳，混进仇家舞会。",
+   "en": "Sneaking into the enemy's ball, for Rosaline.",
+   "screens": [
+    {
+     "zh": "为了罗瑟琳，混进仇家舞会。",
+     "en": "Sneaking into the enemy's ball, for Rosaline."
+    }
+   ],
+   "emo": "whisper",
+   "pic": "Wide: torch-lit hall, dancers. Romeo in a half mask sulks along the wall.",
+   "tts": "[whispers] 为了罗瑟琳，混进仇家舞会。",
+   "pre": 0.6
+  },
+  {
+   "n": 7,
+   "id": "B02",
+   "scene": "B",
+   "who": "ro",
+   "zh": "我以前那也叫爱？",
+   "en": "Did my heart love till now?",
+   "screens": [
+    {
+     "zh": "我以前那也叫爱？",
+     "en": "Did my heart love till now?"
+    }
+   ],
+   "emo": "struck, the mask slipping",
+   "pic": "He stops mid-step. She tilts along his look to Juliet across the hall, and back.",
+   "tts": "[awestruck, breathless] Did my heart love till now?"
+  },
+  {
+   "n": 8,
+   "id": "B03",
+   "scene": "B",
+   "who": "ji",
+   "zh": "那罗瑟琳呢？",
+   "en": "And Rosaline?",
+   "screens": [
+    {
+     "zh": "那罗瑟琳呢？",
+     "en": "And Rosaline?"
+    }
+   ],
+   "emo": "innocent",
+   "pic": "",
+   "tts": "[innocently curious] 那罗瑟琳呢？"
+  },
+  {
+   "n": 9,
+   "id": "B04",
+   "scene": "B",
+   "who": "ro",
+   "zh": "谁？",
+   "en": "Who?",
+   "screens": [
+    {
+     "zh": "谁？",
+     "en": "Who?"
+    }
+   ],
+   "emo": "not blinking, not turning",
+   "pic": "Hold. Her note in the gap: 失恋：一个白天.",
+   "tts": "[distracted, not listening] Who?",
+   "after": 1.0
+  },
+  {
+   "n": 10,
+   "id": "B05",
+   "scene": "B",
+   "who": "ji",
+   "zh": "朱丽叶，看上谁了？",
+   "en": "Juliet, who caught your eye?",
+   "screens": [
+    {
+     "zh": "朱丽叶，看上谁了？",
+     "en": "Juliet, who caught your eye?"
+    }
+   ],
+   "emo": "friendly",
+   "pic": "SWITCH (hard cut) to Juliet's interview across the same hall: on tiptoe, staring back the other way. Mirrored framings: he looks right, she looks left. Her red strip slams in and folds into a tab: 朱丽叶 · 行动派.",
+   "tts": "[teasing, friendly] 朱丽叶，看上谁了？"
+  },
+  {
+   "n": 11,
+   "id": "B06",
+   "scene": "B",
+   "who": "ju",
+   "zh": "快去，问他叫什么。",
+   "en": "Go ask his name.",
+   "screens": [
+    {
+     "zh": "快去，问他叫什么。",
+     "en": "Go ask his name."
+    }
+   ],
+   "emo": "eyes locked on him, an order",
+   "pic": "She points without looking at the lens.",
+   "tts": "[urgent, bossy] Go! Ask his name."
+  },
+  {
+   "n": 12,
+   "id": "B07",
+   "scene": "B",
+   "who": "ji",
+   "zh": "我只拍。",
+   "en": "I only film.",
+   "screens": [
+    {
+     "zh": "我只拍。",
+     "en": "I only film."
+    }
+   ],
+   "emo": "flat",
+   "pic": "The tally blinks: 插手 0. Juliet huffs and waves someone else off.",
+   "tts": "[flat, polite but firm] 我只拍。"
+  },
+  {
+   "n": 13,
+   "id": "B08",
+   "scene": "B",
+   "who": "ji",
+   "zh": "他是她家世仇的独子。",
+   "en": "He's the only son of her family's sworn enemy.",
+   "screens": [
+    {
+     "zh": "他是她家世仇的独子。",
+     "en": "He's the only son of her family's sworn enemy."
+    }
+   ],
+   "emo": "whisper, to us",
+   "pic": "Her whisper (悄悄说): the lens leans in, the edges darken, the room sound dips. Juliet stays in frame, unaware.",
+   "tts": "[whispers] 他是她家世仇的独子。",
+   "after": 0.5
+  },
+  {
+   "n": 14,
+   "id": "C01",
+   "scene": "C",
+   "who": "ju",
+   "zh": "罗密欧啊罗密欧！你为什么偏偏是罗密欧？",
+   "en": "O Romeo, Romeo! Wherefore art thou Romeo?",
+   "screens": [
+    {
+     "zh": "罗密欧啊罗密欧！",
+     "en": "O Romeo, Romeo!"
+    },
+    {
+     "zh": "你为什么偏偏是罗密欧？",
+     "en": "Wherefore art thou Romeo?"
+    }
+   ],
+   "emo": "to the night, sighing",
+   "pic": "Her interview, close on the balcony, the moon behind her. Still.",
+   "tts": "[sighing, dreamy] O Romeo, Romeo! Wherefore art thou Romeo?",
+   "pre": 0.5
+  },
+  {
+   "n": 15,
+   "id": "C02",
+   "scene": "C",
+   "who": "ji",
+   "zh": "对方哪里好？",
+   "en": "What's so good about her?",
+   "screens": [
+    {
+     "zh": "对方哪里好？",
+     "en": "What's so good about her?"
+    }
+   ],
+   "emo": "whisper",
+   "pic": "Switch to his interview: one question, both answer.",
+   "tts": "[whispers] 对方哪里好？"
+  },
+  {
+   "n": 16,
+   "id": "C03",
+   "scene": "C",
+   "who": "ro",
+   "zh": "那是东方，朱丽叶就是太阳！",
+   "en": "It is the east, and Juliet is the sun!",
+   "screens": [
+    {
+     "zh": "那是东方，朱丽叶就是太阳！",
+     "en": "It is the east, and Juliet is the sun!"
+    }
+   ],
+   "emo": "a whisper that turns into a shout, arms wide",
+   "pic": "He points up out of frame. Snap zoom on 'sun'.",
+   "tts": "[whispering, then bursting out] It is the east, and Juliet is the sun!"
+  },
+  {
+   "n": 17,
+   "id": "C04",
+   "scene": "C",
+   "who": "ji",
+   "zh": "现在是半夜。",
+   "en": "It's midnight.",
+   "screens": [
+    {
+     "zh": "现在是半夜。",
+     "en": "It's midnight."
+    }
+   ],
+   "emo": "dry",
+   "pic": "Hold on him, arm still up.",
+   "tts": "[whispers, deadpan] 现在是半夜。"
+  },
+  {
+   "n": 18,
+   "id": "C05",
+   "scene": "C",
+   "who": "ju",
+   "zh": "我的爱像海一样深，没有边。",
+   "en": "My bounty is as boundless as the sea, my love as deep.",
+   "screens": [
+    {
+     "zh": "我的爱像海一样深，没有边。",
+     "en": "My bounty is as boundless as the sea, my love as deep."
+    }
+   ],
+   "emo": "dreamy",
+   "pic": "Switch to her. Slow push: the one sincere beat of the first half.",
+   "tts": "[softly, dreamy] My bounty is as boundless as the sea, my love as deep."
+  },
+  {
+   "n": 19,
+   "id": "C06",
+   "scene": "C",
+   "who": "ji",
+   "zh": "才认识三小时吧？",
+   "en": "You met three hours ago?",
+   "screens": [
+    {
+     "zh": "才认识三小时吧？",
+     "en": "You met three hours ago?"
+    }
+   ],
+   "emo": "dry",
+   "pic": "",
+   "tts": "[deadpan, teasing] 才认识三小时吧？"
+  },
+  {
+   "n": 20,
+   "id": "C07",
+   "scene": "C",
+   "who": "ju",
+   "zh": "是太急，太轻率，太突然了。",
+   "en": "It is too rash, too unadvised, too sudden.",
+   "screens": [
+    {
+     "zh": "是太急，太轻率，太突然了。",
+     "en": "It is too rash, too unadvised, too sudden."
+    }
+   ],
+   "emo": "prim, nodding gravely",
+   "pic": "She straightens, hands folded. Then her eyes drift shut.",
+   "tts": "[primly, very serious] It is too rash, too unadvised, too sudden."
+  },
+  {
+   "n": 21,
+   "id": "C08",
+   "scene": "C",
+   "who": "ju",
+   "zh": "罗密欧……罗密欧……",
+   "en": "Romeo… Romeo…",
+   "screens": [
+    {
+     "zh": "罗密欧……罗密欧……",
+     "en": "Romeo… Romeo…"
+    }
+   ],
+   "emo": "lovesick, eyes closed, to herself (Romeo says his half at the same moment)",
+   "pic": "(Jay's idea.) The screen splits: Juliet on top in red, Romeo below in blue, each sighing the other's name twice at the same moment in the same lovey voice, each to themselves. Both stop: each heard something. The two pictures widen until they meet; the line between them is the edge of her balcony: one picture all along. She looks down, he looks up. Her note: 就在楼下.",
+   "tts": "[lovesick sigh] Romeo... Romeo...",
+   "after": 1.6,
+   "also": {
+    "who": "ro",
+    "zh": "朱丽叶……朱丽叶……",
+    "en": "Juliet… Juliet…",
+    "tts": "[lovesick sigh] Juliet... Juliet..."
+   }
+  },
+  {
+   "n": 22,
+   "id": "C09",
+   "scene": "C",
+   "who": "ro",
+   "zh": "小姐，我对着月亮发誓——",
+   "en": "Lady, by yonder blessed moon I swear—",
+   "screens": [
+    {
+     "zh": "小姐，我对着月亮发誓——",
+     "en": "Lady, by yonder blessed moon I swear—"
+    }
+   ],
+   "emo": "calling up, hand on heart",
+   "pic": "One picture: him below, her at the rail.",
+   "tts": "[earnest, hand on heart] Lady, by yonder blessed moon I swear—"
+  },
+  {
+   "n": 23,
+   "id": "C10",
+   "scene": "C",
+   "who": "ju",
+   "zh": "别对月亮发誓！月亮天天在变！",
+   "en": "O, swear not by the moon, the inconstant moon!",
+   "screens": [
+    {
+     "zh": "别对月亮发誓！月亮天天在变！",
+     "en": "O, swear not by the moon, the inconstant moon!"
+    }
+   ],
+   "emo": "cutting him off",
+   "pic": "Her note in the gap: 月亮一月一变，他一天。",
+   "tts": "[cutting in, quick] O, swear not by the moon, the inconstant moon!",
+   "after": 0.9
+  },
+  {
+   "n": 24,
+   "id": "C11",
+   "scene": "C",
+   "who": "ju",
+   "zh": "你要是真心想娶我，明天给我回话！",
+   "en": "Thy purpose marriage, send me word tomorrow!",
+   "screens": [
+    {
+     "zh": "你要是真心想娶我，明天给我回话！",
+     "en": "Thy purpose marriage, send me word tomorrow!"
+    }
+   ],
+   "emo": "caught for half a second, then all business, calling down",
+   "pic": "Snap zoom on 'marriage'.",
+   "tts": "[brisk, decisive] Thy purpose marriage, send me word tomorrow!"
+  },
+  {
+   "n": 25,
+   "id": "C12",
+   "scene": "C",
+   "who": "ro",
+   "zh": "九点整！",
+   "en": "At the hour of nine!",
+   "screens": [
+    {
+     "zh": "九点整！",
+     "en": "At the hour of nine!"
+    }
+   ],
+   "emo": "from below, instantly",
+   "pic": "Tilt down: he is already running for the wall. Her note: 太突然？",
+   "tts": "[instantly, thrilled] At the hour of nine!",
+   "after": 0.9
+  },
+  {
+   "n": 26,
+   "id": "D01",
+   "scene": "D",
+   "who": "fr",
+   "zh": "你昨晚，是跟罗瑟琳在一起？",
+   "en": "Wast thou with Rosaline?",
+   "screens": [
+    {
+     "zh": "你昨晚，是跟罗瑟琳在一起？",
+     "en": "Wast thou with Rosaline?"
+    }
+   ],
+   "emo": "eyebrow up, eyes on his herbs",
+   "pic": "The Friar sorts herbs and small bottles at a bench. Romeo bursts in, glowing. Banner travels with the Friar: 劳伦斯神父 · 草药行家.",
+   "tts": "[dry, knowing] Wast thou with Rosaline?",
+   "pre": 0.6
+  },
+  {
+   "n": 27,
+   "id": "D02",
+   "scene": "D",
+   "who": "ro",
+   "zh": "这个名字，我已经忘了。",
+   "en": "I have forgot that name.",
+   "screens": [
+    {
+     "zh": "这个名字，我已经忘了。",
+     "en": "I have forgot that name."
+    }
+   ],
+   "emo": "stiff, one eye on the lens",
+   "pic": "He shuffles to stand between the Friar and the lens.",
+   "tts": "[stiffly] I have forgot that name."
+  },
+  {
+   "n": 28,
+   "id": "D03",
+   "scene": "D",
+   "who": "fr",
+   "zh": "年轻人的爱，不走心，只看脸。",
+   "en": "Young men's love then lies not truly in their hearts, but in their eyes.",
+   "screens": [
+    {
+     "zh": "年轻人的爱，",
+     "en": "Young men's love then lies"
+    },
+    {
+     "zh": "不走心，只看脸。",
+     "en": "not truly in their hearts, but in their eyes."
+    }
+   ],
+   "emo": "dry, straight to the lens",
+   "pic": "He leans round Romeo to say it to her. Snap zoom on 'eyes'.",
+   "tts": "[wry, amused] Young men's love then lies not truly in their hearts, but in their eyes."
+  },
+  {
+   "n": 29,
+   "id": "D04",
+   "scene": "D",
+   "who": "ji",
+   "zh": "那您还给他们证婚？",
+   "en": "And you'll still marry them?",
+   "screens": [
+    {
+     "zh": "那您还给他们证婚？",
+     "en": "And you'll still marry them?"
+    }
+   ],
+   "emo": "amused",
+   "pic": "",
+   "tts": "[amused, surprised] 那您还给他们证婚？"
+  },
+  {
+   "n": 30,
+   "id": "D05",
+   "scene": "D",
+   "who": "fr",
+   "zh": "慢慢来。跑得快的，容易摔。",
+   "en": "Wisely and slow; they stumble that run fast.",
+   "screens": [
+    {
+     "zh": "慢慢来。跑得快的，容易摔。",
+     "en": "Wisely and slow; they stumble that run fast."
+    }
+   ],
+   "emo": "wagging a finger, slow",
+   "pic": "On 'fast' Juliet sprints in through the bright doorway and skids to a stop.",
+   "tts": "[slow, wise] Wisely and slow; they stumble that run fast."
+  },
+  {
+   "n": 31,
+   "id": "D06",
+   "scene": "D",
+   "who": "fr",
+   "zh": "爱得越猛，收场越惨。",
+   "en": "These violent delights have violent ends.",
+   "screens": [
+    {
+     "zh": "爱得越猛，收场越惨。",
+     "en": "These violent delights have violent ends."
+    }
+   ],
+   "emo": "low, a shadow crossing his face",
+   "pic": "The two clasp hands in front of him. A bell. She steps back wide: three small figures in the doorway light (no blessing close-up). Stamp: 认识一天 · 已婚.",
+   "tts": "[quietly, ominous] These violent delights have violent ends.",
+   "after": 1.4
+  },
+  {
+   "n": 32,
+   "id": "E01",
+   "scene": "E",
+   "who": "ji",
+   "zh": "罗密欧？",
+   "en": "Romeo?",
+   "screens": [
+    {
+     "zh": "罗密欧？",
+     "en": "Romeo?"
+    }
+   ],
+   "emo": "small",
+   "pic": "Dusk, an empty street. Romeo with his back to us, a sword at his feet, a red cap on the stones. No body in frame. Still.",
+   "tts": "[quietly, uneasy] 罗密欧？",
+   "pre": 1.2
+  },
+  {
+   "n": 33,
+   "id": "E02",
+   "scene": "E",
+   "who": "ro",
+   "zh": "老天爷在耍我！",
+   "en": "O, I am fortune's fool!",
+   "screens": [
+    {
+     "zh": "老天爷在耍我！",
+     "en": "O, I am fortune's fool!"
+    }
+   ],
+   "emo": "hollow, to his own hand",
+   "pic": "He turns; one slow push; he runs out of frame.",
+   "tts": "[hollow, shaken] O, I am fortune's fool!"
+  },
+  {
+   "n": 34,
+   "id": "E03",
+   "scene": "E",
+   "who": "ji",
+   "zh": "他刚杀了朱丽叶的表哥。",
+   "en": "He just killed Juliet's cousin.",
+   "screens": [
+    {
+     "zh": "他刚杀了朱丽叶的表哥。",
+     "en": "He just killed Juliet's cousin."
+    }
+   ],
+   "emo": "whisper, small",
+   "pic": "Her whisper on the empty street. Then the fact card while nobody speaks.",
+   "tts": "[whispers, shaken] 他刚杀了朱丽叶的表哥。",
+   "after": 4.0,
+   "card": {
+    "zh": "判决：驱逐。回来就是死。",
+    "en": "Sentence: banished. Come back and die."
+   },
+   "card_hold": 3.6,
+   "card_delay": 0.2
+  },
+  {
+   "n": 35,
+   "id": "F01",
+   "scene": "F",
+   "who": "ji",
+   "zh": "爸妈要她后天嫁别人。",
+   "en": "Her parents want her married to another man the day after tomorrow.",
+   "screens": [
+    {
+     "zh": "爸妈要她后天嫁别人。",
+     "en": "Her parents want her married to another man the day after tomorrow."
+    }
+   ],
+   "emo": "whisper",
+   "pic": "Her whisper over the cell: the Friar at the window, Juliet steady beside him.",
+   "tts": "[whispers] 爸妈要她后天嫁别人。",
+   "pre": 0.6
+  },
+  {
+   "n": 36,
+   "id": "F02",
+   "scene": "F",
+   "who": "fr",
+   "zh": "喝下这瓶药。没有体温，没有呼吸。",
+   "en": "Take thou this vial. No warmth, no breath, shall testify thou livest.",
+   "screens": [
+    {
+     "zh": "喝下这瓶药。",
+     "en": "Take thou this vial."
+    },
+    {
+     "zh": "没有体温，没有呼吸。",
+     "en": "No warmth, no breath, shall testify thou livest."
+    }
+   ],
+   "emo": "low, careful",
+   "pic": "Close on a small bottle held to the window light (the 假死药), Juliet's steady face behind it.",
+   "tts": "[low, careful] Take thou this vial. No warmth, no breath, shall testify thou livest."
+  },
+  {
+   "n": 37,
+   "id": "F03",
+   "scene": "F",
+   "who": "fr",
+   "zh": "四十二个小时后，像睡了一觉一样醒来。",
+   "en": "Two and forty hours, and then awake as from a pleasant sleep.",
+   "screens": [
+    {
+     "zh": "四十二个小时后，",
+     "en": "Two and forty hours,"
+    },
+    {
+     "zh": "像睡了一觉一样醒来。",
+     "en": "and then awake as from a pleasant sleep."
+    }
+   ],
+   "emo": "the same",
+   "pic": "",
+   "tts": "[low, reassuring] Two and forty hours, and then awake as from a pleasant sleep."
+  },
+  {
+   "n": 38,
+   "id": "F04",
+   "scene": "F",
+   "who": "ju",
+   "zh": "给我，给我！别跟我说怕！",
+   "en": "Give me, give me! O, tell not me of fear!",
+   "screens": [
+    {
+     "zh": "给我，给我！别跟我说怕！",
+     "en": "Give me, give me! O, tell not me of fear!"
+    }
+   ],
+   "emo": "snatching it before he has finished",
+   "pic": "She takes the bottle out of his hand.",
+   "tts": "[fierce, impatient] Give me, give me! O, tell not me of fear!"
+  },
+  {
+   "n": 39,
+   "id": "F05",
+   "scene": "F",
+   "who": "ji",
+   "zh": "罗密欧知道吗？",
+   "en": "Does Romeo know?",
+   "screens": [
+    {
+     "zh": "罗密欧知道吗？",
+     "en": "Does Romeo know?"
+    }
+   ],
+   "emo": "worried",
+   "pic": "",
+   "tts": "[worried] 罗密欧知道吗？"
+  },
+  {
+   "n": 40,
+   "id": "F06",
+   "scene": "F",
+   "who": "fr",
+   "zh": "我写信，把一切告诉罗密欧。",
+   "en": "Shall Romeo by my letters know our drift.",
+   "screens": [
+    {
+     "zh": "我写信，把一切告诉罗密欧。",
+     "en": "Shall Romeo by my letters know our drift."
+    }
+   ],
+   "emo": "already writing, sealing it with red wax",
+   "pic": "He writes and seals a letter with red wax. Her note in the gap: 信里写着：她是假死.",
+   "tts": "[busy, writing] Shall Romeo by my letters know our drift.",
+   "after": 0.9
+  },
+  {
+   "n": 41,
+   "id": "F07",
+   "scene": "F",
+   "who": "fr",
+   "zh": "你，能替我带给罗密欧吗？",
+   "en": "Thou. Wilt thou bear this to Romeo?",
+   "screens": [
+    {
+     "zh": "你，能替我带给罗密欧吗？",
+     "en": "Thou. Wilt thou bear this to Romeo?"
+    }
+   ],
+   "emo": "gentle, to the lens",
+   "pic": "He holds the sealed letter out to the lens, exactly as Romeo did in scene 1.",
+   "tts": "[gently, hopeful] Thou. Wilt thou bear this to Romeo?"
+  },
+  {
+   "n": 42,
+   "id": "F08",
+   "scene": "F",
+   "who": "ji",
+   "zh": "……我只拍。",
+   "en": "…I only film.",
+   "screens": [
+    {
+     "zh": "……我只拍。",
+     "en": "…I only film."
+    }
+   ],
+   "emo": "after a long beat, small",
+   "pic": "The tally 插手 0 blinks, no sound this time. He nods without blame and gives the letter to a young friar, who leaves. She holds on the empty doorway a second too long.",
+   "tts": "[small, hesitant] ……我只拍。",
+   "pre": 0.9,
+   "after": 1.3
+  },
+  {
+   "n": 43,
+   "id": "F09",
+   "scene": "F",
+   "who": "ju",
+   "zh": "罗密欧，等我。这一杯，敬你。",
+   "en": "Romeo, I come! This do I drink to thee.",
+   "screens": [
+    {
+     "zh": "罗密欧，等我。这一杯，敬你。",
+     "en": "Romeo, I come! This do I drink to thee."
+    }
+   ],
+   "emo": "alone, a small brave smile",
+   "pic": "Join: the cell door closes over the lens and opens on her room at night. She raises the bottle to the lens like a toast. Cut before it reaches her lips.",
+   "tts": "[softly, brave] Romeo, I come! This do I drink to thee.",
+   "pre": 1.0,
+   "after": 1.0
+  },
+  {
+   "n": 44,
+   "id": "G01",
+   "scene": "G",
+   "who": "ji",
+   "zh": "先到的消息：朱丽叶死了。",
+   "en": "The news that got here first: Juliet is dead.",
+   "screens": [
+    {
+     "zh": "先到的消息：朱丽叶死了。",
+     "en": "The news that got here first: Juliet is dead."
+    }
+   ],
+   "emo": "whisper",
+   "pic": "Mantua, a bare street, flat noon light. A rider leaves at the far end. Romeo small in frame, seen from a little above.",
+   "tts": "[whispers] 先到的消息：朱丽叶死了。",
+   "pre": 4.4,
+   "card_before": {
+    "zh": "送信人被瘟疫封了门。信没出城。",
+    "en": "The messenger was shut in by the plague. The letter never left town."
+   }
+  },
+  {
+   "n": 45,
+   "id": "G02",
+   "scene": "G",
+   "who": "ro",
+   "zh": "老天，我不服！",
+   "en": "Then I defy you, stars!",
+   "screens": [
+    {
+     "zh": "老天，我不服！",
+     "en": "Then I defy you, stars!"
+    }
+   ],
+   "emo": "white, to the sky",
+   "pic": "",
+   "tts": "[raw, defiant] Then I defy you, stars!"
+  },
+  {
+   "n": 46,
+   "id": "G03",
+   "scene": "G",
+   "who": "ro",
+   "zh": "神父没有托你带信给我？",
+   "en": "Hast thou no letters to me from the friar?",
+   "screens": [
+    {
+     "zh": "神父没有托你带信给我？",
+     "en": "Hast thou no letters to me from the friar?"
+    }
+   ],
+   "emo": "a last hope, straight to the lens",
+   "pic": "He walks up to the lens. The camera holds still.",
+   "tts": "[desperate hope] Hast thou no letters to me from the friar?"
+  },
+  {
+   "n": 47,
+   "id": "G04",
+   "scene": "G",
+   "who": "ji",
+   "zh": "……没有。",
+   "en": "…No.",
+   "screens": [
+    {
+     "zh": "……没有。",
+     "en": "…No."
+    }
+   ],
+   "emo": "barely",
+   "pic": "",
+   "tts": "[barely audible] ……没有。"
+  },
+  {
+   "n": 48,
+   "id": "G05",
+   "scene": "G",
+   "who": "ro",
+   "zh": "……无所谓了。",
+   "en": "No matter.",
+   "screens": [
+    {
+     "zh": "……无所谓了。",
+     "en": "No matter."
+    }
+   ],
+   "emo": "flat",
+   "pic": "He turns away. A small dark bottle goes into his coat.",
+   "tts": "[flat, empty] No matter.",
+   "after": 0.3
+  },
+  {
+   "n": 49,
+   "id": "G06",
+   "scene": "G",
+   "who": "ji",
+   "zh": "等等，她没——",
+   "en": "Wait, she's not—",
+   "screens": [
+    {
+     "zh": "等等，她没——",
+     "en": "Wait, she's not—"
+    }
+   ],
+   "emo": "urgent",
+   "pic": "He is already walking off; he does not turn.",
+   "tts": "[urgent, cut off] 等等，她没——"
+  },
+  {
+   "n": 50,
+   "id": "G07",
+   "scene": "G",
+   "who": "ji",
+   "zh": "她没死。他没听完。",
+   "en": "She isn't dead. He didn't hear the rest.",
+   "screens": [
+    {
+     "zh": "她没死。他没听完。",
+     "en": "She isn't dead. He didn't hear the rest."
+    }
+   ],
+   "emo": "whisper, cracking",
+   "pic": "Plain words, no bubble. From here every effect is gone. He walks off; she does not follow at once.",
+   "tts": "[whispers, voice cracking] 她没死。他没听完。",
+   "after": 1.0
+  },
+  {
+   "n": 51,
+   "id": "H01",
+   "scene": "H",
+   "who": "ro",
+   "zh": "死神，还没能夺走你的美。",
+   "en": "Death hath had no power yet upon thy beauty.",
+   "screens": [
+    {
+     "zh": "死神，还没能夺走你的美。",
+     "en": "Death hath had no power yet upon thy beauty."
+    }
+   ],
+   "emo": "soft, wondering",
+   "pic": "Torchlight. Juliet on a stone bier, hands folded. Romeo kneels beside her.",
+   "tts": "[soft, wondering] Death hath had no power yet upon thy beauty.",
+   "pre": 1.5
+  },
+  {
+   "n": 52,
+   "id": "H02",
+   "scene": "H",
+   "who": "ro",
+   "zh": "你的嘴唇，你的脸，还是红的。",
+   "en": "Beauty's ensign yet is crimson in thy lips and in thy cheeks.",
+   "screens": [
+    {
+     "zh": "你的嘴唇，你的脸，",
+     "en": "Beauty's ensign yet is crimson"
+    },
+    {
+     "zh": "还是红的。",
+     "en": "in thy lips and in thy cheeks."
+    }
+   ],
+   "emo": "the same",
+   "pic": "His hand near her cheek, not touching.",
+   "tts": "[tender, quiet] Beauty's ensign yet is crimson in thy lips, and in thy cheeks."
+  },
+  {
+   "n": 53,
+   "id": "H03",
+   "scene": "H",
+   "who": "ji",
+   "zh": "红的，是因为她活着！",
+   "en": "They're red because she's alive!",
+   "screens": [
+    {
+     "zh": "红的，是因为她活着！",
+     "en": "They're red because she's alive!"
+    }
+   ],
+   "emo": "out loud, shaking",
+   "pic": "She says it out loud this time. He does not turn. Picture still; only her voice shakes.",
+   "tts": "[desperate, voice shaking] 红的，是因为她活着！"
+  },
+  {
+   "n": 54,
+   "id": "H04",
+   "scene": "H",
+   "who": "ro",
+   "zh": "这一杯，敬我的爱人。",
+   "en": "Here's to my love!",
+   "screens": [
+    {
+     "zh": "这一杯，敬我的爱人。",
+     "en": "Here's to my love!"
+    }
+   ],
+   "emo": "calm",
+   "pic": "He raises the dark bottle with the same gesture Juliet used in F09. It never reaches his lips.",
+   "tts": "[calm, tender] Here's to my love!"
+  },
+  {
+   "n": 55,
+   "id": "H05",
+   "scene": "H",
+   "who": "ji",
+   "zh": "我只拍，不插……不拍了！",
+   "en": "I only film, I don't inter— I'm done filming!",
+   "screens": [
+    {
+     "zh": "我只拍，不插……不拍了！",
+     "en": "I only film, I don't inter— I'm done filming!"
+    }
+   ],
+   "emo": "breaking",
+   "pic": "The picture lurches. The camera leaves her hands: torch streaks, the bier, his hand filling the frame. Glass breaks. Stone. A crack splits the picture. Black. The REC display stutters and dies. Two seconds of silence.",
+   "tts": "[breaking] 我只拍，不插……[shouting] 不拍了！",
+   "after": 3.2
+  },
+  {
+   "n": 56,
+   "id": "I01",
+   "scene": "I",
+   "who": "ju",
+   "zh": "我的罗密欧呢？",
+   "en": "Where is my Romeo?",
+   "screens": [
+    {
+     "zh": "我的罗密欧呢？",
+     "en": "Where is my Romeo?"
+    }
+   ],
+   "emo": "waking, soft",
+   "pic": "Through the shard: the spilled bottle on the stones, his empty hand. He stares at the hand, then towards where it came from. Behind him her fingers move. She sits up. He turns. They hug; it holds four seconds. The lute returns, slow.",
+   "tts": "[waking, drowsy, soft] Where is my Romeo?",
+   "pre": 2.2,
+   "after": 4.0
+  },
+  {
+   "n": 57,
+   "id": "I02",
+   "scene": "I",
+   "who": "ju",
+   "zh": "神父的信，你没收到？",
+   "en": "Did the friar's letter not reach thee?",
+   "screens": [
+    {
+     "zh": "神父的信，你没收到？",
+     "en": "Did the friar's letter not reach thee?"
+    }
+   ],
+   "emo": "over his shoulder, puzzled",
+   "pic": "Still in the hug.",
+   "tts": "[puzzled] Did the friar's letter not reach thee?"
+  },
+  {
+   "n": 58,
+   "id": "I03",
+   "scene": "I",
+   "who": "ro",
+   "zh": "什么信？",
+   "en": "What letter?",
+   "screens": [
+    {
+     "zh": "什么信？",
+     "en": "What letter?"
+    }
+   ],
+   "emo": "blank",
+   "pic": "Both turn slowly and look up past the shard, to where she is standing.",
+   "tts": "[blank] What letter?",
+   "after": 0.8
+  },
+  {
+   "n": 59,
+   "id": "I04",
+   "scene": "I",
+   "who": "ji",
+   "zh": "……拍不了了。我送。",
+   "en": "…I can't film any more. I'll deliver it.",
+   "screens": [
+    {
+     "zh": "……拍不了了。我送。",
+     "en": "…I can't film any more. I'll deliver it."
+    }
+   ],
+   "emo": "tiny",
+   "pic": "In the cracked glass the tally turns to 插手 1. The shard flickers. Power-off sound. Black. End card on parchment: 从相识到墓穴，一共四天。原著里，信没有送到，两个人都没能活下来。这个结局，是记者扔出来的。 Seal: 演绎.",
+   "tts": "[tiny, sheepish, after a pause] 拍不了了。我送。",
+   "after": 6.0
+  }
+ ]
+}

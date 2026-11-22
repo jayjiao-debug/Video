@@ -1,0 +1,9 @@
+{
+ "note": "采访罗密欧与朱丽叶 cast (public ElevenLabs library voices). Chosen from the audition romeo-audition-01 (eleven_v4, seed 1597): Romeo = Archie (clearest English of three, widest pitch range, warm), Juliet = Ana (emotional and expressive; Amelia's 'Go ask his name' was heard as 'Don't ask his name'), Friar = Grandfather Joe (gentle, warm, wise; livelier than Oliver, quicker than Cornelius). The reporter keeps the series voice Lin.",
+ "cast": {
+  "ji": {"name": "Lin", "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a", "voice_id": "I23uc91tu5zY2PA1tKEN", "lang": "zh"},
+  "ro": {"name": "Archie", "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74", "voice_id": "kmSVBPu7loj4ayNinwWM", "lang": "en"},
+  "ju": {"name": "Ana", "owner": "76c9cb1aa5bde66e61587de2b16dd92ca167852393360a9c1f7e567f229a31b4", "voice_id": "rCmVtv8cYU60uhlsOo1M", "lang": "en"},
+  "fr": {"name": "Grandfather", "owner": "34c483aaa9f266050bb548d8a3495b18c266f138401947fae23df13770cb6f7b", "voice_id": "0lp4RIz96WD1RUtvEu3Q", "lang": "en"}
+ }
+}

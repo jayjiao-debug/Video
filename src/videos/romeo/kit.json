@@ -1,0 +1,45 @@
+{
+  "film": "romeo",
+  "composition": "RomeoFilm",
+  "dir": "src/videos/romeo",
+  "story": "story.ts",
+  "hooks": "kit.world.ts",
+  "entries": {
+    "overlay": "Film.tsx",
+    "segFile": "shots/seg{SEG}"
+  },
+  "tsc": [
+    "world.ts",
+    "story.ts",
+    "cam.ts",
+    "people.ts",
+    "places.ts",
+    "sets/index.ts",
+    "shots/common.ts",
+    "preview/set_places.ts",
+    "preview/people_lineup.ts",
+    "Film.tsx",
+    "fx.tsx",
+    "shard.tsx",
+    "whisper.ts",
+    "hud.tsx",
+    "kit.world.ts",
+    "shots/kit.ts",
+    "shots/segA.ts",
+    "shots/segB.ts",
+    "shots/segC.ts",
+    "shots/segD.ts",
+    "shots/segE.ts",
+    "shots/segF.ts",
+    "shots/segG.ts",
+    "shots/segH.ts",
+    "shots/segI.ts"
+  ],
+  "domOnly": [
+    "hud/"
+  ],
+  "langs": [
+    "zh"
+  ],
+  "work": "/home/user/romeo_work"
+}

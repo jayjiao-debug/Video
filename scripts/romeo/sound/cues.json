@@ -1,0 +1,1715 @@
+{
+ "note": "采访罗密欧与朱丽叶的四天 sound plan v1 (22 Nov, overnight build). Frames from the picture (src/videos/romeo: fx.tsx, shard.tsx, shots/seg*.ts), written as scene anchors by /home/user/romeo_work/sound/make_cues.py. Music: eight original lute pieces synthesised in code (no samples); none in the turn (E), the letter's failure (G) or the quiet scene (H). Effects from the library and the sound farm (romeo-sfx-01).",
+ "whisper_dip": {
+  "db": -6,
+  "ramp": 0.2,
+  "also": [],
+  "note": "her whispered asides (whisper.ts WHISPER_LINES): the room dips 6 dB"
+ },
+ "beds": [
+  {
+   "label": "A dawn birds in the sycamore grove",
+   "clip": "amb_dawn",
+   "at": [
+    "A",
+    "from",
+    0.0
+   ],
+   "until": [
+    "B",
+    "from",
+    0.0
+   ],
+   "gain": -7.1,
+   "loop": true,
+   "fade": 0.05,
+   "fade_out": 0.3,
+   "note": " | level: clip -39.1 LUFS -> -40 LUFS in the mix"
+  },
+  {
+   "label": "A leaves over him",
+   "clip": "amb_leaves",
+   "at": [
+    "A",
+    "from",
+    0.0
+   ],
+   "until": [
+    "B",
+    "from",
+    0.0
+   ],
+   "gain": -11.0,
+   "loop": true,
+   "fade": 0.05,
+   "fade_out": 0.3,
+   "note": " | level: clip -42.2 LUFS -> -47 LUFS in the mix"
+  },
+  {
+   "label": "B the feast hall (crowd, tavern)",
+   "clip": "amb_feast_tavern",
+   "at": [
+    "B",
+    "from",
+    0.0
+   ],
+   "until": [
+    "C",
+    "from",
+    0.0
+   ],
+   "gain": -22.4,
+   "loop": true,
+   "fade": 0.08,
+   "fade_out": 0.3,
+   "note": " | level: clip -22.8 LUFS -> -39 LUFS in the mix"
+  },
+  {
+   "label": "B the feast (cups, laughter)",
+   "clip": "amb_feast",
+   "at": [
+    "B",
+    "from",
+    0.0
+   ],
+   "until": [
+    "C",
+    "from",
+    0.0
+   ],
+   "gain": -13.0,
+   "loop": true,
+   "fade": 0.08,
+   "fade_out": 0.3,
+   "note": " | level: clip -35.2 LUFS -> -42 LUFS in the mix"
+  },
+  {
+   "label": "C night garden (crickets, an owl)",
+   "clip": "amb_night",
+   "at": [
+    "C",
+    "from",
+    0.0
+   ],
+   "until": [
+    "D",
+    "from",
+    0.0
+   ],
+   "gain": 16.0,
+   "loop": true,
+   "fade": 0.1,
+   "fade_out": 0.3,
+   "note": " | level: clip -67.2 LUFS -> -45 LUFS in the mix"
+  },
+  {
+   "label": "C leaves in the orchard",
+   "clip": "amb_leaves",
+   "at": [
+    "C",
+    "from",
+    0.0
+   ],
+   "until": [
+    "D",
+    "from",
+    0.0
+   ],
+   "gain": -13.0,
+   "loop": true,
+   "fade": 0.1,
+   "fade_out": 0.3,
+   "note": " | level: clip -42.2 LUFS -> -49 LUFS in the mix"
+  },
+  {
+   "label": "D the cell (room)",
+   "clip": "amb_cell",
+   "at": [
+    "D",
+    "from",
+    0.0
+   ],
+   "until": [
+    "E",
+    "from",
+    0.0
+   ],
+   "gain": 14.3,
+   "loop": true,
+   "fade": 0.08,
+   "fade_out": 0.3,
+   "note": " | level: clip -67.5 LUFS -> -47 LUFS in the mix"
+  },
+  {
+   "label": "D birds through the bright doorway",
+   "clip": "amb_dawn",
+   "at": [
+    "D",
+    "from",
+    0.0
+   ],
+   "until": [
+    "E",
+    "from",
+    0.0
+   ],
+   "gain": -17.1,
+   "loop": true,
+   "fade": 0.08,
+   "fade_out": 0.3,
+   "lp": [
+    2800
+   ],
+   "note": " | level: clip -39.1 LUFS -> -50 LUFS in the mix"
+  },
+  {
+   "label": "E wind down the empty street",
+   "clip": "amb_wind",
+   "at": [
+    "E",
+    "from",
+    0.0
+   ],
+   "until": [
+    "F",
+    "from",
+    0.0
+   ],
+   "gain": 13.7,
+   "loop": true,
+   "fade": 0.05,
+   "fade_out": 0.4,
+   "note": " | level: clip -57.9 LUFS -> -38 LUFS in the mix"
+  },
+  {
+   "label": "E the town far off",
+   "clip": "amb_street",
+   "at": [
+    "E",
+    "from",
+    0.0
+   ],
+   "until": [
+    "F",
+    "from",
+    0.0
+   ],
+   "gain": -29.4,
+   "loop": true,
+   "fade": 0.05,
+   "fade_out": 0.4,
+   "note": " | level: clip -20.8 LUFS -> -44 LUFS in the mix"
+  },
+  {
+   "label": "F the cell (greyer)",
+   "clip": "amb_cell",
+   "at": [
+    "F",
+    "from",
+    0.0
+   ],
+   "until": [
+    "F",
+    "from",
+    30.6
+   ],
+   "gain": 14.3,
+   "loop": true,
+   "fade": 0.08,
+   "fade_out": 0.05,
+   "note": " | level: clip -67.5 LUFS -> -47 LUFS in the mix"
+  },
+  {
+   "label": "F her room at night",
+   "clip": "amb_bedroom",
+   "at": [
+    "F",
+    "from",
+    30.6
+   ],
+   "until": [
+    "F",
+    "from",
+    35.1
+   ],
+   "gain": 11.0,
+   "loop": true,
+   "fade": 0.3,
+   "fade_out": 0.02,
+   "note": " | level: clip -63.2 LUFS -> -46 LUFS in the mix"
+  },
+  {
+   "label": "F the Friar writes (the quill)",
+   "clip": "sfx_quill",
+   "at": [
+    "F",
+    "from",
+    20.133
+   ],
+   "until": [
+    "F",
+    "from",
+    22.067
+   ],
+   "gain": 3.1,
+   "loop": true,
+   "fade": 0.1,
+   "fade_out": 0.05,
+   "in": 0.5,
+   "group": "sfx",
+   "note": " | level: clip -43.3 LUFS -> -34 LUFS in the mix"
+  },
+  {
+   "label": "G the street by day (the boarded house)",
+   "clip": "amb_street",
+   "at": [
+    "G",
+    "from",
+    0.0
+   ],
+   "until": [
+    "G",
+    "from",
+    4.367
+   ],
+   "gain": -27.4,
+   "loop": true,
+   "fade": 0.05,
+   "fade_out": 0.05,
+   "note": " | level: clip -20.8 LUFS -> -42 LUFS in the mix"
+  },
+  {
+   "label": "G Mantua: flat noon wind on the road",
+   "clip": "amb_mantua",
+   "at": [
+    "G",
+    "from",
+    4.367
+   ],
+   "until": [
+    "H",
+    "from",
+    0.0
+   ],
+   "gain": -15.4,
+   "loop": true,
+   "fade": 0.05,
+   "fade_out": 0.4,
+   "note": " | level: clip -28.8 LUFS -> -38 LUFS in the mix"
+  },
+  {
+   "label": "H torches",
+   "clip": "amb_torch",
+   "at": [
+    "H",
+    "from",
+    0.0
+   ],
+   "until": [
+    "H",
+    "from",
+    17.033
+   ],
+   "gain": -7.1,
+   "loop": true,
+   "fade": 0.3,
+   "fade_out": 0.03,
+   "note": " | level: clip -39.1 LUFS -> -40 LUFS in the mix"
+  },
+  {
+   "label": "H the vault's air",
+   "clip": "amb_crypt",
+   "at": [
+    "H",
+    "from",
+    0.0
+   ],
+   "until": [
+    "H",
+    "from",
+    17.033
+   ],
+   "gain": -8.8,
+   "loop": true,
+   "fade": 0.3,
+   "fade_out": 0.03,
+   "note": " | level: clip -41.4 LUFS -> -44 LUFS in the mix"
+  },
+  {
+   "label": "H water dripping in the vault",
+   "clip": "amb_drips",
+   "at": [
+    "H",
+    "from",
+    0.0
+   ],
+   "until": [
+    "H",
+    "from",
+    17.033
+   ],
+   "gain": -15.1,
+   "loop": true,
+   "fade": 0.3,
+   "fade_out": 0.03,
+   "note": " | level: clip -38.1 LUFS -> -47 LUFS in the mix"
+  },
+  {
+   "label": "I the vault, through the shard: drips",
+   "clip": "amb_drips",
+   "at": [
+    "I",
+    "from",
+    0.0
+   ],
+   "until": [
+    "I",
+    "from",
+    16.667
+   ],
+   "gain": -12.1,
+   "loop": true,
+   "fade": 1.2,
+   "fade_out": 0.02,
+   "note": " | level: clip -38.1 LUFS -> -44 LUFS in the mix"
+  },
+  {
+   "label": "I the vault's air",
+   "clip": "amb_crypt",
+   "at": [
+    "I",
+    "from",
+    0.0
+   ],
+   "until": [
+    "I",
+    "from",
+    16.667
+   ],
+   "gain": -10.8,
+   "loop": true,
+   "fade": 1.2,
+   "fade_out": 0.02,
+   "note": " | level: clip -41.4 LUFS -> -46 LUFS in the mix"
+  },
+  {
+   "label": "I the torches, far",
+   "clip": "amb_torch",
+   "at": [
+    "I",
+    "from",
+    0.0
+   ],
+   "until": [
+    "I",
+    "from",
+    16.667
+   ],
+   "gain": -14.1,
+   "loop": true,
+   "fade": 1.2,
+   "fade_out": 0.02,
+   "note": " | level: clip -39.1 LUFS -> -47 LUFS in the mix"
+  },
+  {
+   "label": "A music: Romeo's sobbing theme, from the first frame; stopped dead in mid-sigh as A02 begins (3.4 s)",
+   "clip": "mus_lovesick",
+   "at": [
+    "A",
+    "from",
+    0.0
+   ],
+   "until": [
+    "A",
+    "from",
+    3.4
+   ],
+   "gain": -16.2,
+   "loop": false,
+   "fade": 0.02,
+   "fade_out": 0.03,
+   "note": " | level: clip -20.0 LUFS -> -30 LUFS in the mix"
+  },
+  {
+   "label": "A title sting: the rolled G major chord (0.9 s) lands on the seal (f188), the cadence the sobbing theme was denied",
+   "clip": "mus_title",
+   "at": [
+    "A",
+    "from",
+    6.267
+   ],
+   "until": [
+    "A",
+    "from",
+    7.467
+   ],
+   "gain": -11.2,
+   "loop": false,
+   "fade": 0.01,
+   "fade_out": 0.25,
+   "sync": 0.9,
+   "note": " | level: clip -20.0 LUFS -> -25 LUFS in the mix"
+  },
+  {
+   "label": "A music: the sobbing theme comes back at bar 3 (4.0 s in) under A03, on to the cut into B",
+   "clip": "mus_lovesick",
+   "at": [
+    "A",
+    "from",
+    7.667
+   ],
+   "until": [
+    "B",
+    "from",
+    0.0
+   ],
+   "gain": -17.2,
+   "loop": false,
+   "fade": 0.25,
+   "fade_out": 0.6,
+   "in": 4.0,
+   "note": " | level: clip -20.0 LUFS -> -31 LUFS in the mix"
+  },
+  {
+   "label": "B music: the feast dance, looped for the whole party",
+   "clip": "mus_feast",
+   "at": [
+    "B",
+    "from",
+    0.0
+   ],
+   "until": [
+    "C",
+    "from",
+    0.0
+   ],
+   "gain": -17.2,
+   "loop": true,
+   "fade": 0.15,
+   "fade_out": 0.3,
+   "note": " | level: clip -20.0 LUFS -> -31 LUFS in the mix"
+  },
+  {
+   "label": "C music: the balcony serenade; its swell (22-27.5 s) under the split screen, the scurry (37.5 s) on his run, the cheeky pluck (40.6 s) as he bursts into the cell",
+   "clip": "mus_balcony",
+   "at": [
+    "C",
+    "from",
+    0.0
+   ],
+   "until": [
+    "D",
+    "from",
+    0.867
+   ],
+   "gain": -17.2,
+   "loop": false,
+   "fade": 0.3,
+   "fade_out": 0.1,
+   "note": " | level: clip -20.0 LUFS -> -31 LUFS in the mix"
+  },
+  {
+   "label": "D music: the Friar's jig, 3.75 percent quick so that its G cadence (20.30 s) lands on the wedding stamp (f2852)",
+   "clip": "mus_cell",
+   "at": [
+    "D",
+    "from",
+    20.433
+   ],
+   "until": [
+    "D",
+    "from",
+    21.1
+   ],
+   "gain": -17.2,
+   "loop": false,
+   "fade": 0.05,
+   "fade_out": 0.2,
+   "sync": 20.3,
+   "rate": 1.0375,
+   "note": " | level: clip -20.0 LUFS -> -31 LUFS in the mix"
+  },
+  {
+   "label": "F music: the vial, falling sighs; sparse, so 3 dB under the others (the composer: its single plucks peak like the busy pieces); faded to nothing before the cell door closes",
+   "clip": "mus_vial",
+   "at": [
+    "F",
+    "from",
+    0.0
+   ],
+   "until": [
+    "F",
+    "from",
+    30.2
+   ],
+   "gain": -20.2,
+   "loop": false,
+   "fade": 0.5,
+   "fade_out": 0.2,
+   "note": " | level: clip -20.0 LUFS -> -34 LUFS in the mix"
+  },
+  {
+   "label": "F music: Juliet's toast, one fragile lute, sparse (3 dB under the busy pieces' level would be -34; -32 keeps it present under her line); cut dead with the picture at TOAST_CUT (f4329), before its A chord",
+   "clip": "mus_toast",
+   "at": [
+    "F",
+    "from",
+    30.7
+   ],
+   "until": [
+    "F",
+    "from",
+    35.1
+   ],
+   "gain": -18.2,
+   "loop": false,
+   "fade": 0.05,
+   "fade_out": 0.02,
+   "note": " | level: clip -20.0 LUFS -> -32 LUFS in the mix"
+  },
+  {
+   "label": "I music: the lute returns 0.6 s after the hug, under the last lines",
+   "clip": "mus_return",
+   "at": [
+    "I",
+    "from",
+    5.567
+   ],
+   "until": [
+    "I",
+    "from",
+    16.667
+   ],
+   "gain": -17.2,
+   "loop": false,
+   "fade": 0.6,
+   "fade_out": 0.3,
+   "note": " | level: clip -20.0 LUFS -> -31 LUFS in the mix"
+  },
+  {
+   "label": "I music: the same take on, 6 dB up after the camera dies; its D major chord (16.5 s) lands on the end card's seal (f6205)",
+   "clip": "mus_return",
+   "at": [
+    "I",
+    "from",
+    16.367
+   ],
+   "until": [
+    "I",
+    "to",
+    0
+   ],
+   "gain": -11.2,
+   "loop": false,
+   "fade": 0.3,
+   "fade_out": 0.6,
+   "in": 10.8,
+   "note": " | level: clip -20.0 LUFS -> -25 LUFS in the mix"
+  }
+ ],
+ "hits": [
+  {
+   "label": "A REC beep (frame 1)",
+   "clip": "rec_beep",
+   "at": [
+    "A",
+    "from",
+    0.033
+   ],
+   "gain": -22.9,
+   "note": " | level: clip peak -3.3 dBFS -> about -20 dBFS in the mix"
+  },
+  {
+   "label": "A title: the letter lands",
+   "clip": "sfx_paper_fold",
+   "at": [
+    "A",
+    "from",
+    5.7
+   ],
+   "gain": -6.6,
+   "sync": 0.43,
+   "note": " | level: clip peak -23.6 dBFS -> about -24 dBFS in the mix"
+  },
+  {
+   "label": "A title: the seal thunks",
+   "clip": "sfx_wax_thunk_1",
+   "at": [
+    "A",
+    "from",
+    6.267
+   ],
+   "gain": -7.0,
+   "sync": 0.25,
+   "note": " | level: clip peak -15.2 dBFS -> about -16 dBFS in the mix"
+  },
+  {
+   "label": "A title: 四 over 一 (a wax tick)",
+   "clip": "sfx_wax_tock",
+   "at": [
+    "A",
+    "from",
+    6.633
+   ],
+   "gain": -30.9,
+   "sync": 0.25,
+   "rate": 1.35,
+   "note": " | level: clip peak -1.3 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "A Romeo's tab: the banner snaps in",
+   "clip": "sfx_whip",
+   "at": [
+    "A",
+    "from",
+    8.667
+   ],
+   "gain": -28.0,
+   "note": " | level: clip peak -0.2 dBFS -> about -22 dBFS in the mix"
+  },
+  {
+   "label": "A Romeo's tab: three quill dabs",
+   "clip": "sfx_quill_dabs",
+   "at": [
+    "A",
+    "from",
+    8.9
+   ],
+   "gain": -15.4,
+   "sync": 0.29,
+   "note": " | level: clip peak -14.8 dBFS -> about -24 dBFS in the mix"
+  },
+  {
+   "label": "A Romeo's tab: the epithet's slip",
+   "clip": "sfx_paper_fold",
+   "at": [
+    "A",
+    "from",
+    9.4
+   ],
+   "gain": -10.6,
+   "sync": 0.43,
+   "note": " | level: clip peak -23.6 dBFS -> about -28 dBFS in the mix"
+  },
+  {
+   "label": "A Romeo's tab: the wax dot",
+   "clip": "sfx_wax_tock",
+   "at": [
+    "A",
+    "from",
+    9.7
+   ],
+   "gain": -30.9,
+   "sync": 0.25,
+   "rate": 1.35,
+   "note": " | level: clip peak -1.3 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "A Romeo's tab: it folds into the tab",
+   "clip": "sfx_paper_fold",
+   "at": [
+    "A",
+    "from",
+    10.133
+   ],
+   "gain": -8.6,
+   "sync": 0.43,
+   "note": " | level: clip peak -23.6 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "A the tally: the slip flaps in",
+   "clip": "sfx_paper_fold",
+   "at": [
+    "A",
+    "from",
+    16.0
+   ],
+   "gain": -8.6,
+   "sync": 0.43,
+   "note": " | level: clip peak -23.6 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "A the tally: 插手 0 stamped",
+   "clip": "sfx_wax_thunk_2",
+   "at": [
+    "A",
+    "from",
+    16.267
+   ],
+   "gain": -9.7,
+   "sync": 0.14,
+   "note": " | level: clip peak -18.5 dBFS -> about -22 dBFS in the mix"
+  },
+  {
+   "label": "B her whisper note slips in (B01)",
+   "clip": "sfx_paper_fold",
+   "at": [
+    "B",
+    "from",
+    0.433
+   ],
+   "gain": -14.6,
+   "sync": 0.43,
+   "note": " | level: clip peak -23.6 dBFS -> about -32 dBFS in the mix"
+  },
+  {
+   "label": "B note 失恋：一个白天: the red stroke",
+   "clip": "sfx_quill",
+   "at": [
+    "B",
+    "from",
+    8.533
+   ],
+   "gain": -9.0,
+   "in": 1.2,
+   "len": 0.2,
+   "fade_out": 0.05,
+   "note": " | level: clip peak -23.2 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "B Juliet's tab: the banner snaps in",
+   "clip": "sfx_whip",
+   "at": [
+    "B",
+    "from",
+    9.833
+   ],
+   "gain": -28.0,
+   "note": " | level: clip peak -0.2 dBFS -> about -22 dBFS in the mix"
+  },
+  {
+   "label": "B Juliet's tab: three quill dabs",
+   "clip": "sfx_quill_dabs",
+   "at": [
+    "B",
+    "from",
+    10.067
+   ],
+   "gain": -15.4,
+   "sync": 0.29,
+   "note": " | level: clip peak -14.8 dBFS -> about -24 dBFS in the mix"
+  },
+  {
+   "label": "B Juliet's tab: the epithet's slip",
+   "clip": "sfx_paper_fold",
+   "at": [
+    "B",
+    "from",
+    10.567
+   ],
+   "gain": -10.6,
+   "sync": 0.43,
+   "note": " | level: clip peak -23.6 dBFS -> about -28 dBFS in the mix"
+  },
+  {
+   "label": "B Juliet's tab: the wax dot",
+   "clip": "sfx_wax_tock",
+   "at": [
+    "B",
+    "from",
+    10.867
+   ],
+   "gain": -30.9,
+   "sync": 0.25,
+   "rate": 1.35,
+   "note": " | level: clip peak -1.3 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "B Juliet's tab: it folds into the tab",
+   "clip": "sfx_paper_fold",
+   "at": [
+    "B",
+    "from",
+    11.3
+   ],
+   "gain": -8.6,
+   "sync": 0.43,
+   "note": " | level: clip peak -23.6 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "B the tally blinks (tock)",
+   "clip": "sfx_wax_tock",
+   "at": [
+    "B",
+    "from",
+    14.6
+   ],
+   "gain": -30.9,
+   "sync": 0.25,
+   "note": " | level: clip peak -1.3 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "B the tally blinks (tock 2)",
+   "clip": "sfx_wax_tock",
+   "at": [
+    "B",
+    "from",
+    14.733
+   ],
+   "gain": -32.9,
+   "sync": 0.25,
+   "note": " | level: clip peak -1.3 dBFS -> about -28 dBFS in the mix"
+  },
+  {
+   "label": "B her whisper note slips in (B08)",
+   "clip": "sfx_paper_fold",
+   "at": [
+    "B",
+    "from",
+    14.433
+   ],
+   "gain": -14.6,
+   "sync": 0.43,
+   "note": " | level: clip peak -23.6 dBFS -> about -32 dBFS in the mix"
+  },
+  {
+   "label": "C the switch to his interview",
+   "clip": "sfx_switch",
+   "at": [
+    "C",
+    "from",
+    5.6
+   ],
+   "gain": -32.2,
+   "note": " | level: clip peak 0.0 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "C SNAP ZOOM on 'sun'",
+   "clip": "sfx_whip",
+   "at": [
+    "C",
+    "from",
+    9.333
+   ],
+   "gain": -30.0,
+   "note": " | level: clip peak -0.2 dBFS -> about -24 dBFS in the mix"
+  },
+  {
+   "label": "C the switch back to her",
+   "clip": "sfx_switch",
+   "at": [
+    "C",
+    "from",
+    12.1
+   ],
+   "gain": -32.2,
+   "note": " | level: clip peak 0.0 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "C the split: Romeo sighs 'Juliet…' (his first word, under her first)",
+   "clip": "vo_romeo_echo",
+   "at": [
+    "C08",
+    "start",
+    0.45
+   ],
+   "in": 0.0,
+   "len": 1.42,
+   "sync": 0.06,
+   "gain": 3.9,
+   "fade": 0.01,
+   "fade_out": 0.08,
+   "note": "his take of C08 (vo01 also_C08), heard with hers in the split; level matched to her C08 (his clip is 3.7 dB under hers)"
+  },
+  {
+   "label": "C the split: Romeo sighs 'Juliet…' (his second word, under her second)",
+   "clip": "vo_romeo_echo",
+   "at": [
+    "C08",
+    "start",
+    1.64
+   ],
+   "in": 2.08,
+   "len": 1.0,
+   "sync": 2.15,
+   "gain": 3.9,
+   "fade": 0.02,
+   "fade_out": 0.1
+  },
+  {
+   "label": "C the tear opens",
+   "clip": "sfx_paper_tear_2",
+   "at": [
+    "C",
+    "from",
+    25.633
+   ],
+   "gain": -13.5,
+   "sync": 0.13,
+   "note": " | level: clip peak -12.7 dBFS -> about -20 dBFS in the mix"
+  },
+  {
+   "label": "C note 就在楼下: the red stroke",
+   "clip": "sfx_quill",
+   "at": [
+    "C",
+    "from",
+    26.367
+   ],
+   "gain": -9.0,
+   "in": 2.4,
+   "len": 0.2,
+   "fade_out": 0.05,
+   "note": " | level: clip peak -23.2 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "C note 他一天: the stroke",
+   "clip": "sfx_quill",
+   "at": [
+    "C",
+    "from",
+    34.033
+   ],
+   "gain": -9.0,
+   "in": 3.6,
+   "len": 0.2,
+   "fade_out": 0.05,
+   "note": " | level: clip peak -23.2 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "C SNAP ZOOM on 'marriage'",
+   "clip": "sfx_whip",
+   "at": [
+    "C",
+    "from",
+    35.333
+   ],
+   "gain": -30.0,
+   "note": " | level: clip peak -0.2 dBFS -> about -24 dBFS in the mix"
+  },
+  {
+   "label": "C his run (steps)",
+   "clip": "sfx_run_a",
+   "at": [
+    "C",
+    "from",
+    37.5
+   ],
+   "gain": -22.5,
+   "fade_out": 0.15,
+   "note": " | level: clip peak -5.7 dBFS -> about -22 dBFS in the mix"
+  },
+  {
+   "label": "C his run (steps, on)",
+   "clip": "sfx_run_b",
+   "at": [
+    "C",
+    "from",
+    38.7
+   ],
+   "gain": -18.7,
+   "fade_out": 0.3,
+   "note": " | level: clip peak -13.5 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "C note 太突然？: the red stroke",
+   "clip": "sfx_quill",
+   "at": [
+    "C",
+    "from",
+    39.2
+   ],
+   "gain": -9.0,
+   "in": 4.4,
+   "len": 0.2,
+   "fade_out": 0.05,
+   "note": " | level: clip peak -23.2 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "D Romeo bursts in (running steps)",
+   "clip": "sfx_run_b",
+   "at": [
+    "D",
+    "from",
+    0.067
+   ],
+   "gain": -14.7,
+   "fade_out": 0.2,
+   "note": " | level: clip peak -13.5 dBFS -> about -22 dBFS in the mix"
+  },
+  {
+   "label": "D the Friar's banner opens",
+   "clip": "sfx_paper_fold",
+   "at": [
+    "D",
+    "from",
+    0.933
+   ],
+   "gain": -8.6,
+   "sync": 0.43,
+   "note": " | level: clip peak -23.6 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "D the Friar's banner: the leaf seal",
+   "clip": "sfx_wax_tock",
+   "at": [
+    "D",
+    "from",
+    1.333
+   ],
+   "gain": -30.9,
+   "sync": 0.25,
+   "rate": 1.35,
+   "note": " | level: clip peak -1.3 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "D SNAP ZOOM on 'eyes'",
+   "clip": "sfx_whip",
+   "at": [
+    "D",
+    "from",
+    8.333
+   ],
+   "gain": -30.0,
+   "note": " | level: clip peak -0.2 dBFS -> about -24 dBFS in the mix"
+  },
+  {
+   "label": "D Juliet sprints in (steps)",
+   "clip": "sfx_run_a",
+   "at": [
+    "D",
+    "from",
+    15.2
+   ],
+   "gain": -24.5,
+   "rate": 1.12,
+   "fade_out": 0.1,
+   "note": " | level: clip peak -5.7 dBFS -> about -24 dBFS in the mix"
+  },
+  {
+   "label": "D Juliet skids to a stop",
+   "clip": "sfx_skid_1",
+   "at": [
+    "D",
+    "from",
+    15.567
+   ],
+   "gain": -23.2,
+   "sync": 0.0,
+   "note": " | level: clip peak -1.0 dBFS -> about -18 dBFS in the mix"
+  },
+  {
+   "label": "D a bell outside after the wedding line",
+   "clip": "sfx_bell",
+   "at": [
+    "D",
+    "from",
+    20.367
+   ],
+   "gain": -0.5,
+   "fade_out": 1.0,
+   "note": " | level: clip peak -31.7 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "D the stamp: a paper flap",
+   "clip": "sfx_paper_fold",
+   "at": [
+    "D",
+    "from",
+    20.433
+   ],
+   "gain": -8.6,
+   "sync": 0.43,
+   "note": " | level: clip peak -23.6 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "D the stamp: 已婚 (heavy wax)",
+   "clip": "sfx_wax_thunk_1",
+   "at": [
+    "D",
+    "from",
+    20.633
+   ],
+   "gain": -5.0,
+   "sync": 0.25,
+   "note": " | level: clip peak -15.2 dBFS -> about -14 dBFS in the mix"
+  },
+  {
+   "label": "E he runs off into the alley",
+   "clip": "sfx_run_b",
+   "at": [
+    "E",
+    "from",
+    5.567
+   ],
+   "gain": -14.7,
+   "fade_out": 0.5,
+   "note": " | level: clip peak -13.5 dBFS -> about -22 dBFS in the mix"
+  },
+  {
+   "label": "E her whisper note slips in (E03)",
+   "clip": "sfx_paper_fold",
+   "at": [
+    "E",
+    "from",
+    5.667
+   ],
+   "gain": -14.6,
+   "sync": 0.43,
+   "note": " | level: clip peak -23.6 dBFS -> about -32 dBFS in the mix"
+  },
+  {
+   "label": "E the proclamation card: the seal",
+   "clip": "sfx_wax_thunk_2",
+   "at": [
+    "E",
+    "from",
+    9.2
+   ],
+   "gain": -11.7,
+   "sync": 0.14,
+   "note": " | level: clip peak -18.5 dBFS -> about -24 dBFS in the mix"
+  },
+  {
+   "label": "F her whisper note slips in (F01)",
+   "clip": "sfx_paper_fold",
+   "at": [
+    "F",
+    "from",
+    0.367
+   ],
+   "gain": -14.6,
+   "sync": 0.43,
+   "note": " | level: clip peak -23.6 dBFS -> about -32 dBFS in the mix"
+  },
+  {
+   "label": "F she snatches the vial",
+   "clip": "sfx_toss_1",
+   "at": [
+    "F",
+    "from",
+    14.267
+   ],
+   "gain": -23.2,
+   "sync": 0.2,
+   "note": " | level: clip peak -9.0 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "F the seal pressed on the letter",
+   "clip": "sfx_wax_thunk_2",
+   "at": [
+    "F",
+    "from",
+    22.2
+   ],
+   "gain": -9.7,
+   "sync": 0.14,
+   "note": " | level: clip peak -18.5 dBFS -> about -22 dBFS in the mix"
+  },
+  {
+   "label": "F note 她是假死: the red stroke",
+   "clip": "sfx_quill",
+   "at": [
+    "F",
+    "from",
+    22.5
+   ],
+   "gain": -9.0,
+   "in": 5.2,
+   "len": 0.2,
+   "fade_out": 0.05,
+   "note": " | level: clip peak -23.2 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "F the tally blinks (tock)",
+   "clip": "sfx_wax_tock",
+   "at": [
+    "F",
+    "from",
+    28.533
+   ],
+   "gain": -30.9,
+   "sync": 0.25,
+   "note": " | level: clip peak -1.3 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "F the tally blinks (tock 2)",
+   "clip": "sfx_wax_tock",
+   "at": [
+    "F",
+    "from",
+    28.667
+   ],
+   "gain": -32.9,
+   "sync": 0.25,
+   "note": " | level: clip peak -1.3 dBFS -> about -28 dBFS in the mix"
+  },
+  {
+   "label": "F the young friar takes the letter",
+   "clip": "sfx_paper_fold",
+   "at": [
+    "F",
+    "from",
+    28.9
+   ],
+   "gain": -10.6,
+   "sync": 0.43,
+   "note": " | level: clip peak -23.6 dBFS -> about -28 dBFS in the mix"
+  },
+  {
+   "label": "F the cell door swings shut over the lens",
+   "clip": "sfx_door_shut",
+   "at": [
+    "F",
+    "from",
+    30.533
+   ],
+   "gain": -16.9,
+   "note": " | level: clip peak -3.3 dBFS -> about -14 dBFS in the mix"
+  },
+  {
+   "label": "G the plague card: the seal",
+   "clip": "sfx_wax_thunk_2",
+   "at": [
+    "G",
+    "from",
+    0.833
+   ],
+   "gain": -11.7,
+   "sync": 0.14,
+   "note": " | level: clip peak -18.5 dBFS -> about -24 dBFS in the mix"
+  },
+  {
+   "label": "G plank 1: the hammer",
+   "clip": "sfx_hammer_1",
+   "at": [
+    "G",
+    "from",
+    1.167
+   ],
+   "gain": -18.9,
+   "sync": 0.28,
+   "note": " | level: clip peak -1.3 dBFS -> about -14 dBFS in the mix"
+  },
+  {
+   "label": "G plank 1: the second blow",
+   "clip": "sfx_hammer_1",
+   "at": [
+    "G",
+    "from",
+    1.4
+   ],
+   "gain": -24.9,
+   "sync": 0.28,
+   "note": " | level: clip peak -1.3 dBFS -> about -20 dBFS in the mix"
+  },
+  {
+   "label": "G plank 2: the hammer",
+   "clip": "sfx_hammer_2",
+   "at": [
+    "G",
+    "from",
+    1.667
+   ],
+   "gain": -18.4,
+   "sync": 0.65,
+   "note": " | level: clip peak -1.8 dBFS -> about -14 dBFS in the mix"
+  },
+  {
+   "label": "G plank 2: the second blow",
+   "clip": "sfx_hammer_1",
+   "at": [
+    "G",
+    "from",
+    1.9
+   ],
+   "gain": -24.9,
+   "sync": 0.28,
+   "note": " | level: clip peak -1.3 dBFS -> about -20 dBFS in the mix"
+  },
+  {
+   "label": "G plank 3: the hammer",
+   "clip": "sfx_hammer_1",
+   "at": [
+    "G",
+    "from",
+    2.067
+   ],
+   "gain": -18.9,
+   "sync": 0.28,
+   "note": " | level: clip peak -1.3 dBFS -> about -14 dBFS in the mix"
+  },
+  {
+   "label": "G plank 3: the second blow",
+   "clip": "sfx_hammer_1",
+   "at": [
+    "G",
+    "from",
+    2.3
+   ],
+   "gain": -24.9,
+   "sync": 0.28,
+   "note": " | level: clip peak -1.3 dBFS -> about -20 dBFS in the mix"
+  },
+  {
+   "label": "G plank 4: the hammer",
+   "clip": "sfx_hammer_2",
+   "at": [
+    "G",
+    "from",
+    2.5
+   ],
+   "gain": -18.4,
+   "sync": 0.65,
+   "note": " | level: clip peak -1.8 dBFS -> about -14 dBFS in the mix"
+  },
+  {
+   "label": "G plank 4: the second blow",
+   "clip": "sfx_hammer_1",
+   "at": [
+    "G",
+    "from",
+    2.733
+   ],
+   "gain": -24.9,
+   "sync": 0.28,
+   "note": " | level: clip peak -1.3 dBFS -> about -20 dBFS in the mix"
+  },
+  {
+   "label": "G plank 5: the hammer",
+   "clip": "sfx_hammer_1",
+   "at": [
+    "G",
+    "from",
+    3.0
+   ],
+   "gain": -18.9,
+   "sync": 0.28,
+   "note": " | level: clip peak -1.3 dBFS -> about -14 dBFS in the mix"
+  },
+  {
+   "label": "G plank 5: the second blow",
+   "clip": "sfx_hammer_1",
+   "at": [
+    "G",
+    "from",
+    3.233
+   ],
+   "gain": -24.9,
+   "sync": 0.28,
+   "note": " | level: clip peak -1.3 dBFS -> about -20 dBFS in the mix"
+  },
+  {
+   "label": "G the rider gallops off",
+   "clip": "sfx_gallop",
+   "at": [
+    "G",
+    "from",
+    4.4
+   ],
+   "gain": -17.9,
+   "fade_out": 0.8,
+   "note": " | level: clip peak -14.3 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "G her whisper note slips in (G01)",
+   "clip": "sfx_paper_fold",
+   "at": [
+    "G",
+    "from",
+    4.267
+   ],
+   "gain": -14.6,
+   "sync": 0.43,
+   "note": " | level: clip peak -23.6 dBFS -> about -32 dBFS in the mix"
+  },
+  {
+   "label": "G the tally blinks (tock)",
+   "clip": "sfx_wax_tock",
+   "at": [
+    "G",
+    "from",
+    13.0
+   ],
+   "gain": -30.9,
+   "sync": 0.25,
+   "note": " | level: clip peak -1.3 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "G the tally blinks (tock 2)",
+   "clip": "sfx_wax_tock",
+   "at": [
+    "G",
+    "from",
+    13.133
+   ],
+   "gain": -32.9,
+   "sync": 0.25,
+   "note": " | level: clip peak -1.3 dBFS -> about -28 dBFS in the mix"
+  },
+  {
+   "label": "G he walks off (stone steps)",
+   "clip": "sfx_steps_stone",
+   "at": [
+    "G",
+    "from",
+    14.167
+   ],
+   "gain": -29.9,
+   "fade_out": 1.2,
+   "len": 3.5,
+   "note": " | level: clip peak -2.3 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "H 不拍了: she throws the camera (whoosh)",
+   "clip": "sfx_toss_2",
+   "at": [
+    "H",
+    "from",
+    16.267
+   ],
+   "gain": -12.5,
+   "sync": 0.11,
+   "note": " | level: clip peak -7.7 dBFS -> about -14 dBFS in the mix"
+  },
+  {
+   "label": "H the glass breaks in his hand",
+   "clip": "sfx_glass_break_2",
+   "at": [
+    "H",
+    "from",
+    16.533
+   ],
+   "gain": -13.1,
+   "sync": 0.02,
+   "note": " | level: clip peak -1.1 dBFS -> about -8 dBFS in the mix"
+  },
+  {
+   "label": "H the camera hits the stones",
+   "clip": "sfx_cam_floor_1",
+   "at": [
+    "H",
+    "from",
+    16.633
+   ],
+   "gain": -14.3,
+   "sync": 0.06,
+   "note": " | level: clip peak -0.9 dBFS -> about -9 dBFS in the mix"
+  },
+  {
+   "label": "H the bottle rolls on the stones",
+   "clip": "sfx_clatter",
+   "at": [
+    "H",
+    "from",
+    16.767
+   ],
+   "gain": -25.8,
+   "fade_out": 0.3,
+   "note": " | level: clip peak -0.4 dBFS -> about -20 dBFS in the mix"
+  },
+  {
+   "label": "H the display stutters",
+   "clip": "sfx_glitch_2",
+   "at": [
+    "H",
+    "from",
+    16.633
+   ],
+   "gain": -19.4,
+   "in": 0.9,
+   "len": 0.4,
+   "sync": 0.9,
+   "fade_out": 0.05,
+   "note": " | level: clip peak -4.8 dBFS -> about -18 dBFS in the mix"
+  },
+  {
+   "label": "H the crack runs across the lens",
+   "clip": "sfx_glass_break_1",
+   "at": [
+    "H",
+    "from",
+    16.867
+   ],
+   "gain": -26.7,
+   "sync": 0.05,
+   "rate": 0.8,
+   "fade_out": 0.2,
+   "note": " | level: clip peak -1.5 dBFS -> about -22 dBFS in the mix"
+  },
+  {
+   "label": "I the shard flickers (she sits up behind it)",
+   "clip": "sfx_glitch_1",
+   "at": [
+    "I",
+    "from",
+    1.667
+   ],
+   "gain": -26.1,
+   "in": 1.1,
+   "len": 0.25,
+   "sync": 1.24,
+   "fade_out": 0.05,
+   "note": " | level: clip peak -4.1 dBFS -> about -24 dBFS in the mix"
+  },
+  {
+   "label": "I the hug",
+   "clip": "sfx_hug",
+   "at": [
+    "I",
+    "from",
+    4.967
+   ],
+   "gain": -6.1,
+   "sync": 0.43,
+   "note": " | level: clip peak -24.1 dBFS -> about -24 dBFS in the mix"
+  },
+  {
+   "label": "I the tally comes back: flap",
+   "clip": "sfx_paper_fold",
+   "at": [
+    "I",
+    "from",
+    12.733
+   ],
+   "gain": -8.6,
+   "sync": 0.43,
+   "note": " | level: clip peak -23.6 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "I the tally comes back: 插手 0",
+   "clip": "sfx_wax_thunk_2",
+   "at": [
+    "I",
+    "from",
+    13.0
+   ],
+   "gain": -11.7,
+   "sync": 0.14,
+   "note": " | level: clip peak -18.5 dBFS -> about -24 dBFS in the mix"
+  },
+  {
+   "label": "I 送: the 0 struck out",
+   "clip": "sfx_quill",
+   "at": [
+    "I",
+    "from",
+    15.333
+   ],
+   "gain": -7.0,
+   "in": 6.1,
+   "len": 0.15,
+   "fade_out": 0.04,
+   "note": " | level: clip peak -23.2 dBFS -> about -24 dBFS in the mix"
+  },
+  {
+   "label": "I 送: THE BIG WAX THUNK, 插手 1",
+   "clip": "sfx_wax_thunk_1",
+   "at": [
+    "I",
+    "from",
+    15.5
+   ],
+   "gain": -3.0,
+   "sync": 0.25,
+   "note": " | level: clip peak -15.2 dBFS -> about -12 dBFS in the mix"
+  },
+  {
+   "label": "I 送: the old seal cracks under it",
+   "clip": "sfx_paper_tear_2",
+   "at": [
+    "I",
+    "from",
+    15.5
+   ],
+   "gain": -19.5,
+   "sync": 0.13,
+   "len": 0.25,
+   "note": " | level: clip peak -12.7 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "I the power goes off",
+   "clip": "sfx_poweroff_old",
+   "at": [
+    "I",
+    "from",
+    16.667
+   ],
+   "gain": 12.6,
+   "note": " | level: clip peak -34.8 dBFS -> about -16 dBFS in the mix"
+  },
+  {
+   "label": "I the end card: the letter unfolds",
+   "clip": "sfx_paper_fold",
+   "at": [
+    "I",
+    "from",
+    17.133
+   ],
+   "gain": -8.6,
+   "sync": 0.43,
+   "note": " | level: clip peak -23.6 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "I the end card: a second crease",
+   "clip": "sfx_paper_fold",
+   "at": [
+    "I",
+    "from",
+    17.333
+   ],
+   "gain": -10.6,
+   "sync": 0.43,
+   "note": " | level: clip peak -23.6 dBFS -> about -28 dBFS in the mix"
+  },
+  {
+   "label": "I the end card: line 1 written",
+   "clip": "sfx_quill",
+   "at": [
+    "I",
+    "from",
+    17.467
+   ],
+   "gain": -11.0,
+   "in": 1.8,
+   "len": 0.45,
+   "fade_out": 0.1,
+   "note": " | level: clip peak -23.2 dBFS -> about -28 dBFS in the mix"
+  },
+  {
+   "label": "I the end card: line 2 written",
+   "clip": "sfx_quill",
+   "at": [
+    "I",
+    "from",
+    19.067
+   ],
+   "gain": -11.0,
+   "in": 3.0,
+   "len": 0.45,
+   "fade_out": 0.1,
+   "note": " | level: clip peak -23.2 dBFS -> about -28 dBFS in the mix"
+  },
+  {
+   "label": "I the end card: line 3 written",
+   "clip": "sfx_quill",
+   "at": [
+    "I",
+    "from",
+    21.2
+   ],
+   "gain": -11.0,
+   "in": 4.6,
+   "len": 0.45,
+   "fade_out": 0.1,
+   "note": " | level: clip peak -23.2 dBFS -> about -28 dBFS in the mix"
+  },
+  {
+   "label": "I the end card: 演绎, the last thunk, left to ring",
+   "clip": "sfx_wax_thunk_1",
+   "at": [
+    "I",
+    "from",
+    22.067
+   ],
+   "gain": -7.0,
+   "sync": 0.25,
+   "note": " | level: clip peak -15.2 dBFS -> about -16 dBFS in the mix"
+  }
+ ],
+ "cards": {
+  "clip": "sfx_unroll",
+  "gain": -9.4,
+  "note": "the proclamation card unrolls (CARD_RAW)"
+ }
+}
