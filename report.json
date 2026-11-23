@@ -1,0 +1,2787 @@
+{
+  "id": "romeo-vo-03-v6",
+  "clips": [
+    {
+      "name": "rt_H03_s2584",
+      "type": "dialogue",
+      "lang": "",
+      "lines": [
+        "[whispers, voice shaking] 红的，是因为她活着！"
+      ],
+      "status": 200,
+      "model": "eleven_v4",
+      "file": "rt_H03_s2584.mp3",
+      "voice_segments": [
+        {
+          "voice_id": "I23uc91tu5zY2PA1tKEN",
+          "start_time_seconds": 0.0,
+          "end_time_seconds": 3.12,
+          "character_start_index": 0,
+          "character_end_index": 36,
+          "dialogue_input_index": 0
+        }
+      ],
+      "alignment": {
+        "characters": [
+          "[",
+          "w",
+          "h",
+          "i",
+          "s",
+          "p",
+          "e",
+          "r",
+          "s",
+          ",",
+          " ",
+          "v",
+          "o",
+          "i",
+          "c",
+          "e",
+          " ",
+          "s",
+          "h",
+          "a",
+          "k",
+          "i",
+          "n",
+          "g",
+          "]",
+          " ",
+          "红",
+          "的",
+          "，",
+          "是",
+          "因",
+          "为",
+          "她",
+          "活",
+          "着",
+          "！"
+        ],
+        "character_start_times_seconds": [
+          0.0,
+          0.027,
+          0.033,
+          0.04,
+          0.042,
+          0.044,
+          0.047,
+          0.049,
+          0.051,
+          0.053,
+          0.067,
+          0.08,
+          0.112,
+          0.144,
+          0.176,
+          0.208,
+          0.24,
+          0.288,
+          0.312,
+          0.336,
+          0.346,
+          0.355,
+          0.365,
+          0.374,
+          0.384,
+          0.432,
+          0.48,
+          0.8,
+          0.96,
+          1.52,
+          1.68,
+          1.84,
+          2.0,
+          2.4,
+          2.56,
+          2.72
+        ],
+        "character_end_times_seconds": [
+          0.027,
+          0.033,
+          0.04,
+          0.042,
+          0.044,
+          0.047,
+          0.049,
+          0.051,
+          0.053,
+          0.067,
+          0.08,
+          0.112,
+          0.144,
+          0.176,
+          0.208,
+          0.24,
+          0.288,
+          0.312,
+          0.336,
+          0.346,
+          0.355,
+          0.365,
+          0.374,
+          0.384,
+          0.432,
+          0.48,
+          0.8,
+          0.96,
+          1.52,
+          1.68,
+          1.84,
+          2.0,
+          2.4,
+          2.56,
+          2.72,
+          3.12
+        ]
+      },
+      "words": [
+        [
+          "红",
+          0.0,
+          0.58
+        ],
+        [
+          "的是",
+          0.58,
+          0.96
+        ],
+        [
+          "因为",
+          0.96,
+          1.82
+        ],
+        [
+          "他",
+          1.82,
+          2.06
+        ],
+        [
+          "活",
+          2.06,
+          2.36
+        ],
+        [
+          "着",
+          2.36,
+          2.66
+        ]
+      ],
+      "heard": "红的是因为他活着",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "seconds": 3.04
+    },
+    {
+      "name": "rt_H05_s2584",
+      "type": "dialogue",
+      "lang": "",
+      "lines": [
+        "[breaking] 我只拍……[screaming] 不要啊！"
+      ],
+      "status": 200,
+      "model": "eleven_v4",
+      "file": "rt_H05_s2584.mp3",
+      "voice_segments": [
+        {
+          "voice_id": "I23uc91tu5zY2PA1tKEN",
+          "start_time_seconds": 0.0,
+          "end_time_seconds": 2.64,
+          "character_start_index": 0,
+          "character_end_index": 32,
+          "dialogue_input_index": 0
+        }
+      ],
+      "alignment": {
+        "characters": [
+          "[",
+          "b",
+          "r",
+          "e",
+          "a",
+          "k",
+          "i",
+          "n",
+          "g",
+          "]",
+          " ",
+          "我",
+          "只",
+          "拍",
+          "…",
+          "…",
+          "[",
+          "s",
+          "c",
+          "r",
+          "e",
+          "a",
+          "m",
+          "i",
+          "n",
+          "g",
+          "]",
+          " ",
+          "不",
+          "要",
+          "啊",
+          "！"
+        ],
+        "character_start_times_seconds": [
+          0.0,
+          0.064,
+          0.068,
+          0.072,
+          0.076,
+          0.08,
+          0.084,
+          0.088,
+          0.092,
+          0.096,
+          0.128,
+          0.16,
+          0.4,
+          0.8,
+          1.04,
+          1.12,
+          1.2,
+          1.36,
+          1.392,
+          1.403,
+          1.413,
+          1.424,
+          1.43,
+          1.437,
+          1.443,
+          1.45,
+          1.456,
+          1.488,
+          1.52,
+          1.76,
+          2.0,
+          2.32
+        ],
+        "character_end_times_seconds": [
+          0.064,
+          0.068,
+          0.072,
+          0.076,
+          0.08,
+          0.084,
+          0.088,
+          0.092,
+          0.096,
+          0.128,
+          0.16,
+          0.4,
+          0.8,
+          1.04,
+          1.12,
+          1.2,
+          1.36,
+          1.392,
+          1.403,
+          1.413,
+          1.424,
+          1.43,
+          1.437,
+          1.443,
+          1.45,
+          1.456,
+          1.488,
+          1.52,
+          1.76,
+          2.0,
+          2.32,
+          2.64
+        ]
+      },
+      "words": [
+        [
+          "我",
+          0.0,
+          0.28
+        ],
+        [
+          "只",
+          0.28,
+          0.48
+        ],
+        [
+          "拍",
+          0.48,
+          0.92
+        ],
+        [
+          "不要",
+          0.92,
+          1.64
+        ],
+        [
+          "啊",
+          1.64,
+          2.2
+        ]
+      ],
+      "heard": "我只拍不要啊",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.97,
+      "seconds": 2.56
+    },
+    {
+      "name": "rt_I01_s2584",
+      "type": "dialogue",
+      "lang": "",
+      "lines": [
+        "[softly, tender, relieved] O my Romeo!"
+      ],
+      "status": 200,
+      "model": "eleven_v4",
+      "file": "rt_I01_s2584.mp3",
+      "voice_segments": [
+        {
+          "voice_id": "rCmVtv8cYU60uhlsOo1M",
+          "start_time_seconds": 0.0,
+          "end_time_seconds": 2.3200000000000003,
+          "character_start_index": 0,
+          "character_end_index": 38,
+          "dialogue_input_index": 0
+        }
+      ],
+      "alignment": {
+        "characters": [
+          "[",
+          "s",
+          "o",
+          "f",
+          "t",
+          "l",
+          "y",
+          ",",
+          " ",
+          "t",
+          "e",
+          "n",
+          "d",
+          "e",
+          "r",
+          ",",
+          " ",
+          "r",
+          "e",
+          "l",
+          "i",
+          "e",
+          "v",
+          "e",
+          "d",
+          "]",
+          " ",
+          "O",
+          " ",
+          "m",
+          "y",
+          " ",
+          "R",
+          "o",
+          "m",
+          "e",
+          "o",
+          "!"
+        ],
+        "character_start_times_seconds": [
+          0.0,
+          0.08,
+          0.082,
+          0.085,
+          0.088,
+          0.09,
+          0.095,
+          0.1,
+          0.11,
+          0.12,
+          0.13,
+          0.132,
+          0.134,
+          0.136,
+          0.138,
+          0.14,
+          0.15,
+          0.16,
+          0.213,
+          0.267,
+          0.32,
+          0.368,
+          0.416,
+          0.464,
+          0.512,
+          0.56,
+          0.64,
+          0.72,
+          0.88,
+          1.04,
+          1.16,
+          1.28,
+          1.36,
+          1.44,
+          1.573,
+          1.707,
+          1.84,
+          2.08
+        ],
+        "character_end_times_seconds": [
+          0.08,
+          0.082,
+          0.085,
+          0.088,
+          0.09,
+          0.095,
+          0.1,
+          0.11,
+          0.12,
+          0.13,
+          0.132,
+          0.134,
+          0.136,
+          0.138,
+          0.14,
+          0.15,
+          0.16,
+          0.213,
+          0.267,
+          0.32,
+          0.368,
+          0.416,
+          0.464,
+          0.512,
+          0.56,
+          0.64,
+          0.72,
+          0.88,
+          1.04,
+          1.16,
+          1.28,
+          1.36,
+          1.44,
+          1.573,
+          1.707,
+          1.84,
+          2.08,
+          2.32
+        ]
+      },
+      "words": [
+        [
+          "Oh",
+          0.0,
+          0.9
+        ],
+        [
+          "my",
+          0.9,
+          1.18
+        ],
+        [
+          "Romeo.",
+          1.18,
+          1.66
+        ]
+      ],
+      "heard": "Oh my Romeo.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.921,
+      "seconds": 2.32
+    },
+    {
+      "name": "rt_I04_s2584",
+      "type": "dialogue",
+      "lang": "",
+      "lines": [
+        "[tiny, sheepish, after a pause] 我得买新手机了。"
+      ],
+      "status": 200,
+      "model": "eleven_v4",
+      "file": "rt_I04_s2584.mp3",
+      "voice_segments": [
+        {
+          "voice_id": "I23uc91tu5zY2PA1tKEN",
+          "start_time_seconds": 0.0,
+          "end_time_seconds": 2.3200000000000003,
+          "character_start_index": 0,
+          "character_end_index": 40,
+          "dialogue_input_index": 0
+        }
+      ],
+      "alignment": {
+        "characters": [
+          "[",
+          "t",
+          "i",
+          "n",
+          "y",
+          ",",
+          " ",
+          "s",
+          "h",
+          "e",
+          "e",
+          "p",
+          "i",
+          "s",
+          "h",
+          ",",
+          " ",
+          "a",
+          "f",
+          "t",
+          "e",
+          "r",
+          " ",
+          "a",
+          " ",
+          "p",
+          "a",
+          "u",
+          "s",
+          "e",
+          "]",
+          " ",
+          "我",
+          "得",
+          "买",
+          "新",
+          "手",
+          "机",
+          "了",
+          "。"
+        ],
+        "character_start_times_seconds": [
+          0.0,
+          0.06,
+          0.08,
+          0.082,
+          0.084,
+          0.086,
+          0.092,
+          0.098,
+          0.101,
+          0.103,
+          0.105,
+          0.108,
+          0.111,
+          0.113,
+          0.115,
+          0.117,
+          0.123,
+          0.129,
+          0.13,
+          0.132,
+          0.133,
+          0.134,
+          0.135,
+          0.142,
+          0.148,
+          0.154,
+          0.155,
+          0.156,
+          0.158,
+          0.159,
+          0.16,
+          0.28,
+          0.4,
+          0.64,
+          0.88,
+          1.12,
+          1.36,
+          1.56,
+          1.76,
+          1.92
+        ],
+        "character_end_times_seconds": [
+          0.06,
+          0.08,
+          0.082,
+          0.084,
+          0.086,
+          0.092,
+          0.098,
+          0.101,
+          0.103,
+          0.105,
+          0.108,
+          0.111,
+          0.113,
+          0.115,
+          0.117,
+          0.123,
+          0.129,
+          0.13,
+          0.132,
+          0.133,
+          0.134,
+          0.135,
+          0.142,
+          0.148,
+          0.154,
+          0.155,
+          0.156,
+          0.158,
+          0.159,
+          0.16,
+          0.28,
+          0.4,
+          0.64,
+          0.88,
+          1.12,
+          1.36,
+          1.56,
+          1.76,
+          1.92,
+          2.32
+        ]
+      },
+      "words": [
+        [
+          "我",
+          0.0,
+          0.48
+        ],
+        [
+          "得",
+          0.48,
+          0.64
+        ],
+        [
+          "买",
+          0.64,
+          0.86
+        ],
+        [
+          "新",
+          0.86,
+          1.1
+        ],
+        [
+          "手",
+          1.1,
+          1.34
+        ],
+        [
+          "机",
+          1.34,
+          1.6
+        ],
+        [
+          "了",
+          1.6,
+          1.86
+        ]
+      ],
+      "heard": "我得买新手机了",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.974,
+      "seconds": 2.24
+    },
+    {
+      "name": "rt_H03_s4181",
+      "type": "dialogue",
+      "lang": "",
+      "lines": [
+        "[whispers, voice shaking] 红的，是因为她活着！"
+      ],
+      "status": 200,
+      "model": "eleven_v4",
+      "file": "rt_H03_s4181.mp3",
+      "voice_segments": [
+        {
+          "voice_id": "I23uc91tu5zY2PA1tKEN",
+          "start_time_seconds": 0.0,
+          "end_time_seconds": 3.12,
+          "character_start_index": 0,
+          "character_end_index": 36,
+          "dialogue_input_index": 0
+        }
+      ],
+      "alignment": {
+        "characters": [
+          "[",
+          "w",
+          "h",
+          "i",
+          "s",
+          "p",
+          "e",
+          "r",
+          "s",
+          ",",
+          " ",
+          "v",
+          "o",
+          "i",
+          "c",
+          "e",
+          " ",
+          "s",
+          "h",
+          "a",
+          "k",
+          "i",
+          "n",
+          "g",
+          "]",
+          " ",
+          "红",
+          "的",
+          "，",
+          "是",
+          "因",
+          "为",
+          "她",
+          "活",
+          "着",
+          "！"
+        ],
+        "character_start_times_seconds": [
+          0.0,
+          0.053,
+          0.067,
+          0.08,
+          0.084,
+          0.089,
+          0.093,
+          0.098,
+          0.102,
+          0.107,
+          0.133,
+          0.16,
+          0.208,
+          0.256,
+          0.304,
+          0.352,
+          0.4,
+          0.448,
+          0.472,
+          0.496,
+          0.506,
+          0.515,
+          0.525,
+          0.534,
+          0.544,
+          0.592,
+          0.64,
+          0.88,
+          1.44,
+          1.52,
+          1.707,
+          1.893,
+          2.08,
+          2.48,
+          2.6,
+          2.72
+        ],
+        "character_end_times_seconds": [
+          0.053,
+          0.067,
+          0.08,
+          0.084,
+          0.089,
+          0.093,
+          0.098,
+          0.102,
+          0.107,
+          0.133,
+          0.16,
+          0.208,
+          0.256,
+          0.304,
+          0.352,
+          0.4,
+          0.448,
+          0.472,
+          0.496,
+          0.506,
+          0.515,
+          0.525,
+          0.534,
+          0.544,
+          0.592,
+          0.64,
+          0.88,
+          1.44,
+          1.52,
+          1.707,
+          1.893,
+          2.08,
+          2.48,
+          2.6,
+          2.72,
+          3.12
+        ]
+      },
+      "words": [
+        [
+          "红",
+          0.0,
+          0.58
+        ],
+        [
+          "的是",
+          0.58,
+          1.02
+        ],
+        [
+          "因为",
+          1.02,
+          1.82
+        ],
+        [
+          "他",
+          1.82,
+          2.06
+        ],
+        [
+          "活",
+          2.06,
+          2.4
+        ],
+        [
+          "着",
+          2.4,
+          2.7
+        ]
+      ],
+      "heard": "红的是因为他活着",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.985,
+      "seconds": 3.04
+    },
+    {
+      "name": "rt_H05_s4181",
+      "type": "dialogue",
+      "lang": "",
+      "lines": [
+        "[breaking] 我只拍……[screaming] 不要啊！"
+      ],
+      "status": 200,
+      "model": "eleven_v4",
+      "file": "rt_H05_s4181.mp3",
+      "voice_segments": [
+        {
+          "voice_id": "I23uc91tu5zY2PA1tKEN",
+          "start_time_seconds": 0.0,
+          "end_time_seconds": 2.7199999999999998,
+          "character_start_index": 0,
+          "character_end_index": 32,
+          "dialogue_input_index": 0
+        }
+      ],
+      "alignment": {
+        "characters": [
+          "[",
+          "b",
+          "r",
+          "e",
+          "a",
+          "k",
+          "i",
+          "n",
+          "g",
+          "]",
+          " ",
+          "我",
+          "只",
+          "拍",
+          "…",
+          "…",
+          "[",
+          "s",
+          "c",
+          "r",
+          "e",
+          "a",
+          "m",
+          "i",
+          "n",
+          "g",
+          "]",
+          " ",
+          "不",
+          "要",
+          "啊",
+          "！"
+        ],
+        "character_start_times_seconds": [
+          0.0,
+          0.064,
+          0.068,
+          0.072,
+          0.076,
+          0.08,
+          0.084,
+          0.088,
+          0.092,
+          0.096,
+          0.128,
+          0.16,
+          0.4,
+          0.8,
+          1.04,
+          1.12,
+          1.2,
+          1.36,
+          1.376,
+          1.381,
+          1.387,
+          1.392,
+          1.395,
+          1.398,
+          1.402,
+          1.405,
+          1.408,
+          1.424,
+          1.44,
+          1.72,
+          2.0,
+          2.4
+        ],
+        "character_end_times_seconds": [
+          0.064,
+          0.068,
+          0.072,
+          0.076,
+          0.08,
+          0.084,
+          0.088,
+          0.092,
+          0.096,
+          0.128,
+          0.16,
+          0.4,
+          0.8,
+          1.04,
+          1.12,
+          1.2,
+          1.36,
+          1.376,
+          1.381,
+          1.387,
+          1.392,
+          1.395,
+          1.398,
+          1.402,
+          1.405,
+          1.408,
+          1.424,
+          1.44,
+          1.72,
+          2.0,
+          2.4,
+          2.72
+        ]
+      },
+      "words": [
+        [
+          "我",
+          0.0,
+          0.28
+        ],
+        [
+          "只",
+          0.28,
+          0.48
+        ],
+        [
+          "拍",
+          0.48,
+          0.9
+        ],
+        [
+          "不要",
+          0.9,
+          1.62
+        ],
+        [
+          "啊",
+          1.62,
+          2.22
+        ]
+      ],
+      "heard": "我只拍不要啊",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.966,
+      "seconds": 2.64
+    },
+    {
+      "name": "rt_I01_s4181",
+      "type": "dialogue",
+      "lang": "",
+      "lines": [
+        "[softly, tender, relieved] O my Romeo!"
+      ],
+      "status": 200,
+      "model": "eleven_v4",
+      "file": "rt_I01_s4181.mp3",
+      "voice_segments": [
+        {
+          "voice_id": "rCmVtv8cYU60uhlsOo1M",
+          "start_time_seconds": 0.0,
+          "end_time_seconds": 1.92,
+          "character_start_index": 0,
+          "character_end_index": 38,
+          "dialogue_input_index": 0
+        }
+      ],
+      "alignment": {
+        "characters": [
+          "[",
+          "s",
+          "o",
+          "f",
+          "t",
+          "l",
+          "y",
+          ",",
+          " ",
+          "t",
+          "e",
+          "n",
+          "d",
+          "e",
+          "r",
+          ",",
+          " ",
+          "r",
+          "e",
+          "l",
+          "i",
+          "e",
+          "v",
+          "e",
+          "d",
+          "]",
+          " ",
+          "O",
+          " ",
+          "m",
+          "y",
+          " ",
+          "R",
+          "o",
+          "m",
+          "e",
+          "o",
+          "!"
+        ],
+        "character_start_times_seconds": [
+          0.0,
+          0.027,
+          0.03,
+          0.033,
+          0.037,
+          0.04,
+          0.047,
+          0.053,
+          0.067,
+          0.08,
+          0.1,
+          0.104,
+          0.108,
+          0.112,
+          0.116,
+          0.12,
+          0.14,
+          0.16,
+          0.167,
+          0.173,
+          0.18,
+          0.184,
+          0.188,
+          0.192,
+          0.196,
+          0.2,
+          0.22,
+          0.24,
+          0.4,
+          0.56,
+          0.68,
+          0.8,
+          0.96,
+          1.04,
+          1.173,
+          1.307,
+          1.44,
+          1.68
+        ],
+        "character_end_times_seconds": [
+          0.027,
+          0.03,
+          0.033,
+          0.037,
+          0.04,
+          0.047,
+          0.053,
+          0.067,
+          0.08,
+          0.1,
+          0.104,
+          0.108,
+          0.112,
+          0.116,
+          0.12,
+          0.14,
+          0.16,
+          0.167,
+          0.173,
+          0.18,
+          0.184,
+          0.188,
+          0.192,
+          0.196,
+          0.2,
+          0.22,
+          0.24,
+          0.4,
+          0.56,
+          0.68,
+          0.8,
+          0.96,
+          1.04,
+          1.173,
+          1.307,
+          1.44,
+          1.68,
+          1.92
+        ]
+      },
+      "words": [
+        [
+          "Oh,",
+          0.0,
+          0.46
+        ],
+        [
+          "my",
+          0.64,
+          0.8
+        ],
+        [
+          "Romeo.",
+          0.8,
+          1.22
+        ]
+      ],
+      "heard": "Oh, my Romeo.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.959,
+      "seconds": 1.92
+    },
+    {
+      "name": "rt_I04_s4181",
+      "type": "dialogue",
+      "lang": "",
+      "lines": [
+        "[tiny, sheepish, after a pause] 我得买新手机了。"
+      ],
+      "status": 200,
+      "model": "eleven_v4",
+      "file": "rt_I04_s4181.mp3",
+      "voice_segments": [
+        {
+          "voice_id": "I23uc91tu5zY2PA1tKEN",
+          "start_time_seconds": 0.0,
+          "end_time_seconds": 2.3200000000000003,
+          "character_start_index": 0,
+          "character_end_index": 40,
+          "dialogue_input_index": 0
+        }
+      ],
+      "alignment": {
+        "characters": [
+          "[",
+          "t",
+          "i",
+          "n",
+          "y",
+          ",",
+          " ",
+          "s",
+          "h",
+          "e",
+          "e",
+          "p",
+          "i",
+          "s",
+          "h",
+          ",",
+          " ",
+          "a",
+          "f",
+          "t",
+          "e",
+          "r",
+          " ",
+          "a",
+          " ",
+          "p",
+          "a",
+          "u",
+          "s",
+          "e",
+          "]",
+          " ",
+          "我",
+          "得",
+          "买",
+          "新",
+          "手",
+          "机",
+          "了",
+          "。"
+        ],
+        "character_start_times_seconds": [
+          0.0,
+          0.06,
+          0.08,
+          0.082,
+          0.084,
+          0.086,
+          0.092,
+          0.098,
+          0.101,
+          0.103,
+          0.105,
+          0.108,
+          0.111,
+          0.113,
+          0.115,
+          0.117,
+          0.123,
+          0.129,
+          0.13,
+          0.132,
+          0.133,
+          0.134,
+          0.135,
+          0.142,
+          0.148,
+          0.154,
+          0.155,
+          0.156,
+          0.158,
+          0.159,
+          0.16,
+          0.28,
+          0.4,
+          0.64,
+          0.88,
+          1.12,
+          1.36,
+          1.56,
+          1.76,
+          1.92
+        ],
+        "character_end_times_seconds": [
+          0.06,
+          0.08,
+          0.082,
+          0.084,
+          0.086,
+          0.092,
+          0.098,
+          0.101,
+          0.103,
+          0.105,
+          0.108,
+          0.111,
+          0.113,
+          0.115,
+          0.117,
+          0.123,
+          0.129,
+          0.13,
+          0.132,
+          0.133,
+          0.134,
+          0.135,
+          0.142,
+          0.148,
+          0.154,
+          0.155,
+          0.156,
+          0.158,
+          0.159,
+          0.16,
+          0.28,
+          0.4,
+          0.64,
+          0.88,
+          1.12,
+          1.36,
+          1.56,
+          1.76,
+          1.92,
+          2.32
+        ]
+      },
+      "words": [
+        [
+          "我",
+          0.0,
+          0.52
+        ],
+        [
+          "得",
+          0.52,
+          0.66
+        ],
+        [
+          "買",
+          0.66,
+          0.84
+        ],
+        [
+          "新",
+          0.84,
+          1.1
+        ],
+        [
+          "手",
+          1.1,
+          1.34
+        ],
+        [
+          "機",
+          1.34,
+          1.62
+        ],
+        [
+          "了",
+          1.62,
+          1.84
+        ]
+      ],
+      "heard": "我得買新手機了",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.977,
+      "seconds": 2.24
+    },
+    {
+      "name": "rt_H05_s6765",
+      "type": "dialogue",
+      "lang": "",
+      "lines": [
+        "[breaking] 我只拍……[screaming] 不要啊！"
+      ],
+      "status": 200,
+      "model": "eleven_v4",
+      "file": "rt_H05_s6765.mp3",
+      "voice_segments": [
+        {
+          "voice_id": "I23uc91tu5zY2PA1tKEN",
+          "start_time_seconds": 0.0,
+          "end_time_seconds": 2.72,
+          "character_start_index": 0,
+          "character_end_index": 32,
+          "dialogue_input_index": 0
+        }
+      ],
+      "alignment": {
+        "characters": [
+          "[",
+          "b",
+          "r",
+          "e",
+          "a",
+          "k",
+          "i",
+          "n",
+          "g",
+          "]",
+          " ",
+          "我",
+          "只",
+          "拍",
+          "…",
+          "…",
+          "[",
+          "s",
+          "c",
+          "r",
+          "e",
+          "a",
+          "m",
+          "i",
+          "n",
+          "g",
+          "]",
+          " ",
+          "不",
+          "要",
+          "啊",
+          "！"
+        ],
+        "character_start_times_seconds": [
+          0.0,
+          0.064,
+          0.068,
+          0.072,
+          0.076,
+          0.08,
+          0.084,
+          0.088,
+          0.092,
+          0.096,
+          0.128,
+          0.16,
+          0.4,
+          0.8,
+          1.04,
+          1.12,
+          1.2,
+          1.36,
+          1.376,
+          1.381,
+          1.387,
+          1.392,
+          1.395,
+          1.398,
+          1.402,
+          1.405,
+          1.408,
+          1.424,
+          1.44,
+          1.76,
+          2.08,
+          2.32
+        ],
+        "character_end_times_seconds": [
+          0.064,
+          0.068,
+          0.072,
+          0.076,
+          0.08,
+          0.084,
+          0.088,
+          0.092,
+          0.096,
+          0.128,
+          0.16,
+          0.4,
+          0.8,
+          1.04,
+          1.12,
+          1.2,
+          1.36,
+          1.376,
+          1.381,
+          1.387,
+          1.392,
+          1.395,
+          1.398,
+          1.402,
+          1.405,
+          1.408,
+          1.424,
+          1.44,
+          1.76,
+          2.08,
+          2.32,
+          2.72
+        ]
+      },
+      "words": [
+        [
+          "我",
+          0.0,
+          0.26
+        ],
+        [
+          "只",
+          0.26,
+          0.48
+        ],
+        [
+          "拍",
+          0.48,
+          0.92
+        ],
+        [
+          "不要",
+          0.92,
+          1.64
+        ],
+        [
+          "啊",
+          1.64,
+          2.24
+        ]
+      ],
+      "heard": "我只拍不要啊",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.954,
+      "seconds": 2.64
+    },
+    {
+      "name": "rt_I01_s6765",
+      "type": "dialogue",
+      "lang": "",
+      "lines": [
+        "[softly, tender, relieved] O my Romeo!"
+      ],
+      "status": 200,
+      "model": "eleven_v4",
+      "file": "rt_I01_s6765.mp3",
+      "voice_segments": [
+        {
+          "voice_id": "rCmVtv8cYU60uhlsOo1M",
+          "start_time_seconds": 0.0,
+          "end_time_seconds": 1.8399999999999999,
+          "character_start_index": 0,
+          "character_end_index": 38,
+          "dialogue_input_index": 0
+        }
+      ],
+      "alignment": {
+        "characters": [
+          "[",
+          "s",
+          "o",
+          "f",
+          "t",
+          "l",
+          "y",
+          ",",
+          " ",
+          "t",
+          "e",
+          "n",
+          "d",
+          "e",
+          "r",
+          ",",
+          " ",
+          "r",
+          "e",
+          "l",
+          "i",
+          "e",
+          "v",
+          "e",
+          "d",
+          "]",
+          " ",
+          "O",
+          " ",
+          "m",
+          "y",
+          " ",
+          "R",
+          "o",
+          "m",
+          "e",
+          "o",
+          "!"
+        ],
+        "character_start_times_seconds": [
+          0.0,
+          0.027,
+          0.03,
+          0.033,
+          0.037,
+          0.04,
+          0.047,
+          0.053,
+          0.067,
+          0.08,
+          0.1,
+          0.104,
+          0.108,
+          0.112,
+          0.116,
+          0.12,
+          0.14,
+          0.16,
+          0.167,
+          0.173,
+          0.18,
+          0.184,
+          0.188,
+          0.192,
+          0.196,
+          0.2,
+          0.22,
+          0.24,
+          0.4,
+          0.56,
+          0.68,
+          0.8,
+          0.88,
+          0.96,
+          1.067,
+          1.173,
+          1.28,
+          1.6
+        ],
+        "character_end_times_seconds": [
+          0.027,
+          0.03,
+          0.033,
+          0.037,
+          0.04,
+          0.047,
+          0.053,
+          0.067,
+          0.08,
+          0.1,
+          0.104,
+          0.108,
+          0.112,
+          0.116,
+          0.12,
+          0.14,
+          0.16,
+          0.167,
+          0.173,
+          0.18,
+          0.184,
+          0.188,
+          0.192,
+          0.196,
+          0.2,
+          0.22,
+          0.24,
+          0.4,
+          0.56,
+          0.68,
+          0.8,
+          0.88,
+          0.96,
+          1.067,
+          1.173,
+          1.28,
+          1.6,
+          1.84
+        ]
+      },
+      "words": [
+        [
+          "Oh",
+          0.0,
+          0.46
+        ],
+        [
+          "my",
+          0.46,
+          0.76
+        ],
+        [
+          "Romeo.",
+          0.76,
+          1.18
+        ]
+      ],
+      "heard": "Oh my Romeo.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.929,
+      "seconds": 1.84
+    }
+  ],
+  "plan": {
+    "tier": "creator",
+    "character_count": 113662,
+    "character_limit": 123898,
+    "status": "active"
+  },
+  "models": [
+    "eleven_v4",
+    "eleven_v4_turbo",
+    "eleven_v3",
+    "eleven_v3_conversational",
+    "eleven_multilingual_v2",
+    "eleven_flash_v2_5",
+    "eleven_turbo_v2_5",
+    "eleven_turbo_v2",
+    "eleven_flash_v2",
+    "eleven_english_sts_v2",
+    "eleven_multilingual_sts_v2"
+  ],
+  "model": "eleven_v4",
+  "own_voices": [
+    {
+      "id": "q98Kxgzc0nMDSWQrcpa8",
+      "name": "Juno Frankenstein Creature",
+      "labels": {},
+      "category": "generated"
+    },
+    {
+      "id": "ljGjaiU0wAV9gLkUfavZ",
+      "name": "LuXun K1 (film)",
+      "labels": {},
+      "category": "generated"
+    },
+    {
+      "id": "jbWlBCyxlOi9ReBhwDUd",
+      "name": "client01-narrator",
+      "labels": {
+        "language": "zh",
+        "use_case": "narration"
+      },
+      "category": "cloned"
+    },
+    {
+      "id": "tOuLUAIdXShmWH7PEUrU",
+      "name": "zh-Julia - Young, Smooth and Neutral",
+      "labels": {
+        "age": "young",
+        "descriptive": "confident",
+        "gender": "female",
+        "language": "zh",
+        "accent": "standard",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "Ca5bKgudqKJzq8YRFoAz",
+      "name": "zh-Coco Li - Calm, Young and Trustworthy",
+      "labels": {
+        "age": "young",
+        "descriptive": "chill",
+        "gender": "female",
+        "language": "zh",
+        "accent": "standard",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "M0TrFmFeBJS9H4xzdk8Z",
+      "name": "zh-Steven Gor - Low, Calm and Soothing",
+      "labels": {
+        "age": "young",
+        "descriptive": "calm",
+        "gender": "male",
+        "language": "zh",
+        "use_case": "narrative_story",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ZJsn5HnrE3eUbep2ia8D",
+      "name": "zh-Qiao Feng - Warm, Clear & Friendly",
+      "labels": {
+        "age": "young",
+        "descriptive": "casual",
+        "gender": "male",
+        "language": "zh",
+        "use_case": "entertainment_tv",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "54Cze5LrTSyLgbO6Fhlc",
+      "name": "zh-Caty - Droll, Wry and Dry",
+      "labels": {
+        "age": "young",
+        "gender": "female",
+        "descriptive": "sassy",
+        "language": "en",
+        "use_case": "characters_animation",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "lt7GBaCoAHWbT7JSZ5Xs",
+      "name": "zh-Xinghe Jiang - Magnetic Conversationa",
+      "labels": {
+        "age": "young",
+        "descriptive": "calm",
+        "gender": "male",
+        "language": "zh",
+        "accent": "standard",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "TPIitICAZ8CqlGZ81AKm",
+      "name": "zh-Elen Kuragina – Golden & Dangerous",
+      "labels": {
+        "age": "middle_aged",
+        "descriptive": "excited",
+        "gender": "female",
+        "language": "ru",
+        "use_case": "characters_animation",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "1qEiC6qsybMkmnNdVMbK",
+      "name": "hi-Monika Sogam - Calm and Natural",
+      "labels": {
+        "age": "middle_aged",
+        "descriptive": "professional",
+        "gender": "female",
+        "language": "hi",
+        "use_case": "narrative_story",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "u0TsaWvt0v8migutHM3M",
+      "name": "ar-Ghizlane - Smooth, Distinctive and Ca",
+      "labels": {
+        "age": "middle_aged",
+        "gender": "female",
+        "language": "ar",
+        "accent": "modern standard",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ko0CPqOV7GGUcPkJMPej",
+      "name": "it-Vera - Calm, Influential and Balanced",
+      "labels": {
+        "age": "young",
+        "gender": "female",
+        "descriptive": "confident",
+        "language": "it",
+        "accent": "milanese",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "iw7467blzNLEVe32avRC",
+      "name": "pt-Alcione - Soft, Energetic and Tender",
+      "labels": {
+        "age": "young",
+        "descriptive": "calm",
+        "gender": "female",
+        "language": "pt",
+        "use_case": "narrative_story",
+        "accent": "brazilian"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "qHkrJuifPpn95wK3rm2A",
+      "name": "es-Andrea - Polite, Cheerful and Calm",
+      "labels": {
+        "age": "young",
+        "descriptive": "casual",
+        "gender": "female",
+        "language": "es",
+        "accent": "latin american",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "JYyJjNPfmNJdaby8LdZs",
+      "name": "es-Marlene - Melodic, Pleasant and Brigh",
+      "labels": {
+        "age": "young",
+        "gender": "female",
+        "descriptive": "cute",
+        "language": "es",
+        "accent": "mexican",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "CaJslL1xziwefCeTNzHv",
+      "name": "es-Cristina Campos - Friendly and Soft",
+      "labels": {
+        "age": "young",
+        "gender": "female",
+        "descriptive": "casual",
+        "language": "es",
+        "use_case": "conversational",
+        "accent": "latin american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "2rigMbVWLdqtBSCahJFX",
+      "name": "es-Tatiana Martin - Wise-speaking, calm",
+      "labels": {
+        "age": "middle_aged",
+        "gender": "female",
+        "descriptive": "calm",
+        "language": "es",
+        "use_case": "narrative_story",
+        "accent": "latin american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "KYiVPerWcenyBTIvWbfY",
+      "name": "hi-Sia - Friendly, Helpful and Reassurin",
+      "labels": {
+        "age": "young",
+        "descriptive": "pleasant",
+        "gender": "female",
+        "language": "hi",
+        "use_case": "conversational",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "OtEfb2LVzIE45wdYe54M",
+      "name": "hi-Zara - Soft, Professional and Gentle",
+      "labels": {
+        "age": "young",
+        "gender": "female",
+        "descriptive": "classy",
+        "language": "hi",
+        "accent": "standard",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "XTa3iQyMA6f1qrI4F6kZ",
+      "name": "ar-Sara - Soft, Expressive, and Warm",
+      "labels": {
+        "age": "young",
+        "descriptive": "calm",
+        "gender": "female",
+        "language": "ar",
+        "accent": "modern standard",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "gfKKsLN1k0oYYN9n2dXX",
+      "name": "it-Violetta - Ringing, Bright and Joyful",
+      "labels": {
+        "age": "middle_aged",
+        "gender": "female",
+        "descriptive": "professional",
+        "language": "it",
+        "accent": "standard",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "33B4UnXyTNbgLmdEDh5P",
+      "name": "pt-Keren - Sweet, Vibrant and Rhythmic",
+      "labels": {
+        "age": "young",
+        "descriptive": "excited",
+        "gender": "female",
+        "language": "pt",
+        "use_case": "narrative_story",
+        "accent": "brazilian"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "5vkxOzoz40FrElmLP4P7",
+      "name": "es-Gaby - Friendly, Expressive and Vibra",
+      "labels": {
+        "age": "young",
+        "gender": "female",
+        "descriptive": "casual",
+        "language": "es",
+        "use_case": "conversational",
+        "accent": "peruvian"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "9Godp7dNohUvXk6qp0gS",
+      "name": "es-Regina - Contact Center",
+      "labels": {
+        "age": "young",
+        "descriptive": "casual",
+        "gender": "female",
+        "language": "es",
+        "accent": "mexican",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "kPzsL2i3teMYv0FxEYQ6",
+      "name": "en-Brittney - Social Media Voice - Fun, ",
+      "labels": {
+        "age": "young",
+        "descriptive": "upbeat",
+        "gender": "female",
+        "language": "en",
+        "use_case": "social_media",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "vZZLclMx4wouUtKBRfZn",
+      "name": "zh-Jin - Clear, Warm and Casual",
+      "labels": {
+        "age": "middle_aged",
+        "descriptive": "casual",
+        "gender": "male",
+        "language": "zh",
+        "use_case": "narrative_story",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "PaZ8laODC1yRxHTPYJFh",
+      "name": "el-Christos - Casual, Calm and Serious",
+      "labels": {
+        "age": "middle_aged",
+        "descriptive": "confident",
+        "gender": "male",
+        "language": "el",
+        "accent": "standard",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "QpnXVbX7RkmUGDwpJh5v",
+      "name": "el-Talos",
+      "labels": {
+        "age": "old",
+        "gender": "male",
+        "descriptive": "calm",
+        "language": "el",
+        "use_case": "narrative_story",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "n0vzWypeCK1NlWPVwhOc",
+      "name": "el-Theos - Narrational, Assertive and Wa",
+      "labels": {
+        "age": "middle_aged",
+        "descriptive": "professional",
+        "gender": "male",
+        "language": "el",
+        "accent": "standard",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "2OcnG4mH3jIMtWz3vKus",
+      "name": "zh-Wolf Spencer - Rough and Deep",
+      "labels": {
+        "age": "old",
+        "descriptive": "professional",
+        "gender": "male",
+        "language": "de",
+        "accent": "standard",
+        "use_case": "characters_animation"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "APSIkVZudNbPAwyPoeVO",
+      "name": "zh-Sage - Soothing & Gentle",
+      "labels": {
+        "age": "young",
+        "descriptive": "calm",
+        "gender": "female",
+        "language": "zh",
+        "use_case": "narrative_story",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "5mZxJZhSmJTjL7GoYfYI",
+      "name": "zh-Karo Yang - Clear, Lively and Energet",
+      "labels": {
+        "age": "young",
+        "descriptive": "pleasant",
+        "gender": "male",
+        "language": "zh",
+        "use_case": "social_media",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "Iqi0ix5WGtiSXX9VDZB4",
+      "name": "zh-Helen Sun - Smooth, Clear and Mature",
+      "labels": {
+        "age": "middle_aged",
+        "descriptive": "formal",
+        "gender": "female",
+        "language": "zh",
+        "accent": "standard",
+        "use_case": "informative_educational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hkfHEbBvdQFNX4uWHqRF",
+      "name": "zh-Stacy - Young, Sweet and Cute",
+      "labels": {
+        "age": "young",
+        "gender": "female",
+        "descriptive": "pleasant",
+        "language": "zh",
+        "accent": "standard",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "SF9uvIlY93SJRMdV5jeP",
+      "name": "en-Andrew Griffin - Football Commentator",
+      "labels": {
+        "age": "middle_aged",
+        "gender": "male",
+        "descriptive": "calm",
+        "language": "en",
+        "accent": "american",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "OYTbf65OHHFELVut7v2H",
+      "name": "en-Hope - Natural, Clear and Calm",
+      "labels": {
+        "age": "young",
+        "gender": "female",
+        "descriptive": "crisp",
+        "language": "en",
+        "accent": "american",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "U5UjeJMsOvyhYhXfZdvZ",
+      "name": "en-Adam - Classic Scottish Storyteller",
+      "labels": {
+        "age": "old",
+        "descriptive": "crisp",
+        "gender": "male",
+        "language": "en",
+        "use_case": "narrative_story",
+        "accent": "scottish"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "keLVje3aBMuRpxuu0bqO",
+      "name": "en-Crofty - Energetic Radio Host",
+      "labels": {
+        "descriptive": "professional",
+        "gender": "male",
+        "language": "en",
+        "use_case": "advertisement",
+        "accent": "scottish"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "yj30vwTGJxSHezdAGsv9",
+      "name": "en-Jessa - Easygoing and Effortless",
+      "labels": {
+        "age": "young",
+        "descriptive": "casual",
+        "gender": "female",
+        "language": "en",
+        "accent": "american",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "h1i3CVVBUuF6s46cxUGG",
+      "name": "en-Andy Lin - Gentle and Friendly Narrat",
+      "labels": {
+        "age": "young",
+        "gender": "male",
+        "descriptive": "gentle",
+        "language": "en",
+        "use_case": "narrative_story",
+        "accent": "chinese"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ZthjuvLPty3kTMaNKVKb",
+      "name": "en-Peter",
+      "labels": {
+        "age": "middle_aged",
+        "gender": "male",
+        "descriptive": "confident",
+        "language": "en",
+        "accent": "american",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "W71zT1VwIFFx3mMGH2uZ",
+      "name": "it-MarcoTrox - Warm, Balanced and Polish",
+      "labels": {
+        "age": "middle_aged",
+        "descriptive": "intense",
+        "gender": "male",
+        "language": "it",
+        "accent": "standard",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "gUbIduqGzBP438teh4ZA",
+      "name": "en-Lewis - Friendly, Calm, and Full",
+      "labels": {
+        "age": "young",
+        "gender": "male",
+        "descriptive": "calm",
+        "language": "en",
+        "use_case": "narrative_story",
+        "accent": "scottish"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "MFZUKuGQUsGJPQjTS4wC",
+      "name": "en-Jon - Warm & Grounded Storyteller",
+      "labels": {
+        "age": "middle_aged",
+        "descriptive": "calm",
+        "gender": "male",
+        "language": "en",
+        "use_case": "narrative_story",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "MI36FIkp9wRP7cpWKPTl",
+      "name": "zh-Evan Zhao - Warm, Calm and Trustworth",
+      "labels": {
+        "age": "young",
+        "gender": "male",
+        "descriptive": "gentle",
+        "language": "zh",
+        "use_case": "narrative_story",
+        "accent": "beijing mandarin"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hZTuv9Zqrq4yHYrEmF1r",
+      "name": "zh-Adam Li -  Deep, Steady and Calm",
+      "labels": {
+        "age": "middle_aged",
+        "descriptive": "deep",
+        "gender": "male",
+        "language": "zh",
+        "accent": "singapore mandarin",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "YxbjaPemDJV2xlfvkiIG",
+      "name": "zh-Yun - Elegant, Sweet and Gentle",
+      "labels": {
+        "age": "middle_aged",
+        "descriptive": "calm",
+        "gender": "female",
+        "language": "zh",
+        "use_case": "narrative_story",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "NxUQ5SgevJvRsX9HsM0O",
+      "name": "en-Wenchang - Chinese accent",
+      "labels": {
+        "age": "middle_aged",
+        "descriptive": "chill",
+        "gender": "male",
+        "language": "en",
+        "use_case": "informative_educational",
+        "accent": "chinese"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6OzrBCQf8cjERkYgzSg8",
+      "name": "en-Young Jamal",
+      "labels": {
+        "age": "young",
+        "gender": "male",
+        "descriptive": "chill",
+        "language": "en",
+        "use_case": "social_media",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "iLVmqjzCGGvqtMCk6vVQ",
+      "name": "en-Antonio - Lively, Engaging and Energe",
+      "labels": {
+        "age": "young",
+        "gender": "male",
+        "descriptive": "calm",
+        "language": "en",
+        "use_case": "conversational",
+        "accent": "italian"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "y6p0SvBlfEe2MH4XN7BP",
+      "name": "en-Hugh - Rhythmic and Engaging Storytel",
+      "labels": {
+        "age": "middle_aged",
+        "gender": "male",
+        "descriptive": "casual",
+        "language": "en",
+        "accent": "scottish",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "NOpBlnGInO9m6vDvFkFC",
+      "name": "en-Spuds Oxley - Grandpa ",
+      "labels": {
+        "age": "old",
+        "descriptive": "gentle",
+        "gender": "male",
+        "language": "en",
+        "accent": "american",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6vTyAgAT8PncODBcLjRf",
+      "name": "fr-Claire - Warm, Pretty and Charming",
+      "labels": {
+        "age": "middle_aged",
+        "descriptive": "casual",
+        "gender": "female",
+        "language": "fr",
+        "accent": "standard",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "aQROLel5sQbj1vuIVi6B",
+      "name": "fr-Nicolas - Narrator",
+      "labels": {
+        "age": "middle_aged",
+        "gender": "male",
+        "descriptive": "professional",
+        "language": "fr",
+        "use_case": "narrative_story",
+        "accent": "parisian"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "v3V1d2rk6528UrLKRuy8",
+      "name": "de-Susi - Effortless and Confident",
+      "labels": {
+        "age": "middle_aged",
+        "descriptive": "calm",
+        "gender": "female",
+        "language": "de",
+        "accent": "standard",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "FTNCalFNG5bRnkkaP5Ug",
+      "name": "de-Otto - Casual and Normal",
+      "labels": {
+        "age": "middle_aged",
+        "descriptive": "calm",
+        "gender": "male",
+        "language": "de",
+        "accent": "standard",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ymDCYd8puC7gYjxIamPt",
+      "name": "ru-Marina - Soft, Clear and Warm",
+      "labels": {
+        "age": "middle_aged",
+        "gender": "female",
+        "descriptive": "calm",
+        "language": "ru",
+        "accent": "standard",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "3EuKHIEZbSzrHGNmdYsx",
+      "name": "ru-Nikolay - Confident, Clear and Engagi",
+      "labels": {
+        "age": "middle_aged",
+        "gender": "male",
+        "descriptive": "confident",
+        "language": "ru",
+        "accent": "standard",
+        "use_case": "social_media"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "n1PvBOwxb8X6m7tahp2h",
+      "name": "Michael C. Vincent - Suspenseful Storyteller",
+      "labels": {
+        "age": "middle_aged",
+        "gender": "male",
+        "descriptive": "serious",
+        "language": "en",
+        "accent": "american",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6FiCmD8eY5VyjOdG5Zjk",
+      "name": "Adam - Deep English Story Voice",
+      "labels": {
+        "age": "middle_aged",
+        "gender": "male",
+        "descriptive": "calm",
+        "language": "en",
+        "accent": "american",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "UgBBYS2sOqTuMpoF3BR0",
+      "name": "Mark - Natural Conversations",
+      "labels": {
+        "age": "young",
+        "gender": "male",
+        "descriptive": "casual",
+        "language": "en",
+        "use_case": "conversational",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "RABOvaPec1ymXz02oDQi",
+      "name": "Anika - Sweet, Lively and Warm",
+      "labels": {
+        "age": "young",
+        "descriptive": "upbeat",
+        "gender": "female",
+        "language": "hi",
+        "use_case": "social_media",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hpp4J3VqNfWAUOO0d1Us",
+      "name": "Bella - Professional, Bright, Warm",
+      "labels": {
+        "descriptive": "professional",
+        "language": "en",
+        "accent": "american",
+        "age": "middle_aged",
+        "use_case": "informative_educational",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "CwhRBWXzGAHq8TQ4Fs17",
+      "name": "Roger - Laid-Back, Casual, Resonant",
+      "labels": {
+        "descriptive": "classy",
+        "language": "en",
+        "accent": "american",
+        "age": "middle_aged",
+        "use_case": "conversational",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "EXAVITQu4vr4xnSDxMaL",
+      "name": "Sarah - Mature, Reassuring, Confident",
+      "labels": {
+        "descriptive": "professional",
+        "language": "en",
+        "accent": "american",
+        "age": "young",
+        "use_case": "entertainment_tv",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "FGY2WhTYpPnrIDTdsKH5",
+      "name": "Laura - Enthusiast, Quirky Attitude",
+      "labels": {
+        "descriptive": "sassy",
+        "language": "en",
+        "accent": "american",
+        "age": "young",
+        "use_case": "social_media",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "IKne3meq5aSn9XLyUdCD",
+      "name": "Charlie - Deep, Confident, Energetic",
+      "labels": {
+        "descriptive": "hyped",
+        "language": "en",
+        "accent": "australian",
+        "age": "young",
+        "use_case": "conversational",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "JBFqnCBsd6RMkjVDRZzb",
+      "name": "George - Warm, Captivating Storyteller",
+      "labels": {
+        "descriptive": "mature",
+        "language": "en",
+        "accent": "british",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "N2lVS1w4EtoT3dr4eOWO",
+      "name": "Callum - Husky Trickster",
+      "labels": {
+        "language": "en",
+        "accent": "american",
+        "age": "middle_aged",
+        "use_case": "characters_animation",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "SAz9YHcvj6GT2YYXdXww",
+      "name": "River - Relaxed, Neutral, Informative",
+      "labels": {
+        "descriptive": "calm",
+        "language": "en",
+        "accent": "american",
+        "age": "middle_aged",
+        "use_case": "conversational",
+        "gender": "neutral"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "SOYHLrjzK2X1ezoPC6cr",
+      "name": "Harry - Fierce Warrior",
+      "labels": {
+        "descriptive": "rough",
+        "language": "en",
+        "accent": "american",
+        "age": "young",
+        "use_case": "characters_animation",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "TX3LPaxmHKxFdv7VOQHJ",
+      "name": "Liam - Energetic, Social Media Creator",
+      "labels": {
+        "descriptive": "confident",
+        "language": "en",
+        "accent": "american",
+        "age": "young",
+        "use_case": "social_media",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "Xb7hH8MSUJpSbSDYk0k2",
+      "name": "Alice - Clear, Engaging Educator",
+      "labels": {
+        "descriptive": "professional",
+        "language": "en",
+        "accent": "british",
+        "age": "middle_aged",
+        "use_case": "informative_educational",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "XrExE9yKIg1WjnnlVkGX",
+      "name": "Matilda - Knowledgable, Professional",
+      "labels": {
+        "descriptive": "upbeat",
+        "language": "en",
+        "accent": "american",
+        "age": "middle_aged",
+        "use_case": "informative_educational",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "bIHbv24MWmeRgasZH58o",
+      "name": "Will - Relaxed Optimist",
+      "labels": {
+        "descriptive": "chill",
+        "language": "en",
+        "accent": "american",
+        "age": "young",
+        "use_case": "conversational",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "cgSgspJ2msm6clMCkdW9",
+      "name": "Jessica - Playful, Bright, Warm",
+      "labels": {
+        "descriptive": "cute",
+        "language": "en",
+        "accent": "american",
+        "age": "young",
+        "use_case": "conversational",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "cjVigY5qzO86Huf0OWal",
+      "name": "Eric - Smooth, Trustworthy",
+      "labels": {
+        "descriptive": "classy",
+        "language": "en",
+        "accent": "american",
+        "age": "middle_aged",
+        "use_case": "conversational",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "iP95p4xoKVk53GoZ742B",
+      "name": "Chris - Charming, Down-to-Earth",
+      "labels": {
+        "descriptive": "casual",
+        "language": "en",
+        "accent": "american",
+        "age": "middle_aged",
+        "use_case": "conversational",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "nPczCjzI2devNBz1zQrb",
+      "name": "Brian - Deep, Resonant and Comforting",
+      "labels": {
+        "descriptive": "classy",
+        "language": "en",
+        "accent": "american",
+        "age": "middle_aged",
+        "use_case": "social_media",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "onwK4e9ZLuTAKqWW03F9",
+      "name": "Daniel - Steady Broadcaster",
+      "labels": {
+        "descriptive": "formal",
+        "language": "en",
+        "accent": "british",
+        "age": "middle_aged",
+        "use_case": "informative_educational",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pFZP5JQG7iQjIQuC4Bku",
+      "name": "Lily - Velvety Actress",
+      "labels": {
+        "descriptive": "confident",
+        "language": "en",
+        "accent": "british",
+        "age": "middle_aged",
+        "use_case": "informative_educational",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pNInz6obpgDQGcFmaJgB",
+      "name": "Adam - Dominant, Firm",
+      "labels": {
+        "language": "en",
+        "accent": "american",
+        "age": "middle_aged",
+        "use_case": "social_media",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pqHfZKP75CvOlQylNhV4",
+      "name": "Bill - Wise, Mature, Balanced",
+      "labels": {
+        "descriptive": "crisp",
+        "language": "en",
+        "accent": "american",
+        "age": "old",
+        "use_case": "advertisement",
+        "gender": "male"
+      },
+      "category": "premade"
+    }
+  ],
+  "removed": {
+    "I23uc91tu5zY2PA1tKEN": 200,
+    "rCmVtv8cYU60uhlsOo1M": 200
+  }
+}
