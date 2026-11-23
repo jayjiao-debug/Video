@@ -16,10 +16,10 @@ import { seg, type Segment } from "../story";
 import { povCam, punchIn } from "../cam";
 import { V, standing, yawTo } from "./common";
 import { ROMEO_MASK as ROMEO, JULIET } from "../people";
-import { NameTab } from "../hud/index";
+import { NameTab, EyeHearts, Huff, HEARTS } from "../hud/index";
 import { whisperLean } from "../whisper";
-import { P, spot, camAt, ck, faceAt, talk, wordAt, startOf, endOf, ky, accent, headBox, rel, REACT } from "./kit";
-import { h } from "./h";
+import { P, spot, camAt, ck, faceAt, talk, wordAt, startOf, endOf, ky, accent, headBox, rel, eyesPx, facePx, REACT } from "./kit";
+import { h, frag } from "./h";
 import { JU_TAB } from "../fx";
 import { dancers } from "./dance";
 
@@ -78,11 +78,12 @@ export const SEG: Segment = {
     const ju = w.actor(JULIET);
     const tip = 0.04 * (0.5 + 0.5 * Math.sin(f / 6));
     const pointing = f >= b06 - 4 && f < endOf("B06") + 20;
-    const huff = endOf("B07") + REACT;
+    // her huff lands inside "I only film" (v4: at its end + REACT it had two frames before the whisper took her face)
+    const huff = endOf("B07") - 9;
     ju.set({
       ...standing(JT.at.clone().add(V(0, tip, 0)), yawTo(JT.at, RO_AT), f, 2),
       pose: pointing ? { kind: "point", t: (f - b06) / 30, arm: 0 } : f >= huff && f < huff + 24 ? { kind: "wave", t: (f - huff) / 30, arm: 1 } : { kind: "idle", t: f / 30 },
-      expr: faceAt(f, [[0, "smitten"], [b06 - 6, "bossy"], [huff, "sure"], [startOf("B08"), "smitten"]]),
+      expr: faceAt(f, [[0, "smitten"], [b06 - 6, "bossy"], [huff, "huffy"], [startOf("B08") + 4, "smitten"]]),
       ...talk("ju", f, 2), gaze: -0.5, hide: ["vial"],
     });
     // --- the ball goes on: two masked couples round the dance floor
@@ -92,7 +93,17 @@ export const SEG: Segment = {
     // it flaps away before the whisper lean on B08: pushed in that close her head fills the frame, the tab has no slot
     // left beside or above it and would fall back onto the 插手 tally just as it blinks on 我只拍 (stills v8, f950)
     const tabFrom = JU_TAB.from, tabHold = JU_TAB.hold;     // fx.tsx: the tally steps aside while its banner hangs
-    const overlays = switched && f >= tabFrom && f < tabFrom + tabHold ? h(NameTab, { f, from: tabFrom, who: "juliet", box: headBox(w, ju), hold: tabHold }) : undefined;
+    const tab = switched && f >= tabFrom && f < tabFrom + tabHold ? h(NameTab, { key: "tab", f, from: tabFrom, who: "juliet", box: headBox(w, ju), hold: tabHold }) : null;
+    // --- what comes out of their eyes (v4, the owner: "heart coming out their eyes"). His HEART EYES on "Who?": a heart
+    // beats out of each and small hearts float off toward her (she is off the frame's right), all gone before the cut.
+    // Hers on the other side of the cut, mirrored and smaller (no heart eyes yet: hers are on the balcony): a few
+    // float off to the left, toward him, until she starts giving orders. Then her huff when the reporter will not go.
+    const b04 = startOf("B04");
+    const hisHearts = !switched ? h(EyeHearts, { key: "hh", f, eyes: eyesPx(w, ro), from: b04 - 2, to: Math.min(endOf("B04") + 8, b05 - 3 - HEARTS.life), dir: [0.8, -0.6] }) : null;
+    const herHearts = switched ? h(EyeHearts, { key: "jh", f, eyes: eyesPx(w, ju), from: b05 + 1, to: b06 - 6 - HEARTS.life, dir: [-0.75, -0.65], beat: false, size: 0.8 }) : null;
+    const nose = switched ? facePx(w, ju, -9, 17) : null, u = switched ? Math.abs(facePx(w, ju, 10, 0).x - facePx(w, ju, -10, 0).x) / 20 : 0;
+    const puff = nose && nose.on > 0.5 ? h(Huff, { key: "hf", f, at: huff + 1, x: nose.x, y: nose.y, dir: [-1, -0.1], r: 5.2 * u }) : null;
+    const overlays = frag(hisHearts, herHearts, puff, tab);
     return { camera, overlays };
   },
 };

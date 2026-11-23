@@ -5,5 +5,5 @@ import { FPS, W, H, lensTan } from "./story";
 
 export const EYE = 1.5, FOV = 62;
 export const CAM = makeCam({ fps: FPS, W, H, FOV, EYE, lensTan });
-export const { keyCam, povCam, handheld, punchIn, whip, follow, creep, lean, nudge, toScreen, whipSmear } = CAM;
+export const { keyCam, povCam, handheld, lensCam, punchIn, whip, follow, creep, lean, nudge, toScreen, whipSmear } = CAM;
 export type { CamKey } from "../../kit/day/cam";

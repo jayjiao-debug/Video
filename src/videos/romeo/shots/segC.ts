@@ -17,8 +17,8 @@ import { seg, type Segment } from "../story";
 import { povCam, punchIn, type CamKey } from "../cam";
 import { V, standing, yawTo, walkAlong, speak, saying } from "./common";
 import { ROMEO, JULIET } from "../people";
-import { SplitDivider } from "../hud/index";
-import { P, wv, spot, camAt, ck, faceAt, talk, wordAt, startOf, endOf, ky, accent, rel, REACT } from "./kit";
+import { SplitDivider, EyeHearts } from "../hud/index";
+import { P, wv, spot, camAt, ck, faceAt, talk, wordAt, startOf, endOf, ky, accent, rel, eyesPx, REACT } from "./kit";
 import { h, frag } from "./h";
 import { FONT_STACK } from "../../../kit/day/hud/style";
 import { SPEAKER_COL } from "../hud";
@@ -39,8 +39,10 @@ export const SPLIT = { from: startOf("C08") - 3, open: endOf("C08") + 8, len: 20
 export const splitOpen = (f: number) => easeInOutCubic(clamp01((f - SPLIT.open) / SPLIT.len));
 /** the balcony slab's underside, where the tear lies (world) */
 const SLAB_UNDER = P("balcony", 0.25, 2.43, -0.47);
-/** his run: from the bushes along to the orchard wall and out past the right of the frame */
-const RUN_PATH = [BELOW.at, P("balcony", 1.4, 0, 0.95), P("balcony", 2.5, 0, 1.25), P("balcony", 2.64, 0, 3.4)];
+/** his run: from the bushes along to the orchard wall and out past the right of the frame. (v4: 2.42 / 2.5 from 2.5 /
+ *  2.64: the orchard wall's face is at x 2.95, and his head with the beret on it is 0.35 wide to that side: it went
+ *  11 cm into the stone as he left the frame; and a little further on, so he is still running when the edge takes him) */
+const RUN_PATH = [BELOW.at, P("balcony", 1.4, 0, 0.95), P("balcony", 2.42, 0, 1.25), P("balcony", 2.5, 0, 3.75)];
 
 export const SEG: Segment = {
   id: "C", from: S.from, to: S.to,
@@ -102,6 +104,10 @@ export const SEG: Segment = {
     const clasp: [THREE.Vector3, THREE.Vector3] = [rel(RAIL.at, RAIL.facing, -0.04, 0.8, 0.25), rel(RAIL.at, RAIL.facing, 0.04, 0.8, 0.25)];
     const heart: [THREE.Vector3, THREE.Vector3] = [rel(RAIL.at, RAIL.facing, 0.05, 0.82, 0.22), onRail[1]];
     const c07 = startOf("C07"), c11 = startOf("C11");
+    // the reporter's "you met three hours ago?" LANDS on "three hours", seven tenths of the way through it: her hearts
+    // burst and she is caught for half a second before she straightens up to answer (at the line's end the caught face
+    // had one frame before her prim one took over)
+    const caughtAt = startOf("C06") + Math.round((endOf("C06") - startOf("C06")) * 0.7);
     const ang = (2 * Math.PI * (f - S.from)) / TWIRL.period;
     const twirl: [THREE.Vector3, THREE.Vector3] = [clasp[0], rel(RAIL.at, RAIL.facing, TWIRL.x, TWIRL.y + TWIRL.r * Math.sin(ang), TWIRL.z + TWIRL.r * Math.cos(ang))];
     const juHands = f < herCut ? (f >= S.from + 6 && f < herCut - 8 ? twirl : clasp) : f >= c05 - 4 && f < endOf("C05") + 8 ? heart
@@ -117,7 +123,7 @@ export const SEG: Segment = {
       // v3b (the owner: "give them expressive emotion showing they are in love"): smitten eyes on her famous line and on
       // "my love as deep"; HEART EYES (the film's signature emote, in her close) as the line ends, through the reporter's
       // "you met three hours ago?", until it lands; smitten again when she finds him under the balcony
-      expr: faceAt(f, [[0, "smitten"], [endOf("C05") + 4, "heartsSoft"], [endOf("C06") + REACT, "caught"], [c07 - 2, "sure"], [endOf("C07") + REACT, "swoon"],
+      expr: faceAt(f, [[0, "smitten"], [endOf("C05") + 4, "heartsSoft"], [caughtAt, "caught"], [c07 - 2, "sure"], [endOf("C07") + REACT, "swoon"],
         [tSplitStop, "caught"], [SPLIT.open + 14, "smitten"], [c10 - 2, "bossy"], [endOf("C11") + REACT, "sure"]]),
       ...talk("ju", f, 2),
       gaze: f < c05 ? 0.5 : 0,
@@ -132,7 +138,7 @@ export const SEG: Segment = {
     const ro = w.actor(ROMEO);
     const runFrom = c12 - 6;
     const interview = f >= herCut && f < hisCut;
-    const ruN = walkAlong(RUN_PATH, 2.8, (f - runFrom) / 30);
+    const ruN = walkAlong(RUN_PATH, 2.8, (f - runFrom) / 30, { easeOut: 0 });      // (he runs out of sight: no stop)
     let roAt = BELOW.at.clone(), roFacing = BELOW.facing, roState: Record<string, unknown> = {};
     if (interview || f < herCut) {
       // crouched in the bushes, three-quarter to her lens, pointing up behind him at the balcony
@@ -187,6 +193,13 @@ export const SEG: Segment = {
         splitNames(f, y, open),
       );
     }
+    // --- her HEART EYES in her close (v4, the owner: "heart coming out their eyes"): a heart beats out of each eye as
+    // "my love as deep" ends and small hearts float up out of them, through the reporter's "you met three hours ago?";
+    // when that lands every heart in the air bursts
+    if (f >= endOf("C05") + 4 && f < caughtAt + 5 && f >= hisCut && f < c08)
+      // (smaller and not as far: this close her head is wider than the frame, and full-size hearts sailed up through
+      // the REC row)
+      overlays = h(EyeHearts, { f, eyes: eyesPx(w, ju), from: endOf("C05") + 5, to: caughtAt, pop: caughtAt, dir: [0.12, -1], size: 0.75, far: 0.66 });
     const namesUp = f >= c08 && f < endOf("C08") + 8;
     return { camera, overlays, captions: namesUp ? false : undefined };
   },

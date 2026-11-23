@@ -85,7 +85,7 @@ export const SEG: Segment = {
 
     // ---------------------------------------------------------------- Romeo: bursts in, glowing; blocks the lens; the wedding
     const ro = w.actor(ROMEO);
-    const inLeg = walkAlong([DOOR.at.clone().add(V(-0.3, 0, -0.2)), P("cell", -1.6, 0, -1.0), RO_IN], 3.0, (f - (S.from + 2)) / 30, { endFacing: yawTo(RO_IN, BENCH.at) });
+    const inLeg = walkAlong([DOOR.at.clone().add(V(-0.3, 0, -0.2)), P("cell", -1.6, 0, -1.0), RO_IN], 3.0, (f - (S.from + 2)) / 30, { endFacing: yawTo(RO_IN, BENCH.at), easeIn: 0 });      // (he comes in running)
     const blockLeg = walkAlong([RO_IN, RO_BLOCK], 0.9, (f - (d02 - 3)) / 30, { endFacing: yawTo(RO_BLOCK, wv("cell", BENCH_CAM.pos as number[])) });
     // he takes the right of the pair and she the left, so their two short walks never cross
     const roW = RO_WED;
@@ -109,7 +109,7 @@ export const SEG: Segment = {
     // ---------------------------------------------------------------- Juliet: sprints in on "fast", skids, the wedding
     const ju = w.actor(JULIET);
     const runFrom = tFast - 12;
-    const juLeg = walkAlong(JU_PATH, 4.2, (f - runFrom) / 30, { endFacing: yawTo(JU_PATH[2], RO_BLOCK) });
+    const juLeg = walkAlong(JU_PATH, 4.2, (f - runFrom) / 30, { endFacing: yawTo(JU_PATH[2], RO_BLOCK), easeIn: 0 });      // (she comes in at a sprint)
     const juW = JU_WED;
     const juWed = walkAlong([JU_PATH[2], juW], 0.9, (f - d06) / 30, { endFacing: yawTo(JU_WED, RO_WED) });
     const jl = f < d06 ? juLeg : juWed;

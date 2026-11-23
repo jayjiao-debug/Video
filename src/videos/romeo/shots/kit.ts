@@ -105,10 +105,80 @@ export function lieDown(w: World, r: Rig, pivot: THREE.Vector3, headDir: THREE.V
     fu.uFF.value.applyQuaternion(_q); fu.uFR.value.applyQuaternion(_q); fu.uFU.value.applyQuaternion(_q);
   }
 }
+/** A SOLVED FIGURE CARRIED BY A RIGID MOVE (Juliet sitting up in scene I): turned by q about `pivot` (world: a point
+ *  of the figure as it was solved), then shifted by `shift`. As lieDown does it: the figure is solved again for the
+ *  camera carried the other way round, so its face, its ink and its layers are right for where it ends up; then its
+ *  group and its face's frame are moved. Call after w.update(). keep = the group's own placing stays under the move
+ *  (a figure with a size of its own solved where it will stand or sit: people.ts scales it about its ground point);
+ *  without it the move replaces the placing (lieDown's way: the lying figure). */
+export function carry(w: World, r: Rig, q: THREE.Quaternion, pivot: THREE.Vector3, shift: THREE.Vector3, keep = false) {
+  const cam = w.camera as THREE.PerspectiveCamera;
+  cam.updateMatrixWorld();
+  _cam.copy(cam);
+  const inv = q.clone().invert();
+  _cam.position.copy(cam.position.clone().sub(pivot).sub(shift).applyQuaternion(inv).add(pivot));
+  _cam.quaternion.copy(inv.clone().multiply(cam.quaternion));
+  _cam.updateMatrixWorld(true);
+  (r as unknown as { _update(c: THREE.Camera): void })._update(_cam);
+  _m.makeTranslation(pivot.x + shift.x, pivot.y + shift.y, pivot.z + shift.z).multiply(new THREE.Matrix4().makeRotationFromQuaternion(q)).multiply(new THREE.Matrix4().makeTranslation(-pivot.x, -pivot.y, -pivot.z));
+  if (keep) { r.group.updateMatrix(); r.group.matrix.premultiply(_m); } else r.group.matrix.copy(_m);
+  r.group.matrixAutoUpdate = false;
+  r.group.matrixWorldNeedsUpdate = true;
+  const fu = (r as unknown as { faceU?: { uHead: { value: THREE.Vector4 }; uFF: { value: THREE.Vector3 }; uFR: { value: THREE.Vector3 }; uFU: { value: THREE.Vector3 } } }).faceU;
+  if (fu) {
+    const h = fu.uHead.value, c = new THREE.Vector3(h.x, h.y, h.z).applyMatrix4(_m);
+    h.set(c.x, c.y, c.z, h.w);
+    fu.uFF.value.applyQuaternion(q); fu.uFR.value.applyQuaternion(q); fu.uFU.value.applyQuaternion(q);
+  }
+}
+/** the turn lieDown gives a figure (see there): its up to headDir (raised by `lift`), its front up */
+export function lieQ(headDir: THREE.Vector3, lift = 0) {
+  const hd = headDir.clone().normalize(), Y = V(0, 1, 0);
+  const up = hd.clone().multiplyScalar(Math.cos(lift)).addScaledVector(Y, Math.sin(lift)), front = Y.clone().multiplyScalar(Math.cos(lift)).addScaledVector(hd, -Math.sin(lift));
+  return new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(up.clone().cross(front).normalize(), up, front));
+}
 /** undo lieDown (the World calls it for every figure before it solves) */
 export function standUp(r: Rig) {
   if (!r.group.matrixAutoUpdate) { r.group.matrixAutoUpdate = true; r.group.position.set(0, 0, 0); r.group.quaternion.identity(); r.group.updateMatrix(); }
 }
+
+// ------------------------------------------------------------------------------------------- the drawn face on screen
+type FaceUniforms = { uHead: { value: THREE.Vector4 }; uFF: { value: THREE.Vector3 }; uFR: { value: THREE.Vector3 }; uFU: { value: THREE.Vector3 }; uFaceOn: { value: number } };
+/** A POINT OF A FIGURE'S DRAWN FACE ON SCREEN (film px), for what comes out of a face (hud/emotes.tsx: tears, hearts).
+ *  (x, y) are in the face's own units (rig3d FaceKit: u = 1 % of the head's width, from the middle of the eye line,
+ *  x = screen right, y = down; the eyes are at x = -14 and +14, y = 0). The rig projects the drawing flat along the
+ *  face's direction onto the head (its shader's uHead / uFF / uFR / uFU, with the same pull toward the camera): this
+ *  is that projection run forward, on the ball the head is. Call after w.update() (and after lieDown / carry).
+ *  `on` = how much of the face shows (0 = turned away or behind the head's edge). */
+export function facePx(w: World, r: Rig, x: number, y: number): { x: number; y: number; on: number } {
+  const fu = (r as unknown as { faceU: FaceUniforms }).faceU;
+  const H = fu.uHead.value, C = V(H.x, H.y, H.z), R = H.w, F = fu.uFF.value;
+  const sx = 1 / fu.uFR.value.length(), sy = 1 / fu.uFU.value.length();
+  const rf = fu.uFR.value.clone().multiplyScalar(sx), uf = fu.uFU.value.clone().multiplyScalar(sy);
+  const hc = C.clone().sub((w.camera as THREE.PerspectiveCamera).position), d2 = hc.lengthSq();
+  // (0.99 = the rig's FACE_FS; the eye line is 1.5u above the drawing's middle)
+  const qx = (x * 0.99) / 50, qy = ((1.5 - y) * 0.99) / 50, hp = V(0, 0, 0);
+  let k = 1, c = 1;
+  for (let i = 0; i < 3; i++) {
+    const a = (qx * sx) / k, b = (qy * sy) / k;
+    c = Math.sqrt(Math.max(0, 1 - a * a - b * b));
+    hp.copy(rf).multiplyScalar(a).addScaledVector(uf, b).addScaledVector(F, c);
+    k = d2 / Math.max(d2 + R * hp.dot(hc), 1e-4);
+  }
+  const p = w.project(C.addScaledVector(hp, R));
+  return { x: p.x, y: p.y, on: p.front && c > 0.05 && hp.dot(hc) < 0 ? fu.uFaceOn.value : 0 };
+}
+/** AN EYE OF A FIGURE ON SCREEN: a point of the face (the eye's middle is (side * 14, 0)) with the face's own axes
+ *  there, in film px per u: ex along the face's x (screen right), ey along its y (down). side: -1 = the eye on the
+ *  screen's left */
+export type EyePt = { x: number; y: number; ex: [number, number]; ey: [number, number]; u: number; side: -1 | 1; on: number };
+export function eyePx(w: World, r: Rig, side: -1 | 1, x = 14, y = 0): EyePt {
+  const X = side * x, p = facePx(w, r, X, y), px = facePx(w, r, X + 4, y), py = facePx(w, r, X, y + 4);
+  const ex: [number, number] = [(px.x - p.x) / 4, (px.y - p.y) / 4], ey: [number, number] = [(py.x - p.x) / 4, (py.y - p.y) / 4];
+  return { x: p.x, y: p.y, ex, ey, u: Math.hypot(ey[0], ey[1]), side, on: Math.min(p.on, px.on, py.on) };
+}
+/** both eyes (screen left, screen right) */
+export const eyesPx = (w: World, r: Rig, x = 14, y = 0): EyePt[] => [eyePx(w, r, -1, x, y), eyePx(w, r, 1, x, y)];
 
 /** the reaction delay: a face lands this many frames after the word that caused it (format: within about ten) */
 export const REACT = 6;

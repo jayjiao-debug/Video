@@ -1,5 +1,5 @@
 {
- "note": "采访罗密欧与朱丽叶的四天 sound plan v2 (23 Nov: the end card holds 3 s longer, the Friar's banner opens on his first good look). Frames from the picture (src/videos/romeo: fx.tsx, shard.tsx, shots/seg*.ts), written as scene anchors by /home/user/romeo_work/sound/make_cues.py. Music: eight original lute pieces synthesised in code (no samples); none in the turn (E), the letter's failure (G) or the quiet scene (H). Effects from the library and the sound farm (romeo-sfx-01).",
+ "note": "采访罗密欧与朱丽叶的四天 sound plan v3 (23 Nov, the polish pass: a heartbeat under his heart eyes, a pop as her hearts burst, her gown as she sits up in place of the flicker's glitch; v2: the end card holds 3 s longer, the Friar's banner opens on his first good look). Frames from the picture (src/videos/romeo: fx.tsx, shard.tsx, shots/seg*.ts), written as scene anchors by /home/user/romeo_work/sound/make_cues.py. Music: eight original lute pieces synthesised in code (no samples); none in the turn (E), the letter's failure (G) or the quiet scene (H). Effects from the library and the sound farm (romeo-sfx-01).",
  "whisper_dip": {
   "db": -6,
   "ramp": 0.2,
@@ -753,6 +753,18 @@
    "note": " | level: clip peak -23.6 dBFS -> about -32 dBFS in the mix"
   },
   {
+   "label": "B his heart eyes: lub-dub",
+   "clip": "sfx_heartbeat",
+   "at": [
+    "B",
+    "from",
+    7.8
+   ],
+   "gain": -23.7,
+   "sync": 0.025,
+   "note": " | level: clip peak -1.5 dBFS -> about -19 dBFS in the mix"
+  },
+  {
    "label": "B note 失恋：一个白天: the red stroke",
    "clip": "sfx_quill",
    "at": [
@@ -925,6 +937,18 @@
    "gain": 3.9,
    "fade": 0.02,
    "fade_out": 0.1
+  },
+  {
+   "label": "C her hearts burst on the reporter's question (a soft pop)",
+   "clip": "sfx_pop",
+   "at": [
+    "C",
+    "from",
+    18.533
+   ],
+   "gain": -30.9,
+   "sync": 0.025,
+   "note": " | level: clip peak -0.3 dBFS -> about -25 dBFS in the mix"
   },
   {
    "label": "C the tear opens",
@@ -1240,7 +1264,7 @@
    "at": [
     "F",
     "from",
-    28.9
+    29.033
    ],
    "gain": -10.6,
    "sync": 0.43,
@@ -1528,19 +1552,17 @@
    "note": " | level: clip peak -1.5 dBFS -> about -22 dBFS in the mix"
   },
   {
-   "label": "I the shard flickers (she sits up behind it)",
-   "clip": "sfx_glitch_1",
+   "label": "I she sits up (her gown rustles)",
+   "clip": "sfx_linen",
    "at": [
     "I",
     "from",
-    1.667
+    1.467
    ],
-   "gain": -26.1,
-   "in": 1.1,
-   "len": 0.25,
-   "sync": 1.24,
-   "fade_out": 0.05,
-   "note": " | level: clip peak -4.1 dBFS -> about -24 dBFS in the mix"
+   "gain": -22.6,
+   "sync": 0.0,
+   "fade_out": 0.2,
+   "note": " | level: clip peak -10.6 dBFS -> about -27 dBFS in the mix"
   },
   {
    "label": "I the hug",

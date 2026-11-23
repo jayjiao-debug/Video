@@ -15,6 +15,9 @@
 //   stamp.tsx     <WaxStamp f at cx cy />                                认识一天 · 已婚
 //   divider.tsx   <SplitDivider y open />                                the split screen's torn edge
 //   end.tsx       <EndCard f from lineAt? sealAt? />                     the end card, seal 演绎
+//   emotes.tsx    <TearSpray /> <TearHang /> <EyeHearts /> <Huff />      what comes out of their eyes (v4): tears that
+//                                                                        fly, hearts that float; drawn in the
+//                                                                        picture's own ink, riding the head
 // LAYERS (bottom to top): the picture; SplitDivider; NameTab / FriarBanner; Note, WaxStamp, FactCard; LetterTitle;
 // MeddleTally with the REC display; WhisperNote in place of the subtitle; the phone mask. EndCard stands alone.
 //   sounds.ts     HUD_SOUNDS                                              each piece's one short sound and its cue frame
@@ -31,4 +34,5 @@ export * from "./fact";
 export * from "./stamp";
 export * from "./divider";
 export * from "./end";
+export * from "./emotes";
 export * from "./sounds";

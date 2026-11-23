@@ -296,9 +296,9 @@ const bow = (b: PartKit, at: THREE.Vector3, face: THREE.Vector3, k: number, col:
 };
 /** JULIET'S DRILL CURLS (see the head of this file): col / light / deep = the hair; len = how far below the head's middle
  *  they end (head units); ribbon = the bows' colour (false = none) */
-export const drills = (o: { col: string; light?: string; deep?: string; len?: number; r?: number; turns?: number; ribbon?: string | false; size?: number }): Acc => {
+export const drills = (o: { col: string; light?: string; deep?: string; len?: number; r?: number; turns?: number; ribbon?: string | false; size?: number; bowAt?: "face" | "side" }): Acc => {
   const len = o.len ?? 2.25, r = o.r ?? 0.27, turns = o.turns ?? 5, ribbon = o.ribbon === undefined ? "#c4202e" : o.ribbon, light = o.light ?? shade(o.col, 1.3), deep = o.deep ?? shade(o.col, 0.62);
-  const key = ["rjDrills", o.col, light, deep, len, r, turns, ribbon, o.size ?? 1].join("|");
+  const key = ["rjDrills", o.col, light, deep, len, r, turns, ribbon, o.size ?? 1, o.bowAt ?? "side"].join("|");
   return {
     name: "drills", slots: [], key,
     build(b) {
@@ -308,7 +308,10 @@ export const drills = (o: { col: string; light?: string; deep?: string; len?: nu
         const p0 = V(s * 0.9, 0.4, -0.16), p1 = V(s * 1.26, -0.5, -0.04), p2 = V(s * 1.1, -len, 0.1);
         const map = drillMap(b, o.col, light, deep, turns, s, key + "|" + s);
         b.solid("head", drillGeo(b, p0, p1, p2, r, 0.03, turns, 0.5, s), { col: "#ffffff", map, paint: "hair", ink: 0.0075 });
-        if (ribbon) bow(b, V(s * 1.03, 0.38, 0.16), V(s * 0.45, 0.2, 0.87), 1.3 * (o.size ?? 1), ribbon);
+        // v4: the bow sits on the SIDE of the head, behind the lock that hangs beside her face. On the face side of
+        // that lock (v3: bowAt "face") its inner loop and tail lay on her temple and read as a red streak by her eye
+        if (ribbon && o.bowAt === "face") bow(b, V(s * 1.03, 0.38, 0.16), V(s * 0.45, 0.2, 0.87), 1.3 * (o.size ?? 1), ribbon);
+        else if (ribbon) bow(b, V(s * 0.98, 0.63, 0.1), V(s * 0.62, 0.28, 0.73), 1.3 * (o.size ?? 1), ribbon);
       }
     },
   };

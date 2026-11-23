@@ -16,14 +16,14 @@
 //   8  F09      the toast to the lens; cut to black before the bottle comes back to her                  (the end of hope)
 import * as THREE from "three";
 import { seg, type Segment } from "../story";
-import { povCam, type CamKey } from "../cam";
-import { V, standing, yawTo, walkAlong, seated } from "./common";
+import { povCam, keyCam, handheld, lensCam, toScreen, type CamKey } from "../cam";
+import { V, VERBS, standing, yawTo, walkAlong, seated } from "./common";
 import { JULIET, FRIAR, FRIAR_VIAL, FRIAR_QUILL, FRIAR_LETTER, YOUNG_FRIAR } from "../people";
 import { whisperLean } from "../whisper";
 import { P, wv, spot, camAt, faceAt, talk, wordAt, startOf, endOf, ky, accent, rel, REACT } from "./kit";
 import { h } from "./h";
 import { seatOn, stoolSeat } from "../../../kit/day/rig/seats";
-import { clamp01, easeInOutCubic } from "../../group/story";
+import { clamp01, easeInOutCubic, smooth } from "../../group/story";
 
 const S = seg("F");
 const BENCH = spot("cell", "friarBench"), DOOR = spot("cell", "door"), DESK = spot("cell", "desk"), BED = spot("bedroom", "julietBed");
@@ -54,10 +54,18 @@ function cell(w: Parameters<Segment["pose"]>[0], f: number) {
   const tGive = startOf("F04") + 6, sealAt = endOf("F06") - 6;
   const deskWalk = f06 - 10, lensWalk = f07 - 18;
   // the young friar: in by the door during F07, takes the letter after F08, leaves
-  const handAt = endOf("F08") + 14, yfLeave = handAt + 4;
+  // THE LETTER CHANGES HANDS (v5). The Friar held it out to the lens to the end, and the young friar, beside and behind
+  // him, reached for it 24 cm short: it jumped from one hand to the other, and the Friar's turn to him came after. Now,
+  // once the tally has blinked, the Friar turns to him and brings the letter between them (GIVE); the young friar's
+  // hand is on it (TAKE) when it goes; he lowers it and turns to the door.
+  const handAt = endOf("F08") + 18, yfLeave = handAt + 6;
+  // (he sets off 24 frames before the line ends, not 6: at 6 he was still 29 cm short when he turned to go, and jumped there)
+  const yfGo = endOf("F08") - 24;
+  const TO_YF = yawTo(FR_LENS, YF_TAKE), GIVE = rel(FR_LENS, TO_YF, 0, 0.95, 0.34), TAKE = rel(FR_LENS, TO_YF, 0, 0.95, 0.4);
+  const give = ky(f, [[handAt - 9, 0], [handAt - 1, 1]]);
   // ---------------------------------------------------------------- the camera
   const k = (fr: number, o: Partial<CamKey> = {}): CamKey => ({ ...BENCH_CAM, f: fr, ...o });
-  let camera = povCam(f, [
+  const keys: CamKey[] = [
     // the two of them by the bench, from a step further back so both heads fit (v4 stills: her head was cut at the left)
     k(S.from, { pos: wv("cell", [0.05, 1.5, 1.75]), look: wv("cell", [0.26, 1.1, -1.2]), fov: 48 }),
     k(f02 - 4, { pos: wv("cell", [0.05, 1.5, 1.75]), look: wv("cell", [0.26, 1.1, -1.2]), fov: 48 }),
@@ -69,15 +77,36 @@ function cell(w: Parameters<Segment["pose"]>[0], f: number) {
     k(f06 + 20, { look: wv("cell", [1.28, 1.08, -0.62]), fov: 38 }),                // pan right to the desk: him writing at it
     k(lensWalk, { look: wv("cell", [1.28, 1.08, -0.62]), fov: 38 }),
     k(f07 + 4, { look: wv("cell", [0.3, 1.0, -0.05]), fov: 50 }),                   // he walks the letter up to her
-    k(handAt - 6, { look: wv("cell", [0.3, 1.0, -0.05]), fov: 50 }),
-    k(yfLeave + 18, { look: wv("cell", [-1.7, 1.05, -1.0]), fov: 46 }),             // after the young friar: the doorway
-    k(JOIN.black, { look: wv("cell", [-1.8, 1.05, -1.05]), fov: 46 }),
-  ], { mood: "calm", amp: 0.4 });
+    k(handAt - 9, { look: wv("cell", [0.3, 1.0, -0.05]), fov: 50 }),
+    // with the letter as he turns and holds it out: the boy's face and the two hands on it (it changed hands at the
+    // frame's left edge, under the part the app cuts off). An even turn of the lens, as the Friar's own turn is (the
+    // default ease is three times as fast in its middle: 6 degrees a frame here, a whip); then a beat on the hands
+    k(handAt + 1, { look: wv("cell", [-0.12, 1.02, -0.28]), fov: 50, ease: smooth }),
+    k(handAt + 4, { look: wv("cell", [-0.12, 1.02, -0.28]), fov: 50 }),
+  ];
+  // AFTER THE BOY: the lens stays on him as he turns and walks to the door. (It swung to the doorway in twenty frames,
+  // faster than he walks: he hung at the frame's right edge, under the part the app cuts off, f4160-4172, and crossed
+  // the picture only as he left.) His head is brought from the left of the letter to the middle as he walks, and kept
+  // there to the door wipe: the lens turns at his pace, at most 2.4 degrees a frame.
+  const yfOutAt = (g: number) => walkAlong([YF_TAKE, DOOR.at.clone().add(V(-0.5, 0, -0.15))], 1.5, (g - yfLeave) / 30, { easeOut: 0 });      // (he walks out of sight)
+  const yfHead = (g: number) => (g < yfLeave ? YF_TAKE : yfOutAt(g).at).clone().setY(1.12);
+  const atHand = keyCam(handAt + 4, keys), s0 = toScreen(atHand, yfHead(handAt + 4));
+  let camera = f <= handAt + 4 ? keyCam(f, keys) : lensCam(f, [
+    { f: handAt + 4, pos: BENCH_CAM.pos, at: yfHead, sx: s0.x, sy: s0.y, fov: 50 },
+    { f: yfLeave + 25, pos: BENCH_CAM.pos, at: yfHead, sx: 600, sy: 890, fov: 46 },
+    { f: JOIN.close + 6, pos: BENCH_CAM.pos, at: yfHead, sx: 540, sy: 930, fov: 46 },
+  ]);
+  camera = handheld(camera, f, { mood: "calm", amp: 0.4 });
   camera = whisperLean(f, camera);
   w.setCamera(camera);
 
   // ---------------------------------------------------------------- the Friar: vial -> desk (quill, wax) -> letter to the lens
-  const deskLeg = walkAlong([FR_AT, P("cell", 1.45, 0, -1.1), DESK.at], 1.3, (f - deskWalk) / 30, { endFacing: DESK.facing });
+  const DESK_PATH = [FR_AT, P("cell", 1.45, 0, -1.1), DESK.at];
+  const deskLeg = walkAlong(DESK_PATH, 1.3, (f - deskWalk) / 30, { endFacing: DESK.facing });
+  // he walks up beside the desk, turns to it (the walk's own turn: six frames) and THEN puts the quill to the sheet
+  // (the hand went to the sheet on the frame he arrived, a quarter turn before he faced it: eased, it came up from
+  // under the desk and through the writing slope)
+  const deskAt = deskWalk + Math.ceil(VERBS.walkTime(DESK_PATH, 1.3) * 30);
   const lensLeg = walkAlong([DESK.at, P("cell", 1.42, 0, -0.06), FR_LENS], 1.4, (f - lensWalk) / 30, { endFacing: yawTo(FR_LENS, BENCH_CAM.pos as number[]) });
   const phase = f < tGive ? "vial" : f < deskWalk ? "free" : f < lensWalk ? "desk" : f < handAt ? "letter" : "after";
   const fr = w.actor(phase === "vial" ? FRIAR_VIAL : phase === "desk" ? FRIAR_QUILL : phase === "letter" ? FRIAR_LETTER : FRIAR);
@@ -87,14 +116,19 @@ function cell(w: Parameters<Segment["pose"]>[0], f: number) {
     frX = { pose: { kind: "hold", t: f / 30 }, hands: up > 0 ? [rel(FR_AT, frFacing, -0.12, 0.72, 0.25).lerp(VIAL_UP, up), null] : [null, null] };
   } else if (phase === "desk") {
     frAt = deskLeg.at; frFacing = deskLeg.facing;
-    const writing = deskLeg.arrived && f < sealAt;
+    const writing = f >= deskAt + 9 && f < sealAt;
     const stroke = Math.sin(f * 0.9) * 0.025, line = ((f % 18) / 18) * 0.06;
     const nib = P("cell", 1.03, 1.03, -0.66 + line).add(V(0, stroke * 0.4, stroke));
     const seal = P("cell", 1.02, 1.0 + 0.06 * (1 - ky(f, [[sealAt, 0], [sealAt + 4, 1]])), -0.56);
-    frX = { pose: deskLeg.moving ? deskLeg.pose : { kind: "hold", t: f / 30 }, hands: writing ? [nib, null] : f >= sealAt ? [null, seal] : [null, null], lookDown: deskLeg.arrived ? 16 : 0, hide: f >= sealAt ? ["quill"] : [] };
+    // the quill is in his hand from the frame the hand comes down on the desk to the frame it leaves it (it was in his
+    // hanging hand from the first step of the walk: it popped in there, in view, and he carried it across the cell);
+    // the desk's top is seen edge on from the bench, so a quill lying on it could not be seen before or after
+    const quillOn = f >= deskAt + 11 && f < sealAt;
+    frX = { pose: deskLeg.moving ? deskLeg.pose : { kind: deskLeg.arrived ? "hold" : "idle", t: f / 30 }, hands: writing ? [nib, null] : f >= sealAt ? [null, seal] : [null, null], lookDown: deskLeg.arrived ? 16 : 0, hide: quillOn ? [] : ["quill"] };
   } else if (phase === "letter") {
-    frAt = lensLeg.at; frFacing = lensLeg.facing;
-    frX = { pose: lensLeg.moving ? lensLeg.pose : { kind: "hold", t: f / 30 }, hands: lensLeg.arrived ? [rel(FR_LENS, frFacing, -0.12, 1.0, 0.4), null] : [null, null] };
+    const d = TO_YF - lensLeg.facing;
+    frAt = lensLeg.at; frFacing = lensLeg.facing + Math.atan2(Math.sin(d), Math.cos(d)) * give;
+    frX = { pose: lensLeg.moving ? lensLeg.pose : { kind: "hold", t: f / 30 }, hands: lensLeg.arrived ? [rel(FR_LENS, lensLeg.facing, -0.12, 1.0, 0.4).lerp(GIVE, give), null] : [null, null] };
   } else if (phase === "after") {
     frAt = FR_LENS.clone(); frFacing = yawTo(FR_LENS, YF_TAKE);
   }
@@ -105,21 +139,34 @@ function cell(w: Parameters<Segment["pose"]>[0], f: number) {
     expr: faceAt(f, [[0, "worried"], [f02 - 2, "warn"], [f04 + REACT, "worried"], [f06 - 2, "weary"], [f07 - 2, "worried"], [endOf("F08") + REACT, "weary"]]),
     ...talk("fr", f, 3),
     head: accent("nod", f, endOf("F08") + REACT + 2) ?? undefined,
-    gaze: phase === "letter" ? 0 : undefined,
+    gaze: phase === "letter" && f < handAt - 9 ? 0 : undefined,                    // (his eyes leave the lens as he turns to the boy)
     hide: [...((frX.hide as string[] | undefined) ?? []), "herbBasket"],
   });
 
   // ---------------------------------------------------------------- Juliet: steady beside him; snatches the vial
   const ju = w.actor(JULIET);
   const has = f >= tGive;
-  const juFacing = f < f06 ? yawTo(JU_AT, FR_AT) + 0.35 : yawTo(JU_AT, frAt);
-  const grab = ky(f, [[tGive - 8, 0], [tGive, 1], [tGive + 14, 0.25]]);
+  // she stands a fifth of a turn open to the lens while they talk, and turns to follow him as he goes to the desk (the
+  // 0.35 went in one frame at F06: her body's turn was eased, but the vial's place went with it at once, 10 cm, and
+  // her elbow 22 cm)
+  // ... and to the boy as he comes for the letter: she watches it go. (She stood square to the Friar to the end, and
+  // from the bench the vial in her hand sat right on top of the letter as it changed hands, f4143-4152. Turned to
+  // him, a little past, it is behind his head from there, and comes out as he walks off.) Off the frame while she turns.
+  const toFriar = yawTo(JU_AT, frAt) + 0.35 * (1 - ky(f, [[f06 - 4, 0], [f06 + 8, 1]]));
+  const watch = yawTo(JU_AT, YF_TAKE) - 0.2 - toFriar;
+  const juFacing = toFriar + Math.atan2(Math.sin(watch), Math.cos(watch)) * ky(f, [[yfGo + 6, 0], [yfGo + 26, 1]]);
+  // up to the vial in eight frames; then she yanks it down and settles it slowly, 22 frames, the last quarter of the
+  // way in 14 of them. (It came down on a key that ended a quarter of the way up and dropped the last 12 cm in one
+  // frame; and down there her arm lines up with the pose's elbow direction, where the rig turns the elbow out and up:
+  // crossed at speed, the elbow went 14 cm in one frame.)
+  const grab = f <= tGive ? ky(f, [[tGive - 8, 0], [tGive, 1]]) : Math.pow(1 - clamp01((f - tGive) / 22), 3);
   // (v3b) the vial held in front of her middle, not off to her left: there her left drill curl swung into it as she
-  // turned her head to the Friar (clearance v3a: the vial 2.4 cm into her hair, f3722-3861)
+  // turned her head to the Friar (clearance v3a: the vial 2.4 cm into her hair, f3722-3861). (v5) 6 cm higher: at 0.76
+  // its foot stood in the top of the caption for three seconds
   ju.set({
     ...standing(JU_AT, juFacing, f, 2),
     pose: { kind: has ? "hold" : "idle", t: f / 30 },
-    hands: grab > 0 && f < tGive + 14 ? [null, VIAL_UP.clone().lerp(rel(JU_AT, juFacing, 0.03, 0.76, 0.3), clamp01(1 - grab))] : has ? [null, rel(JU_AT, juFacing, 0.03, 0.76, 0.3)] : [null, null],
+    hands: grab > 0 ? [null, VIAL_UP.clone().lerp(rel(JU_AT, juFacing, 0.03, 0.82, 0.3), clamp01(1 - grab))] : has ? [null, rel(JU_AT, juFacing, 0.03, 0.82, 0.3)] : [null, null],
     expr: faceAt(f, [[0, "brave"], [f04 - 2, "bossy"], [endOf("F04") + REACT, "brave"]]),
     ...talk("ju", f, 2),
     hide: has ? [] : ["vial"],
@@ -127,15 +174,15 @@ function cell(w: Parameters<Segment["pose"]>[0], f: number) {
 
   // ---------------------------------------------------------------- the young friar
   const yf = w.actor(YOUNG_FRIAR);
-  const yfIn = walkAlong([DOOR.at.clone().add(V(-0.35, 0, -0.1)), YF_WAIT], 1.2, (f - (f07 + 10)) / 30, { endFacing: yawTo(YF_WAIT, FR_LENS) });
-  const yfTo = walkAlong([YF_WAIT, YF_TAKE], 1.3, (f - (endOf("F08") - 6)) / 30, { endFacing: yawTo(YF_TAKE, FR_LENS) });
-  const yfOut = walkAlong([YF_TAKE, DOOR.at.clone().add(V(-0.5, 0, -0.15))], 1.5, (f - yfLeave) / 30);
-  const yl = f < endOf("F08") - 6 ? yfIn : f < yfLeave ? yfTo : yfOut;
+  const yfIn = walkAlong([DOOR.at.clone().add(V(-0.35, 0, -0.1)), YF_WAIT], 1.2, (f - (f07 + 10)) / 30, { endFacing: yawTo(YF_WAIT, FR_LENS), easeIn: 0 });      // (he comes in walking)
+  const yfTo = walkAlong([YF_WAIT, YF_TAKE], 1.3, (f - yfGo) / 30, { endFacing: yawTo(YF_TAKE, FR_LENS) });
+  const yfOut = yfOutAt(f);
+  const yl = f < yfGo ? yfIn : f < yfLeave ? yfTo : yfOut;
   const holding = f >= handAt;
   yf.set({
     ...standing(yl.at, yl.facing, f, 4),
     pose: yl.moving ? yl.pose : { kind: holding ? "hold" : "idle", t: f / 30 },
-    hands: f >= handAt - 6 && f < handAt + 2 ? [rel(FR_LENS, frFacing, -0.1, 0.95, 0.42), null] : [null, null],
+    hands: f >= handAt - 6 && f < handAt + 2 ? [TAKE, null] : [null, null],
     expr: faceAt(f, [[0, "neutral"]]),
     visible: f >= f07 + 10 && !(f >= yfLeave && yfOut.arrived),
     hide: holding ? [] : ["letter"],

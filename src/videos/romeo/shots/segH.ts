@@ -24,7 +24,7 @@ const S = seg("H");
 const BIER = spot("tomb", "bier"), FLOOR = spot("tomb", "shardFloor");
 /** Romeo kneels at the bier's head end (its right end in the lens), facing along it to her face: both faces read
  *  (v2, 22 Nov: kneeling at its front he hid her face, and the lens, at her feet, saw only the hem of her robe) */
-export const KNEEL = P("tomb", 1.3, 0, -1.0);
+export const KNEEL = P("tomb", 1.36, 0, -1.0);   // (v4: 1.36 from 1.3: with the beret and her sculpted hair their heads met by 2 cm; the hug is the only touch)
 /** Juliet lying on the bier near its front edge: her feet (the pivot of lieDown), her head toward +x, toward him */
 export const JU_FEET = P("tomb", -0.44, 0.87, -1.05), HEAD_DIR = V(1, 0, 0);
 const JU_FACE = P("tomb", 0.76, 0.85, -1.05);
@@ -33,6 +33,9 @@ export const RO_FACING = yawTo(KNEEL, JU_FACE);
  *  it (kneel 1 -> 0.5): from the full kneel the rig's 0.4 m arm could not get the bottle clear of the two heads (v5
  *  stills: at y 1.0 it was behind her head; set higher, the hand stopped short beside his own) */
 export const TOAST = rel(KNEEL, RO_FACING, 0, 1.2, 0.36);
+/** the bottle's way up to the toast (his own frame: to his left, up, forward): out to his right at chest height, up
+ *  beside his head, then level over her crown */
+const LIFT_A = [-0.26, 0.72, 0.2], LIFT_B = [-0.2, 1.16, 0.22];
 
 export const SEG: Segment = {
   id: "H", from: S.from, to: S.to,
@@ -75,13 +78,16 @@ export const SEG: Segment = {
     const rest = rel(KNEEL, RO_FACING, 0.14, 0.45, 0.15), upP = rel(KNEEL, RO_FACING, 0.32, 0.78, 0.25), cheek = rel(KNEEL, RO_FACING, 0.3, 0.86, 0.66);
     const reachAt = reach < 0.4 ? rest.clone().lerp(upP, reach / 0.4) : upP.clone().lerp(cheek, (reach - 0.4) / 0.6);
     const raise = ky(f, [[h04 - 6, 0], [h04 + 10, 1]]);
-    const lap = rel(KNEEL, RO_FACING, -0.12, 0.42, 0.2), lift = rel(KNEEL, RO_FACING, -0.08, 0.98, 0.14);
-    // the bottle comes up close to him first, then out over her: a straight lap-to-toast line went through her head
-    const toastAt = raise < 0.55 ? lap.clone().lerp(lift, raise / 0.55) : lift.clone().lerp(TOAST, (raise - 0.55) / 0.45);
+    // the bottle comes out to his right at chest height first, then up over her: a straight lap-to-toast line went
+    // through her head, and (until v4) the way up close to him went through his own face for four frames
+    const lap = rel(KNEEL, RO_FACING, -0.12, 0.42, 0.2), lift = rel(KNEEL, RO_FACING, LIFT_A[0], LIFT_A[1], LIFT_A[2]), over = rel(KNEEL, RO_FACING, LIFT_B[0], LIFT_B[1], LIFT_B[2]);
+    const toastAt = raise < 0.4 ? lap.clone().lerp(lift, raise / 0.4) : raise < 0.75 ? lift.clone().lerp(over, (raise - 0.4) / 0.35) : over.clone().lerp(TOAST, (raise - 0.75) / 0.25);
     ro.set({
       ...standing(KNEEL, RO_FACING, f, 1),
       ...VERBS.kneel(knocked ? 1 : 1 - 0.5 * raise, KNEEL, 10),
-      pose: { kind: "hold", t: f / 30 },
+      // "idle" until the bottle is knocked away: its elbows go out and back. With "hold" (elbows out and down) the
+      // bottle arm passed its own elbow line on the way up and the elbow flipped 30 cm in one frame (f5314)
+      pose: { kind: knocked ? "hold" : "idle", t: f / 30 },
       hands: [knocked ? rel(KNEEL, RO_FACING, -0.18, 0.84, 0.32) : toastAt, knocked ? null : reachAt],
       expr: faceAt(f, [[0, "tender"], [h04 - 4, "grief"], [IMPACT_AT + REACT, "blank"]]),   // eyes on her, never a smile with closed eyes beside her
       ...talk("ro", f, 1),

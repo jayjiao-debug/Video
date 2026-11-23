@@ -48,7 +48,7 @@ export const SEG: Segment = {
     const toLens = yawTo(BACK.at, c0.pos as number[]);
     const turnK = ky(f, [[endOf("E01") + REACT, 0], [endOf("E01") + REACT + 12, 1]]);
     const runFrom = endOf("E02") - 4;
-    const leg = walkAlong([BACK.at, BACK.at.clone().add(new THREE.Vector3(-0.15, 0, -0.65)), EXIT.at], 3.6, (f - runFrom) / 30, { startFacing: toLens });
+    const leg = walkAlong([BACK.at, BACK.at.clone().add(new THREE.Vector3(-0.15, 0, -0.65)), EXIT.at], 3.6, (f - runFrom) / 30, { startFacing: toLens, easeOut: 0 });      // (he runs out of sight: no stop)
     const running = f >= runFrom;
     const facing = running ? leg.facing : THREE.MathUtils.lerp(BACK.facing, toLens + 0.25, turnK);
     ro.set({

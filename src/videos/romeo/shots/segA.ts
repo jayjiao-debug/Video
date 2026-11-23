@@ -13,10 +13,10 @@ import * as THREE from "three";
 import { seg, type Segment } from "../story";
 import { povCam, punchIn } from "../cam";
 import { V, standing } from "./common";
-import { ROMEO, ROMEO_CRY } from "../people";
-import { NameTab } from "../hud/index";
-import { P, spot, camAt, ck, faceAt, talk, wordAt, startOf, endOf, L, ky, accent, headBox, rel, REACT } from "./kit";
-import { h } from "./h";
+import { ROMEO } from "../people";
+import { NameTab, TearSpray, TearHang } from "../hud/index";
+import { P, spot, camAt, ck, faceAt, talk, wordAt, startOf, endOf, L, ky, accent, headBox, rel, eyesPx, REACT } from "./kit";
+import { h, frag } from "./h";
 
 const S = seg("A");
 const TREE = spot("grove", "romeoTree"), TALK = spot("grove", "romeoTalk");
@@ -42,8 +42,7 @@ export const SEG: Segment = {
     const walkK = ky(f, [[a04 - 6, 0], [a04 + 10, 1]]);
     const at = TREE.at.clone().add(V(0, 0, 0.08)).lerp(TALK.at, walkK);
     const facing = THREE.MathUtils.lerp(Math.PI * 0.8, 0.35, Math.max(turnK * 0.8, walkK)) ;
-    const cry = f < a04;
-    const r = w.actor(cry ? ROMEO_CRY : ROMEO);
+    const r = w.actor(ROMEO);
     const hugging = f < tWho - 4;
     const flung = f >= a03 && f < a04 - 4;
     const offering = f >= a04 - 2;
@@ -66,10 +65,18 @@ export const SEG: Segment = {
       turn: hugging ? 0.42 : undefined,
     });
     w.update();
+    // --- his tears (v4, the owner: "tear drops coming out"): while he wails they fly out of the corners of his eyes,
+    // harder on every sob; when he stops dead one is left hanging, and it runs down his cheek as the title lands; they
+    // fly again for Rosaline and dry up as he turns to the lens with his letter
+    const eyes = eyesPx(w, r), sobAt = (b: number) => Math.sin(b * 0.26) ** 2;
+    const cry1 = h(TearSpray, { key: "t1", f, eyes, from: -40, to: tWho - 9, power: sobAt });
+    const hang = f >= tWho - 9 && f < a03 ? h(TearHang, { key: "th", f, eye: eyes[1], from: tWho - 9, fall: Math.min(tWho + 34, a03 - 16) }) : null;
+    const cry2 = h(TearSpray, { key: "t2", f, eyes, from: a03 - 1, to: a04 - 5, power: sobAt, size: 1.08 });
     // --- his tab slams in during his wail (the first good look at him)
     const tabFrom = a03 + 8;
     const box = headBox(w, r);
-    const overlays = f >= tabFrom && f < tabFrom + 150 ? h(NameTab, { f, from: tabFrom, who: "romeo", box }) : undefined;
+    const tab = f >= tabFrom && f < tabFrom + 150 ? h(NameTab, { key: "tab", f, from: tabFrom, who: "romeo", box }) : null;
+    const overlays = frag(cry1, hang, cry2, tab);
     return { camera, overlays };
   },
 };
