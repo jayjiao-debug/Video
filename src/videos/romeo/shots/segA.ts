@@ -17,6 +17,7 @@ import { ROMEO } from "../people";
 import { NameTab, TearSpray, TearHang } from "../hud/index";
 import { P, spot, camAt, ck, faceAt, talk, wordAt, startOf, endOf, L, ky, accent, headBox, rel, eyesPx, REACT } from "./kit";
 import { h, frag } from "./h";
+import { reach, hit, lineBody, leans, talkHead } from "./gest";
 
 const S = seg("A");
 const TREE = spot("grove", "romeoTree"), TALK = spot("grove", "romeoTalk");
@@ -51,15 +52,20 @@ export const SEG: Segment = {
     // frames 0 and 60 looked the same)
     const wailing = f < tWho - 8 || (f >= a03 - 2 && f < a04 - 2);
     const sob = wailing ? Math.sin(f * 0.26) ** 2 : 0;
+    // (v5) "bear her THIS!": the letter is pushed at her lens on "this" (and a little on "bear"), his other hand on his
+    // heart while he begs; it sinks with the letter when her rule lands
+    const tThis = wordAt("A04", "this"), push = hit(f, tThis, 3, 13) + 0.5 * hit(f, wordAt("A04", "bear"), 3, 8);
+    const begK = ky(f, [[a04 - 2, 0], [a04 + 7, 1], [endOf("A05") - 2, 1], [endOf("A05") + 12, 0]]);
     const hands: [THREE.Vector3 | null, THREE.Vector3 | null] = hugging
       ? [TRUNK.clone().add(V(0.36, 1.12, 0.3)), TRUNK.clone().add(V(-0.3, 1.05, 0.32))]
-      : offering ? [rel(at, facing, -0.12, 1.02 - 0.18 * ky(f, [[endOf("A05"), 0], [endOf("A05") + 12, 1]]), 0.42), null] : [null, null];
+      : offering ? [rel(at, facing, -0.12, 0.96 + 0.03 * push - 0.12 * ky(f, [[endOf("A05"), 0], [endOf("A05") + 12, 1]]), 0.42 + 0.09 * push), reach(rel(at, facing, 0.07, 0.85, 0.17), begK)] : [null, null];
     r.set({
       ...standing(at, facing, f, 1),
       pose: flung ? { kind: "cheer", t: (f - a03) / 30 } : hands[0] || hands[1] ? { kind: "hold", t: f / 30 } : { kind: "idle", t: f / 30 },
       hands, expr, ...talk("ro", f, 1),
-      head: accent("jolt", f, tWho - 6) ?? (sob > 0 ? { dy: -0.05 * sob, squash: 0.05 * sob } : undefined),
-      lean: sob > 0 ? { pitch: 4 * sob } : undefined,
+      // (his blank "…Who is Juliet?" keeps a still head: the stop is the joke; from his wail on, the speaking head)
+      head: f < a03 - 8 ? accent("jolt", f, tWho - 6) ?? (sob > 0 ? { dy: -0.05 * sob, squash: 0.05 * sob } : undefined) : talkHead("ro", f, 1, sob > 0 ? { dy: -0.05 * sob, squash: 0.05 * sob } : undefined),
+      lean: leans(sob > 0 ? { pitch: 4 * sob } : undefined, lineBody(f, "A04", { lean: 5, dip: 3, sway: 0, words: ["this"], hold: 6 })),
       lookDown: hugging ? -6 : 0, hide: offering ? [] : ["letter"],
       // at the tree he keeps his back half to her (the rig would turn him to the lens); his face shows in three-quarter
       turn: hugging ? 0.42 : undefined,

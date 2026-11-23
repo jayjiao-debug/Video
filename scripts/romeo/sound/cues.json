@@ -1,5 +1,5 @@
 {
- "note": "采访罗密欧与朱丽叶的四天 sound plan v3 (23 Nov, the polish pass: a heartbeat under his heart eyes, a pop as her hearts burst, her gown as she sits up in place of the flicker's glitch; v2: the end card holds 3 s longer, the Friar's banner opens on his first good look). Frames from the picture (src/videos/romeo: fx.tsx, shard.tsx, shots/seg*.ts), written as scene anchors by /home/user/romeo_work/sound/make_cues.py. Music: eight original lute pieces synthesised in code (no samples); none in the turn (E), the letter's failure (G) or the quiet scene (H). Effects from the library and the sound farm (romeo-sfx-01).",
+ "note": "采访罗密欧与朱丽叶的四天 sound plan v5 (23 Nov, the owner's notes on the v4 cut: the duel's blades and falls and the slow-motion throw's swell, made in code; the 插手 tally's sounds only round her refusals; the rider rides on; one soft heartbeat where the heart eyes were). Frames from the picture's own dump (/home/user/romeo_work/sound/v5/frames.json, written from src/videos/romeo), as scene anchors by /home/user/romeo_work/sound/make_cues.py. Music: eight original lute pieces synthesised in code (no samples); none in the turn (E), the letter's failure (G) or the quiet scene (H). Effects from the library, the sound farm (romeo-sfx-01) and v5/synth.py.",
  "whisper_dip": {
   "db": -6,
   "ramp": 0.2,
@@ -308,12 +308,12 @@
    "until": [
     "H",
     "from",
-    17.033
+    16.367
    ],
    "gain": -7.1,
    "loop": true,
    "fade": 0.3,
-   "fade_out": 0.03,
+   "fade_out": 0.12,
    "note": " | level: clip -39.1 LUFS -> -40 LUFS in the mix"
   },
   {
@@ -327,12 +327,12 @@
    "until": [
     "H",
     "from",
-    17.033
+    16.367
    ],
    "gain": -8.8,
    "loop": true,
    "fade": 0.3,
-   "fade_out": 0.03,
+   "fade_out": 0.12,
    "note": " | level: clip -41.4 LUFS -> -44 LUFS in the mix"
   },
   {
@@ -346,13 +346,97 @@
    "until": [
     "H",
     "from",
-    17.033
+    16.367
    ],
    "gain": -15.1,
    "loop": true,
    "fade": 0.3,
-   "fade_out": 0.03,
+   "fade_out": 0.12,
    "note": " | level: clip -38.1 LUFS -> -47 LUFS in the mix"
+  },
+  {
+   "label": "H slow motion: the torches, slowed",
+   "clip": "amb_torch",
+   "at": [
+    "H",
+    "from",
+    16.3
+   ],
+   "until": [
+    "H",
+    "from",
+    18.833
+   ],
+   "gain": -8.1,
+   "loop": true,
+   "fade": 0.12,
+   "fade_out": 0.03,
+   "rate": 0.4,
+   "lp": [
+    1100
+   ],
+   "note": " | level: clip -39.1 LUFS -> -41 LUFS in the mix"
+  },
+  {
+   "label": "H slow motion: the vault's air, slowed",
+   "clip": "amb_crypt",
+   "at": [
+    "H",
+    "from",
+    16.3
+   ],
+   "until": [
+    "H",
+    "from",
+    18.833
+   ],
+   "gain": -8.8,
+   "loop": true,
+   "fade": 0.12,
+   "fade_out": 0.03,
+   "rate": 0.5,
+   "lp": [
+    900
+   ],
+   "note": " | level: clip -41.4 LUFS -> -44 LUFS in the mix"
+  },
+  {
+   "label": "H the vault again for the hit, until the camera dies",
+   "clip": "amb_torch",
+   "at": [
+    "H",
+    "from",
+    18.833
+   ],
+   "until": [
+    "H",
+    "from",
+    19.233
+   ],
+   "gain": -7.1,
+   "loop": true,
+   "fade": 0.01,
+   "fade_out": 0.03,
+   "note": " | level: clip -39.1 LUFS -> -40 LUFS in the mix"
+  },
+  {
+   "label": "H the vault's air again for the hit",
+   "clip": "amb_crypt",
+   "at": [
+    "H",
+    "from",
+    18.833
+   ],
+   "until": [
+    "H",
+    "from",
+    19.233
+   ],
+   "gain": -8.8,
+   "loop": true,
+   "fade": 0.01,
+   "fade_out": 0.03,
+   "note": " | level: clip -41.4 LUFS -> -44 LUFS in the mix"
   },
   {
    "label": "I the vault, through the shard: drips",
@@ -428,7 +512,7 @@
    "loop": false,
    "fade": 0.02,
    "fade_out": 0.03,
-   "note": " | level: clip -20.0 LUFS -> -30 LUFS in the mix"
+   "note": " | level: clip -20.0 LUFS -> -30 LUFS in the mix | v5 frames 0-102"
   },
   {
    "label": "A title sting: the rolled G major chord (0.9 s) lands on the seal (f188), the cadence the sobbing theme was denied",
@@ -448,7 +532,7 @@
    "fade": 0.01,
    "fade_out": 0.25,
    "sync": 0.9,
-   "note": " | level: clip -20.0 LUFS -> -25 LUFS in the mix"
+   "note": " | level: clip -20.0 LUFS -> -25 LUFS in the mix | v5 frames 188-224"
   },
   {
    "label": "A music: the sobbing theme comes back at bar 3 (4.0 s in) under A03, on to the cut into B",
@@ -468,7 +552,7 @@
    "fade": 0.25,
    "fade_out": 0.6,
    "in": 4.0,
-   "note": " | level: clip -20.0 LUFS -> -31 LUFS in the mix"
+   "note": " | level: clip -20.0 LUFS -> -31 LUFS in the mix | v5 frames 230-510"
   },
   {
    "label": "B music: the feast dance, looped for the whole party",
@@ -487,7 +571,7 @@
    "loop": true,
    "fade": 0.15,
    "fade_out": 0.3,
-   "note": " | level: clip -20.0 LUFS -> -31 LUFS in the mix"
+   "note": " | level: clip -20.0 LUFS -> -31 LUFS in the mix | v5 frames 510-1035"
   },
   {
    "label": "C music: the balcony serenade; its swell (22-27.5 s) under the split screen, the scurry (37.5 s) on his run, the cheeky pluck (40.6 s) as he bursts into the cell",
@@ -506,7 +590,7 @@
    "loop": false,
    "fade": 0.3,
    "fade_out": 0.1,
-   "note": " | level: clip -20.0 LUFS -> -31 LUFS in the mix"
+   "note": " | level: clip -20.0 LUFS -> -31 LUFS in the mix | v5 frames 1035-2265"
   },
   {
    "label": "D music: the Friar's jig, 3.75 percent quick so that its G cadence (20.30 s) lands on the wedding stamp (f2852)",
@@ -527,7 +611,7 @@
    "fade_out": 0.2,
    "sync": 20.3,
    "rate": 1.0375,
-   "note": " | level: clip -20.0 LUFS -> -31 LUFS in the mix"
+   "note": " | level: clip -20.0 LUFS -> -31 LUFS in the mix | v5 frames 2852-2872"
   },
   {
    "label": "F music: the vial, falling sighs; sparse, so 3 dB under the others (the composer: its single plucks peak like the busy pieces); faded to nothing before the cell door closes",
@@ -546,7 +630,7 @@
    "loop": false,
    "fade": 0.5,
    "fade_out": 0.2,
-   "note": " | level: clip -20.0 LUFS -> -34 LUFS in the mix"
+   "note": " | level: clip -20.0 LUFS -> -34 LUFS in the mix | v5 frames 3414-4320"
   },
   {
    "label": "F music: Juliet's toast, one fragile lute, sparse (3 dB under the busy pieces' level would be -34; -32 keeps it present under her line); cut dead with the picture at TOAST_CUT (f4329), before its A chord",
@@ -565,7 +649,7 @@
    "loop": false,
    "fade": 0.05,
    "fade_out": 0.02,
-   "note": " | level: clip -20.0 LUFS -> -32 LUFS in the mix"
+   "note": " | level: clip -20.0 LUFS -> -32 LUFS in the mix | v5 frames 4335-4467"
   },
   {
    "label": "I music: the lute returns 0.6 s after the hug, under the last lines",
@@ -584,7 +668,7 @@
    "loop": false,
    "fade": 0.6,
    "fade_out": 0.3,
-   "note": " | level: clip -20.0 LUFS -> -31 LUFS in the mix"
+   "note": " | level: clip -20.0 LUFS -> -31 LUFS in the mix | v5 frames 5914-6247"
   },
   {
    "label": "I music: the same take on, 6 dB up after the camera dies; its D major chord (16.5 s) lands on the end card's seal (f6205) and rings to the clip's end over the end card's longer hold",
@@ -604,7 +688,7 @@
    "fade": 0.3,
    "fade_out": 0.6,
    "in": 10.8,
-   "note": " | level: clip -20.0 LUFS -> -25 LUFS in the mix"
+   "note": " | level: clip -20.0 LUFS -> -25 LUFS in the mix | v5 frames 6238-6504"
   }
  ],
  "hits": [
@@ -717,28 +801,65 @@
    "note": " | level: clip peak -23.6 dBFS -> about -26 dBFS in the mix"
   },
   {
-   "label": "A the tally: the slip flaps in",
+   "label": "A the tally (A05): the slip flaps in",
    "clip": "sfx_paper_fold",
    "at": [
     "A",
     "from",
-    16.0
+    15.1
    ],
    "gain": -8.6,
    "sync": 0.43,
    "note": " | level: clip peak -23.6 dBFS -> about -26 dBFS in the mix"
   },
   {
-   "label": "A the tally: 插手 0 stamped",
+   "label": "A the tally (A05): 插手 0 stamped",
    "clip": "sfx_wax_thunk_2",
    "at": [
     "A",
     "from",
-    16.267
+    15.367
    ],
    "gain": -9.7,
    "sync": 0.14,
    "note": " | level: clip peak -18.5 dBFS -> about -22 dBFS in the mix"
+  },
+  {
+   "label": "A the tally (A05) blinks (tock)",
+   "clip": "sfx_wax_tock",
+   "at": [
+    "A",
+    "from",
+    15.967
+   ],
+   "gain": -30.9,
+   "sync": 0.25,
+   "note": " | level: clip peak -1.3 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "A the tally (A05) blinks (tock 2)",
+   "clip": "sfx_wax_tock",
+   "at": [
+    "A",
+    "from",
+    16.1
+   ],
+   "gain": -32.9,
+   "sync": 0.25,
+   "note": " | level: clip peak -1.3 dBFS -> about -28 dBFS in the mix"
+  },
+  {
+   "label": "A the tally (A05): the slip flaps away",
+   "clip": "sfx_paper_fold",
+   "at": [
+    "B",
+    "from",
+    0.133
+   ],
+   "gain": -14.6,
+   "sync": 0.43,
+   "rate": 1.15,
+   "note": " | level: clip peak -23.6 dBFS -> about -32 dBFS in the mix"
   },
   {
    "label": "B her whisper note slips in (B01)",
@@ -753,19 +874,19 @@
    "note": " | level: clip peak -23.6 dBFS -> about -32 dBFS in the mix"
   },
   {
-   "label": "B his heart eyes: lub-dub",
+   "label": "B his hearts float up: one soft lub-dub",
    "clip": "sfx_heartbeat",
    "at": [
     "B",
     "from",
     7.8
    ],
-   "gain": -23.7,
+   "gain": -27.7,
    "sync": 0.025,
-   "note": " | level: clip peak -1.5 dBFS -> about -19 dBFS in the mix"
+   "note": " | level: clip peak -1.5 dBFS -> about -23 dBFS in the mix"
   },
   {
-   "label": "B note 失恋：一个白天: the red stroke",
+   "label": "B note 一个白天: the red stroke",
    "clip": "sfx_quill",
    "at": [
     "B",
@@ -839,7 +960,31 @@
    "note": " | level: clip peak -23.6 dBFS -> about -26 dBFS in the mix"
   },
   {
-   "label": "B the tally blinks (tock)",
+   "label": "B the tally (B07): the slip flaps in",
+   "clip": "sfx_paper_fold",
+   "at": [
+    "B",
+    "from",
+    13.433
+   ],
+   "gain": -8.6,
+   "sync": 0.43,
+   "note": " | level: clip peak -23.6 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "B the tally (B07): 插手 0 stamped",
+   "clip": "sfx_wax_thunk_2",
+   "at": [
+    "B",
+    "from",
+    13.7
+   ],
+   "gain": -12.7,
+   "sync": 0.14,
+   "note": " | level: clip peak -18.5 dBFS -> about -25 dBFS in the mix"
+  },
+  {
+   "label": "B the tally (B07) blinks (tock)",
    "clip": "sfx_wax_tock",
    "at": [
     "B",
@@ -851,7 +996,7 @@
    "note": " | level: clip peak -1.3 dBFS -> about -26 dBFS in the mix"
   },
   {
-   "label": "B the tally blinks (tock 2)",
+   "label": "B the tally (B07) blinks (tock 2)",
    "clip": "sfx_wax_tock",
    "at": [
     "B",
@@ -861,6 +1006,19 @@
    "gain": -32.9,
    "sync": 0.25,
    "note": " | level: clip peak -1.3 dBFS -> about -28 dBFS in the mix"
+  },
+  {
+   "label": "B the tally (B07): the slip flaps away",
+   "clip": "sfx_paper_fold",
+   "at": [
+    "B",
+    "from",
+    15.8
+   ],
+   "gain": -14.6,
+   "sync": 0.43,
+   "rate": 1.15,
+   "note": " | level: clip peak -23.6 dBFS -> about -32 dBFS in the mix"
   },
   {
    "label": "B her whisper note slips in (B08)",
@@ -977,7 +1135,7 @@
    "note": " | level: clip peak -23.2 dBFS -> about -26 dBFS in the mix"
   },
   {
-   "label": "C note 他一天: the stroke",
+   "label": "C note 他一天。: the red stroke",
    "clip": "sfx_quill",
    "at": [
     "C",
@@ -1149,12 +1307,192 @@
    "note": " | level: clip peak -15.2 dBFS -> about -14 dBFS in the mix"
   },
   {
+   "label": "E Tybalt's tab opens",
+   "clip": "sfx_paper_fold",
+   "at": [
+    "E",
+    "from",
+    0.067
+   ],
+   "gain": -8.6,
+   "sync": 0.43,
+   "note": " | level: clip peak -23.6 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "E Tybalt's tab: the seal",
+   "clip": "sfx_wax_tock",
+   "at": [
+    "E",
+    "from",
+    0.467
+   ],
+   "gain": -30.9,
+   "sync": 0.25,
+   "rate": 1.35,
+   "note": " | level: clip peak -1.3 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "E the duel: first clash",
+   "clip": "sfx_sword_clash_1",
+   "at": [
+    "E",
+    "from",
+    0.733
+   ],
+   "gain": -22.1,
+   "sync": 0.0,
+   "note": " | level: clip peak -1.1 dBFS -> about -17 dBFS in the mix"
+  },
+  {
+   "label": "E the duel: second clash (the blades slide)",
+   "clip": "sfx_sword_clash_2",
+   "at": [
+    "E",
+    "from",
+    1.333
+   ],
+   "gain": -23.0,
+   "sync": 0.0,
+   "note": " | level: clip peak -1.2 dBFS -> about -18 dBFS in the mix"
+  },
+  {
+   "label": "E the duel: third clash",
+   "clip": "sfx_sword_clash_3",
+   "at": [
+    "E",
+    "from",
+    1.867
+   ],
+   "gain": -20.9,
+   "sync": 0.0,
+   "note": " | level: clip peak -1.3 dBFS -> about -16 dBFS in the mix"
+  },
+  {
+   "label": "E the duel: feet on the stones",
+   "clip": "sfx_run_a",
+   "at": [
+    "E",
+    "from",
+    0.467
+   ],
+   "gain": -30.5,
+   "len": 1.1,
+   "fade_out": 0.2,
+   "note": " | level: clip peak -5.7 dBFS -> about -30 dBFS in the mix"
+  },
+  {
+   "label": "E the thrust: the blade through the air",
+   "clip": "sfx_blade_swish",
+   "at": [
+    "E",
+    "from",
+    2.233
+   ],
+   "gain": -23.9,
+   "sync": 0.145,
+   "note": " | level: clip peak -1.3 dBFS -> about -19 dBFS in the mix"
+  },
+  {
+   "label": "E the thrust stops at his doublet (a dull stop)",
+   "clip": "sfx_punch",
+   "at": [
+    "E",
+    "from",
+    2.267
+   ],
+   "gain": -24.3,
+   "sync": 0.03,
+   "lp": [
+    900
+   ],
+   "fade_out": 0.15,
+   "note": " | level: clip peak -2.9 dBFS -> about -21 dBFS in the mix"
+  },
+  {
+   "label": "E Tybalt's rapier falls on the stones",
+   "clip": "sfx_sword_drop_1",
+   "at": [
+    "E",
+    "from",
+    2.767
+   ],
+   "gain": -21.9,
+   "sync": 0.0,
+   "note": " | level: clip peak -1.3 dBFS -> about -17 dBFS in the mix"
+  },
+  {
+   "label": "E he goes down",
+   "clip": "sfx_body_fall",
+   "at": [
+    "E",
+    "from",
+    3.4
+   ],
+   "gain": -24.9,
+   "sync": 0.0,
+   "note": " | level: clip peak -1.3 dBFS -> about -20 dBFS in the mix"
+  },
+  {
+   "label": "E his clothes as he goes down",
+   "clip": "sfx_linen",
+   "at": [
+    "E",
+    "from",
+    2.867
+   ],
+   "gain": -25.6,
+   "sync": 0.0,
+   "fade_out": 0.25,
+   "note": " | level: clip peak -10.6 dBFS -> about -30 dBFS in the mix"
+  },
+  {
+   "label": "E Romeo's rapier slips from his hand and rings on the stones",
+   "clip": "sfx_sword_drop_2",
+   "at": [
+    "E",
+    "from",
+    3.933
+   ],
+   "gain": -23.9,
+   "sync": 0.0,
+   "note": " | level: clip peak -1.3 dBFS -> about -19 dBFS in the mix"
+  },
+  {
+   "label": "E she steps nearer",
+   "clip": "sfx_steps_her",
+   "at": [
+    "E",
+    "from",
+    4.0
+   ],
+   "gain": -24.7,
+   "in": 0.4,
+   "len": 1.27,
+   "fade": 0.05,
+   "fade_out": 0.25,
+   "note": " | level: clip peak -11.5 dBFS -> about -30 dBFS in the mix"
+  },
+  {
+   "label": "E note 报仇: the red stroke",
+   "clip": "sfx_quill",
+   "at": [
+    "E",
+    "from",
+    4.267
+   ],
+   "gain": -9.0,
+   "in": 0.6,
+   "len": 0.2,
+   "fade_out": 0.05,
+   "note": " | level: clip peak -23.2 dBFS -> about -26 dBFS in the mix"
+  },
+  {
    "label": "E he runs off into the alley",
    "clip": "sfx_run_b",
    "at": [
     "E",
     "from",
-    5.567
+    10.167
    ],
    "gain": -14.7,
    "fade_out": 0.5,
@@ -1166,7 +1504,7 @@
    "at": [
     "E",
     "from",
-    5.667
+    10.267
    ],
    "gain": -14.6,
    "sync": 0.43,
@@ -1178,7 +1516,7 @@
    "at": [
     "E",
     "from",
-    9.2
+    13.8
    ],
    "gain": -11.7,
    "sync": 0.14,
@@ -1195,6 +1533,34 @@
    "gain": -14.6,
    "sync": 0.43,
    "note": " | level: clip peak -23.6 dBFS -> about -32 dBFS in the mix"
+  },
+  {
+   "label": "F note 假死逃婚: the red stroke",
+   "clip": "sfx_quill",
+   "at": [
+    "F",
+    "from",
+    5.333
+   ],
+   "gain": -9.0,
+   "in": 2.0,
+   "len": 0.2,
+   "fade_out": 0.05,
+   "note": " | level: clip peak -23.2 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "F note 私奔: the red stroke",
+   "clip": "sfx_quill",
+   "at": [
+    "F",
+    "from",
+    11.4
+   ],
+   "gain": -9.0,
+   "in": 3.2,
+   "len": 0.2,
+   "fade_out": 0.05,
+   "note": " | level: clip peak -23.2 dBFS -> about -26 dBFS in the mix"
   },
   {
    "label": "F she snatches the vial",
@@ -1235,7 +1601,31 @@
    "note": " | level: clip peak -23.2 dBFS -> about -26 dBFS in the mix"
   },
   {
-   "label": "F the tally blinks (tock)",
+   "label": "F the tally (F08): the slip flaps in",
+   "clip": "sfx_paper_fold",
+   "at": [
+    "F",
+    "from",
+    27.267
+   ],
+   "gain": -8.6,
+   "sync": 0.43,
+   "note": " | level: clip peak -23.6 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "F the tally (F08): 插手 0 stamped",
+   "clip": "sfx_wax_thunk_2",
+   "at": [
+    "F",
+    "from",
+    27.533
+   ],
+   "gain": -12.7,
+   "sync": 0.14,
+   "note": " | level: clip peak -18.5 dBFS -> about -25 dBFS in the mix"
+  },
+  {
+   "label": "F the tally (F08) blinks (tock)",
    "clip": "sfx_wax_tock",
    "at": [
     "F",
@@ -1247,7 +1637,7 @@
    "note": " | level: clip peak -1.3 dBFS -> about -26 dBFS in the mix"
   },
   {
-   "label": "F the tally blinks (tock 2)",
+   "label": "F the tally (F08) blinks (tock 2)",
    "clip": "sfx_wax_tock",
    "at": [
     "F",
@@ -1257,6 +1647,19 @@
    "gain": -32.9,
    "sync": 0.25,
    "note": " | level: clip peak -1.3 dBFS -> about -28 dBFS in the mix"
+  },
+  {
+   "label": "F the tally (F08): the slip flaps away",
+   "clip": "sfx_paper_fold",
+   "at": [
+    "F",
+    "from",
+    29.733
+   ],
+   "gain": -14.6,
+   "sync": 0.43,
+   "rate": 1.15,
+   "note": " | level: clip peak -23.6 dBFS -> about -32 dBFS in the mix"
   },
   {
    "label": "F the young friar takes the letter",
@@ -1422,8 +1825,42 @@
     4.4
    ],
    "gain": -17.9,
-   "fade_out": 0.8,
+   "fade_out": 0.5,
    "note": " | level: clip peak -14.3 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "G the rider rides on down the street",
+   "clip": "sfx_gallop",
+   "at": [
+    "G",
+    "from",
+    7.067
+   ],
+   "gain": -22.9,
+   "fade": 0.4,
+   "fade_out": 0.8,
+   "lp": [
+    2600
+   ],
+   "note": " | level: clip peak -14.3 dBFS -> about -31 dBFS in the mix"
+  },
+  {
+   "label": "G the rider at the gate, far",
+   "clip": "sfx_gallop",
+   "at": [
+    "G",
+    "from",
+    9.733
+   ],
+   "gain": -28.9,
+   "fade": 0.5,
+   "fade_out": 1.6,
+   "lp": [
+    1500
+   ],
+   "rate": 0.97,
+   "len": 2.2,
+   "note": " | level: clip peak -14.3 dBFS -> about -37 dBFS in the mix"
   },
   {
    "label": "G her whisper note slips in (G01)",
@@ -1438,7 +1875,31 @@
    "note": " | level: clip peak -23.6 dBFS -> about -32 dBFS in the mix"
   },
   {
-   "label": "G the tally blinks (tock)",
+   "label": "G the tally (G04): the slip flaps in",
+   "clip": "sfx_paper_fold",
+   "at": [
+    "G",
+    "from",
+    12.067
+   ],
+   "gain": -8.6,
+   "sync": 0.43,
+   "note": " | level: clip peak -23.6 dBFS -> about -26 dBFS in the mix"
+  },
+  {
+   "label": "G the tally (G04): 插手 0 stamped",
+   "clip": "sfx_wax_thunk_2",
+   "at": [
+    "G",
+    "from",
+    12.333
+   ],
+   "gain": -12.7,
+   "sync": 0.14,
+   "note": " | level: clip peak -18.5 dBFS -> about -25 dBFS in the mix"
+  },
+  {
+   "label": "G the tally (G04) blinks (tock)",
    "clip": "sfx_wax_tock",
    "at": [
     "G",
@@ -1450,7 +1911,7 @@
    "note": " | level: clip peak -1.3 dBFS -> about -26 dBFS in the mix"
   },
   {
-   "label": "G the tally blinks (tock 2)",
+   "label": "G the tally (G04) blinks (tock 2)",
    "clip": "sfx_wax_tock",
    "at": [
     "G",
@@ -1460,6 +1921,19 @@
    "gain": -32.9,
    "sync": 0.25,
    "note": " | level: clip peak -1.3 dBFS -> about -28 dBFS in the mix"
+  },
+  {
+   "label": "G the tally (G04): the slip flaps away",
+   "clip": "sfx_paper_fold",
+   "at": [
+    "G",
+    "from",
+    14.2
+   ],
+   "gain": -14.6,
+   "sync": 0.43,
+   "rate": 1.15,
+   "note": " | level: clip peak -23.6 dBFS -> about -32 dBFS in the mix"
   },
   {
    "label": "G he walks off (stone steps)",
@@ -1482,9 +1956,82 @@
     "from",
     16.267
    ],
-   "gain": -12.5,
+   "gain": -13.5,
    "sync": 0.11,
-   "note": " | level: clip peak -7.7 dBFS -> about -14 dBFS in the mix"
+   "note": " | level: clip peak -7.7 dBFS -> about -15 dBFS in the mix"
+  },
+  {
+   "label": "H slow motion: the whoosh drawn out to the flight's length",
+   "clip": "sfx_toss_2",
+   "at": [
+    "H",
+    "from",
+    16.433
+   ],
+   "gain": -21.5,
+   "rate": 0.27,
+   "lp": [
+    1800
+   ],
+   "fade": 0.1,
+   "fade_out": 0.25,
+   "note": " | level: clip peak -7.7 dBFS -> about -23 dBFS in the mix"
+  },
+  {
+   "label": "H slow motion: the low swell into the hit",
+   "clip": "sfx_slowmo_rise",
+   "at": [
+    "H",
+    "from",
+    18.833
+   ],
+   "gain": -19.9,
+   "sync": 2.55,
+   "note": " | level: clip peak -1.3 dBFS -> about -15 dBFS in the mix"
+  },
+  {
+   "label": "H slow motion: a heartbeat",
+   "clip": "sfx_heartbeat",
+   "at": [
+    "H",
+    "from",
+    17.0
+   ],
+   "gain": -28.7,
+   "sync": 0.025,
+   "rate": 0.8,
+   "lp": [
+    1400
+   ],
+   "note": " | level: clip peak -1.5 dBFS -> about -24 dBFS in the mix"
+  },
+  {
+   "label": "H slow motion: a second heartbeat, nearer",
+   "clip": "sfx_heartbeat",
+   "at": [
+    "H",
+    "from",
+    17.867
+   ],
+   "gain": -25.7,
+   "sync": 0.025,
+   "rate": 0.8,
+   "lp": [
+    1400
+   ],
+   "note": " | level: clip peak -1.5 dBFS -> about -21 dBFS in the mix"
+  },
+  {
+   "label": "H the last of the flight at full speed (air)",
+   "clip": "sfx_whip",
+   "at": [
+    "H",
+    "from",
+    18.767
+   ],
+   "gain": -25.0,
+   "sync": 0.25,
+   "note": " | level: clip peak -0.2 dBFS -> about -19 dBFS in the mix"
   },
   {
    "label": "H the glass breaks in his hand",
@@ -1492,7 +2039,7 @@
    "at": [
     "H",
     "from",
-    16.533
+    18.833
    ],
    "gain": -13.1,
    "sync": 0.02,
@@ -1504,7 +2051,7 @@
    "at": [
     "H",
     "from",
-    16.633
+    18.933
    ],
    "gain": -14.3,
    "sync": 0.06,
@@ -1516,7 +2063,7 @@
    "at": [
     "H",
     "from",
-    16.767
+    19.067
    ],
    "gain": -25.8,
    "fade_out": 0.3,
@@ -1528,7 +2075,7 @@
    "at": [
     "H",
     "from",
-    16.633
+    18.933
    ],
    "gain": -19.4,
    "in": 0.9,
@@ -1543,7 +2090,7 @@
    "at": [
     "H",
     "from",
-    16.867
+    19.167
    ],
    "gain": -26.7,
    "sync": 0.05,
@@ -1563,6 +2110,21 @@
    "sync": 0.0,
    "fade_out": 0.2,
    "note": " | level: clip peak -10.6 dBFS -> about -27 dBFS in the mix"
+  },
+  {
+   "label": "I his two steps to her",
+   "clip": "sfx_steps_stone",
+   "at": [
+    "I",
+    "from",
+    4.6
+   ],
+   "gain": -32.9,
+   "in": 1.0,
+   "len": 0.4,
+   "fade": 0.03,
+   "fade_out": 0.12,
+   "note": " | level: clip peak -2.3 dBFS -> about -29 dBFS in the mix"
   },
   {
    "label": "I the hug",

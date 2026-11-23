@@ -18,6 +18,7 @@ import { ROMEO, JULIET, FRIAR } from "../people";
 import { FriarBanner } from "../hud/index";
 import { P, wv, spot, camAt, faceAt, talk, wordAt, startOf, endOf, ky, accent, headBox, rel, REACT } from "./kit";
 import { h } from "./h";
+import { reach, hit, beat, span, rock, strokes, lineBody, leans, talkHead } from "./gest";
 
 const S = seg("D");
 const BENCH = spot("cell", "friarBench"), DOOR = spot("cell", "door");
@@ -34,6 +35,10 @@ const JU_PATH = [P("cell", -2.45, 0, -1.1), P("cell", -1.5, 0, -0.98), P("cell",
  *  the first restage, whose groom put his head through the inkpot and candle on the writing desk (clearance, f2786) */
 const JU_WED = P("cell", -0.32, 0, -0.82), RO_WED = P("cell", 0.48, 0, -0.78), FR_WED = P("cell", 0.08, 0, -1.42);
 const COUPLE = P("cell", 0.08, 0, -0.8), COUPLE_FACING = yawTo(COUPLE, FR_LEAN);
+/** the Friar's free hand while he leans round Romeo (he stands at FR_LEAN, his head 0.15 m to the right of his feet,
+ *  at x 1.15): on his chest, and up beside his eye, on Romeo's side of his head, never in front of his face. (Points
+ *  of the cell, not of his own frame: his feet point along the wall there and his body is turned to the lens.) */
+const FR_CHEST = P("cell", 1.08, 0.88, -1.16), FR_EYE = P("cell", 0.79, 1.24, -1.22);
 /** the step back for the wedding: back by the front wall, the three of them in one frame, small (no blessing close-up) */
 const WED_WIDE = { pos: wv("cell", [0.08, 1.55, 2.9]), look: wv("cell", [0.08, 1.3, -1.0]), fov: 46 };
 
@@ -45,6 +50,7 @@ export const SEG: Segment = {
     w.set.param("day", "monday");
     const d01 = startOf("D01"), d02 = startOf("D02"), d03 = startOf("D03"), d05 = startOf("D05"), d06 = startOf("D06");
     const tEyes = wordAt("D03", "eyes"), tFast = wordAt("D05", "fast");
+    const tHearts = wordAt("D03", "hearts"), tName = wordAt("D02", "name");
     // ---------------------------------------------------------------- the camera
     const k = (fr: number, c: CamKey, o: Partial<CamKey> = {}): CamKey => ({ ...c, f: fr, ...o });
     const benchLook = BENCH_CAM.look, frHead = wv("cell", [1.0, 1.22, -1.3]);
@@ -73,13 +79,21 @@ export const SEG: Segment = {
       : f < d03 - 6 ? yawTo(frAt, RO_IN)
       : f < d06 ? toLens
       : f < d06 + 6 ? THREE.MathUtils.lerp(toLens, yawTo(frAt, COUPLE), ky(f, [[d06, 0], [d06 + 6, 0.5]])) : frWed.facing;
+    // (v5, the owner: "Make their body or hands move as they speak") "not truly in their HEARTS, but in their EYES":
+    // his free hand (the basket hangs from the other) taps his chest on "hearts" and comes up beside his eye on
+    // "eyes", where the snap zoom finds it; he dips on each phrase; "Wisely and slow" is two slow nods of his whole
+    // body; on "violent ends" he shakes his head
+    const frK = ky(f, [[tHearts - 10, 0], [tHearts - 1, 1], [endOf("D03") + 6, 1], [endOf("D03") + 22, 0]]);
+    const frHand = FR_CHEST.clone().add(V(0, 0, -0.03 * hit(f, tHearts)))
+      .lerp(FR_EYE.clone().add(V(0.03 * beat(f, [tEyes, tEyes + 9], 2, 6), 0, 0)), ky(f, [[tEyes - 9, 0], [tEyes - 1, 1]]));
     fr.set({
       ...standing(frAt, frFacing, f, 3),
       pose: f >= d06 + 6 && frWed.moving ? frWed.pose : { kind: "hold", t: f / 30 },
+      hands: [reach(frHand, frK), null],
       expr: faceAt(f, [[0, "weary"], [d01 - 4, "dry"], [d03 - 2, "warn"], [endOf("D04") + REACT, "weary"], [tFast + REACT, "worried"], [d06 - 2, "warn"], [endOf("D06") + REACT, "weary"]]),
       ...talk("fr", f, 3),
-      lean: { roll: 9 * leanK, pitch: 4 * leanK },
-      head: accent("nod", f, tEyes) ?? undefined,
+      lean: leans({ roll: 9 * leanK, pitch: 4 * leanK }, { pitch: 2 * beat(f, strokes("D03", "hearts")) }, lineBody(f, "D05", { lean: 2, dip: 3, sway: 0, words: ["slow"] })),
+      head: talkHead("fr", f, 3, accent("nod", f, tEyes), accent("shake", f, wordAt("D06", "ends") - 4, { amp: 0.8 })),
       gaze: f >= d03 && f < endOf("D03") + 6 ? -0.5 : 0,
     });
 
@@ -95,13 +109,19 @@ export const SEG: Segment = {
     const roFacing = f >= tFast + 8 && f < d06 ? THREE.MathUtils.lerp(leg.facing, yawTo(leg.at, JU_PATH[2]), ky(f, [[tFast + 8, 0], [tFast + 18, 1]])) : leg.facing;
     const meet = P("cell", 0.08, 0.62, -0.7);
     const clasped = f >= d06 + 18;
+    const flick = ky(f, [[tName - 3, 0], [tName + 1, 1]]), swoon = span(f, d06 + 44, S.to + 40, 16, 1) * (2 + 1.5 * Math.sin((f - d06) * 0.08));
     ro.set({
       ...standing(leg.at, roFacing, f, 1),
       pose: leg.moving ? leg.pose : { kind: "idle", t: f / 30 },
-      hands: clasped ? [null, meet] : [null, null],
+      // (v5) "I have forgot that NAME": he brushes it away past his shoulder, on "name" (he shuffles into the frame
+      // through the first half of the line; the hand's place is given across the picture, not in his own frame: his
+      // feet point along the wall, his body is turned to the lens); then he rocks on his heels, beaming, through the
+      // Friar's sermon; at the wedding the two sway toward each other
+      hands: clasped ? [null, meet] : [reach(leg.at.clone().add(V(-0.14 - 0.1 * flick, 0.9 + 0.14 * flick, 0.25 - 0.05 * flick)), ky(f, [[tName - 12, 0], [tName - 3, 1], [tName + 12, 1], [tName + 26, 0]])), null],
+      lean: { roll: rock(f, endOf("D02") + 12, tFast + 4, 2.4, 0.14), pitch: swoon },
       expr: faceAt(f, [[0, "puppy"], [d02 - 2, "blank"], [endOf("D02") + 8, "puppy"], [tFast + 10, "dreamy"]]),   // eyes open until she runs in
       ...talk("ro", f, 1),
-      head: accent("pop", f, tFast + 10) ?? undefined,
+      head: talkHead("ro", f, 1, accent("pop", f, tFast + 10)),
       visible: roHere,
       hide: ["letter"],
     });
@@ -120,7 +140,7 @@ export const SEG: Segment = {
       pose: jl.moving ? jl.pose : { kind: "idle", t: f / 30 },
       hands: clasped ? [meet, null] : [null, null],
       expr: faceAt(f, [[0, "bossy"], [arriveAt + 6, "sure"], [d06 + 18, "swoon"]]),
-      lean: { pitch: -12 * skid },
+      lean: { pitch: -12 * skid + swoon },
       visible: f >= runFrom,
       hide: ["vial"],
     });

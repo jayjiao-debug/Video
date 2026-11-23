@@ -1,8 +1,10 @@
-// THE BROKEN LENS (script v2, H05 and scene I): she throws her camera on 「不拍了！」, it knocks the cup out of Romeo's
+// THE BROKEN LENS (script v2, H05 and scene I): she throws her camera on 「不拍了！」, it knocks the bottle out of Romeo's
 // hand and shatters; one big shard of the lens survives, and through it we see Juliet wake. Drawn UNDER her camera's UI
 // (the cracks are in the glass in front of the lens, the REC display is electronic and stays crisp above them).
 //   THROW_AT     the frame she throws (the first word of 不拍了)
-//   IMPACT_AT    the camera hits the cup and the glass breaks
+//   IMPACT_AT    the camera hits the bottle and the glass breaks, FLIGHT frames later: THE THROW IS IN SLOW MOTION
+//   worldF(f)    the world's own frame at film frame f (it runs slow through the flight): what moves in the picture
+//                (his hand, the torch flames, the dust) is timed by it, not by f
 //   shardAt(f)   { phase: "crack" | "dark" | "shard", k } or null
 //   <Shard f s /> the glass: the crack star and the flash at the impact, then the dark, then the one shard
 import React from "react";
@@ -12,8 +14,38 @@ import { line, seg } from "./story";
 import { clamp01 } from "../group/story";
 
 export const THROW_AT = capWord("H05", "不拍了").from;
-export const FLIGHT = 11;
+/** THE THROW IN SLOW MOTION (v5, the owner: "then we do a slow scene as the camera is being thrown, screen spinning in
+ *  a sense"). The flight takes FLIGHT frames of film (until v4: 11). The world runs at full speed for the throw's first
+ *  frames and for the last ones into the hit, and at SLOW_RATE of it between them: RAMP is the world's speed over the
+ *  flight's frames. */
+export const FLIGHT = 77;
 export const IMPACT_AT = THROW_AT + FLIGHT;
+const SLOW_RATE = 0.12;
+const RAMP: [number, number][] = [[0, 1], [4, 1], [12, SLOW_RATE], [FLIGHT - 10, SLOW_RATE], [FLIGHT - 3, 1], [FLIGHT, 1]];
+/** how fast the world runs, u film frames into the flight (1 = as the film) */
+export const flightRate = (u: number) => {
+  if (u <= 0 || u >= FLIGHT) return 1;
+  let i = 0; while (i < RAMP.length - 2 && u > RAMP[i + 1][0]) i++;
+  const [u0, r0] = RAMP[i], [u1, r1] = RAMP[i + 1];
+  return r0 + ((r1 - r0) * (u - u0)) / (u1 - u0);
+};
+/** the world's frames gone by, u film frames into the flight (the area under RAMP) */
+export const flown = (u: number) => {
+  const x = Math.min(FLIGHT, Math.max(0, u));
+  let a = 0;
+  for (let i = 0; i < RAMP.length - 1; i++) {
+    const [u0, r0] = RAMP[i], [u1, r1] = RAMP[i + 1];
+    if (x <= u0) break;
+    const e = Math.min(x, u1), re = r0 + ((r1 - r0) * (e - u0)) / (u1 - u0);
+    a += ((r0 + re) / 2) * (e - u0);
+  }
+  return a;
+};
+/** the whole flight in the world's frames (about 22: two thirds of a second for three metres) */
+export const FLOWN = flown(FLIGHT);
+/** THE WORLD'S FRAME at film frame f: the film's own until the throw, slow through the flight, and FLIGHT - FLOWN
+ *  behind from the hit to the end of scene H (scene I opens in the dark on the film's own frames again) */
+export const worldF = (f: number) => (f <= THROW_AT ? f : f >= IMPACT_AT ? f - (FLIGHT - FLOWN) : THROW_AT + flown(f - THROW_AT));
 /** the camera lies on the floor for this long after the impact before the picture goes dark */
 const SETTLE = 26, DARK_IN = 10;
 /** scene I: the shard's light comes back over SHARD_IN frames; it flickers on her last line; the power-off ends it */

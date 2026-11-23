@@ -1,6 +1,7 @@
 // SCENE I · the shard (认识第4天). Her camera lies on the stones, tilted, and one big shard of its lens survives: through
-// it the light comes back. The spilled bottle, his empty hand; he stares at it, then toward where it came from. Behind
-// him her fingers move; she sits up ("Where is my Romeo?"). He turns; they hug, and it holds four seconds while the lute
+// it the light comes back. The spilled bottle, his empty hand; he stands bent over it and stares, then toward where it
+// came from. Beside him her fingers move; she sits up ("Where is my Romeo?"). He turns and steps to her; they hug, and
+// it holds four seconds while the lute
 // comes back, slow. "Did the friar's letter not reach thee?" "What letter?" Both turn slowly and look up past the shard
 // to where she stands. Her last line (…拍不了了。我送。): in the cracked glass the tally turns to 插手 1, the shard
 // flickers, the power goes off, black, the end card.
@@ -12,23 +13,28 @@
 import * as THREE from "three";
 import { seg, type Segment } from "../story";
 import { povCam } from "../cam";
-import { V, standing, yawTo, seated } from "./common";
+import { V, standing, yawTo, seated, walkAlong } from "./common";
 import { VERBS } from "./common";
 import { ROMEO_BOTTLE, JULIET } from "../people";
 import { P, spot, camAt, faceAt, talk, startOf, endOf, ky, rel, lieDown, carry, lieQ, soft, REACT } from "./kit";
-import { KNEEL, JU_FEET, HEAD_DIR, RO_FACING } from "./segH";
+import { EMPTY, BEND, STAND, JU_FEET, HEAD_DIR, RO_FACING } from "./segH";
 import { seatOn, stoolSeat } from "../../../kit/day/rig/seats";
 import type { RigHead } from "../../group/kit/rig3d";
+import { reach } from "./gest";
 
 const S = seg("I");
 /** the reporter: standing where she threw from (they look up at her) */
 const HER = P("tomb", 0.35, 1.45, 1.3);
 /** Juliet sitting up on the bier's FRONT edge at its head end, her legs over the edge, turned to the lens and a little
- *  to him; Romeo up from his knees at the bier's end to stand at her left: the embrace side by side, cheek to cheek,
+ *  to him; Romeo steps from the bier's end (two short steps) to stand at her left: the embrace side by side, cheek to cheek,
  *  both faces to the lens on the floor (v5, 22 Nov: in profile at the bier's end the bier hid their bodies, her robe
  *  went into it, and the rig's short arms could not reach round each other) */
 const JU_SIT = P("tomb", 0.81, 0, -0.88), JU_FACING = 0.3;
 const RO_HUG = P("tomb", 1.38, 0, -0.62), RO_HUG_FACING = -0.6;
+/** where he stands when the light comes back: 14 cm nearer the bier than in scene H (he shifted his feet in the dark).
+ *  From the floor the shard's right edge is close behind him: at H's 1.6 his head went 30 px past it as he straightened
+ *  (still v28 f5800). He bends less here than over her in H, so his beret still clears her hair. */
+const AT = P("tomb", 1.46, 0, -1.0), UP_BEND = 7;
 /** the frames: the light is back, her fingers, she sits up (from .. sitUp), his turn, the hug */
 export const I_BEATS = {
   fingers: S.from + 34, sitFrom: S.from + 44, sitUp: S.from + 66, turnBack: endOf("I01") + REACT, hug: endOf("I01") + REACT + 16,
@@ -64,14 +70,17 @@ export const SEG: Segment = {
 
     // ---------------------------------------------------------------- Romeo
     const ro = w.actor(ROMEO_BOTTLE);
-    const toHer = yawTo(KNEEL, HER);
+    const toHer = yawTo(AT, HER);
     // stares at his empty hand, then toward where the camera came from; turns back to Juliet when she speaks; the hug;
     // then both look up at the reporter
     const lookCam = ky(f, [[S.from + 18, 0], [S.from + 30, 1]]);
     const back = ky(f, [[B.turnBack, 0], [B.turnBack + 12, 1]]);
     const up = ky(f, [[B.lookUp, 0], [B.lookUp + 20, 1]]);
+    // (v5: he stands, as in scene H; until v4 he rose from his knees here, the figure coming up out of the floor as it
+    // slid to her. Now he walks the two steps.)
     const rise = ky(f, [[B.turnBack + 4, 0], [B.hug, 1]]);
-    const roAt = KNEEL.clone().lerp(RO_HUG, rise);
+    const step = walkAlong([AT, RO_HUG], AT.distanceTo(RO_HUG) / ((B.hug - (B.turnBack + 4)) / 30), (f - (B.turnBack + 4)) / 30);
+    const roAt = step.at;
     const hugFacing = RO_HUG_FACING;
     let roFacing = THREE.MathUtils.lerp(RO_FACING, toHer, lookCam);
     if (back > 0) roFacing = THREE.MathUtils.lerp(roFacing, THREE.MathUtils.lerp(RO_FACING, hugFacing, rise), back);
@@ -87,11 +96,15 @@ export const SEG: Segment = {
     const roRoundHer = P("tomb", 0.95, 0.98, -0.96), juRoundHim = P("tomb", 1.3, 0.95, -0.78);
     ro.set({
       ...standing(roAt, roFacing, f, 1),
-      ...VERBS.kneel(1 - rise, roAt, 0),
-      pose: { kind: "hold", t: f / 30 },
-      // before he turns back, his empty right hand held where the bottle was
-      hands: hugging ? [roRoundHer, null]
-        : f < B.turnBack ? [rel(KNEEL, RO_FACING, -0.18, 0.84 - 0.1 * lookCam, 0.32), null] : [null, null],
+      pose: step.moving ? step.pose : { kind: "hold", t: f / 30 },
+      // bent over his empty hand; he straightens (not all the way: the shard's edge is close behind his head) as he
+      // looks toward where the camera came from, and stands up to her
+      lean: { pitch: BEND.after - (BEND.after - UP_BEND) * lookCam - UP_BEND * rise },
+      // his empty right hand held where the bottle was knocked out of it, the very point of scene H (measured from
+      // where he stood there: measured from AT it lay 14 cm nearer her and 6.5 cm in her hair, clearance f5747-5770);
+      // it sinks to his side as he looks toward where the camera came from (held on in the world while his body
+      // turned under it, its elbow flipped 18 cm in one frame, f5774)
+      hands: hugging ? [roRoundHer, null] : [reach(rel(STAND, RO_FACING, EMPTY[0], EMPTY[1], EMPTY[2]), 1 - lookCam), null],
       expr: faceAt(f, [[0, "blank"], [startOf("I01") + REACT, "caught"], [B.hug, "dreamy"], [startOf("I03") - 2, "blank"]]),
       ...roSay,
       head: tilted(roSay.head, -13 * hugK),

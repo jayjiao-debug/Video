@@ -14,7 +14,7 @@
 //   8  C12      TILT DOWN to his spot: empty; he is already running, the lens follows him to the wall  (he leaves)
 import * as THREE from "three";
 import { seg, type Segment } from "../story";
-import { povCam, punchIn, type CamKey } from "../cam";
+import { povCam, punchIn, CAM, type CamKey } from "../cam";
 import { V, standing, yawTo, walkAlong, speak, saying } from "./common";
 import { ROMEO, JULIET } from "../people";
 import { SplitDivider, EyeHearts } from "../hud/index";
@@ -23,6 +23,7 @@ import { h, frag } from "./h";
 import { FONT_STACK } from "../../../kit/day/hud/style";
 import { SPEAKER_COL } from "../hud";
 import { clamp01, easeInOutCubic } from "../../group/story";
+import { reach, hit, beat, rock, lineBody, leans, talkHead } from "./gest";
 
 const S = seg("C");
 const RAIL = spot("balcony", "julietRail"), BELOW = spot("balcony", "romeoBelow");
@@ -37,6 +38,16 @@ const TWIRL = { x: 0.25, y: 0.72, z: 0.1, r: 0.025, period: 24 };
 /** the split: the tear across the balcony's underside; it opens a few frames after the two names */
 export const SPLIT = { from: startOf("C08") - 3, open: endOf("C08") + 8, len: 20 };
 export const splitOpen = (f: number) => easeInOutCubic(clamp01((f - SPLIT.open) / SPLIT.len));
+/** "too rash, too unadvised, too sudden": her three counts */
+const COUNT3 = [wordAt("C07", "rash"), wordAt("C07", "unadvised"), wordAt("C07", "sudden")];
+/** his arm at her balcony (points in his own frame): thrown up on "east", sagging while he gets his breath, thrust
+ *  straight up beside his hat on "sun". (Until v4 one point, far out to his side: in her close on his face the hand
+ *  was at the frame's edge, under the part the app cuts off, and stood still for three seconds.) */
+const ARM_EAST = V(-0.55, 1.75, 0.1), ARM_SAG = V(-0.6, 1.42, 0.25), ARM_SUN = V(-0.42, 1.95, 0.05);
+/** from his left shoulder to the moon (his own frame: it hangs over the orchard wall to his left as he faces her).
+ *  Half way between up and out: his arm is 0.38 m long, and a hand held higher is hidden behind his own head */
+/** the oath's arm: how steeply it goes up toward the moon, in the picture's own plane (radians above level) */
+const MOON_UP = 0.5;
 /** the balcony slab's underside, where the tear lies (world) */
 const SLAB_UNDER = P("balcony", 0.25, 2.43, -0.47);
 /** his run: from the bushes along to the orchard wall and out past the right of the frame. (v4: 2.42 / 2.5 from 2.5 /
@@ -121,15 +132,22 @@ export const SEG: Segment = {
       ...standing(RAIL.at, RAIL.facing, f, 2),
       pose: juPose, hands: juHands ?? [null, null],
       // v3b (the owner: "give them expressive emotion showing they are in love"): smitten eyes on her famous line and on
-      // "my love as deep"; HEART EYES (the film's signature emote, in her close) as the line ends, through the reporter's
-      // "you met three hours ago?", until it lands; smitten again when she finds him under the balcony
-      expr: faceAt(f, [[0, "smitten"], [endOf("C05") + 4, "heartsSoft"], [caughtAt, "caught"], [c07 - 2, "sure"], [endOf("C07") + REACT, "swoon"],
+      // "my love as deep"; a soft smitten smile with hearts floating out of her eyes as the line ends, through the
+      // reporter's "you met three hours ago?", until it lands (v5: no heart eyes: "the floatinng heart is enough");
+      // smitten again when she finds him under the balcony
+      expr: faceAt(f, [[0, "smitten"], [endOf("C05") + 4, "smittenSoft"], [caughtAt, "caught"], [c07 - 2, "sure"], [endOf("C07") + REACT, "swoon"],
         [tSplitStop, "caught"], [SPLIT.open + 14, "smitten"], [c10 - 2, "bossy"], [endOf("C11") + REACT, "sure"]]),
       ...talk("ju", f, 2),
       gaze: f < c05 ? 0.5 : 0,
-      lookDown: looksDown, head: accent("jolt", f, tSplitStop) ?? (f >= c08 && f < tSplitStop ? { tilt: 7 } : undefined),
+      lookDown: looksDown, head: talkHead("ju", f, 2, accent("jolt", f, tSplitStop), f >= c08 && f < tSplitStop ? { tilt: 7 } : undefined),
       // (v3) "Thy purpose marriage, send me word tomorrow!": all business, she leans out over the rail to call it down
-      lean: { pitch: 11 * ky(f, [[c11 - 6, 0], [c11 + 6, 1], [endOf("C11"), 1], [endOf("C11") + 14, 0]]) },
+      // (v5, the owner: "Make their body or hands move as they speak") she sways as she sighs his name; she rocks a
+      // little on "my love as deep"; "too rash, too unadvised, too sudden" is counted off with three tips of her head
+      // and shoulders, one way and the other; she tips out at him to forbid the moon
+      lean: leans({ pitch: 11 * ky(f, [[c11 - 6, 0], [c11 + 6, 1], [endOf("C11"), 1], [endOf("C11") + 14, 0]]) },
+        lineBody(f, "C01", { lean: 0, dip: 0, sway: 2.2, rate: 0.075 }), lineBody(f, "C05", { lean: 2, dip: 1.2, sway: 1.5, rate: 0.07 }),
+        { pitch: 2.4 * beat(f, COUNT3, 3, 10), roll: 3.4 * (hit(f, COUNT3[0], 3, 12) - hit(f, COUNT3[1], 3, 12) + hit(f, COUNT3[2], 3, 12)) },
+        lineBody(f, "C10", { lean: 3, dip: 2.5, sway: 0 })),
       ...(shut !== undefined ? { blink: shut } : {}),
       hide: ["vial"],
     });
@@ -143,14 +161,23 @@ export const SEG: Segment = {
     if (interview || f < herCut) {
       // crouched in the bushes, three-quarter to her lens, pointing up behind him at the balcony
       roFacing = yawTo(BELOW.at, wv("balcony", RO_POS)) + 0.5;
-      const up = f >= tEast - 4;
+      const tk = talk("ro", f, 1);
       // the rise: crouched (sunk RISE.drop) until RISE.len frames before "sun", up by "sun" with a 3 cm overshoot
       const u = Math.min(1, Math.max(0, (f - (tSun - RISE.len)) / RISE.len)), e = u * u * (3 - 2 * u), over = u >= 1 ? 0.03 * Math.max(0, 1 - (f - tSun) / 6) * Math.sin(((f - tSun) / 6) * Math.PI) : 0;
+      // (v5) the arm moves with the words: up on "east", a sag, straight up on "sun"; through her "It's midnight" it
+      // wavers up there and he sways, still beaming
+      const feet = BELOW.at.clone().add(V(0, -RISE.drop * (1 - e) + over, 0));
+      const arm = ARM_EAST.clone().lerp(ARM_SAG, ky(f, [[tEast + 8, 0], [tSun - 12, 1]])).lerp(ARM_SUN, ky(f, [[tSun - 6, 0], [tSun, 1]]));
+      const wav = ky(f, [[tSun + 6, 0], [tSun + 18, 1]]), wa = (f - tSun) * 0.17;
+      arm.add(V(0.035 * wav * Math.sin(wa), 0.03 * wav * Math.cos(wa), 0));
       roState = {
-        at: BELOW.at.clone().add(V(0, -RISE.drop * (1 - e) + over, 0)),
-        hands: up ? [rel(BELOW.at, roFacing, -0.85, 1.65, 0.15), null] : [null, null],
+        at: feet,
+        hands: [reach(rel(feet, roFacing, arm.x, arm.y, arm.z), ky(f, [[tEast - 9, 0], [tEast - 1, 1]])), null],
+        lean: leans(lineBody(f, "C03", { lean: 4, dip: 3, sway: 0, words: ["Juliet"] }), { roll: rock(f, tSun + 6, hisCut + 12, 1.7, 0.1, 10, 1) }),
         expr: faceAt(f, [[0, "dreamy"], [tSun - 4, "smittenOpen"]]),
-        head: accent("pop", f, tSun) ?? undefined,
+        // (v5, the owner: "his mouth doesnt move when he speak in this scene": this branch never had his lip-sync)
+        ...tk,
+        head: talkHead("ro", f, 1, accent("pop", f, tSun)),
         lookDown: -6,
       };
     } else if (f < runFrom) {
@@ -159,19 +186,33 @@ export const SEG: Segment = {
       const turnK = ky(f, [[SPLIT.open + 2, 0], [SPLIT.open + 16, 1]]);
       roFacing = THREE.MathUtils.lerp(0.25, Math.PI * 0.88, turnK);
       const sighing = f >= c08 && f < tSplitStop;
-      const swear = f >= startOf("C09") - 4 && f < endOf("C09") + 8;
+      // (v5) THE OATH, acted: both hands to his heart and a bow on "Lady"; his arm sweeps up to the moon on "yonder",
+      // is drawn back and thrust at it on "swear"; when she forbids the moon it comes down slowly. (Until v4 the arm
+      // stood up from the first word and dropped when the line ended. And it was his right arm, out to the right of
+      // the picture: the moon hangs at the left. Now it is his left: his back is to her lens.)
+      const c09 = startOf("C09"), tYon = wordAt("C09", "yonder"), swearK = ky(f, [[c09 - 6, 0], [c09 + 2, 1], [c10 + 4, 1], [c10 + 24, 0]]);
+      const moonK = ky(f, [[tYon - 3, 0], [tYon + 7, 1]]), reachOut = 0.62 - 0.42 * hit(f, wordAt("C09", "swear") - 4, 5, 5);
+      // (the moon hangs at the upper left of this picture and his back is to the lens: the arm goes out in the picture's
+      // own plane, to the lens's left and up. Aimed at the moon itself it pointed away from the lens and stayed
+      // behind his own head: the rig's arm is 0.38 m and his head is 0.5 m across)
+      const toMoon = CAM.camAxes(camera).right.multiplyScalar(-Math.cos(MOON_UP)).add(V(0, Math.sin(MOON_UP), 0));
+      const oath = rel(roAt, roFacing, 0.07, 0.8, 0.13).lerp(rel(roAt, roFacing, 0.155, 1.0, 0.03).addScaledVector(toMoon, reachOut), moonK);
       roState = {
         hands: sighing ? [rel(roAt, roFacing, -0.05, 0.86, 0.2), rel(roAt, roFacing, 0.05, 0.86, 0.2)]
-          : swear ? [rel(roAt, roFacing, -0.78, 1.62, 0.4), rel(roAt, roFacing, 0.07, 0.8, 0.13)] : [null, null],
+          : swearK > 0 ? [reach(rel(roAt, roFacing, -0.07, 0.83, 0.15), swearK), reach(oath, swearK)] : [null, null],
+        lean: { pitch: 7 * hit(f, c09 + 3, 5, 16) - 4 * moonK * swearK },
         expr: faceAt(f, [[0, "dreamy"], [tSplitStop, "blank"], [SPLIT.open + 14, "smitten"], [endOf("C10") + REACT, "puppy"], [c11 + 20, "smitten"]]),
         ...(sighing && saying("ju", f) ? speak(saying("ju", f)!, f, 1) : talk("ro", f, 1)),
         ...(sighing ? { blink: 1 } : {}),
-        head: accent("jolt", f, tSplitStop) ?? (sighing ? { tilt: -7 } : undefined),
+        head: talkHead("ro", f, 1, accent("jolt", f, tSplitStop), sighing ? { tilt: -7 } : undefined),
         lookDown: -20 * turnK, turn: turnK > 0.5 ? 0.55 : undefined,
       };
     } else {
       roAt = ruN.at; roFacing = ruN.facing;
-      roState = { pose: ruN.pose, expr: faceAt(f, [[0, "smittenOpen"]]), ...talk("ro", f, 1), turn: 0.4 };
+      // (v5) "At the hour of nine!": he throws an arm up and back at her as he runs (up over his own head it was
+      // hidden behind his hat)
+      roState = { pose: ruN.pose, expr: faceAt(f, [[0, "smittenOpen"]]), ...talk("ro", f, 1), turn: 0.4,
+        hands: [reach(rel(roAt, roFacing, -0.16, 1.45, -0.75), ky(f, [[c12 - 2, 0], [c12 + 7, 1]])), null] };
     }
     ro.set({
       ...standing(roAt, roFacing, f, 1),
@@ -193,9 +234,9 @@ export const SEG: Segment = {
         splitNames(f, y, open),
       );
     }
-    // --- her HEART EYES in her close (v4, the owner: "heart coming out their eyes"): a heart beats out of each eye as
-    // "my love as deep" ends and small hearts float up out of them, through the reporter's "you met three hours ago?";
-    // when that lands every heart in the air bursts
+    // --- her hearts in her close (v4, the owner: "heart coming out their eyes"): as "my love as deep" ends small hearts
+    // float up out of her eyes, through the reporter's "you met three hours ago?"; when that lands every heart in the
+    // air bursts
     if (f >= endOf("C05") + 4 && f < caughtAt + 5 && f >= hisCut && f < c08)
       // (smaller and not as far: this close her head is wider than the frame, and full-size hearts sailed up through
       // the REC row)

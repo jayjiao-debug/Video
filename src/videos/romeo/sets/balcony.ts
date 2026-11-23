@@ -26,7 +26,8 @@ import type { Kit } from "../../../kit/props/kit";
 import type { CastLight } from "../../group/kit/cast";
 import { BAKED_LIGHT, type PlaceDef } from "../../../kit/day/sets";
 import type { PlaceBuild, PlaceLook, ParamValue } from "../../../kit/day/types";
-import { lightRig, paint, rng, css, blotch, skyDome, Batch, groundG, type SkyStops, type G2 } from "../../../kit/sets/okit";
+import { lightRig, paint, rng, css, blotch, skyDome, Batch, type SkyStops, type G2 } from "../../../kit/sets/okit";
+import { groundGrid } from "./parts/ground";
 import { ISLAND } from "../places";
 import { maker, lathe, blobG, bentLimb, panoramaRing, wrapBlotch, glowSprite, leafClusterTex, crossCardsG, tileUV, Part, NOINK, shade, shadeHex } from "./parts/a_util";
 
@@ -208,8 +209,10 @@ const buildBalcony = (K: Kit): PlaceBuild => {
     const shM = Mk.tex(shutterTex(), 0.85);
     for (const w of WIN) {
       Mk.mesh("balcony.window.shutter", new THREE.BoxGeometry(w.x1 - w.x0, w.y1 - w.y0, 0.06).translate(X0 + (w.x0 + w.x1) / 2, (w.y0 + w.y1) / 2, WALL_Z - 0.2), shM);
-      Mk.mesh("balcony.window.sill", tileUV(new THREE.BoxGeometry(w.x1 - w.x0 + 0.24, 0.1, 0.26).translate(X0 + (w.x0 + w.x1) / 2, w.y0 - 0.05, WALL_Z + 0.03), 0.6), stoneM);
-      Mk.mesh("balcony.window.lintel", tileUV(new THREE.BoxGeometry(w.x1 - w.x0 + 0.24, 0.16, 0.2).translate(X0 + (w.x0 + w.x1) / 2, w.y1 + 0.08, WALL_Z + 0.02), 0.6), stoneM);
+      // (v5: the sill 4 mm over the hole's own foot and the lintel 4 mm under its head: each lay in the hole's plane and
+      // the pair flickered, stone against stucco: parts/ground.ts, the audit of surfaces in one plane)
+      Mk.mesh("balcony.window.sill", tileUV(new THREE.BoxGeometry(w.x1 - w.x0 + 0.24, 0.1, 0.26).translate(X0 + (w.x0 + w.x1) / 2, w.y0 - 0.046, WALL_Z + 0.03), 0.6), stoneM);
+      Mk.mesh("balcony.window.lintel", tileUV(new THREE.BoxGeometry(w.x1 - w.x0 + 0.24, 0.16, 0.2).translate(X0 + (w.x0 + w.x1) / 2, w.y1 + 0.076, WALL_Z + 0.02), 0.6), stoneM);
     }
   }
   // ============================================================================================ THE DOORWAY AND HER ROOM
@@ -218,14 +221,16 @@ const buildBalcony = (K: Kit): PlaceBuild => {
     const room = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 2.4).translate(X0 + DOOR_CX, FLOOR + 1.2, WALL_Z - 0.88), new THREE.MeshBasicMaterial({ map: roomTex(), fog: false }));
     room.layers.set(NOINK); room.name = "balcony.room"; group.add(room);
     const roomSide = Mk.flat("#b07a4e", 0.9);
-    Mk.mesh("balcony.room.floor", new THREE.BoxGeometry(1.6, 0.1, 0.6).translate(X0 + DOOR_CX, FLOOR - 0.05, WALL_Z - 0.58), Mk.flat("#9a6a44", 0.85));
+    // (v5: the room's floor starts where the wall's own doorway ends, z -0.30: its first 2 cm lay in the doorway's foot)
+    Mk.mesh("balcony.room.floor", new THREE.BoxGeometry(1.6, 0.1, 0.58).translate(X0 + DOOR_CX, FLOOR - 0.05, WALL_Z - 0.59), Mk.flat("#9a6a44", 0.85));
     Mk.mesh("balcony.room.sideL", new THREE.BoxGeometry(0.1, 2.4, 0.6).translate(X0 + DOOR_CX - 0.8, FLOOR + 1.2, WALL_Z - 0.58), roomSide);
     Mk.mesh("balcony.room.sideR", new THREE.BoxGeometry(0.1, 2.4, 0.6).translate(X0 + DOOR_CX + 0.8, FLOOR + 1.2, WALL_Z - 0.58), roomSide);
     Mk.mesh("balcony.room.ceil", new THREE.BoxGeometry(1.7, 0.1, 0.6).translate(X0 + DOOR_CX, FLOOR + 2.45, WALL_Z - 0.58), roomSide);
     // a flat stone surround round the door (8 cm proud: under the camera-distance step band, reads as one line)
     const sur = new THREE.Shape(); const o = 0.16;
     sur.moveTo(DOOR.x0 - o, FLOOR); sur.lineTo(DOOR.x0, FLOOR); sur.lineTo(DOOR.x0, DOOR_SPRING); sur.absarc(DOOR_CX, DOOR_SPRING, DOOR_R, Math.PI, 0, true); sur.lineTo(DOOR.x1, FLOOR); sur.lineTo(DOOR.x1 + o, FLOOR); sur.lineTo(DOOR.x1 + o, DOOR_SPRING); sur.absarc(DOOR_CX, DOOR_SPRING, DOOR_R + o, 0, Math.PI, false); sur.lineTo(DOOR.x0 - o, FLOOR);
-    const sg = new THREE.ExtrudeGeometry(sur, { depth: 0.08, bevelEnabled: false, curveSegments: 20 }).translate(X0, 0, WALL_Z - 0.02);
+    // (v5: from the wall's own face, not 2 cm inside it: its inner sides lay in the doorway's own sides there)
+    const sg = new THREE.ExtrudeGeometry(sur, { depth: 0.06, bevelEnabled: false, curveSegments: 20 }).translate(X0, 0, WALL_Z);
     Mk.mesh("balcony.door.surround", sg, stoneM);
     // the keystone
     Mk.mesh("balcony.door.key", new THREE.BoxGeometry(0.2, 0.3, 0.12).translate(X0 + DOOR_CX, DOOR.top + 0.08, WALL_Z + 0.04), stoneM);
@@ -263,7 +268,8 @@ const buildBalcony = (K: Kit): PlaceBuild => {
     // three scroll corbels (an S profile in z-y, extruded along x)
     const prof: [number, number][] = [];
     for (let i = 0; i <= 14; i++) { const t = i / 14; prof.push([WALL_Z + 0.85 * (1 - Math.pow(1 - t, 1.6)), FLOOR - 0.28 - 0.62 * (1 - t) + 0.07 * Math.sin(Math.PI * t)]); }
-    const cs = new THREE.Shape([new THREE.Vector2(WALL_Z, FLOOR - 0.28), ...prof.slice().reverse().map(([z, y]) => new THREE.Vector2(z, y)), new THREE.Vector2(WALL_Z, FLOOR - 0.95)]);
+    // (v5: no spike down the wall under the scroll's foot: it was a 5 cm face lying in the wall's own plane)
+    const cs = new THREE.Shape([new THREE.Vector2(WALL_Z, FLOOR - 0.28), ...prof.slice().reverse().map(([z, y]) => new THREE.Vector2(z, y))]);
     for (const cx of [-0.55, 0.25, 1.05]) {
       // the shape's x is world z; rotateY(-90 deg) maps (x, y, z) -> (-z, y, x): the extrusion runs along -x
       B.add(stoneM, new THREE.ExtrudeGeometry(cs, { depth: 0.2, bevelEnabled: false, curveSegments: 8 }).rotateY(-Math.PI / 2).translate(X0 + cx + 0.1, 0, 0));
@@ -311,7 +317,8 @@ const buildBalcony = (K: Kit): PlaceBuild => {
   // ============================================================================================ THE ORCHARD
   {
     const S = 2048, gtex = groundPaint(S);
-    Mk.mesh("balcony.ground", groundG(X0, 0.5, 20, 300), Mk.tex(gtex, 0.95), { cast: false });
+    // (v5: a grid, not the kit's one 600 m quad, which lands a pixel off on every frame: parts/ground.ts)
+    Mk.mesh("balcony.ground", groundGrid(X0, 0.5, 20, 300, { fine: 14, at: [X0, 2] }), Mk.tex(gtex, 0.95), { cast: false });
   }
   const leafM = K.flat("#4c6c4a", { map: foliageTex(361, false), rough: 0.95 });
   const pearM = K.flat("#4a6a46", { map: foliageTex(363, true), rough: 0.95 });

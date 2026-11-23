@@ -7,9 +7,10 @@ import * as THREE from "three";
 import { C, V, M4, Part, turned, limb, ball, prism, paint, hash, NOINK, type Kit } from "../../../kit/props/kit";
 import { horse, horseGait, horseSeat, type Coat } from "../../../kit/props/horse";
 import type { Hook } from "../../../kit/props/things";
+import { bottleLabel } from "./skull";
 
 export type { Hook };
-export type PropO = { t?: number; amount?: number; go?: number; lying?: boolean; stand?: boolean };
+export type PropO = { t?: number; amount?: number; go?: number; gait?: "stand" | "walk" | "gallop"; lying?: boolean; stand?: boolean };
 export type Build = (K: Kit, g: THREE.Group) => ((o: PropO, g: THREE.Group) => void) | void;
 const TAU = Math.PI * 2;
 
@@ -55,17 +56,23 @@ export const DARK_BOTTLE = { h: 0.102, r: 0.028 };
 /** the dark bottle's body profile ([radius, y] from the foot up): flat shoulders, a short neck (Juliet's vial is round
  *  and pale teal: this one is square-shouldered, taller, almost black plum) */
 export const darkBottleProfile: [number, number][] = [[0, 0], [0.026, 0], [0.028, 0.006], [0.028, 0.062], [0.024, 0.07], [0.011, 0.077], [0.0095, 0.088], [0, 0.088]];
-export const darkGlassTex = () => paint(64, 128, (c, w, h) => {
-  c.fillStyle = "#4a3246"; c.fillRect(0, 0, w, h);
-  c.fillStyle = "#6e5068"; c.fillRect(w * 0.12, h * 0.12, w * 0.06, h * 0.7);           // a long highlight down the side
-  c.fillStyle = "#e4d8bc"; c.fillRect(0, h * 0.42, w, h * 0.22);                        // a plain paper label round the body
-  c.fillStyle = "#6a5a50"; for (let i = 0; i < 3; i++) c.fillRect(w * (0.55 + 0.1 * i), h * 0.48, w * 0.05, h * 0.1);
-});
-/** THE DARK BOTTLE (Romeo's poison from the Mantuan apothecary): standing; put({ lying: true }) lays it on its side */
+/** the body's profile resampled evenly along its length (so the map's v is the length along the glass), and where its
+ *  straight side begins and ends on that v */
+const DARK_N = 44, DARK_SIDE: [number, number] = (() => {
+  const len = [0]; for (let i = 1; i < darkBottleProfile.length; i++) len.push(len[i - 1] + Math.hypot(darkBottleProfile[i][0] - darkBottleProfile[i - 1][0], darkBottleProfile[i][1] - darkBottleProfile[i - 1][1]));
+  return [len[2] / len[len.length - 1], len[3] / len[len.length - 1]];
+})();
+/** the bottle's paint: plum glass, a paper label with a SKULL (props/skull.ts; v5, the owner: "Draw a skull label on the
+ *  potion") */
+export const darkGlassTex = () => paint(512, 256, (c, w, h) => bottleLabel(c, w, h, lerpN(DARK_SIDE[0], DARK_SIDE[1], 0.06), lerpN(DARK_SIDE[0], DARK_SIDE[1], 0.97), { sx: 1.5 }));
+const lerpN = (a: number, b: number, t: number) => a + (b - a) * t;
+/** THE DARK BOTTLE (Romeo's poison from the Mantuan apothecary): standing; put({ lying: true }) lays it on its side,
+ *  its label up */
 export const darkBottle: Build = (K, g) => {
   const inner = new THREE.Group(); g.add(inner);
   const P = new Part(K);
-  P.add(K.flat("#ffffff", { map: darkGlassTex(), rough: 0.25 }), turned(darkBottleProfile, 24), 0.004);
+  // (the skull is in the middle of the map, at -z on the lathe: turned to +x, which is up when the bottle lies)
+  P.add(K.flat("#ffffff", { map: darkGlassTex(), rough: 0.25 }), turned(darkBottleProfile, 32, DARK_N).rotateY(-Math.PI / 2), 0.004);
   P.add(K.flat("#5a4636", { rough: 0.8 }), turned([[0, 0.084], [0.0115, 0.084], [0.0125, 0.1], [0.008, DARK_BOTTLE.h], [0, DARK_BOTTLE.h]], 16), 0.0035);   // the cork, a dark wax cap
   P.into(inner, "darkBottle");
   return (o) => {
@@ -199,6 +206,7 @@ export const RIDER = { go: 9, cloak: "#6a6458" };
 const RIDER_COAT: Coat = { body: "#a49c90", mane: "#5a5450", tack: "saddle", cloth: "#8c867a" };
 /** A HORSE WITH A SMALL CLOAKED RIDER, seen far away (kit horse, a grey; a hooded cloak, no face detail). put({ go })
  *  0..1 = leaving: it moves RIDER.go metres along its facing, at a gallop while 0 < go < 1 (eased in), standing at 0;
+ *  put({ gait }) = the shot moves it itself along a path (the origin stays under the horse) and names the gait;
  *  t = the gait's seconds */
 export const horseRider: Build = (K, g) => {
   const body = new THREE.Group(); g.add(body);
@@ -211,8 +219,8 @@ export const horseRider: Build = (K, g) => {
   P.add(cloakLo, new THREE.ConeGeometry(0.06, 0.16, 10).rotateX(-0.5).translate(0, 0.72, -0.1), 0.01);                               // the hood's point
   P.into(rider, "horseRider.rider");
   return (o) => {
-    const go = Math.max(0, Math.min(1, o.go ?? 0)), e = go * go * (3 - 2 * go) * 0.4 + go * 0.6, pose = go > 0.001 && go < 0.999 ? "gallop" : "stand", t = o.t ?? 0;
-    body.position.set(0, 0, RIDER.go * e);
+    const go = Math.max(0, Math.min(1, o.go ?? 0)), e = go * go * (3 - 2 * go) * 0.4 + go * 0.6, pose = o.gait ?? (go > 0.001 && go < 0.999 ? "gallop" : "stand"), t = o.t ?? 0;
+    body.position.set(0, 0, o.gait ? 0 : RIDER.go * e);
     hook({ t, pose, rider: RIDER.cloak }, body);
     const s = horseSeat(V(0, 0, 0), 0, pose, t), G = horseGait(pose, t);
     rider.position.set(s.x, s.y - 0.06, s.z); rider.rotation.set(G.pitch * 0.6, 0, 0);

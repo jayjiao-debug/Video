@@ -661,9 +661,9 @@
     }
    ],
    "emo": "small",
-   "pic": "Dusk, an empty street. Romeo with his back to us, a sword at his feet, a red cap on the stones. No body in frame. Still.",
+   "pic": "Dusk, the street after the duel (v5: the duel itself opens the scene, without words). Romeo with his back to us, his rapier dropped on the stones beside Tybalt's; Tybalt lies behind him. No blood. Still.",
    "tts": "[quietly, uneasy] 罗密欧？",
-   "pre": 1.2
+   "pre": 5.8
   },
   {
    "n": 33,
@@ -1088,7 +1088,7 @@
    "emo": "breaking",
    "pic": "The picture lurches. The camera leaves her hands: torch streaks, the bier, his hand filling the frame. Glass breaks. Stone. A crack splits the picture. Black. The REC display stutters and dies. Two seconds of silence.",
    "tts": "[breaking] 我只拍，不插……[shouting] 不拍了！",
-   "after": 3.2
+   "after": 5.4
   },
   {
    "n": 56,

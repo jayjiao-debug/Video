@@ -82,16 +82,16 @@ export const STAGE = {
     spots: {
       romeoBack: { at: [0.0, 0, -1.4], facing: Math.PI, note: "Romeo standing with his back to us in the middle of the street" } as Spot,
       sword: { at: [0.25, 0, -1.1], facing: 0.4, note: "a sword lying on the stones at his feet" } as Spot,
-      cap: { at: [-0.5, 0, -1.6], facing: 0, note: "a red cap lying on the stones" } as Spot,
+      cap: { at: [-0.5, 0, -1.6], facing: 0, note: "where a red cap lay on the stones until v4 (the owner on the v4 cut: remove the red blob). The spot is kept: the two rapiers lie near it" } as Spot,
       exit: { at: [-2.8, 0, -3.5], facing: Math.PI * 0.8, note: "where he runs off (a side alley on the left)" } as Spot,
       boarded: { at: [2.3, 0, -0.2], facing: -Math.PI / 2, note: "a house front on the right (its face at x 2.3) with a ground-floor window (sill 0.90, head 1.75, 0.5 wide, 0.34 deep) that can be boarded shut (param 'boards' 0..1: planks appear one by one from the top down); scene 7 looks at it straight on. A letter stands on its inner sill at [2.47, 0.9, -0.2]" } as Spot,
     },
     cams: {
-      back: { pos: [0.2, 1.5, 1.6], look: [0.0, 1.0, -1.5], fov: 46, note: "the turn: Romeo's back, the sword and the cap on the stones" } as CamSpot,
+      back: { pos: [0.2, 1.5, 1.6], look: [0.0, 1.0, -1.5], fov: 46, note: "the turn: Romeo's back, Tybalt down behind him, the two rapiers on the stones" } as CamSpot,
       window: { pos: [0.3, 1.5, -0.2], look: [2.0, 1.3, -0.2], fov: 40, note: "scene 7's match cut: the window straight on (set.param light \"day\")" } as CamSpot,
       wide: { pos: [1.7, 1.9, 4.2], look: [-1.0, 1.25, -5.0], fov: 50, note: "for showing the set: Romeo on the stones, the alley under its arch on the left, the street running to the piazza and the low sun" } as CamSpot,
     },
-    dressing: "paved street between plain Verona houses (warm stucco, arches, shutters, a balcony or two), an alley on the left, a well or a fountain basin further back, nothing red except the cap. No blood, no body.",
+    dressing: "paved street between plain Verona houses (warm stucco, arches, shutters, a balcony or two), an alley on the left, a well or a fountain basin further back, nothing red. (v5: the duel is shown; Tybalt lies on the stones afterwards, the two rapiers side by side. No blood, and nothing goes through a body.)",
   },
   // ---------------------------------------------------------------- scene 6b: Tuesday night, Juliet's room
   bedroom: {
@@ -124,11 +124,11 @@ export const STAGE = {
     when: "deep night, two wall torches, warm pools of light in black stone; the quiet scene",
     spots: {
       bier: { at: [0.0, 0, -1.2], facing: 0, note: "the stone bier (top at y 0.62, 2.0 long along x, 0.8 deep): Juliet lies on it near its front edge (z -1.05), head at x +0.68 toward Romeo, hands folded" } as Spot,
-      romeoKneel: { at: [1.3, 0, -1.0], facing: -Math.PI / 2, note: "Romeo kneeling at the bier's head end (right), facing along it to her face: both faces to the lens (v2, 22 Nov: at the front side he hid her face and the lens saw only her feet)" } as Spot,
+      romeoStand: { at: [1.6, 0, -1.0], facing: -Math.PI / 2, note: "Romeo standing at the bier's head end (right), bent over her, facing along it to her face: both faces to the lens (v2, 22 Nov: at the front side he hid her face and the lens saw only her feet; v5: standing and bending, until v4 he knelt sunk into the floor)" } as Spot,
       shardFloor: { at: [0.95, 0.02, 1.05], facing: 0, note: "where the thrown camera lands: on the floor in front of the bier's head end, tilted, looking up at the two of them" } as Spot,
     },
     cams: {
-      push: { pos: [0.7, 1.45, 1.9], look: [1.03, 0.74, -1.02], fov: 50, note: "the one slow push of the quiet scene (fov 50 -> 42): her face and his across the bier's head end, the stair and its glowing door behind them; from 3 m so that both heads (R 0.24) stay inside the phone frame (v4 stills: from 2.4 m they sat on its edges)" } as CamSpot,
+      push: { pos: [0.75, 1.45, 1.9], look: [1.11, 0.8, -1.02], fov: 54, note: "the one slow push of the quiet scene (fov 54 -> 49.5): her face on the bier and Romeo standing at her head, bent over her, the stair and its glowing door behind them; from 3 m, and wide enough for him on his feet (v5: x 0.42 to 1.8 inside the phone frame; until v4 he knelt and it went from 50 to 42)" } as CamSpot,
       floor: { pos: [0.95, 0.12, 1.05], look: [1.1, 0.82, -0.92], fov: 64, roll: 0.14, note: "scene 9: the camera on the floor in front of the bier's head end, tilted, looking up at the two of them through the shard (v5: from 2 m, so the pair stays inside the phone frame)" } as CamSpot & { roll: number },
       set: { pos: [1.9, 1.4, 2.7], look: [-0.15, 1.05, -2.0], fov: 54, note: "set view (the beauty angle): the vault, the bier under its cloth, the torch and the Capulet arms on the back wall, the stair to the door" } as CamSpot,
     },

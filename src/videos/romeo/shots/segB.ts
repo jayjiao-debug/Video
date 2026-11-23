@@ -22,6 +22,7 @@ import { P, spot, camAt, ck, faceAt, talk, wordAt, startOf, endOf, ky, accent, h
 import { h, frag } from "./h";
 import { JU_TAB } from "../fx";
 import { dancers } from "./dance";
+import { reach, hit, span, rock, lineBody, talkHead } from "./gest";
 
 const S = seg("B");
 const RW = spot("hall", "romeoWall"), JT = spot("hall", "julietTiptoe");
@@ -64,15 +65,20 @@ export const SEG: Segment = {
     const ro = w.actor(ROMEO);
     const struck = wordAt("B02", "heart");
     const roLook = f >= b02 - 8 ? yawTo(RO_AT, JT.at) : RW.facing + 0.4;
+    // (v5: hands and bodies move with the words) "Did my HEART love till now?": his free hand goes to his heart on the
+    // word and stays there; he leans after her and sways on his feet; on "Who?" the mask he has forgotten bobs
+    const heartK = ky(f, [[struck - 5, 0], [struck + 4, 1]]), smit = span(f, struck, S.to + 30, 12, 1);
     ro.set({
       ...standing(RO_AT, roLook, f, 1),
       // his half mask on its stick, held low at the chest (never in front of the face)
-      pose: { kind: "hold", t: f / 30 }, hands: [null, rel(RO_AT, roLook, 0.15, 0.72, 0.2)],
-      // v3b (the owner: "give them expressive emotion showing they are in love"): struck, his eyes go big with a heart
-      // in their light (smitten); asked about Rosaline he answers "Who?" with HEART EYES (the film's signature emote)
-      expr: faceAt(f, [[0, "hollow"], [b02 - 8, "smitten"], [startOf("B04") - 3, "hearts"], [endOf("B04") + 18, "smitten"]]),
+      pose: { kind: "hold", t: f / 30 }, hands: [reach(rel(RO_AT, roLook, -0.06, 0.86, 0.17), heartK), rel(RO_AT, roLook, 0.15, 0.72 + 0.05 * hit(f, startOf("B04") + 1, 3, 10), 0.2)],
+      lean: { pitch: 4 * smit, roll: rock(f, struck, S.to + 30, 2.4, 0.085, 14, 1) },
+      // v3b (the owner: "give them expressive emotion showing they are in love"): struck, his eyes go big and bright
+      // (smitten); asked about Rosaline he answers "Who?" with an open grin and hearts floating out of his eyes (v5,
+      // the owner: "This eyes turning into heart is too much, the floatinng heart is enough": no heart IN an eye)
+      expr: faceAt(f, [[0, "hollow"], [b02 - 8, "smitten"], [startOf("B04") - 3, "smittenOpen"], [endOf("B04") + 18, "smitten"]]),
       ...talk("ro", f, 1), gaze: f >= b02 - 8 ? 0.5 : -0.5, lookDown: soft(f, (g) => (g < b02 - 8 ? 8 : 0), 2),      // (his head comes up with his turn to her: five frames)
-      head: accent("pop", f, struck) ?? undefined, hide: ["letter"],
+      head: talkHead("ro", f, 1, accent("pop", f, struck)), hide: ["letter"],
     });
     // --- Juliet across the hall: on tiptoe, staring back at him; pointing on her order
     const ju = w.actor(JULIET);
@@ -84,7 +90,9 @@ export const SEG: Segment = {
       ...standing(JT.at.clone().add(V(0, tip, 0)), yawTo(JT.at, RO_AT), f, 2),
       pose: pointing ? { kind: "point", t: (f - b06) / 30, arm: 0 } : f >= huff && f < huff + 24 ? { kind: "wave", t: (f - huff) / 30, arm: 1 } : { kind: "idle", t: f / 30 },
       expr: faceAt(f, [[0, "smitten"], [b06 - 6, "bossy"], [huff, "huffy"], [startOf("B08") + 4, "smitten"]]),
-      ...talk("ju", f, 2), gaze: -0.5, hide: ["vial"],
+      ...talk("ju", f, 2), head: talkHead("ju", f, 2), gaze: -0.5, hide: ["vial"],
+      // (v5) the order is given with her whole body: she tips toward him on "Go" and on "name"
+      lean: lineBody(f, "B06", { lean: 4, dip: 3.5, sway: 0, words: ["name"] }),
     });
     // --- the ball goes on: two masked couples round the dance floor
     dancers(w, f, S.from);
@@ -94,13 +102,13 @@ export const SEG: Segment = {
     // left beside or above it and would fall back onto the 插手 tally just as it blinks on 我只拍 (stills v8, f950)
     const tabFrom = JU_TAB.from, tabHold = JU_TAB.hold;     // fx.tsx: the tally steps aside while its banner hangs
     const tab = switched && f >= tabFrom && f < tabFrom + tabHold ? h(NameTab, { key: "tab", f, from: tabFrom, who: "juliet", box: headBox(w, ju), hold: tabHold }) : null;
-    // --- what comes out of their eyes (v4, the owner: "heart coming out their eyes"). His HEART EYES on "Who?": a heart
-    // beats out of each and small hearts float off toward her (she is off the frame's right), all gone before the cut.
-    // Hers on the other side of the cut, mirrored and smaller (no heart eyes yet: hers are on the balcony): a few
-    // float off to the left, toward him, until she starts giving orders. Then her huff when the reporter will not go.
+    // --- what comes out of their eyes (v4, the owner: "heart coming out their eyes"). On "Who?" small hearts float out
+    // of his eyes toward her (she is off the frame's right), all gone before the cut. Hers on the other side of the
+    // cut, mirrored and smaller: a few float off to the left, toward him, until she starts giving orders. Then her
+    // huff when the reporter will not go. (v5: floating hearts only; no heart eyes, no heart beating out of the eye)
     const b04 = startOf("B04");
     const hisHearts = !switched ? h(EyeHearts, { key: "hh", f, eyes: eyesPx(w, ro), from: b04 - 2, to: Math.min(endOf("B04") + 8, b05 - 3 - HEARTS.life), dir: [0.8, -0.6] }) : null;
-    const herHearts = switched ? h(EyeHearts, { key: "jh", f, eyes: eyesPx(w, ju), from: b05 + 1, to: b06 - 6 - HEARTS.life, dir: [-0.75, -0.65], beat: false, size: 0.8 }) : null;
+    const herHearts = switched ? h(EyeHearts, { key: "jh", f, eyes: eyesPx(w, ju), from: b05 + 1, to: b06 - 6 - HEARTS.life, dir: [-0.75, -0.65], size: 0.8 }) : null;
     const nose = switched ? facePx(w, ju, -9, 17) : null, u = switched ? Math.abs(facePx(w, ju, 10, 0).x - facePx(w, ju, -10, 0).x) / 20 : 0;
     const puff = nose && nose.on > 0.5 ? h(Huff, { key: "hf", f, at: huff + 1, x: nose.x, y: nose.y, dir: [-1, -0.1], r: 5.2 * u }) : null;
     const overlays = frag(hisHearts, herHearts, puff, tab);

@@ -174,7 +174,9 @@ export const ZERO = (() => {
 })();
 /** the tally's 1: a thin flag, a fat stem, a foot */
 export const ONE = "M-6,-39 L12,-44 C13,-12 12,16 10,36 L-8,36 C-6,12 -6,-12 -6,-39 Z M-6,-39 L-6,-26 C-13,-19 -19,-15 -26,-13 L-28,-21 C-19,-25 -12,-31 -6,-39 Z M-22,43 L24,43 L24,35 C10,37 -8,37 -22,35 Z";
-const EMBLEM = { heart: HEART, arrow: ARROW, leaf: LEAF, "0": ZERO, "1": ONE } as const;
+/** a rapier, point up (Tybalt's wax: the duellist) */
+export const BLADE = "M0,-44 L5,-31 L5,14 L20,14 L20,22 L5,22 L5,33 C10,35 10,44 0,45 C-10,44 -10,35 -5,33 L-5,22 L-20,22 L-20,14 L-5,14 L-5,-31 Z";
+const EMBLEM = { heart: HEART, arrow: ARROW, leaf: LEAF, blade: BLADE, "0": ZERO, "1": ONE } as const;
 export type Emblem = keyof typeof EMBLEM;
 
 /** A STROKE OF THE QUILL from (x0, y0) to (x1, y1), bellied by `sag` px, `th` px thick at its middle and tapering to
