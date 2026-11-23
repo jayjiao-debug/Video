@@ -119,6 +119,8 @@ export const shine = (o: { k?: number } = {}): Acc => {
   return {
     name: "shine", slots: [], key: `rjShine|${k}`,
     face(f) {
+      // (the love eyes draw their own lights: eyes.ts)
+      if (f.expr === "lick" || f.expr === "speechless") return;
       for (const s of [-1, 1]) {
         const e = eyeOf(f, s);
         const dot = (x: number, y: number, r: number) => f.fill(f.arc(x, y, r, r * 1.08, 0, 360, 14), "#ffffff", 0);
@@ -307,3 +309,50 @@ export const tears = (o: { col?: string; w?: number } = {}): Acc => {
     },
   };
 };
+
+// ------------------------------------------------------------------------------------------------------- v3 (23 Nov)
+/** ROMEO: a beauty mark under one eye (泪痣, the lovesick one's mark), below its outer corner. side = 1: his left */
+export const mole = (o: { col?: string; side?: 1 | -1; r?: number } = {}): Acc => {
+  const col = o.col ?? "#3b2a26", s = o.side ?? 1, r = o.r ?? 0.95;
+  return {
+    name: "mole", slots: [], key: `rjMole|${col}|${s}|${r}`,
+    face(f) {
+      const e = eyeOf(f, s);
+      const ox = e.kind === "none" ? s * (f.sp + 6) : (s > 0 ? e.right : e.left) - s * 1.4, oy = e.kind === "none" ? 7.5 : Math.max(e.bottom, e.cy + 3) + 4.2;
+      f.fill(f.arc(ox, oy, r, r, 0, 360, 10), col, 0);
+    },
+  };
+};
+/** JULIET (大小姐): a lined upper lid with a wing past the outer corner, over the rig's eye. On a shut or dot eye
+ *  only the wing. w = the line's weight */
+export const liner = (o: { col?: string; w?: number; wing?: number } = {}): Acc => {
+  const w = o.w ?? 2.4, wing = o.wing ?? 1;
+  return {
+    name: "liner", slots: [], key: `rjLiner|${o.col ?? ""}|${w}|${wing}`,
+    face(f) {
+      const col = o.col ?? f.INK;
+      for (const s of [-1, 1]) {
+        const e = eyeOf(f, s);
+        if (e.kind === "none") continue;
+        const ox = s > 0 ? e.right : e.left, oy = e.kind === "dot" ? e.top + 2.6 : (firstInk(f, ox - s * 1.0, -9, 12) ?? e.top);
+        // the wing: up and out from the outer corner, tapering
+        f.fill([[ox - s * 2.6, oy - 0.9], [ox + s * 3.8 * wing, oy - 2.9 * wing], [ox - s * 0.4, oy + 1.0]], col, 0);
+        if (e.kind === "lid") f.line(f.quad([lerp(e.left, e.right, s > 0 ? 0.35 : 0.65), e.top + 0.4], [lerp(e.left, e.right, s > 0 ? 0.7 : 0.3), e.top - 0.5], [ox - s * 1.0, oy - 0.4], 6), w, col);
+      }
+    },
+  };
+};
+
+// ------------------------------------------------------------------------------------------------------- the masks
+/** A FEAST GUEST'S DOMINO: a gold half mask round both eyes, drawn under them (the eyes show on it), its outer ends
+ *  swept up into points, a dip over the bridge of the nose and a notch under it. The guests are faces in the crowd: the
+ *  mask keeps them anonymous and says "a masked ball" at a glance. */
+export const domino = (o: { col?: string } = {}): Acc => ({
+  name: "domino", slots: [], key: `rjDomino|${o.col ?? ""}`,
+  faceUnder(f) {
+    const sp = f.sp, col = o.col ?? "#d9a531";
+    const top: P2[] = [[-(sp + 13), -4.5], [-(sp + 10), -8.2], [-(sp + 4), -9.4], [-(sp - 3), -9.2], [-(sp - 8), -7.6], [-2.4, -5.2], [2.4, -5.2], [sp - 8, -7.6], [sp - 3, -9.2], [sp + 4, -9.4], [sp + 10, -8.2], [sp + 13, -4.5]];
+    const bottom: P2[] = [[sp + 10.5, 2.5], [sp + 6, 7], [sp - 1, 8.2], [sp - 7, 6.6], [2.2, 3.4], [-2.2, 3.4], [-(sp - 7), 6.6], [-(sp - 1), 8.2], [-(sp + 6), 7], [-(sp + 10.5), 2.5]];
+    f.fill([...top, ...bottom], col, 1.3);
+  },
+});

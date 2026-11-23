@@ -69,10 +69,14 @@ export const rel = VERBS.rel;
  *    pivot  her feet on the bier (world);  headDir  the way her head lies (world, horizontal unit: (-1, 0, 0) on the bier)
  *    k      0 = standing .. 1 = lying (sitting up in between: she rises about her hips) */
 const _m = new THREE.Matrix4(), _q = new THREE.Quaternion(), _cam = new THREE.PerspectiveCamera();
-export function lieDown(w: World, r: Rig, pivot: THREE.Vector3, headDir: THREE.Vector3, k = 1) {
+export function lieDown(w: World, r: Rig, pivot: THREE.Vector3, headDir: THREE.Vector3, k = 1, lift = 0) {
   if (k <= 0) return;
-  // R: the figure's up (+y) goes to headDir, its front (+z) goes up (+y); a sit-up turns it back about the hip axis
-  const up = headDir.clone().normalize(), front = V(0, 1, 0), side = up.clone().cross(front).normalize();
+  // R: the figure's up (+y) goes to headDir, its front (+z) goes up (+y); a sit-up turns it back about the hip axis.
+  // lift (rad): the head end raised about the feet (v3: the sculpted hair is 3.6 cm thick at the back of the head and
+  // went into the bier's cloth; it lies on the hair as on a pillow)
+  const hd = headDir.clone().normalize(), Y = V(0, 1, 0);
+  const up = hd.clone().multiplyScalar(Math.cos(lift)).addScaledVector(Y, Math.sin(lift)), front = Y.clone().multiplyScalar(Math.cos(lift)).addScaledVector(hd, -Math.sin(lift));
+  const side = up.clone().cross(front).normalize();
   const full = new THREE.Matrix4().makeBasis(side, up, front);   // columns: images of x, y, z
   const qFull = new THREE.Quaternion().setFromRotationMatrix(full);
   _q.identity().slerp(qFull, k);
