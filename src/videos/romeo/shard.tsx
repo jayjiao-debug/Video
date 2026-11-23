@@ -18,8 +18,6 @@ export const IMPACT_AT = THROW_AT + FLIGHT;
 const SETTLE = 26, DARK_IN = 10;
 /** scene I: the shard's light comes back over SHARD_IN frames; it flickers on her last line; the power-off ends it */
 const SHARD_IN = 22;
-/** the flicker Juliet sits up behind (shots/segI I_BEATS.sitUp): the shard goes nearly dark for a few frames */
-export const SIT_FLICKER = () => seg("I").from + 50;
 const OFF = () => line("I04").to + 22;
 
 export type ShardState = { phase: "crack" | "dark" | "shard"; k: number; t: number };
@@ -88,8 +86,8 @@ export const Shard: React.FC<{ f: number; s: ShardState }> = ({ f, s }) => {
   }
   // the shard: the dark everywhere but inside it, its edges catching light, a flicker on her last line
   const I04 = line("I04"), flick = f >= I04.from ? 0.5 + 0.5 * Math.cos((f - I04.from) * 1.9) * (f % 7 === 0 ? 1 : 0.3) : 1;
-  const sit = Math.abs(f - SIT_FLICKER()) <= 2 ? 0.12 : Math.abs(f - SIT_FLICKER()) === 3 ? 0.6 : 1;
-  const open = s.k * sit * (f >= I04.from ? 0.75 + 0.25 * flick : 1);
+  // (until v3 the shard went dark for five frames here and Juliet was sitting when it came back; she sits up in view now)
+  const open = s.k * (f >= I04.from ? 0.75 + 0.25 * flick : 1);
   const hole = `M0,0 H1080 V1920 H0 Z M${pts(SHARD).replace(/ /g, " L")} Z`;
   return (
     <AbsoluteFill>

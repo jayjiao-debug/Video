@@ -22,7 +22,7 @@ import { beard } from "../../kit/acc/facehair";
 import { moustache } from "../group/kit/rigacc";
 import { lashes, lips, cheeks, shine, jewel, freckles, softBrows, bushyBrows, ageLines, nose, fullBeard, tears, mole, liner, domino } from "./acc/face";
 import { hairShell, drills, tiara, comma, sideLocks, type ShellO } from "./acc/hair";
-import { backFall, backBow, napeLocks } from "./acc/backhair";
+import { backFall, backBow, napeLocks, templeLocks } from "./acc/backhair";
 
 export type Person = KitPerson & { limbs?: { hand?: string; arm?: string }; legs?: { leg?: string; foot?: string }; nape?: boolean; bald?: boolean };
 export function addPerson(rc: RigCast, p: Person): Rig {
@@ -70,7 +70,18 @@ export const ROMEO_HAIR: ShellO = {
 /** (v3's hair as on the first sheet, for the before/after sheet: the ring round the crown) */
 const ROMEO_HAIR_V3: ShellO = { ...ROMEO_HAIR, ringEl: undefined, ringA: undefined, ringN: undefined };
 const ROMEO_BERET = (): Acc => beretOn({ on: ROMEO_HAIR, col: COL.blueDeep, tilt: [12, -16], foot: 38, top: 48, size: 1 });
-const romeoHead = (hair: ShellO = ROMEO_HAIR): Acc[] => [hairShell(hair), comma({ col: COL.hairRomeo }), sideLocks({ col: COL.hairRomeo, locks: [{ a: -84, y0: 0.5, y1: -0.36, wide: 0.21, r: 1.08, curl: -0.08, peak: 0.2 }, { a: 84, y0: 0.5, y1: -0.3, wide: 0.21, r: 1.08, curl: -0.08, peak: 0.2 }, { a: -104, y0: 0.42, y1: -0.2, wide: 0.19, r: 1.11, curl: -0.12 }, { a: 104, y0: 0.42, y1: -0.16, wide: 0.19, r: 1.11, curl: -0.12 }] })];
+/** v3b's locks beside his face (kit leaves standing out of the head: two boards beside each cheek), for the before/after sheet */
+const ROMEO_LOCKS_V3B = (): Acc => sideLocks({ col: COL.hairRomeo, locks: [{ a: -84, y0: 0.5, y1: -0.36, wide: 0.21, r: 1.08, curl: -0.08, peak: 0.2 }, { a: 84, y0: 0.5, y1: -0.3, wide: 0.21, r: 1.08, curl: -0.08, peak: 0.2 }, { a: -104, y0: 0.42, y1: -0.2, wide: 0.19, r: 1.11, curl: -0.12 }, { a: 104, y0: 0.42, y1: -0.16, wide: 0.19, r: 1.11, curl: -0.12 }] });
+/** v4 (the owner, 23 Nov: "polish the character designs"): fine pointed locks that lie along the side of his head
+ *  (backhair.ts templeLocks): one in front of each ear, half turned to the front, and one behind it that flicks out
+ *  past the head's edge (tousled). Uneven lengths, as his swept fringe is */
+const ROMEO_LOCKS = (): Acc => templeLocks({ col: COL.hairRomeo, locks: [
+  { a0: -82, a1: -76, y0: 0.5, y1: -0.24, wide: 0.2, out: 0.075, tip: 0.05, twist: 30 }, { a0: 82, a1: 77, y0: 0.5, y1: -0.16, wide: 0.19, out: 0.075, tip: 0.05, twist: 30 },
+  { a0: -100, a1: -113, y0: 0.44, y1: -0.12, wide: 0.22, out: 0.07, tip: 0.17 }, { a0: 100, a1: 114, y0: 0.44, y1: -0.2, wide: 0.22, out: 0.07, tip: 0.18 },
+  // (a longer one behind each ear, down to the nape locks: the skin behind the ear showed as a pale strip from the side)
+  { a0: -116, a1: -126, y0: 0.26, y1: -0.46, wide: 0.26, out: 0.06, tip: 0.13 }, { a0: 116, a1: 127, y0: 0.26, y1: -0.4, wide: 0.26, out: 0.06, tip: 0.13 },
+] });
+const romeoHead = (hair: ShellO = ROMEO_HAIR, locks: Acc = ROMEO_LOCKS()): Acc[] => [hairShell(hair), comma({ col: COL.hairRomeo }), locks];
 export const ROMEO: Person = {
   name: "romeo", scale: 1.03, look: ROMEO_LOOK, limbs: { hand: COL.skinRomeo, arm: COL.blue }, legs: { leg: "#c7d3ea", foot: "#7a5232" }, nape: true,
   expr: face("neutral", "smile", "sad") as unknown as Expr,
@@ -82,12 +93,14 @@ export const ROMEO: Person = {
   // only as two flaps behind the ears)
   acc: (): Acc[] => [doublet({ col: COL.blue }), shortCape({ col: COL.blueDeep, lining: COL.gold }), peplum({ col: COL.blueDeep }), puffs({ col: COL.blue, pane: COL.cream }), ...romeoHead(), ROMEO_BERET(), napeLocks({ on: ROMEO_HAIR, col: COL.hairRomeo }), letter(), softBrows({ weight: 3.4 }), mole(), loveEyes(), cheeks({ k: 0.32 }), shine()],
 };
+/** Romeo as v3b drew him (the before/after sheet of v4 only): the board-like locks beside his face */
+export const ROMEO_V3B: Person = { ...ROMEO, name: "romeoV3b", acc: (): Acc[] => ROMEO.acc().map((x) => (x.name === "sideLocks" ? ROMEO_LOCKS_V3B() : x)) };
 /** (the sheet's name for him in the beret: the film's Romeo) */
 export const ROMEO_HAT: Person = { ...ROMEO, name: "romeoHat" };
 /** v3 as sent on the first sheet: the round beret (its band sank into the sculpted hair: the hair came through it) */
 export const ROMEO_HAT_V3: Person = {
   ...ROMEO, name: "romeoHatV3",
-  acc: (): Acc[] => [doublet({ col: COL.blue }), shortCape({ col: COL.blueDeep, lining: COL.gold }), peplum({ col: COL.blueDeep }), puffs({ col: COL.blue, pane: COL.cream }), ...romeoHead(ROMEO_HAIR_V3), beret({ col: COL.blueDeep, r0: 0.9, base: 0.74, tilt: [12, -16], size: 0.95 }), curls(), letter(), softBrows({ weight: 3.4 }), mole(), cheeks({ k: 0.32 }), shine()],
+  acc: (): Acc[] => [doublet({ col: COL.blue }), shortCape({ col: COL.blueDeep, lining: COL.gold }), peplum({ col: COL.blueDeep }), puffs({ col: COL.blue, pane: COL.cream }), ...romeoHead(ROMEO_HAIR_V3, ROMEO_LOCKS_V3B()), beret({ col: COL.blueDeep, r0: 0.9, base: 0.74, tilt: [12, -16], size: 0.95 }), curls(), letter(), softBrows({ weight: 3.4 }), mole(), cheeks({ k: 0.32 }), shine()],
 };
 /** Romeo as v2 drew him (the before/after sheet only) */
 export const ROMEO_V2: Person = {
@@ -107,12 +120,19 @@ export const JULIET_HAIR: ShellO = {
   thF: 0.085, thS: 0.15, thB: 0.15, top: 1.27, featherF: 8, lift: [{ a: 0, el: 62, w: 40, h: 0.05 }], relief: 0.03, ridges: { n: 22, amp: 0.025 }, hat: 56,
   col: COL.hairJuliet, light: COL.blondeLight, deep: COL.blondeDeep, ring: COL.blondeRing, part: 40, sideTo: 100, backFrom: 128,
 };
+const JULIET_LOCKS_V3B = (): Acc => sideLocks({ col: COL.hairJuliet, locks: [{ a: -78, y0: 0.52, y1: -0.42, wide: 0.24, r: 1.07, curl: 0.05, peak: 0.2 }, { a: 78, y0: 0.52, y1: -0.36, wide: 0.24, r: 1.07, curl: 0.05, peak: 0.2 }] });
+const JULIET_LOCKS = (): Acc => templeLocks({ col: COL.hairJuliet, locks: [
+  { a0: -80, a1: -74, y0: 0.52, y1: -0.46, wide: 0.24, out: 0.095, tip: 0.07, twist: 38 }, { a0: 80, a1: 74, y0: 0.52, y1: -0.4, wide: 0.24, out: 0.095, tip: 0.07, twist: 38 },
+] });
 export const JULIET: Person = {
   // (hair "bob", not v2's "long": the rig hangs a long fall behind the body for "long" whatever the accessories say, and
   // under the shell its top showed as two lobes at the nape)
   name: "juliet", scale: 0.97, look: { ...JULIET_LOOK, hair: "bob" }, limbs: { hand: COL.skinJuliet, arm: COL.red }, nape: true, expr: face("smile", "smile", "neutral") as unknown as Expr,
   acc: (): Acc[] => [robe({ col: COL.red, band: COL.gold, sash: false }), gown({ col: COL.red }), girdleEnd(), puffs({ col: COL.red, pane: COL.cream, size: 0.046 }),
-    hairShell(JULIET_HAIR), sideLocks({ col: COL.hairJuliet, locks: [{ a: -78, y0: 0.52, y1: -0.42, wide: 0.24, r: 1.07, curl: 0.05, peak: 0.2 }, { a: 78, y0: 0.52, y1: -0.36, wide: 0.24, r: 1.07, curl: 0.05, peak: 0.2 }] }), drills({ col: COL.hairJuliet, light: COL.blondeLight, deep: COL.blondeDeep }), tiara({ on: JULIET_HAIR, lean: 24 }),
+    // v4 ("polish the character designs"): the lock beside each cheek is a long fine point lying along her head, half
+    // turned to the front (v3b's stood out of the head like a board), and the drill curls' bows sit behind it on the
+    // side of her head (hair.ts drills: on the face side their inner loop read as a red streak by her eye)
+    hairShell(JULIET_HAIR), JULIET_LOCKS(), drills({ col: COL.hairJuliet, light: COL.blondeLight, deep: COL.blondeDeep }), tiara({ on: JULIET_HAIR, lean: 24 }),
     // v3b (the owner, 23 Nov: "v3 juliet her eyes are weird, try learning from Ra's daughter"): her eyes are drawn the
     // way 拉的女儿's were (eyes.ts herEyes: the rig's eye wiped, one lid line with her liner's wing, a round ink pupil with
     // its lights), in place of v3's three loose strokes over the rig's dot (lashes, liner, shine)
@@ -122,6 +142,8 @@ export const JULIET: Person = {
     // body, as 拉的女儿's was, so a turn of her head does not swing it through her back)
     backBow({ on: JULIET_HAIR }), backFall({ col: COL.hairJuliet, light: COL.blondeLight, deep: COL.blondeDeep, ring: COL.blondeRing })],
 };
+/** Juliet as v3b drew her (the before/after sheet of v4 only): the board-like side locks, the bows on the face side */
+export const JULIET_V3B: Person = { ...JULIET, name: "julietV3b", acc: (): Acc[] => JULIET.acc().map((x) => (x.name === "sideLocks" ? JULIET_LOCKS_V3B() : x.name === "drills" ? drills({ col: COL.hairJuliet, light: COL.blondeLight, deep: COL.blondeDeep, bowAt: "face" }) : x)) };
 /** Juliet as the first v3 sheet drew her eyes (the before/after sheet only) */
 export const JULIET_V3: Person = { ...JULIET, name: "julietV3", acc: (): Acc[] => [...JULIET.acc().filter((a) => !["herEyes", "cheeks", "backBow", "backFall"].includes(a.name)), lashes({ len: 1.3 }), liner(), cheeks({ k: 0.5 }), shine()] };
 /** Juliet as v2 drew her (the before/after sheet only) */
@@ -139,7 +161,7 @@ export const friar = (o: { beard?: "none" | "goatee" | "full" } = {}): Person =>
   const bk = o.beard ?? "full";
   return {
     name: `friar${bk === "full" ? "" : "_" + bk}`, look: FRIAR_LOOK, limbs: { hand: COL.skinFriar, arm: COL.habit }, bald: true, expr: face("neutral", "smile", "sad") as unknown as Expr,
-    acc: (): Acc[] => [robe({ col: COL.habit, band: COL.habitDeep, sash: false }), habit({ col: COL.habit }), ropeEnd(), cowl({ col: COL.habitDeep }), hairRing(), herbBasket(),
+    acc: (): Acc[] => [robe({ col: COL.habit, band: COL.habitDeep, sash: false }), habit({ col: COL.habit }), ropeEnd(), cowl({ col: COL.habitDeep }), hairRing({ burns: 0.5 }), herbBasket(),
       ...(bk === "goatee" ? [beard({ kind: "goatee", col: FRIAR_BEARD })] : bk === "full" ? [fullBeard({ col: FRIAR_BEARD }), moustache({ kind: "walrus", col: FRIAR_BEARD })] : []),
       bushyBrows(), ageLines(), nose(), cheeks({ k: 0.3, col: "#e8907c" })],
   };
@@ -168,7 +190,7 @@ export const YOUNG_FRIAR: Person = {
   // young: a brown ring of hair lying close (the old Friar's grey puffs read as a grey visor on him from the side), soft
   // brown brows, no age lines
   acc: (): Acc[] => [robe({ col: COL.habit, band: COL.habitDeep, sash: false }), habit({ col: COL.habit }), ropeEnd(), cowl({ col: COL.habitDeep }),
-    hairRing({ col: "#6b4a2e", puff: 0.15 }), softBrows({ col: "#5a3c24" }), nose(), cheeks({ k: 0.3, col: "#e8907c" }), letter({ hand: 0 })],
+    hairRing({ col: "#6b4a2e", puff: 0.15, burns: 0.3 }), softBrows({ col: "#5a3c24" }), nose(), cheeks({ k: 0.3, col: "#e8907c" }), letter({ hand: 0 })],
 };
 /** THE FEAST'S DANCERS (scene B, v3: "less moving around"; the script always had dancers in the hall): masked Capulet
  *  guests in muted colours (the leads keep the strongest blue and red), a gold domino each, nothing in their hands */
@@ -186,7 +208,7 @@ export const GUEST_MAN_A = guest("guestManA", { lady: false, col: "#7a3446", dee
 export const GUEST_LADY_B = guest("guestLadyB", { lady: true, col: "#76608f", deep: "#53426a", hair: "bun", hairCol: "#a7743e", seed: 2129 });
 export const GUEST_MAN_B = guest("guestManB", { lady: false, col: "#6c5d35", deep: "#4c4124", hair: "side", hairCol: "#3b2a1e", seed: 2137 });
 
-export const PEOPLE = { romeoV2: ROMEO_V2, julietV2: JULIET_V2, friarVial: FRIAR_VIAL, friarLetter: FRIAR_LETTER, youngFriar: YOUNG_FRIAR, romeoMask: ROMEO_MASK, romeoBottle: ROMEO_BOTTLE, friarQuill: FRIAR_QUILL, romeoBare: ROMEO_BARE, romeoHat: ROMEO_HAT, romeoHatV3: ROMEO_HAT_V3, julietV3: JULIET_V3, romeoCry: ROMEO_CRY, romeo: ROMEO, juliet: JULIET, friar: FRIAR, friarGoatee: friar({ beard: "goatee" }), friarBare: friar({ beard: "none" }), guestLadyA: GUEST_LADY_A, guestManA: GUEST_MAN_A, guestLadyB: GUEST_LADY_B, guestManB: GUEST_MAN_B } satisfies Record<string, Person>;
+export const PEOPLE = { romeoV3b: ROMEO_V3B, julietV3b: JULIET_V3B, romeoV2: ROMEO_V2, julietV2: JULIET_V2, friarVial: FRIAR_VIAL, friarLetter: FRIAR_LETTER, youngFriar: YOUNG_FRIAR, romeoMask: ROMEO_MASK, romeoBottle: ROMEO_BOTTLE, friarQuill: FRIAR_QUILL, romeoBare: ROMEO_BARE, romeoHat: ROMEO_HAT, romeoHatV3: ROMEO_HAT_V3, julietV3: JULIET_V3, romeoCry: ROMEO_CRY, romeo: ROMEO, juliet: JULIET, friar: FRIAR, friarGoatee: friar({ beard: "goatee" }), friarBare: friar({ beard: "none" }), guestLadyA: GUEST_LADY_A, guestManA: GUEST_MAN_A, guestLadyB: GUEST_LADY_B, guestManB: GUEST_MAN_B } satisfies Record<string, Person>;
 export type PersonKey = keyof typeof PEOPLE;
 /** FACES by name (preview: expr "<name>"). Romeo: puppy (his resting face), dreamy, wail, blank, hollow.
  *  Juliet: sure (her resting face), bossy, swoon, caught, brave. The Friar: weary (resting), dry, worried, warn. */
@@ -203,6 +225,10 @@ export const FACES: Record<string, Expr | RigFace> = {
   smitten: face("lick", "smile", "relief", "smile"), smittenOpen: face("lick", "relief_open", "relief", "smile"), hearts: face("speechless", "relief_open", "relief", "relief_open"),
   // (hers: the small smile with the tip of the tongue, not his big grin: she is the 大小姐)
   heartsSoft: face("speechless", "relief", "relief", "relief"),
+  // v4 (the owner: "the tears and other expressions need to be bettered"): her huff when the reporter will not run her
+  // errand: narrowed eyes under level brows, a turned-down mouth, the red anger mark by her eye (and a puff of breath,
+  // hud/emotes.tsx Huff)
+  huffy: face("huff", "stern", "huff", "rage"),
   weary: face("neutral", "smile", "sad"), dry: face("deadpan", "smug", "smug", "neutral"), worried: face("neutral", "nervous", "sad", "neutral"), warn: face("neutral", "neutral", "stern", "neutral"),
 };
 /** test looks: one per kit hair kind (preview: who "hair:curly") */

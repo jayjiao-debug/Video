@@ -71,7 +71,7 @@ function mantua(w: Parameters<Segment["pose"]>[0], f: number) {
   w.prop("horseRider").put(RIDER_AT, { rot: RIDER.facing, t: f / 30, go: ky(f, [[G_CUT, 0.15], [g02 + 30, 1]]) });
   // ---------------------------------------------------------------- Romeo
   const ro = w.actor(ROMEO_BOTTLE);
-  const outLeg = walkAlong([LENS.at, P("mantua", 0.35, 0, -4.2), P("mantua", 0.5, 0, -8.0)], 1.0, (f - walkOff) / 30);
+  const outLeg = walkAlong([LENS.at, P("mantua", 0.35, 0, -4.2), P("mantua", 0.5, 0, -8.0)], 1.0, (f - walkOff) / 30, { easeOut: 0 });      // (he walks out of sight)
   const leaving = f >= walkOff;
   const turnK = ky(f, [[turnAway, 0], [turnAway + 10, 1]]);
   const at = leaving ? outLeg.at : f >= walkIn ? inLeg.at : FAR.at;

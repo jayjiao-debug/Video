@@ -37,8 +37,8 @@ const outFrom = (pos: number[], uv: number[], idx: number[], m: number, from: V3
 /** A POINTED LOCK along the curve p0 -> p1 -> p2 (head units, mapped to metres by toM): `wide` across the direction
  *  `side` (made square to the curve: a lock lies flat ON the head, where the kit's leaf stands out of it as a fin),
  *  `deep` thick the other way, widest at `peak` of its length, coming to a point at p2 and to nothing at p0 (the
- *  root, buried in the shell). Closed. */
-export const lockGeo = (toM: (v: V3) => V3, p0: V3, p1: V3, p2: V3, side: V3, wide: number, deep: number, peak = 0.45) => {
+ *  root, buried in the shell); pow = how fast it narrows (0.6: full with a short point; 1: a long fine point). Closed. */
+export const lockGeo = (toM: (v: V3) => V3, p0: V3, p1: V3, p2: V3, side: V3, wide: number, deep: number, peak = 0.45, pow = 0.6) => {
   const NS = 26, NCl = 14, pos: number[] = [], uv: number[] = [], idx: number[] = [], v = V(), c = V(), T = V(), A = V(), B = V();
   const at = (t: number) => { const s = 1 - t; return c.set(0, 0, 0).addScaledVector(p0, s * s).addScaledVector(p1, 2 * s * t).addScaledVector(p2, t * t); };
   const e = Math.log(0.5) / Math.log(clamp(peak, 0.1, 0.9));
@@ -47,7 +47,7 @@ export const lockGeo = (toM: (v: V3) => V3, p0: V3, p1: V3, p2: V3, side: V3, wi
     const t = i / NS, s = 1 - t;
     T.set(0, 0, 0).addScaledVector(p0, -2 * s).addScaledVector(p1, 2 * s - 2 * t).addScaledVector(p2, 2 * t).normalize();
     A.copy(side).addScaledVector(T, -side.dot(T)).normalize(); B.crossVectors(T, A).normalize();
-    const k = Math.sin(Math.PI * t ** e) ** 0.6, w = (wide / 2) * k, d = (deep / 2) * (0.4 + 0.6 * k);
+    const k = Math.sin(Math.PI * t ** e) ** pow, w = (wide / 2) * k, d = (deep / 2) * (0.4 + 0.6 * k);
     at(t);
     for (let j = 0; j < NCl; j++) { const p = (j / NCl) * Math.PI * 2; toM(v.copy(c).addScaledVector(A, w * Math.cos(p)).addScaledVector(B, d * Math.sin(p))); pos.push(v.x, v.y, v.z); uv.push(j / NCl, t); }
   }
@@ -213,3 +213,29 @@ export const napeLocks = (o: { on: ShellO; col: string; locks?: [number, number,
     },
   };
 };
+
+// ------------------------------------------------------------------------------------------- beside the face (v4)
+/** THE LOCKS BESIDE THE FACE (v4, 23 Nov, the owner: "polish the character designs"). v3's side locks were kit leaves
+ *  standing out of the head like fins: from the front two boards hung beside each cheek, with strand lines that read
+ *  as wood grain. These LIE ALONG the side of the head and come to a long fine point: from under the hair's edge at
+ *  azimuth a0, height y0 down to a1, y1 (deg, head units; + = the person's left), `wide` across, `out` off the ball
+ *  along the way and `tip` off it at the point (a flick), turned `twist` deg out of the head's surface (0 = lying
+ *  flat on it, the way a lock over the ear lies; 40 = half turned to the front, so it shows from the front too) */
+export type TempleLock = { a0: number; a1: number; y0: number; y1: number; wide: number; out?: number; tip?: number; twist?: number; deep?: number; peak?: number; pow?: number };
+export const templeLocks = (o: { col: string; locks: TempleLock[] }): Acc => ({
+  name: "sideLocks", slots: [], key: ["rjTempleLocks", o.col, JSON.stringify(o.locks)].join("|"),
+  build(b) {
+    const on = (aD: number, y: number, out: number) => { const a = rad(aD), el = Math.asin(clamp(y, -0.97, 0.97)), r = 1 + out, ce = Math.cos(el); return V(r * ce * Math.sin(a), r * Math.sin(el), r * ce * Math.cos(a)); };
+    for (const L of o.locks) {
+      const out = L.out ?? 0.05, deep = L.deep ?? 0.075;
+      const p0 = on(L.a0, L.y0, -0.02), p2 = on(L.a1, L.y1, L.tip ?? out);
+      // (the middle of the curve stands `out` off the ball: the chord between the ends sags into it)
+      const mid = p0.clone().add(p2).multiplyScalar(0.5), ml = mid.length(), p1 = mid.clone().multiplyScalar((2 * (1 + out + deep * 0.5) - ml) / ml);
+      const am = rad((L.a0 + L.a1) / 2), tang = V(Math.cos(am), 0, -Math.sin(am)).multiplyScalar(Math.sign(am) || 1), rdl = V(Math.sin(am), 0, Math.cos(am)), tw = rad(L.twist ?? 0);
+      // (twist: the edge nearer the face stays on the cheek and the edge behind it stands out, the way a lock hangs
+      // beside a face, so its outer side shows from the front)
+      const side = tang.clone().multiplyScalar(-Math.cos(tw)).addScaledVector(rdl, -Math.sin(tw));
+      b.solid("head", lockGeo(b.toM, p0, p1, p2, side, L.wide, deep, L.peak ?? 0.34, L.pow ?? 0.95), { col: o.col, paint: "hair", ink: 0.0065 });
+    }
+  },
+});

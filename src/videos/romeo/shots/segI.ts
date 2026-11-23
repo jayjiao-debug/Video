@@ -15,10 +15,10 @@ import { povCam } from "../cam";
 import { V, standing, yawTo, seated } from "./common";
 import { VERBS } from "./common";
 import { ROMEO_BOTTLE, JULIET } from "../people";
-import { P, spot, camAt, faceAt, talk, startOf, endOf, ky, rel, lieDown, REACT } from "./kit";
+import { P, spot, camAt, faceAt, talk, startOf, endOf, ky, rel, lieDown, carry, lieQ, REACT } from "./kit";
 import { KNEEL, JU_FEET, HEAD_DIR, RO_FACING } from "./segH";
 import { seatOn, stoolSeat } from "../../../kit/day/rig/seats";
-import { SIT_FLICKER } from "../shard";
+import type { RigHead } from "../../group/kit/rig3d";
 
 const S = seg("I");
 /** the reporter: standing where she threw from (they look up at her) */
@@ -29,11 +29,25 @@ const HER = P("tomb", 0.35, 1.45, 1.3);
  *  went into it, and the rig's short arms could not reach round each other) */
 const JU_SIT = P("tomb", 0.81, 0, -0.88), JU_FACING = 0.3;
 const RO_HUG = P("tomb", 1.38, 0, -0.62), RO_HUG_FACING = -0.6;
-/** the frames: the light is back, her fingers, the flicker she sits up behind, his turn, the hug */
+/** the frames: the light is back, her fingers, she sits up (from .. sitUp), his turn, the hug */
 export const I_BEATS = {
-  fingers: S.from + 34, sitUp: SIT_FLICKER(), turnBack: endOf("I01") + REACT, hug: endOf("I01") + REACT + 16,
+  fingers: S.from + 34, sitFrom: S.from + 44, sitUp: S.from + 66, turnBack: endOf("I01") + REACT, hug: endOf("I01") + REACT + 16,
   lookUp: startOf("I03") + 6,
 };
+/** HER WAKING (v4, the owner: "the ending animation where she wakes is now just teleport, need animation"). Until v3
+ *  she lay, the shard flickered, and she was sitting. Now she wakes: her lids flutter, her eyes open, her body rises
+ *  about her hips and turns to the lens as her legs swing over the bier's front edge (quick off the mark, easing in),
+ *  she swings a little past upright and settles, her head a beat behind her body, and she blinks once at where she is.
+ *  The rig cannot lie down or sit up, so it is done as lieDown does lying: the figure is solved as a normal one and
+ *  CARRIED (kit.ts carry). Up to SIT_SWAP of the way it is the lying figure (solved standing) turning up about its
+ *  hips; from there the sitting figure (solved on the bier's edge) turned back by what is left of the turn, so her
+ *  thighs come over the edge as her back comes up. The swap falls where both have the same back and head; the legs
+ *  that change are out of the shard's view at her feet end.
+ *  HER GOWN AND THE STONE: sitting, her gown hangs down the bier's front face (its back half is in the stone, as on
+ *  any seat). So her hips come forward to the edge FIRST, while her legs are still above the slab (SIT_EDGE of the
+ *  way); after that the gown swings down in front of the face and never comes out through it (stills v12: with the
+ *  hips drifting forward all the way up, the gown slid out of the stone for six frames). */
+const SIT_SWAP = 0.3, SIT_EDGE = 0.22, SIT_OVER = 0.05, Q_LIE = lieQ(HEAD_DIR, 0.04), Q_SIT = new THREE.Quaternion().setFromAxisAngle(V(0, 1, 0), JU_FACING);
 
 export const SEG: Segment = {
   id: "I", from: S.from, to: S.to,
@@ -63,6 +77,11 @@ export const SEG: Segment = {
     if (back > 0) roFacing = THREE.MathUtils.lerp(roFacing, THREE.MathUtils.lerp(RO_FACING, hugFacing, rise), back);
     if (up > 0) roFacing = THREE.MathUtils.lerp(roFacing, yawTo(RO_HUG, HER), 0.55 * up);
     const hugging = f >= B.hug;
+    // their heads tip together over ten frames, and stay together while they speak (v4: the tip came and went in one
+    // frame, 5 to 6 cm at the head, at the hug and at each line: a spoken line's own head replaced it)
+    const hugK = ky(f, [[B.hug - 3, 0], [B.hug + 7, 1]]) * (1 - up);
+    const tilted = (hd: RigHead | undefined, tilt: number): RigHead | undefined => (tilt ? { ...hd, tilt: (hd?.tilt ?? 0) + tilt } : hd);
+    const roSay = talk("ro", f, 1) as { head?: RigHead }, juSay = talk("ju", f, 2) as { head?: RigHead };
     // the embrace: heads together, their inner arms round each other's backs (behind them), the outer ones easy (the
     // rig's arms are 0.4 m: across to the other's chest they could not reach)
     const roRoundHer = P("tomb", 0.95, 0.98, -0.96), juRoundHim = P("tomb", 1.3, 0.95, -0.78);
@@ -73,42 +92,70 @@ export const SEG: Segment = {
       // before he turns back, his empty right hand held where the bottle was
       hands: hugging ? [roRoundHer, null]
         : f < B.turnBack ? [rel(KNEEL, RO_FACING, -0.18, 0.84 - 0.1 * lookCam, 0.32), null] : [null, null],
-      head: hugging && up < 1 ? { tilt: -13 * (1 - up) } : undefined,
       expr: faceAt(f, [[0, "blank"], [startOf("I01") + REACT, "caught"], [B.hug, "dreamy"], [startOf("I03") - 2, "blank"]]),
-      ...talk("ro", f, 1),
+      ...roSay,
+      head: tilted(roSay.head, -13 * hugK),
       lookDown: f < S.from + 18 ? 14 : up > 0 ? -16 * up : 0,
       hide: ["letter", "darkBottle"],
     });
 
     // ---------------------------------------------------------------- Juliet: lying; her fingers move; sitting up; the hug
     const ju = w.actor(JULIET);
-    const sitting = f >= B.sitUp;
-    if (!sitting) {
+    // 0 lying .. 1 sitting: quick off the mark, easing in
+    const st = Math.min(1, Math.max(0, (f - B.sitFrom) / (B.sitUp - B.sitFrom))), sitK = 0.3 * st * st * (3 - 2 * st) + 0.7 * (1 - Math.pow(1 - st, 2.4));
+    // her turn swings a little past upright as she arrives and comes back (toward the lens: the way she is going)
+    const turnK = sitK + SIT_OVER * Math.sin(Math.PI * Math.min(1, Math.max(0, (f - (B.sitUp - 7)) / 16)));
+    // her lids: fluttering as her fingers move, open as she starts up, one slow blink once she is up
+    const lids = ky(f, [[B.fingers - 5, 1], [B.fingers - 1, 0.5], [B.fingers + 2, 1], [B.fingers + 5, 0.3], [B.fingers + 7, 0.75], [B.sitFrom, 0], [B.sitUp + 1, 0], [B.sitUp + 3, 1], [B.sitUp + 4, 0.6], [B.sitUp + 6, 0]]);
+    // her head a beat behind her body: tipped back on the way up, a nod as she arrives, level
+    const nod = ky(f, [[B.sitFrom, 0], [B.sitFrom + 4, -10], [B.sitUp - 5, -10], [B.sitUp + 2, 12], [B.sitUp + 9, 4]]);
+    const waking = f >= B.fingers - 5 && f < B.sitUp + 7;
+    const lying = sitK < SIT_SWAP;
+    const seat = seatOn(stoolSeat({ seat: 0.62, d: 0.3 }), JU_SIT, JU_FACING);
+    if (lying) {
       const twitch = f >= B.fingers ? 0.03 * Math.sin((f - B.fingers) * 0.8) : 0;
       ju.set({
         ...standing(JU_FEET, 0, 0, 2),
         pose: { kind: "hold", t: 0 },
         hands: [rel(JU_FEET, 0, -0.035 - twitch, 0.7, 0.15), rel(JU_FEET, 0, 0.035 + twitch, 0.7 + twitch, 0.15)],
-        expr: "sleep", blink: f >= B.fingers + 8 ? 0.5 : 1, gaze: 0,
+        expr: waking ? faceAt(f, [[0, "waking"]]) : "sleep", blink: waking ? lids : 1, gaze: 0,
+        lookDown: nod,
         hide: ["vial"],
       });
     } else {
-      const seat = seatOn(stoolSeat({ seat: 0.62, d: 0.3 }), JU_SIT, JU_FACING);
       const juUp = yawTo(JU_SIT, HER);
+      // her hands come down from her chest to her lap as she comes up
+      const lapH = VERBS.lap(seat, 0.1, 0.25, 0.2).hands ?? [null, null], hk = ky(f, [[B.sitFrom + 6, 0], [B.sitUp + 4, 1]]);
+      const chest = [rel(seat.top, JU_FACING, -0.035, 0.2, 0.15), rel(seat.top, JU_FACING, 0.035, 0.2, 0.15)];
+      const downH = lapH.map((h, i) => (h ? chest[i].clone().lerp(h, hk) : null)) as [THREE.Vector3 | null, THREE.Vector3 | null];
       ju.set({
         ...standing(seat.top.clone(), JU_FACING, f, 2),
         ...seated(seat, f / 30, { facing: up > 0 ? THREE.MathUtils.lerp(JU_FACING, juUp, 0.5 * up) : JU_FACING }),
         // the embrace: her right hand on his chest, her left round his back
-        hands: hugging ? [VERBS.lap(seat, 0.1, 0.25, 0.2).hands?.[0] ?? null, juRoundHim] : VERBS.lap(seat, 0.1, 0.25, 0.2).hands ?? [null, null],
-        head: hugging && up < 1 ? { tilt: 13 * (1 - up) } : undefined,
+        hands: hugging ? [lapH[0] ?? null, juRoundHim] : downH,
         expr: faceAt(f, [[0, "waking"], [B.hug, "swoon"], [startOf("I02") - 2, "puzzled"], [startOf("I03") + REACT, "blank"]]),
-        ...talk("ju", f, 2),
-        lookDown: up > 0 ? -12 * up : 4,
+        ...juSay,
+        head: tilted(juSay.head, 13 * hugK),
+        ...(waking ? { blink: lids } : {}),
+        lookDown: up > 0 ? -12 * up : f < B.sitUp + 9 ? nod : 4,
         hide: ["vial"],
       });
     }
     w.update();
-    if (!sitting) lieDown(w, ju, JU_FEET, HEAD_DIR, 1, 0.04);
+    if (sitK <= 0) lieDown(w, ju, JU_FEET, HEAD_DIR, 1, 0.04);
+    else if (sitK < 1 || turnK !== 1) {
+      // the hips' way: from where they lie to the edge she sits on, a little up and toward her feet in the middle (the
+      // arc of a real sit-up), forward to the edge first (SIT_EDGE); the turn: from lying to sitting and a little
+      // past it, one turn about one axis
+      const hipL = (ju as unknown as { dim: { hipY: number } }).dim.hipY, pivL = JU_FEET.clone().add(V(0, hipL, 0));
+      const H0 = JU_FEET.clone().add(V(0, hipL, 0).applyQuaternion(Q_LIE)), H1 = seat.top.clone().add(V(0, 0.03, 0));
+      const arc = Math.sin(Math.PI * sitK), hip = H0.clone().lerp(H1, sitK).add(V(-0.1 * arc, 0.05 * arc, 0));
+      const ek = Math.min(1, sitK / SIT_EDGE);
+      hip.z = H0.z + (H1.z - H0.z) * ek * ek * (3 - 2 * ek);
+      const q = Q_LIE.clone().slerp(Q_SIT, turnK);
+      if (lying) carry(w, ju, q, pivL, hip.clone().sub(pivL));
+      else carry(w, ju, q.clone().multiply(Q_SIT.clone().invert()), H1, hip.clone().sub(H1), true);
+    }
     return { camera, cards: false };
   },
 };

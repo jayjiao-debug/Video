@@ -16,6 +16,7 @@ import type { Acc } from "../../group/kit/rig3d";
 import { hoop, shade } from "../../group/kit/rigacc/shapes";
 import { lathe, leafGeo, meshOf, weld } from "../../wanbi/acc/envoy";
 import { shellPoint, type ShellO } from "./hair";
+import { lockGeo } from "./backhair";
 
 const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
 const rad = (d: number) => (d * Math.PI) / 180;
@@ -269,10 +270,10 @@ export const tonsure = (o: { rim?: number; col?: string; tufts?: boolean } = {})
  *  the skull from the temples round the back, fullest over the ears (the classic friar's crown seen from the front as
  *  two puffs). col = the hair (default the look's), y = the ring's height on the head (head units), puff = how far the
  *  side tufts stand out. */
-export const hairRing = (o: { col?: string; y?: number; puff?: number } = {}): Acc => {
-  const y0 = o.y ?? 0.1, puff = o.puff ?? 1;
+export const hairRing = (o: { col?: string; y?: number; puff?: number; burns?: number } = {}): Acc => {
+  const y0 = o.y ?? 0.1, puff = o.puff ?? 1, burns = o.burns ?? 0;
   return {
-    name: "hairRing", slots: [], key: ["rjHairRing", o.col ?? "", y0, puff].join("|"),
+    name: "hairRing", slots: [], key: ["rjHairRing", o.col ?? "", y0, puff, burns].join("|"),
     build(b) {
       const col = o.col ?? b.look.hairCol;
       // P(az, y, r): a point at azimuth az (deg from the face toward the person's left), height y, radius r (head units)
@@ -285,6 +286,14 @@ export const hairRing = (o: { col?: string; y?: number; puff?: number } = {}): A
         for (const [az, k] of [[84, 0.85], [103, 1.15], [121, 1.0], [139, 0.8], [156, 0.65], [170, 0.55]] as const) tuft(s * az, k);
       }
       tuft(180, 0.5);
+      // v4 ("polish the character designs"): the ring's front end is a pointed lock lying on the temple and running
+      // down in front of the ear (a sideburn `burns` long), where it used to stop as a flat cut face (the two puffs
+      // read as earmuffs from the front)
+      if (burns > 0) for (const s of [-1, 1]) {
+        const p0 = P(s * 92, y0 + 0.3, 1.0), p2 = P(s * 67, y0 - burns, 1.03), mid = p0.clone().add(p2).multiplyScalar(0.5), ml = mid.length(), p1 = mid.clone().multiplyScalar((2 * 1.1 - ml) / ml);
+        const am = rad(s * 80), side = V(Math.cos(am), 0, -Math.sin(am));
+        b.solid("head", lockGeo(b.toM, p0, p1, p2, side, 0.34, 0.11, 0.3, 0.9), { col, paint: "hair", ink: 0.0075 });
+      }
     },
   };
 };
