@@ -102,7 +102,7 @@ const sceneA: Act = (w, f) => {
 const sceneB: Act = (w, f) => {
   const S = seg("B"), l4 = line("B04"), l5 = line("B05"), l8 = line("B08"), l9 = line("B09"), l10 = line("B10");
   const snap = capWord("B08", "vanno").from, yawn0 = l8.to + 16, yawn1 = l8.to + 52;
-  const jester: P3 = [-0.28, 0.98, 1.6], M: P3 = [0.12, 1.5, 3.9];
+  const jester: P3 = [-0.52, 0.98, 1.55], M: P3 = [0.12, 1.5, 3.9];
   // (the yawn: the widest mouth, the eyes shut; then caught: her eyes on the lens)
   if (f >= yawn0 && f < yawn1) w.actor(MONA).set({ mouth: f < yawn0 + 3 || f >= yawn1 - 4 ? "half" : "wide", blink: 1, head: { tilt: -4, dy: 0.02 } as RigState["head"] });
   w.actor(MONA).set({ gaze: f >= yawn1 && f < l10.from ? 0 : 0.5 });
@@ -163,7 +163,7 @@ const sceneE: Act = (w, f, sc) => {
   if (sc.who?.includes("thief")) return povCam(f, [
     { f: S.from, pos: th.pos, look: th.look, fov: th.fov },
     { f: l25.from - 6, pos: th.pos, look: th.look, fov: th.fov },
-    { f: l25.from + 14, pos: [0.3, 1.5, 4.0], look: [0.14, 1.42, WZ], fov: 32 },
+    { f: l25.from + 14, pos: [0.42, 1.5, 4.5], look: [0.3, 1.36, WZ], fov: 33 },
   ], { mood: [[S.from, "calm"], [l25.from, "excited"]] });
   return handheld({ pos: th.pos, look: th.look, fov: th.fov }, f, { mood: "calm" });
 };

@@ -37,7 +37,7 @@ export type Scene = {
 };
 export const SCENES: Record<string, Scene> = {
   s1: { room: "studio", mount: "easel", state: "head", expr: "pose", gaze: 1.0 },
-  s2: { room: "studio", mount: "easel", state: "body", expr: "tired", who: ["jester"] },
+  s2: { room: "studio", mount: "easel", state: "body", expr: "tired", who: ["jester"], jesterAt: [-0.52, 0, 1.55] },
   s3: { room: "cloux", mount: "easel", state: "done", expr: "pose", who: ["leonardo"] },
   s4a: { room: "palace0", mount: "frame", state: "done", cracks: 0.2, plate: ["枫丹白露宫", "国王的收藏"], expr: "pose" },
   s4b: { room: "palace1", mount: "frame", state: "done", cracks: 0.3, plate: ["王宫", "国王的收藏"], expr: "tired" },

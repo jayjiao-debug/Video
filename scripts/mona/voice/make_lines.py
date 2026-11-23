@@ -10,7 +10,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 L = [
  [1, "A", "mo", "pose, lips barely move", "嘘。新来的徒弟？站那儿，别挡光。", "Ssh. La nuova allieva? Sta' lì. Non farmi ombra.", {"pre": 2.0}],
  [2, "A", "ji", "curious", "你嘴没动啊？", "Your lips aren't moving.", {}],
- [3, "A", "mo", "pose, proud", "师父说了：别动，快好了。", "Il maestro ha detto: ferma, ho quasi finito.", {"after": 3.4, "card": {"zh": "1503年10月 · 佛罗伦萨 · 先画好的是头", "en": "October 1503 · Florence · the head was painted first"}, "card_delay": 1.9, "card_hold": 2.6}],
+ [3, "A", "mo", "pose, proud", "师父说了：别动，快好了。", "Il maestro ha detto: ferma, ho quasi finito.", {"after": 4.4, "card": {"zh": "1503年10月 · 佛罗伦萨 · 先画好的是头", "en": "October 1503 · Florence · the head was painted first"}, "card_delay": 1.9, "card_hold": 2.6}],
  [4, "B", "ji", "", "他们是谁？", "Who are they?", {"pre": 2.2}],
  [5, "B", "mo", "tired, the smile stays on", "师父怕我闷，请人唱歌、讲笑话。", "Il maestro ha paura che mi annoi. Ha chiamato musici e buffoni.", {}],
  [6, "B", "mo", "tired", "讲了四年。就三个笑话。", "Quattro anni. Tre barzellette in tutto.", {"after": 0.6}],

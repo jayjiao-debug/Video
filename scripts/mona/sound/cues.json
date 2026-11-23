@@ -1,0 +1,768 @@
+{
+ "note": "采访蒙娜丽莎的一天: the TEMP sound for the placeholder cut (24 Nov 2026): library clips only, no new sounds and no voice yet. The new sounds (lute theme, bells, frame knock, police whistle, shutters, glass crack, cake, soup, creak) come from the farm with the voice (Jay's choice on 24 Nov). Gains: beds about -42 dB mean, music about -34, before the master +6.2.",
+ "beds": [
+  {
+   "label": "A-B the studio's room tone",
+   "clip": "amb_room",
+   "at": [
+    "A",
+    "from",
+    0
+   ],
+   "until": [
+    "B",
+    "to",
+    0
+   ],
+   "gain": 20,
+   "loop": true,
+   "fade": 0.05,
+   "fade_out": 0.3
+  },
+  {
+   "label": "A-B birds at the window",
+   "clip": "birds_1",
+   "at": [
+    "A",
+    "from",
+    0
+   ],
+   "until": [
+    "B",
+    "to",
+    0
+   ],
+   "gain": -20,
+   "loop": true,
+   "fade": 0.5,
+   "fade_out": 0.3
+  },
+  {
+   "label": "A-B temp music: a light period tune (the lute theme comes from the farm later)",
+   "clip": "mus_tavern_fiddle",
+   "at": [
+    "A",
+    "from",
+    0.6
+   ],
+   "until": [
+    "B",
+    "to",
+    -0.2
+   ],
+   "gain": -22,
+   "loop": true,
+   "fade": 1.2,
+   "fade_out": 0.8
+  },
+  {
+   "label": "C the fire at Cloux",
+   "clip": "amb_fire",
+   "at": [
+    "C",
+    "from",
+    0
+   ],
+   "until": [
+    "C",
+    "to",
+    0
+   ],
+   "gain": -9,
+   "loop": true,
+   "fade": 0.2,
+   "fade_out": 0.3
+  },
+  {
+   "label": "D the king's halls (until the bedroom)",
+   "clip": "amb_hall",
+   "at": [
+    "D",
+    "from",
+    0
+   ],
+   "until": [
+    "D23",
+    "start",
+    0
+   ],
+   "gain": -6,
+   "loop": true,
+   "fade": 0.2,
+   "fade_out": 0.15
+  },
+  {
+   "label": "D the candles on the stands",
+   "clip": "fire_t1",
+   "at": [
+    "D",
+    "from",
+    0
+   ],
+   "until": [
+    "D23",
+    "start",
+    0
+   ],
+   "gain": -5,
+   "loop": true,
+   "fade": 0.2,
+   "fade_out": 0.15
+  },
+  {
+   "label": "D temp music: palace pomp, out for 'two hundred years'",
+   "clip": "mus_pomp",
+   "at": [
+    "D",
+    "from",
+    0.3
+   ],
+   "until": [
+    "D22",
+    "start",
+    -0.3
+   ],
+   "gain": -15,
+   "loop": true,
+   "fade": 0.4,
+   "fade_out": 0.6
+  },
+  {
+   "label": "D the bedroom at night",
+   "clip": "amb_night",
+   "at": [
+    "D23",
+    "start",
+    0
+   ],
+   "until": [
+    "D",
+    "to",
+    0
+   ],
+   "gain": 18,
+   "loop": true,
+   "fade": 0.2,
+   "fade_out": 0.3
+  },
+  {
+   "label": "E the empty gallery, early morning",
+   "clip": "amb_museum",
+   "at": [
+    "E",
+    "from",
+    0
+   ],
+   "until": [
+    "E28",
+    "start",
+    -2.25
+   ],
+   "gain": 6,
+   "loop": true,
+   "fade": 0.2,
+   "fade_out": 0.05
+  },
+  {
+   "label": "E temp music: the sneak, out when the lid shuts",
+   "clip": "mus_sneak",
+   "at": [
+    "E",
+    "from",
+    0.2
+   ],
+   "until": [
+    "E28",
+    "start",
+    -2.3
+   ],
+   "gain": -12,
+   "fade": 0.3,
+   "fade_out": 0.25
+  },
+  {
+   "label": "E inside the trunk: the room, muffled",
+   "clip": "amb_room",
+   "at": [
+    "E28",
+    "start",
+    -2.2
+   ],
+   "until": [
+    "E34",
+    "start",
+    -0.6
+   ],
+   "gain": 16,
+   "loop": true,
+   "lp": [
+    900
+   ],
+   "fade": 0.1,
+   "fade_out": 0.2
+  },
+  {
+   "label": "E the queue at the empty wall",
+   "clip": "amb_museum_crowd",
+   "at": [
+    "E30",
+    "end",
+    0.25
+   ],
+   "until": [
+    "E31",
+    "start",
+    -0.6
+   ],
+   "gain": 8,
+   "loop": true,
+   "fade": 0.1,
+   "fade_out": 0.1
+  },
+  {
+   "label": "E back on her wall, 1914",
+   "clip": "amb_museum",
+   "at": [
+    "E34",
+    "start",
+    -0.5
+   ],
+   "until": [
+    "E",
+    "to",
+    0
+   ],
+   "gain": 6,
+   "loop": true,
+   "fade": 0.3,
+   "fade_out": 0.3
+  },
+  {
+   "label": "F the crowd behind the glass",
+   "clip": "amb_museum_crowd",
+   "at": [
+    "F",
+    "from",
+    0
+   ],
+   "until": [
+    "F",
+    "to",
+    0
+   ],
+   "gain": 9,
+   "loop": true,
+   "fade": 0.3,
+   "fade_out": 0.3
+  },
+  {
+   "label": "G the crowd thins out",
+   "clip": "amb_museum_crowd",
+   "at": [
+    "G",
+    "from",
+    0
+   ],
+   "until": [
+    "G44",
+    "start",
+    0
+   ],
+   "gain": 7,
+   "loop": true,
+   "fade": 0.05,
+   "fade_out": 2.5
+  },
+  {
+   "label": "G the room",
+   "clip": "amb_museum",
+   "at": [
+    "G",
+    "from",
+    0
+   ],
+   "until": [
+    "G",
+    "to",
+    0
+   ],
+   "gain": 6,
+   "loop": true,
+   "fade": 0.2,
+   "fade_out": 0.3
+  },
+  {
+   "label": "G temp music, stops dead on 走了",
+   "clip": "mus_museum",
+   "at": [
+    "G",
+    "from",
+    0.2
+   ],
+   "until": [
+    "G44",
+    "end",
+    -0.25
+   ],
+   "gain": -17,
+   "fade": 0.8,
+   "fade_out": 0.04
+  },
+  {
+   "label": "H after closing: room tone only",
+   "clip": "amb_room_night",
+   "at": [
+    "H",
+    "from",
+    0
+   ],
+   "until": [
+    "H",
+    "to",
+    0
+   ],
+   "gain": 14,
+   "loop": true,
+   "fade": 0.6,
+   "fade_out": 0.3
+  },
+  {
+   "label": "I night room tone",
+   "clip": "amb_room_night",
+   "at": [
+    "I",
+    "from",
+    0
+   ],
+   "until": [
+    "I",
+    "to",
+    0
+   ],
+   "gain": 14,
+   "loop": true,
+   "fade": 0.1,
+   "fade_out": 0.5
+  }
+ ],
+ "hits": [
+  {
+   "label": "A REC beep",
+   "clip": "rec_beep",
+   "at": [
+    "A",
+    "from",
+    0.033
+   ],
+   "gain": -14
+  },
+  {
+   "label": "A brush strokes on the panel",
+   "clip": "sfx_brush",
+   "at": [
+    "A",
+    "from",
+    0.5
+   ],
+   "gain": -12,
+   "len": 1.6,
+   "fade_out": 0.3
+  },
+  {
+   "label": "A the jester's bells off screen",
+   "clip": "bell_1",
+   "at": [
+    "A",
+    "from",
+    1.2
+   ],
+   "gain": -17,
+   "len": 1.6,
+   "fade_out": 0.4
+  },
+  {
+   "label": "B juggling 1",
+   "clip": "pop_1",
+   "at": [
+    "B",
+    "from",
+    0.8
+   ],
+   "gain": -15
+  },
+  {
+   "label": "B juggling 2",
+   "clip": "pop_1",
+   "at": [
+    "B",
+    "from",
+    1.25
+   ],
+   "gain": -16,
+   "rate": 1.1
+  },
+  {
+   "label": "B juggling 3",
+   "clip": "pop_1",
+   "at": [
+    "B",
+    "from",
+    1.7
+   ],
+   "gain": -15,
+   "rate": 0.95
+  },
+  {
+   "label": "B bells as we tilt to the jester",
+   "clip": "bell_1",
+   "at": [
+    "B04",
+    "end",
+    0.1
+   ],
+   "gain": -16,
+   "len": 1.5,
+   "fade_out": 0.4
+  },
+  {
+   "label": "B a sad lute note after 'three jokes'",
+   "clip": "sfx_pluck",
+   "at": [
+    "B06",
+    "end",
+    0.15
+   ],
+   "gain": 10
+  },
+  {
+   "label": "B the smile snaps back (caught after the yawn)",
+   "clip": "boing_1",
+   "at": [
+    "B09",
+    "start",
+    -0.2
+   ],
+   "gain": -15
+  },
+  {
+   "label": "B the master's brush (his voice beside us)",
+   "clip": "sfx_brush",
+   "at": [
+    "B10",
+    "start",
+    -0.3
+   ],
+   "gain": -10,
+   "len": 1.8,
+   "fade_out": 0.3
+  },
+  {
+   "label": "C join: the wall swaps",
+   "clip": "sfx_whoosh",
+   "at": [
+    "C",
+    "from",
+    -0.15
+   ],
+   "gain": -20
+  },
+  {
+   "label": "C he snores",
+   "clip": "sfx_snore",
+   "at": [
+    "C",
+    "from",
+    0.6
+   ],
+   "gain": -19
+  },
+  {
+   "label": "C he snores again (the wide view)",
+   "clip": "sfx_snore",
+   "at": [
+    "C17",
+    "end",
+    0.4
+   ],
+   "gain": -17
+  },
+  {
+   "label": "D join",
+   "clip": "sfx_whoosh",
+   "at": [
+    "D",
+    "from",
+    -0.15
+   ],
+   "gain": -20
+  },
+  {
+   "label": "D wall swap 2",
+   "clip": "sfx_whoosh",
+   "at": [
+    "D21",
+    "start",
+    -0.15
+   ],
+   "gain": -22
+  },
+  {
+   "label": "D wall swap 3",
+   "clip": "sfx_whoosh",
+   "at": [
+    "D22",
+    "start",
+    -1.95
+   ],
+   "gain": -22
+  },
+  {
+   "label": "D to the bedroom",
+   "clip": "sfx_whoosh",
+   "at": [
+    "D23",
+    "start",
+    -0.15
+   ],
+   "gain": -22
+  },
+  {
+   "label": "D the blanket",
+   "clip": "cloth",
+   "at": [
+    "D23",
+    "start",
+    0.0
+   ],
+   "gain": -4
+  },
+  {
+   "label": "E join",
+   "clip": "sfx_whoosh",
+   "at": [
+    "E",
+    "from",
+    -0.15
+   ],
+   "gain": -20
+  },
+  {
+   "label": "E tiptoe 1",
+   "clip": "tiptoe_t1",
+   "at": [
+    "E",
+    "from",
+    0.3
+   ],
+   "gain": -12
+  },
+  {
+   "label": "E tiptoe 2",
+   "clip": "tiptoe_t1",
+   "at": [
+    "E",
+    "from",
+    1.9
+   ],
+   "gain": -13
+  },
+  {
+   "label": "E the trunk's lid shuts",
+   "clip": "sfx_trunk",
+   "at": [
+    "E28",
+    "start",
+    -2.25
+   ],
+   "gain": -13
+  },
+  {
+   "label": "E the crowd gasps at the empty wall",
+   "clip": "gasp_crowd",
+   "at": [
+    "E30",
+    "end",
+    0.45
+   ],
+   "gain": -6
+  },
+  {
+   "label": "E the lid opens: found",
+   "clip": "sfx_wood_lid_lift",
+   "at": [
+    "E34",
+    "start",
+    -0.6
+   ],
+   "gain": -11
+  },
+  {
+   "label": "F join",
+   "clip": "sfx_whoosh",
+   "at": [
+    "F",
+    "from",
+    -0.15
+   ],
+   "gain": -20
+  },
+  {
+   "label": "F 1956: the stone stars the glass",
+   "clip": "sfx_ice_glass",
+   "at": [
+    "F35",
+    "start",
+    2.75
+   ],
+   "gain": -11
+  },
+  {
+   "label": "F the crowd gasps",
+   "clip": "gasp_crowd",
+   "at": [
+    "F35",
+    "start",
+    3.05
+   ],
+   "gain": -8
+  },
+  {
+   "label": "F 2022: cake on the glass",
+   "clip": "X22_comic_plop",
+   "at": [
+    "F35",
+    "end",
+    0.73
+   ],
+   "gain": -12
+  },
+  {
+   "label": "F 2024: soup on the glass",
+   "clip": "splash_pop",
+   "at": [
+    "F36",
+    "end",
+    0.4
+   ],
+   "gain": -10
+  },
+  {
+   "label": "F the glass wiped 1",
+   "clip": "sfx_wipe",
+   "at": [
+    "F38",
+    "end",
+    0.33
+   ],
+   "gain": -2
+  },
+  {
+   "label": "F the glass wiped 2",
+   "clip": "sfx_wipe",
+   "at": [
+    "F38",
+    "end",
+    0.7
+   ],
+   "gain": -3,
+   "rate": 0.92
+  },
+  {
+   "label": "F caught again (the brows)",
+   "clip": "boing_1",
+   "at": [
+    "F42",
+    "start",
+    -0.4
+   ],
+   "gain": -15
+  },
+  {
+   "label": "G the lights go out 1",
+   "clip": "sfx_light_click",
+   "at": [
+    "G46",
+    "end",
+    0.3
+   ],
+   "gain": 8
+  },
+  {
+   "label": "G the lights go out 2",
+   "clip": "sfx_light_click",
+   "at": [
+    "G46",
+    "end",
+    0.9
+   ],
+   "gain": 7
+  },
+  {
+   "label": "G the lights go out 3",
+   "clip": "sfx_light_click",
+   "at": [
+    "G46",
+    "end",
+    1.5
+   ],
+   "gain": 6
+  },
+  {
+   "label": "G the big door",
+   "clip": "sfx_big_door",
+   "at": [
+    "G46",
+    "end",
+    0.05
+   ],
+   "gain": -16
+  },
+  {
+   "label": "I the guard's steps",
+   "clip": "X21_stone_footsteps",
+   "at": [
+    "I",
+    "from",
+    0.2
+   ],
+   "gain": -6,
+   "fade_out": 1.2
+  },
+  {
+   "label": "I the torch switched on",
+   "clip": "sfx_light_click",
+   "at": [
+    "I",
+    "from",
+    0.25
+   ],
+   "gain": 8
+  },
+  {
+   "label": "I temp music: the last smile",
+   "clip": "mus_cello",
+   "at": [
+    "I54",
+    "start",
+    -1.0
+   ],
+   "gain": -15,
+   "fade": 1.5,
+   "fade_out": 1.5
+  },
+  {
+   "label": "I the camera switches off",
+   "clip": "sfx_poweroff",
+   "at": [
+    "I54",
+    "end",
+    1.3
+   ],
+   "gain": 20
+  }
+ ],
+ "cards": {
+  "clip": "card_ding",
+  "gain": -16
+ }
+}
