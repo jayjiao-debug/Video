@@ -13,6 +13,7 @@ import * as THREE from "three";
 import type { Acc } from "../../group/kit/rig3d";
 import { roundBox, turned, shade } from "../../group/kit/rigacc/shapes";
 import { weld } from "../../wanbi/acc/envoy";
+import { bottleLabel, LABEL_SPIN } from "../props/skull";
 
 /** the half mask's outline (metres, centred, facing +z): a wide almond with a dip over the nose and two eye holes */
 const maskShape = (k: number) => {
@@ -63,22 +64,21 @@ export const maskStick = (o: { hand?: 0 | 1; col?: string; trim?: string; size?:
   };
 };
 
-/** THE DARK BOTTLE IN A HAND (the prop darkBottle's twin): plum-black square-shouldered glass, a paper label, a cork */
+/** THE DARK BOTTLE IN A HAND (the prop darkBottle's twin): plum-black square-shouldered glass, a paper label with a
+ *  skull (v5, the owner: "Draw a skull label on the potion"; props/skull.ts), a cork. The glass is a part of its own
+ *  named LABEL_SPIN: world.ts turns it about the bottle's axis so the label keeps toward the lens. */
 export const darkBottleHeld = (o: { hand?: 0 | 1; size?: number } = {}): Acc => {
   const hand = o.hand ?? 1, k = o.size ?? 1;
   return {
-    name: "darkBottle", slots: [hand ? "hand1" : "hand0"], key: ["rjDarkBottle", hand, k].join("|"),
+    name: "darkBottle", slots: [hand ? "hand1" : "hand0"], key: ["rjDarkBottle2", hand, k].join("|"),
     build(b) {
-      const g = b.held(hand, { offset: [hand ? 0.02 : -0.02, -0.018, 0.026] });
-      const body = turned([[0, 0], [0.026 * k, 0], [0.028 * k, 0.062 * k], [0.011 * k, 0.077 * k], [0.0095 * k, 0.088 * k], [0, 0.088 * k]], 0.005, 28), v = body.userData.v as number[];
-      const map = b.tex(16, 128, (cg) => {
-        cg.fillStyle = "#4a3246"; cg.fillRect(0, 0, 16, 128);
-        const y = (t: number) => 128 * (1 - t);
-        cg.fillStyle = "#e4d8bc"; cg.fillRect(0, y(v[1] * 0.75), 16, y(v[1] * 0.35) - y(v[1] * 0.75));   // the label
-        cg.fillStyle = "#9a7a94"; cg.fillRect(2, y(v[2]), 3, y(v[1] * 0.8) - y(v[2]));                     // a highlight (lighter: it must read on the vault's brown)
-      }, "rjDarkBottleGlass");
-      b.solid(g, body, { col: "#ffffff", map, ink: 0.0055 });
-      b.solid(g, turned([[0, 0.084 * k], [0.0115 * k, 0.084 * k], [0.0125 * k, 0.1 * k], [0, 0.1 * k]], 0.003, 20), { col: "#5a4636", ink: 0.005 });
+      const g = b.held(hand, { offset: [hand ? 0.02 : -0.02, -0.018, 0.026] }), spin = new THREE.Group();
+      spin.name = LABEL_SPIN; g.add(spin);
+      const body = turned([[0, 0], [0.026 * k, 0], [0.028 * k, 0.062 * k], [0.011 * k, 0.077 * k], [0.0095 * k, 0.088 * k], [0, 0.088 * k]], 0.005, 32), v = body.userData.v as number[];
+      // (v[1] = the foot's edge, v[2] = the shoulder: the label covers the straight side between them)
+      const map = b.tex(512, 256, (cg) => bottleLabel(cg, 512, 256, v[1] + (v[2] - v[1]) * 0.1, v[1] + (v[2] - v[1]) * 0.93, { sx: 1.5 }), "rjDarkBottleSkull");
+      b.solid(spin, body, { col: "#ffffff", map, ink: 0.0055 });
+      b.solid(spin, turned([[0, 0.084 * k], [0.0115 * k, 0.084 * k], [0.0125 * k, 0.1 * k], [0, 0.1 * k]], 0.003, 20), { col: "#5a4636", ink: 0.005 });
     },
   };
 };

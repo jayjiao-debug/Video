@@ -65,7 +65,20 @@ export type ShellO = {
    *  above y 0.35 out to 100 deg (the face slides round toward the lens); behind that it can drop fast, so the skin
    *  behind the ear does not show as a long slanted cut in a three-quarter back view */
   sideTo?: number; backFrom?: number;
+  /** THE NAPE AT ITS TRUE DEPTH (v5): the back of the shell below this height (y, head units) is a part of its own that
+   *  is drawn at its true depth against the body (FREE_DEPTH below). Without it the hair low on the back of the head
+   *  shows in front of the collar from a low or a three-quarter front view. */
+  napeY?: number;
 };
+/** FREE DEPTH (v5, 23 Nov 2026, the owner on the v4 cut: "His hair clipping through his cloths and neck? it should be
+ *  behind"). The rig draws everything on a head on top of that figure's own body (its stencil rule: a chin is never cut
+ *  by a collar). Hair that hangs low at the nape is on the head too, so from the front, wherever it stood out past the
+ *  head's outline, it was drawn over the collar and the shoulders that are really in front of it (from the lens on the
+ *  floor of the vault: a scalloped fringe of hair under his chin). A part marked with this is drawn after the head with
+ *  no stencil test at all, only the depth test: over the head ball when it is nearer (from behind), behind the collar
+ *  when the collar is nearer. people.ts addPerson applies it (acc/figure.ts freeDepth) once the rig has built the
+ *  figure; `under` keeps the rig from counting the part as head (its own flag, the one its long ponytail uses). */
+export const markFreeDepth = <T extends THREE.Object3D>(m: T): T => { m.userData.under = true; m.userData.rjFreeDepth = true; return m; };
 /** the hairline as elevations (rad) every 0.5 deg round the head, once per cut */
 const HL = new WeakMap<ShellO, Float64Array>();
 const hlTab = (o: ShellO) => {
@@ -137,11 +150,14 @@ export const shellPoint = (o: ShellO, aDeg: number, el: number, out = 0) => {
   const a = rad(aDeg), r = shellR(o, aDeg, el).r + out, ce = Math.cos(el);
   return V(r * ce * Math.sin(a), r * Math.sin(el), r * ce * Math.cos(a));
 };
-const shellGeo = (b: PartKit, o: ShellO) => {
+const shellGeo = (b: PartKit, o: ShellO, low?: boolean[]) => {
   const pos: number[] = [], uv: number[] = [], idx: number[] = [], v = V(), ROWS = NR + 3;
   for (let j = 0; j <= NC; j++) {
     const aDeg = -180 + (360 * j) / NC, a = rad(aDeg), u = j / NC, { el0, lip } = shellR(o, aDeg, 0);
-    const put = (el: number, r: number) => { const ce = Math.cos(el); b.toM(v.set(r * ce * Math.sin(a), r * Math.sin(el), r * ce * Math.cos(a))); pos.push(v.x, v.y, v.z); uv.push(u, vOf((el * 180) / Math.PI)); };
+    const put = (el: number, r: number) => {
+      const ce = Math.cos(el); b.toM(v.set(r * ce * Math.sin(a), r * Math.sin(el), r * ce * Math.cos(a))); pos.push(v.x, v.y, v.z); uv.push(u, vOf((el * 180) / Math.PI));
+      if (low) low.push(o.napeY !== undefined && Math.abs(aDeg) > 90 && r * Math.sin(el) < o.napeY);   // (napeY: the nape, see ShellO)
+    };
     // the edge tucks into the skin (an edge that just stops stands off the head and shows as a forked spike), then its
     // lip (as thick as the hair at a blunt edge, nothing at a soft one), then up over the dome to the crown
     put(el0 - rad(4), 0.93); put(el0, 0.995); put(el0, 1 + lip);
@@ -220,8 +236,15 @@ export const hairShell = (o: ShellO): Acc => {
     name: "hairShell", slots: o.hat ? ["hat", "crown"] : [], key, noHairProps: true,
     ...(o.hat ? { hat: { rim: o.hat, hair: "cut" as const, shade: false } } : {}),
     build(b) {
-      const map = shellMap(b, o, key);
-      b.solid("head", shellGeo(b, o), { col: "#ffffff", map, paint: o.paint ?? "hair", ink: 0.0085 });
+      const map = shellMap(b, o, key), low: boolean[] = [], g = shellGeo(b, o, low), po = { col: "#ffffff", map, paint: o.paint ?? "hair", ink: 0.0085 } as const;
+      if (o.napeY === undefined || !g.index) { b.solid("head", g, po); return; }
+      // the nape as a part of its own: the same vertices (so the surface and its light run on across the cut), the
+      // triangles shared out between the two
+      const ix = g.index.array, up: number[] = [], dn: number[] = [];
+      for (let t = 0; t + 2 < ix.length; t += 3) (low[ix[t]] && low[ix[t + 1]] && low[ix[t + 2]] ? dn : up).push(ix[t], ix[t + 1], ix[t + 2]);
+      const part = (ids: number[]) => { const q = new THREE.BufferGeometry(); for (const k of Object.keys(g.attributes)) q.setAttribute(k, g.attributes[k]); q.setIndex(ids); return q; };
+      b.solid("head", part(up), po);
+      if (dn.length) markFreeDepth(b.solid("head", part(dn), po));
     },
   };
 };

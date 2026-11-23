@@ -22,7 +22,8 @@ import type { Kit } from "../../../kit/props/kit";
 import type { CastLight } from "../../group/kit/cast";
 import { BAKED_LIGHT, type PlaceDef } from "../../../kit/day/sets";
 import type { PlaceBuild, PlaceLook, ParamValue } from "../../../kit/day/types";
-import { lightRig, paint, rng, css, blotch, skyDome, Batch, groundG, type SkyStops } from "../../../kit/sets/okit";
+import { lightRig, paint, rng, css, blotch, skyDome, Batch, type SkyStops } from "../../../kit/sets/okit";
+import { groundGrid } from "./parts/ground";
 import { ISLAND } from "../places";
 import {
   maker, lathe, bar, blobG, bentLimb, panoramaRing, strandField, wrapBlotch, mistCard, lightShaft, paperBallG, paperTex, pageG, pageTex,
@@ -141,7 +142,9 @@ const buildGrove = (K: Kit): PlaceBuild => {
     for (let i = 0; i < 9000; i++) { const x = S * r(), y = S * r(); g.fillStyle = css(COL.dew, 0.35 + 0.4 * r()); g.fillRect(x, y, 1.6, 1.6); }
   });
   {
-    const geo = groundG(GCX, GCZ, GS, 300);
+    // a grid, not the kit's one 600 m quad (v5, the owner: "The ground is twitching": parts/ground.ts); 1 m cells within
+    // 12 m of the tree, where her lens is
+    const geo = groundGrid(GCX, GCZ, GS, 300, { fine: 12, at: [TREE.x, TREE.z] });
     const mat = Mk.tex(gtex, 0.95);
     // the edge colour runs on: the texture is clamped, its border pixels are grass-coloured
     Mk.mesh("grove.ground", geo, mat, { cast: false });

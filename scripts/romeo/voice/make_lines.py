@@ -111,7 +111,7 @@ line("D06", "fr", "low, a shadow crossing his face", "爱得越猛，收场越�
 
 # ---------------------------------------------------------------- E · Monday dusk · the street (THE TURN)
 line("E01", "ji", "small", "罗密欧？", "Romeo?",
-     "Dusk, an empty street. Romeo with his back to us, a sword at his feet, a red cap on the stones. No body in frame. Still.", tts="[quietly, uneasy] 罗密欧？", pre=1.2)
+     "Dusk, the street after the duel (v5: the duel itself opens the scene, without words). Romeo with his back to us, his rapier dropped on the stones beside Tybalt's; Tybalt lies behind him. No blood. Still.", tts="[quietly, uneasy] 罗密欧？", pre=5.8)
 line("E02", "ro", "hollow, to his own hand", "老天爷在耍我！", "O, I am fortune's fool!",
      "He turns; one slow push; he runs out of frame.", tts="[hollow, shaken] O, I am fortune's fool!")
 line("E03", "ji", "whisper, small", "他刚杀了朱丽叶的表哥。", "He just killed Juliet's cousin.",
@@ -170,7 +170,7 @@ line("H04", "ro", "calm", "这一杯，敬我的爱人。", "Here's to my love!"
      "He raises the dark bottle with the same gesture Juliet used in F09. It never reaches his lips.", tts="[calm, tender] Here's to my love!")
 line("H05", "ji", "breaking", "我只拍，不插……不拍了！", "I only film, I don't inter— I'm done filming!",
      "The picture lurches. The camera leaves her hands: torch streaks, the bier, his hand filling the frame. Glass breaks. Stone. A crack splits the picture. Black. The REC display stutters and dies. Two seconds of silence.",
-     tts="[breaking] 我只拍，不插……[shouting] 不拍了！", after=3.2)
+     tts="[breaking] 我只拍，不插……[shouting] 不拍了！", after=5.4)
 
 # ---------------------------------------------------------------- I · the shard
 line("I01", "ju", "waking, soft", "我的罗密欧呢？", "Where is my Romeo?",
@@ -207,7 +207,7 @@ def lines_json():
         "scenes": {k: {"time": v["time"], "en": v["en"], "place": v["place"], "label": v["label"]} for k, v in SCENES.items()},
         "gap": 0.25, "lead": 0.1,
         "engine": {"spoken": {"ji": "zh", "ro": "en", "ju": "en", "fr": "en"}, "places": sorted({v["place"] for v in SCENES.values()}),
-                   "title_after": "A02", "title_delay": 0.15, "title_hold": 1.6, "rate_zh": 4.2, "rate_en": 2.4},
+                   "title_after": "A02", "title_delay": 0.15, "title_hold": 2.6, "rate_zh": 4.2, "rate_en": 2.4},
         "lines": out,
     }
 

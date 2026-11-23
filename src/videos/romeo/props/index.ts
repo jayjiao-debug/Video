@@ -7,6 +7,7 @@
 //   put(at, { t })       seconds, for what moves by itself (the horse's gait)
 //   spill:        { amount } 0..1 = how far the stain has spread (0 = none)
 //   horseRider:   { go } 0..1 = leaving: it moves RIDER.go (9 m) along its facing at a gallop; 0 = standing; { t }
+//                 { gait } = the shot moves it along its own path (segG: out through the gate); this names the gait
 //   darkBottle:   { lying: true } = on its side (default standing)
 //   letterSealed: { stand: true } = upright on its long edge, face toward +z (default lying face up)
 //   w.prop(name, key)    another instance of the same prop (two crumpled pages, a second shard pile)
@@ -34,7 +35,7 @@ export const PROP_INFO: Record<PropName, string> = {
   inkpot: "a squat glazed earthenware INKPOT, r 0.042, 5.8 cm high, black ink in its mouth. Origin = on the desk under its middle",
   waxStick: "a stick of dark red SEALING WAX, 0.10 m along x, its burnt tip at +x. Origin = on the desk under its middle",
   glassShards: "CAMERA-GLASS SHARDS: six flat broken pieces and one domed piece of the front element, within 0.3 m round the origin, pale smoky glass. Origin = on the floor at the middle of the scatter (the tomb's shardFloor mark)",
-  horseRider: "A HORSE WITH A SMALL CLOAKED RIDER (kit horse, grey; hooded grey-brown cloak), seen far away. Origin = on the ground under the horse's middle; the head toward +z (rot PI = riding toward -z, the Mantua mark `rider`). put({ go }) 0..1 = leaving (moves 9 m along its facing at a gallop, eased in), { t } = the gait's seconds",
+  horseRider: "A HORSE WITH A SMALL CLOAKED RIDER (kit horse, grey; hooded grey-brown cloak), seen far away. Origin = on the ground under the horse's middle; the head toward +z (rot PI = riding toward -z, the Mantua mark `rider`). put({ go }) 0..1 = leaving (moves 9 m along its facing at a gallop, eased in), put({ gait }) = the shot moves it itself, { t } = the gait's seconds",
   crumpledPage: "a CRUMPLED PAGE: a lumpy paper ball r ~4.5 cm with creases and a few lines of writing. Origin = on the floor under it",
 };
 export const PROP_NAMES = Object.keys(PROP_INFO) as PropName[];
@@ -48,6 +49,7 @@ export type PutOpts = {
   /** seconds for what moves by itself (the horse) */ t?: number;
   /** spill: 0..1 */ amount?: number;
   /** horseRider: 0..1 */ go?: number;
+  /** horseRider: the shot moves it along its own path; this is the gait */ gait?: "stand" | "walk" | "gallop";
   /** darkBottle */ lying?: boolean;
   /** letterSealed */ stand?: boolean;
 };

@@ -5,7 +5,7 @@
 //   <Note f from big small? x y to? rot? tone? id? />
 //     f       the film frame
 //     from    the frame it lands: in the gap AFTER a line, never on its punch word
-//     big     the punch word, at most 6 characters (it is set as large as fits, up to 112 px)
+//     big     the punch word, at most 6 characters (it is set as large as fits, up to 112 px, or up to `size`)
 //     small   a lead-in set small above it (the part of the note that is not the punch), optional
 //     x, y    the centre of the punch word (film px). Keep the scrap clear of faces, the REC row and the caption
 //             band: noteRect() gives its box.
@@ -28,20 +28,20 @@ import { letterDefs, sheet, quill, quillW, swashPath } from "./marks";
 export const NOTE = { bigPx: 112, smallPx: 42, padX: 34, padY: 24, len: 41, rot: -4 } as const;
 const INK = { ink: C.ink, red: TONE.inkRed, blue: TONE.blueDeep } as const;
 /** a note's geometry: the punch word's size, the scrap's box */
-export const noteLayout = (big: string, small: string | undefined, x: number, y: number) => {
+export const noteLayout = (big: string, small: string | undefined, x: number, y: number, size: number = NOTE.bigPx) => {
   const N = NOTE, right = y > 1000 ? 890 : FRAME_9x16.W - FRAME_9x16.side, room = 2 * Math.min(x - FRAME_9x16.side, right - x) - 2 * N.padX;
-  const px = Math.max(60, fitPx(big, N.bigPx, room, SKIN.display.track * N.bigPx)), bw = quillW(big, px);
+  const px = Math.max(60, fitPx(big, size, room, SKIN.display.track * size)), bw = quillW(big, px);
   const sw = small ? quillW(small, N.smallPx, { body: true }) : 0, w = Math.max(bw, sw) + 2 * N.padX;
   const top = y - px * 0.56 - (small ? N.smallPx + 14 : 0) - N.padY, bot = y + px * 0.56 + N.padY + 6;
   return { px, bw, sw, r: { x0: x - w / 2, y0: top, x1: x + w / 2, y1: bot } as Rect, smallY: y - px * 0.56 - N.smallPx * 0.5 - 6 };
 };
-export const noteRect = (big: string, small: string | undefined, x: number, y: number): Rect => { const r = noteLayout(big, small, x, y).r; return { x0: r.x0 - 14, y0: r.y0 - 16, x1: r.x1 + 14, y1: r.y1 + 22 }; };
+export const noteRect = (big: string, small: string | undefined, x: number, y: number, size?: number): Rect => { const r = noteLayout(big, small, x, y, size).r; return { x0: r.x0 - 14, y0: r.y0 - 16, x1: r.x1 + 14, y1: r.y1 + 22 }; };
 
-export const Note: React.FC<{ f: number; from: number; big: string; small?: string; x: number; y: number; to?: number; rot?: number; tone?: keyof typeof INK; id?: string }> = (props) => {
-  const { f, from, big, small, x, y, rot = NOTE.rot, tone = "ink", id = "romeo-note" } = props;
+export const Note: React.FC<{ f: number; from: number; big: string; small?: string; x: number; y: number; to?: number; rot?: number; tone?: keyof typeof INK; id?: string; size?: number }> = (props) => {
+  const { f, from, big, small, x, y, rot = NOTE.rot, tone = "ink", id = "romeo-note", size } = props;
   const L = life(f, from, props.to ?? from + NOTE.len - 1, SKIN.motion.arrive, SKIN.motion.leave);
   if (!L) return null;
-  const t = L.t, G = noteLayout(big, small, x, y), A = flapIn(t, 0, 4, -10), out = flapOut(L.leave, 1), br = breathe(t, 2);
+  const t = L.t, G = noteLayout(big, small, x, y, size), A = flapIn(t, 0, 4, -10), out = flapOut(L.leave, 1), br = breathe(t, 2);
   const cy = (G.r.y0 + G.r.y1) / 2, uy = y + G.px * 0.56;
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{ position: "absolute", left: 0, top: 0, pointerEvents: "none", opacity: A.o * out.o }}>

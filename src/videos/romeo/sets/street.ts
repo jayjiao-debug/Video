@@ -17,7 +17,14 @@
 //   catch it at a graze, the right fronts stand in a cool violet shade; the houses on the right do not cast, so the
 //   street keeps its warm floor and Romeo his long shadow toward the camera), a peach-to-violet sky; "day" = an
 //   ordinary daylight from high over the camera's left (scene 7's window, straight on).
-// Nothing red in the set (the cap is the only red). No blood, no body. Seeded painting; animate is a pure function of t.
+//   - (v5, the owner on the v4 cut: "Make this background more complete and high quality") THE STREET IS LIVED IN: door
+//     steps, two real doorways, a baker's and a cobbler's sign on iron arms, lanterns lit at dusk, a bench, barrels,
+//     sacks and crates at the wall feet, a loaded handcart, a shop's awning over a table of baskets, pots, rain pipes,
+//     a ladder; THE PIAZZA has two market stalls, barrels, a bucket on the well, and A FAR SIDE OF ITS OWN: two houses
+//     and between them a low arcaded loggia with a tiled roof (lit from inside), the tower and the sun over it.
+//     All of it stands at the wall feet or beyond the street's mouth: the stones where they fight are bare.
+// Nothing red in the set. No blood. (v5: the duel is played here and Tybalt lies on these stones, shots/segE; the red
+// cap is gone.) Seeded painting; animate is a pure function of t.
 import * as THREE from "three";
 import type { EnvSpec } from "../../bt/pbr";
 import type { Kit } from "../../../kit/props/kit";
@@ -26,9 +33,12 @@ import { BAKED_LIGHT, type PlaceDef } from "../../../kit/day/sets";
 import type { CastLight } from "../../group/kit/cast";
 import type { PlaceBuild, PlaceLook, ParamValue } from "../../../kit/day/types";
 import { lightRig, paint, rng, css, mix, toHex, blotch, skyDome, farCard, glowCard, makeBanner, NOINK, type SkyStops } from "../../../kit/sets/okit";
-import { maker, levelQuad, quad4 } from "../../newton/sets/parts/common";
+import { maker, quad4 } from "../../newton/sets/parts/common";
 import { ISLAND } from "../places";
 import { Batch, boxG, house, houseAt, onHouse, frontTex, upperWins, tilesTex, raftersTex, balustradeTex, pavingTex, softCard, type FrontPal, type Win } from "./parts/c_town";
+import { gridLines, patchG, metrePaint } from "./parts/ground";
+import { dresser, VERONA_DRESS } from "./parts/d_dress";
+import { archWallG } from "./parts/b_common";
 
 const X0 = ISLAND.street;
 /** the street's numbers (local to the island) */
@@ -80,6 +90,62 @@ const PAL = {
   sand: P("#d8bc8c", "#7a5e44"), apricot: P("#e8c29a", "#6a7258"), stone: P("#cdb8a0", "#6e5a46"),
 };
 
+type G2 = CanvasRenderingContext2D;
+/** THE STREET'S FLOOR, painted in METRES (x across from the island's middle, z along: parts/ground.ts metrePaint): big
+ *  worn pink-grey flags laid in courses, a drain of small setts down the middle, a footway kerb of long stones under
+ *  each row of fronts, a threshold course at the piazza's mouth; wear, cracks, dust in the joints, a weed or two.
+ *  The low sun is at the far end (-z): each flag's far edge catches it, its near edge is in shade. `px` = one pixel
+ *  in metres. */
+const streetPaint = (g: G2, px: number) => {
+  const r = rng(52), X = S.fxR, Z0 = S.end - 0.05, Z1 = 12.05, KERB = 0.52, DRAIN = 0.17, J = 0.018;
+  const tone = (base: string) => { const k = r(); return css(mix(base, k < 0.5 ? "#a68e7e" : "#ccb6a4", 0.75 * Math.abs(k - 0.5) * 2)); };
+  const line = (pts: [number, number][], w: number, col: string) => { g.strokeStyle = col; g.lineWidth = Math.max(w, px * 0.8); g.lineCap = "round"; g.lineJoin = "round"; g.beginPath(); pts.forEach(([x, z], i) => (i ? g.lineTo(x, z) : g.moveTo(x, z))); g.stroke(); };
+  /** one stone: a fill with worn corners, a lit far edge, a shaded near edge, an uneven face */
+  const stone = (x0: number, z0: number, w: number, d: number, base: string, crack = false) => {
+    const a = x0 + J / 2, b = z0 + J / 2, ww = w - J, dd = d - J, c = Math.min(0.035, ww * 0.2, dd * 0.2) * (0.5 + r());
+    g.fillStyle = tone(base); g.beginPath(); g.roundRect(a, b, ww, dd, c); g.fill();
+    g.save(); g.beginPath(); g.roundRect(a, b, ww, dd, c); g.clip();
+    blotch(g, a + ww * r(), b + dd * r(), Math.max(ww, dd) * (0.35 + 0.3 * r()), r() < 0.5 ? "#d2bdaa" : "#a08878", 0.3);
+    if (r() < 0.6) blotch(g, a + ww * r(), b + dd * r(), Math.min(ww, dd) * 0.5, "#8f7868", 0.22);
+    g.fillStyle = "rgba(255,236,214,0.3)"; g.fillRect(a, b, ww, 0.022); g.fillStyle = "rgba(70,48,52,0.2)"; g.fillRect(a, b + dd - 0.02, ww, 0.02);
+    if (crack) { let x = a + ww * (0.2 + 0.6 * r()), z = b; const pts: [number, number][] = [[x, z]]; while (z < b + dd) { z += dd * (0.2 + 0.2 * r()); x += (r() - 0.5) * ww * 0.3; pts.push([x, Math.min(z, b + dd)]); } line(pts, 0.011, "rgba(84,62,60,0.6)"); line(pts.map(([px0, pz0]) => [px0 + 0.012, pz0]), 0.006, "rgba(255,238,220,0.3)"); }
+    g.restore();
+  };
+  g.fillStyle = "#8f796b"; g.fillRect(-X - 0.1, Z0, 2 * X + 0.2, Z1 - Z0);                      // the joints' bed
+  // THE FLAGS: courses across each half of the carriageway, two or three flags to a course
+  for (const sx of [-1, 1]) {
+    const xa = sx > 0 ? DRAIN : -X + KERB, xb = sx > 0 ? X - KERB : -DRAIN, wAll = xb - xa;
+    for (let z = Z0 - 0.3 * r(); z < Z1;) {
+      const d = 0.52 + 0.36 * r(), n = r() < 0.45 ? 2 : 3, cuts = [0];
+      for (let i = 1; i < n; i++) cuts.push((i + (r() - 0.5) * 0.5) / n);
+      cuts.push(1);
+      for (let i = 0; i < n; i++) stone(xa + wAll * cuts[i], z, wAll * (cuts[i + 1] - cuts[i]), d, "#b9a190", r() < 0.07);
+      z += d;
+    }
+  }
+  // THE DRAIN: two rows of small setts down the middle, a dark wet joint between them
+  g.fillStyle = "#7c6659"; g.fillRect(-DRAIN, Z0, 2 * DRAIN, Z1 - Z0);
+  for (const row of [0, 1]) for (let z = Z0 - (row ? 0.11 : 0); z < Z1;) { const d = 0.19 + 0.05 * r(); stone(row ? 0.005 : -DRAIN, z, DRAIN - 0.005, d, "#a28c7c"); z += d; }
+  { const gr = g.createLinearGradient(-DRAIN, 0, DRAIN, 0); gr.addColorStop(0, "rgba(50,36,40,0)"); gr.addColorStop(0.5, "rgba(50,36,40,0.3)"); gr.addColorStop(1, "rgba(50,36,40,0)"); g.fillStyle = gr; g.fillRect(-DRAIN, Z0, 2 * DRAIN, Z1 - Z0); }
+  // THE KERBS: long stones under each row of fronts
+  for (const sx of [-1, 1]) for (let z = Z0 - 1.2 * r(); z < Z1;) { const d = 1.5 + 1.0 * r(); stone(sx > 0 ? X - KERB : -X, z, KERB, d, "#c4b4a6", r() < 0.1); z += d; }
+  // the threshold course at the piazza's mouth
+  for (let x = -X; x < X;) { const w = 0.7 + 0.5 * r(); stone(x, Z0, Math.min(w, X - x), 0.42, "#c4b4a6"); x += w; }
+  // wear: the middle of each half trodden pale, the wall feet and the drain's sides dark with dirt
+  for (const [x0, x1, col] of [[-1.35, -0.45, "236,214,196"], [0.45, 1.35, "236,214,196"]] as [number, number, string][]) { const gr = g.createLinearGradient(x0, 0, x1, 0); gr.addColorStop(0, `rgba(${col},0)`); gr.addColorStop(0.5, `rgba(${col},0.16)`); gr.addColorStop(1, `rgba(${col},0)`); g.fillStyle = gr; g.fillRect(x0, Z0, x1 - x0, Z1 - Z0); }
+  for (const sx of [-1, 1]) { const gr = g.createLinearGradient(sx * X, 0, sx * (X - 0.45), 0); gr.addColorStop(0, "rgba(72,50,56,0.36)"); gr.addColorStop(1, "rgba(72,50,56,0)"); g.fillStyle = gr; g.fillRect(Math.min(sx * X, sx * (X - 0.45)), Z0, 0.45, Z1 - Z0); }
+  for (let i = 0; i < 420; i++) blotch(g, -X + 2 * X * r(), Z0 + (Z1 - Z0) * r(), 0.25 + 0.6 * r(), r() < 0.5 ? "#cdb7a4" : "#98806f", 0.14);
+  // dust in the joints, grit
+  for (let i = 0; i < 16000; i++) { g.fillStyle = r() < 0.5 ? "rgba(90,66,62,0.2)" : "rgba(246,226,204,0.2)"; g.fillRect(-X + 2 * X * r(), Z0 + (Z1 - Z0) * r(), 0.01 + 0.024 * r(), 0.01 + 0.018 * r()); }
+  // weeds in the joints at the wall feet (grey-olive, small)
+  for (let i = 0; i < 46; i++) {
+    const sx = r() < 0.5 ? -1 : 1, x = sx * (X - 0.03 - 0.12 * r() * r()), z = Z0 + (Z1 - Z0) * r();
+    for (let k = 0; k < 5; k++) { const a = r() * 6.28, l = 0.03 + 0.05 * r(); line([[x, z], [x + Math.cos(a) * l, z + Math.sin(a) * l * 0.7]], 0.012, r() < 0.5 ? "rgba(112,116,78,0.8)" : "rgba(138,136,92,0.75)"); }
+  }
+  // a few fallen leaves and wisps of straw
+  for (let i = 0; i < 150; i++) { const x = -X + 2 * X * r(), z = Z0 + (Z1 - Z0) * r(), a = r() * 3.14, l = 0.04 + 0.07 * r(); line([[x, z], [x + Math.cos(a) * l, z + Math.sin(a) * l]], 0.008, r() < 0.5 ? "rgba(214,188,140,0.7)" : "rgba(150,120,90,0.55)"); }
+};
+
 function build(K: Kit): PlaceBuild {
   const group = new THREE.Group(); group.name = "street";
   const Mk = maker(K, group), BT = new Batch(), RB = new Batch();
@@ -102,17 +168,22 @@ function build(K: Kit): PlaceBuild {
   }), 0.95);
 
   // ---------------------------------------------------------------------------------------------- the ground
+  // (v5: the paving was ONE quad of 80 x 110 m with the gutter and the kerbs as sheets 0.6 and 0.7 mm over it: the same
+  // two faults as Mantua's ground, parts/ground.ts. Now the street between the fronts is one painting, in metres, with
+  // its drain and its kerbs painted INTO it, on a grid; the alley and the piazza keep the tiled paving, on the same grid)
   const mPave = Mk.tex(pavingTex(52, { base: "#b9a190", lo: "#a68e7e", hi: "#c8b2a0", joint: "#a48e7e" }), 0.95);
-  Mk.mesh("street.paving", levelQuad(L(-40), L(40), -80, 30, 0, (x, z) => [(x - X0) / 3.2, -z / 3.2]), mPave, { cast: false });
-  const mSetts = Mk.tex(paint(128, 512, (g, W, H) => {
-    const rr = rng(53); g.fillStyle = "#8a7466"; g.fillRect(0, 0, W, H);
-    for (let y = 0; y < H; y += 24) for (let x = (y / 24) % 2 ? -16 : 0; x < W; x += 32) { g.fillStyle = css(mix("#a28c7c", rr() < 0.5 ? "#937d6e" : "#b29c8a", 0.5 * rr())); g.fillRect(x + 2.5, y + 2.5, 27, 19); }
-    const sh = g.createLinearGradient(0, 0, W, 0); sh.addColorStop(0, "rgba(50,36,40,0)"); sh.addColorStop(0.5, "rgba(50,36,40,0.14)"); sh.addColorStop(1, "rgba(50,36,40,0)"); g.fillStyle = sh; g.fillRect(0, 0, W, H);
-  }, true), 0.92);
-  Mk.mesh("street.gutter", levelQuad(L(-0.28), L(0.28), S.end - 0.2, 12, 0.0006, (x, z) => [(x - X0 + 0.28) / 0.56, -z / 1.7]), mSetts, { cast: false });
-  // the footway kerbs: a flush strip of long kerb stones along each row of fronts
-  const mKerb = Mk.tex(paint(512, 64, (g, W, H) => { g.fillStyle = "#a8968a"; g.fillRect(0, 0, W, H); for (let x = 0; x < W; x += 128) { g.fillStyle = "#c2b2a4"; g.fillRect(x + 3, 3, 122, H - 6); } }, true), 0.92);
-  for (const sx of [-1, 1]) Mk.mesh("street.kerb", levelQuad(L(sx * S.fxR - (sx > 0 ? 0.55 : 0)), L(sx * S.fxR + (sx > 0 ? 0 : 0.55)), S.end, 12, 0.0007, (x, z) => [-z / 2.2, 0.5]), mKerb, { cast: false });
+  {
+    const ZE = S.end, ZC = 12;
+    const xs = gridLines(L(-40), L(40), L(-9), L(6), 1, [L(S.fxL), L(S.fxR)]), zs = gridLines(-80, 30, -18, 6, 1, [ZE, ZC]);
+    const tile = (x: number, z: number): [number, number] => [(x - X0) / 3.2, -z / 3.2];
+    Mk.mesh("street.paving", patchG(xs, zs, L(-40), L(S.fxL), -80, 30, 0, tile), mPave, { cast: false });
+    Mk.mesh("street.paving", patchG(xs, zs, L(S.fxR), L(40), -80, 30, 0, tile), mPave, { cast: false });
+    Mk.mesh("street.paving", patchG(xs, zs, L(S.fxL), L(S.fxR), -80, ZE, 0, tile), mPave, { cast: false });
+    Mk.mesh("street.paving", patchG(xs, zs, L(S.fxL), L(S.fxR), ZC, 30, 0, tile), mPave, { cast: false });
+    const MP = metrePaint(S.fxL, S.fxR, ZE, ZC, 150);
+    const tex = paint(MP.W, MP.H, (g) => { MP.begin(g); streetPaint(g, 1 / 150); });
+    Mk.mesh("street.floor", patchG(xs, zs, L(S.fxL), L(S.fxR), ZE, ZC, 0, (x, z) => MP.uvOf(x - X0, z)), Mk.tex(tex, 0.95), { cast: false });
+  }
 
   // ---------------------------------------------------------------------------------------------- the houses
   type HSpec = { name: string; z0: number; z1: number; side: "L" | "R"; h: number; pal: FrontPal; storeys: number[]; cols: number; ground: Win[]; holes?: { u0: number; u1: number; y0: number; y1: number; arch?: number; surround?: number }[]; back?: THREE.Material; balcony?: { u: number; s: number; w: number }; lit?: number[]; bricks?: number; recess?: number; ppm?: number };
@@ -120,20 +191,23 @@ function build(K: Kit): PlaceBuild {
     // left row (fronts at x -2.3 facing +x; u runs toward -z from z0)
     { name: "A", side: "L", z0: 9.0, z1: 1.2, h: 7.4, pal: PAL.ochre, storeys: [2.9, 5.1], cols: 3, ground: [{ u: 2.0, y0: 1.0, y1: 2.15, w: 0.8, kind: "closed" }, { u: 5.6, y0: 0, y1: 2.3, w: 1.1, kind: "door" }], bricks: 1 },
     { name: "B", side: "L", z0: 1.2, z1: S.alley.z0, h: 6.5, pal: PAL.rose, storeys: [2.8, 4.75], cols: 2, ground: [{ u: 0.9, y0: 1.0, y1: 2.1, w: 0.7, kind: "half" }], holes: [{ u0: 2.35, u1: 3.45, y0: 0, y1: 2.55, arch: 0.55, surround: 0.15 }], back: mDoorBack, bricks: 1 },
-    { name: "C", side: "L", z0: S.alley.z1, z1: -9.6, h: 8.1, pal: PAL.cream, storeys: [3.1, 5.6], cols: 3, ground: [{ u: 1.3, y0: 0, y1: 2.4, w: 1.15, kind: "door" }, { u: 3.9, y0: 1.05, y1: 2.2, w: 0.8, kind: "closed" }], balcony: { u: 2.75, s: 0, w: 1.9 }, lit: [4] },
+    { name: "C", side: "L", z0: S.alley.z1, z1: -9.6, h: 8.1, pal: PAL.cream, storeys: [3.1, 5.6], cols: 3, ground: [{ u: 3.9, y0: 1.05, y1: 2.2, w: 0.8, kind: "closed" }], holes: [{ u0: 0.74, u1: 1.86, y0: 0, y1: 2.4, arch: 0.5, surround: 0.15 }], back: mDoorBack, balcony: { u: 2.75, s: 0, w: 1.9 }, lit: [4] },
     { name: "D", side: "L", z0: -9.6, z1: S.end, h: 7.2, pal: PAL.peach, storeys: [2.9, 5.0], cols: 3, ground: [{ u: 2.8, y0: 0, y1: 2.3, w: 1.1, kind: "door" }], lit: [1], bricks: 1 },
     // right row (fronts at x +2.3 facing -x; u runs toward +z from z1)
     { name: "H", side: "R", z0: S.end, z1: -9.9, h: 7.7, pal: PAL.sand, storeys: [3.0, 5.3], cols: 3, ground: [{ u: 1.6, y0: 0, y1: 2.3, w: 1.1, kind: "door" }, { u: 4.0, y0: 1.0, y1: 2.15, w: 0.8, kind: "open" }], lit: [3] },
-    { name: "G", side: "R", z0: -9.9, z1: -4.6, h: 6.9, pal: PAL.rose, storeys: [2.9, 4.95], cols: 2, ground: [{ u: 3.9, y0: 0, y1: 2.3, w: 1.05, kind: "door" }, { u: 1.4, y0: 1.0, y1: 2.15, w: 0.8, kind: "closed" }], balcony: { u: 2.65, s: 0, w: 1.7 }, bricks: 2 },
+    { name: "G", side: "R", z0: -9.9, z1: -4.6, h: 6.9, pal: PAL.rose, storeys: [2.9, 4.95], cols: 2, ground: [{ u: 1.4, y0: 1.0, y1: 2.15, w: 0.8, kind: "closed" }], holes: [{ u0: 3.38, u1: 4.42, y0: 0, y1: 2.3, surround: 0.14 }], back: mDoorBack, balcony: { u: 2.65, s: 0, w: 1.7 }, bricks: 2 },
     { name: "F", side: "R", z0: -4.6, z1: 2.8, h: 7.3, pal: PAL.apricot, storeys: [2.95, 5.15], cols: 3, ground: [{ u: 1.5, y0: 0, y1: 2.3, w: 1.1, kind: "door" }, { u: 6.4, y0: 1.0, y1: 2.15, w: 0.8, kind: "closed" }], holes: [{ u0: S.win.z + 4.6 - S.win.w / 2, u1: S.win.z + 4.6 + S.win.w / 2, y0: S.win.y0, y1: S.win.y1, surround: 0.1 }], back: mRoom, recess: S.win.deep, ppm: 280, bricks: 1 },
     { name: "E", side: "R", z0: 2.8, z1: 9.0, h: 6.6, pal: PAL.stone, storeys: [2.8, 4.8], cols: 2, ground: [{ u: 2.2, y0: 1.0, y1: 2.15, w: 0.8, kind: "half" }] },
   ];
   const mats = new Map<string, THREE.Material>();
   const sideOf = (pal: FrontPal) => { const k = pal.wall; if (!mats.has(k)) mats.set(k, Mk.flat(toHex(mix(pal.wall, "#9a7a6a", 0.12)), 0.92)); return mats.get(k)!; };
   const litRects: { M: THREE.Matrix4; wn: Win }[] = [];
+  /** each house's placement, by its letter (the dressing stands on the fronts) */
+  const HM: Record<string, THREE.Matrix4> = {};
   let hi = 0;
   for (const hs of HOUSES) {
     const w = Math.abs(hs.z1 - hs.z0), M = hs.side === "L" ? houseAt(L(S.fxL), hs.z0, Math.PI / 2) : houseAt(L(S.fxR), hs.z0, -Math.PI / 2);
+    HM[hs.name] = M;
     const wins = [...hs.ground, ...upperWins(600 + hi, w, hs.storeys, hs.cols)];
     if (hs.balcony) { const k = wins.findIndex((q, i) => i >= hs.ground.length && Math.abs(q.u - hs.balcony!.u) < w / hs.cols / 2 && Math.abs(q.y0 - hs.storeys[0] - 0.85) < 0.01); if (k >= 0) wins[k] = { ...wins[k], u: hs.balcony.u, y0: hs.storeys[0] + 0.02, y1: hs.storeys[0] + 2.1, w: 0.9, kind: "open" }; }
     for (const li of hs.lit ?? []) { const q = wins[hs.ground.length + li]; if (q) { q.kind = "open"; litRects.push({ M, wn: q }); } }
@@ -189,6 +263,12 @@ function build(K: Kit): PlaceBuild {
       const g = new THREE.Group(); g.name = `street.plank${i}`;
       const yc = W0.y1 + 0.03 - ht / 2 - i * ((W0.y1 - W0.y0 + 0.06 - ht) / (n - 1)), tilt = [0.05, -0.04, 0.035, -0.06, 0.03][i % 5], dz = [0.02, -0.03, 0.01, 0.03, -0.02][i % 5];
       new Part(K).add(K.flat("#ffffff", { map: plankTex(880 + i), rough: 0.9 }), new THREE.BoxGeometry(len, ht, 0.026), 0.005).into(g, `street.plank${i}`);
+      // THE PLANK'S BODY IS SEEN BY THE INK PASS (v5, the owner on the v4 cut: "The lines are clipping here": the window's
+      // two jamb lines and its lintel line ran across the planks). A props-kit part is on the NOINK layer: the pass does
+      // not know it is there and draws the set's lines behind it over it unless it stands 1.5 % of the distance + 3 cm
+      // clear (kit fx/README.md, rule 5), and these lie ON the wall. In the pass's own picture the planks now cover the
+      // window's edges; their outline stays their own black hull.
+      g.children.forEach((c) => { if (!c.name.endsWith(".ink")) c.layers.set(0); });
       // the plank's own frame: length along x, its face toward +z; turned to lie on the front (facing -x)
       g.position.set(L(S.fxR - 0.016 - (i % 2) * 0.012), yc, W0.z + dz); g.rotation.set(0, -Math.PI / 2, tilt, "YXZ");
       g.visible = false; group.add(g); planks.push(g);
@@ -205,8 +285,59 @@ function build(K: Kit): PlaceBuild {
     BT.add(mWood, new THREE.CylinderGeometry(0.14, 0.14, 0.09, 16).rotateX(Math.PI / 2).translate(x, 1.86, wz));
     BT.add(mStoneLo, new THREE.CylinderGeometry(1.05, 1.1, 0.12, 28).translate(x, 0.06, wz));
   }
+  // ---------------------------------------------------------------------------------------------- the street is lived in (v5)
+  // the glows of the lanterns and of the lit windows: shown at dusk only
+  const litG = new THREE.Group(); litG.name = "street.lit"; group.add(litG);
+  /** the piazza's things and its far side do not cast: the sun is behind them and their shadows would lie the whole
+   *  length of the street */
+  const PB = new Batch();
+  {
+    const d = dresser(Mk, BT, VERONA_DRESS, 5151), dp = dresser(Mk, PB, VERONA_DRESS, 5152);
+    // ---- the left row (the fronts face +x; u runs toward -z)
+    d.step(HM.C, 1.3, 1.5); d.sign(HM.C, 0.36, 2.95, "loaf"); d.bench(L(-2.04), -8.0, Math.PI / 2, 1.3);
+    d.barrel(L(-1.96), -9.05); d.barrel(L(-1.93), -9.72, { h: 0.74, r: 0.26 }); d.sack(L(-1.62), -9.38, 0.95, 0.6); d.pipe(HM.C, 5.42, 7.6);
+    d.step(HM.D, 2.8, 1.45); d.lantern(HM.D, 1.9, 2.8, { lit: litG }); d.pot(L(-2.06), -11.62, { plant: "tall", r: 0.16 }); d.pot(L(-2.06), -13.18, { plant: "tall", r: 0.16 });
+    d.crate(L(-2.0), 0, -10.35, 0.52, 0.36, 0.42, 0.1); d.crate(L(-2.02), 0.36, -10.33, 0.38, 0.26, 0.32, -0.25); d.ladder(HM.D, 4.75, 3.2);
+    // ---- the right row (the fronts face -x; u runs toward +z)
+    d.step(HM.F, 1.5, 1.4);
+    d.step(HM.G, 3.9, 1.4); d.sign(HM.G, 0.7, 2.85, "boot"); d.pot(L(2.07), -5.28, { plant: "bush" }); d.pot(L(2.07), -6.74, { plant: "bush", r: 0.15 });
+    d.cart(L(1.74), -8.95, -Math.PI / 2, { load: true }); d.pipe(HM.H, 5.26, 7.2);
+    d.awning(HM.H, 4.0, 2.5, 1.8); d.bench(L(1.98), -11.2, Math.PI / 2, 1.5); d.basket(L(1.98), 0.46, -11.62, 0.19, "leaf"); d.basket(L(1.98), 0.46, -11.14, 0.18, "bloom"); d.jar(L(1.97), 0.46, -10.74, 0.85);
+    d.step(HM.H, 1.6, 1.45); d.lantern(HM.H, 2.55, 2.8, { lit: litG }); d.barrel(L(1.97), -14.62); d.sack(L(1.66), -14.3, 0.9, 2.2);
+    // ---- the piazza: two stalls shut for the evening, barrels, the bucket on the well's curb
+    dp.stall(L(-1.25), -19.3, 0.22); dp.stall(L(0.45), -24.2, -0.18, { w: 1.6 });
+    dp.barrel(L(-1.95), -16.7); dp.barrel(L(-1.4), -16.95, { h: 0.7, r: 0.25 }); dp.crate(L(-1.68), 0, -16.25, 0.5, 0.34, 0.4, 0.3);
+    dp.bucket(L(S.well[0] - 0.44), 0.88, S.well[1] + 0.42); dp.sack(L(S.well[0] + 1.25), S.well[1] + 0.2, 0.9, 1.1);
+    // ---- THE FAR SIDE OF THE PIAZZA: two houses, and between them a low arcaded loggia under a tiled roof. The tower
+    // and the low sun stand over the loggia (the painted far card behind keeps the roofs beyond)
+    const ZF = -27.5, lx0 = -4.4, lx1 = 3.6, lh = 3.3, lDeep = 2.7;
+    const far: { name: string; x0: number; w: number; h: number; pal: FrontPal; storeys: number[]; cols: number; ground: Win[]; lit: number[] }[] = [
+      { name: "P", x0: -11.6, w: 7.2, h: 7.5, pal: PAL.cream, storeys: [3.1, 5.4], cols: 4, ground: [{ u: 1.6, y0: 0, y1: 2.4, w: 1.15, kind: "door" }, { u: 3.9, y0: 1.0, y1: 2.2, w: 0.8, kind: "closed" }, { u: 5.9, y0: 0, y1: 2.4, w: 1.1, kind: "door" }], lit: [2, 7] },
+      { name: "Q", x0: lx1, w: 7.0, h: 6.8, pal: PAL.ochre, storeys: [2.9, 5.0], cols: 4, ground: [{ u: 1.3, y0: 1.0, y1: 2.2, w: 0.8, kind: "half" }, { u: 3.5, y0: 0, y1: 2.3, w: 1.1, kind: "door" }], lit: [1] },
+    ];
+    far.forEach((hs, i) => {
+      const M = houseAt(L(hs.x0), ZF, 0), wins = [...hs.ground, ...upperWins(640 + i, hs.w, hs.storeys, hs.cols)];
+      for (const li of hs.lit) { const q = wins[hs.ground.length + li]; if (q) { q.kind = "open"; litRects.push({ M, wn: q }); } }
+      const tex = frontTex({ seed: 740 + i, w: hs.w, h: hs.h, ppm: 48, pal: hs.pal, wins, courses: hs.storeys.map((y) => y - 0.05), cornice: true, brickPatches: 1, cracks: 1 });
+      house(Mk, PB, M, { w: hs.w, h: hs.h, D: 5.5, face: Mk.tex(tex, 0.92), side: sideOf(hs.pal), roof: { kind: "eaves", rise: 1.4, over: 0.5, m: roof }, cast: false }, `street.far${hs.name}`);
+    });
+    // the loggia: four round arches on piers, a dim room behind them with two lit windows, a lean-to roof of tiles
+    const mLog = Mk.flat("#e0cfb4", 0.9), mLogIn = Mk.flat("#8a6a5e", 0.95), nA = 4, bay = (lx1 - lx0) / nA;
+    PB.add(mLog, archWallG({ axis: "x", at: ZF, u0: L(lx0), u1: L(lx1), y0: 0, y1: lh, thick: 0.42, notches: Array.from({ length: nA }, (_, i) => ({ c: L(lx0 + bay * (i + 0.5)), w: bay - 0.56, y0: 0, spring: 1.72, round: true })) }));
+    PB.add(mLogIn, boxG(L(lx0), L(lx1), 0, lh + 0.9, ZF - lDeep - 0.2, ZF - lDeep));
+    PB.add(mSlab, boxG(L(lx0) - 0.04, L(lx1) + 0.04, lh, lh + 0.14, ZF - 0.25, ZF + 0.3));                 // the cornice over the arches
+    PB.add(roof.tile, quad4(new THREE.Vector3(L(lx0), lh + 0.14, ZF + 0.28), new THREE.Vector3(L(lx1), lh + 0.14, ZF + 0.28), new THREE.Vector3(L(lx1), lh + 1.0, ZF - lDeep), new THREE.Vector3(L(lx0), lh + 1.0, ZF - lDeep), (lx1 - lx0) / 1.1, 2.8));
+    for (let i = 0; i <= nA; i++) PB.add(mSlab, boxG(L(lx0 + bay * i) - 0.3, L(lx0 + bay * i) + 0.3, 0, 0.16, ZF - 0.24, ZF + 0.3));   // the piers' plinths
+    for (const cx of [lx0 + bay * 0.5, lx0 + bay * 2.5]) {
+      const win = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 1.1).translate(L(cx), 1.6, ZF - lDeep + 0.012), new THREE.MeshBasicMaterial({ color: new THREE.Color(1.0, 0.72, 0.4), fog: false }));
+      win.layers.set(NOINK); win.name = "street.litWin"; litG.add(win);
+    }
+    for (const i of [1, 3]) dp.pot(L(lx0 + bay * i), ZF + 0.52, { plant: "tall", r: 0.2 });
+    dp.bench(L(lx0 + bay * 1.5), ZF - 1.2, 0, 1.6); dp.barrel(L(lx0 + bay * 3.5 + 0.3), ZF - 1.6);
+  }
   BT.flush(group, "street.parts");
   RB.flush(group, "street.parts2");
+  PB.flush(group, "street.piazza", false, true);
 
   // ---------------------------------------------------------------------------------------------- laundry across the street
   const laundry: { animate(t: number): void }[] = [];
@@ -221,7 +352,6 @@ function build(K: Kit): PlaceBuild {
   }
 
   // ---------------------------------------------------------------------------------------------- the windows lit at dusk
-  const litG = new THREE.Group(); litG.name = "street.lit"; group.add(litG);
   {
     const mLit = new THREE.MeshBasicMaterial({ color: new THREE.Color(1.0, 0.72, 0.4), fog: false });
     for (const { M, wn } of litRects) {

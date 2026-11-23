@@ -5,13 +5,16 @@
 //            neck and gold trim. Resting face: a small sure smile under level brows.
 //   FRIAR    Friar Laurence, the herbalist: a brown habit with the hood down on his shoulders, a rope belt, a bald crown with a ring of hair,
 //            grey brows and a short grey beard. Resting face: weary and warm.
+//   TYBALT   (v5) Capulet, Juliet's cousin, the duellist of scene E: the house's red a shade deeper than hers with black
+//            and gold, black hair combed straight back from a widow's peak, a pointed goatee and a pencil moustache,
+//            heavy brows in a V; the tallest of the cast. Resting face: the glare. He is on screen for six seconds.
 // Each Person is Wanbi's type (a kit Look made once + accessories + scale + resting face); addPerson is Wanbi's plus
 // the limbs' colours.
 import type { Expr, Look } from "../group/kit/toon";
 import type { Acc, Rig, RigCast, RigFace } from "../group/kit/rig3d";
 import { addPerson as addKitPerson, type Person as KitPerson } from "../wanbi/people";
 import { limbColours, napeHair } from "../su/acc/figure";
-import { legColours, baldHead } from "./acc/figure";
+import { legColours, baldHead, fineHead, freeDepth } from "./acc/figure";
 import { robe } from "../../kit/acc/garb";
 import { beret, beretOn, curls, julietCap, tresses, hairRing } from "./acc/head";
 import { herEyes, loveEyes } from "./acc/eyes";
@@ -24,13 +27,16 @@ import { lashes, lips, cheeks, shine, jewel, freckles, softBrows, bushyBrows, ag
 import { hairShell, drills, tiara, comma, sideLocks, type ShellO } from "./acc/hair";
 import { backFall, backBow, napeLocks, templeLocks } from "./acc/backhair";
 
-export type Person = KitPerson & { limbs?: { hand?: string; arm?: string }; legs?: { leg?: string; foot?: string }; nape?: boolean; bald?: boolean };
+export type Person = KitPerson & { limbs?: { hand?: string; arm?: string }; legs?: { leg?: string; foot?: string }; nape?: boolean; bald?: boolean;
+  /** a finer head outline (acc/figure.ts fineHead): the line's width in m and its brush swell (the rig's: 0.021, 0.63) */ headLine?: { w: number; thick: number } };
 export function addPerson(rc: RigCast, p: Person): Rig {
   const r = addKitPerson(rc, p);
   if (p.limbs) limbColours(r, p.limbs);
   if (p.legs) legColours(r, p.legs);
   if (p.nape) napeHair(r, p.look);
   if (p.bald) baldHead(r);
+  if (p.headLine) fineHead(r, p.headLine);
+  freeDepth(r);
   return r;
 }
 
@@ -46,6 +52,8 @@ export const COL = {
   // (v2's dark hair, kept for the before/after sheet)
   hairRomeoV2: "#5a3a26", hairJulietV2: "#3a2a26",
   skinRomeo: "#f6dcc4", skinJuliet: "#fbe6d6", skinFriar: "#eccaa6",
+  // v5: Tybalt. The Capulet red a shade deeper than Juliet's (she keeps the strongest red), black cloth, black hair
+  redTybalt: "#99212c", blackCloth: "#2a2126", hairTybalt: "#241d21", skinTybalt: "#f0d3b8",
 } as const;
 
 const face = (eyesE: Expr, mouth: Expr, browsE: Expr, marks?: Expr): RigFace => ({ eyes: eyesE, mouth, brows: browsE, marks: marks ?? browsE });
@@ -66,6 +74,9 @@ export const ROMEO_HAIR: ShellO = {
   // v3b: the shine ring lower, across the back of his head under the beret's band (at 56 deg it showed only as a pale
   // zigzag between the band and the fringe)
   ringEl: 14, ringA: 0.5, ringN: 20,
+  // v5 (the owner on the v4 cut: "His hair clipping through his cloths and neck? it should be behind"): the back of his
+  // hair below this height is drawn at its true depth (hair.ts FREE_DEPTH), with the locks at his nape
+  napeY: -0.4,
 };
 /** (v3's hair as on the first sheet, for the before/after sheet: the ring round the crown) */
 const ROMEO_HAIR_V3: ShellO = { ...ROMEO_HAIR, ringEl: undefined, ringA: undefined, ringN: undefined };
@@ -128,6 +139,9 @@ export const JULIET: Person = {
   // (hair "bob", not v2's "long": the rig hangs a long fall behind the body for "long" whatever the accessories say, and
   // under the shell its top showed as two lobes at the nape)
   name: "juliet", scale: 0.97, look: { ...JULIET_LOOK, hair: "bob" }, limbs: { hand: COL.skinJuliet, arm: COL.red }, nape: true, expr: face("smile", "smile", "neutral") as unknown as Expr,
+  // v5 (the owner on the v4 cut: "Juilet's jaw black line is always so thick, make it more thin, feminine"): her head's
+  // ink line is 1.5 cm with a light brush (2 cm under the chin; the rig's is 2.1 cm, 3.4 under the chin)
+  headLine: { w: 0.0135, thick: 0.26 },
   acc: (): Acc[] => [robe({ col: COL.red, band: COL.gold, sash: false }), gown({ col: COL.red }), girdleEnd(), puffs({ col: COL.red, pane: COL.cream, size: 0.046 }),
     // v4 ("polish the character designs"): the lock beside each cheek is a long fine point lying along her head, half
     // turned to the front (v3b's stood out of the head like a board), and the drill curls' bows sit behind it on the
@@ -192,6 +206,25 @@ export const YOUNG_FRIAR: Person = {
   acc: (): Acc[] => [robe({ col: COL.habit, band: COL.habitDeep, sash: false }), habit({ col: COL.habit }), ropeEnd(), cowl({ col: COL.habitDeep }),
     hairRing({ col: "#6b4a2e", puff: 0.15, burns: 0.3 }), softBrows({ col: "#5a3c24" }), nose(), cheeks({ k: 0.3, col: "#e8907c" }), letter({ hand: 0 })],
 };
+/** TYBALT (v5, 23 Nov 2026; the owner on the v4 cut: "Add a sequence to them fighting and someone lying on the ground
+ *  with some labels perhaps to give more context"). His hair: a low glossy black shell combed back, a widow's peak at
+ *  the face, short at the nape; no hat (the shell is the rig's "hat": it hides the rig's painted hairline). */
+export const TYBALT_HAIR: ShellO = {
+  front: 0.86, temple: 0.6, side: 0.4, back: -0.34,
+  locks: [{ a: 0, w: 17, len: 0.17 }],
+  thF: 0.06, thS: 0.085, thB: 0.1, top: 1.13, featherF: 8, relief: 0.02, ridges: { n: 17, amp: 0.03, from: 22 }, lift: [{ a: 0, el: 58, w: 46, h: 0.06 }], hat: 56,
+  col: COL.hairTybalt, light: "#5d4e57", deep: "#120e11", ring: "#9a8a94", ringEl: 46, ringA: 0.5, ringN: 16, part: null, sideTo: 100, backFrom: 128,
+};
+const TYBALT_LOOK: Look = {
+  seed: 1487, skin: COL.skinTybalt, top: "tee", topCol: COL.redTybalt, bottom: "chinos", botCol: COL.blackCloth, shoes: "#231b1e", shoeSole: "#151012",
+  hair: "short", hairCol: COL.hairTybalt, part: 1, width: 0.92,
+};
+export const TYBALT: Person = {
+  name: "tybalt", scale: 1.06, look: TYBALT_LOOK, limbs: { hand: COL.skinTybalt, arm: COL.redTybalt }, legs: { leg: "#3a2e34", foot: "#1d1619" },
+  expr: face("stern", "stern", "huff") as unknown as Expr,
+  acc: (): Acc[] => [doublet({ col: COL.redTybalt, belt: "#1f181b" }), peplum({ col: COL.blackCloth }), puffs({ col: COL.redTybalt, pane: COL.blackCloth }),
+    hairShell(TYBALT_HAIR), beard({ kind: "goatee", col: COL.hairTybalt }), moustache({ kind: "pencil", col: COL.hairTybalt }), softBrows({ col: "#1c1619", weight: 4.4 }), cheeks({ k: 0.18 })],
+};
 /** THE FEAST'S DANCERS (scene B, v3: "less moving around"; the script always had dancers in the hall): masked Capulet
  *  guests in muted colours (the leads keep the strongest blue and red), a gold domino each, nothing in their hands */
 const guest = (name: string, o: { lady: boolean; col: string; deep: string; hair: Look["hair"]; hairCol: string; seed: number }): Person => ({
@@ -208,23 +241,27 @@ export const GUEST_MAN_A = guest("guestManA", { lady: false, col: "#7a3446", dee
 export const GUEST_LADY_B = guest("guestLadyB", { lady: true, col: "#76608f", deep: "#53426a", hair: "bun", hairCol: "#a7743e", seed: 2129 });
 export const GUEST_MAN_B = guest("guestManB", { lady: false, col: "#6c5d35", deep: "#4c4124", hair: "side", hairCol: "#3b2a1e", seed: 2137 });
 
-export const PEOPLE = { romeoV3b: ROMEO_V3B, julietV3b: JULIET_V3B, romeoV2: ROMEO_V2, julietV2: JULIET_V2, friarVial: FRIAR_VIAL, friarLetter: FRIAR_LETTER, youngFriar: YOUNG_FRIAR, romeoMask: ROMEO_MASK, romeoBottle: ROMEO_BOTTLE, friarQuill: FRIAR_QUILL, romeoBare: ROMEO_BARE, romeoHat: ROMEO_HAT, romeoHatV3: ROMEO_HAT_V3, julietV3: JULIET_V3, romeoCry: ROMEO_CRY, romeo: ROMEO, juliet: JULIET, friar: FRIAR, friarGoatee: friar({ beard: "goatee" }), friarBare: friar({ beard: "none" }), guestLadyA: GUEST_LADY_A, guestManA: GUEST_MAN_A, guestLadyB: GUEST_LADY_B, guestManB: GUEST_MAN_B } satisfies Record<string, Person>;
+export const PEOPLE = { tybalt: TYBALT, romeoV3b: ROMEO_V3B, julietV3b: JULIET_V3B, romeoV2: ROMEO_V2, julietV2: JULIET_V2, friarVial: FRIAR_VIAL, friarLetter: FRIAR_LETTER, youngFriar: YOUNG_FRIAR, romeoMask: ROMEO_MASK, romeoBottle: ROMEO_BOTTLE, friarQuill: FRIAR_QUILL, romeoBare: ROMEO_BARE, romeoHat: ROMEO_HAT, romeoHatV3: ROMEO_HAT_V3, julietV3: JULIET_V3, romeoCry: ROMEO_CRY, romeo: ROMEO, juliet: JULIET, friar: FRIAR, friarGoatee: friar({ beard: "goatee" }), friarBare: friar({ beard: "none" }), guestLadyA: GUEST_LADY_A, guestManA: GUEST_MAN_A, guestLadyB: GUEST_LADY_B, guestManB: GUEST_MAN_B } satisfies Record<string, Person>;
 export type PersonKey = keyof typeof PEOPLE;
 /** FACES by name (preview: expr "<name>"). Romeo: puppy (his resting face), dreamy, wail, blank, hollow.
  *  Juliet: sure (her resting face), bossy, swoon, caught, brave. The Friar: weary (resting), dry, worried, warn. */
 export const FACES: Record<string, Expr | RigFace> = {
   puppy: face("neutral", "smile", "sad"), dreamy: face("relief", "smile", "sad"), wail: face("wince", "shock", "sad"), blank: face("smile", "neutral", "shock", "neutral"), hollow: face("neutral", "sad", "sad"),
+  // Tybalt (v5): the glare (resting), teeth bared in the fight, struck, and down (eyes shut, the brows let go)
+  glare: face("stern", "stern", "huff"), snarl: face("stern", "pained", "huff", "stern"), struck: face("shock", "shock", "shock"), down: face("sleep", "neutral", "sad", "neutral"),
   sure: face("smile", "smile", "neutral"), bossy: { eyes: "smile", mouth: "smile", brows: "neutral", browsTo: "stern", k: 0.5, marks: "neutral" }, swoon: face("relief", "relief", "sad", "neutral"), caught: face("smile", "nervous", "shock", "nervous"), brave: face("neutral", "smile", "sad", "neutral"),
   // taste review of v1 (23 Nov): faces that fought their beats. wail had the laugh mouth (it read 笑哭) and caught had the
   // ring eyes (on Juliet they read as round spectacles); the bier, the waking and her sincere line get their own faces
   tender: face("sad", "smile", "sad"), grief: face("sad", "sad", "sad"), waking: face("neutral", "sigh", "sad"),
   puzzled: face("smile", "whistle", "shock", "neutral"), soft: face("smile", "smile", "sad", "neutral"),
-  // v3b (the owner, 23 Nov: "give them expressive emotion showing they are in love"): the love eyes (eyes.ts) by the
-  // rig eye expressions no face here used before. smitten: big pupils with a heart-shaped light and a flush; hearts:
-  // HEART EYES, the film's one signature emote (once or twice)
-  smitten: face("lick", "smile", "relief", "smile"), smittenOpen: face("lick", "relief_open", "relief", "smile"), hearts: face("speechless", "relief_open", "relief", "relief_open"),
-  // (hers: the small smile with the tip of the tongue, not his big grin: she is the 大小姐)
-  heartsSoft: face("speechless", "relief", "relief", "relief"),
+  // v3b (the owner, 23 Nov: "give them expressive emotion showing they are in love"): the love eyes (eyes.ts) by a rig
+  // eye expression no face here used before. smitten: big pupils with a large light and a flush.
+  // (v5, the owner on the v4 cut: "This eyes turning into heart is too much, the floatinng heart is enough": the red
+  // HEART EYES are out of the film and so is the heart-shaped light in the pupil; love is the big bright eyes, the
+  // flush and the hearts that float out of them, hud/emotes.tsx)
+  smitten: face("lick", "smile", "relief", "smile"), smittenOpen: face("lick", "relief_open", "relief", "smile"),
+  // (hers while her hearts float: the small soft smile, not his big grin: she is the 大小姐)
+  smittenSoft: face("lick", "relief", "relief", "smile"),
   // v4 (the owner: "the tears and other expressions need to be bettered"): her huff when the reporter will not run her
   // errand: narrowed eyes under level brows, a turned-down mouth, the red anger mark by her eye (and a puff of breath,
   // hud/emotes.tsx Huff)

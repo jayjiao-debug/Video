@@ -213,7 +213,9 @@ export const house = (Mk: Mk, BT: Batch, M: THREE.Matrix4, o: HouseO, name: stri
     const rc = o.recess ?? 0.28;
     Mk.mesh(name + ".front", W(holedWall([0, 0], [w, 0], 0, h, o.holes, w, h)), o.face, { cast, into });
     Mk.mesh(name + ".body", W(new THREE.BoxGeometry(w, h, D - rc).translate(w / 2, h / 2, -rc - (D - rc) / 2)), [o.side, o.side, o.side, o.side, o.back ?? o.side, o.side], { cast, into });
-    for (const hl of o.holes) Mk.mesh(name + ".reveal", W(revealG([0, 0], [w, 0], { ...hl, arch: 0 }, rc, 0.6, hl.arch ? [0, 1, 3] : undefined)), o.reveal ?? o.side, { cast: false, into });
+    // (v5: a DOORWAY's reveal has no sill: the ground is its floor. A sill at y 0 lay in the ground's own plane and the
+    // two flickered in every doorway of Mantua: parts/ground.ts)
+    for (const hl of o.holes) { const door = hl.y0 <= 0.002; Mk.mesh(name + ".reveal", W(revealG([0, 0], [w, 0], { ...hl, arch: 0 }, rc, 0.6, hl.arch ? (door ? [0, 1] : [0, 1, 3]) : door ? [0, 1, 2] : undefined)), o.reveal ?? o.side, { cast: false, into }); }
     for (const hl of o.holes) if (hl.arch) {   // the arched head's soffit: a strip along the curve, rc deep
       const n = 10, ww = hl.u1 - hl.u0, spring = hl.y1 - hl.arch, pts: THREE.Vector3[] = [];
       for (let i = 0; i <= n; i++) { const t = i / n, x = hl.u1 - ww * t, y = spring + hl.arch * Math.sin(Math.PI * t) ** 0.6; pts.push(new THREE.Vector3(x, Math.min(hl.y1, y), 0)); }
@@ -258,7 +260,9 @@ export const house = (Mk: Mk, BT: Batch, M: THREE.Matrix4, o: HouseO, name: stri
     for (const s of [0, 1]) add(Bl.slab, boxG(s ? u1 - t - 0.04 : u0 - 0.04, s ? u1 + 0.04 : u0 + t + 0.04, y + 0.86, y + 0.96, -0.02, d - t));
     for (const c of [u0 + 0.25, u1 - 0.25]) { add(Bl.slab, boxG(c - 0.09, c + 0.09, y - 0.42, y - 0.16, -0.02, d * 0.7)); add(Bl.slab, boxG(c - 0.09, c + 0.09, y - 0.62, y - 0.42, -0.02, d * 0.35)); }
   }
-  for (const [u, y, sw] of o.sills ?? []) add(o.sillMat ?? o.side, boxG(u - sw / 2, u + sw / 2, y - 0.09, y, -0.02, 0.13));
+  // (v5: from the front's own plane, not 2 cm inside it: its top lay in the plane of the window's own sill there and the
+  // two flickered)
+  for (const [u, y, sw] of o.sills ?? []) add(o.sillMat ?? o.side, boxG(u - sw / 2, u + sw / 2, y - 0.09, y, 0, 0.13));
 };
 
 /** the windows of a plain house front: `cols` windows per upper storey, shutters by a seeded mix */

@@ -1,7 +1,8 @@
 // hud/whisper.tsx: HER WHISPER, the aside marked 悄悄说, in the film's skin (hud/skin.ts, 「信」 the letter): a note torn
 // off a letter and passed under the lens while the lead carries on unaware. A pure function of the frame.
 //
-//   <WhisperNote f from to text cx? bottom? id? />
+//   <WhisperNote f from to text cx? bottom? id? drips? />   (drips false: no red wax drops under it. The street, E03:
+//                                                            a man lies there, and red drops beside him would read as blood)
 //     f        the film frame
 //     from/to  the first and last frame of her line (it arrives on her first word; give `to` about 6 frames after her
 //              voice ends). The film hides the normal subtitle on these frames: the note REPLACES it, never both.
@@ -39,7 +40,7 @@ export const whisperRect = (text: string | string[], cx?: number, bottom?: numbe
   return { x0: G.x0 - 4, y0: G.y0 - 30, x1: G.x0 + G.w + 6, y1: G.y0 + G.h + 54 };
 };
 
-export const WhisperNote: React.FC<{ f: number; from: number; to: number; text: string | string[]; cx?: number; bottom?: number; id?: string }> = ({ f, from, to, text, cx, bottom, id = "romeo-whisper" }) => {
+export const WhisperNote: React.FC<{ f: number; from: number; to: number; text: string | string[]; cx?: number; bottom?: number; id?: string; drips?: boolean }> = ({ f, from, to, text, cx, bottom, id = "romeo-whisper", drips = true }) => {
   const L = life(f, from, to, SKIN.motion.arrive, SKIN.motion.leave);
   if (!L) return null;
   const t = L.t, N = WHISPER, G = whisperLayout(text, cx, bottom), A = flapIn(t, 0, 5, 6), out = flapOut(L.leave, -1), br = breathe(t, 4);
@@ -56,8 +57,8 @@ export const WhisperNote: React.FC<{ f: number; from: number; to: number; text: 
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{ position: "absolute", left: 0, top: 0, pointerEvents: "none", opacity: A.o * out.o }}>
       <defs>{letterDefs(id)}</defs>
-      {drip(G.x0 + 74, oy + 22, 12, 3, clamp01(part(t, 4, 3)) * (1 - out.k))}
-      {drip(G.x0 + 50, oy + 43, 7.5, 5, clamp01(part(t, 6, 3)) * (1 - out.k))}
+      {drips ? drip(G.x0 + 74, oy + 22, 12, 3, clamp01(part(t, 4, 3)) * (1 - out.k)) : null}
+      {drips ? drip(G.x0 + 50, oy + 43, 7.5, 5, clamp01(part(t, 6, 3)) * (1 - out.k)) : null}
       <g transform={`translate(${ox},${(oy + A.lift + out.dy * -0.6 + br.y * 0.6).toFixed(1)}) rotate(${(N.rot + A.rot + out.rot + br.rot).toFixed(2)}) scale(${(A.s * out.s).toFixed(3)}) translate(${-ox},${-oy})`}>
         {sheet(id, "note", { x0: G.x0, y0: G.y0, x1: G.x0 + G.w, y1: G.y0 + G.h }, { sides: ["bottom"], jag: 7, step: 17, seed: 8, shadow: "big", burn: 7 }, (
           <>

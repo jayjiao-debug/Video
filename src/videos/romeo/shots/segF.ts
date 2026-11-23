@@ -24,6 +24,8 @@ import { P, wv, spot, camAt, faceAt, talk, wordAt, startOf, endOf, ky, accent, r
 import { h } from "./h";
 import { seatOn, stoolSeat } from "../../../kit/day/rig/seats";
 import { clamp01, easeInOutCubic, smooth } from "../../group/story";
+import { cap } from "../captions";
+import { hit, span, lineBody, leans, talkHead } from "./gest";
 
 const S = seg("F");
 const BENCH = spot("cell", "friarBench"), DOOR = spot("cell", "door"), DESK = spot("cell", "desk"), BED = spot("bedroom", "julietBed");
@@ -113,7 +115,13 @@ function cell(w: Parameters<Segment["pose"]>[0], f: number) {
   let frAt = FR_AT.clone(), frFacing = yawTo(FR_AT, JU_AT), frX: Record<string, unknown> = { pose: { kind: "idle", t: f / 30 } };
   if (phase === "vial") {
     const up = ky(f, [[f02 - 6, 0], [f02 + 10, 1]]);
-    frX = { pose: { kind: "hold", t: f / 30 }, hands: up > 0 ? [rel(FR_AT, frFacing, -0.12, 0.72, 0.25).lerp(VIAL_UP, up), null] : [null, null] };
+    // (v5, the owner: "Make their body or hands move as they speak") THE VIAL MOVES WITH HIS WORDS (it stood in the air
+    // between them for ten seconds): shown on "vial"; tipped from side to side through "no warmth, no breath" (a
+    // slow no); turned in a small circle over "two and forty hours"; lifted on "awake"
+    const no = cap("F02", 1), hours = cap("F03", 0), tip = span(f, no.from, no.end - 8, 6, 14) * Math.sin((f - no.from) * 0.24);
+    const turn = span(f, hours.from, hours.end, 8, 12), ta = (f - hours.from) * 0.2;
+    const vial = VIAL_UP.clone().add(V(0.036 * tip + 0.02 * turn * Math.sin(ta), 0.03 * hit(f, wordAt("F02", "vial"), 4, 12) + 0.045 * hit(f, wordAt("F03", "awake"), 5, 18) + 0.02 * turn * (1 - Math.cos(ta)), 0));
+    frX = { pose: { kind: "hold", t: f / 30 }, hands: up > 0 ? [rel(FR_AT, frFacing, -0.12, 0.72, 0.25).lerp(vial, up), null] : [null, null] };
   } else if (phase === "desk") {
     frAt = deskLeg.at; frFacing = deskLeg.facing;
     const writing = f >= deskAt + 9 && f < sealAt;
@@ -128,7 +136,9 @@ function cell(w: Parameters<Segment["pose"]>[0], f: number) {
   } else if (phase === "letter") {
     const d = TO_YF - lensLeg.facing;
     frAt = lensLeg.at; frFacing = lensLeg.facing + Math.atan2(Math.sin(d), Math.cos(d)) * give;
-    frX = { pose: lensLeg.moving ? lensLeg.pose : { kind: "hold", t: f / 30 }, hands: lensLeg.arrived ? [rel(FR_LENS, lensLeg.facing, -0.12, 1.0, 0.4).lerp(GIVE, give), null] : [null, null] };
+    // (v5) "bear THIS to Romeo": the letter is pushed at her lens on "this", and again, less, on "Romeo"
+    const push = hit(f, wordAt("F07", "this"), 3, 14) + 0.5 * hit(f, wordAt("F07", "Romeo"), 3, 10);
+    frX = { pose: lensLeg.moving ? lensLeg.pose : { kind: "hold", t: f / 30 }, hands: lensLeg.arrived ? [rel(FR_LENS, lensLeg.facing, -0.12, 1.0 + 0.06 * push, 0.4 + 0.07 * push).lerp(GIVE, give), null] : [null, null] };
   } else if (phase === "after") {
     frAt = FR_LENS.clone(); frFacing = yawTo(FR_LENS, YF_TAKE);
   }
@@ -141,7 +151,9 @@ function cell(w: Parameters<Segment["pose"]>[0], f: number) {
     // he looks down at the sheet while he stands at the desk, and up again as he turns to the lens with the letter (each
     // took one frame; the rule is of the frame alone, so the look travels across the change of figure at lensWalk too)
     lookDown: soft(f, (g) => (g >= deskAt && g < lensWalk ? 16 : 0)),
-    head: accent("nod", f, endOf("F08") + REACT + 2) ?? undefined,
+    head: talkHead("fr", f, 3, accent("nod", f, endOf("F08") + REACT + 2)),
+    // (v5) he leans to her with each phrase of the plan; he leans in at the lens with his letter
+    lean: leans(lineBody(f, "F02", { lean: 3, dip: 2.2, sway: 0 }), lineBody(f, "F03", { lean: 3, dip: 2.2, sway: 0, words: ["awake"] }), lineBody(f, "F07", { lean: 4, dip: 2.5, sway: 0, words: ["this"] })),
     gaze: phase === "letter" && f < handAt - 9 ? 0 : undefined,                    // (his eyes leave the lens as he turns to the boy)
     hide: [...((frX.hide as string[] | undefined) ?? []), "herbBasket"],
   });
@@ -171,7 +183,9 @@ function cell(w: Parameters<Segment["pose"]>[0], f: number) {
     pose: { kind: has ? "hold" : "idle", t: f / 30 },
     hands: grab > 0 ? [null, VIAL_UP.clone().lerp(rel(JU_AT, juFacing, 0.03, 0.82, 0.3), clamp01(1 - grab))] : has ? [null, rel(JU_AT, juFacing, 0.03, 0.82, 0.3)] : [null, null],
     expr: faceAt(f, [[0, "brave"], [f04 - 2, "bossy"], [endOf("F04") + REACT, "brave"]]),
-    ...talk("ju", f, 2),
+    ...talk("ju", f, 2), head: talkHead("ju", f, 2),
+    // (v5) she leans in to the vial as he explains it, goes at it with her whole body on "Give me", and tells him off
+    lean: leans({ pitch: 3 * span(f, f02 + 24, f04 - 6, 18, 8) + 7 * hit(f, tGive, 5, 12) }, lineBody(f, "F04", { lean: 3, dip: 3, sway: 0, words: ["tell"] })),
     hide: has ? [] : ["vial"],
   });
 
@@ -219,7 +233,7 @@ function room(w: Parameters<Segment["pose"]>[0], f: number) {
     hands: [rel(BED.at, BED.facing, -0.1, 0.61, 0.3), lap.clone().lerp(out, easeInOutCubic(raise))],
     expr: faceAt(f, [[0, "brave"], [toast - 4, "sure"]]),
     ...talk("ju", f, 2),
-    head: accent("nod", f, toast) ?? undefined,
+    head: talkHead("ju", f, 2, accent("nod", f, toast)),
   });
   w.update();
   const opening = f < JOIN.done ? doorWipe(1 - clamp01((f - JOIN.open) / (JOIN.done - JOIN.open))) : undefined;

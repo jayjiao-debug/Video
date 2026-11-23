@@ -234,16 +234,57 @@ const build = (K: Kit): PlaceBuild => {
     P.add(Mk.flat("#8a7a62", 0.95), boxG(bx0 + 0.55, bx1 - 0.02, 0.36, 0.475, bz0 + 0.01, bz1 + 0.02), 0.005);            // the blanket
     P.add(Mk.flat("#ddd2bc", 0.95), new THREE.CylinderGeometry(0.09, 0.09, 0.6, 12).rotateX(Math.PI / 2).translate(bx0 + 0.25, 0.53, (bz0 + bz1) / 2), 0.005);
     // a pair of sandals under the bed's foot and a satchel on the wall peg
-    // THE WRITING DESK (standing, its sloped top facing the writer at x 1.5): quill, ink, red wax, a sheet
+    // THE WRITING DESK (standing, its sloped top facing the writer at x 1.5): quill, ink, red wax, a sheet.
+    // v5 (23 Nov 2026, the owner on the v4 cut: "This prop here I dont think its designed as how its supposed to be?"):
+    // it was a sloped board and a ledge on two bare posts, and the lens (by the bench, looking past it at the writer)
+    // saw the board's underside over the posts: a stack of planks. It is now a slant-top desk the way a scriptorium's
+    // stands: two shaped END PANELS whose top edge carries the slope (the end toward the lens shows the desk in profile:
+    // ledge, slope, lip), each with a pointed blind arch sunk into it and a sled foot; a framed back board toward the
+    // room; a shelf with books between the ends. The slope, the lip and the ledge are where they were (the shots' marks
+    // are on them).
     const dx0 = X(0.85), dx1 = X(1.15), dz0 = -0.85, dz1 = -0.35;
-    for (const z of [dz0 + 0.05, dz1 - 0.05]) P.add(mWood, boxG(dx0 + 0.08, dx0 + 0.16, 0, 0.92, z - 0.04, z + 0.04), 0.005);
-    P.add(mWood, boxG(dx0 + 0.04, dx0 + 0.2, 0, 0.05, dz0, dz1), 0.005);
-    P.add(mWood, boxG(dx0 + 0.08, dx0 + 0.16, 0.25, 0.3, dz0 + 0.05, dz1 - 0.05), 0.005);
-    const slope = new THREE.Matrix4().makeRotationZ(-0.35);
-    const top = boxG(-0.2, 0.2, -0.025, 0.0, (dz0 - dz1) / 2, (dz1 - dz0) / 2).applyMatrix4(slope).translate((dx0 + dx1) / 2, 1.0, (dz0 + dz1) / 2);
-    P.add(mWoodLo, top, 0.005);
-    P.add(mWoodLo, boxG(dx1 - 0.01, dx1 + 0.04, 0.88, 0.95, dz0, dz1), 0.004);                 // the lip that holds the sheet
-    P.add(mWood, boxG(dx0 - 0.03, dx0 + 0.09, 1.06, 1.1, dz0, dz1), 0.004);                    // the flat ledge at the top
+    const slope = new THREE.Matrix4().makeRotationZ(-0.35), SL = Math.tan(0.35), dxm = (dx0 + dx1) / 2;
+    /** the slope's underside at x (its face passes through (dxm, 1.0); the board is 25 mm thick) */
+    const under = (x: number) => 1.0 - (x - dxm) * SL - 0.025 / Math.cos(0.35);
+    const mDeskHi = Mk.flat("#8c6a48", 0.8), mDeskDark = Mk.flat(CC.woodDark, 0.85);
+    {
+      // an end panel in (x, y), 34 mm thick: the back edge up to under the ledge, the top edge under the slope, the
+      // writer's edge, a sled foot fore and aft, and a pointed arch cut through it
+      const xb = dx0 - 0.01, xw = dx1 - 0.02, endG = (z0: number) => {
+        const sh = new THREE.Shape();
+        sh.moveTo(xb - 0.05, 0); sh.lineTo(xb - 0.05, 0.05); sh.quadraticCurveTo(xb - 0.045, 0.1, xb, 0.12);
+        sh.lineTo(xb, 1.06); sh.lineTo(xb + 0.1, 1.06); sh.lineTo(xb + 0.1, under(xb + 0.1)); sh.lineTo(xw, under(xw));
+        sh.lineTo(xw, 0.12); sh.quadraticCurveTo(xw + 0.045, 0.1, xw + 0.05, 0.05); sh.lineTo(xw + 0.05, 0);
+        // (the foot is cut away between its two toes: the desk stands on four points)
+        sh.lineTo(xw - 0.03, 0); sh.quadraticCurveTo((xb + xw) / 2, 0.075, xb + 0.03, 0); sh.closePath();
+        const xa = (xb + xw) / 2, hw = 0.062, y0 = 0.2, ys = 0.56, yt = 0.7, hole = new THREE.Path();   // (the same xa as the arch's board below)
+        hole.moveTo(xa - hw, y0); hole.lineTo(xa - hw, ys); hole.quadraticCurveTo(xa - hw, yt - 0.04, xa, yt); hole.quadraticCurveTo(xa + hw, yt - 0.04, xa + hw, ys); hole.lineTo(xa + hw, y0); hole.closePath();
+        sh.holes.push(hole);
+        return new THREE.ExtrudeGeometry(sh, { depth: 0.034, bevelEnabled: false, curveSegments: 10 }).translate(0, 0, z0);
+      };
+      P.add(mWood, endG(dz0), 0.005); P.add(mWood, endG(dz1 - 0.034), 0.005);
+      // each arch is BLIND: a dark board closes it 26 mm in (through an open arch the lens saw the Friar's rope tassel
+      // hanging behind the desk, a white cone in the dark: first stills of v5)
+      const xa = (xb + xw) / 2;
+      P.add(mDeskDark, boxG(xa - 0.075, xa + 0.075, 0.19, 0.71, dz1 - 0.042, dz1 - 0.026), 0.003);
+      P.add(mDeskDark, boxG(xa - 0.075, xa + 0.075, 0.19, 0.71, dz0 + 0.026, dz0 + 0.042), 0.003);
+      // the back board toward the room (between the ends), framed: a stile at each end and three rails stand 8 mm
+      // proud of it (the lens sees this back at a slant, a third of the frame wide: bare, it was one dark slab);
+      // a rail across its foot, the shelf and its books
+      P.add(mWoodLo, boxG(xb + 0.004, xb + 0.026, 0.16, 1.06, dz0 + 0.034, dz1 - 0.034), 0.004);
+      for (const [za, zb] of [[dz0 + 0.034, dz0 + 0.09], [dz1 - 0.09, dz1 - 0.034]]) P.add(mWood, boxG(xb - 0.004, xb + 0.004, 0.19, 1.02, za, zb), 0.003);
+      for (const [ya, yb] of [[0.19, 0.26], [0.6, 0.655], [0.955, 1.02]]) P.add(mWood, boxG(xb - 0.004, xb + 0.004, ya, yb, dz0 + 0.09, dz1 - 0.09), 0.003);
+      P.add(mWood, boxG(xb + 0.004, xb + 0.05, 0.12, 0.19, dz0 + 0.034, dz1 - 0.034), 0.004);
+      P.add(mWoodLo, boxG(xb + 0.026, xw - 0.01, 0.4, 0.425, dz0 + 0.034, dz1 - 0.034), 0.004);
+      book(P, { cover: Mk.flat("#6e3f34", 0.7), pages: Mk.flat("#ece2c8", 0.9) }, (xb + xw) / 2 + 0.01, 0.425, (dz0 + dz1) / 2 + 0.04, 0.2, 0.15, 0.045, 0.1);
+      book(P, { cover: Mk.flat("#4f5a3e", 0.7), pages: Mk.flat("#ece2c8", 0.9) }, (xb + xw) / 2 + 0.005, 0.47, (dz0 + dz1) / 2 + 0.03, 0.17, 0.13, 0.035, -0.2);
+      // a moulding under the ledge, toward the room
+      P.add(mDeskDark, boxG(xb - 0.012, xb + 0.004, 1.02, 1.06, dz0 - 0.004, dz1 + 0.004), 0.003);
+    }
+    const top = boxG(-0.2, 0.2, -0.025, 0.0, (dz0 - dz1) / 2 - 0.02, (dz1 - dz0) / 2 + 0.02).applyMatrix4(slope).translate(dxm, 1.0, (dz0 + dz1) / 2);
+    P.add(mDeskHi, top, 0.005);
+    P.add(mWoodLo, boxG(dx1 - 0.01, dx1 + 0.04, 0.88, 0.95, dz0 - 0.02, dz1 + 0.02), 0.004);   // the lip that holds the sheet
+    P.add(mWood, boxG(dx0 - 0.03, dx0 + 0.09, 1.06, 1.1, dz0 - 0.02, dz1 + 0.02), 0.004);      // the flat ledge at the top
     // the sheet on the slope (a thin sheet laid on the top's face)
     const sheet = new THREE.PlaneGeometry(0.22, 0.28).rotateX(-Math.PI / 2).applyMatrix4(slope).translate((dx0 + dx1) / 2 + 0.02, 1.0 + 0.004, (dz0 + dz1) / 2 + 0.02);
     Mk.mesh("cell.desk.sheet", sheet, Mk.tex(pageTex(), 0.9), { cast: false, noink: true });

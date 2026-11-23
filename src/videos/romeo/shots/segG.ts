@@ -20,14 +20,19 @@ import { ROMEO_BOTTLE } from "../people";
 import { whisperLean } from "../whisper";
 import { P, wv, spot, camAt, faceAt, talk, wordAt, startOf, endOf, ky, accent, rel, soft, REACT } from "./kit";
 import { G_CARD } from "../fx";
+import { reach, hit, lineBody, leans, talkHead } from "./gest";
 
 const S = seg("G");
-const FAR = spot("mantua", "romeoFar"), LENS = spot("mantua", "romeoLens"), RIDER = spot("mantua", "rider");
-/** the rider on the right of the street, clear of Romeo's feather (taste review of v1: at the stock mark, x -1, the
- *  horse and rider slid along the top of his feather all through the whisper) */
-const RIDER_AT = P("mantua", 1.1, 0, -9.0);
+const FAR = spot("mantua", "romeoFar"), LENS = spot("mantua", "romeoLens");
 /** the cut from the boarded window to Mantua: just before her first word */
 export const G_CUT = startOf("G01") - 7;
+/** THE RIDER WHO BROUGHT THE NEWS RIDES ON OUT OF SIGHT (v5, the owner on the v4 cut: "this horseman continues out
+ *  screen": he rode nine metres and stood at the far end for the rest of the scene). Down the right of the street,
+ *  clear of Romeo's feather (taste review of v1: at the stock mark, x -1, the horse and rider slid along the top of his
+ *  feather all through the whisper), in to the middle, through the gate's passage (2.5 m wide) and off to the right
+ *  behind its tower. 5.6 m a second: the kit gallop's own stride. He is already riding at the cut. */
+const RIDE = new THREE.CatmullRomCurve3([[1.1, -6.0], [0.95, -14], [0.3, -26], [0.25, -33.4], [1.7, -37.4], [6.5, -40.5]].map(([x, z]) => P("mantua", x, 0, z)), false, "centripetal");
+const RIDE_V = 5.6, RIDE_FROM = G_CUT - 20, RIDE_LEN = RIDE.getLength();
 
 export const SEG: Segment = {
   id: "G", from: S.from, to: S.to,
@@ -68,7 +73,8 @@ function mantua(w: Parameters<Segment["pose"]>[0], f: number) {
   camera = whisperLean(f, camera);
   w.setCamera(camera);
   // ---------------------------------------------------------------- the rider who brought the news, leaving at the far end
-  w.prop("horseRider").put(RIDER_AT, { rot: RIDER.facing, t: f / 30, go: ky(f, [[G_CUT, 0.15], [g02 + 30, 1]]) });
+  const rode = ((f - RIDE_FROM) / 30) * RIDE_V / RIDE_LEN;
+  if (rode < 1) { const tan = RIDE.getTangentAt(Math.max(0, rode)); w.prop("horseRider").put(RIDE.getPointAt(Math.max(0, rode)), { rot: Math.atan2(tan.x, tan.z), t: f / 30, gait: "gallop" }); }
   // ---------------------------------------------------------------- Romeo
   const ro = w.actor(ROMEO_BOTTLE);
   const outLeg = walkAlong([LENS.at, P("mantua", 0.35, 0, -4.2), P("mantua", 0.5, 0, -8.0)], 1.0, (f - walkOff) / 30, { easeOut: 0 });      // (he walks out of sight)
@@ -76,7 +82,7 @@ function mantua(w: Parameters<Segment["pose"]>[0], f: number) {
   const turnK = ky(f, [[turnAway, 0], [turnAway + 10, 1]]);
   const at = leaving ? outLeg.at : f >= walkIn ? inLeg.at : FAR.at;
   const facing = leaving ? outLeg.facing : f >= walkIn ? (inLeg.arrived ? THREE.MathUtils.lerp(LENS.facing, Math.PI * 0.94, turnK) : inLeg.facing) : FAR.facing;
-  const fistAt = (g: number) => g >= tStars - 6 && g < endOf("G02") + 4, fist = fistAt(f);
+  const fistAt = (g: number) => g >= tStars - 6 && g < endOf("G02") + 4;
   // the bottle: in his right hand in front of him on "No matter" (still facing her lens, so it reads), then into his
   // coat as he turns away
   const pocket = ky(f, [[turnAway + 6, 0], [turnAway + 16, 1]]);
@@ -87,14 +93,25 @@ function mantua(w: Parameters<Segment["pose"]>[0], f: number) {
   // showed): soft() makes each a move of seven frames. (From the bottle his head went UP to her lens, with his back
   // turning to her, and down again as he left: now it leaves the bottle once.)
   const look = (g: number) => (g < g02 - 4 ? 18 : fistAt(g) ? -14 : !inAt(g).arrived ? 6 : g < g05 - 4 ? -10 : g < turnAway + 4 ? 16 : 6);
+  // (v5, the owner: "Make their body or hands move as they speak") "Then I DEFY you, STARS!": both fists clench at his
+  // sides and he rears back; on "stars" the right one goes up at the sky and is shaken there (it went up on the word
+  // and stood still). "Hast thou no letters?": he stops in front of her with both hands open, and they sink on her "No"
+  const defK = ky(f, [[g02 - 5, 0], [g02 + 3, 1], [endOf("G02") + 2, 1], [endOf("G02") + 14, 0]]), upK = ky(f, [[tStars - 6, 0], [tStars, 1]]);
+  // (the fist up there is at the end of his arm, 0.38 m: it is shaken by pulling it in toward the shoulder and
+  // throwing it out again, three times, each less)
+  const shake = f >= tStars + 2 ? Math.max(0, 1 - (f - tStars) / 30) * Math.sin((f - tStars - 2) * 0.42) ** 2 : 0;
+  const fistR = rel(at, facing, -0.28, 0.78, 0.12).lerp(rel(at, facing, -0.31 + 0.05 * shake, 1.31 - 0.1 * shake, 0.14), upK), fistL = rel(at, facing, 0.28, 0.78, 0.12);
+  const arrive = walkIn + Math.round((inLeg.d + inLeg.left) / 1.5 * 30), askK = ky(f, [[arrive - 6, 0], [arrive + 5, 1], [endOf("G04") - 8, 1], [g05 - 5, 0]]);
+  const ask = (side: number) => reach(rel(at, facing, side * 0.28, 0.95 + 0.03 * hit(f, wordAt("G03", "friar"), 3, 10), 0.25), askK);
   ro.set({
     ...standing(at, facing, f, 1),
     pose: (leaving || (f >= walkIn && !inLeg.arrived)) && (leaving ? outLeg.moving : inLeg.moving) ? (leaving ? outLeg.pose : inLeg.pose) : { kind: bottleShown ? "hold" : "idle", t: f / 30 },
-    hands: fist ? [rel(at, facing, -0.62, 1.75, 0.3), null] : bottleShown ? [rel(at, facing, -0.16, 0.8 + 0.1 * pocket, 0.24 - 0.12 * pocket), null] : [null, null],
+    hands: defK > 0 ? [reach(fistR, defK), reach(fistL, defK)] : bottleShown ? [rel(at, facing, -0.16, 0.8 + 0.1 * pocket, 0.24 - 0.12 * pocket), null] : askK > 0 ? [ask(-1), ask(1)] : [null, null],
+    lean: leans({ pitch: -5 * defK * (1 - 0.5 * upK) }, lineBody(f, "G03", { lean: 3.5 * askK, dip: 2, sway: 0, words: ["friar"] })),
     expr: faceAt(f, [[0, "hollow"], [tStars - 8, "pained"], [endOf("G02") + 8, "hollow"], [g03 - 2, "worried"], [endOf("G04") + REACT, "hollow"]]),
     ...talk("ro", f, 1),
     lookDown: soft(f, look),
-    head: accent("jolt", f, tStars) ?? undefined,
+    head: talkHead("ro", f, 1, accent("jolt", f, tStars)),
     hide: bottleShown ? ["letter"] : ["letter", "darkBottle"],
     visible: !(leaving && outLeg.arrived),
   });

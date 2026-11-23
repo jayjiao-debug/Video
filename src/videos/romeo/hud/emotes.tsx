@@ -12,15 +12,16 @@
 //       at      where on the face the tears come out, in face units from the eye's middle: [outward, down]
 //   <TearHang f eye from fall />                 one tear left hanging at an eye's corner: it swells, hangs, and at
 //                                                `fall` runs down the cheek and is gone
-//   <EyeHearts f eyes from to dir? pop? beat? /> in love: a heart beats out of each eye, then small hearts float out of
-//                                                them, one after another, swaying, and fade
+//   <EyeHearts f eyes from to dir? pop? />       in love: small hearts float out of the eyes, one after another,
+//                                                swaying, and fade
 //       dir     the way they drift on screen (a unit vector; up by default: toward the one they look at)
 //       pop     a frame at which every heart still in the air bursts (the question that wakes her)
-//       beat    false = no heartbeat rings at the start
 //       size    the hearts' size against the head (1);  far  how far they float against that size (1)
 //   <Huff f at x y dir? />                       a puff of breath blown out (her huff)
 // THE LIMITS (the format's): tears and hearts live only in the comedy half (scenes A to C); the turn, the tomb and the
-// shard get none. Heart eyes stay the film's one signature emote (twice); the floating hearts belong to those two.
+// shard get none. The floating hearts are the film's one signature emote (v5, the owner on the v4 cut: "This eyes
+// turning into heart is too much, the floatinng heart is enough": the heart eyes and the heart that beat out of each
+// eye are gone).
 import React from "react";
 import { clamp01, easeOut, easeOutBack, hash01, smooth } from "../../../kit/overlay";
 import type { EyePt } from "../shots/kit";
@@ -123,19 +124,14 @@ const Heart: React.FC<{ x: number; y: number; r: number; deg?: number; o?: numbe
 
 /** the hearts' numbers: one heart every PERIOD frames (the eyes take turns), LIFE frames in the air; speeds in face
  *  units a frame; r = the half width of a heart in face units */
-export const HEARTS = { period: 5, life: 30, rise: 2.5, sway: 4.2, r: [3.3, 5.4] as [number, number], beat: [0, 8] as number[] } as const;
-export const EyeHearts: React.FC<{ f: number; eyes: EyePt[]; from: number; to: number; dir?: [number, number]; pop?: number; beat?: boolean; size?: number; far?: number }> = ({ f, eyes, from, to, dir = [0, -1], pop, beat = true, size = 1, far = 1 }) => {
+export const HEARTS = { period: 5, life: 30, rise: 2.5, sway: 4.2, r: [3.3, 5.4] as [number, number] } as const;
+export const EyeHearts: React.FC<{ f: number; eyes: EyePt[]; from: number; to: number; dir?: [number, number]; pop?: number; size?: number; far?: number }> = ({ f, eyes, from, to, dir = [0, -1], pop, size = 1, far = 1 }) => {
   const S = HEARTS;
   if (f < from || f >= to + S.life || (pop !== undefined && f > pop + 3)) return null;
   const dl = Math.hypot(dir[0], dir[1]) || 1, dx = dir[0] / dl, dy = dir[1] / dl, kids: React.ReactNode[] = [];
   eyes.forEach((e, ei) => {
     if (e.on < 0.5 || !(e.u > 0)) return;
     const u = e.u * size;
-    // the heartbeat: the eye's own heart beats out of the face twice (a ring that grows and goes)
-    if (beat) S.beat.forEach((b0, bi) => {
-      const t = f - from - b0 + 0.5;
-      if (t > 0 && t < 9) kids.push(<Heart key={`r${ei}-${bi}`} x={e.x} y={e.y} r={e.u * (5.2 + 9.5 * easeOut(t / 9, 2))} o={0.85 * (1 - smooth(t / 9))} line w={0.7 / (1 + t / 4)} />);
-    });
     const off = ei * Math.round(S.period / 2) + 3;
     const n1st = Math.ceil((f - S.life + 1 - from - off) / S.period), nLast = Math.floor((Math.min(f, to - 1) - from - off) / S.period);
     for (let n = Math.max(0, n1st); n <= nLast; n++) {

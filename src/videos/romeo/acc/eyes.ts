@@ -10,26 +10,28 @@
 // WHICH EYE: a face's eyes are a setting (how open, how arched the lid, its slope, the pupil), never a swapped picture.
 // The setting comes from the rig expression of the face's eyes (f.expr), and the blink and the gaze from the rig's own
 // drawing, read off the canvas before it is wiped (a half lid, a shut lid, the pupil's place).
-// LOVE (the owner: "showing they are in love"): two settings, keyed by rig eye expressions that no face of this film
-// used before, so a face asks for them by name (people.ts FACES):
-//   eyes "lick" (the rig's plain dot eyes)      SMITTEN: big pupils with a heart-shaped light, a deeper blush with three
-//                                               strokes on each cheek
-//   eyes "speechless" (the rig's bead eyes)     HEART EYES, the film's one signature emote: red hearts with a light
+// LOVE (the owner: "showing they are in love"): one setting, keyed by a rig eye expression that no face of this film
+// used before, so a face asks for it by name (people.ts FACES):
+//   eyes "lick" (the rig's plain dot eyes)      SMITTEN: big pupils with a large round light and a small second one, a
+//                                               deeper blush with three strokes on each cheek
+//   (until v4 there were red HEART EYES and a heart-shaped light in the smitten pupil. The owner on the v4 cut: "This
+//   eyes turning into heart is too much, the floatinng heart is enough": NO heart is drawn in an eye any more; the
+//   hearts that float out of the eyes are hud/emotes.tsx)
 //   herEyes(o)    Juliet: every open, half and shut eye redrawn; the love eyes too
-//   loveEyes(o)   Romeo (and anyone): his own eyes stay the rig's; only the two love settings are drawn
+//   loveEyes(o)   Romeo (and anyone): his own eyes stay the rig's; only the love setting is drawn
 import type { Acc, FaceKit, P2 } from "../../group/kit/rig3d";
 
 const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const smoothstep = (a: number, b: number, x: number) => { const t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
 const rad = (d: number) => (d * Math.PI) / 180;
-const RED = "#e0364e", BLUSH = "#e2536c";
+const BLUSH = "#e2536c";
 
 type Pupil = "round" | "big" | "dot";
 /** ONE EYE'S SETTING (拉的女儿's EyeSpec, cut to the ink eye): open = how far the lids are apart, 0..1 (under 0.12 the eye
  *  is drawn shut as `shut`); round = how arched the lid is, 0..1; tilt = the lid line's slope (deg, + = the inner end
- *  lower: a frown); pk = the pupil's size against its usual one; love = a heart light / heart pupils */
-export type EyeSet = { open: number; pupil?: Pupil; pk?: number; tilt?: number; round?: number; shut?: "smile" | "sleep" | "line"; love?: "light" | "heart" };
+ *  lower: a frown); pk = the pupil's size against its usual one; love = the smitten pupil's large light */
+export type EyeSet = { open: number; pupil?: Pupil; pk?: number; tilt?: number; round?: number; shut?: "smile" | "sleep" | "line"; love?: "light" };
 /** the rig's eye kind for each rig expression the film's faces use (rig3d.ts FACES; it is not exported): what the rig
  *  draws when the face is open, so a half or a shut lid can be told from it */
 type RigEye = "dot" | "lid" | "down" | "slit" | "bead" | "shut";
@@ -57,25 +59,16 @@ export const HER_EYES: Record<string, EyeSet> = {
   sleep: { open: 0, shut: "sleep" },
   sigh: { open: 0, shut: "line" }, whistle: { open: 0, shut: "line" }, gloom: { open: 0, shut: "line" },
 };
-/** THE LOVE EYES (both of them) */
+/** THE LOVE EYES (v5: the red heart pupils, eyes "speechless", are out: the owner, "This eyes turning into heart is
+ *  too much, the floatinng heart is enough") */
 export const LOVE_EYES: Record<string, EyeSet> = {
   lick: { open: 1, pupil: "big", pk: 1.04, round: 0.6, love: "light" },
-  speechless: { open: 1, pupil: "big", round: 0.7, love: "heart" },
 };
 Object.assign(HER_EYES, LOVE_EYES);
 /** the rig expressions that draw their own blush (rig3d.ts FACES blush: true): the blush is put back where the eye's
  *  box was wiped */
 const RIG_BLUSH = new Set(["relief", "relief_open", "smile_closed", "happy"]);
 
-/** a heart (its middle at x, y; r = half its width) */
-const heart = (x: number, y: number, r: number, n = 30): P2[] => {
-  const o: P2[] = [];
-  for (let i = 0; i <= n; i++) {
-    const t = (i / n) * Math.PI * 2;
-    o.push([x + r * Math.pow(Math.sin(t), 3), y + 0.2 * r - (r * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t))) / 16]);
-  }
-  return o;
-};
 const trace = (f: FaceKit, pts: P2[]) => { const g = f.g; g.beginPath(); pts.forEach((p, i) => { const [a, b] = f.px(p[0], p[1]); if (i) g.lineTo(a, b); else g.moveTo(a, b); }); g.closePath(); };
 const clipTo = (f: FaceKit, pts: P2[], fn: () => void) => { f.g.save(); trace(f, pts); f.g.clip(); fn(); f.g.restore(); };
 
@@ -147,23 +140,15 @@ export const inkEye = (f: FaceKit, x: number, y: number, s: number, E: EyeSet, l
   const lw = (PEN + 0.35) * (o.lidK ?? 1), cy = y + 1.4, drop = lerp(0.66, 0, smoothstep(0.22, 0.88, open)) * 2 * ry, yL = cy - ry - lw * 0.3 + drop;
   const arch = 0.6 + 2.4 * (E.round ?? 0) * clamp(open / 0.7, 0, 1), gx = gaze * 2.6;
   const lidPts = f.quad([x - hw, yL + arch * 0.55], [x, yL - arch * 1.45], [x + hw, yL + arch * 0.55], 16);
-  if (E.love === "heart") {
-    // HEART EYES: a red heart for each pupil, an ink rim, a light; it stands whole under the arched lid
-    const hr = 6.9 * pk;
-    f.fill(heart(x + gx, cy + 0.2, hr), RED, 1.25);
-    f.fill(f.arc(x + gx - 0.42 * hr, cy - 0.28 * hr, 0.2 * hr, 0.24 * hr, 0, 360, 14), "#ffffff", 0);
-    f.fill(f.arc(x + gx + 0.3 * hr, cy + 0.32 * hr, 0.09 * hr, 0.09 * hr, 0, 360, 10), "#ffffff", 0);
-  } else {
-    clipTo(f, R([...lidPts, [x + hw + 3, cy + ry + 5], [x - hw - 3, cy + ry + 5]]), () => {
-      f.fill(R(f.arc(x + gx, cy, rx, ry)), INK, 0);
-      if (dot) return;
-      const m = Math.min(rx, ry * 0.9);
-      // the light: round, high on the side of the light; a heart when smitten
-      if (E.love === "light") f.fill(heart(x + gx - 0.3 * rx, cy - 0.3 * ry, 0.4 * m), "#ffffff", 0);
-      else f.fill(f.arc(x + gx - 0.34 * rx, cy - 0.3 * ry, 0.3 * m, 0.3 * m), "#ffffff", 0);
-      if (o.sparkle || E.love) f.fill(f.arc(x + gx + 0.34 * rx, cy + 0.38 * ry, 0.13 * m, 0.13 * m), "#ffffff", 0);
-    });
-  }
+  clipTo(f, R([...lidPts, [x + hw + 3, cy + ry + 5], [x - hw - 3, cy + ry + 5]]), () => {
+    f.fill(R(f.arc(x + gx, cy, rx, ry)), INK, 0);
+    if (dot) return;
+    const m = Math.min(rx, ry * 0.9);
+    // the light: round, high on the side of the light; larger when smitten (never a heart: v5, the owner)
+    const lk = E.love === "light" ? 0.43 : 0.3;
+    f.fill(f.arc(x + gx - 0.34 * rx, cy - 0.3 * ry, lk * m, lk * m), "#ffffff", 0);
+    if (o.sparkle || E.love) f.fill(f.arc(x + gx + 0.34 * rx, cy + 0.38 * ry, 0.13 * m, 0.13 * m), "#ffffff", 0);
+  });
   f.line(R(lidPts), lw);
   wingAt(x + s * hw, yL + arch * 0.55, lw);
 };
@@ -208,7 +193,7 @@ export const herEyes = (o: InkEyeO = {}): Acc => {
     face(f) { const E = HER_EYES[f.expr as string]; if (E) drawOver(f, E, O); },
   };
 };
-/** THE LOVE EYES on a figure whose own eyes stay the rig's (Romeo): only the two love settings are drawn */
+/** THE LOVE EYES on a figure whose own eyes stay the rig's (Romeo): only the love setting is drawn */
 export const loveEyes = (o: InkEyeO = {}): Acc => {
   const O: InkEyeO = { wing: 0, pupilK: 1.06, lidK: 1, wide: 0.95, sparkle: true, ...o };
   return {

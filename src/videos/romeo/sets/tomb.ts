@@ -27,6 +27,7 @@ import type { PlaceBuild, PlaceLook, ParamValue } from "../../../kit/day/types";
 import { lightRig, paint, rng, css, blotch, Batch, makeFlame, glowCard } from "../../../kit/sets/okit";
 import { ISLAND } from "../places";
 import { maker, lathe, bar, shade, wrapBlotch, glowSprite, dustMotes, shieldPath, tileUV, Part, NOINK, shadeHex } from "./parts/a_util";
+import { levelGrid } from "./parts/ground";
 
 const X0 = ISLAND.tomb;
 const RW = 2.4, ZB = -3.0, ZF = 3.0, SPRING = 1.75, CROWN = 2.85;
@@ -132,9 +133,11 @@ const buildTomb = (K: Kit): PlaceBuild => {
   // ============================================================================================ floor
   {
     const ft = floorTex();
-    const geo = new THREE.PlaneGeometry(RW * 2 + 0.4, ZF - ZB + 0.4).rotateX(-Math.PI / 2).translate(X0, 0, (ZB + ZF) / 2);
-    const p = geo.attributes.position as THREE.BufferAttribute, uv = geo.attributes.uv as THREE.BufferAttribute;
-    for (let i = 0; i < uv.count; i++) uv.setXY(i, (p.getX(i) - X0) / 2.4, -p.getZ(i) / 2.4);
+    // The floor runs on under the back wall and through the stair's mouth to under the first step (z -3.5). Until v4 it
+    // stopped at z -3.2 and the passage's floor from there to the step was the wall's own hole (its sill, a face at
+    // y 0): from z -3.2 to -3.0 the two lay in ONE plane and flickered on every frame (the owner on the v4 cut: "This
+    // ground/shadow at the back keeps clipping, flickering"). Now the wall's hole starts under the floor.
+    const geo = levelGrid(X0 - RW - 0.2, X0 + RW + 0.2, ZB - 0.5, ZF + 0.2, 0, (x, z) => [(x - X0) / 2.4, -z / 2.4], { fine: [X0 - RW, X0 + RW, ZB, ZF] });
     Mk.mesh("tomb.floor", geo, Mk.tex(ft, 0.93), { cast: false });
   }
   // ============================================================================================ walls (with the niches and the stair mouth)
@@ -160,11 +163,13 @@ const buildTomb = (K: Kit): PlaceBuild => {
     };
     sideWall(-1); sideWall(1);
     // the back wall: the lunette under the vault with the stair's arched mouth
-    const pts: THREE.Vector2[] = [new THREE.Vector2(-RW - 0.2, 0), new THREE.Vector2(RW + 0.2, 0), new THREE.Vector2(RW + 0.2, SPRING + 0.25)];
+    // (both end walls start 10 cm under the floor: the stair's mouth is a hole in this shape and its foot must not lie
+    // in the floor's plane)
+    const pts: THREE.Vector2[] = [new THREE.Vector2(-RW - 0.2, -0.1), new THREE.Vector2(RW + 0.2, -0.1), new THREE.Vector2(RW + 0.2, SPRING + 0.25)];
     for (let i = 0; i <= 24; i++) { const x = RW - (2 * RW * i) / 24; pts.push(new THREE.Vector2(x, vaultY(x) + 0.12)); }
     pts.push(new THREE.Vector2(-RW - 0.2, SPRING + 0.25));
     const bsh = new THREE.Shape(pts), mouth = new THREE.Path();
-    mouth.moveTo(STAIR.x0, 0); mouth.lineTo(STAIR.x1, 0); mouth.lineTo(STAIR.x1, STAIR.spring); mouth.absarc(STAIR_CX, STAIR.spring, STAIR_R, 0, Math.PI, false); mouth.lineTo(STAIR.x0, 0);
+    mouth.moveTo(STAIR.x0, -0.06); mouth.lineTo(STAIR.x1, -0.06); mouth.lineTo(STAIR.x1, STAIR.spring); mouth.absarc(STAIR_CX, STAIR.spring, STAIR_R, 0, Math.PI, false); mouth.lineTo(STAIR.x0, -0.06);
     bsh.holes.push(mouth);
     const bg = new THREE.ExtrudeGeometry(bsh, { depth: 0.45, bevelEnabled: false, curveSegments: 16 }).translate(X0, 0, ZB - 0.45);
     Mk.mesh("tomb.wallB", tileUV(bg, 1.8), wallM, { cast: false });

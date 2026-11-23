@@ -16,7 +16,7 @@ import * as THREE from "three";
 import type { Acc, PartKit } from "../../group/kit/rig3d";
 import { shade } from "../../group/kit/rigacc/shapes";
 import { meshOf, weld } from "../../wanbi/acc/envoy";
-import { shellPoint, type ShellO } from "./hair";
+import { shellPoint, markFreeDepth, type ShellO } from "./hair";
 
 type V3 = THREE.Vector3;
 const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
@@ -208,7 +208,8 @@ export const napeLocks = (o: { on: ShellO; col: string; locks?: [number, number,
         const p0 = shellPoint(o.on, aD, rad(-2), 0), p1 = shellPoint(o.on, aD + spl * 0.4, rad(-34), out);
         const rt = hR + (o.flick ?? 0.22) + 0.03 * layer, p2 = V(Math.sin(a2) * rt, back - len, Math.cos(a2) * rt);
         const side = V(Math.cos(rad(aD + spl * 0.5)), 0, -Math.sin(rad(aD + spl * 0.5)));
-        b.solid("head", lockGeo(b.toM, p0, p1, p2, side, wide, 0.09, 0.6), { col: o.col, paint: "hair", ink: 0.0065 });
+        // (v5: at their true depth against the body, hair.ts FREE_DEPTH: behind the collar from the front)
+        markFreeDepth(b.solid("head", lockGeo(b.toM, p0, p1, p2, side, wide, 0.09, 0.6), { col: o.col, paint: "hair", ink: 0.0065 }));
       }
     },
   };
