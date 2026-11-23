@@ -1,200 +1,53 @@
 {
- "id": "romeo-vo-03-v6",
- "own_branch": true,
- "model_prefs": [
-  "eleven_v4"
- ],
- "words": true,
+ "id": "mengpo-voices-01",
  "items": [
   {
-   "type": "dialogue",
-   "name": "rt_H03_s2584",
-   "model": "eleven_v4",
-   "seed": 2584,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[whispers, voice shaking] 红的，是因为她活着！",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    }
-   ]
+   "type": "voices",
+   "name": "zh_female_old",
+   "lang": "zh",
+   "gender": "female",
+   "age": "old",
+   "n": 25
   },
   {
-   "type": "dialogue",
-   "name": "rt_H05_s2584",
-   "model": "eleven_v4",
-   "seed": 2584,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[breaking] 我只拍……[screaming] 不要啊！",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    }
-   ]
+   "type": "voices",
+   "name": "zh_female_middle_aged",
+   "lang": "zh",
+   "gender": "female",
+   "age": "middle_aged",
+   "n": 25
   },
   {
-   "type": "dialogue",
-   "name": "rt_I01_s2584",
-   "model": "eleven_v4",
-   "seed": 2584,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[softly, tender, relieved] O my Romeo!",
-     "voice": {
-      "owner": "76c9cb1aa5bde66e61587de2b16dd92ca167852393360a9c1f7e567f229a31b4",
-      "voice_id": "rCmVtv8cYU60uhlsOo1M",
-      "name": "Ana"
-     }
-    }
-   ]
+   "type": "voices",
+   "name": "zh_male_old",
+   "lang": "zh",
+   "gender": "male",
+   "age": "old",
+   "n": 25
   },
   {
-   "type": "dialogue",
-   "name": "rt_I04_s2584",
-   "model": "eleven_v4",
-   "seed": 2584,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[tiny, sheepish, after a pause] 我得买新手机了。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    }
-   ]
+   "type": "voices",
+   "name": "zh_male_young",
+   "lang": "zh",
+   "gender": "male",
+   "age": "young",
+   "n": 25
   },
   {
-   "type": "dialogue",
-   "name": "rt_H03_s4181",
-   "model": "eleven_v4",
-   "seed": 4181,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[whispers, voice shaking] 红的，是因为她活着！",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    }
-   ]
+   "type": "voices",
+   "name": "zh_male_middle_aged",
+   "lang": "zh",
+   "gender": "male",
+   "age": "middle_aged",
+   "n": 25
   },
   {
-   "type": "dialogue",
-   "name": "rt_H05_s4181",
-   "model": "eleven_v4",
-   "seed": 4181,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[breaking] 我只拍……[screaming] 不要啊！",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "rt_I01_s4181",
-   "model": "eleven_v4",
-   "seed": 4181,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[softly, tender, relieved] O my Romeo!",
-     "voice": {
-      "owner": "76c9cb1aa5bde66e61587de2b16dd92ca167852393360a9c1f7e567f229a31b4",
-      "voice_id": "rCmVtv8cYU60uhlsOo1M",
-      "name": "Ana"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "rt_I04_s4181",
-   "model": "eleven_v4",
-   "seed": 4181,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[tiny, sheepish, after a pause] 我得买新手机了。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "rt_H05_s6765",
-   "model": "eleven_v4",
-   "seed": 6765,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[breaking] 我只拍……[screaming] 不要啊！",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "rt_I01_s6765",
-   "model": "eleven_v4",
-   "seed": 6765,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[softly, tender, relieved] O my Romeo!",
-     "voice": {
-      "owner": "76c9cb1aa5bde66e61587de2b16dd92ca167852393360a9c1f7e567f229a31b4",
-      "voice_id": "rCmVtv8cYU60uhlsOo1M",
-      "name": "Ana"
-     }
-    }
-   ]
+   "type": "voices",
+   "name": "zh_female_young",
+   "lang": "zh",
+   "gender": "female",
+   "age": "young",
+   "n": 25
   }
  ]
 }
