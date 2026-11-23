@@ -245,7 +245,7 @@ const rest = (f: FaceKit, mx: number, my: number, press: boolean) => {
   f.line(spline([[mx - 3.6, y + dn - 0.3], [mx, y + dn + 0.5], [mx + 3.6, y + dn - 0.3]], 6), 1.1, `rgba(${UMBER},${0.45 * ST.shade})`);
   f.line(lipLine, ST.lipW, ST.lipLine);
 };
-const smile = (f: FaceKit, mx: number, my: number, k = 1) => {
+const smile = (f: FaceKit, mx: number, my: number, k = 1, parted = false) => {
   const g = f.g, y = my - 0.3, up = ST.lift;
   blob(f, -10.4, 17.4, 4.6, 4.2, UMBER, 0.46 * k * ST.corner); blob(f, 10, 17.5, 4.4, 4.0, UMBER, 0.42 * k * ST.corner);   // the mouth's corners: where the smile hides
   const Lc: P2 = [mx - 8.8, y - 0.6 - up], Rc: P2 = [mx + 8.4, y - 0.4 - up];
@@ -256,6 +256,8 @@ const smile = (f: FaceKit, mx: number, my: number, k = 1) => {
   const lower = spline([[mx + 6.2, y + 0.6], [mx + 3.2, y + 3.4], [mx, y + 4.1], [mx - 3.2, y + 3.4], [mx - 6.4, y + 0.5]], 8);
   g.save(); g.globalAlpha = Math.min(1, 0.6 * ST.lip); f.fill([...upper, ...lipLine.slice(5, -5).reverse()], `rgb(${ROSE})`, 0); g.globalAlpha = Math.min(1, 0.36 * ST.lip); f.fill([...lipLine.slice(5, -5), ...lower], `rgb(${ROSE})`, 0); g.restore();
   f.line(spline([[mx - 3.8, y + 3.7], [mx, y + 4.5], [mx + 3.8, y + 3.7]], 6), 1.1, `rgba(${UMBER},${0.45 * ST.shade})`);
+  // (speaking through the smile: a small dark gap between the lips, the lower lip a little down)
+  if (parted) f.fill([...f.quad([mx - 4.4, y + 0.6], [mx, y + 0.2], [mx + 4.2, y + 0.62], 8), ...f.quad([mx + 4.2, y + 0.62], [mx, y + 4.0], [mx - 4.4, y + 0.6], 8).slice(1, -1)], "#3a1f1a", 0);
   f.line(lipLine, ST.lipW, ST.lipLine);
   // the corners: each tucked up into the cheek with a very short hook (the screen-left one higher and longer)
   f.line(f.quad(Lc, [mx - 9.7, y - 1.0 - up], [mx - 10.2, y - 2.1 - up], 6), ST.lipW * 0.87, ST.lipLine);
@@ -332,6 +334,12 @@ export const monaFace = (o: MonaFaceO = {}): Acc => {
         const mb = box(m.x0 - 1.5, m.y0 - 1.5, m.x1 + 1.5, m.y1 + 1.5);
         wipe(f, mb); clipTo(f, mb, () => sfumato(f, k));
         smile(f, mx, my, k);
+      } else if (m && m.w > 30 && m.h > 6.5 && m.h < 12.2 && m.row > 0.9) {
+        // the rig's "pill" talking mouth (a filled bar) = HER WORD ON DUTY: the smile stays and the lips part a little
+        // (shots/segs.ts gives her this mouth, and only this one, while she holds the pose)
+        const mb = box(m.x0 - 1.5, m.y0 - 1.5, m.x1 + 1.5, m.y1 + 1.5);
+        wipe(f, mb); clipTo(f, mb, () => sfumato(f, k));
+        smile(f, mx, my, k, true);
       } else if (m && m.w >= 7 && m.w < 12.5 && m.h < 9.5 && m.y0 > my - 6 && m.y1 < my + 7) {
         // the rig's tiny lens of a mouth (a neutral face) -> her lips at rest (the flat line and the wobble stay the rig's)
         const mb = box(m.x0 - 1.5, m.y0 - 1.5, m.x1 + 1.5, m.y1 + 1.5), press = m.h < 3.4;

@@ -6,6 +6,7 @@ import { line, seg, FPS, type Segment, type SceneId, type Speaker } from "../sto
 import { handheld } from "../cam";
 import { saying, speak } from "./common";
 import { SCENES, poseScene, type Scene } from "../scenes";
+import type { RigMouth } from "../../group/kit/rig3d";
 import { MONA, LEONARDO, NAPOLEON, type Person } from "../people";
 
 /** which stage scene shows from which line on (from the silent beat before that line; `at` = a share 0..1 of the line's own words instead) */
@@ -24,6 +25,12 @@ const PLAN: Record<SceneId, Beat[]> = {
 };
 /** the inside of the trunk: black under the subtitles (her REC lamp comes back on top with the film's own HUD) */
 const BLACK = React.createElement("div", { style: { position: "absolute", inset: 0, background: "#000" } });
+/** HER WAY OF TALKING (the personality sheet's first tic): on duty she talks through the smile. The lips barely move: a
+ *  closed beat shows the smile itself, an open one is the rig's "pill", which her face draws as the smile with the lips
+ *  just parted (acc/face.ts). After closing (scene H) her lips move like
+ *  anyone's for the first time; in the button (scene I) they do not move at all. */
+const DUTY: Partial<Record<RigMouth, RigMouth>> = { small: "pill", half: "pill", wide: "pill", round: "pill", tongue: "pill" };
+const herMouth = (id: SceneId, m: RigMouth | undefined): RigMouth | undefined => (m === undefined ? m : id === "H" ? (m === "pill" ? "strip" : m) : id === "I" ? undefined : DUTY[m]);
 const VOICES: [Speaker, Person][] = [["mo", MONA], ["le", LEONARDO], ["na", NAPOLEON]];
 const beatFrame = (b: Beat) => { const l = line(b.from); return b.at === undefined ? l.preFrom : Math.round(l.from + (l.to - l.from) * b.at); };
 
@@ -41,8 +48,8 @@ const make = (id: SceneId): Segment => {
       for (const [who, p] of VOICES) {
         const on = who === "mo" ? !sc.gone : (sc.who ?? []).includes(p.name as never);
         if (!on) continue;
-        const q = saying(who, f);
-        w.actor(p).set({ mouth: q ? speak(q, f, 1).mouth : undefined });
+        const q = saying(who, f), m = q ? speak(q, f, 1).mouth : undefined;
+        w.actor(p).set({ mouth: who === "mo" ? herMouth(id, m) : m });
       }
       const camera = handheld({ pos: cam.pos, look: cam.look, fov: cam.fov }, f, { mood: "calm" });
       return { camera, slate: `${id} ${b.scene}`, ...(b.black ? { overlays: BLACK } : {}) };
