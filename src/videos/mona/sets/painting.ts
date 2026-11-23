@@ -201,7 +201,7 @@ export const paintingSet = (M: Mats, o: { wall?: string; label?: boolean; room?:
   return {
     group: G, frame: frameG, open: OPEN, frameZ: FRAME_Z,
     // (the torch: the night lifts inside its disc, and a little warm light is added on top)
-    torch: (x, y, r, k) => { torch.visible = k > 0.001; torch.position.x = x; torch.position.y = y; torch.scale.set(r * 2, r * 2, 1); torchM.opacity = 0.09 * k; nightM.uniforms.uC.value.set(x + G.position.x, y + G.position.y); nightM.uniforms.uR.value = r; nightM.uniforms.uK.value = Math.min(1, k); },
+    torch: (x, y, r, k) => { torch.visible = k > 0.001; torch.position.x = x; torch.position.y = y; torch.scale.set(r * 2, r * 2, 1); torchM.opacity = 0.15 * k; nightM.uniforms.uC.value.set(x + G.position.x, y + G.position.y); nightM.uniforms.uR.value = r; nightM.uniforms.uK.value = Math.min(1, k); },
     dim: (k) => { const a = (1 - k) * 0.86; night.visible = a > 0.001; nightM.uniforms.uA.value = a; },
   };
 };

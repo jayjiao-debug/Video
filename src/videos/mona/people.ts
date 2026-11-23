@@ -9,6 +9,7 @@ import type { Acc, Rig, RigCast, RigFace } from "../group/kit/rig3d";
 import { addPerson as addKitPerson, type Person as KitPerson } from "../wanbi/people";
 import { limbColours, napeHair } from "../su/acc/figure";
 import { robe } from "../../kit/acc/garb";
+import { finger } from "../group/kit/rigacc/finger";
 import { monaFace, type MonaFaceO } from "./acc/face";
 import { veilHair, ringlets } from "./acc/hair";
 import { monaGown } from "./acc/garb";
@@ -98,7 +99,7 @@ export const NAPOLEON: Person = {
 const THIEF_LOOK: Look = { seed: 1911, skin: "#eccaa6", top: "tee", topCol: "#eeeae0", bottom: "chinos", botCol: "#4a4640", shoes: "#3a3028", shoeSole: "#221c18", hair: "short", hairCol: "#2a221e", part: 1 };
 export const THIEF: Person = {
   name: "thief", look: THIEF_LOOK, limbs: { hand: "#eccaa6", arm: "#eeeae0" }, expr: "neutral" as Expr,
-  acc: (): Acc[] => [robe({ col: "#eeeae0", band: "#cfc8b8", sash: false, skirt: "short", knot: false }), moustache({ kind: "handlebar", col: "#2a221e" }), nose()],
+  acc: (): Acc[] => [robe({ col: "#eeeae0", band: "#cfc8b8", sash: false, skirt: "short", knot: false }), moustache({ kind: "handlebar", col: "#2a221e" }), nose(), finger({ hand: 1, col: "#eccaa6" })],
 };
 export const SIDE: Record<string, Person> = { leonardo: LEONARDO, jester: JESTER, napoleon: NAPOLEON, thief: THIEF };
 

@@ -1,0 +1,10 @@
+{
+  "film": "mona",
+  "composition": "MonaFilm",
+  "dir": "src/videos/mona",
+  "hooks": "kit.world.ts",
+  "tsc": ["frame.ts", "world.ts", "scenes.ts", "people.ts", "sets/index.ts", "sets/stage.ts", "sets/painting.ts", "kit.world.ts", "preview/scenes.ts", "preview/mona_scene.ts", "preview/lineup.ts"],
+  "langs": ["zh"],
+  "work": "/home/user/mona_work",
+  "qa": { "clearanceOut": "/home/user/mona_work/qa/clearance" }
+}
