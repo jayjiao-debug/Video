@@ -13,7 +13,7 @@ import { povCam } from "../cam";
 import { standing, yawTo, walkAlong } from "./common";
 import { ROMEO } from "../people";
 import { whisperLean } from "../whisper";
-import { P, wv, spot, camAt, faceAt, talk, wordAt, startOf, endOf, ky, accent, REACT } from "./kit";
+import { P, wv, spot, camAt, faceAt, talk, wordAt, startOf, endOf, ky, accent, soft, REACT } from "./kit";
 
 const S = seg("E");
 const BACK = spot("street", "romeoBack"), SWORD = spot("street", "sword"), CAP = spot("street", "cap"), EXIT = spot("street", "exit");
@@ -56,7 +56,8 @@ export const SEG: Segment = {
       pose: running && leg.moving ? leg.pose : { kind: "idle", t: f / 30 },
       expr: faceAt(f, [[0, "hollow"], [tFool - 3, "pained"], [endOf("E02") + 2, "hollow"]]),
       ...talk("ro", f, 1),
-      lookDown: f < e01 + 10 ? 14 : 4,
+      // his head hangs; it lifts when he hears his name (over nine frames: it lifted in one, seen from behind)
+      lookDown: soft(f, (g) => (g < e01 + 10 ? 14 : 4), 4),
       head: accent("jolt", f, endOf("E01") + REACT) ?? undefined,
       visible: !(running && leg.arrived),
       turn: f < endOf("E01") + REACT ? 1 : undefined,

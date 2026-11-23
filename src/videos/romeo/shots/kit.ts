@@ -182,5 +182,17 @@ export const eyesPx = (w: World, r: Rig, x = 14, y = 0): EyePt[] => [eyePx(w, r,
 
 /** the reaction delay: a face lands this many frames after the word that caused it (format: within about ten) */
 export const REACT = 6;
+/** A LOOK THAT TRAVELS. A shot gives a head's pitch (lookDown) as a rule of the frame (f < b02 - 8 ? 8 : 0) and the rig
+ *  takes it as it comes: when the rule flips, the head is somewhere else on the next frame (measured over the whole film
+ *  on 23 Nov: 8 to 26 degrees in one frame, in twelve places on screen; the hands and the turns were eased, the check
+ *  looked at where a head IS and not at where it looks). `soft` is the rule spread over 2n + 1 frames centred on each
+ *  flip (a triangle window: out of the old look, into the new, at most a quarter of the way in one frame at n = 3):
+ *  7 frames by default, about a quarter of a second, so the head starts three frames ahead of the hand or the turn
+ *  the look belongs to and is there with it. The rule must be a pure function of its frame. */
+export const soft = (f: number, rule: (g: number) => number, n = 3): number => {
+  let s = 0, sw = 0;
+  for (let k = -n; k <= n; k++) { const wk = n + 1 - Math.abs(k); s += wk * rule(f + k); sw += wk; }
+  return s / sw;
+};
 export const sec = (s: number) => Math.round(s * FPS);
 export type { Pose };

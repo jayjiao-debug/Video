@@ -18,7 +18,7 @@ import { V, standing, yawTo } from "./common";
 import { ROMEO_MASK as ROMEO, JULIET } from "../people";
 import { NameTab, EyeHearts, Huff, HEARTS } from "../hud/index";
 import { whisperLean } from "../whisper";
-import { P, spot, camAt, ck, faceAt, talk, wordAt, startOf, endOf, ky, accent, headBox, rel, eyesPx, facePx, REACT } from "./kit";
+import { P, spot, camAt, ck, faceAt, talk, wordAt, startOf, endOf, ky, accent, headBox, rel, eyesPx, facePx, soft, REACT } from "./kit";
 import { h, frag } from "./h";
 import { JU_TAB } from "../fx";
 import { dancers } from "./dance";
@@ -71,7 +71,7 @@ export const SEG: Segment = {
       // v3b (the owner: "give them expressive emotion showing they are in love"): struck, his eyes go big with a heart
       // in their light (smitten); asked about Rosaline he answers "Who?" with HEART EYES (the film's signature emote)
       expr: faceAt(f, [[0, "hollow"], [b02 - 8, "smitten"], [startOf("B04") - 3, "hearts"], [endOf("B04") + 18, "smitten"]]),
-      ...talk("ro", f, 1), gaze: f >= b02 - 8 ? 0.5 : -0.5, lookDown: f < b02 - 8 ? 8 : 0,
+      ...talk("ro", f, 1), gaze: f >= b02 - 8 ? 0.5 : -0.5, lookDown: soft(f, (g) => (g < b02 - 8 ? 8 : 0), 2),      // (his head comes up with his turn to her: five frames)
       head: accent("pop", f, struck) ?? undefined, hide: ["letter"],
     });
     // --- Juliet across the hall: on tiptoe, staring back at him; pointing on her order

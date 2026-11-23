@@ -15,7 +15,7 @@ import { povCam } from "../cam";
 import { V, standing, yawTo, seated } from "./common";
 import { VERBS } from "./common";
 import { ROMEO_BOTTLE, JULIET } from "../people";
-import { P, spot, camAt, faceAt, talk, startOf, endOf, ky, rel, lieDown, carry, lieQ, REACT } from "./kit";
+import { P, spot, camAt, faceAt, talk, startOf, endOf, ky, rel, lieDown, carry, lieQ, soft, REACT } from "./kit";
 import { KNEEL, JU_FEET, HEAD_DIR, RO_FACING } from "./segH";
 import { seatOn, stoolSeat } from "../../../kit/day/rig/seats";
 import type { RigHead } from "../../group/kit/rig3d";
@@ -95,7 +95,8 @@ export const SEG: Segment = {
       expr: faceAt(f, [[0, "blank"], [startOf("I01") + REACT, "caught"], [B.hug, "dreamy"], [startOf("I03") - 2, "blank"]]),
       ...roSay,
       head: tilted(roSay.head, -13 * hugK),
-      lookDown: f < S.from + 18 ? 14 : up > 0 ? -16 * up : 0,
+      // (his eyes leave his empty hand as he turns toward where the camera came from: the head came up in one frame)
+      lookDown: soft(f, (g) => { const u = ky(g, [[B.lookUp, 0], [B.lookUp + 20, 1]]); return g < S.from + 18 ? 14 : u > 0 ? -16 * u : 0; }),
       hide: ["letter", "darkBottle"],
     });
 
@@ -137,7 +138,7 @@ export const SEG: Segment = {
         ...juSay,
         head: tilted(juSay.head, 13 * hugK),
         ...(waking ? { blink: lids } : {}),
-        lookDown: up > 0 ? -12 * up : f < B.sitUp + 9 ? nod : 4,
+        lookDown: up > 0 ? 4 - 16 * up : f < B.sitUp + 9 ? nod : 4,      // (the look up starts from where her head is: it started 4 degrees off, in one frame)
         hide: ["vial"],
       });
     }
