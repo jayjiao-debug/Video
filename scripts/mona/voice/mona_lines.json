@@ -1,0 +1,1175 @@
+{
+ "film": "mona",
+ "version": "v1 (script v1 with the spoken Italian / French, 24 Nov 2026; placeholder timing until the voice exists)",
+ "source": "the Claude Doc 采访蒙娜丽莎的一天: script v1 (its tables and its section of spoken lines); written by make_lines.py",
+ "title": {
+  "zh": "采访蒙娜丽莎的一天",
+  "en": "A Day Interviewing the Mona Lisa"
+ },
+ "speakers": {
+  "ji": "记者 (the camera, never seen; Chinese)",
+  "mo": "蒙娜丽莎 Mona (Italian)",
+  "le": "达芬奇 Leonardo (Italian)",
+  "na": "拿破仑 Napoleon (French)",
+  "ki": "小孩 a child in the crowd (off screen; Chinese)"
+ },
+ "scenes": {
+  "A": {
+   "time": "1503年",
+   "en": "1503",
+   "place": "stage",
+   "where": "佛罗伦萨，画室",
+   "stage": [
+    "s1"
+   ]
+  },
+  "B": {
+   "time": "第四年",
+   "en": "Year four",
+   "place": "stage",
+   "where": "佛罗伦萨，画室",
+   "stage": [
+    "s2"
+   ],
+   "open_card": "画了四年 · 瓦萨里《艺苑名人传》"
+  },
+  "C": {
+   "time": "1517年",
+   "en": "1517",
+   "place": "stage",
+   "where": "法国，克卢城堡",
+   "stage": [
+    "s3"
+   ],
+   "open_card": "1517年10月10日 · 法国 克卢城堡 · 十四年后"
+  },
+  "D": {
+   "time": "1518年",
+   "en": "1518",
+   "place": "stage",
+   "where": "国王的墙，拿破仑的卧室",
+   "stage": [
+    "s4a",
+    "s4b",
+    "s4c",
+    "s4d"
+   ],
+   "open_card": "约1518年 · 归法国国王",
+   "cards": {
+    "D22": "1800年 · 杜伊勒里宫 · 拿破仑的卧室（传说）"
+   }
+  },
+  "E": {
+   "time": "1911年",
+   "en": "1911",
+   "place": "stage",
+   "where": "卢浮宫",
+   "stage": [
+    "s5",
+    "s5b"
+   ],
+   "open_card": "1911年8月21日 · 卢浮宫"
+  },
+  "F": {
+   "time": "今天",
+   "en": "Today",
+   "place": "stage",
+   "where": "卢浮宫，玻璃后面",
+   "stage": [
+    "s6",
+    "s6b",
+    "s6c",
+    "s6d"
+   ],
+   "open_card": "卢浮宫 · 回来以后",
+   "cards": {
+    "F35": "1956年 · 一块石头 / 2022年 · 蛋糕",
+    "F36": "2024年 · 南瓜汤"
+   }
+  },
+  "G": {
+   "time": "傍晚",
+   "en": "Evening",
+   "place": "stage",
+   "where": "卢浮宫",
+   "stage": [
+    "s7"
+   ]
+  },
+  "H": {
+   "time": "闭馆以后",
+   "en": "After closing",
+   "place": "stage",
+   "where": "卢浮宫",
+   "stage": [
+    "s8"
+   ]
+  },
+  "I": {
+   "time": "深夜",
+   "en": "Night",
+   "place": "stage",
+   "where": "卢浮宫",
+   "stage": [
+    "s9"
+   ]
+  }
+ },
+ "gap": 0.2,
+ "lead": 0.1,
+ "engine": {
+  "spoken": {
+   "ji": "zh",
+   "mo": "en",
+   "le": "en",
+   "na": "en",
+   "ki": "zh"
+  },
+  "places": [
+   "stage"
+  ],
+  "title_after": "A03",
+  "title_delay": 0.3,
+  "title_hold": 1.5,
+  "rate_en": 3.0
+ },
+ "lines": [
+  {
+   "n": 1,
+   "id": "A01",
+   "scene": "A",
+   "who": "mo",
+   "emotion": "pose, lips barely move",
+   "lang": "it",
+   "zh": "嘘。新来的徒弟？站那儿，别挡光。",
+   "en": "Ssh. La nuova allieva? Sta' lì. Non farmi ombra.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "嘘。新来的徒弟？站那儿，别挡光。",
+     "en": "Ssh. La nuova allieva? Sta' lì. Non farmi ombra."
+    }
+   ],
+   "pre": 2.0
+  },
+  {
+   "n": 2,
+   "id": "A02",
+   "scene": "A",
+   "who": "ji",
+   "emotion": "curious",
+   "lang": "zh",
+   "zh": "你嘴没动啊？",
+   "en": "Your lips aren't moving.",
+   "en_on_screen": false,
+   "screens": [
+    {
+     "zh": "你嘴没动啊？",
+     "en": "Your lips aren't moving."
+    }
+   ]
+  },
+  {
+   "n": 3,
+   "id": "A03",
+   "scene": "A",
+   "who": "mo",
+   "emotion": "pose, proud",
+   "lang": "it",
+   "zh": "师父说了：别动，快好了。",
+   "en": "Il maestro ha detto: ferma, ho quasi finito.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "师父说了：别动，快好了。",
+     "en": "Il maestro ha detto: ferma, ho quasi finito."
+    }
+   ],
+   "after": 3.4,
+   "card": {
+    "zh": "1503年10月 · 佛罗伦萨 · 先画好的是头",
+    "en": "October 1503 · Florence · the head was painted first"
+   },
+   "card_delay": 1.9,
+   "card_hold": 2.6
+  },
+  {
+   "n": 4,
+   "id": "B04",
+   "scene": "B",
+   "who": "ji",
+   "emotion": "",
+   "lang": "zh",
+   "zh": "他们是谁？",
+   "en": "Who are they?",
+   "en_on_screen": false,
+   "screens": [
+    {
+     "zh": "他们是谁？",
+     "en": "Who are they?"
+    }
+   ],
+   "pre": 2.2
+  },
+  {
+   "n": 5,
+   "id": "B05",
+   "scene": "B",
+   "who": "mo",
+   "emotion": "tired, the smile stays on",
+   "lang": "it",
+   "zh": "师父怕我闷，请人唱歌、讲笑话。",
+   "en": "Il maestro ha paura che mi annoi. Ha chiamato musici e buffoni.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "师父怕我闷，请人唱歌、讲笑话。",
+     "en": "Il maestro ha paura che mi annoi. Ha chiamato musici e buffoni."
+    }
+   ]
+  },
+  {
+   "n": 6,
+   "id": "B06",
+   "scene": "B",
+   "who": "mo",
+   "emotion": "tired",
+   "lang": "it",
+   "zh": "讲了四年。就三个笑话。",
+   "en": "Quattro anni. Tre barzellette in tutto.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "讲了四年。就三个笑话。",
+     "en": "Quattro anni. Tre barzellette in tutto."
+    }
+   ],
+   "after": 0.6
+  },
+  {
+   "n": 7,
+   "id": "B07",
+   "scene": "B",
+   "who": "ji",
+   "emotion": "",
+   "lang": "zh",
+   "zh": "那你笑什么？",
+   "en": "So why the smile?",
+   "en_on_screen": false,
+   "screens": [
+    {
+     "zh": "那你笑什么？",
+     "en": "So why the smile?"
+    }
+   ]
+  },
+  {
+   "n": 8,
+   "id": "B08",
+   "scene": "B",
+   "who": "mo",
+   "emotion": "pose, dry",
+   "lang": "it",
+   "zh": "我不笑，他们不走。",
+   "en": "Se non sorrido, non se ne vanno.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "我不笑，他们不走。",
+     "en": "Se non sorrido, non se ne vanno."
+    }
+   ],
+   "after": 2.4
+  },
+  {
+   "n": 9,
+   "id": "B09",
+   "scene": "B",
+   "who": "mo",
+   "emotion": "caught, then pose",
+   "lang": "it",
+   "zh": "……这一笔，别画。",
+   "en": "...Questo non disegnarlo.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "……这一笔，别画。",
+     "en": "...Questo non disegnarlo."
+    }
+   ],
+   "after": 0.5
+  },
+  {
+   "n": 10,
+   "id": "B10",
+   "scene": "B",
+   "who": "le",
+   "emotion": "absent-minded",
+   "lang": "it",
+   "zh": "别动。快好了。",
+   "en": "Ferma. Ho quasi finito.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "别动。快好了。",
+     "en": "Ferma. Ho quasi finito."
+    }
+   ],
+   "after": 0.4
+  },
+  {
+   "n": 11,
+   "id": "B11",
+   "scene": "B",
+   "who": "ji",
+   "emotion": "",
+   "lang": "zh",
+   "zh": "能不笑吗？",
+   "en": "Can you stop smiling?",
+   "en_on_screen": false,
+   "screens": [
+    {
+     "zh": "能不笑吗？",
+     "en": "Can you stop smiling?"
+    }
+   ]
+  },
+  {
+   "n": 12,
+   "id": "B12",
+   "scene": "B",
+   "who": "mo",
+   "emotion": "pose, firm",
+   "lang": "it",
+   "zh": "不能。还差一笔。",
+   "en": "No. Manca una pennellata.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "不能。还差一笔。",
+     "en": "No. Manca una pennellata."
+    }
+   ],
+   "after": 0.8
+  },
+  {
+   "n": 13,
+   "id": "C13",
+   "scene": "C",
+   "who": "ji",
+   "emotion": "",
+   "lang": "zh",
+   "zh": "还没交货？",
+   "en": "Still not delivered?",
+   "en_on_screen": false,
+   "screens": [
+    {
+     "zh": "还没交货？",
+     "en": "Still not delivered?"
+    }
+   ],
+   "pre": 2.4
+  },
+  {
+   "n": 14,
+   "id": "C14",
+   "scene": "C",
+   "who": "mo",
+   "emotion": "pose, patient",
+   "lang": "it",
+   "zh": "十四年了。师父说，还差一笔。",
+   "en": "Quattordici anni. Il maestro dice che manca una pennellata.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "十四年了。师父说，还差一笔。",
+     "en": "Quattordici anni. Il maestro dice che manca una pennellata."
+    }
+   ]
+  },
+  {
+   "n": 15,
+   "id": "C15",
+   "scene": "C",
+   "who": "ji",
+   "emotion": "",
+   "lang": "zh",
+   "zh": "订画的人呢？",
+   "en": "And the client?",
+   "en_on_screen": false,
+   "screens": [
+    {
+     "zh": "订画的人呢？",
+     "en": "And the client?"
+    }
+   ]
+  },
+  {
+   "n": 16,
+   "id": "C16",
+   "scene": "C",
+   "who": "mo",
+   "emotion": "plain",
+   "lang": "it",
+   "zh": "我丈夫订的。一直没收到货。",
+   "en": "L'ha ordinato mio marito. Non l'ha mai ricevuto.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "我丈夫订的。一直没收到货。",
+     "en": "L'ha ordinato mio marito. Non l'ha mai ricevuto."
+    }
+   ]
+  },
+  {
+   "n": 17,
+   "id": "C17",
+   "scene": "C",
+   "who": "mo",
+   "emotion": "pose, dry",
+   "lang": "it",
+   "zh": "他大概以为，我跟画家跑了。",
+   "en": "Penserà che sono scappata col pittore.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "他大概以为，我跟画家跑了。",
+     "en": "Penserà che sono scappata col pittore."
+    }
+   ],
+   "after": 1.0
+  },
+  {
+   "n": 18,
+   "id": "C18",
+   "scene": "C",
+   "who": "le",
+   "emotion": "asleep, mumbling",
+   "lang": "it",
+   "zh": "别动……快好了……",
+   "en": "Ferma... ho quasi finito...",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "别动……快好了……",
+     "en": "Ferma... ho quasi finito..."
+    }
+   ],
+   "after": 3.2,
+   "card": {
+    "zh": "客人的日记 · 他的右手已经瘫了",
+    "en": "A visitor's diary · his right hand was paralysed"
+   },
+   "card_delay": 0.4,
+   "card_hold": 2.6
+  },
+  {
+   "n": 19,
+   "id": "C19",
+   "scene": "C",
+   "who": "mo",
+   "emotion": "plain, warm",
+   "lang": "it",
+   "zh": "你听，快好了。",
+   "en": "Senti? Ha quasi finito.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "你听，快好了。",
+     "en": "Senti? Ha quasi finito."
+    }
+   ],
+   "after": 1.4
+  },
+  {
+   "n": 20,
+   "id": "D20",
+   "scene": "D",
+   "who": "mo",
+   "emotion": "pose",
+   "lang": "it",
+   "zh": "师父把我借给国王，看两天。",
+   "en": "Il maestro mi ha prestata al re. Per due giorni.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "师父把我借给国王，看两天。",
+     "en": "Il maestro mi ha prestata al re. Per due giorni."
+    }
+   ],
+   "pre": 2.2
+  },
+  {
+   "n": 21,
+   "id": "D21",
+   "scene": "D",
+   "who": "ji",
+   "emotion": "",
+   "lang": "zh",
+   "zh": "两天？",
+   "en": "Two days?",
+   "en_on_screen": false,
+   "screens": [
+    {
+     "zh": "两天？",
+     "en": "Two days?"
+    }
+   ]
+  },
+  {
+   "n": 22,
+   "id": "D22",
+   "scene": "D",
+   "who": "mo",
+   "emotion": "tired, the smile stays on",
+   "lang": "it",
+   "zh": "……两百多年了。",
+   "en": "...Sono passati più di duecento anni.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "……两百多年了。",
+     "en": "...Sono passati più di duecento anni."
+    }
+   ],
+   "pre": 1.8,
+   "after": 1.6
+  },
+  {
+   "n": 23,
+   "id": "D23",
+   "scene": "D",
+   "who": "na",
+   "emotion": "nervous whisper",
+   "lang": "fr",
+   "zh": "她一直在看我。",
+   "en": "Elle me regarde. Tout le temps.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "她一直在看我。",
+     "en": "Elle me regarde. Tout le temps."
+    }
+   ]
+  },
+  {
+   "n": 24,
+   "id": "D24",
+   "scene": "D",
+   "who": "mo",
+   "emotion": "pose, whisper, eyes to lens",
+   "lang": "it",
+   "zh": "是他把我挂床头的。",
+   "en": "È lui che mi ha appesa sopra il letto.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "是他把我挂床头的。",
+     "en": "È lui che mi ha appesa sopra il letto."
+    }
+   ],
+   "after": 0.9
+  },
+  {
+   "n": 25,
+   "id": "E25",
+   "scene": "E",
+   "who": "mo",
+   "emotion": "bright, a real smile",
+   "lang": "it",
+   "zh": "师父派人来接我了！",
+   "en": "Il maestro ha mandato qualcuno a prendermi!",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "师父派人来接我了！",
+     "en": "Il maestro ha mandato qualcuno a prendermi!"
+    }
+   ],
+   "pre": 3.2
+  },
+  {
+   "n": 26,
+   "id": "E26",
+   "scene": "E",
+   "who": "ji",
+   "emotion": "flat",
+   "lang": "zh",
+   "zh": "他是小偷。",
+   "en": "He's a thief.",
+   "en_on_screen": false,
+   "screens": [
+    {
+     "zh": "他是小偷。",
+     "en": "He's a thief."
+    }
+   ]
+  },
+  {
+   "n": 27,
+   "id": "E27",
+   "scene": "E",
+   "who": "mo",
+   "emotion": "pose, whisper",
+   "lang": "it",
+   "zh": "嘘。别吓跑他。",
+   "en": "Ssh. Non farlo scappare.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "嘘。别吓跑他。",
+     "en": "Ssh. Non farlo scappare."
+    }
+   ],
+   "after": 3.6,
+   "card": {
+    "zh": "藏在箱子里 · 28个月",
+    "en": "Hidden in a trunk · 28 months"
+   },
+   "card_delay": 1.2,
+   "card_hold": 2.2
+  },
+  {
+   "n": 28,
+   "id": "E28",
+   "scene": "E",
+   "who": "mo",
+   "emotion": "sigh, loose",
+   "lang": "it",
+   "zh": "啊……没人看。",
+   "en": "Ahh... nessuno mi guarda.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "啊……没人看。",
+     "en": "Ahh... nessuno mi guarda."
+    }
+   ]
+  },
+  {
+   "n": 29,
+   "id": "E29",
+   "scene": "E",
+   "who": "mo",
+   "emotion": "plain, content",
+   "lang": "it",
+   "zh": "画了四百年，头一回不用笑。",
+   "en": "Quattrocento anni, e per la prima volta non devo sorridere.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "画了四百年，头一回不用笑。",
+     "en": "Quattrocento anni, e per la prima volta non devo sorridere."
+    }
+   ],
+   "after": 0.5
+  },
+  {
+   "n": 30,
+   "id": "E30",
+   "scene": "E",
+   "who": "ji",
+   "emotion": "",
+   "lang": "zh",
+   "zh": "外面排队看空墙呢。",
+   "en": "They're queuing to see the empty wall.",
+   "en_on_screen": false,
+   "screens": [
+    {
+     "zh": "外面排队看空墙呢。",
+     "en": "They're queuing to see the empty wall."
+    }
+   ],
+   "after": 3.0
+  },
+  {
+   "n": 31,
+   "id": "E31",
+   "scene": "E",
+   "who": "mo",
+   "emotion": "baffled",
+   "lang": "it",
+   "zh": "看墙？我挂着的时候，怎么没人排队？",
+   "en": "Il muro? Quando c'ero appesa io, nessuno faceva la fila.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "看墙？我挂着的时候，",
+     "en": "Il muro? Quando c'ero appesa io,"
+    },
+    {
+     "zh": "怎么没人排队？",
+     "en": "nessuno faceva la fila."
+    }
+   ]
+  },
+  {
+   "n": 32,
+   "id": "E32",
+   "scene": "E",
+   "who": "ji",
+   "emotion": "",
+   "lang": "zh",
+   "zh": "你丢了才出名。",
+   "en": "You got famous by going missing.",
+   "en_on_screen": false,
+   "screens": [
+    {
+     "zh": "你丢了才出名。",
+     "en": "You got famous by going missing."
+    }
+   ]
+  },
+  {
+   "n": 33,
+   "id": "E33",
+   "scene": "E",
+   "who": "mo",
+   "emotion": "tired",
+   "lang": "it",
+   "zh": "……那我早该丢。",
+   "en": "...Allora dovevo sparire prima.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "……那我早该丢。",
+     "en": "...Allora dovevo sparire prima."
+    }
+   ],
+   "after": 3.2,
+   "card": {
+    "zh": "1913年12月 · 佛罗伦萨 · 找到了",
+    "en": "December 1913 · Florence · found"
+   },
+   "card_delay": 0.5,
+   "card_hold": 2.4
+  },
+  {
+   "n": 34,
+   "id": "E34",
+   "scene": "E",
+   "who": "mo",
+   "emotion": "pose, through the smile",
+   "lang": "it",
+   "zh": "假，放完了。",
+   "en": "Vacanza finita.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "假，放完了。",
+     "en": "Vacanza finita."
+    }
+   ],
+   "after": 1.0
+  },
+  {
+   "n": 35,
+   "id": "F35",
+   "scene": "F",
+   "who": "mo",
+   "emotion": "tired, the smile stays on",
+   "lang": "it",
+   "zh": "他们看我一眼，就转过身，背对我，学我笑。",
+   "en": "Mi guardano un attimo, poi mi voltano le spalle e imitano il mio sorriso.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "他们看我一眼，就转过身，",
+     "en": "Mi guardano un attimo, poi mi voltano le spalle"
+    },
+    {
+     "zh": "背对我，学我笑。",
+     "en": "e imitano il mio sorriso."
+    }
+   ],
+   "pre": 2.2,
+   "after": 1.6
+  },
+  {
+   "n": 36,
+   "id": "F36",
+   "scene": "F",
+   "who": "mo",
+   "emotion": "pose, pleased",
+   "lang": "it",
+   "zh": "有位老太太从轮椅上站起来，请我吃蛋糕。",
+   "en": "Una vecchia signora si è alzata dalla sedia a rotelle per offrirmi una torta.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "有位老太太从轮椅上站起来，",
+     "en": "Una vecchia signora si è alzata dalla sedia a rotelle"
+    },
+    {
+     "zh": "请我吃蛋糕。",
+     "en": "per offrirmi una torta."
+    }
+   ],
+   "after": 1.0
+  },
+  {
+   "n": 37,
+   "id": "F37",
+   "scene": "F",
+   "who": "mo",
+   "emotion": "pose, touched",
+   "lang": "it",
+   "zh": "还有人送南瓜汤。五百年，总算有人管饭。",
+   "en": "E qualcuno ha portato la zuppa di zucca. Cinquecento anni, e finalmente mi danno da mangiare.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "还有人送南瓜汤。",
+     "en": "E qualcuno ha portato la zuppa di zucca."
+    },
+    {
+     "zh": "五百年，总算有人管饭。",
+     "en": "Cinquecento anni, e finalmente mi danno da mangiare."
+    }
+   ]
+  },
+  {
+   "n": 38,
+   "id": "F38",
+   "scene": "F",
+   "who": "mo",
+   "emotion": "tired",
+   "lang": "it",
+   "zh": "可惜，隔着窗。",
+   "en": "Peccato per il vetro.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "可惜，隔着窗。",
+     "en": "Peccato per il vetro."
+    }
+   ],
+   "after": 1.0
+  },
+  {
+   "n": 39,
+   "id": "F39",
+   "scene": "F",
+   "who": "ki",
+   "emotion": "loud",
+   "lang": "zh",
+   "zh": "妈妈，她没有眉毛！",
+   "en": "Mum, she has no eyebrows!",
+   "en_on_screen": false,
+   "screens": [
+    {
+     "zh": "妈妈，她没有眉毛！",
+     "en": "Mum, she has no eyebrows!"
+    }
+   ],
+   "after": 0.5
+  },
+  {
+   "n": 40,
+   "id": "F40",
+   "scene": "F",
+   "who": "mo",
+   "emotion": "pose, stung",
+   "lang": "it",
+   "zh": "有的。师父一根一根画的。",
+   "en": "Le ho. Il maestro le ha dipinte pelo per pelo.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "有的。师父一根一根画的。",
+     "en": "Le ho. Il maestro le ha dipinte pelo per pelo."
+    }
+   ],
+   "after": 2.8,
+   "card": {
+    "zh": "瓦萨里写过她的眉毛 · 画上现在没有",
+    "en": "Vasari described her eyebrows · the panel shows none today"
+   },
+   "card_delay": 0.2,
+   "card_hold": 2.4
+  },
+  {
+   "n": 41,
+   "id": "F41",
+   "scene": "F",
+   "who": "ji",
+   "emotion": "",
+   "lang": "zh",
+   "zh": "真没有。",
+   "en": "You really don't.",
+   "en_on_screen": false,
+   "screens": [
+    {
+     "zh": "真没有。",
+     "en": "You really don't."
+    }
+   ],
+   "after": 1.0
+  },
+  {
+   "n": 42,
+   "id": "F42",
+   "scene": "F",
+   "who": "mo",
+   "emotion": "caught, then pose",
+   "lang": "it",
+   "zh": "……这一笔，也别画。",
+   "en": "...Non disegnare neanche questo.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "……这一笔，也别画。",
+     "en": "...Non disegnare neanche questo."
+    }
+   ],
+   "after": 1.0
+  },
+  {
+   "n": 43,
+   "id": "G43",
+   "scene": "G",
+   "who": "mo",
+   "emotion": "pose, giving orders",
+   "lang": "it",
+   "zh": "徒弟，师父呢？他该来补那一笔了。",
+   "en": "Allieva, dov'è il maestro? È ora che venga a dare quell'ultima pennellata.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "徒弟，师父呢？",
+     "en": "Allieva, dov'è il maestro?"
+    },
+    {
+     "zh": "他该来补那一笔了。",
+     "en": "È ora che venga a dare quell'ultima pennellata."
+    }
+   ],
+   "pre": 2.0
+  },
+  {
+   "n": 44,
+   "id": "G44",
+   "scene": "G",
+   "who": "ji",
+   "emotion": "quiet",
+   "lang": "zh",
+   "zh": "他1519年就走了。",
+   "en": "He's been gone since 1519.",
+   "en_on_screen": false,
+   "screens": [
+    {
+     "zh": "他1519年就走了。",
+     "en": "He's been gone since 1519."
+    }
+   ],
+   "after": 1.2
+  },
+  {
+   "n": 45,
+   "id": "G45",
+   "scene": "G",
+   "who": "mo",
+   "emotion": "the smile holds, the eyes change",
+   "lang": "it",
+   "zh": "……走了？那“快好了”呢？",
+   "en": "...Se n'è andato? E «ho quasi finito»?",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "……走了？那“快好了”呢？",
+     "en": "...Se n'è andato? E «ho quasi finito»?"
+    }
+   ],
+   "after": 0.8
+  },
+  {
+   "n": 46,
+   "id": "G46",
+   "scene": "G",
+   "who": "ji",
+   "emotion": "quiet",
+   "lang": "zh",
+   "zh": "一直没画完。",
+   "en": "He never finished.",
+   "en_on_screen": false,
+   "screens": [
+    {
+     "zh": "一直没画完。",
+     "en": "He never finished."
+    }
+   ],
+   "after": 2.4
+  },
+  {
+   "n": 47,
+   "id": "H47",
+   "scene": "H",
+   "who": "mo",
+   "emotion": "plain",
+   "lang": "it",
+   "zh": "他右手瘫了那年，还把我摆出来，给客人看。",
+   "en": "L'anno in cui gli si paralizzò la mano destra, mi mostrava ancora ai suoi ospiti.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "他右手瘫了那年，",
+     "en": "L'anno in cui gli si paralizzò la mano destra,"
+    },
+    {
+     "zh": "还把我摆出来，给客人看。",
+     "en": "mi mostrava ancora ai suoi ospiti."
+    }
+   ],
+   "pre": 2.6,
+   "after": 0.5
+  },
+  {
+   "n": 48,
+   "id": "H48",
+   "scene": "H",
+   "who": "mo",
+   "emotion": "plain",
+   "lang": "it",
+   "zh": "十四年，他走到哪儿，把我带到哪儿。",
+   "en": "Quattordici anni. Ovunque andasse, mi portava con sé.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "十四年，",
+     "en": "Quattordici anni."
+    },
+    {
+     "zh": "他走到哪儿，把我带到哪儿。",
+     "en": "Ovunque andasse, mi portava con sé."
+    }
+   ],
+   "after": 0.9
+  },
+  {
+   "n": 49,
+   "id": "H49",
+   "scene": "H",
+   "who": "mo",
+   "emotion": "a small laugh",
+   "lang": "it",
+   "zh": "我还以为，是他手慢。",
+   "en": "Credevo fosse solo lento.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "我还以为，是他手慢。",
+     "en": "Credevo fosse solo lento."
+    }
+   ],
+   "after": 0.9
+  },
+  {
+   "n": 50,
+   "id": "H50",
+   "scene": "H",
+   "who": "mo",
+   "emotion": "sigh, soft",
+   "lang": "it",
+   "zh": "原来，是他舍不得画完。",
+   "en": "Invece non se la sentiva di finirmi.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "原来，是他舍不得画完。",
+     "en": "Invece non se la sentiva di finirmi."
+    }
+   ],
+   "after": 2.2
+  },
+  {
+   "n": 51,
+   "id": "H51",
+   "scene": "H",
+   "who": "ji",
+   "emotion": "gentle",
+   "lang": "zh",
+   "zh": "你可以动了。",
+   "en": "You can move now.",
+   "en_on_screen": false,
+   "screens": [
+    {
+     "zh": "你可以动了。",
+     "en": "You can move now."
+    }
+   ],
+   "after": 2.6
+  },
+  {
+   "n": 52,
+   "id": "H52",
+   "scene": "H",
+   "who": "mo",
+   "emotion": "sore",
+   "lang": "it",
+   "zh": "五百年……腮帮子，酸死了。",
+   "en": "Cinquecento anni... che male alla mascella.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "五百年……腮帮子，酸死了。",
+     "en": "Cinquecento anni... che male alla mascella."
+    }
+   ],
+   "after": 1.6
+  },
+  {
+   "n": 53,
+   "id": "I53",
+   "scene": "I",
+   "who": "ji",
+   "emotion": "whisper",
+   "lang": "zh",
+   "zh": "他都不在了。",
+   "en": "He isn't even here any more.",
+   "en_on_screen": false,
+   "screens": [
+    {
+     "zh": "他都不在了。",
+     "en": "He isn't even here any more."
+    }
+   ],
+   "pre": 3.2
+  },
+  {
+   "n": 54,
+   "id": "I54",
+   "scene": "I",
+   "who": "mo",
+   "emotion": "pose, lips still, eyes warm",
+   "lang": "it",
+   "zh": "嘘。我不动，他就还在画。",
+   "en": "Ssh. Finché non mi muovo, lui sta ancora dipingendo.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "嘘。我不动，他就还在画。",
+     "en": "Ssh. Finché non mi muovo, lui sta ancora dipingendo."
+    }
+   ],
+   "after": 2.6
+  },
+  {
+   "n": 55,
+   "id": "I55",
+   "scene": "I",
+   "who": "mo",
+   "emotion": "whisper, off screen",
+   "lang": "it",
+   "zh": "……刚才揉脸那一笔，别画啊。",
+   "en": "...E la mano sulla guancia, prima. Non disegnarla, eh.",
+   "en_on_screen": true,
+   "screens": [
+    {
+     "zh": "……刚才揉脸那一笔，别画啊。",
+     "en": "...E la mano sulla guancia, prima. Non disegnarla, eh."
+    }
+   ],
+   "after": 1.2
+  }
+ ]
+}
