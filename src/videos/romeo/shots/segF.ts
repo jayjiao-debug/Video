@@ -61,9 +61,11 @@ function cell(w: Parameters<Segment["pose"]>[0], f: number) {
     // the two of them by the bench, from a step further back so both heads fit (v4 stills: her head was cut at the left)
     k(S.from, { pos: wv("cell", [0.05, 1.5, 1.75]), look: wv("cell", [0.26, 1.1, -1.2]), fov: 48 }),
     k(f02 - 4, { pos: wv("cell", [0.05, 1.5, 1.75]), look: wv("cell", [0.26, 1.1, -1.2]), fov: 48 }),
-    k(f02 + 30, { look: wv("cell", [0.26, 1.1, -1.1]), fov: 29 }),                  // the push onto the vial
-    k(endOf("F03"), { look: wv("cell", [0.26, 1.1, -1.1]), fov: 31 }),
-    k(endOf("F05") + 4, { look: wv("cell", [0.3, 1.08, -1.1]), fov: 36 }),
+    // the push onto the vial is a zoom from where she stands (taste review of v1: stepping in to the stock bench view
+    // put the back of Juliet's head over half the frame and the vial was lost beside it); her face, the vial, his face
+    k(f02 + 30, { pos: wv("cell", [0.05, 1.5, 1.75]), look: wv("cell", [0.3, 1.14, -1.08]), fov: 28 }),
+    k(endOf("F03"), { pos: wv("cell", [0.05, 1.5, 1.75]), look: wv("cell", [0.3, 1.14, -1.08]), fov: 30 }),
+    k(endOf("F05") + 4, { pos: wv("cell", [0.05, 1.5, 1.75]), look: wv("cell", [0.32, 1.1, -1.1]), fov: 36 }),
     k(f06 + 20, { look: wv("cell", [1.28, 1.08, -0.62]), fov: 38 }),                // pan right to the desk: him writing at it
     k(lensWalk, { look: wv("cell", [1.28, 1.08, -0.62]), fov: 38 }),
     k(f07 + 4, { look: wv("cell", [0.3, 1.0, -0.05]), fov: 50 }),                   // he walks the letter up to her

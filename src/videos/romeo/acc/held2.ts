@@ -75,7 +75,7 @@ export const darkBottleHeld = (o: { hand?: 0 | 1; size?: number } = {}): Acc => 
         cg.fillStyle = "#4a3246"; cg.fillRect(0, 0, 16, 128);
         const y = (t: number) => 128 * (1 - t);
         cg.fillStyle = "#e4d8bc"; cg.fillRect(0, y(v[1] * 0.75), 16, y(v[1] * 0.35) - y(v[1] * 0.75));   // the label
-        cg.fillStyle = "#6e5068"; cg.fillRect(2, y(v[2]), 2, y(v[1] * 0.8) - y(v[2]));                     // a highlight
+        cg.fillStyle = "#9a7a94"; cg.fillRect(2, y(v[2]), 3, y(v[1] * 0.8) - y(v[2]));                     // a highlight (lighter: it must read on the vault's brown)
       }, "rjDarkBottleGlass");
       b.solid(g, body, { col: "#ffffff", map, ink: 0.0055 });
       b.solid(g, turned([[0, 0.084 * k], [0.0115 * k, 0.084 * k], [0.0125 * k, 0.1 * k], [0, 0.1 * k]], 0.003, 20), { col: "#5a4636", ink: 0.005 });

@@ -48,6 +48,10 @@ export const SEG: Segment = {
     const flung = f >= a03 && f < a04 - 4;
     const offering = f >= a04 - 2;
     const expr = faceAt(f, [[0, "wail"], [tWho - 8, "blank"], [a03 - 2, "wail"], [a04 - 2, "puppy"], [endOf("A05") + REACT, "hollow"]]);
+    // the sob: while he wails his shoulders heave and his head dips, two and a half times a second (taste review of v1:
+    // frames 0 and 60 looked the same)
+    const wailing = f < tWho - 8 || (f >= a03 - 2 && f < a04 - 2);
+    const sob = wailing ? Math.sin(f * 0.26) ** 2 : 0;
     const hands: [THREE.Vector3 | null, THREE.Vector3 | null] = hugging
       ? [TRUNK.clone().add(V(0.36, 1.12, 0.3)), TRUNK.clone().add(V(-0.3, 1.05, 0.32))]
       : offering ? [rel(at, facing, -0.12, 1.02 - 0.18 * ky(f, [[endOf("A05"), 0], [endOf("A05") + 12, 1]]), 0.42), null] : [null, null];
@@ -55,7 +59,8 @@ export const SEG: Segment = {
       ...standing(at, facing, f, 1),
       pose: flung ? { kind: "cheer", t: (f - a03) / 30 } : hands[0] || hands[1] ? { kind: "hold", t: f / 30 } : { kind: "idle", t: f / 30 },
       hands, expr, ...talk("ro", f, 1),
-      head: accent("jolt", f, tWho - 6) ?? undefined,
+      head: accent("jolt", f, tWho - 6) ?? (sob > 0 ? { dy: -0.05 * sob, squash: 0.05 * sob } : undefined),
+      lean: sob > 0 ? { pitch: 4 * sob } : undefined,
       lookDown: hugging ? -6 : 0, hide: offering ? [] : ["letter"],
       // at the tree he keeps his back half to her (the rig would turn him to the lens); his face shows in three-quarter
       turn: hugging ? 0.42 : undefined,

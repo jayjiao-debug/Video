@@ -23,6 +23,9 @@ import { G_CARD } from "../fx";
 
 const S = seg("G");
 const FAR = spot("mantua", "romeoFar"), LENS = spot("mantua", "romeoLens"), RIDER = spot("mantua", "rider");
+/** the rider on the right of the street, clear of Romeo's feather (taste review of v1: at the stock mark, x -1, the
+ *  horse and rider slid along the top of his feather all through the whisper) */
+const RIDER_AT = P("mantua", 1.1, 0, -9.0);
 /** the cut from the boarded window to Mantua: just before her first word */
 export const G_CUT = startOf("G01") - 7;
 
@@ -65,7 +68,7 @@ function mantua(w: Parameters<Segment["pose"]>[0], f: number) {
   camera = whisperLean(f, camera);
   w.setCamera(camera);
   // ---------------------------------------------------------------- the rider who brought the news, leaving at the far end
-  w.prop("horseRider").put(RIDER.at, { rot: RIDER.facing, t: f / 30, go: ky(f, [[G_CUT, 0.15], [g02 + 30, 1]]) });
+  w.prop("horseRider").put(RIDER_AT, { rot: RIDER.facing, t: f / 30, go: ky(f, [[G_CUT, 0.15], [g02 + 30, 1]]) });
   // ---------------------------------------------------------------- Romeo
   const ro = w.actor(ROMEO_BOTTLE);
   const outLeg = walkAlong([LENS.at, P("mantua", 0.35, 0, -4.2), P("mantua", 0.5, 0, -8.0)], 1.0, (f - walkOff) / 30);

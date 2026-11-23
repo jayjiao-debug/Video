@@ -41,7 +41,7 @@ export const SEG: Segment = {
   enter() {}, exit() {},
   pose(w, f) {
     w.setPlace("balcony");
-    const c02 = startOf("C02"), c05 = startOf("C05"), c08 = SPLIT.from, c12 = startOf("C12");
+    const c02 = startOf("C02"), c05 = startOf("C05"), c08 = SPLIT.from, c10 = startOf("C10"), c12 = startOf("C12");
     const tEast = wordAt("C03", "east"), tSun = wordAt("C03", "sun"), tMar = wordAt("C11", "marriage");
     const herCut = c02 - 3, hisCut = c05 - 3;
     // ---------------------------------------------------------------- the camera
@@ -65,7 +65,11 @@ export const SEG: Segment = {
         k(c08, rvLook, 48),
         k(SPLIT.open, rvLook, 48),
         k(SPLIT.open + SPLIT.len + 10, rvLook, 50),                  // the halves meet: a breath back
-        k(tMar - 5, rvLook, 50),
+        // she cuts him off: a slow push up to her (taste review of v1: in the wide their heads were too small to read on
+        // a phone for nine seconds, and the captions sat on his back); his hat stays at the bottom edge, he is still there
+        k(c10 - 4, rvLook, 50),
+        k(c10 + 50, [0.06, 2.7, -0.7], 40),
+        k(tMar - 5, [0.06, 2.7, -0.7], 40),
         k(tMar, [0.02, 3.72, -1.0], 31),                            // SNAP ZOOM onto her on "marriage"
         k(c12 - 3, [0.02, 3.72, -1.0], 31),
         k(c12 + 9, [0.4, 0.95, 0.4], 42),                           // tilt down: his spot in the bushes, empty
@@ -88,7 +92,7 @@ export const SEG: Segment = {
     // are clasped at her chest, on "my love as deep" one hand is on her heart and the other stays on the rail
     const clasp: [THREE.Vector3, THREE.Vector3] = [rel(RAIL.at, RAIL.facing, -0.04, 0.8, 0.25), rel(RAIL.at, RAIL.facing, 0.04, 0.8, 0.25)];
     const heart: [THREE.Vector3, THREE.Vector3] = [rel(RAIL.at, RAIL.facing, 0.05, 0.82, 0.22), onRail[1]];
-    const c07 = startOf("C07"), c10 = startOf("C10"), c11 = startOf("C11");
+    const c07 = startOf("C07"), c11 = startOf("C11");
     const juHands = f < herCut ? clasp : f >= c05 - 4 && f < endOf("C05") + 8 ? heart
       : f >= c07 - 4 && f < c08 ? folded : f >= c08 && f < tSplitStop ? chin : f >= c10 && f < endOf("C11") + 6 ? null : onRail;
     const juPose = f >= c10 && f < c11 - 6 ? { kind: "wave" as const, t: (f - c10) / 30, arm: 0 as const }
@@ -99,7 +103,7 @@ export const SEG: Segment = {
     ju.set({
       ...standing(RAIL.at, RAIL.facing, f, 2),
       pose: juPose, hands: juHands ?? [null, null],
-      expr: faceAt(f, [[0, "swoon"], [c05 - 2, "sure"], [endOf("C06") + REACT, "caught"], [c07 - 2, "sure"], [endOf("C07") + REACT, "swoon"],
+      expr: faceAt(f, [[0, "swoon"], [c05 - 2, "soft"], [endOf("C06") + REACT, "caught"], [c07 - 2, "sure"], [endOf("C07") + REACT, "swoon"],
         [tSplitStop, "caught"], [SPLIT.open + 14, "swoon"], [c10 - 2, "bossy"], [endOf("C11") + REACT, "sure"]]),
       ...talk("ju", f, 2),
       gaze: f < c05 ? 0.5 : 0,
@@ -186,7 +190,8 @@ function splitNames(f: number, y: number, open: number) {
   const edges = { up: y - open * (y + 70), down: y + open * (1920 - y + 70) };
   return frag(
     row("nj", "罗密欧……罗密欧……", "Romeo… Romeo…", edges.up - 120, SPEAKER_COL.ju),
-    row("nr", "朱丽叶……朱丽叶……", "Juliet… Juliet…", Math.max(edges.down + 330, 1330), SPEAKER_COL.ro),
+    // his under the tear, above his hat: in the subtitle band it lay across his face (taste review of v1, f1750)
+    row("nr", "朱丽叶……朱丽叶……", "Juliet… Juliet…", edges.down + 135, SPEAKER_COL.ro),
   );
 }
 

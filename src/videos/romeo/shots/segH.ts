@@ -83,7 +83,7 @@ export const SEG: Segment = {
       ...VERBS.kneel(knocked ? 1 : 1 - 0.5 * raise, KNEEL, 10),
       pose: { kind: "hold", t: f / 30 },
       hands: [knocked ? rel(KNEEL, RO_FACING, -0.18, 0.84, 0.32) : toastAt, knocked ? null : reachAt],
-      expr: faceAt(f, [[0, "hollow"], [h02 - 2, "dreamy"], [h04 - 4, "hollow"], [IMPACT_AT + REACT, "blank"]]),
+      expr: faceAt(f, [[0, "tender"], [h04 - 4, "grief"], [IMPACT_AT + REACT, "blank"]]),   // eyes on her, never a smile with closed eyes beside her
       ...talk("ro", f, 1),
       lookDown: knocked ? -4 : 12,
       hide: knocked ? ["letter", "darkBottle"] : ["letter"],
@@ -102,7 +102,7 @@ export const SEG: Segment = {
     // ---------------------------------------------------------------- after the throw: what fell on the stones
     if (knocked) {
       const t = (f - IMPACT_AT) / 30;
-      w.prop("darkBottle").put(P("tomb", 1.02, 0.0, -0.42), { lying: true, rot: 2.2 });
+      w.prop("darkBottle").put(P("tomb", 1.02, 0.0, -0.42), { lying: true, rot: 2.2, scale: 1.3 });
       w.prop("spill").put(P("tomb", 0.96, 0.005, -0.38), { amount: Math.min(1, t * 1.2) });
       w.prop("glassShards").put(P("tomb", 0.78, 0.005, -0.12), { rot: 0.6 });
     }
