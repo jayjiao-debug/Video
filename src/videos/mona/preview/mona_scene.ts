@@ -35,7 +35,9 @@ const SHOTS: Record<string, Cam> = {
 };
 /** plain rig expressions -> her own faces (the acted changes of rigMood run on the rig's names) */
 const HERS: Record<string, keyof typeof FACES> = { smile: "pose", neutral: "plain", deadpan: "tired", pained: "sore", sigh: "sigh", shock: "caught" };
-const hers = (e: Expr | RigFace): Expr | RigFace => (typeof e === "string" ? (e in HERS ? FACES[HERS[e]] : e) : { ...e, marks: "neutral" as Expr });
+/** (in the frames of a change rigMood gives a mixed face of the rig's names: its mouth is put into hers too) */
+const MOUTHS: Record<string, Expr> = { pained: "gloom" as Expr, deadpan: "speechless" as Expr };
+const hers = (e: Expr | RigFace): Expr | RigFace => (typeof e === "string" ? (e in HERS ? FACES[HERS[e]] : e) : { ...e, mouth: MOUTHS[e.mouth as string] ?? e.mouth, marks: "neutral" as Expr });
 
 preview({ w: 540, h: 960 }, (c) => {
   const o = c.opts, M = c.mats();
@@ -72,7 +74,8 @@ preview({ w: 540, h: 960 }, (c) => {
         // ----- the motion test (seconds)
         const m = rigMood(t, [{ at: 0, expr: "smile" }, { at: 2.8, expr: "sigh", how: "sink" }, { at: 3.75, expr: "pained", how: "blink" }, { at: 5.42, expr: "shock", how: "take" }, { at: 5.72, expr: "smile", how: "blink" }]);
         st.expr = hers(m.expr) as RigState["expr"];
-        if (m.blink !== undefined) st.blink = m.blink; else if (Math.abs(t - 0.75) < 0.05) st.blink = 1;
+        // (the state keeps what it was given: the blink is said on every frame)
+        st.blink = m.blink ?? (Math.abs(t - 0.75) < 0.05 || Math.abs(t - 6.2) < 0.05 ? 1 : 0);
         night = 0.8 * ramp(t, 1.25, 1.75);
         // the eyes check the room, left then right, before she lets go
         const look = t < 1.9 ? 0 : t < 2.25 ? -1.3 * ramp(t, 1.9, 2.0) : t < 2.65 ? -1.3 + 2.0 * ramp(t, 2.25, 2.37) : 0.7 * (1 - ramp(t, 2.65, 2.78));
@@ -88,7 +91,7 @@ preview({ w: 540, h: 960 }, (c) => {
         const sag = ramp(t, 2.8, 3.3) * (1 - ramp(t, 5.42, 5.52));
         const own: RigHead = { dy: -0.035 * sag, tilt: -5.5 * up + 1.2 * rub * Math.sin(a) } as RigHead;
         st.head = rigHeadAdd(m.head, own);
-        if (sag > 0.01) st.lean = { pitch: 0.07 * sag } as RigState["lean"];
+        st.lean = { pitch: 0.07 * sag } as RigState["lean"];
         // the torch: in from the right at 5.2, on her face, wobbling, and out to the left
         const tin = ramp(t, 5.15, 5.45), tout = ramp(t, 6.45, 6.85);
         torch = [1.1 * (1 - tin) - 1.3 * tout + 0.02 * Math.sin(t * 7), 1.22 + 0.25 * (1 - tin) + 0.015 * Math.sin(t * 5.3), 0.5, 0.96 * clamp(tin * 3) * (1 - clamp(tout * 1.4))];
@@ -99,7 +102,7 @@ preview({ w: 540, h: 960 }, (c) => {
         if (hands === "cross") st.hands = [v(CROSS[0]), v(CROSS[1])] as RigState["hands"];
         else if (hands === "rub") { pose = { kind: "shh", arm: 0, amount: Pg.amount ?? 1, jaw: Pg.jaw ?? 1.3 }; st.hands = [null, v(CROSS[1])] as RigState["hands"]; st.head = { dy: -0.03, tilt: Pg.tilt ?? -5 } as RigHead; st.lean = { pitch: 0.07 } as RigState["lean"]; }
         else if (hands === "jaw") { st.hands = [v(JAW), v(CROSS[1])] as RigState["hands"]; st.armFront = [true, undefined]; st.head = { dy: -0.03, tilt: -5.5 } as RigHead; st.lean = { pitch: 0.07 } as RigState["lean"]; }
-        if (Pg.blink !== undefined) st.blink = Pg.blink;
+        st.blink = Pg.blink ?? 0;
         if (Pg.tilt !== undefined) st.head = { tilt: Pg.tilt } as RigHead;
       }
       st.pose = { ...pose, t: 0.4 + t } as RigPose;

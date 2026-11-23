@@ -31,7 +31,18 @@ export const LINE = "#2c1b14";
 const UMBER = "118,74,30", LIGHT = "255,247,222", ROSE = "206,112,88";
 const IRIS = "#6a4424", WHITE = "#fbf4de";
 
+/** HOW THE FACE IS DRAWN. "soft" (the default, after the owner's "she looks kinda scary", 23 Nov 2026) = the series'
+ *  friendly toon read of her: the series' SOLID eyes (a lid line with a solid pupil hanging from it, no white, no
+ *  iris: the owner's "lets give her solid eyes, like our style") under her heavy lids, hardly any shade, a blush, a
+ *  faint brow.
+ *  "panel" = the first read, close to the painting: dark lid lines, shaded sockets, no brow. */
+type Style = { shade: number; socket: number; noseShade: number; blush: number; hw: number; lidW: number; openK: number; iris: number; irisCol: string; pupil: number; glint: number; lidShade: number; lower: number; fold: number; line: string; lash: boolean; solid: boolean; lipW: number; lipLine: string; corner: number; lip: number; lift: number; nose: number; bridge: number; brow: number; hem: number; out: number };
+const PANEL: Style = { shade: 1, socket: 1, noseShade: 1, blush: 1, hw: 9.3, lidW: 0.94, openK: 1, iris: 5.1, irisCol: "#6a4424", pupil: 0.56, glint: 0.24, lidShade: 0.28, lower: 0.8, fold: 0.78, line: "#2c1b14", lash: false, solid: false, lipW: 1.95, lipLine: "#2c1b14", corner: 1, lip: 1, lift: 0, nose: 0.9, bridge: 0.4, brow: 0, hem: 0.7, out: 0 };
+const SOFT: Style = { shade: 0.42, socket: 0.22, noseShade: 0.3, blush: 2.3, hw: 10.4, lidW: 0.9, openK: 1, iris: 6.3, irisCol: "#8a5628", pupil: 0.5, glint: 0.36, lidShade: 0.1, lower: 0.34, fold: 0.38, line: "#2a1a18", lash: false, solid: true, lipW: 1.7, lipLine: "#6a2f24", corner: 0.35, lip: 1.25, lift: 0.55, nose: 0.6, bridge: 0, brow: 0.42, hem: 0.42, out: 0.5 };
+let ST: Style = SOFT;
+
 export type MonaFaceO = {
+  /** "soft" (default) | "panel": see Style */ style?: "soft" | "panel";
   /** sfumato's strength (1 = the sheet's) */ shade?: number;
   /** the varnish cracks' strength (0 = none) */ cracks?: number;
   /** the veil's hem across the forehead */ veil?: boolean;
@@ -112,12 +123,13 @@ const spline = (p: P2[], n = 8): P2[] => {
  *  the panel: the far (screen right) side of the face falls away into shade. */
 const sfumato = (f: FaceKit, k: number) => {
   const U = UMBER;
+  k *= ST.shade;
   blob(f, 50, 4, 30, 56, U, 0.4 * k);                       // the far side of the face
   blob(f, 6, 56, 52, 19, U, 0.42 * k);                      // under the jaw
   blob(f, -50, -6, 13, 34, U, 0.2 * k);                     // the near temple, under the hair
   blob(f, 0, -52, 46, 12, U, 0.26 * k);                     // under the veil's hem
-  for (const s of [-1, 1]) blob(f, s * 14.6 + 1, -4.6, 13.5, 8.4, U, (s > 0 ? 0.3 : 0.24) * k);   // the eye sockets
-  blob(f, 5.2, 3.4, 4.4, 10.5, U, 0.24 * k);                // the nose's shaded side
+  for (const s of [-1, 1]) blob(f, s * 14.6 + 1, -4.6, 13.5, 8.4, U, (s > 0 ? 0.3 : 0.24) * k * ST.socket);   // the eye sockets
+  blob(f, 5.2, 3.4, 4.4, 10.5, U, 0.24 * k * ST.noseShade);                // the nose's shaded side
   blob(f, 1, 13, 7, 2.8, U, 0.3 * k);                       // under the nose
   blob(f, 0, 25.2, 8.5, 3.2, U, 0.28 * k);                  // under the lower lip
   const L = LIGHT;
@@ -125,7 +137,8 @@ const sfumato = (f: FaceKit, k: number) => {
   blob(f, -19.5, 9.5, 12, 9, L, 0.36 * k);                  // the near cheek
   blob(f, -1.6, 2.5, 2.4, 9, L, 0.4 * k);                   // down the nose
   blob(f, -1, 31.5, 9, 6, L, 0.3 * k);                      // the chin
-  blob(f, -22, 12.5, 9.5, 6, ROSE, 0.16 * k); blob(f, 23, 12.5, 9, 6, ROSE, 0.13 * k);   // a breath of warmth in the cheeks
+  const bl = (k / ST.shade) * ST.blush;
+  blob(f, -22, 12.5, 9.5, 6, ROSE, 0.16 * bl); blob(f, 23, 12.5, 9, 6, ROSE, 0.13 * bl);   // a breath of warmth in the cheeks
 };
 
 // ------------------------------------------------------------------------------------------------- the eyes
@@ -162,11 +175,11 @@ const RIDGE: Record<string, number> = { smile: 0, lick: 0, neutral: 0.5, deadpan
 /** ONE OF HER EYES (x, y) = its middle; s = +1 the eye on screen right; lid = the blink on top of the setting's own
  *  lids (0, 0.5, 1); gaze -1..1 */
 export const monaEye = (f: FaceKit, x: number, y: number, s: number, E: EyeSet, lid: number, gaze: number) => {
-  const hw = 9.3, LW = f.PEN * 0.94, tilt = -s * (E.tilt ?? 0), g = f.g;
+  const hw = ST.hw, LW = f.PEN * ST.lidW, LINE = ST.line, tilt = -s * (E.tilt ?? 0), g = f.g;
   const rot = (p: P2): P2 => { const a = rad(tilt), c = Math.cos(a), sn = Math.sin(a), dx = p[0] - x, dy = p[1] - y; return [x + dx * c - dy * sn, y + dx * sn + dy * c]; };
   const R = (a: P2[]) => a.map(rot);
   if (E.squeeze) { f.line(R([[x + s * 5.2, y - 4.8], [x - s * 5.2, y + 0.4], [x + s * 5.2, y + 5.2]]), LW, LINE); return; }
-  let open = E.open;
+  let open = Math.min(1, E.open * ST.openK);
   if (lid >= 1) open = 0; else if (lid > 0) open = Math.min(open, 0.5) * 0.5;
   // the corners: the outer one a touch lower than the inner (her calm, falling lids)
   const I: P2 = [x - s * hw, y + 1.5], O: P2 = [x + s * hw, y + 2.3], mid = (I[1] + O[1]) / 2;
@@ -177,23 +190,36 @@ export const monaEye = (f: FaceKit, x: number, y: number, s: number, E: EyeSet, 
     if (kind !== "smile") f.line(R(f.quad([I[0] + s * 2.4, I[1] - 3.4], [x, mid - 4.6 + dy], [O[0] - s * 1.6, O[1] - 3.2], 10)), 1.4, `rgba(${UMBER},0.75)`);
     return;
   }
-  const up = 1.3 + 7.5 * open, lo = 1.0 + 2.7 * open, ri = 5.1 * (E.iris ?? 1);
+  if (ST.solid) {
+    // THE SERIES' EYE in her shape: the lid a soft arch (the outer end a touch lower: her calm, falling lids), a solid
+    // pupil hanging from it (the lower the lid, the less of it), and over it the fine fold of her heavy lid
+    const ly = y - 4.3, lidPts = f.quad([x - s * 8.8, ly + 1.5], [x - s * 0.6, ly - 2.6], [x + s * 8.8, ly + 2.2], 16);
+    const rx = 5.9 * (E.iris ?? 1), ry = (2.8 + 10 * open) * (E.iris ?? 1), cx = x + gaze * 3.2;
+    clipTo(f, R([...lidPts, [x + s * 13, y + 15], [x - s * 13, y + 15]]), () => f.fill(R(f.arc(cx, ly - 0.2, rx, ry)), LINE, 0));
+    f.line(R(f.quad([x - s * 6.6, ly - 2.4], [x - s * 0.6, ly - 6.3], [x + s * 7.0, ly - 1.6], 12)), 1.4, `rgba(${UMBER},${ST.fold})`);
+    f.line(R(lidPts), LW, LINE);
+    return;
+  }
+  const up = 1.3 + 7.5 * open, lo = 1.0 + 2.7 * open, ri = ST.iris * (E.iris ?? 1);
   // (the upper lid peaks a little toward the nose side of the middle, as hers do)
   const top = f.quad(I, [x - s * 0.9, mid - 2 * up], O, 18), bot = f.quad(O, [x + s * 0.4, mid + 2 * lo], I, 18), almond = R([...top, ...bot.slice(1, -1)]);
   g.save(); g.globalAlpha = 0.95; f.fill(almond, WHITE, 0); g.restore();
   clipTo(f, almond, () => {
     // the iris rests on the lower lid; the upper lid cuts its top off unless the eye is wide
     const cx = x + gaze * 3.1, cy = Math.min(mid + lo - ri + 0.9, mid - up + ri + 1.2 + 6 * Math.max(0, open - 0.7));
-    f.fill(R(f.arc(cx, cy, ri, ri)), IRIS, 0);
-    f.fill(R(f.arc(cx, cy, ri * 0.56, ri * 0.56)), LINE, 0);
-    f.fill(R(f.arc(cx - 0.42 * ri, cy - 0.4 * ri, 0.24 * ri, 0.24 * ri, 0, 360, 12)), "#fffaf0", 0);
+    f.fill(R(f.arc(cx, cy, ri, ri)), ST.irisCol, 0);
+    f.fill(R(f.arc(cx, cy, ri * ST.pupil, ri * ST.pupil)), LINE, 0);
+    f.fill(R(f.arc(cx - 0.42 * ri, cy - 0.34 * ri, ST.glint * ri, ST.glint * ri, 0, 360, 12)), "#fffaf0", 0);
+    if (ST.lash) f.fill(R(f.arc(cx + 0.4 * ri, cy + 0.42 * ri, 0.15 * ri, 0.15 * ri, 0, 360, 10)), "#fffaf0", 0);
     // the lid's own shadow on the eye
-    f.line(R(f.quad([I[0], I[1] + 1.6], [x - s * 0.9, mid - 2 * up + 3.4], [O[0], O[1] + 1.4], 14)), 2.2, `rgba(${UMBER},0.28)`);
+    f.line(R(f.quad([I[0], I[1] + 1.6], [x - s * 0.9, mid - 2 * up + 3.4], [O[0], O[1] + 1.4], 14)), 2.2, `rgba(${UMBER},${ST.lidShade})`);
   });
   // the lower lid: fine and soft; the lid's fold above the eye: a second fine line (her heavy lids); the lid line last
-  f.line(R(f.quad([O[0] - s * 0.8, O[1] + 0.2], [x + s * 0.4, mid + 2 * lo + 0.3], [I[0] + s * 1.2, I[1] + 0.6], 14)), 1.25, `rgba(${UMBER},0.8)`);
-  if (open < 0.8) f.line(R(f.quad([I[0] + s * 2.2, I[1] - 2.9 - 1.6 * open], [x - s * 0.9, mid - 2 * up - 3.9], [O[0] - s * 1.4, O[1] - 2.8 - 1.4 * open], 12)), 1.5, `rgba(${UMBER},0.78)`);
+  f.line(R(f.quad([O[0] - s * 0.8, O[1] + 0.2], [x + s * 0.4, mid + 2 * lo + 0.3], [I[0] + s * 1.2, I[1] + 0.6], 14)), 1.25, `rgba(${UMBER},${ST.lower})`);
+  if (open < 0.8) f.line(R(f.quad([I[0] + s * 2.2, I[1] - 2.9 - 1.6 * open], [x - s * 0.9, mid - 2 * up - 3.9], [O[0] - s * 1.4, O[1] - 2.8 - 1.4 * open], 12)), 1.5, `rgba(${UMBER},${ST.fold})`);
   f.line(R(top), LW, LINE);
+  // (soft) one lash at the outer corner, flicked up
+  if (ST.lash) f.line(R(f.quad(O, [O[0] + s * 1.3, O[1] + 0.1], [O[0] + s * 2.1, O[1] - 1.5], 6)), LW * 0.8, LINE);
 };
 
 /** the brow the rig drew at side s (its ink above the eye): three points along it (inner, middle, outer) */
@@ -215,33 +241,33 @@ const rest = (f: FaceKit, mx: number, my: number, press: boolean) => {
   const lipLine = spline([Lc, [mx - w * 0.62, y + 0.08], [mx - 2.5, y + 0.3], [mx, y + 0.05], [mx + 2.5, y + 0.32], [mx + w * 0.6, y + 0.12], Rc], 8);
   const upper = spline([[mx - w * 0.8, y - 0.05], [mx - 2.9, y - up], [mx, y - up * 0.62], [mx + 2.9, y - up], [mx + w * 0.78, y]], 8);
   const lower = spline([[mx + w * 0.72, y + 0.5], [mx + 3, y + dn * 0.86], [mx, y + dn], [mx - 3, y + dn * 0.86], [mx - w * 0.74, y + 0.45]], 8);
-  g.save(); g.globalAlpha = 0.55; f.fill([...upper, ...lipLine.slice(5, -5).reverse()], `rgb(${ROSE})`, 0); g.globalAlpha = 0.34; f.fill([...lipLine.slice(5, -5), ...lower], `rgb(${ROSE})`, 0); g.restore();
-  f.line(spline([[mx - 3.6, y + dn - 0.3], [mx, y + dn + 0.5], [mx + 3.6, y + dn - 0.3]], 6), 1.1, `rgba(${UMBER},0.45)`);
-  f.line(lipLine, 1.95, LINE);
+  g.save(); g.globalAlpha = Math.min(1, 0.55 * ST.lip); f.fill([...upper, ...lipLine.slice(5, -5).reverse()], `rgb(${ROSE})`, 0); g.globalAlpha = Math.min(1, 0.34 * ST.lip); f.fill([...lipLine.slice(5, -5), ...lower], `rgb(${ROSE})`, 0); g.restore();
+  f.line(spline([[mx - 3.6, y + dn - 0.3], [mx, y + dn + 0.5], [mx + 3.6, y + dn - 0.3]], 6), 1.1, `rgba(${UMBER},${0.45 * ST.shade})`);
+  f.line(lipLine, ST.lipW, ST.lipLine);
 };
 const smile = (f: FaceKit, mx: number, my: number, k = 1) => {
-  const g = f.g, y = my - 0.3;
-  blob(f, -10.4, 17.4, 4.6, 4.2, UMBER, 0.46 * k); blob(f, 10, 17.5, 4.4, 4.0, UMBER, 0.42 * k);   // the mouth's corners: where the smile hides
-  const Lc: P2 = [mx - 8.8, y - 0.6], Rc: P2 = [mx + 8.4, y - 0.4];
+  const g = f.g, y = my - 0.3, up = ST.lift;
+  blob(f, -10.4, 17.4, 4.6, 4.2, UMBER, 0.46 * k * ST.corner); blob(f, 10, 17.5, 4.4, 4.0, UMBER, 0.42 * k * ST.corner);   // the mouth's corners: where the smile hides
+  const Lc: P2 = [mx - 8.8, y - 0.6 - up], Rc: P2 = [mx + 8.4, y - 0.4 - up];
   // the line between the lips: almost level, a slight dip under the cupid's bow, both ends just rising
   const lipLine = spline([Lc, [mx - 6.2, y + 0.3], [mx - 2.9, y + 0.72], [mx, y + 0.5], [mx + 2.9, y + 0.76], [mx + 6, y + 0.42], Rc], 8);
   // the upper lip (deeper rose) and the lower (paler, fuller in the middle)
   const upper = spline([[mx - 7.2, y - 0.5], [mx - 3.1, y - 2.5], [mx, y - 1.6], [mx + 3.1, y - 2.5], [mx + 7, y - 0.4]], 8);
   const lower = spline([[mx + 6.2, y + 0.6], [mx + 3.2, y + 3.4], [mx, y + 4.1], [mx - 3.2, y + 3.4], [mx - 6.4, y + 0.5]], 8);
-  g.save(); g.globalAlpha = 0.6; f.fill([...upper, ...lipLine.slice(5, -5).reverse()], `rgb(${ROSE})`, 0); g.globalAlpha = 0.36; f.fill([...lipLine.slice(5, -5), ...lower], `rgb(${ROSE})`, 0); g.restore();
-  f.line(spline([[mx - 3.8, y + 3.7], [mx, y + 4.5], [mx + 3.8, y + 3.7]], 6), 1.1, `rgba(${UMBER},0.45)`);
-  f.line(lipLine, 1.95, LINE);
+  g.save(); g.globalAlpha = Math.min(1, 0.6 * ST.lip); f.fill([...upper, ...lipLine.slice(5, -5).reverse()], `rgb(${ROSE})`, 0); g.globalAlpha = Math.min(1, 0.36 * ST.lip); f.fill([...lipLine.slice(5, -5), ...lower], `rgb(${ROSE})`, 0); g.restore();
+  f.line(spline([[mx - 3.8, y + 3.7], [mx, y + 4.5], [mx + 3.8, y + 3.7]], 6), 1.1, `rgba(${UMBER},${0.45 * ST.shade})`);
+  f.line(lipLine, ST.lipW, ST.lipLine);
   // the corners: each tucked up into the cheek with a very short hook (the screen-left one higher and longer)
-  f.line(f.quad(Lc, [mx - 9.7, y - 1.0], [mx - 10.2, y - 2.1], 6), 1.7, LINE);
-  f.line(f.quad(Rc, [mx + 9.1, y - 0.7], [mx + 9.5, y - 1.4], 6), 1.55, LINE);
+  f.line(f.quad(Lc, [mx - 9.7, y - 1.0 - up], [mx - 10.2, y - 2.1 - up], 6), ST.lipW * 0.87, ST.lipLine);
+  f.line(f.quad(Rc, [mx + 9.1, y - 0.7 - up], [mx + 9.5, y - 1.4 - up], 6), ST.lipW * 0.8, ST.lipLine);
 };
 
 // ------------------------------------------------------------------------------------------------- nose, veil, cracks
 const noseOf = (f: FaceKit) => {
   // the tip's under-curve running up into the far wing (no near wing: a "U" reads as a snout)
-  f.line(spline([[-3.2, 9.9], [-1.4, 10.9], [0.8, 11.1], [3.0, 10.5], [4.0, 9.1], [3.6, 7.9]], 6), 1.5, `rgba(${UMBER},0.9)`);
+  f.line(spline([[-3.2, 9.9], [-1.4, 10.9], [0.8, 11.1], [3.0, 10.5], [4.0, 9.1], [3.6, 7.9]], 6), 1.5, `rgba(${UMBER},${ST.nose})`);
   // the bridge: one long soft line down the shaded side, from under the brow ridge
-  f.line(spline([[4.9, -5.5], [3.5, -1], [3.3, 3.6], [3.7, 7.6]], 6), 1.25, `rgba(${UMBER},0.4)`);
+  if (ST.bridge > 0) f.line(spline([[4.9, -5.5], [3.5, -1], [3.3, 3.6], [3.7, 7.6]], 6), 1.25, `rgba(${UMBER},${ST.bridge})`);
 };
 const veilOf = (f: FaceKit) => {
   // the hem of the gauze: one fine dark line across the top of the forehead, under the hairline, and a little of the
@@ -251,7 +277,7 @@ const veilOf = (f: FaceKit) => {
   // (it fades out toward the temples: the face turns on the head a little more than the hair does, and a hem drawn
   // right out to the head's edge then shows as a stray line beside the temple)
   const g = f.g, [xa] = f.px(-41, 0), [xb] = f.px(41, 0), gr = g.createLinearGradient(xa, 0, xb, 0);
-  gr.addColorStop(0, "rgba(60,38,20,0)"); gr.addColorStop(0.2, "rgba(60,38,20,0.7)"); gr.addColorStop(0.8, "rgba(60,38,20,0.7)"); gr.addColorStop(1, "rgba(60,38,20,0)");
+  gr.addColorStop(0, "rgba(60,38,20,0)"); gr.addColorStop(0.2, `rgba(60,38,20,${ST.hem})`); gr.addColorStop(0.8, `rgba(60,38,20,${ST.hem})`); gr.addColorStop(1, "rgba(60,38,20,0)");
   g.save(); g.strokeStyle = gr; g.lineWidth = 1.1 * f.u; g.lineCap = "round"; g.lineJoin = "round"; g.beginPath();
   hem.forEach((p, i) => { const [x, y] = f.px(p[0], p[1]); if (i) g.lineTo(x, y); else g.moveTo(x, y); });
   g.stroke(); g.restore();
@@ -274,29 +300,30 @@ const cracksOf = (f: FaceKit, k: number) => {
 // ------------------------------------------------------------------------------------------------- the accessory
 /** MONA LISA'S FACE (see the head of this file) */
 export const monaFace = (o: MonaFaceO = {}): Acc => {
-  const k = o.shade ?? 1, cracks = o.cracks ?? 0, veil = o.veil ?? true, nose = o.nose ?? true;
+  const k = o.shade ?? 1, cracks = o.cracks ?? 0, veil = o.veil ?? true, nose = o.nose ?? true, style = o.style === "panel" ? PANEL : SOFT;
   return {
-    name: "monaFace", slots: [], key: `monaFace8|${k}|${cracks}|${veil}|${nose}`,
-    faceUnder(f) { sfumato(f, k); },
+    name: "monaFace", slots: [], key: `monaFace12|${k}|${cracks}|${veil}|${nose}|${o.style ?? "soft"}`,
+    faceUnder(f) { ST = style; sfumato(f, k); },
     face(f) {
       if (f.lens) return;
+      ST = style;
       const name = f.expr as string, kinds = RIG[name] ?? ["other", "other"], sets = EYES2[name] ?? (EYES[name] ? [EYES[name], EYES[name]] : null);
       // --- the eyes and the brows
       [-1, 1].forEach((s, i) => {
         const x = s * f.sp, brow = readBrow(f, s);
         // the brow goes (she has none); the shade under it is laid again
-        const bb = box(x - 12.4, -30, x + 12.4, -8.6);
+        const bb = box(x - 12.4, -30, x + 12.4, ST.solid && kinds[i] === "ring" ? -12.8 : -8.6);   // (a ring eye reaches higher than her own)
         wipe(f, bb); clipTo(f, bb, () => sfumato(f, k));
-        const ridge = RIDGE[name] ?? 1;
+        const ridge = Math.max(RIDGE[name] ?? 1, ST.brow);
         if (brow && ridge > 0) {
           const [a, m, b] = brow, c: P2 = [2 * m[0] - (a[0] + b[0]) / 2, 2 * m[1] - (a[1] + b[1]) / 2], q = f.quad(a, c, b, 12);
           f.line(q, 5.4, `rgba(${UMBER},${0.2 * ridge})`); f.line(q, 2.6, `rgba(${UMBER},${0.5 * ridge})`);
         }
-        if (!sets) return;
+        if (!sets || (ST.solid && kinds[i] === "ring")) return;   // (solid: a shock keeps the series' own ring eyes)
         // (the rig's ring eye of a shock is far bigger than her eye: all of it goes)
-        const { lid, gaze } = blinkGaze(f, s, kinds[i]), eb = kinds[i] === "ring" ? box(x - 13.6, -14, x + 13.6, 13.6) : box(x - 10.8, -8.6, x + 10.8, 8.0);
+        const { lid, gaze } = blinkGaze(f, s, kinds[i]), eb = kinds[i] === "ring" ? box(x - 14.4, -14, x + 14.4, 13.6) : box(x - 10.8, -8.6, x + 10.8, 8.0);
         wipe(f, eb); clipTo(f, eb, () => sfumato(f, k));
-        monaEye(f, x, 0.3, s, sets[i], lid, gaze);
+        monaEye(f, x + s * ST.out, 0.3, s, sets[i], lid, gaze);
       });
       // --- THE SMILE in place of the rig's closed smile (a small arc with its ends up and nothing else in the mouth's
       // box: a speaking mouth is a filled bar, a frown bends the other way)

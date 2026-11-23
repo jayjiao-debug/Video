@@ -30,7 +30,7 @@ export function addPerson(rc: RigCast, p: Person): Rig {
 /** her colours, off the panel (never pure black: the line stays the darkest thing) */
 export const COL = {
   /** the skin: old ivory under yellowed varnish */
-  skin: "#f1dcae",
+  skin: "#f7e3c6",
   hair: "#4a2c1a", hairLight: "#8a5a30", hairDeep: "#2a1810", veil: "#2e2118",
   gown: "#3c4630", gownDeep: "#262d20", braid: "#c79a3c", sleeve: "#b8873a", sleeveDeep: "#7c5622", mantle: "#2f3326",
 } as const;
@@ -49,18 +49,18 @@ export const MONA_HAIR: ShellO = {
   thF: 0.05, thS: 0.1, thB: 0.12, top: 1.13, featherF: 9, edge: 0.012,
   col: COL.hair, light: COL.hairLight, deep: COL.hairDeep, ring: null, part: 0, hat: 52, sideTo: 100, backFrom: 128,
 };
-export type MonaO = { face?: MonaFaceO; skin?: string; gauze?: number };
+export type MonaO = { face?: MonaFaceO; skin?: string; gauze?: number; /** the sleeves' thickness: the upper arm's radius in metres */ sleeve?: number; /** the hands' size against the kit's */ hand?: number };
 export const mona = (o: MonaO = {}): Person => ({
-  name: `mona${Object.keys(o).length ? "_" + JSON.stringify(o) : ""}`, scale: 1.0, look: o.skin ? { ...MONA_LOOK, skin: o.skin } : MONA_LOOK, limbs: { hand: o.skin ?? COL.skin, arm: COL.sleeve }, nape: true, handK: 1.3,
+  name: `mona${Object.keys(o).length ? "_" + JSON.stringify(o) : ""}`, scale: 1.0, look: o.skin ? { ...MONA_LOOK, skin: o.skin } : MONA_LOOK, limbs: { hand: o.skin ?? COL.skin, arm: COL.sleeve }, nape: true, handK: o.hand ?? 1.2,
   expr: face("smile", "smile", "neutral") as unknown as Expr,
-  acc: (): Acc[] => [robe({ col: COL.gown, band: COL.gownDeep, sash: false }), monaGown({ col: COL.gown, skin: o.skin ?? COL.skin, braid: COL.braid, mantle: COL.mantle }), monaSleeves({ col: COL.sleeve, deep: COL.sleeveDeep }),
+  acc: (): Acc[] => [robe({ col: COL.gown, band: COL.gownDeep, sash: false }), monaGown({ col: COL.gown, skin: o.skin ?? COL.skin, braid: COL.braid, mantle: COL.mantle }), monaSleeves({ col: COL.sleeve, deep: COL.sleeveDeep, thick: o.sleeve ?? 0.034 }),
     veilHair({ shell: MONA_HAIR, skin: o.skin ?? COL.skin, gauze: o.gauze ?? 0, tint: 0.85 }), ringlets({ col: COL.hair, light: COL.hairLight, deep: COL.hairDeep }),
     backFall({ col: COL.hair, light: COL.hairLight, deep: COL.hairDeep, ring: COL.hair, n: 5, notchMid: 1.7, notchSide: 1.45, tips: [0.2, 0.16, 0.12] }),
     monaFace(o.face)],
 });
 export const MONA: Person = mona();
 
-export const PEOPLE: Record<string, Person> = { mona: MONA, monaGauze: mona({ gauze: 5.5, face: { veil: false } }), monaCracks: mona({ face: { cracks: 1 } }) };
+export const PEOPLE: Record<string, Person> = { mona: MONA, monaFull: mona({ sleeve: 0.046, hand: 1.3 }), monaThin: mona({ sleeve: 0.025, hand: 1.1 }), monaPanel: mona({ face: { style: "panel" }, skin: "#f1dcae" }), monaGauze: mona({ gauze: 5.5, face: { veil: false } }), monaCracks: mona({ face: { cracks: 1 } }) };
 export type PersonKey = keyof typeof PEOPLE;
 /** FACES by name (preview: expr "<name>") */
 export const FACES: Record<string, Expr | RigFace> = {
