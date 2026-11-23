@@ -4,7 +4,8 @@
 // "Go! Ask his name." (an order, pointing, eyes never leaving him); 我只拍 (the tally blinks); her whisper: he is the only
 // son of her family's enemy.
 // CAMERA PLAN:
-//   1  B01      his interview framing, a touch wide: him sulking at the wall, the hall to the right; the whisper lean
+//   1  B01      (v3) she comes in wide on the ball: two masked couples promenading, Romeo sulking at the left wall;
+//               she walks in on him to his interview framing under her whisper (the whisper lean on top)
 //   2  B02      he stops; she TILTS along his look across the hall to Juliet (fov tighter), holds, and comes back   (he looks)
 //   3  B03-B04  back on him, closer: he answers without looking at her                                              (the joke is his face)
 //   4  B05      HARD CUT (Jay's rapid switch) to her interview across the hall: mirrored, she looks left               (the switch)
@@ -20,9 +21,17 @@ import { whisperLean } from "../whisper";
 import { P, spot, camAt, ck, faceAt, talk, wordAt, startOf, endOf, ky, accent, headBox, rel, REACT } from "./kit";
 import { h } from "./h";
 import { JU_TAB } from "../fx";
+import { dancers } from "./dance";
 
 const S = seg("B");
 const RW = spot("hall", "romeoWall"), JT = spot("hall", "julietTiptoe");
+/** (v3) Romeo 12 cm right of and 10 cm out from his mark: the sculpted hair (and the beret on it) went 6 cm into the
+ *  column behind him */
+const RO_AT = RW.at.clone().add(V(0.12, 0, 0.1));
+/** (v3) the wide she comes in on: from just inside the door down the left of the nave, Romeo at the left wall a third in
+ *  from the frame's left, the dancers right of the middle (the frame is narrow: from the middle of the door end he was
+ *  half cut off by the app) */
+const WIDE_POS: [number, number, number] = [-1.0, 1.5, 2.2], WIDE_LOOK: [number, number, number] = [-1.16, 1.15, -1.8];
 
 export const SEG: Segment = {
   id: "B", from: S.from, to: S.to,
@@ -34,7 +43,8 @@ export const SEG: Segment = {
     let camera;
     if (!switched) {
       camera = povCam(f, [
-        ck("hall", S.from, [-0.15, 1.5, 0.95], [-1.45, 1.25, -0.95], 48),
+        ck("hall", S.from, WIDE_POS, WIDE_LOOK, 52),
+        ck("hall", S.from + 22, WIDE_POS, WIDE_LOOK, 52),
         ck("hall", b02 - 2, [-0.15, 1.5, 0.95], [-1.45, 1.25, -0.95], 48),
         // the tilt along his look to her, and back
         { ...camAt("hall", "across", b02 + 10), fov: 30 },
@@ -53,12 +63,14 @@ export const SEG: Segment = {
     // --- Romeo by the wall: sulking -> struck -> distracted (looking past her at Juliet)
     const ro = w.actor(ROMEO);
     const struck = wordAt("B02", "heart");
-    const roLook = f >= b02 - 8 ? yawTo(RW.at, JT.at) : RW.facing + 0.4;
+    const roLook = f >= b02 - 8 ? yawTo(RO_AT, JT.at) : RW.facing + 0.4;
     ro.set({
-      ...standing(RW.at, roLook, f, 1),
+      ...standing(RO_AT, roLook, f, 1),
       // his half mask on its stick, held low at the chest (never in front of the face)
-      pose: { kind: "hold", t: f / 30 }, hands: [null, rel(RW.at, roLook, 0.15, 0.72, 0.2)],
-      expr: faceAt(f, [[0, "hollow"], [b02 - 8, "dreamy"], [b03 + REACT, "dreamy"]]),
+      pose: { kind: "hold", t: f / 30 }, hands: [null, rel(RO_AT, roLook, 0.15, 0.72, 0.2)],
+      // v3b (the owner: "give them expressive emotion showing they are in love"): struck, his eyes go big with a heart
+      // in their light (smitten); asked about Rosaline he answers "Who?" with HEART EYES (the film's signature emote)
+      expr: faceAt(f, [[0, "hollow"], [b02 - 8, "smitten"], [startOf("B04") - 3, "hearts"], [endOf("B04") + 18, "smitten"]]),
       ...talk("ro", f, 1), gaze: f >= b02 - 8 ? 0.5 : -0.5, lookDown: f < b02 - 8 ? 8 : 0,
       head: accent("pop", f, struck) ?? undefined, hide: ["letter"],
     });
@@ -68,11 +80,13 @@ export const SEG: Segment = {
     const pointing = f >= b06 - 4 && f < endOf("B06") + 20;
     const huff = endOf("B07") + REACT;
     ju.set({
-      ...standing(JT.at.clone().add(V(0, tip, 0)), yawTo(JT.at, RW.at), f, 2),
+      ...standing(JT.at.clone().add(V(0, tip, 0)), yawTo(JT.at, RO_AT), f, 2),
       pose: pointing ? { kind: "point", t: (f - b06) / 30, arm: 0 } : f >= huff && f < huff + 24 ? { kind: "wave", t: (f - huff) / 30, arm: 1 } : { kind: "idle", t: f / 30 },
-      expr: faceAt(f, [[0, "swoon"], [b06 - 6, "bossy"], [huff, "sure"], [startOf("B08"), "swoon"]]),
+      expr: faceAt(f, [[0, "smitten"], [b06 - 6, "bossy"], [huff, "sure"], [startOf("B08"), "smitten"]]),
       ...talk("ju", f, 2), gaze: -0.5, hide: ["vial"],
     });
+    // --- the ball goes on: two masked couples round the dance floor
+    dancers(w, f, S.from);
     w.update();
     // --- her red tab slams in on the switch
     // it flaps away before the whisper lean on B08: pushed in that close her head fills the frame, the tab has no slot

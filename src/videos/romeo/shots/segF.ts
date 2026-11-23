@@ -114,10 +114,12 @@ function cell(w: Parameters<Segment["pose"]>[0], f: number) {
   const has = f >= tGive;
   const juFacing = f < f06 ? yawTo(JU_AT, FR_AT) + 0.35 : yawTo(JU_AT, frAt);
   const grab = ky(f, [[tGive - 8, 0], [tGive, 1], [tGive + 14, 0.25]]);
+  // (v3b) the vial held in front of her middle, not off to her left: there her left drill curl swung into it as she
+  // turned her head to the Friar (clearance v3a: the vial 2.4 cm into her hair, f3722-3861)
   ju.set({
     ...standing(JU_AT, juFacing, f, 2),
     pose: { kind: has ? "hold" : "idle", t: f / 30 },
-    hands: grab > 0 && f < tGive + 14 ? [null, VIAL_UP.clone().lerp(rel(JU_AT, juFacing, 0.12, 0.75, 0.25), clamp01(1 - grab))] : has ? [null, rel(JU_AT, juFacing, 0.1, 0.78, 0.24)] : [null, null],
+    hands: grab > 0 && f < tGive + 14 ? [null, VIAL_UP.clone().lerp(rel(JU_AT, juFacing, 0.03, 0.76, 0.3), clamp01(1 - grab))] : has ? [null, rel(JU_AT, juFacing, 0.03, 0.76, 0.3)] : [null, null],
     expr: faceAt(f, [[0, "brave"], [f04 - 2, "bossy"], [endOf("F04") + REACT, "brave"]]),
     ...talk("ju", f, 2),
     hide: has ? [] : ["vial"],

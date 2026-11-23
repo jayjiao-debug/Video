@@ -14,7 +14,8 @@
 import * as THREE from "three";
 import type { Acc } from "../../group/kit/rig3d";
 import { hoop, shade } from "../../group/kit/rigacc/shapes";
-import { lathe, leafGeo, weld } from "../../wanbi/acc/envoy";
+import { lathe, leafGeo, meshOf, weld } from "../../wanbi/acc/envoy";
+import { shellPoint, type ShellO } from "./hair";
 
 const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
 const rad = (d: number) => (d * Math.PI) / 180;
@@ -22,13 +23,14 @@ const rad = (d: number) => (d * Math.PI) / 180;
 // ------------------------------------------------------------------------------------------------------- Romeo
 /** ROMEO'S CAP (see the head of this file). col = the velvet, band = the band round its foot, plume = the feather,
  *  gem = the brooch's stone. size = the crown's spread (1 = 1.18 head radii) */
-export const beret = (o: { col?: string; band?: string; plume?: string; gem?: string; size?: number } = {}): Acc => {
-  const col = o.col ?? "#24468f", band = o.band ?? "#e2b03a", plume = o.plume ?? "#f6f1e4", gem = o.gem ?? "#c4202e", k = o.size ?? 1;
+export const beret = (o: { col?: string; band?: string; plume?: string; gem?: string; size?: number; r0?: number; base?: number; tilt?: [number, number] } = {}): Acc => {
+  const col = o.col ?? "#24468f", band = o.band ?? "#e2b03a", plume = o.plume ?? "#f6f1e4", gem = o.gem ?? "#c4202e", k = o.size ?? 1, tl = o.tilt ?? [-13, -5];
   return {
-    name: "beret", slots: ["hat", "crown"], key: ["rjBeret", col, band, plume, gem, k].join("|"), hat: { rim: 44, hair: "keep", shade: false },
+    name: "beret", slots: ["hat", "crown"], key: ["rjBeret", col, band, plume, gem, k, o.r0 ?? "", o.base ?? "", tl.join(",")].join("|"), hat: { rim: 44, hair: "keep", shade: false },
     build(b) {
-      b.tilt(-13, -5);
-      const R = b.R, r0 = 0.74, base = 0.62, hb = 0.17, rx = 1.18 * k, ry = 0.36, t0 = -Math.acos(r0 / rx), cy = base + hb - ry * Math.sin(t0);
+      // (v3: r0 / base lift it onto the sculpted hair, tilt sets it back off his fringe)
+      b.tilt(tl[0], tl[1]);
+      const R = b.R, r0 = o.r0 ?? 0.74, kr = r0 / 0.74, base = o.base ?? 0.62, hb = 0.17, rx = 1.18 * k, ry = 0.36, t0 = -Math.acos(r0 / rx), cy = base + hb - ry * Math.sin(t0);
       // the band (a short upright wall), then the soft crown bulging out over it and closing on top
       const prof: [number, number][] = [[r0 * 0.96, base - 0.32], [r0, base + hb]];
       for (let i = 1; i < 14; i++) { const t = t0 + ((Math.PI / 2 - t0) * i) / 14; prof.push([rx * Math.cos(t), cy + ry * Math.sin(t)]); }
@@ -52,10 +54,109 @@ export const beret = (o: { col?: string; band?: string; plume?: string; gem?: st
         for (const x of [64, 192]) for (let i = 1; i < 11; i++) for (const s of [-1, 1]) { g.beginPath(); g.moveTo(x, 256 - i * 23); g.lineTo(x + s * 52, 256 - i * 23 - 20); g.stroke(); }
         g.fillStyle = shade(plume, 0.62); for (const x of [64, 192]) g.fillRect(x - 4, 0, 8, 256);
       }, `rjPlume|${plume}`);
-      b.solid("head", leafGeo(b.toM, V(0.66, base + 0.1, 0.34), V(1.7, 2.2, 0.1), V(0.1, 2.05, -1.25), 0.6, 0.2, 0.55), { map: fmap, ink: 0.0075 });
+      b.solid("head", leafGeo(b.toM, V(0.66 * kr, base + 0.1, 0.34 * kr), V(1.7, 2.2, 0.1), V(0.1, 2.05, -1.25), 0.6, 0.2, 0.55), { map: fmap, ink: 0.0075 });
       // the brooch: a gold boss with a red stone in it
-      b.put(b.solid("head", new THREE.SphereGeometry(0.15 * R, 16, 12), { col: band, ink: b.INK * 0.7 }), 0.7, base + 0.1, 0.4);
-      b.put(b.solid("head", new THREE.SphereGeometry(0.085 * R, 12, 10), { col: gem, ink: b.INK * 0.5 }), 0.745, base + 0.1, 0.49);
+      b.put(b.solid("head", new THREE.SphereGeometry(0.15 * R, 16, 12), { col: band, ink: b.INK * 0.7 }), 0.7 * kr, base + 0.1, 0.4 * kr);
+      b.put(b.solid("head", new THREE.SphereGeometry(0.085 * R, 12, 10), { col: gem, ink: b.INK * 0.5 }), 0.745 * kr, base + 0.1, 0.49 * kr);
+    },
+  };
+};
+/** ROMEO'S CAP ON THE SCULPTED HAIR (v3b, 23 Nov: the owner, "romeo v3 with hat but no clipping of hairs"). The cap
+ *  above is a lathe: a round band. The sculpted hair is not round (a forelock, locks, a fuller back), so a round band
+ *  either sank into it (the hair came through the gold band: v3) or stood off it. This one is FITTED: the band runs
+ *  round the hair shell `on` (hair.ts shellPoint) at a constant height in the cap's own tilted frame, so it lies ON the
+ *  hair everywhere, over the forelock and the locks; the soft crown starts from the band's top edge and puffs out
+ *  round it, closing over the hair. Nothing of the hair can come through: under the band is the band, above it is
+ *  the crown. tilt = [toward his left, toward the face] (deg); foot / top = the band's lower / upper edge as
+ *  elevations in the cap's frame (deg); size = the puff's spread (1 = 1.3 times the band's widest) */
+export const beretOn = (o: { on: ShellO; tilt?: [number, number]; foot?: number; top?: number; size?: number; col?: string; band?: string; plume?: string; gem?: string }): Acc => {
+  const col = o.col ?? "#24468f", band = o.band ?? "#e2b03a", plume = o.plume ?? "#f6f1e4", gem = o.gem ?? "#c4202e", k = o.size ?? 1;
+  const tl = o.tilt ?? [12, -16], eF = rad(o.foot ?? 30), eT = rad(o.top ?? 41);
+  return {
+    name: "beret", slots: ["hat", "crown"], hat: { rim: 44, hair: "keep", shade: false },
+    key: ["rjBeretOn", JSON.stringify(o.on), col, band, plume, gem, k, tl.join(","), eF, eT].join("|"),
+    build(b) {
+      const Q = new THREE.Quaternion().setFromEuler(new THREE.Euler(rad(tl[1]), 0, rad(-tl[0]), "XYZ")), Qi = Q.clone().invert();
+      const SEG = 72, NCb = 12, TH = 0.045;
+      // the hair's surface along a direction given in the cap's frame (phi round from the face, + = his left; e = up)
+      const onHair = (phi: number, e: number, out = 0) => {
+        const d = V(Math.cos(e) * Math.sin(phi), Math.sin(e), Math.cos(e) * Math.cos(phi)).applyQuaternion(Q);
+        const el = Math.asin(Math.max(-1, Math.min(1, d.y))), az = (Math.atan2(d.x, d.z) * 180) / Math.PI;
+        const p = shellPoint(o.on, az, el);
+        return p.addScaledVector(p.clone().normalize(), out);
+      };
+      const loft = (rows: THREE.Vector3[][], mTest: number) => {
+        // rows[i][k]: column i round the cap (the last = the first when close), k along it
+        const n = rows[0].length, pos: number[] = [], uv: number[] = [], idx: number[] = [], v = V();
+        rows.forEach((r, i) => r.forEach((p, kk) => { b.toM(v.copy(p)); pos.push(v.x, v.y, v.z); uv.push(i / (rows.length - 1), kk / (n - 1)); }));
+        for (let i = 0; i < rows.length - 1; i++) for (let kk = 0; kk < n - 1; kk++) { const A = i * n + kk, B = A + 1, C = A + n, D = C + 1; idx.push(A, C, B, B, C, D); }
+        let g = meshOf(pos, uv, idx);
+        // outward faces (the ink hull needs them): the normal at row mTest of the first column against the head's middle
+        const m = mTest, P = g.attributes.position, N = g.attributes.normal, ax = b.toM(V(0, 0, 0));
+        if ((P.getX(m) - ax.x) * N.getX(m) + (P.getY(m) - ax.y) * N.getY(m) + (P.getZ(m) - ax.z) * N.getZ(m) < 0) {
+          for (let i = 0; i < idx.length; i += 3) { const t = idx[i + 1]; idx[i + 1] = idx[i + 2]; idx[i + 2] = t; }
+          g = meshOf(pos, uv, idx);
+        }
+        return g;
+      };
+      // THE BAND: a rounded strip lying on the hair from `foot` to `top` (its inner half under the hair's surface). It lies
+      // on the hair's OUTER ENVELOPE, not on every notch and lock tip: the radius at each place is the most the hair
+      // reaches round it (8 deg each way, a little above and below), evened out round the band, so it runs smooth
+      // and bridges the gaps between locks (on the hair itself it took their points: a crown of gold teeth)
+      const dirOf = (phi: number, e: number) => V(Math.cos(e) * Math.sin(phi), Math.sin(e), Math.cos(e) * Math.cos(phi)).applyQuaternion(Q);
+      const env = (e: number) => {
+        const raw: number[] = [];
+        for (let i = 0; i < SEG; i++) {
+          const phi = (2 * Math.PI * i) / SEG;
+          let m = 1.03;
+          for (let dp = -8; dp <= 8; dp += 4) for (let de = -3; de <= 3; de += 3) m = Math.max(m, onHair(phi + rad(dp), e + rad(de)).length());
+          raw.push(m);
+        }
+        return raw.map((_, i) => { let t = 0; for (let j = -3; j <= 3; j++) t += raw[(i + j + SEG) % SEG]; return t / 7; }).map((v, i) => Math.max(v, raw[i]));
+      };
+      const envF = env(eF), envT = env(eT);
+      const onEnv = (i: number, e: number, rr: number[]) => dirOf((2 * Math.PI * (i % SEG)) / SEG, e).multiplyScalar(rr[i % SEG]);
+      const bandRows: THREE.Vector3[][] = [], topEdge: THREE.Vector3[] = [];
+      for (let i = 0; i <= SEG; i++) {
+        const F = onEnv(i, eF, envF), T = onEnv(i, eT, envT), C = F.clone().add(T).multiplyScalar(0.5);
+        const U = T.clone().sub(F).multiplyScalar(0.5), Rd = C.clone().normalize(), col: THREE.Vector3[] = [];
+        for (let j = 0; j <= NCb; j++) { const th = (2 * Math.PI * j) / NCb; col.push(C.clone().addScaledVector(U, Math.cos(th)).addScaledVector(Rd, TH * Math.sin(th))); }
+        bandRows.push(col); topEdge.push(T.clone().addScaledVector(T.clone().normalize(), 0.02));
+      }
+      const bandMap = b.tex(16, 64, (g) => { g.fillStyle = band; g.fillRect(0, 0, 16, 64); g.fillStyle = shade(band, 0.62); g.fillRect(0, 30, 16, 4); }, `rjBandOn|${band}`);
+      b.solid("head", loft(bandRows, NCb / 4), { map: bandMap, ink: 0.0075 });
+      // THE CROWN: from the band's top edge out round an ellipse (rx across, ry up) and closed over the top; each
+      // column starts where its own band ends and the puff evens out toward the top
+      const starts = topEdge.map((p) => p.clone().applyQuaternion(Qi)), h0 = starts.map((p) => Math.hypot(p.x, p.z)), y0 = starts.map((p) => p.y);
+      const rx = 1.3 * k * Math.max(...h0), ry = 0.36, NK = 14;
+      const t0s = h0.map((h) => -Math.acos(Math.min(0.995, h / rx))), cys = t0s.map((t, i) => y0[i] - ry * Math.sin(t)), cyM = cys.reduce((a, c) => a + c, 0) / cys.length;
+      const crownRows = starts.map((s0, i) => {
+        const ph = Math.atan2(s0.x, s0.z), out: THREE.Vector3[] = [topEdge[i].clone()];
+        for (let kk = 1; kk <= NK; kk++) {
+          const u = kk / NK, t = t0s[i] + (Math.PI / 2 - t0s[i]) * u, w = u * u * (3 - 2 * u), h = rx * Math.cos(t), y = cys[i] + (cyM - cys[i]) * w + ry * Math.sin(t) * (kk === NK ? 0.94 : 1);
+          out.push(V(h * Math.sin(ph), y, h * Math.cos(ph)).applyQuaternion(Q));
+        }
+        return out;
+      });
+      const map = b.tex(64, 256, (g) => {
+        g.fillStyle = col; g.fillRect(0, 0, 64, 256);
+        g.fillStyle = shade(col, 0.82); for (let x = 4; x < 64; x += 16) g.fillRect(x, 70, 2.2, 186);
+        g.fillStyle = shade(col, 1.25); for (let x = 12; x < 64; x += 16) g.fillRect(x, 40, 1.6, 120);
+      }, `rjBeretOnCrown|${col}`);
+      b.solid("head", loft(crownRows, NK >> 1), { map, ink: 0.0085 });
+      // the brooch on the band at his left temple, and the feather from it up, back and over the crown in one curl
+      const bp = (() => { const i = Math.round(SEG / 6), C = onEnv(i, eF, envF).add(onEnv(i, eT, envT)).multiplyScalar(0.5); return C.addScaledVector(C.clone().normalize(), TH + 0.05); })();
+      const R = b.R, hq = (x: number, y: number, z: number) => V(x, y, z).applyQuaternion(Q);
+      b.put(b.solid("head", new THREE.SphereGeometry(0.15 * R, 16, 12), { col: band, ink: b.INK * 0.7 }), bp.x, bp.y, bp.z);
+      const gp = bp.clone().addScaledVector(bp.clone().normalize(), 0.09);
+      b.put(b.solid("head", new THREE.SphereGeometry(0.085 * R, 12, 10), { col: gem, ink: b.INK * 0.5 }), gp.x, gp.y, gp.z);
+      const fmap = b.tex(256, 256, (g) => {
+        g.fillStyle = plume; g.fillRect(0, 0, 256, 256);
+        g.strokeStyle = shade(plume, 0.82); g.lineWidth = 6; g.lineCap = "round";
+        for (const x of [64, 192]) for (let i = 1; i < 11; i++) for (const s of [-1, 1]) { g.beginPath(); g.moveTo(x, 256 - i * 23); g.lineTo(x + s * 52, 256 - i * 23 - 20); g.stroke(); }
+        g.fillStyle = shade(plume, 0.62); for (const x of [64, 192]) g.fillRect(x - 4, 0, 8, 256);
+      }, `rjPlume|${plume}`);
+      b.solid("head", leafGeo(b.toM, bp.clone(), hq(1.7, cyM + 1.25, 0.1), hq(0.1, cyM + 1.1, -1.25), 0.6, 0.2, 0.55), { map: fmap, ink: 0.0075 });
     },
   };
 };

@@ -28,6 +28,12 @@ const S = seg("C");
 const RAIL = spot("balcony", "julietRail"), BELOW = spot("balcony", "romeoBelow");
 /** his interview: she crouches in the orchard (lower and closer than the stock "romeo" spot, his face a third down) */
 const RO_POS: [number, number, number] = [0.9, 1.15, 1.9], RO_LOOK: [number, number, number] = [0.32, 0.75, 0.35];
+/** (v3) he springs up out of the bushes on "and Juliet is the sun!" (the whisper turning into a shout): up from the
+ *  crouch over `len` frames, landing on "sun" with a little overshoot; her lens rises with him */
+const RISE = { len: 9, drop: 0.38 };
+const RO_POS_UP: [number, number, number] = [0.9, 1.3, 1.9], RO_LOOK_UP: [number, number, number] = [0.32, 1.12, 0.35];
+/** (v3) her famous line: her left hand winds the curl of her left drill (a circle every 0.8 s) while she sighs */
+const TWIRL = { x: 0.25, y: 0.72, z: 0.1, r: 0.025, period: 24 };
 /** the split: the tear across the balcony's underside; it opens a few frames after the two names */
 export const SPLIT = { from: startOf("C08") - 3, open: endOf("C08") + 8, len: 20 };
 export const splitOpen = (f: number) => easeInOutCubic(clamp01((f - SPLIT.open) / SPLIT.len));
@@ -49,8 +55,11 @@ export const SEG: Segment = {
     if (f < herCut) {
       camera = povCam(f, [camAt("balcony", "juliet", S.from), camAt("balcony", "juliet", herCut)], { mood: "calm", amp: 0.35 });
     } else if (f < hisCut) {
-      camera = povCam(f, [ck("balcony", herCut, RO_POS, RO_LOOK, 46), ck("balcony", hisCut, RO_POS, RO_LOOK, 46)], { mood: "calm", amp: 0.5 });
-      camera = punchIn(camera, f, tSun - 5, { k: 0.8, len: 5, off: hisCut + 20 });
+      // (v3) he springs up out of the bushes as the whisper turns into a shout: she tilts up with him, the snap zoom
+      // lands on "sun" on his face up there
+      camera = povCam(f, [ck("balcony", herCut, RO_POS, RO_LOOK, 46), ck("balcony", tSun - RISE.len - 2, RO_POS, RO_LOOK, 46),
+        ck("balcony", tSun + 2, RO_POS_UP, RO_LOOK_UP, 46), ck("balcony", hisCut, RO_POS_UP, RO_LOOK_UP, 46)], { mood: "calm", amp: 0.5 });
+      camera = punchIn(camera, f, tSun - 5, { k: 0.86, len: 5, off: hisCut + 20 });
     } else if (f < c08) {
       camera = povCam(f, [
         camAt("balcony", "juliet", hisCut),
@@ -93,7 +102,9 @@ export const SEG: Segment = {
     const clasp: [THREE.Vector3, THREE.Vector3] = [rel(RAIL.at, RAIL.facing, -0.04, 0.8, 0.25), rel(RAIL.at, RAIL.facing, 0.04, 0.8, 0.25)];
     const heart: [THREE.Vector3, THREE.Vector3] = [rel(RAIL.at, RAIL.facing, 0.05, 0.82, 0.22), onRail[1]];
     const c07 = startOf("C07"), c11 = startOf("C11");
-    const juHands = f < herCut ? clasp : f >= c05 - 4 && f < endOf("C05") + 8 ? heart
+    const ang = (2 * Math.PI * (f - S.from)) / TWIRL.period;
+    const twirl: [THREE.Vector3, THREE.Vector3] = [clasp[0], rel(RAIL.at, RAIL.facing, TWIRL.x, TWIRL.y + TWIRL.r * Math.sin(ang), TWIRL.z + TWIRL.r * Math.cos(ang))];
+    const juHands = f < herCut ? (f >= S.from + 6 && f < herCut - 8 ? twirl : clasp) : f >= c05 - 4 && f < endOf("C05") + 8 ? heart
       : f >= c07 - 4 && f < c08 ? folded : f >= c08 && f < tSplitStop ? chin : f >= c10 && f < endOf("C11") + 6 ? null : onRail;
     const juPose = f >= c10 && f < c11 - 6 ? { kind: "wave" as const, t: (f - c10) / 30, arm: 0 as const }
       : f >= c11 && f < endOf("C11") + 6 ? { kind: "point" as const, t: (f - c11) / 30, arm: 0 as const } : { kind: "hold" as const, t: f / 30 };
@@ -103,11 +114,16 @@ export const SEG: Segment = {
     ju.set({
       ...standing(RAIL.at, RAIL.facing, f, 2),
       pose: juPose, hands: juHands ?? [null, null],
-      expr: faceAt(f, [[0, "swoon"], [c05 - 2, "soft"], [endOf("C06") + REACT, "caught"], [c07 - 2, "sure"], [endOf("C07") + REACT, "swoon"],
-        [tSplitStop, "caught"], [SPLIT.open + 14, "swoon"], [c10 - 2, "bossy"], [endOf("C11") + REACT, "sure"]]),
+      // v3b (the owner: "give them expressive emotion showing they are in love"): smitten eyes on her famous line and on
+      // "my love as deep"; HEART EYES (the film's signature emote, in her close) as the line ends, through the reporter's
+      // "you met three hours ago?", until it lands; smitten again when she finds him under the balcony
+      expr: faceAt(f, [[0, "smitten"], [endOf("C05") + 4, "heartsSoft"], [endOf("C06") + REACT, "caught"], [c07 - 2, "sure"], [endOf("C07") + REACT, "swoon"],
+        [tSplitStop, "caught"], [SPLIT.open + 14, "smitten"], [c10 - 2, "bossy"], [endOf("C11") + REACT, "sure"]]),
       ...talk("ju", f, 2),
       gaze: f < c05 ? 0.5 : 0,
       lookDown: looksDown, head: accent("jolt", f, tSplitStop) ?? (f >= c08 && f < tSplitStop ? { tilt: 7 } : undefined),
+      // (v3) "Thy purpose marriage, send me word tomorrow!": all business, she leans out over the rail to call it down
+      lean: { pitch: 11 * ky(f, [[c11 - 6, 0], [c11 + 6, 1], [endOf("C11"), 1], [endOf("C11") + 14, 0]]) },
       ...(shut !== undefined ? { blink: shut } : {}),
       hide: ["vial"],
     });
@@ -122,10 +138,12 @@ export const SEG: Segment = {
       // crouched in the bushes, three-quarter to her lens, pointing up behind him at the balcony
       roFacing = yawTo(BELOW.at, wv("balcony", RO_POS)) + 0.5;
       const up = f >= tEast - 4;
+      // the rise: crouched (sunk RISE.drop) until RISE.len frames before "sun", up by "sun" with a 3 cm overshoot
+      const u = Math.min(1, Math.max(0, (f - (tSun - RISE.len)) / RISE.len)), e = u * u * (3 - 2 * u), over = u >= 1 ? 0.03 * Math.max(0, 1 - (f - tSun) / 6) * Math.sin(((f - tSun) / 6) * Math.PI) : 0;
       roState = {
-        ...VERBS_KNEEL(BELOW.at),
+        at: BELOW.at.clone().add(V(0, -RISE.drop * (1 - e) + over, 0)),
         hands: up ? [rel(BELOW.at, roFacing, -0.85, 1.65, 0.15), null] : [null, null],
-        expr: faceAt(f, [[0, "dreamy"], [tSun + REACT, "dreamy"]]),
+        expr: faceAt(f, [[0, "dreamy"], [tSun - 4, "smittenOpen"]]),
         head: accent("pop", f, tSun) ?? undefined,
         lookDown: -6,
       };
@@ -139,7 +157,7 @@ export const SEG: Segment = {
       roState = {
         hands: sighing ? [rel(roAt, roFacing, -0.05, 0.86, 0.2), rel(roAt, roFacing, 0.05, 0.86, 0.2)]
           : swear ? [rel(roAt, roFacing, -0.78, 1.62, 0.4), rel(roAt, roFacing, 0.07, 0.8, 0.13)] : [null, null],
-        expr: faceAt(f, [[0, "dreamy"], [tSplitStop, "blank"], [SPLIT.open + 14, "dreamy"], [endOf("C10") + REACT, "puppy"], [c11 + 20, "dreamy"]]),
+        expr: faceAt(f, [[0, "dreamy"], [tSplitStop, "blank"], [SPLIT.open + 14, "smitten"], [endOf("C10") + REACT, "puppy"], [c11 + 20, "smitten"]]),
         ...(sighing && saying("ju", f) ? speak(saying("ju", f)!, f, 1) : talk("ro", f, 1)),
         ...(sighing ? { blink: 1 } : {}),
         head: accent("jolt", f, tSplitStop) ?? (sighing ? { tilt: -7 } : undefined),
@@ -147,7 +165,7 @@ export const SEG: Segment = {
       };
     } else {
       roAt = ruN.at; roFacing = ruN.facing;
-      roState = { pose: ruN.pose, expr: faceAt(f, [[0, "dreamy"]]), ...talk("ro", f, 1), turn: 0.4 };
+      roState = { pose: ruN.pose, expr: faceAt(f, [[0, "smittenOpen"]]), ...talk("ro", f, 1), turn: 0.4 };
     }
     ro.set({
       ...standing(roAt, roFacing, f, 1),
@@ -195,7 +213,3 @@ function splitNames(f: number, y: number, open: number) {
   );
 }
 
-/** crouched in the bushes: the films' kneel (sunk 0.38 m, the shins hidden by the leaves), head up */
-function VERBS_KNEEL(at: THREE.Vector3) {
-  return { at: at.clone().add(V(0, -0.38, 0)) };
-}

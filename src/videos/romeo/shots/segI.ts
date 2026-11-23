@@ -108,7 +108,7 @@ export const SEG: Segment = {
       });
     }
     w.update();
-    if (!sitting) lieDown(w, ju, JU_FEET, HEAD_DIR, 1);
+    if (!sitting) lieDown(w, ju, JU_FEET, HEAD_DIR, 1, 0.04);
     return { camera, cards: false };
   },
 };

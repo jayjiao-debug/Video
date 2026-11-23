@@ -107,7 +107,7 @@ export const SEG: Segment = {
       w.prop("glassShards").put(P("tomb", 0.78, 0.005, -0.12), { rot: 0.6 });
     }
     w.update();
-    lieDown(w, ju, JU_FEET, HEAD_DIR, 1);
+    lieDown(w, ju, JU_FEET, HEAD_DIR, 1, 0.04);
 
     // ---------------------------------------------------------------- her camera's display stutters and dies at the impact
     const stutter = f >= IMPACT_AT && f < IMPACT_AT + 12;
