@@ -64,9 +64,10 @@ export const TALLY_WINS = [
  *  into the tab 44-52 frames later; the tab flaps away before the whisper lean on B08. (The tally's B07 window opens
  *  after the banner has folded.) */
 export const JU_TAB = { from: cap("B05", 0).from + 6, hold: 136 } as const;
-/** her last line: the tally comes back and changes to 1 on 「我送」 */
+/** her last line (v6: 「……我得买新手机了。」; until v5 「……拍不了了。我送。」): the tally comes back and changes to 1 on
+ *  「新手机」 (until v5 on 「我送」) */
 const TALLY_BACK = L("I04").from - 10;
-export const TALLY_CHANGE = capWord("I04", "送").from - 3;
+export const TALLY_CHANGE = capWord("I04", "新手机").from - 3;
 /** the G card (送信人被瘟疫封了门): in G01's silent beat, before her first word */
 export const G_CARD = { from: seg("G").from + 6, to: L("G01").from - 8 };
 /** the verdict card's centre (the kit's default 1040 is where Tybalt lies) */
@@ -80,7 +81,7 @@ export const END_FROM = OFF_AT + 14;
 /** her whisper's darkened edges (the picture's, under her camera's UI), and the broken lens */
 export const FxUnder: React.FC<{ f: number }> = ({ f }) => {
   // on Mantua's white noon street the edges are taken down to half (taste review of v1: there they read as a dirty lens)
-  const w = whisperAt(f), e = w ? w.edge * (w.id === "G01" ? 0.5 : 1) : 0, s = shardAt(f);
+  const w = whisperAt(f), e = w ? w.edge * (w.id === "G01" || w.id === "G07" ? 0.5 : 1) : 0, s = shardAt(f);
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
       {e > 0 ? <AbsoluteFill style={{ background: "radial-gradient(ellipse 72% 58% at 50% 46%, rgba(20,13,9,0) 52%, rgba(20,13,9,0.62) 100%)", opacity: e }} /> : null}
@@ -118,8 +119,9 @@ export const Fx: React.FC<{ f: number; P: Pose }> = ({ f, P }) => {
 export const FxSubtitle: React.FC<{ f: number }> = ({ f }) => {
   const w = whisperAt(f);
   if (!w || !w.note) return null;
-  // (on the street a man lies behind her note: no red wax drops there, they would read as blood)
-  return <WhisperNote f={f} from={w.from} to={w.to} text={line(w.id).zh} drips={w.id !== "E03"} />;
+  // (on the street a man lies behind her note, and in the tomb she lies on her bier: no red wax drops there, they would
+  // read as blood)
+  return <WhisperNote f={f} from={w.from} to={w.to} text={line(w.id).zh} drips={w.id !== "E03" && w.id !== "H03"} />;
 };
 
 export const fxClamp = clamp01;

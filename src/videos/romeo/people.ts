@@ -13,7 +13,7 @@
 import type { Expr, Look } from "../group/kit/toon";
 import type { Acc, Rig, RigCast, RigFace } from "../group/kit/rig3d";
 import { addPerson as addKitPerson, type Person as KitPerson } from "../wanbi/people";
-import { limbColours, napeHair } from "../su/acc/figure";
+import { limbColours, napeHair, type Nape } from "../su/acc/figure";
 import { legColours, baldHead, fineHead, freeDepth } from "./acc/figure";
 import { robe } from "../../kit/acc/garb";
 import { beret, beretOn, curls, julietCap, tresses, hairRing } from "./acc/head";
@@ -27,13 +27,13 @@ import { lashes, lips, cheeks, shine, jewel, freckles, softBrows, bushyBrows, ag
 import { hairShell, drills, tiara, comma, sideLocks, type ShellO } from "./acc/hair";
 import { backFall, backBow, napeLocks, templeLocks } from "./acc/backhair";
 
-export type Person = KitPerson & { limbs?: { hand?: string; arm?: string }; legs?: { leg?: string; foot?: string }; nape?: boolean; bald?: boolean;
+export type Person = KitPerson & { limbs?: { hand?: string; arm?: string }; legs?: { leg?: string; foot?: string }; nape?: boolean | Nape; bald?: boolean;
   /** a finer head outline (acc/figure.ts fineHead): the line's width in m and its brush swell (the rig's: 0.021, 0.63) */ headLine?: { w: number; thick: number } };
 export function addPerson(rc: RigCast, p: Person): Rig {
   const r = addKitPerson(rc, p);
   if (p.limbs) limbColours(r, p.limbs);
   if (p.legs) legColours(r, p.legs);
-  if (p.nape) napeHair(r, p.look);
+  if (p.nape) napeHair(r, p.look, typeof p.nape === "object" ? { nape: p.nape } : {});
   if (p.bald) baldHead(r);
   if (p.headLine) fineHead(r, p.headLine);
   freeDepth(r);
@@ -142,7 +142,8 @@ export const JULIET: Person = {
   // v5 (the owner on the v4 cut: "Juilet's jaw black line is always so thick, make it more thin, feminine"): her head's
   // ink line is 1.5 cm with a light brush (2 cm under the chin; the rig's is 2.1 cm, 3.4 under the chin)
   headLine: { w: 0.0135, thick: 0.26 },
-  acc: (): Acc[] => [robe({ col: COL.red, band: COL.gold, sash: false }), gown({ col: COL.red }), girdleEnd(), puffs({ col: COL.red, pane: COL.cream, size: 0.046 }),
+  // v6 (the owner on the v5 cut, 24 Nov: "Please remove this"): no gold drop hangs from her girdle any more (girdleEnd)
+  acc: (): Acc[] => [robe({ col: COL.red, band: COL.gold, sash: false }), gown({ col: COL.red }), puffs({ col: COL.red, pane: COL.cream, size: 0.046 }),
     // v4 ("polish the character designs"): the lock beside each cheek is a long fine point lying along her head, half
     // turned to the front (v3b's stood out of the head like a board), and the drill curls' bows sit behind it on the
     // side of her head (hair.ts drills: on the face side their inner loop read as a red streak by her eye)
@@ -191,6 +192,17 @@ export const ROMEO_MASK: Person = { ...ROMEO, name: "romeoMask", acc: (): Acc[] 
 /** Romeo in Mantua and the vault: the apothecary's dark bottle (his right hand; his letter is left out: it is hidden in
  *  both scenes, and the bottle takes its hand) */
 export const ROMEO_BOTTLE: Person = { ...ROMEO, name: "romeoBottle", acc: (): Acc[] => [...ROMEO.acc().filter((a) => a.name !== "letter"), darkBottleHeld({ hand: 0, size: 1.3 })] };
+/** SEEN FROM THE FLOOR (scene I, the camera lying on the stones): the hair painted down the back of the head stops at
+ *  NAPE_LOW deg from the crown (the rig's figures: 165, nearly the ball's bottom). From down there the lowest band of the
+ *  back of the head shows under the chin, and the hair painted on it read as a beard (the owner on the v5 cut: "His hair
+ *  is clipping to the front making it look like beard, same with Juliet"). */
+const NAPE_LOW = { deg: 128 };
+/** and the sculpted hair's back edge (ShellO.back, -0.8 / -0.86 on the ball) comes up to BACK_LOW, with his nape locks
+ *  left off: from the floor that ridged lower rim and the flicks showed under both chins (the stills of v6, before) */
+const BACK_LOW = -0.55;
+const lowHair = (acc: Acc[], hair: ShellO): Acc[] => acc.filter((a) => a.name !== "napeLocks").map((a) => (a.name === "hairShell" ? hairShell({ ...hair, back: BACK_LOW }) : a));
+export const ROMEO_LOW: Person = { ...ROMEO_BOTTLE, name: "romeoLow", nape: NAPE_LOW, acc: (): Acc[] => lowHair(ROMEO_BOTTLE.acc(), ROMEO_HAIR) };
+export const JULIET_LOW: Person = { ...JULIET, name: "julietLow", nape: NAPE_LOW, acc: (): Acc[] => lowHair(JULIET.acc(), JULIET_HAIR) };
 /** the Friar writing his letter: the quill (hand 0; the herb basket stays on hand 1) */
 export const FRIAR_QUILL: Person = { ...FRIAR, name: "friarQuill", acc: (): Acc[] => [...FRIAR.acc(), quillHeld()] };
 /** the vial is drawn 1.4x (taste review of v1: at 7.8 cm it was lost in F02-F04); the dark bottle 1.3x (lost against the
@@ -241,7 +253,7 @@ export const GUEST_MAN_A = guest("guestManA", { lady: false, col: "#7a3446", dee
 export const GUEST_LADY_B = guest("guestLadyB", { lady: true, col: "#76608f", deep: "#53426a", hair: "bun", hairCol: "#a7743e", seed: 2129 });
 export const GUEST_MAN_B = guest("guestManB", { lady: false, col: "#6c5d35", deep: "#4c4124", hair: "side", hairCol: "#3b2a1e", seed: 2137 });
 
-export const PEOPLE = { tybalt: TYBALT, romeoV3b: ROMEO_V3B, julietV3b: JULIET_V3B, romeoV2: ROMEO_V2, julietV2: JULIET_V2, friarVial: FRIAR_VIAL, friarLetter: FRIAR_LETTER, youngFriar: YOUNG_FRIAR, romeoMask: ROMEO_MASK, romeoBottle: ROMEO_BOTTLE, friarQuill: FRIAR_QUILL, romeoBare: ROMEO_BARE, romeoHat: ROMEO_HAT, romeoHatV3: ROMEO_HAT_V3, julietV3: JULIET_V3, romeoCry: ROMEO_CRY, romeo: ROMEO, juliet: JULIET, friar: FRIAR, friarGoatee: friar({ beard: "goatee" }), friarBare: friar({ beard: "none" }), guestLadyA: GUEST_LADY_A, guestManA: GUEST_MAN_A, guestLadyB: GUEST_LADY_B, guestManB: GUEST_MAN_B } satisfies Record<string, Person>;
+export const PEOPLE = { tybalt: TYBALT, romeoV3b: ROMEO_V3B, julietV3b: JULIET_V3B, romeoV2: ROMEO_V2, julietV2: JULIET_V2, friarVial: FRIAR_VIAL, friarLetter: FRIAR_LETTER, youngFriar: YOUNG_FRIAR, romeoMask: ROMEO_MASK, romeoBottle: ROMEO_BOTTLE, romeoLow: ROMEO_LOW, julietLow: JULIET_LOW, friarQuill: FRIAR_QUILL, romeoBare: ROMEO_BARE, romeoHat: ROMEO_HAT, romeoHatV3: ROMEO_HAT_V3, julietV3: JULIET_V3, romeoCry: ROMEO_CRY, romeo: ROMEO, juliet: JULIET, friar: FRIAR, friarGoatee: friar({ beard: "goatee" }), friarBare: friar({ beard: "none" }), guestLadyA: GUEST_LADY_A, guestManA: GUEST_MAN_A, guestLadyB: GUEST_LADY_B, guestManB: GUEST_MAN_B } satisfies Record<string, Person>;
 export type PersonKey = keyof typeof PEOPLE;
 /** FACES by name (preview: expr "<name>"). Romeo: puppy (his resting face), dreamy, wail, blank, hollow.
  *  Juliet: sure (her resting face), bossy, swoon, caught, brave. The Friar: weary (resting), dry, worried, warn. */

@@ -994,8 +994,8 @@
      "en": "She isn't dead. He didn't hear the rest."
     }
    ],
-   "emo": "whisper, cracking",
-   "pic": "Plain words, no bubble. From here every effect is gone. He walks off; she does not follow at once.",
+   "emo": "whisper, to herself, cracking",
+   "pic": "Her whisper to herself (Jay, 24 Nov): her own bubble marked 悄悄说, and nothing else on screen. He walks off; she does not follow at once.",
    "tts": "[whispers, voice cracking] 她没死。他没听完。",
    "after": 1.0
   },
@@ -1051,9 +1051,9 @@
      "en": "They're red because she's alive!"
     }
    ],
-   "emo": "out loud, shaking",
-   "pic": "She says it out loud this time. He does not turn. Picture still; only her voice shakes.",
-   "tts": "[desperate, voice shaking] 红的，是因为她活着！"
+   "emo": "whisper, to herself, shaking",
+   "pic": "Her whisper to herself (Jay, 24 Nov): her bubble marked 悄悄说. He does not turn. Picture still; only her voice shakes.",
+   "tts": "[whispers, voice shaking] 红的，是因为她活着！"
   },
   {
    "n": 54,
@@ -1077,17 +1077,17 @@
    "id": "H05",
    "scene": "H",
    "who": "ji",
-   "zh": "我只拍，不插……不拍了！",
-   "en": "I only film, I don't inter— I'm done filming!",
+   "zh": "我只拍……不要啊！",
+   "en": "I only film… No!",
    "screens": [
     {
-     "zh": "我只拍，不插……不拍了！",
-     "en": "I only film, I don't inter— I'm done filming!"
+     "zh": "我只拍……不要啊！",
+     "en": "I only film… No!"
     }
    ],
    "emo": "breaking",
    "pic": "The picture lurches. The camera leaves her hands: torch streaks, the bier, his hand filling the frame. Glass breaks. Stone. A crack splits the picture. Black. The REC display stutters and dies. Two seconds of silence.",
-   "tts": "[breaking] 我只拍，不插……[shouting] 不拍了！",
+   "tts": "[breaking] 我只拍……[screaming] 不要啊！",
    "after": 5.4
   },
   {
@@ -1095,17 +1095,17 @@
    "id": "I01",
    "scene": "I",
    "who": "ju",
-   "zh": "我的罗密欧呢？",
-   "en": "Where is my Romeo?",
+   "zh": "噢，我的罗密欧！",
+   "en": "O my Romeo!",
    "screens": [
     {
-     "zh": "我的罗密欧呢？",
-     "en": "Where is my Romeo?"
+     "zh": "噢，我的罗密欧！",
+     "en": "O my Romeo!"
     }
    ],
-   "emo": "waking, soft",
+   "emo": "waking, tender",
    "pic": "Through the shard: the spilled bottle on the stones, his empty hand. He stares at the hand, then towards where it came from. Behind him her fingers move. She sits up. He turns. They hug; it holds four seconds. The lute returns, slow.",
-   "tts": "[waking, drowsy, soft] Where is my Romeo?",
+   "tts": "[softly, tender, relieved] O my Romeo!",
    "pre": 2.2,
    "after": 4.0
   },
@@ -1149,17 +1149,17 @@
    "id": "I04",
    "scene": "I",
    "who": "ji",
-   "zh": "……拍不了了。我送。",
-   "en": "…I can't film any more. I'll deliver it.",
+   "zh": "……我得买新手机了。",
+   "en": "…I'll have to buy a new phone.",
    "screens": [
     {
-     "zh": "……拍不了了。我送。",
-     "en": "…I can't film any more. I'll deliver it."
+     "zh": "……我得买新手机了。",
+     "en": "…I'll have to buy a new phone."
     }
    ],
    "emo": "tiny",
    "pic": "In the cracked glass the tally turns to 插手 1. The shard flickers. Power-off sound. Black. End card on parchment: 从相识到墓穴，一共四天。原著里，信没有送到，两个人都没能活下来。这个结局，是记者扔出来的。 Seal: 演绎.",
-   "tts": "[tiny, sheepish, after a pause] 拍不了了。我送。",
+   "tts": "[tiny, sheepish, after a pause] 我得买新手机了。",
    "after": 6.0
   }
  ]

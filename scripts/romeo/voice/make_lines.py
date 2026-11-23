@@ -154,8 +154,8 @@ line("G04", "ji", "barely", "……没有。", "…No.", "", tts="[barely audibl
 line("G05", "ro", "flat", "……无所谓了。", "No matter.",
      "He turns away. A small dark bottle goes into his coat.", tts="[flat, empty] No matter.", after=0.3)
 line("G06", "ji", "urgent", "等等，她没——", "Wait, she's not—", "He is already walking off; he does not turn.", tts="[urgent, cut off] 等等，她没——")
-line("G07", "ji", "whisper, cracking", "她没死。他没听完。", "She isn't dead. He didn't hear the rest.",
-     "Plain words, no bubble. From here every effect is gone. He walks off; she does not follow at once.",
+line("G07", "ji", "whisper, to herself, cracking", "她没死。他没听完。", "She isn't dead. He didn't hear the rest.",
+     "Her whisper to herself (Jay, 24 Nov): her own bubble marked 悄悄说, and nothing else on screen. He walks off; she does not follow at once.",
      tts="[whispers, voice cracking] 她没死。他没听完。", after=1.0)
 
 # ---------------------------------------------------------------- H · Thursday before dawn · the tomb (THE QUIET SCENE)
@@ -164,24 +164,24 @@ line("H01", "ro", "soft, wondering", "死神，还没能夺走你的美。", "De
 line("H02", "ro", "the same", "你的嘴唇，你的脸，还是红的。", "Beauty's ensign yet is crimson in thy lips and in thy cheeks.",
      "His hand near her cheek, not touching.", screens=[("你的嘴唇，你的脸，", "Beauty's ensign yet is crimson"), ("还是红的。", "in thy lips and in thy cheeks.")],
      tts="[tender, quiet] Beauty's ensign yet is crimson in thy lips, and in thy cheeks.")
-line("H03", "ji", "out loud, shaking", "红的，是因为她活着！", "They're red because she's alive!",
-     "She says it out loud this time. He does not turn. Picture still; only her voice shakes.", tts="[desperate, voice shaking] 红的，是因为她活着！")
+line("H03", "ji", "whisper, to herself, shaking", "红的，是因为她活着！", "They're red because she's alive!",
+     "Her whisper to herself (Jay, 24 Nov): her bubble marked 悄悄说. He does not turn. Picture still; only her voice shakes.", tts="[whispers, voice shaking] 红的，是因为她活着！")
 line("H04", "ro", "calm", "这一杯，敬我的爱人。", "Here's to my love!",
      "He raises the dark bottle with the same gesture Juliet used in F09. It never reaches his lips.", tts="[calm, tender] Here's to my love!")
-line("H05", "ji", "breaking", "我只拍，不插……不拍了！", "I only film, I don't inter— I'm done filming!",
+line("H05", "ji", "breaking", "我只拍……不要啊！", "I only film… No!",
      "The picture lurches. The camera leaves her hands: torch streaks, the bier, his hand filling the frame. Glass breaks. Stone. A crack splits the picture. Black. The REC display stutters and dies. Two seconds of silence.",
-     tts="[breaking] 我只拍，不插……[shouting] 不拍了！", after=5.4)
+     tts="[breaking] 我只拍……[screaming] 不要啊！", after=5.4)
 
 # ---------------------------------------------------------------- I · the shard
-line("I01", "ju", "waking, soft", "我的罗密欧呢？", "Where is my Romeo?",
+line("I01", "ju", "waking, tender", "噢，我的罗密欧！", "O my Romeo!",
      "Through the shard: the spilled bottle on the stones, his empty hand. He stares at the hand, then towards where it came from. Behind him her fingers move. She sits up. He turns. They hug; it holds four seconds. The lute returns, slow.",
-     tts="[waking, drowsy, soft] Where is my Romeo?", pre=2.2, after=4.0)
+     tts="[softly, tender, relieved] O my Romeo!", pre=2.2, after=4.0)
 line("I02", "ju", "over his shoulder, puzzled", "神父的信，你没收到？", "Did the friar's letter not reach thee?", "Still in the hug.",
      tts="[puzzled] Did the friar's letter not reach thee?")
 line("I03", "ro", "blank", "什么信？", "What letter?", "Both turn slowly and look up past the shard, to where she is standing.", tts="[blank] What letter?", after=0.8)
-line("I04", "ji", "tiny", "……拍不了了。我送。", "…I can't film any more. I'll deliver it.",
+line("I04", "ji", "tiny", "……我得买新手机了。", "…I'll have to buy a new phone.",
      "In the cracked glass the tally turns to 插手 1. The shard flickers. Power-off sound. Black. End card on parchment: 从相识到墓穴，一共四天。原著里，信没有送到，两个人都没能活下来。这个结局，是记者扔出来的。 Seal: 演绎.",
-     tts="[tiny, sheepish, after a pause] 拍不了了。我送。", after=6.0)
+     tts="[tiny, sheepish, after a pause] 我得买新手机了。", after=6.0)
 
 
 def lines_json():
@@ -220,13 +220,13 @@ def script_md():
          "v1 is unchanged in `script_v1.md` for comparison. What changed and why: the doc's \"Review notes\" tab "
          "(https://claude.ai/artifact/4RfcKCyy65j3Uqx6ahubv7#8ceeca9a-be2c), applied as Claude picked them:", "",
          "1. **Hook**: her first question assumes the famous love story (罗密欧，为朱丽叶哭呢？) and he answers ……朱丽叶是谁？ by second 3.",
-         "2. **One rule, one phrase**: 我只拍，不插手。 then 我只拍。 then ……我只拍。 then 我只拍，不插……不拍了！ The tally reads 插手 0, and 1 at the end.",
+         "2. **One rule, one phrase**: 我只拍，不插手。 then 我只拍。 then ……我只拍。 then 我只拍……不要啊！ (Jay, 24 Nov; until v5: 我只拍，不插……不拍了！) The tally reads 插手 0, and 1 at the end.",
          "3. **Mantua logic hole closed**: she tries to tell him (等等，她没——) and he is gone before she finishes; at the tomb she says it out loud and he does not turn. The throw is the only thing faster than him.",
          "4. **Cards became her whispers** in the second half (他刚杀了朱丽叶的表哥。 / 爸妈要她后天嫁别人。 / 先到的消息：朱丽叶死了。), and the letter's content is said once (信里写着：她是假死).",
          "5. **Restored lines** (time is no longer tight): the moon exchange, the Friar's \"Wisely and slow; they stumble that run fast\" as Juliet sprints in, Juliet's \"Give me, give me!\".",
          "6. **Name tabs**: a name and one tag (罗密欧 · 恋爱脑, 朱丽叶 · 行动派, 劳伦斯神父 · 草药行家).",
          "7. **The clock**: Sunday to Thursday dawn; the REC label counts how long they have known each other (认识第4天 at the tomb); the title keeps 的一天 and a wax 四 is stamped over 一; the end card opens 从相识到墓穴，一共四天。",
-         "8. **Ending**: no 失败 stamp; 插手 1 lands after the last line, the shard fills at least half the frame, and her last line is ……拍不了了。我送。",
+         "8. **Ending**: no 失败 stamp; 插手 1 lands after the last line, the shard fills at least half the frame, Juliet wakes on 噢，我的罗密欧！ and the reporter's last line is ……我得买新手机了。 (Jay, 24 Nov; until v5: 我的罗密欧呢？ and ……拍不了了。我送。)",
          "9. **Platform**: no liquid ever reaches a mouth on screen; the bottle is the 假死药; no 毒 / 殉情 / 自杀 in the title, cover or tags; no cross or altar; 瘟疫 and 封门, never 密接 / 隔离 / 封控.", "",
          f"Counts: {len(L)} lines; the reporter {sum(1 for l in L if l['who']=='ji')} lines ({zh_ji} 字); the leads and the Friar {sum(1 for l in L if l['who']!='ji')} lines ({en_words} English words). "
          "The leads speak Shakespeare's English (large Chinese subtitle, small English under it); the reporter speaks Chinese (Chinese only).", "",

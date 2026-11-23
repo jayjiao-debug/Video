@@ -33,8 +33,15 @@ const JU_PATH = [P("cell", -2.45, 0, -1.1), P("cell", -1.5, 0, -0.98), P("cell",
  *  between them and the Friar like an altar, a third of the frame was floor and beams): side by side across the frame,
  *  turned to each other, hands clasped between them; the Friar steps round behind, between them; all three 0.2 m left of
  *  the first restage, whose groom put his head through the inkpot and candle on the writing desk (clearance, f2786) */
-const JU_WED = P("cell", -0.32, 0, -0.82), RO_WED = P("cell", 0.48, 0, -0.78), FR_WED = P("cell", 0.08, 0, -1.42);
+const JU_WED = P("cell", -0.28, 0, -0.82), RO_WED = P("cell", 0.44, 0, -0.78), FR_WED = P("cell", 0.08, 0, -1.42);
 const COUPLE = P("cell", 0.08, 0, -0.8), COUPLE_FACING = yawTo(COUPLE, FR_LEAN);
+/** (v6, the owner on the v5 cut: "Make their hands touch") at the wedding the two stand half turned to each other and
+ *  half to her lens, so their inner shoulders face each other and the inner hands, his right and her left, meet between
+ *  them, a hair apart so they read as two hands joined. (Until v5 they stood square to each other, 0.8 m apart: each
+ *  hand reached straight ahead and stopped 14 cm short of the other, the rig's arm being 0.31 m. They stand 0.72 m apart
+ *  now, which still leaves the Friar's face between their heads while he speaks.) */
+const OPEN_TO = P("cell", 0.08, 0, 2.9), OPEN = 0.6;
+const wedFacing = (me: THREE.Vector3, other: THREE.Vector3) => yawTo(me, other.clone().lerp(OPEN_TO, OPEN));
 /** the Friar's free hand while he leans round Romeo (he stands at FR_LEAN, his head 0.15 m to the right of his feet,
  *  at x 1.15): on his chest, and up beside his eye, on Romeo's side of his head, never in front of his face. (Points
  *  of the cell, not of his own frame: his feet point along the wall there and his body is turned to the lens.) */
@@ -103,11 +110,11 @@ export const SEG: Segment = {
     const blockLeg = walkAlong([RO_IN, RO_BLOCK], 0.9, (f - (d02 - 3)) / 30, { endFacing: yawTo(RO_BLOCK, wv("cell", BENCH_CAM.pos as number[])) });
     // he takes the right of the pair and she the left, so their two short walks never cross
     const roW = RO_WED;
-    const wedLeg = walkAlong([RO_BLOCK, roW], 0.9, (f - d06) / 30, { endFacing: yawTo(RO_WED, JU_WED) });
+    const wedLeg = walkAlong([RO_BLOCK, roW], 0.9, (f - d06) / 30, { endFacing: wedFacing(RO_WED, JU_WED) });
     const leg = f < d02 - 3 ? inLeg : f < d06 ? blockLeg : wedLeg;
     // after Juliet arrives he turns to her
     const roFacing = f >= tFast + 8 && f < d06 ? THREE.MathUtils.lerp(leg.facing, yawTo(leg.at, JU_PATH[2]), ky(f, [[tFast + 8, 0], [tFast + 18, 1]])) : leg.facing;
-    const meet = P("cell", 0.08, 0.62, -0.7);
+    const meet = P("cell", 0.08, 0.66, -0.68), meetRo = meet.clone().add(V(0.016, 0.008, 0.008)), meetJu = meet.clone().add(V(-0.016, -0.004, 0));
     const clasped = f >= d06 + 18;
     const flick = ky(f, [[tName - 3, 0], [tName + 1, 1]]), swoon = span(f, d06 + 44, S.to + 40, 16, 1) * (2 + 1.5 * Math.sin((f - d06) * 0.08));
     ro.set({
@@ -117,7 +124,7 @@ export const SEG: Segment = {
       // through the first half of the line; the hand's place is given across the picture, not in his own frame: his
       // feet point along the wall, his body is turned to the lens); then he rocks on his heels, beaming, through the
       // Friar's sermon; at the wedding the two sway toward each other
-      hands: clasped ? [null, meet] : [reach(leg.at.clone().add(V(-0.14 - 0.1 * flick, 0.9 + 0.14 * flick, 0.25 - 0.05 * flick)), ky(f, [[tName - 12, 0], [tName - 3, 1], [tName + 12, 1], [tName + 26, 0]])), null],
+      hands: clasped ? [meetRo, null] : [reach(leg.at.clone().add(V(-0.14 - 0.1 * flick, 0.9 + 0.14 * flick, 0.25 - 0.05 * flick)), ky(f, [[tName - 12, 0], [tName - 3, 1], [tName + 12, 1], [tName + 26, 0]])), null],
       lean: { roll: rock(f, endOf("D02") + 12, tFast + 4, 2.4, 0.14), pitch: swoon },
       expr: faceAt(f, [[0, "puppy"], [d02 - 2, "blank"], [endOf("D02") + 8, "puppy"], [tFast + 10, "dreamy"]]),   // eyes open until she runs in
       ...talk("ro", f, 1),
@@ -131,14 +138,14 @@ export const SEG: Segment = {
     const runFrom = tFast - 12;
     const juLeg = walkAlong(JU_PATH, 4.2, (f - runFrom) / 30, { endFacing: yawTo(JU_PATH[2], RO_BLOCK), easeIn: 0 });      // (she comes in at a sprint)
     const juW = JU_WED;
-    const juWed = walkAlong([JU_PATH[2], juW], 0.9, (f - d06) / 30, { endFacing: yawTo(JU_WED, RO_WED) });
+    const juWed = walkAlong([JU_PATH[2], juW], 0.9, (f - d06) / 30, { endFacing: wedFacing(JU_WED, RO_WED) });
     const jl = f < d06 ? juLeg : juWed;
     const arriveAt = runFrom + Math.round((juLeg.left + juLeg.d) / 4.2 * 30);
     const skid = ky(f, [[arriveAt - 4, 0], [arriveAt, 1], [arriveAt + 8, 0]]);
     ju.set({
       ...standing(jl.at.clone().add(rel(V(), jl.facing, 0, 0, 0.12 * skid)), jl.facing, f, 2),
       pose: jl.moving ? jl.pose : { kind: "idle", t: f / 30 },
-      hands: clasped ? [meet, null] : [null, null],
+      hands: clasped ? [null, meetJu] : [null, null],
       expr: faceAt(f, [[0, "bossy"], [arriveAt + 6, "sure"], [d06 + 18, "swoon"]]),
       lean: { pitch: -12 * skid + swoon },
       visible: f >= runFrom,

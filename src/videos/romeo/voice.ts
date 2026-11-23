@@ -59,13 +59,13 @@ export const VOICE_RAW: [number, number, number][] = [
   [50, 165.585, 167.695],
   [51, 170.445, 173.535],
   [52, 173.785, 178.575],
-  [53, 178.825, 181.335],
-  [54, 181.585, 182.965],
-  [55, 183.215, 185.915],
-  [56, 193.765, 195.815],
-  [57, 200.065, 202.395],
-  [58, 202.645, 203.585],
-  [59, 204.635, 207.485],
+  [53, 178.825, 181.815],
+  [54, 182.065, 183.445],
+  [55, 183.695, 186.225],
+  [56, 194.075, 196.395],
+  [57, 200.645, 202.975],
+  [58, 203.225, 204.165],
+  [59, 205.215, 207.415],
 ];
 /** [line number, id, scene, who, pre s (silent beat before it, for action), after s (held after it), zh, en] (the lines file) */
 export const LINE_RAW: [number, string, string, Speaker, number, number, string, string][] = [
@@ -123,17 +123,17 @@ export const LINE_RAW: [number, string, string, Speaker, number, number, string,
   [52, "H02", "H", "ro", 0, 0, "你的嘴唇，你的脸，还是红的。", "Beauty's ensign yet is crimson in thy lips and in thy cheeks."],
   [53, "H03", "H", "ji", 0, 0, "红的，是因为她活着！", "They're red because she's alive!"],
   [54, "H04", "H", "ro", 0, 0, "这一杯，敬我的爱人。", "Here's to my love!"],
-  [55, "H05", "H", "ji", 0, 5.4, "我只拍，不插……不拍了！", "I only film, I don't inter— I'm done filming!"],
-  [56, "I01", "I", "ju", 2.2, 4.0, "我的罗密欧呢？", "Where is my Romeo?"],
+  [55, "H05", "H", "ji", 0, 5.4, "我只拍……不要啊！", "I only film… No!"],
+  [56, "I01", "I", "ju", 2.2, 4.0, "噢，我的罗密欧！", "O my Romeo!"],
   [57, "I02", "I", "ju", 0, 0, "神父的信，你没收到？", "Did the friar's letter not reach thee?"],
   [58, "I03", "I", "ro", 0, 0.8, "什么信？", "What letter?"],
-  [59, "I04", "I", "ji", 0, 6.0, "……拍不了了。我送。", "…I can't film any more. I'll deliver it."],
+  [59, "I04", "I", "ji", 0, 6.0, "……我得买新手机了。", "…I'll have to buy a new phone."],
 ];
-export const VOICE_END_S = 207.485;
+export const VOICE_END_S = 207.415;
 /** frames before the first word, frames of film after the last word, the film's length in frames */
 export const VOICE_LEAD_F = 8;
 export const VOICE_TAIL_F = 294;
-export const VOICE_TOTAL_F = 6519;
+export const VOICE_TOTAL_F = 6516;
 /** each line is a quote of its speaker: [line, who, start s, end s, syllables (Han characters / English, estimated), the words said] */
 export const QUOTE_RAW: [number, Speaker, number, number, number, string][] = [
   [1, "ji", 0.25, 2.77, 9, "罗密欧，为朱丽叶哭呢？"],
@@ -188,13 +188,13 @@ export const QUOTE_RAW: [number, Speaker, number, number, number, string][] = [
   [50, "ji", 165.585, 167.695, 7, "她没死。他没听完。"],
   [51, "ro", 170.445, 173.535, 12, "Death hath had no power yet upon thy beauty."],
   [52, "ro", 173.785, 178.575, 15, "Beauty's ensign yet is crimson in thy lips and in thy cheeks."],
-  [53, "ji", 178.825, 181.335, 8, "红的，是因为她活着！"],
-  [54, "ro", 181.585, 182.965, 5, "Here's to my love!"],
-  [55, "ji", 183.215, 185.915, 8, "我只拍，不插……不拍了！"],
-  [56, "ju", 193.765, 195.815, 5, "Where is my Romeo?"],
-  [57, "ju", 200.065, 202.395, 8, "Did the friar's letter not reach thee?"],
-  [58, "ro", 202.645, 203.585, 3, "What letter?"],
-  [59, "ji", 204.635, 207.485, 6, "……拍不了了。我送。"],
+  [53, "ji", 178.825, 181.815, 8, "红的，是因为她活着！"],
+  [54, "ro", 182.065, 183.445, 5, "Here's to my love!"],
+  [55, "ji", 183.695, 186.225, 6, "我只拍……不要啊！"],
+  [56, "ju", 194.075, 196.395, 4, "O my Romeo!"],
+  [57, "ju", 200.645, 202.975, 8, "Did the friar's letter not reach thee?"],
+  [58, "ro", 203.225, 204.165, 3, "What letter?"],
+  [59, "ji", 205.215, 207.415, 7, "……我得买新手机了。"],
 ];
 /** the build segments = the scenes: [id, first line, last line, first frame, last frame (inclusive)]; a scene starts
  *  where its first line's silent beat (pre) starts (2 frames before its first word when it has none) */
@@ -206,8 +206,8 @@ export const SEGMENT_RAW: [string, number, number, number, number][] = [
   ["E", 32, 34, 2899, 3413],
   ["F", 35, 43, 3414, 4488],
   ["G", 44, 50, 4489, 5067],
-  ["H", 51, 55, 5068, 5746],
-  ["I", 56, 59, 5747, 6518],
+  ["H", 51, 55, 5068, 5755],
+  ["I", 56, 59, 5756, 6515],
 ];
 /** the fact cards: [line, line id, first frame, last frame (inclusive), zh, en]: from the end of the line (+ its "card_delay")
  *  for its "card_hold" seconds (else its "after", else 3.5 s) */

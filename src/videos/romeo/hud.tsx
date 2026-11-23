@@ -12,7 +12,7 @@ import { EN } from "../../kit/film/lang";
 /** the subtitle's colour per speaker: her warm white, Romeo a pale Montague blue, Juliet a pale Capulet rose, the Friar
  *  pale parchment */
 export const SPEAKER_COL: Record<Speaker, string> = { ji: "#fff3e0", ro: "#dce9ff", ju: "#ffdfe2", fr: "#f4e6c6" };
-/** her camera dies on this frame (the end: "……拍不了了。我送。", then the power-off) */
+/** her camera dies on this frame (the end: "……我得买新手机了。", then the power-off) */
 export const OFF_AT = line("I04").to + 22;
 export const CAP = makeCaption({
   captions: CAPTIONS, captionAt: (f) => (whisperCap(f) ? null : captionAt(f)), captionRuns, trailingPunct: TRAILING_PUNCT, speakerCol: SPEAKER_COL,
