@@ -45,12 +45,16 @@ export const SCENES: Record<string, Scene> = {
   s4d: { room: "bedroom", mount: "frame", state: "done", cracks: 0.45, plate: ["杜伊勒里宫", "1800"], expr: "pose", who: ["napoleon"], shot: "bed", gaze: -0.6 },
   s5: { room: "salon", mount: "frame", state: "done", cracks: 0.65, plate: ["卢浮宫", "1911"], expr: "pose", who: ["thief"], shot: "theft", gaze: 0.8 },
   s5b: { room: "salon", mount: "frame", state: "done", plate: ["卢浮宫", "1911"], gone: 1, shot: "theft" },
+  // (back on her wall in January 1914)
+  s5c: { room: "salon", mount: "frame", state: "done", cracks: 0.7, plate: ["卢浮宫", "1914"], expr: "pose", shot: "theft" },
   s6: { room: "louvre", mount: "frame", state: "done", cracks: 1, glass: 1, crowd: 1, plate: ["卢浮宫", ""], expr: "tired" },
   s6b: { room: "louvre", mount: "frame", state: "done", cracks: 1, glass: 1, crowd: 1, stone: 1, plate: ["卢浮宫", "1956"], expr: "caught" },
   s6c: { room: "louvre", mount: "frame", state: "done", cracks: 1, glass: 1, crowd: 1, cake: 1, plate: ["卢浮宫", "2022"], expr: "pose" },
   s6d: { room: "louvre", mount: "frame", state: "done", cracks: 1, glass: 1, crowd: 1, soup: 1, plate: ["卢浮宫", "2024"], expr: "tired" },
   s7: { room: "louvre", mount: "frame", state: "done", cracks: 1, glass: 1, plate: ["卢浮宫", ""], expr: "pose" },
   s8: { room: "louvre", mount: "frame", state: "done", cracks: 1, glass: 1, night: 0.72, torch: [0.08, 1.56, 1.0, 0.5], plate: ["卢浮宫", ""], expr: "sore", hands: "jaw" },
+  // (the quiet scene before she lets go: the hands still crossed)
+  s8a: { room: "louvre", mount: "frame", state: "done", cracks: 1, glass: 1, night: 0.72, torch: [0.08, 1.56, 1.0, 0.5], plate: ["卢浮宫", ""], expr: "plain" },
   s9: { room: "louvre", mount: "frame", state: "done", cracks: 1, glass: 1, night: 0.86, torch: [0.0, 1.6, 0.42, 1.0], plate: ["卢浮宫", ""], expr: "pose" },
 };
 export const SCENE_KEYS = Object.keys(SCENES);

@@ -112,5 +112,13 @@ export const FACES: Record<string, Expr | RigFace> = {
   /** off duty */
   plain: face("neutral", "neutral", "neutral"), tired: face("deadpan", "speechless", "sad", "neutral"), sore: face("pained", "gloom", "sad", "neutral"), sigh: face("sigh", "sigh", "sad", "neutral"),
   caught: face("shock", "shock", "shock", "neutral"),
+  /** 无语 with the smile still on (her signature emote): the mouth smiles, the eyes go flat */
+  wuyu: face("deadpan", "smile", "sad", "neutral"),
+  /** the smile holds, the eyes change (the turn) */
+  hold: face("sad", "smile", "sad", "neutral"),
+  /** a real smile (1911: "the master sent someone for me!") */
+  bright: face("smile", "grin", "neutral"),
+  /** the eyes of a yawn (the mouth is the rig's widest talking mouth, state.mouth) */
+  yawn: face("doze", "neutral", "sad", "neutral"),
 };
 export const hairTest = (hair: Look["hair"], seed = 1503): Person => ({ name: `hair_${hair}_${seed}`, look: { ...MONA_LOOK, seed, hair }, acc: () => [] });

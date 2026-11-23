@@ -621,7 +621,7 @@
      "en": "Ssh. Non farlo scappare."
     }
    ],
-   "after": 3.6,
+   "after": 1.4,
    "card": {
     "zh": "藏在箱子里 · 28个月",
     "en": "Hidden in a trunk · 28 months"
@@ -644,7 +644,8 @@
      "zh": "啊……没人看。",
      "en": "Ahh... nessuno mi guarda."
     }
-   ]
+   ],
+   "pre": 2.2
   },
   {
    "n": 29,
