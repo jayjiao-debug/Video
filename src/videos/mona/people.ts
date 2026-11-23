@@ -15,12 +15,20 @@ import { monaGown } from "./acc/garb";
 import { monaSleeves } from "./acc/sleeves";
 import type { ShellO } from "../romeo/acc/hair";
 import { backFall } from "../romeo/acc/backhair";
+import { legColours, baldHead } from "../romeo/acc/figure";
+import { doublet, puffs } from "../romeo/acc/garb";
+import { bushyBrows, ageLines, nose, cheeks, softBrows } from "../romeo/acc/face";
+import { beard } from "../../kit/acc/facehair";
+import { moustache } from "../group/kit/rigacc";
+import { foolCap, nightCap, oldHair } from "./acc/hats";
 
-export type Person = KitPerson & { limbs?: { hand?: string; arm?: string }; nape?: boolean; /** her hands' size, as a multiple of the kit's ball hand */ handK?: number; hideArms?: boolean };
+export type Person = KitPerson & { limbs?: { hand?: string; arm?: string }; legs?: { leg?: string; foot?: string }; bald?: boolean; nape?: boolean; /** her hands' size, as a multiple of the kit's ball hand */ handK?: number; hideArms?: boolean };
 export function addPerson(rc: RigCast, p: Person): Rig {
   const r = addKitPerson(rc, p);
   if (p.limbs) limbColours(r, p.limbs);
   if (p.nape) napeHair(r, p.look);
+  if (p.legs) legColours(r, p.legs);
+  if (p.bald) baldHead(r);
   // (the hand mesh carries its own ink hull as a child: both grow together; the rig only moves it)
   r.group.userData.monaArmMats = (r as unknown as { armMats?: unknown }).armMats;   // (acc/sleeves.ts: a sleeve follows its arm in front of the head)
   // (sleeves that dress the whole arm: the rig's own tube and its ink line under them are not drawn, or the tube's
@@ -65,7 +73,36 @@ export const mona = (o: MonaO = {}): Person => ({
 });
 export const MONA: Person = mona();
 
-export const PEOPLE: Record<string, Person> = { mona: MONA, monaFull: mona({ sleeve: 0.046, hand: 1.3 }), monaSlim: mona({ sleeve: 0.034, hand: 1.2 }), monaStick0: mona({ sleeve: 0.0105, hand: 1 }), monaThin: mona({ sleeve: 0.025, hand: 1.1 }), monaPanel: mona({ face: { style: "panel" }, skin: "#f1dcae" }), monaGauze: mona({ gauze: 5.5, face: { veil: false } }), monaCracks: mona({ face: { cracks: 1 } }) };
+// ----------------------------------------------------------------------------------------------- the side cast
+// (three faces each and little movement: the lead owns the strongest colour, her old gold)
+/** LEONARDO at Cloux in 1517, sixty-five: a bare crown, long white hair and beard, heavy brows, a dark rose robe */
+const LEO_LOOK: Look = { seed: 1452, skin: "#edcfae", top: "tee", topCol: "#7c3a44", bottom: "chinos", botCol: "#5a2a34", shoes: "#4a3524", shoeSole: "#2e2118", hair: "buzz", hairCol: "#e9e5dc", part: 1, width: 1.1 };
+export const LEONARDO: Person = {
+  name: "leonardo", look: LEO_LOOK, limbs: { hand: "#edcfae", arm: "#7c3a44" }, bald: true, expr: face("sigh", "neutral", "sad", "neutral") as unknown as Expr,
+  acc: (): Acc[] => [robe({ col: "#7c3a44", band: "#5a2a34", sash: false }), oldHair({ col: "#e9e5dc" }), beard({ kind: "long", col: "#ece8e0", len: 1.25 }), moustache({ kind: "walrus", col: "#ece8e0" }),
+    bushyBrows({ col: "#d8d4cc" }), ageLines(), nose()],
+};
+/** THE JESTER of the Florence studio: motley red and yellow, a cap with two horns and bells */
+const JEST_LOOK: Look = { seed: 1504, skin: "#f6dcc4", top: "tee", topCol: "#c8322e", bottom: "chinos", botCol: "#e8b83a", shoes: "#3a6ab8", shoeSole: "#22407a", hair: "short", hairCol: "#8a5a30", part: 1 };
+export const JESTER: Person = {
+  name: "jester", scale: 0.92, look: JEST_LOOK, limbs: { hand: "#f6dcc4", arm: "#e8b83a" }, legs: { leg: "#c8322e", foot: "#3a6ab8" }, expr: "smile" as Expr,
+  acc: (): Acc[] => [doublet({ col: "#c8322e", trim: "#e8b83a", skirt: "#e8b83a", belt: "#3a6ab8" }), puffs({ col: "#e8b83a", pane: "#c8322e", size: 0.044 }), foolCap(), cheeks({ k: 0.7, col: "#e87a6a" }), nose()],
+};
+/** NAPOLEON in bed, 1800: a white night shirt and cap, a dark forelock, a small worried face */
+const NAP_LOOK: Look = { seed: 1769, skin: "#f2d9c0", top: "tee", topCol: "#f1ede2", bottom: "chinos", botCol: "#e6e0d2", shoes: "#e6e0d2", shoeSole: "#cfc8b8", hair: "short", hairCol: "#3a2a20", part: -1 };
+export const NAPOLEON: Person = {
+  name: "napoleon", scale: 0.9, look: NAP_LOOK, limbs: { hand: "#f2d9c0", arm: "#f1ede2" }, expr: face("neutral", "neutral", "sad", "neutral") as unknown as Expr,
+  acc: (): Acc[] => [robe({ col: "#f1ede2", band: "#d8d2c2", sash: false, skirt: false }), nightCap(), softBrows({ col: "#3a2a20", weight: 2.4 }), nose()],
+};
+/** THE THIEF of 1911: a museum workman's white smock, a dark moustache */
+const THIEF_LOOK: Look = { seed: 1911, skin: "#eccaa6", top: "tee", topCol: "#eeeae0", bottom: "chinos", botCol: "#4a4640", shoes: "#3a3028", shoeSole: "#221c18", hair: "short", hairCol: "#2a221e", part: 1 };
+export const THIEF: Person = {
+  name: "thief", look: THIEF_LOOK, limbs: { hand: "#eccaa6", arm: "#eeeae0" }, expr: "neutral" as Expr,
+  acc: (): Acc[] => [robe({ col: "#eeeae0", band: "#cfc8b8", sash: false, skirt: "short", knot: false }), moustache({ kind: "handlebar", col: "#2a221e" }), nose()],
+};
+export const SIDE: Record<string, Person> = { leonardo: LEONARDO, jester: JESTER, napoleon: NAPOLEON, thief: THIEF };
+
+export const PEOPLE: Record<string, Person> = { mona: MONA, leonardo: LEONARDO, jester: JESTER, napoleon: NAPOLEON, thief: THIEF, monaFull: mona({ sleeve: 0.046, hand: 1.3 }), monaSlim: mona({ sleeve: 0.034, hand: 1.2 }), monaStick0: mona({ sleeve: 0.0105, hand: 1 }), monaThin: mona({ sleeve: 0.025, hand: 1.1 }), monaPanel: mona({ face: { style: "panel" }, skin: "#f1dcae" }), monaGauze: mona({ gauze: 5.5, face: { veil: false } }), monaCracks: mona({ face: { cracks: 1 } }) };
 export type PersonKey = keyof typeof PEOPLE;
 /** FACES by name (preview: expr "<name>") */
 export const FACES: Record<string, Expr | RigFace> = {

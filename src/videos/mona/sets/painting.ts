@@ -123,8 +123,10 @@ const paintGilt = (g: CanvasRenderingContext2D, W: number, H: number) => {
   }
 };
 
-export type PaintingSet = { group: THREE.Group; open: typeof OPEN; frameZ: number; torch: (x: number, y: number, r: number, k: number) => void; dim: (k: number) => void };
-export const paintingSet = (M: Mats, o: { wall?: string; label?: boolean } = {}): PaintingSet => {
+/** frame = the gilt frame's bars (hide it for the bare panel on its easel); room: false = no gallery wall, floor or
+ *  skirting (sets/stage.ts builds the room round the picture and lifts the group) */
+export type PaintingSet = { group: THREE.Group; frame: THREE.Group; open: typeof OPEN; frameZ: number; torch: (x: number, y: number, r: number, k: number) => void; dim: (k: number) => void };
+export const paintingSet = (M: Mats, o: { wall?: string; label?: boolean; room?: boolean } = {}): PaintingSet => {
   const G = new THREE.Group(), { x0, x1, y0, y1 } = OPEN, cx = (x0 + x1) / 2, cy = (y0 + y1) / 2, ow = x1 - x0, oh = y1 - y0;
   const add = <T extends THREE.Object3D>(m: T, shadow = true) => { m.traverse((q) => { q.castShadow = shadow; q.receiveShadow = true; }); G.add(m); return m; };
   // ----- the landscape board
@@ -144,11 +146,13 @@ export const paintingSet = (M: Mats, o: { wall?: string; label?: boolean } = {})
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(3.2, 1.7), dark); floor.rotation.x = -Math.PI / 2; floor.position.set(0, 0.001, -0.5); add(floor, false);
   // ----- the gallery wall with its opening
   const wallM = M.paint({ color: o.wall ?? "#2d3b62", roughness: 0.95 }), wz = FRAME_Z - 0.03, big = 6;
+  if (o.room !== false) {
   for (const [w, h, x, y] of [[big, big, x0 - big / 2, cy], [big, big, x1 + big / 2, cy], [ow, big, cx, y1 + big / 2], [ow, big, cx, y0 - big / 2]] as [number, number, number, number][]) {
     const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), wallM); m.position.set(x, y, wz); add(m, false);
   }
   const parquet = new THREE.Mesh(new THREE.PlaneGeometry(12, 8), M.wood({ color: "#8c6a44" })); parquet.rotation.x = -Math.PI / 2; parquet.position.set(0, 0, wz + 4); add(parquet, false);
   const skirt = new THREE.Mesh(new THREE.BoxGeometry(12, 0.09, 0.02), M.paint({ color: "#1d2742" })); skirt.position.set(0, 0.045, wz + 0.01); add(skirt, false);
+  }
   // ----- the frame: an inner slope with the carving, an outer rail
   const gilt = canvasTex(1024, 128, (g) => paintGilt(g, 1024, 128)); gilt.wrapS = THREE.RepeatWrapping;
   const fw = 0.13, rail = 0.04;
@@ -164,13 +168,14 @@ export const paintingSet = (M: Mats, o: { wall?: string; label?: boolean } = {})
     const lip = new THREE.Mesh(new THREE.BoxGeometry(len, 0.012, 0.062), plain); lip.position.set(0, 0.006, 0.031); g.add(lip);
     return g;
   };
-  const FW = ow + 2 * fw, FH = oh + 2 * fw;
-  const top = bar(FW, Math.round(FW / 0.3)); top.position.set(cx, y1, FRAME_Z); add(top, false);
-  const bot = bar(FW, Math.round(FW / 0.3)); bot.rotation.z = Math.PI; bot.position.set(cx, y0, FRAME_Z); add(bot, false);
-  const lef = bar(FH, Math.round(FH / 0.3)); lef.rotation.z = Math.PI / 2; lef.position.set(x0, cy, FRAME_Z); add(lef, false);
-  const rig = bar(FH, Math.round(FH / 0.3)); rig.rotation.z = -Math.PI / 2; rig.position.set(x1, cy, FRAME_Z); add(rig, false);
+  const FW = ow + 2 * fw, FH = oh + 2 * fw, frameG = new THREE.Group(); frameG.name = "mona.frame";
+  const top = bar(FW, Math.round(FW / 0.3)); top.position.set(cx, y1, FRAME_Z); frameG.add(top);
+  const bot = bar(FW, Math.round(FW / 0.3)); bot.rotation.z = Math.PI; bot.position.set(cx, y0, FRAME_Z); frameG.add(bot);
+  const lef = bar(FH, Math.round(FH / 0.3)); lef.rotation.z = Math.PI / 2; lef.position.set(x0, cy, FRAME_Z); frameG.add(lef);
+  const rig = bar(FH, Math.round(FH / 0.3)); rig.rotation.z = -Math.PI / 2; rig.position.set(x1, cy, FRAME_Z); frameG.add(rig);
+  add(frameG, false);
   // the label under it
-  if (o.label !== false) {
+  if (o.label !== false && o.room !== false) {
     const lab = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.07, 0.008), M.metalWith({ color: "#d8b45a", map: canvasTex(256, 96, (g) => {
       g.fillStyle = "#e6c878"; g.fillRect(0, 0, 256, 96); g.strokeStyle = "#7c5a1c"; g.lineWidth = 5; g.strokeRect(6, 6, 244, 84);
       g.fillStyle = "#5a3e14"; for (const [y, w] of [[30, 150], [50, 190], [68, 110]]) g.fillRect(128 - w / 2, y, w, 6);
@@ -194,9 +199,9 @@ export const paintingSet = (M: Mats, o: { wall?: string; label?: boolean } = {})
   });
   const night = new THREE.Mesh(new THREE.PlaneGeometry(12, 12), nightM); night.renderOrder = 998; night.position.set(0, 1.1, FRAME_Z + 0.09); night.visible = false; G.add(night);
   return {
-    group: G, open: OPEN, frameZ: FRAME_Z,
+    group: G, frame: frameG, open: OPEN, frameZ: FRAME_Z,
     // (the torch: the night lifts inside its disc, and a little warm light is added on top)
-    torch: (x, y, r, k) => { torch.visible = k > 0.001; torch.position.x = x; torch.position.y = y; torch.scale.set(r * 2, r * 2, 1); torchM.opacity = 0.09 * k; nightM.uniforms.uC.value.set(x, y); nightM.uniforms.uR.value = r; nightM.uniforms.uK.value = Math.min(1, k); },
+    torch: (x, y, r, k) => { torch.visible = k > 0.001; torch.position.x = x; torch.position.y = y; torch.scale.set(r * 2, r * 2, 1); torchM.opacity = 0.09 * k; nightM.uniforms.uC.value.set(x + G.position.x, y + G.position.y); nightM.uniforms.uR.value = r; nightM.uniforms.uK.value = Math.min(1, k); },
     dim: (k) => { const a = (1 - k) * 0.86; night.visible = a > 0.001; nightM.uniforms.uA.value = a; },
   };
 };
