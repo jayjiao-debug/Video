@@ -16,13 +16,16 @@ import { monaSleeves } from "./acc/sleeves";
 import type { ShellO } from "../romeo/acc/hair";
 import { backFall } from "../romeo/acc/backhair";
 
-export type Person = KitPerson & { limbs?: { hand?: string; arm?: string }; nape?: boolean; /** her hands' size, as a multiple of the kit's ball hand */ handK?: number };
+export type Person = KitPerson & { limbs?: { hand?: string; arm?: string }; nape?: boolean; /** her hands' size, as a multiple of the kit's ball hand */ handK?: number; hideArms?: boolean };
 export function addPerson(rc: RigCast, p: Person): Rig {
   const r = addKitPerson(rc, p);
   if (p.limbs) limbColours(r, p.limbs);
   if (p.nape) napeHair(r, p.look);
   // (the hand mesh carries its own ink hull as a child: both grow together; the rig only moves it)
   r.group.userData.monaArmMats = (r as unknown as { armMats?: unknown }).armMats;   // (acc/sleeves.ts: a sleeve follows its arm in front of the head)
+  // (sleeves that dress the whole arm: the rig's own tube and its ink line under them are not drawn, or the tube's
+  //  ink shows as a second dark arm beside a thin sleeve)
+  if (p.hideArms) for (const a of ((r as unknown as { armMats?: { visible: boolean }[][] }).armMats ?? [])) { if (a[0]) a[0].visible = false; if (a[2]) a[2].visible = false; }
   if (p.handK) for (const h of (r as unknown as { hands?: { scale: { setScalar(k: number): void } }[] }).hands ?? []) h.scale.setScalar(p.handK);
   return r;
 }
@@ -53,16 +56,16 @@ export const MONA_HAIR: ShellO = {
 };
 export type MonaO = { face?: MonaFaceO; skin?: string; gauze?: number; /** the sleeves' thickness: the upper arm's radius in metres */ sleeve?: number; /** the hands' size against the kit's */ hand?: number };
 export const mona = (o: MonaO = {}): Person => ({
-  name: `mona${Object.keys(o).length ? "_" + JSON.stringify(o) : ""}`, scale: 1.0, look: o.skin ? { ...MONA_LOOK, skin: o.skin } : MONA_LOOK, limbs: { hand: o.skin ?? COL.skin, arm: COL.sleeve }, nape: true, handK: o.hand ?? 1.2,
+  name: `mona${Object.keys(o).length ? "_" + JSON.stringify(o) : ""}`, scale: 1.0, look: o.skin ? { ...MONA_LOOK, skin: o.skin } : MONA_LOOK, limbs: { hand: o.skin ?? COL.skin, arm: COL.sleeve }, nape: true, handK: o.hand ?? 1, hideArms: true,
   expr: face("smile", "smile", "neutral") as unknown as Expr,
-  acc: (): Acc[] => [robe({ col: COL.gown, band: COL.gownDeep, sash: false }), monaGown({ col: COL.gown, skin: o.skin ?? COL.skin, braid: COL.braid, mantle: COL.mantle }), monaSleeves({ col: COL.sleeve, deep: COL.sleeveDeep, thick: o.sleeve ?? 0.034 }),
+  acc: (): Acc[] => [robe({ col: COL.gown, band: COL.gownDeep, sash: false }), monaGown({ col: COL.gown, skin: o.skin ?? COL.skin, braid: COL.braid, mantle: COL.mantle }), monaSleeves({ col: COL.sleeve, deep: COL.sleeveDeep, thick: o.sleeve ?? 0.0135 }),
     veilHair({ shell: MONA_HAIR, skin: o.skin ?? COL.skin, gauze: o.gauze ?? 0, tint: 0.85 }), ringlets({ col: COL.hair, light: COL.hairLight, deep: COL.hairDeep }),
     backFall({ col: COL.hair, light: COL.hairLight, deep: COL.hairDeep, ring: COL.hair, n: 5, notchMid: 1.7, notchSide: 1.45, tips: [0.2, 0.16, 0.12] }),
     monaFace({ veil: false, ...o.face })],
 });
 export const MONA: Person = mona();
 
-export const PEOPLE: Record<string, Person> = { mona: MONA, monaFull: mona({ sleeve: 0.046, hand: 1.3 }), monaThin: mona({ sleeve: 0.025, hand: 1.1 }), monaPanel: mona({ face: { style: "panel" }, skin: "#f1dcae" }), monaGauze: mona({ gauze: 5.5, face: { veil: false } }), monaCracks: mona({ face: { cracks: 1 } }) };
+export const PEOPLE: Record<string, Person> = { mona: MONA, monaFull: mona({ sleeve: 0.046, hand: 1.3 }), monaSlim: mona({ sleeve: 0.034, hand: 1.2 }), monaStick0: mona({ sleeve: 0.0105, hand: 1 }), monaThin: mona({ sleeve: 0.025, hand: 1.1 }), monaPanel: mona({ face: { style: "panel" }, skin: "#f1dcae" }), monaGauze: mona({ gauze: 5.5, face: { veil: false } }), monaCracks: mona({ face: { cracks: 1 } }) };
 export type PersonKey = keyof typeof PEOPLE;
 /** FACES by name (preview: expr "<name>") */
 export const FACES: Record<string, Expr | RigFace> = {

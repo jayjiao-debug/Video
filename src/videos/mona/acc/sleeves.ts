@@ -93,7 +93,7 @@ const limbSleeve = (b: PartKit, o: { limb: number; i0: number; i1: number; rad: 
 export type MonaSleevesO = { col?: string; deep?: string; light?: string; thick?: number; /** the hand: its colour (her skin) and its size as a multiple of the kit's ball hand; false = the kit's own hand */ hand?: string | false; handK?: number };
 export const monaSleeves = (o: MonaSleevesO = {}): Acc => {
   const col = o.col ?? "#b8873a", deep = o.deep ?? shade(col, 0.62), light = o.light ?? shade(col, 1.28), thick = o.thick ?? 0.046, hand = o.hand ?? false, handK = o.handK ?? 1.32;
-  const key = ["monaSleeves3", col, deep, light, thick, hand, handK].join("|");
+  const key = ["monaSleeves4", col, deep, light, thick, hand, handK].join("|");
   return {
     name: "monaSleeves", slots: [], key,
     build(b) {
@@ -102,10 +102,10 @@ export const monaSleeves = (o: MonaSleevesO = {}): Acc => {
         g.fillStyle = col; g.fillRect(0, 0, 128, 512);
         for (let i = 0; i < 21; i++) {
           const y = 16 + i * 23.4 + 7 * Math.sin(i * 2.4), ph = i * 1.9;
-          g.globalAlpha = 0.55; g.lineWidth = 3; g.strokeStyle = deep; g.beginPath();
+          g.globalAlpha = thick < 0.02 ? 0.85 : 0.55; g.lineWidth = thick < 0.02 ? 4.5 : 3; g.strokeStyle = deep; g.beginPath();
           for (let x = 0; x <= 128; x += 8) { const yy = y + 3.2 * Math.sin((x / 128) * Math.PI * 2 + ph); if (x) g.lineTo(x, yy); else g.moveTo(x, yy); }
           g.stroke();
-          g.globalAlpha = 0.5; g.lineWidth = 2.4; g.strokeStyle = light; g.beginPath();
+          g.globalAlpha = thick < 0.02 ? 0.75 : 0.5; g.lineWidth = thick < 0.02 ? 3.4 : 2.4; g.strokeStyle = light; g.beginPath();
           for (let x = 0; x <= 128; x += 8) { const yy = y + 6.4 + 3.2 * Math.sin((x / 128) * Math.PI * 2 + ph); if (x) g.lineTo(x, yy); else g.moveTo(x, yy); }
           g.stroke();
         }
@@ -113,8 +113,10 @@ export const monaSleeves = (o: MonaSleevesO = {}): Acc => {
         g.globalAlpha = 1; g.fillStyle = deep; g.fillRect(0, 502, 128, 10);
       }, key);
       // full at the upper arm, a little in at the elbow, full again on the forearm, drawn in to the wrist
-      const rad = (u: number) => u < 0.12 ? lerp(thick * 0.8, thick, u / 0.12) : u < 0.45 ? lerp(thick, thick * 0.9, (u - 0.12) / 0.33) : u < 0.8 ? lerp(thick * 0.9, thick * 0.84, (u - 0.45) / 0.35) : lerp(thick * 0.84, thick * 0.52, smooth((u - 0.8) / 0.2));
-      for (let i = 0; i < 2; i++) limbSleeve(b, { limb: i, i0: 1, i1: 30, rad, map, paint: "cloth", ink: 0.0072, ball: hand ? b.handR * handK : 0, ballCol: hand || undefined });
+      // (stick: the kit's own thin arm, the same thickness all the way, only dressed in her cloth)
+      const full = (u: number) => u < 0.12 ? lerp(thick * 0.8, thick, u / 0.12) : u < 0.45 ? lerp(thick, thick * 0.9, (u - 0.12) / 0.33) : u < 0.8 ? lerp(thick * 0.9, thick * 0.84, (u - 0.45) / 0.35) : lerp(thick * 0.84, thick * 0.52, smooth((u - 0.8) / 0.2));
+      const stick = thick < 0.02, rad = stick ? () => thick : full;
+      for (let i = 0; i < 2; i++) limbSleeve(b, { limb: i, i0: 1, i1: stick ? 31 : 30, rad, map, paint: "cloth", ink: stick ? Math.min(0.0062, thick * 0.46) : 0.0072, ball: hand ? b.handR * handK : 0, ballCol: hand || undefined });
     },
   };
 };
