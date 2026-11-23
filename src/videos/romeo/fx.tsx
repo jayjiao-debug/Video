@@ -46,6 +46,11 @@ const tallyFade = (f: number) => {
   if (f < away - 4 || f >= back + 6) return 1;
   return f < away ? (away - f) / 4 : f < back ? 0 : (f - back) / 6;
 };
+/** in G the tally sits out the card (送信人被瘟疫封了门, whose corner reached under it) and Mantua's opening (the street
+ *  runs to the top right, so the leaving rider galloped in under it), and fades in as he asks for the Friar's letter:
+ *  插手 0 is back for her 「……没有。」 and its blink */
+const G_TALLY_BACK = L("G03").to - 4;
+const gCardFade = (f: number) => (f < seg("G").from || f > G_TALLY_BACK + 8 ? 1 : f <= G_TALLY_BACK ? 0 : (f - G_TALLY_BACK) / 8);
 const tallyShown = (f: number) =>
   (f >= seg("A").from && f <= seg("D").to) || (f >= seg("F").from && f <= seg("F").to) || (f >= seg("G").from && f < L("G07").from - 2);
 /** her last line: the tally comes back and changes to 1 on 「我送」 */
@@ -61,7 +66,8 @@ export const END_FROM = OFF_AT + 14;
 // ---------------------------------------------------------------------------------------------------- under
 /** her whisper's darkened edges (the picture's, under her camera's UI), and the broken lens */
 export const FxUnder: React.FC<{ f: number }> = ({ f }) => {
-  const w = whisperAt(f), e = w ? w.edge : 0, s = shardAt(f);
+  // on Mantua's white noon street the edges are taken down to half (taste review of v1: there they read as a dirty lens)
+  const w = whisperAt(f), e = w ? w.edge * (w.id === "G01" ? 0.5 : 1) : 0, s = shardAt(f);
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
       {e > 0 ? <AbsoluteFill style={{ background: "radial-gradient(ellipse 72% 58% at 50% 46%, rgba(20,13,9,0) 52%, rgba(20,13,9,0.62) 100%)", opacity: e }} /> : null}
@@ -77,9 +83,10 @@ export const Fx: React.FC<{ f: number; P: Pose }> = ({ f, P }) => {
   // the title, in the gap after Romeo's blank 「……朱丽叶是谁？」
   if (f >= TITLE_BLOCK.from && f <= TITLE_BLOCK.to && P.cards !== false) out.push(<LetterTitle key="title" f={f} from={TITLE_BLOCK.from} to={TITLE_BLOCK.to} y={1110} />);
   // the tally
-  if (tallyShown(f) && tallyFade(f) > 0) {
+  const tOp = tallyFade(f) * gCardFade(f);
+  if (tallyShown(f) && tOp > 0) {
     const t = <MeddleTally key="tally" f={f} stampAt={TALLY_STAMP} blinks={TALLY_BLINKS} until={f <= seg("D").to ? undefined : L("G07").from - 3} />;
-    out.push(tallyFade(f) < 1 ? <div key="tally-fade" style={{ position: "absolute", inset: 0, opacity: tallyFade(f) }}>{t}</div> : t);
+    out.push(tOp < 1 ? <div key="tally-fade" style={{ position: "absolute", inset: 0, opacity: tOp }}>{t}</div> : t);
   }
   if (f >= TALLY_BACK && f < OFF_AT) out.push(<MeddleTally key="tally-end" id="romeo-tally-end" f={f} stampAt={TALLY_BACK} changeAt={TALLY_CHANGE} x={700} y={360} scale={1.15} />);
   // her notes

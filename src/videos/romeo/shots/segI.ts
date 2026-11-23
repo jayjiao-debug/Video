@@ -44,7 +44,7 @@ export const SEG: Segment = {
     const camera = povCam(f, [camAt("tomb", "floor", S.from), camAt("tomb", "floor", S.to)], { mood: "calm", amp: 0 });
     w.setCamera(camera);
     // what fell on the stones
-    w.prop("darkBottle").put(P("tomb", 1.02, 0.0, -0.42), { lying: true, rot: 2.2 });
+    w.prop("darkBottle").put(P("tomb", 1.02, 0.0, -0.42), { lying: true, rot: 2.2, scale: 1.3 });
     w.prop("spill").put(P("tomb", 0.96, 0.005, -0.38), { amount: 1 });
     w.prop("glassShards").put(P("tomb", 0.78, 0.005, -0.12), { rot: 0.6 });
 
@@ -101,7 +101,7 @@ export const SEG: Segment = {
         // the embrace: her right hand on his chest, her left round his back
         hands: hugging ? [VERBS.lap(seat, 0.1, 0.25, 0.2).hands?.[0] ?? null, juRoundHim] : VERBS.lap(seat, 0.1, 0.25, 0.2).hands ?? [null, null],
         head: hugging && up < 1 ? { tilt: 13 * (1 - up) } : undefined,
-        expr: faceAt(f, [[0, "worried"], [B.hug, "swoon"], [startOf("I02") - 2, "worried"], [startOf("I03") + REACT, "caught"]]),
+        expr: faceAt(f, [[0, "waking"], [B.hug, "swoon"], [startOf("I02") - 2, "puzzled"], [startOf("I03") + REACT, "blank"]]),
         ...talk("ju", f, 2),
         lookDown: up > 0 ? -12 * up : 4,
         hide: ["vial"],

@@ -58,7 +58,7 @@ const JULIET_LOOK: Look = {
 };
 export const JULIET: Person = {
   name: "juliet", scale: 0.97, look: JULIET_LOOK, limbs: { hand: COL.skinJuliet, arm: COL.red }, nape: true, expr: face("smile", "smile", "neutral") as unknown as Expr,
-  acc: (): Acc[] => [robe({ col: COL.red, band: COL.gold, sash: false }), gown({ col: COL.red }), girdleEnd(), puffs({ col: COL.red, pane: COL.cream, size: 0.046 }), julietCap(), tresses(), vial(), lips(), softBrows({ weight: 2.6 }), lashes(), cheeks({ k: 0.55 }), shine(), jewel()],
+  acc: (): Acc[] => [robe({ col: COL.red, band: COL.gold, sash: false }), gown({ col: COL.red }), girdleEnd(), puffs({ col: COL.red, pane: COL.cream, size: 0.046 }), julietCap(), tresses(), vial({ size: 1.4 }), lips(), softBrows({ weight: 2.6 }), lashes(), cheeks({ k: 0.55 }), shine(), jewel()],
 };
 const FRIAR_LOOK: Look = {
   seed: 1226, skin: COL.skinFriar, top: "tee", topCol: COL.habit, bottom: "chinos", botCol: COL.habitDeep, shoes: "#4a3a2a", shoeSole: "#2e2218",
@@ -84,12 +84,13 @@ export const ROMEO_CRY: Person = { ...ROMEO, name: "romeoCry", acc: (): Acc[] =>
 export const ROMEO_MASK: Person = { ...ROMEO, name: "romeoMask", acc: (): Acc[] => [...ROMEO.acc(), maskStick()] };
 /** Romeo in Mantua and the vault: the apothecary's dark bottle (his right hand; his letter is left out: it is hidden in
  *  both scenes, and the bottle takes its hand) */
-export const ROMEO_BOTTLE: Person = { ...ROMEO, name: "romeoBottle", acc: (): Acc[] => [...ROMEO.acc().filter((a) => a.name !== "letter"), darkBottleHeld({ hand: 0 })] };
+export const ROMEO_BOTTLE: Person = { ...ROMEO, name: "romeoBottle", acc: (): Acc[] => [...ROMEO.acc().filter((a) => a.name !== "letter"), darkBottleHeld({ hand: 0, size: 1.3 })] };
 /** the Friar writing his letter: the quill (hand 0; the herb basket stays on hand 1) */
 export const FRIAR_QUILL: Person = { ...FRIAR, name: "friarQuill", acc: (): Acc[] => [...FRIAR.acc(), quillHeld()] };
-/** the Friar on Tuesday holding the vial out (F02-F04), and holding his sealed letter (F07-F08): hand 0 each (a figure
+/** the vial is drawn 1.4x (taste review of v1: at 7.8 cm it was lost in F02-F04); the dark bottle 1.3x (lost against the
+ *  vault's brown stone). The Friar on Tuesday holding the vial out (F02-F04), and holding his sealed letter (F07-F08): hand 0 each (a figure
  *  takes one thing per hand, so each is its own figure; the shot switches between them at the hand-over) */
-export const FRIAR_VIAL: Person = { ...FRIAR, name: "friarVial", acc: (): Acc[] => [...FRIAR.acc(), vial({ hand: 0 })] };
+export const FRIAR_VIAL: Person = { ...FRIAR, name: "friarVial", acc: (): Acc[] => [...FRIAR.acc(), vial({ hand: 0, size: 1.4 })] };
 export const FRIAR_LETTER: Person = { ...FRIAR, name: "friarLetter", acc: (): Acc[] => [...FRIAR.acc(), letter({ hand: 0 })] };
 /** the young friar who takes the letter (F08): no beard, a little smaller, the letter in his right hand */
 export const YOUNG_FRIAR: Person = {
@@ -104,8 +105,12 @@ export type PersonKey = keyof typeof PEOPLE;
 /** FACES by name (preview: expr "<name>"). Romeo: puppy (his resting face), dreamy, wail, blank, hollow.
  *  Juliet: sure (her resting face), bossy, swoon, caught, brave. The Friar: weary (resting), dry, worried, warn. */
 export const FACES: Record<string, Expr | RigFace> = {
-  puppy: face("neutral", "smile", "sad"), dreamy: face("relief", "smile", "sad"), wail: face("wince", "laugh", "sad"), blank: face("smile", "neutral", "shock", "neutral"), hollow: face("neutral", "sad", "sad"),
-  sure: face("smile", "smile", "neutral"), bossy: { eyes: "smile", mouth: "smile", brows: "neutral", browsTo: "stern", k: 0.5, marks: "neutral" }, swoon: face("relief", "relief", "sad", "neutral"), caught: face("shock", "nervous", "shock", "neutral"), brave: face("neutral", "smile", "sad", "neutral"),
+  puppy: face("neutral", "smile", "sad"), dreamy: face("relief", "smile", "sad"), wail: face("wince", "shock", "sad"), blank: face("smile", "neutral", "shock", "neutral"), hollow: face("neutral", "sad", "sad"),
+  sure: face("smile", "smile", "neutral"), bossy: { eyes: "smile", mouth: "smile", brows: "neutral", browsTo: "stern", k: 0.5, marks: "neutral" }, swoon: face("relief", "relief", "sad", "neutral"), caught: face("smile", "nervous", "shock", "nervous"), brave: face("neutral", "smile", "sad", "neutral"),
+  // taste review of v1 (23 Nov): faces that fought their beats. wail had the laugh mouth (it read 笑哭) and caught had the
+  // ring eyes (on Juliet they read as round spectacles); the bier, the waking and her sincere line get their own faces
+  tender: face("sad", "smile", "sad"), grief: face("sad", "sad", "sad"), waking: face("neutral", "sigh", "sad"),
+  puzzled: face("smile", "whistle", "shock", "neutral"), soft: face("smile", "smile", "sad", "neutral"),
   weary: face("neutral", "smile", "sad"), dry: face("deadpan", "smug", "smug", "neutral"), worried: face("neutral", "nervous", "sad", "neutral"), warn: face("neutral", "neutral", "stern", "neutral"),
 };
 /** test looks: one per kit hair kind (preview: who "hair:curly") */

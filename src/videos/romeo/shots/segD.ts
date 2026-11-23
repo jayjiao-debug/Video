@@ -28,10 +28,14 @@ const RO_IN = P("cell", -0.45, 0, -1.15), RO_BLOCK = P("cell", 0.25, 0, -0.72);
 const FR_LEAN = P("cell", 1.0, 0, -1.3);
 /** Juliet's sprint: in through the doorway, a skid, stops beside Romeo */
 const JU_PATH = [P("cell", -2.45, 0, -1.1), P("cell", -1.5, 0, -0.98), P("cell", -0.42, 0, -0.92)];
-/** the couple before the Friar: the middle between them, and the way they face (toward him) */
-const COUPLE = P("cell", 0.37, 0, -0.78), COUPLE_FACING = yawTo(COUPLE, FR_LEAN);
-/** the step back for the wedding: back by the front wall, the Friar and the pair in one frame, small */
-const WED_WIDE = { pos: wv("cell", [1.1, 1.55, 2.9]), look: wv("cell", [0.55, 1.0, -0.95]), fov: 50 };
+/** THE WEDDING (restaged after the taste review of v1: Juliet's face was hidden behind his head, the writing desk stood
+ *  between them and the Friar like an altar, a third of the frame was floor and beams): side by side across the frame,
+ *  turned to each other, hands clasped between them; the Friar steps round behind, between them; all three 0.2 m left of
+ *  the first restage, whose groom put his head through the inkpot and candle on the writing desk (clearance, f2786) */
+const JU_WED = P("cell", -0.32, 0, -0.82), RO_WED = P("cell", 0.48, 0, -0.78), FR_WED = P("cell", 0.08, 0, -1.42);
+const COUPLE = P("cell", 0.08, 0, -0.8), COUPLE_FACING = yawTo(COUPLE, FR_LEAN);
+/** the step back for the wedding: back by the front wall, the three of them in one frame, small (no blessing close-up) */
+const WED_WIDE = { pos: wv("cell", [0.08, 1.55, 2.9]), look: wv("cell", [0.08, 1.3, -1.0]), fov: 46 };
 
 export const SEG: Segment = {
   id: "D", from: S.from, to: S.to,
@@ -61,16 +65,17 @@ export const SEG: Segment = {
     // ---------------------------------------------------------------- the Friar
     const fr = w.actor(FRIAR);
     const leanK = ky(f, [[d03 - 6, 0], [d03 + 12, 1], [endOf("D03") + 10, 1], [endOf("D03") + 26, 0.6]]);
-    const frAt = BENCH.at.clone().lerp(FR_LEAN, ky(f, [[d03 - 6, 0], [d03 + 12, 1]]));
+    const frWed = walkAlong([FR_LEAN, FR_WED], 0.9, (f - (d06 + 6)) / 30, { endFacing: yawTo(FR_WED, COUPLE) });
+    const frAt = f < d06 + 6 ? BENCH.at.clone().lerp(FR_LEAN, ky(f, [[d03 - 6, 0], [d03 + 12, 1]])) : frWed.at;
     const roHere = f >= S.from + 10;
     const toLens = yawTo(frAt, wv("cell", BENCH_CAM.pos as number[]));
     const frFacing = f < S.from + 12 ? BENCH.facing
       : f < d03 - 6 ? yawTo(frAt, RO_IN)
       : f < d06 ? toLens
-      : THREE.MathUtils.lerp(toLens, yawTo(frAt, COUPLE), ky(f, [[d06, 0], [d06 + 14, 1]]));
+      : f < d06 + 6 ? THREE.MathUtils.lerp(toLens, yawTo(frAt, COUPLE), ky(f, [[d06, 0], [d06 + 6, 0.5]])) : frWed.facing;
     fr.set({
       ...standing(frAt, frFacing, f, 3),
-      pose: { kind: "hold", t: f / 30 },
+      pose: f >= d06 + 6 && frWed.moving ? frWed.pose : { kind: "hold", t: f / 30 },
       expr: faceAt(f, [[0, "weary"], [d01 - 4, "dry"], [d03 - 2, "warn"], [endOf("D04") + REACT, "weary"], [tFast + REACT, "worried"], [d06 - 2, "warn"], [endOf("D06") + REACT, "weary"]]),
       ...talk("fr", f, 3),
       lean: { roll: 9 * leanK, pitch: 4 * leanK },
@@ -83,18 +88,18 @@ export const SEG: Segment = {
     const inLeg = walkAlong([DOOR.at.clone().add(V(-0.3, 0, -0.2)), P("cell", -1.6, 0, -1.0), RO_IN], 3.0, (f - (S.from + 2)) / 30, { endFacing: yawTo(RO_IN, BENCH.at) });
     const blockLeg = walkAlong([RO_IN, RO_BLOCK], 0.9, (f - (d02 - 3)) / 30, { endFacing: yawTo(RO_BLOCK, wv("cell", BENCH_CAM.pos as number[])) });
     // he takes the right of the pair and she the left, so their two short walks never cross
-    const roW = rel(COUPLE, COUPLE_FACING, -0.34, 0, 0);
-    const wedLeg = walkAlong([RO_BLOCK, roW], 0.9, (f - d06) / 30, { endFacing: COUPLE_FACING });
+    const roW = RO_WED;
+    const wedLeg = walkAlong([RO_BLOCK, roW], 0.9, (f - d06) / 30, { endFacing: yawTo(RO_WED, JU_WED) });
     const leg = f < d02 - 3 ? inLeg : f < d06 ? blockLeg : wedLeg;
     // after Juliet arrives he turns to her
     const roFacing = f >= tFast + 8 && f < d06 ? THREE.MathUtils.lerp(leg.facing, yawTo(leg.at, JU_PATH[2]), ky(f, [[tFast + 8, 0], [tFast + 18, 1]])) : leg.facing;
-    const meet = rel(COUPLE, COUPLE_FACING, 0, 0.62, 0.12);
+    const meet = P("cell", 0.08, 0.62, -0.7);
     const clasped = f >= d06 + 18;
     ro.set({
       ...standing(leg.at, roFacing, f, 1),
       pose: leg.moving ? leg.pose : { kind: "idle", t: f / 30 },
       hands: clasped ? [null, meet] : [null, null],
-      expr: faceAt(f, [[0, "dreamy"], [d02 - 2, "puppy"], [endOf("D02") + 8, "dreamy"]]),
+      expr: faceAt(f, [[0, "puppy"], [d02 - 2, "blank"], [endOf("D02") + 8, "puppy"], [tFast + 10, "dreamy"]]),   // eyes open until she runs in
       ...talk("ro", f, 1),
       head: accent("pop", f, tFast + 10) ?? undefined,
       visible: roHere,
@@ -105,8 +110,8 @@ export const SEG: Segment = {
     const ju = w.actor(JULIET);
     const runFrom = tFast - 12;
     const juLeg = walkAlong(JU_PATH, 4.2, (f - runFrom) / 30, { endFacing: yawTo(JU_PATH[2], RO_BLOCK) });
-    const juW = rel(COUPLE, COUPLE_FACING, 0.34, 0, 0);
-    const juWed = walkAlong([JU_PATH[2], juW], 0.9, (f - d06) / 30, { endFacing: COUPLE_FACING });
+    const juW = JU_WED;
+    const juWed = walkAlong([JU_PATH[2], juW], 0.9, (f - d06) / 30, { endFacing: yawTo(JU_WED, RO_WED) });
     const jl = f < d06 ? juLeg : juWed;
     const arriveAt = runFrom + Math.round((juLeg.left + juLeg.d) / 4.2 * 30);
     const skid = ky(f, [[arriveAt - 4, 0], [arriveAt, 1], [arriveAt + 8, 0]]);
@@ -122,8 +127,10 @@ export const SEG: Segment = {
     w.update();
 
     // ---------------------------------------------------------------- his banner travels with him
-    const bannerFrom = d01 + 2;
-    const overlays = f >= bannerFrom && f < bannerFrom + 105 ? h(FriarBanner, { f, from: bannerFrom, box: headBox(w, fr), side: "right" }) : undefined;
+    // on his first good look, and gone before Romeo shuffles in front of him (taste review of v1, f2340: it sat on
+    // Romeo's hat and named the wrong man)
+    const bannerFrom = S.from + 8, bannerHold = d02 + 4 - bannerFrom;
+    const overlays = f >= bannerFrom && f < bannerFrom + bannerHold ? h(FriarBanner, { f, from: bannerFrom, box: headBox(w, fr), side: "right", hold: bannerHold }) : undefined;
     return { camera, overlays };
   },
 };

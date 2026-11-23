@@ -1,5 +1,5 @@
 {
- "note": "采访罗密欧与朱丽叶的四天 sound plan v1 (22 Nov, overnight build). Frames from the picture (src/videos/romeo: fx.tsx, shard.tsx, shots/seg*.ts), written as scene anchors by /home/user/romeo_work/sound/make_cues.py. Music: eight original lute pieces synthesised in code (no samples); none in the turn (E), the letter's failure (G) or the quiet scene (H). Effects from the library and the sound farm (romeo-sfx-01).",
+ "note": "采访罗密欧与朱丽叶的四天 sound plan v2 (23 Nov: the end card holds 3 s longer, the Friar's banner opens on his first good look). Frames from the picture (src/videos/romeo: fx.tsx, shard.tsx, shots/seg*.ts), written as scene anchors by /home/user/romeo_work/sound/make_cues.py. Music: eight original lute pieces synthesised in code (no samples); none in the turn (E), the letter's failure (G) or the quiet scene (H). Effects from the library and the sound farm (romeo-sfx-01).",
  "whisper_dip": {
   "db": -6,
   "ramp": 0.2,
@@ -587,7 +587,7 @@
    "note": " | level: clip -20.0 LUFS -> -31 LUFS in the mix"
   },
   {
-   "label": "I music: the same take on, 6 dB up after the camera dies; its D major chord (16.5 s) lands on the end card's seal (f6205)",
+   "label": "I music: the same take on, 6 dB up after the camera dies; its D major chord (16.5 s) lands on the end card's seal (f6205) and rings to the clip's end over the end card's longer hold",
    "clip": "mus_return",
    "at": [
     "I",
@@ -596,8 +596,8 @@
    ],
    "until": [
     "I",
-    "to",
-    0
+    "from",
+    25.233
    ],
    "gain": -11.2,
    "loop": false,
@@ -1033,7 +1033,7 @@
    "at": [
     "D",
     "from",
-    0.933
+    0.267
    ],
    "gain": -8.6,
    "sync": 0.43,
@@ -1045,7 +1045,7 @@
    "at": [
     "D",
     "from",
-    1.333
+    0.667
    ],
    "gain": -30.9,
    "sync": 0.25,

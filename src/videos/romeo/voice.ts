@@ -132,8 +132,8 @@ export const LINE_RAW: [number, string, string, Speaker, number, number, string,
 export const VOICE_END_S = 200.685;
 /** frames before the first word, frames of film after the last word, the film's length in frames */
 export const VOICE_LEAD_F = 8;
-export const VOICE_TAIL_F = 204;
-export const VOICE_TOTAL_F = 6225;
+export const VOICE_TAIL_F = 294;
+export const VOICE_TOTAL_F = 6315;
 /** each line is a quote of its speaker: [line, who, start s, end s, syllables (Han characters / English, estimated), the words said] */
 export const QUOTE_RAW: [number, Speaker, number, number, number, string][] = [
   [1, "ji", 0.25, 2.77, 9, "罗密欧，为朱丽叶哭呢？"],
@@ -207,7 +207,7 @@ export const SEGMENT_RAW: [string, number, number, number, number][] = [
   ["F", 35, 43, 3276, 4350],
   ["G", 44, 50, 4351, 4929],
   ["H", 51, 55, 4930, 5542],
-  ["I", 56, 59, 5543, 6224],
+  ["I", 56, 59, 5543, 6314],
 ];
 /** the fact cards: [line, line id, first frame, last frame (inclusive), zh, en]: from the end of the line (+ its "card_delay")
  *  for its "card_hold" seconds (else its "after", else 3.5 s) */
@@ -215,8 +215,8 @@ export const CARD_RAW: [number, string, number, number, string, string][] = [
   [34, "E03", 3156, 3263, "判决：驱逐。回来就是死。", "Sentence: banished. Come back and die."],
 ];
 /** the title block (PLAN 5): [first frame, last frame (inclusive), title zh, title en, subtitle zh, subtitle en]: on the
- *  shut door, 0.15 s after the last word of A02, for 1.6 s */
-export const TITLE_RAW: [number, number, string, string, string, string] = [171, 218, "采访罗密欧与朱丽叶的一天", "A Day Interviewing Romeo and Juliet", "", ""];
+ *  shut door, 0.15 s after the last word of A02, for 2.6 s */
+export const TITLE_RAW: [number, number, string, string, string, string] = [171, 248, "采访罗密欧与朱丽叶的一天", "A Day Interviewing Romeo and Juliet", "", ""];
 /** the scenes (the lines file): [id, time of day zh, en, place] */
 export const SCENE_RAW: [string, string, string, string][] = [
   ["A", "星期日 清晨", "Sunday, dawn", "grove"],
