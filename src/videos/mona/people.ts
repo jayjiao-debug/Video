@@ -45,7 +45,9 @@ const MONA_LOOK: Look = {
 /** her crown under the veil: a high bare forehead, the edge (the veil's hem) arched over it and coming down past the
  *  temples; sleek, with little volume; parted in the middle; no fringe, no shine ring */
 export const MONA_HAIR: ShellO = {
-  front: 0.66, temple: 0.5, side: 0.37, back: -0.84,
+  // (v5, after the owner's note on the straight hairline: the hair parts at the middle and sweeps down to each temple
+  //  in one soft curve, like two curtains; two wide shallow "locks" bend the shell's level front edge into that curve)
+  front: 0.66, temple: 0.38, side: 0.33, back: -0.84, locks: [{ a: -45, w: 45, len: 0.11 }, { a: 45, w: 45, len: 0.11 }],
   thF: 0.05, thS: 0.1, thB: 0.12, top: 1.13, featherF: 9, edge: 0.012,
   col: COL.hair, light: COL.hairLight, deep: COL.hairDeep, ring: null, part: 0, hat: 52, sideTo: 100, backFrom: 128,
 };
@@ -56,7 +58,7 @@ export const mona = (o: MonaO = {}): Person => ({
   acc: (): Acc[] => [robe({ col: COL.gown, band: COL.gownDeep, sash: false }), monaGown({ col: COL.gown, skin: o.skin ?? COL.skin, braid: COL.braid, mantle: COL.mantle }), monaSleeves({ col: COL.sleeve, deep: COL.sleeveDeep, thick: o.sleeve ?? 0.034 }),
     veilHair({ shell: MONA_HAIR, skin: o.skin ?? COL.skin, gauze: o.gauze ?? 0, tint: 0.85 }), ringlets({ col: COL.hair, light: COL.hairLight, deep: COL.hairDeep }),
     backFall({ col: COL.hair, light: COL.hairLight, deep: COL.hairDeep, ring: COL.hair, n: 5, notchMid: 1.7, notchSide: 1.45, tips: [0.2, 0.16, 0.12] }),
-    monaFace(o.face)],
+    monaFace({ veil: false, ...o.face })],
 });
 export const MONA: Person = mona();
 

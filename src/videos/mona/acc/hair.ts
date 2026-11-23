@@ -98,7 +98,7 @@ const veilMap = (b: PartKit, O: VeilO, key: string) => b.tex(2048, 1024, (g) => 
 /** HER HAIR UNDER THE VEIL (see the head of this file). The shell tells the rig it is a hat (shell.hat), so the look's
  *  own painted fringe is cut away under it. */
 export const veilHair = (O: VeilO): Acc => {
-  const o = O.shell, key = ["monaVeil6", JSON.stringify(O)].join("|");
+  const o = O.shell, key = ["monaVeil7", JSON.stringify(O)].join("|");
   return {
     name: "veilHair", slots: o.hat ? ["hat", "crown"] : [], key, noHairProps: true,
     ...(o.hat ? { hat: { rim: o.hat, hair: "cut" as const, shade: false } } : {}),
