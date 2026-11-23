@@ -20,7 +20,7 @@ import { povCam, keyCam, handheld, lensCam, toScreen, type CamKey } from "../cam
 import { V, VERBS, standing, yawTo, walkAlong, seated } from "./common";
 import { JULIET, FRIAR, FRIAR_VIAL, FRIAR_QUILL, FRIAR_LETTER, YOUNG_FRIAR } from "../people";
 import { whisperLean } from "../whisper";
-import { P, wv, spot, camAt, faceAt, talk, wordAt, startOf, endOf, ky, accent, rel, REACT } from "./kit";
+import { P, wv, spot, camAt, faceAt, talk, wordAt, startOf, endOf, ky, accent, rel, soft, REACT } from "./kit";
 import { h } from "./h";
 import { seatOn, stoolSeat } from "../../../kit/day/rig/seats";
 import { clamp01, easeInOutCubic, smooth } from "../../group/story";
@@ -124,7 +124,7 @@ function cell(w: Parameters<Segment["pose"]>[0], f: number) {
     // hanging hand from the first step of the walk: it popped in there, in view, and he carried it across the cell);
     // the desk's top is seen edge on from the bench, so a quill lying on it could not be seen before or after
     const quillOn = f >= deskAt + 11 && f < sealAt;
-    frX = { pose: deskLeg.moving ? deskLeg.pose : { kind: deskLeg.arrived ? "hold" : "idle", t: f / 30 }, hands: writing ? [nib, null] : f >= sealAt ? [null, seal] : [null, null], lookDown: deskLeg.arrived ? 16 : 0, hide: quillOn ? [] : ["quill"] };
+    frX = { pose: deskLeg.moving ? deskLeg.pose : { kind: deskLeg.arrived ? "hold" : "idle", t: f / 30 }, hands: writing ? [nib, null] : f >= sealAt ? [null, seal] : [null, null], hide: quillOn ? [] : ["quill"] };
   } else if (phase === "letter") {
     const d = TO_YF - lensLeg.facing;
     frAt = lensLeg.at; frFacing = lensLeg.facing + Math.atan2(Math.sin(d), Math.cos(d)) * give;
@@ -138,6 +138,9 @@ function cell(w: Parameters<Segment["pose"]>[0], f: number) {
     ...frX,
     expr: faceAt(f, [[0, "worried"], [f02 - 2, "warn"], [f04 + REACT, "worried"], [f06 - 2, "weary"], [f07 - 2, "worried"], [endOf("F08") + REACT, "weary"]]),
     ...talk("fr", f, 3),
+    // he looks down at the sheet while he stands at the desk, and up again as he turns to the lens with the letter (each
+    // took one frame; the rule is of the frame alone, so the look travels across the change of figure at lensWalk too)
+    lookDown: soft(f, (g) => (g >= deskAt && g < lensWalk ? 16 : 0)),
     head: accent("nod", f, endOf("F08") + REACT + 2) ?? undefined,
     gaze: phase === "letter" && f < handAt - 9 ? 0 : undefined,                    // (his eyes leave the lens as he turns to the boy)
     hide: [...((frX.hide as string[] | undefined) ?? []), "herbBasket"],

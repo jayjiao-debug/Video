@@ -18,7 +18,7 @@ import { povCam, type CamKey } from "../cam";
 import { standing, yawTo, walkAlong } from "./common";
 import { ROMEO_BOTTLE } from "../people";
 import { whisperLean } from "../whisper";
-import { P, wv, spot, camAt, faceAt, talk, wordAt, startOf, endOf, ky, accent, rel, REACT } from "./kit";
+import { P, wv, spot, camAt, faceAt, talk, wordAt, startOf, endOf, ky, accent, rel, soft, REACT } from "./kit";
 import { G_CARD } from "../fx";
 
 const S = seg("G");
@@ -55,7 +55,7 @@ function mantua(w: Parameters<Segment["pose"]>[0], f: number) {
   const g02 = startOf("G02"), g03 = startOf("G03"), g05 = startOf("G05"), tStars = wordAt("G02", "stars");
   const walkIn = endOf("G02") + 2, turnAway = g05 + 2, walkOff = endOf("G05") + 2;
   const ABOVE = camAt("mantua", "above", 0);
-  const inLeg = walkAlong([FAR.at, LENS.at], 1.5, (f - walkIn) / 30, { endFacing: LENS.facing });
+  const inAt = (g: number) => walkAlong([FAR.at, LENS.at], 1.5, (g - walkIn) / 30, { endFacing: LENS.facing }), inLeg = inAt(f);
   // ---------------------------------------------------------------- the camera: from a little above; it only tilts to keep him
   const k = (fr: number, look: number[], fov = ABOVE.fov): CamKey => ({ ...ABOVE, f: fr, look: wv("mantua", look), fov });
   let camera = povCam(f, [
@@ -76,18 +76,24 @@ function mantua(w: Parameters<Segment["pose"]>[0], f: number) {
   const turnK = ky(f, [[turnAway, 0], [turnAway + 10, 1]]);
   const at = leaving ? outLeg.at : f >= walkIn ? inLeg.at : FAR.at;
   const facing = leaving ? outLeg.facing : f >= walkIn ? (inLeg.arrived ? THREE.MathUtils.lerp(LENS.facing, Math.PI * 0.94, turnK) : inLeg.facing) : FAR.facing;
-  const fist = f >= tStars - 6 && f < endOf("G02") + 4;
+  const fistAt = (g: number) => g >= tStars - 6 && g < endOf("G02") + 4, fist = fistAt(f);
   // the bottle: in his right hand in front of him on "No matter" (still facing her lens, so it reads), then into his
   // coat as he turns away
   const pocket = ky(f, [[turnAway + 6, 0], [turnAway + 16, 1]]);
-  const bottleShown = f >= g05 - 4 && f < turnAway + 18;
+  const shownAt = (g: number) => g >= g05 - 4 && g < turnAway + 18, bottleShown = shownAt(f);
+  // where he looks (the head's pitch): down at the news, up with his fist, up at her lens once he has reached it, down at
+  // the bottle, and a little down from there as he turns away and goes. A rule of the frame, so each change of look took
+  // ONE frame (12 to 26 degrees, seven times in this scene; the one as he reaches the lens, close up, is the one that
+  // showed): soft() makes each a move of seven frames. (From the bottle his head went UP to her lens, with his back
+  // turning to her, and down again as he left: now it leaves the bottle once.)
+  const look = (g: number) => (g < g02 - 4 ? 18 : fistAt(g) ? -14 : !inAt(g).arrived ? 6 : g < g05 - 4 ? -10 : g < turnAway + 4 ? 16 : 6);
   ro.set({
     ...standing(at, facing, f, 1),
     pose: (leaving || (f >= walkIn && !inLeg.arrived)) && (leaving ? outLeg.moving : inLeg.moving) ? (leaving ? outLeg.pose : inLeg.pose) : { kind: bottleShown ? "hold" : "idle", t: f / 30 },
     hands: fist ? [rel(at, facing, -0.62, 1.75, 0.3), null] : bottleShown ? [rel(at, facing, -0.16, 0.8 + 0.1 * pocket, 0.24 - 0.12 * pocket), null] : [null, null],
     expr: faceAt(f, [[0, "hollow"], [tStars - 8, "pained"], [endOf("G02") + 8, "hollow"], [g03 - 2, "worried"], [endOf("G04") + REACT, "hollow"]]),
     ...talk("ro", f, 1),
-    lookDown: f < g02 - 4 ? 18 : fist ? -14 : bottleShown && f < turnAway + 4 ? 16 : inLeg.arrived && !leaving ? -10 : 6,
+    lookDown: soft(f, look),
     head: accent("jolt", f, tStars) ?? undefined,
     hide: bottleShown ? ["letter"] : ["letter", "darkBottle"],
     visible: !(leaving && outLeg.arrived),
