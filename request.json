@@ -1,56 +1,11 @@
 {
- "id": "mengpo-vo-01",
+ "id": "mengpo-vo-fix-01",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "name": "A01",
-   "lang": "zh",
-   "text": "[bright, nosy, curious] 孟婆，汤好喝吗？",
-   "add": {
-    "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-    "voice_id": "I23uc91tu5zY2PA1tKEN",
-    "name": "Lin"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "A02",
-   "lang": "zh",
-   "text": "[flat, bored, deadpan] 两千年，没人说难喝。",
-   "add": {
-    "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
-    "voice_id": "BqljjWyTnrioXPCNkCd4",
-    "name": "Stella Gu"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "A03",
-   "lang": "zh",
-   "text": "[flat, deadpan] 喝完的，全忘了。",
-   "add": {
-    "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
-    "voice_id": "BqljjWyTnrioXPCNkCd4",
-    "name": "Stella Gu"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "A04",
+   "name": "A04_s7",
    "lang": "zh",
    "text": "[dry, unimpressed] 活人？站边上，别挡道。",
    "add": {
@@ -62,27 +17,14 @@
    "settings": {
     "stability": 0.5
    },
-   "seed": 2026
+   "seed": 7,
+   "previous_text": "喝完的，全忘了。",
+   "next_text": "那它到底什么味？"
   },
   {
-   "name": "A05",
+   "name": "A04_s88",
    "lang": "zh",
-   "text": "[bright, undeterred] 那它到底什么味？",
-   "add": {
-    "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-    "voice_id": "I23uc91tu5zY2PA1tKEN",
-    "name": "Lin"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "A06",
-   "lang": "zh",
-   "text": "[flat, brisk] 下一位。",
+   "text": "[dry, unimpressed] 活人？站边上，别挡道。",
    "add": {
     "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
     "voice_id": "BqljjWyTnrioXPCNkCd4",
@@ -92,57 +34,14 @@
    "settings": {
     "stability": 0.5
    },
-   "seed": 2026
+   "seed": 88,
+   "previous_text": "喝完的，全忘了。",
+   "next_text": "那它到底什么味？"
   },
   {
-   "name": "B01",
+   "name": "B04_s7",
    "lang": "zh",
-   "text": "[brisk, rapid, rhythmic] 排队。一人一碗。不许带走。",
-   "add": {
-    "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
-    "voice_id": "BqljjWyTnrioXPCNkCd4",
-    "name": "Stella Gu"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "B02",
-   "lang": "zh",
-   "text": "[curious] 里头放了什么？",
-   "add": {
-    "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-    "voice_id": "I23uc91tu5zY2PA1tKEN",
-    "name": "Lin"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "B03",
-   "lang": "zh",
-   "text": "[deliberate, one word at a time] 甘、苦、辛、酸、咸。",
-   "add": {
-    "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
-    "voice_id": "BqljjWyTnrioXPCNkCd4",
-    "name": "Stella Gu"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "B04",
-   "lang": "zh",
-   "text": "[pleading, whiny] 婆婆，能不能只忘前任？",
+   "text": "[pleading, whiny] 婆婆，能不能只忘了前任？",
    "add": {
     "owner": "6293b9dfc6ac413ab58d3844addcf7871b250281ecd7013106d13a2fbe6cfeef",
     "voice_id": "MI36FIkp9wRP7cpWKPTl",
@@ -152,42 +51,14 @@
    "settings": {
     "stability": 0.5
    },
-   "seed": 2026
+   "seed": 7,
+   "previous_text": "甘、苦、辛、酸、咸。",
+   "next_text": "要忘全忘，不挑。"
   },
   {
-   "name": "B05",
+   "name": "B04_s88",
    "lang": "zh",
-   "text": "[flat, dismissive] 要忘全忘，不挑。",
-   "add": {
-    "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
-    "voice_id": "BqljjWyTnrioXPCNkCd4",
-    "name": "Stella Gu"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "B06",
-   "lang": "zh",
-   "text": "[eager, pouncing] 快说，什么味？",
-   "add": {
-    "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-    "voice_id": "I23uc91tu5zY2PA1tKEN",
-    "name": "Lin"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "B07",
-   "lang": "zh",
-   "text": "[serene, polite, blank] ……你好，你哪位？",
+   "text": "[pleading, whiny] 婆婆，能不能只忘了前任？",
    "add": {
     "owner": "6293b9dfc6ac413ab58d3844addcf7871b250281ecd7013106d13a2fbe6cfeef",
     "voice_id": "MI36FIkp9wRP7cpWKPTl",
@@ -197,10 +68,12 @@
    "settings": {
     "stability": 0.5
    },
-   "seed": 2026
+   "seed": 88,
+   "previous_text": "甘、苦、辛、酸、咸。",
+   "next_text": "要忘全忘，不挑。"
   },
   {
-   "name": "B08",
+   "name": "B08_s7",
    "lang": "zh",
    "text": "[sharp, scolding] 你那盏灯，离锅远点。上回熏黑了。",
    "add": {
@@ -212,27 +85,14 @@
    "settings": {
     "stability": 0.5
    },
-   "seed": 2026
+   "seed": 7,
+   "previous_text": "……你好，你哪位？",
+   "next_text": "上回？"
   },
   {
-   "name": "B09",
+   "name": "B08_s88",
    "lang": "zh",
-   "text": "[puzzled] 上回？",
-   "add": {
-    "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-    "voice_id": "I23uc91tu5zY2PA1tKEN",
-    "name": "Lin"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "B10",
-   "lang": "zh",
-   "text": "[hasty, covering] ……上一个。下一位！",
+   "text": "[sharp, scolding] 你那盏灯，离锅远点。上回熏黑了。",
    "add": {
     "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
     "voice_id": "BqljjWyTnrioXPCNkCd4",
@@ -242,25 +102,12 @@
    "settings": {
     "stability": 0.5
    },
-   "seed": 2026
+   "seed": 88,
+   "previous_text": "……你好，你哪位？",
+   "next_text": "上回？"
   },
   {
-   "name": "C01",
-   "lang": "zh",
-   "text": "[nervous, anxious] 婆婆，下辈子还要高考吗？",
-   "add": {
-    "owner": "dd0f5bb9ac12aaca6570a8c8d9c32a6e97f7c05c673d9864fbccc662fb7b03d7",
-    "voice_id": "5mZxJZhSmJTjL7GoYfYI",
-    "name": "Karo Yang"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "C02",
+   "name": "C02_s7",
    "lang": "zh",
    "text": "[flat] 要。",
    "add": {
@@ -272,25 +119,12 @@
    "settings": {
     "stability": 0.5
    },
-   "seed": 2026
+   "seed": 7,
+   "previous_text": "婆婆，下辈子还要高考吗？",
+   "next_text": "还要上班吗？"
   },
   {
-   "name": "C03",
-   "lang": "zh",
-   "text": "[nervous, hopeful] 还要上班吗？",
-   "add": {
-    "owner": "dd0f5bb9ac12aaca6570a8c8d9c32a6e97f7c05c673d9864fbccc662fb7b03d7",
-    "voice_id": "5mZxJZhSmJTjL7GoYfYI",
-    "name": "Karo Yang"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "C04",
+   "name": "C02_s88",
    "lang": "zh",
    "text": "[flat] 要。",
    "add": {
@@ -302,12 +136,14 @@
    "settings": {
     "stability": 0.5
    },
-   "seed": 2026
+   "seed": 88,
+   "previous_text": "婆婆，下辈子还要高考吗？",
+   "next_text": "还要上班吗？"
   },
   {
-   "name": "C05",
+   "name": "C04_s7",
    "lang": "zh",
-   "text": "[sighs, weary] 又一个。",
+   "text": "[flat] 要。",
    "add": {
     "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
     "voice_id": "BqljjWyTnrioXPCNkCd4",
@@ -317,12 +153,14 @@
    "settings": {
     "stability": 0.5
    },
-   "seed": 2026
+   "seed": 7,
+   "previous_text": "还要上班吗？",
+   "next_text": "又一个。"
   },
   {
-   "name": "D01",
+   "name": "C04_s88",
    "lang": "zh",
-   "text": "[matter-of-fact, a little out of breath] 望乡台。我天天上来收人。",
+   "text": "[flat] 要。",
    "add": {
     "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
     "voice_id": "BqljjWyTnrioXPCNkCd4",
@@ -332,12 +170,14 @@
    "settings": {
     "stability": 0.5
    },
-   "seed": 2026
+   "seed": 88,
+   "previous_text": "还要上班吗？",
+   "next_text": "又一个。"
   },
   {
-   "name": "D02",
+   "name": "D02_s7",
    "lang": "zh",
-   "text": "[resolute, calm] ……婆婆，汤呢？",
+   "text": "[resolute, calm] 婆婆，汤呢？",
    "add": {
     "owner": "dd0f5bb9ac12aaca6570a8c8d9c32a6e97f7c05c673d9864fbccc662fb7b03d7",
     "voice_id": "5mZxJZhSmJTjL7GoYfYI",
@@ -347,10 +187,29 @@
    "settings": {
     "stability": 0.5
    },
-   "seed": 2026
+   "seed": 7,
+   "previous_text": "望乡台。我天天上来收人。",
+   "next_text": "你，下来。"
   },
   {
-   "name": "D03",
+   "name": "D02_s88",
+   "lang": "zh",
+   "text": "[resolute, calm] 婆婆，汤呢？",
+   "add": {
+    "owner": "dd0f5bb9ac12aaca6570a8c8d9c32a6e97f7c05c673d9864fbccc662fb7b03d7",
+    "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+    "name": "Karo Yang"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.5
+   },
+   "seed": 88,
+   "previous_text": "望乡台。我天天上来收人。",
+   "next_text": "你，下来。"
+  },
+  {
+   "name": "D03_s7",
    "lang": "zh",
    "text": "[gruff, a little gentler] 你，下来。",
    "add": {
@@ -362,27 +221,14 @@
    "settings": {
     "stability": 0.5
    },
-   "seed": 2026
+   "seed": 7,
+   "previous_text": "……婆婆，汤呢？",
+   "next_text": "我走了，她怎么办？"
   },
   {
-   "name": "D04",
+   "name": "D03_s88",
    "lang": "zh",
-   "text": "[worried, choked up] 我走了，她怎么办？",
-   "add": {
-    "owner": "c5a3816ac769f42605a16bd623d40279874af8956dc0cf29f4c937e0b634a754",
-    "voice_id": "m7QGIiNrWASyI5oJn4I8",
-    "name": "Xiaoran"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "D05",
-   "lang": "zh",
-   "text": "[plain, matter-of-fact] 会哭一阵。",
+   "text": "[gruff, a little gentler] 你，下来。",
    "add": {
     "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
     "voice_id": "BqljjWyTnrioXPCNkCd4",
@@ -392,145 +238,12 @@
    "settings": {
     "stability": 0.5
    },
-   "seed": 2026
+   "seed": 88,
+   "previous_text": "……婆婆，汤呢？",
+   "next_text": "我走了，她怎么办？"
   },
   {
-   "name": "D06",
-   "lang": "zh",
-   "text": "[plain, matter-of-fact] 哭完了会饿。饿了，就吃饭。",
-   "add": {
-    "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
-    "voice_id": "BqljjWyTnrioXPCNkCd4",
-    "name": "Stella Gu"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "D07",
-   "lang": "zh",
-   "text": "[calm, tender] 我看了两千年，都是这么过来的。",
-   "add": {
-    "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
-    "voice_id": "BqljjWyTnrioXPCNkCd4",
-    "name": "Stella Gu"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "D08",
-   "lang": "zh",
-   "text": "[laughs through tears] ……盐又放多了。",
-   "add": {
-    "owner": "c5a3816ac769f42605a16bd623d40279874af8956dc0cf29f4c937e0b634a754",
-    "voice_id": "m7QGIiNrWASyI5oJn4I8",
-    "name": "Xiaoran"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "E01",
-   "lang": "zh",
-   "text": "[gentle, curious] 以前的人，也都喝吗？",
-   "add": {
-    "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-    "voice_id": "I23uc91tu5zY2PA1tKEN",
-    "name": "Lin"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "E02",
-   "lang": "zh",
-   "text": "[snorts, dismissive] 以前不喝。",
-   "add": {
-    "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
-    "voice_id": "BqljjWyTnrioXPCNkCd4",
-    "name": "Stella Gu"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "E03",
-   "lang": "zh",
-   "text": "[wry, amused] 结果满大街认上辈子的亲戚。",
-   "add": {
-    "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
-    "voice_id": "BqljjWyTnrioXPCNkCd4",
-    "name": "Stella Gu"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "E04",
-   "lang": "zh",
-   "text": "[automatic, scolding] 又是你。这回别插队。",
-   "add": {
-    "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
-    "voice_id": "BqljjWyTnrioXPCNkCd4",
-    "name": "Stella Gu"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "E05",
-   "lang": "zh",
-   "text": "[delighted] 又是？",
-   "add": {
-    "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-    "voice_id": "I23uc91tu5zY2PA1tKEN",
-    "name": "Lin"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "E06",
-   "lang": "zh",
-   "text": "[proud, reciting] 过去的事不想，未来的事不想。我不记事。",
-   "add": {
-    "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
-    "voice_id": "BqljjWyTnrioXPCNkCd4",
-    "name": "Stella Gu"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "F01",
+   "name": "F01_s7",
    "lang": "zh",
    "text": "[hesitant, worried] 婆婆，喝了，我还认得她吗？",
    "add": {
@@ -542,100 +255,29 @@
    "settings": {
     "stability": 0.5
    },
-   "seed": 2026
+   "seed": 7,
+   "previous_text": "过去的事不想，未来的事不想。我不记事。",
+   "next_text": "不认得。"
   },
   {
-   "name": "F02",
+   "name": "F01_s88",
    "lang": "zh",
-   "text": "[honest, plain] 不认得。",
+   "text": "[hesitant, worried] 婆婆，喝了，我还认得她吗？",
    "add": {
-    "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
-    "voice_id": "BqljjWyTnrioXPCNkCd4",
-    "name": "Stella Gu"
+    "owner": "c5a3816ac769f42605a16bd623d40279874af8956dc0cf29f4c937e0b634a754",
+    "voice_id": "m7QGIiNrWASyI5oJn4I8",
+    "name": "Xiaoran"
    },
    "keep": true,
    "settings": {
     "stability": 0.5
    },
-   "seed": 2026
+   "seed": 88,
+   "previous_text": "过去的事不想，未来的事不想。我不记事。",
+   "next_text": "不认得。"
   },
   {
-   "name": "F03",
-   "lang": "zh",
-   "text": "[calm, tender] 汤只洗记性，洗不掉习惯。",
-   "add": {
-    "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
-    "voice_id": "BqljjWyTnrioXPCNkCd4",
-    "name": "Stella Gu"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "F04",
-   "lang": "zh",
-   "text": "[calm, tender] 你见了她就笑。下辈子见了，还是会笑。",
-   "add": {
-    "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
-    "voice_id": "BqljjWyTnrioXPCNkCd4",
-    "name": "Stella Gu"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "F05",
-   "lang": "zh",
-   "text": "[gentle] 只是不知道为什么。",
-   "add": {
-    "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
-    "voice_id": "BqljjWyTnrioXPCNkCd4",
-    "name": "Stella Gu"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "F06",
-   "lang": "zh",
-   "text": "[gruff, brisk] 下一位。",
-   "add": {
-    "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
-    "voice_id": "BqljjWyTnrioXPCNkCd4",
-    "name": "Stella Gu"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "F07",
-   "lang": "zh",
-   "text": "[cheerful, hearty] 婆婆，这汤多少钱？",
-   "add": {
-    "owner": "41777fade59ab222538cb6d5262079b406c2241b0130c6203826ec213fd98812",
-    "voice_id": "DVE92KG0Yd4X7RoMqy8J",
-    "name": "Zicai"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "F08",
+   "name": "F08_s7",
    "lang": "zh",
    "text": "[flat, deadpan] 一辈子。",
    "add": {
@@ -647,10 +289,29 @@
    "settings": {
     "stability": 0.5
    },
-   "seed": 2026
+   "seed": 7,
+   "previous_text": "婆婆，这汤多少钱？",
+   "next_text": "劳驾。我老伴儿先过的桥，穿蓝布衫的。"
   },
   {
-   "name": "G01",
+   "name": "F08_s88",
+   "lang": "zh",
+   "text": "[flat, deadpan] 一辈子。",
+   "add": {
+    "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
+    "voice_id": "BqljjWyTnrioXPCNkCd4",
+    "name": "Stella Gu"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.5
+   },
+   "seed": 88,
+   "previous_text": "婆婆，这汤多少钱？",
+   "next_text": "劳驾。我老伴儿先过的桥，穿蓝布衫的。"
+  },
+  {
+   "name": "G01_s7",
    "lang": "zh",
    "text": "[polite, slow, elderly] 劳驾。我老伴儿先过的桥，穿蓝布衫的。",
    "add": {
@@ -662,12 +323,14 @@
    "settings": {
     "stability": 0.5
    },
-   "seed": 2026
+   "seed": 7,
+   "previous_text": "一辈子。",
+   "next_text": "她……说什么没有？"
   },
   {
-   "name": "G02",
+   "name": "G01_s88",
    "lang": "zh",
-   "text": "[hesitant, hopeful] 她……说什么没有？",
+   "text": "[polite, slow, elderly] 劳驾。我老伴儿先过的桥，穿蓝布衫的。",
    "add": {
     "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
     "voice_id": "WuLq5z7nEcrhppO0ZQJw",
@@ -677,57 +340,14 @@
    "settings": {
     "stability": 0.5
    },
-   "seed": 2026
+   "seed": 88,
+   "previous_text": "一辈子。",
+   "next_text": "她……说什么没有？"
   },
   {
-   "name": "G03",
+   "name": "G11_s7",
    "lang": "zh",
-   "text": "[loud, commanding] 后面的，等着。",
-   "add": {
-    "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
-    "voice_id": "BqljjWyTnrioXPCNkCd4",
-    "name": "Stella Gu"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "G04",
-   "lang": "zh",
-   "text": "[slow, careful] 没说话。",
-   "add": {
-    "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
-    "voice_id": "BqljjWyTnrioXPCNkCd4",
-    "name": "Stella Gu"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "G05",
-   "lang": "zh",
-   "text": "[calm, tender] 走到桥中间，回了三次头。",
-   "add": {
-    "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
-    "voice_id": "BqljjWyTnrioXPCNkCd4",
-    "name": "Stella Gu"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "G06",
-   "lang": "zh",
-   "text": "[proud, smiling] ……那是等我呢。",
+   "text": "[moved, slow] 是。",
    "add": {
     "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
     "voice_id": "WuLq5z7nEcrhppO0ZQJw",
@@ -737,12 +357,14 @@
    "settings": {
     "stability": 0.5
    },
-   "seed": 2026
+   "seed": 7,
+   "previous_text": "那时候有人抱过你，是真的吧？",
+   "next_text": "忘了的事，也是真的。"
   },
   {
-   "name": "G07",
+   "name": "G11_s88",
    "lang": "zh",
-   "text": "[sad, wistful] 舍不得。喝了，这些就都没了。",
+   "text": "[moved, slow] 是。",
    "add": {
     "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
     "voice_id": "WuLq5z7nEcrhppO0ZQJw",
@@ -752,130 +374,12 @@
    "settings": {
     "stability": 0.5
    },
-   "seed": 2026
+   "seed": 88,
+   "previous_text": "那时候有人抱过你，是真的吧？",
+   "next_text": "忘了的事，也是真的。"
   },
   {
-   "name": "G08",
-   "lang": "zh",
-   "text": "[plain, calm] 你三岁以前的事，记得吗？",
-   "add": {
-    "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
-    "voice_id": "BqljjWyTnrioXPCNkCd4",
-    "name": "Stella Gu"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "G09",
-   "lang": "zh",
-   "text": "[puzzled] 不记得。",
-   "add": {
-    "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
-    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-    "name": "Martin Li"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "G10",
-   "lang": "zh",
-   "text": "[calm, gentle] 那时候有人抱过你，是真的吧？",
-   "add": {
-    "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
-    "voice_id": "BqljjWyTnrioXPCNkCd4",
-    "name": "Stella Gu"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "G11",
-   "lang": "zh",
-   "text": "[moved, slow] ……是。",
-   "add": {
-    "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
-    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-    "name": "Martin Li"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "G12",
-   "lang": "zh",
-   "text": "[gentle, tender] 忘了的事，也是真的。",
-   "add": {
-    "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
-    "voice_id": "BqljjWyTnrioXPCNkCd4",
-    "name": "Stella Gu"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "G13",
-   "lang": "zh",
-   "text": "[gentle, curious] 您不是不记事吗？",
-   "add": {
-    "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-    "voice_id": "I23uc91tu5zY2PA1tKEN",
-    "name": "Lin"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "G14",
-   "lang": "zh",
-   "text": "[wistful, calm] ……总得有个人记得。",
-   "add": {
-    "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
-    "voice_id": "BqljjWyTnrioXPCNkCd4",
-    "name": "Stella Gu"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "H01",
-   "lang": "zh",
-   "text": "[hesitant] 孟婆，真有来生吗？",
-   "add": {
-    "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-    "voice_id": "I23uc91tu5zY2PA1tKEN",
-    "name": "Lin"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "H02",
+   "name": "H02_s7",
    "lang": "zh",
    "text": "[honest, plain] 桥那头什么样，没人回来告诉我。",
    "add": {
@@ -887,12 +391,14 @@
    "settings": {
     "stability": 0.5
    },
-   "seed": 2026
+   "seed": 7,
+   "previous_text": "孟婆，真有来生吗？",
+   "next_text": "到头了，有我。给你留一碗热的。"
   },
   {
-   "name": "H03",
+   "name": "H02_s88",
    "lang": "zh",
-   "text": "[warm, sincere] 到头了，有我。给你留一碗热的。",
+   "text": "[honest, plain] 桥那头什么样，没人回来告诉我。",
    "add": {
     "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
     "voice_id": "BqljjWyTnrioXPCNkCd4",
@@ -902,100 +408,12 @@
    "settings": {
     "stability": 0.5
    },
-   "seed": 2026
+   "seed": 88,
+   "previous_text": "孟婆，真有来生吗？",
+   "next_text": "到头了，有我。给你留一碗热的。"
   },
   {
-   "name": "H04",
-   "lang": "zh",
-   "text": "[gentle, concerned] 那您呢？谁记得您？",
-   "add": {
-    "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-    "voice_id": "I23uc91tu5zY2PA1tKEN",
-    "name": "Lin"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "H05",
-   "lang": "zh",
-   "text": "[sincere, sure] 我记得。",
-   "add": {
-    "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-    "voice_id": "I23uc91tu5zY2PA1tKEN",
-    "name": "Lin"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "H06",
-   "lang": "zh",
-   "text": "[touched, brief] ……嗯。",
-   "add": {
-    "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
-    "voice_id": "BqljjWyTnrioXPCNkCd4",
-    "name": "Stella Gu"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "I01",
-   "lang": "zh",
-   "text": "[bright, excited] 最后一个问题！",
-   "add": {
-    "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-    "voice_id": "I23uc91tu5zY2PA1tKEN",
-    "name": "Lin"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "I02",
-   "lang": "zh",
-   "text": "[flat, knowing] 什么味。",
-   "add": {
-    "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
-    "voice_id": "BqljjWyTnrioXPCNkCd4",
-    "name": "Stella Gu"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "I03",
-   "lang": "zh",
-   "text": "[calm, warm] 每人一个味。你这辈子什么味，它就什么味。",
-   "add": {
-    "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
-    "voice_id": "BqljjWyTnrioXPCNkCd4",
-    "name": "Stella Gu"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "I04",
+   "name": "I04_s7",
    "lang": "zh",
    "text": "[excited, cheeky] 那我就抿一小口！",
    "add": {
@@ -1007,10 +425,29 @@
    "settings": {
     "stability": 0.5
    },
-   "seed": 2026
+   "seed": 7,
+   "previous_text": "每人一个味。你这辈子什么味，它就什么味。",
+   "next_text": "多喝少喝，一个样。头两回，我还拦。"
   },
   {
-   "name": "I05",
+   "name": "I04_s88",
+   "lang": "zh",
+   "text": "[excited, cheeky] 那我就抿一小口！",
+   "add": {
+    "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+    "voice_id": "I23uc91tu5zY2PA1tKEN",
+    "name": "Lin"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.5
+   },
+   "seed": 88,
+   "previous_text": "每人一个味。你这辈子什么味，它就什么味。",
+   "next_text": "多喝少喝，一个样。头两回，我还拦。"
+  },
+  {
+   "name": "I05_s7",
    "lang": "zh",
    "text": "[sighs, weary] 多喝少喝，一个样。头两回，我还拦。",
    "add": {
@@ -1022,27 +459,14 @@
    "settings": {
     "stability": 0.5
    },
-   "seed": 2026
+   "seed": 7,
+   "previous_text": "那我就抿一小口！",
+   "next_text": "头两回？"
   },
   {
-   "name": "I06",
+   "name": "I05_s88",
    "lang": "zh",
-   "text": "[surprised] 头两回？",
-   "add": {
-    "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-    "voice_id": "I23uc91tu5zY2PA1tKEN",
-    "name": "Lin"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
-  },
-  {
-   "name": "I07",
-   "lang": "zh",
-   "text": "[gentle, amused] 第八回了。",
+   "text": "[sighs, weary] 多喝少喝，一个样。头两回，我还拦。",
    "add": {
     "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
     "voice_id": "BqljjWyTnrioXPCNkCd4",
@@ -1052,22 +476,9 @@
    "settings": {
     "stability": 0.5
    },
-   "seed": 2026
-  },
-  {
-   "name": "I08",
-   "lang": "zh",
-   "text": "[wonder, trailing off] 哦……原来我这辈子，是——",
-   "add": {
-    "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-    "voice_id": "I23uc91tu5zY2PA1tKEN",
-    "name": "Lin"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.5
-   },
-   "seed": 2026
+   "seed": 88,
+   "previous_text": "那我就抿一小口！",
+   "next_text": "头两回？"
   }
  ]
 }
