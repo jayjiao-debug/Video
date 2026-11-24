@@ -14,7 +14,7 @@
 import * as THREE from "three";
 import { seg, type Segment } from "../story";
 import { povCam, punchIn } from "../cam";
-import { V, standing, yawTo } from "./common";
+import { V, standing, yawTo, speak } from "./common";
 import { ROMEO_MASK as ROMEO, JULIET } from "../people";
 import { NameTab, EyeHearts, Huff, HEARTS } from "../hud/index";
 import { whisperLean } from "../whisper";
@@ -86,6 +86,8 @@ export const SEG: Segment = {
     // (v5: hands and bodies move with the words) "Did my HEART love till now?": his free hand goes to his heart on the
     // word and stays there; he leans after her and sways on his feet; on "Who?" the mask he has forgotten bobs
     const heartK = ky(f, [[struck - 5, 0], [struck + 4, 1]]), smit = span(f, struck, S.to + 30, 12, 1);
+    const roSays: ReturnType<typeof speak> = talk("ro", f, 1), { mouth: _jaw, ...roQuiet } = roSays;
+    const roTalk = f >= tSee && f < b02 ? roQuiet : roSays;
     ro.set({
       ...standing(RO_AT, roLook, f, 1),
       // his half mask on its stick, held low at the chest (never in front of the face)
@@ -95,11 +97,12 @@ export const SEG: Segment = {
       // (smitten); asked about Rosaline he answers "Who?" with an open grin and hearts floating out of his eyes (v5,
       // the owner: "This eyes turning into heart is too much, the floatinng heart is enough": no heart IN an eye)
       // (v7, emo.ts 1 and 2) sulking for Rosaline under a cloud (黑线); at the first sight of her his jaw drops (惊掉下巴, a
-      // hard cut, the shock: ring eyes, wide open, held without a blink through the stare, v7.2); he melts into the
-      // smitten face while the lens is across the hall on her
-      expr: faceAt(f, [[0, EMO.b01Gloom ? "gloom" : "hollow"], ...(EMO.b02Aghast ? [[tSee, "aghast"], [b02 + 4, "smitten"]] as [number, string][] : [[tSee, "smitten"]] as [number, string][]),
+      // hard cut: his love eyes wide open, held without a blink through the stare, v7.2; v7.3, the owner: "His eyes are
+      // so scary......": the love eyes, not the ring eyes); he melts into the smitten face while the lens is on her
+      expr: faceAt(f, [[0, EMO.b01Gloom ? "gloom" : "hollow"], ...(EMO.b02Aghast ? [[tSee, "lovestruck"], [b02 + 4, "smitten"]] as [number, string][] : [[tSee, "smitten"]] as [number, string][]),
         [startOf("B04") - 3, "smittenOpen"], [endOf("B04") + 18, "smitten"]]),
-      ...talk("ro", f, 1),
+      // (v7.3) the jaw stays dropped until his first word: the lip-sync's lead-in clenched it into teeth (f652)
+      ...roTalk,
       // (v7.2) no blink through the stare: the lip-sync's own blink as B02 begins shut his wide eyes to two dashes
       ...(f >= tSee - 2 && f < b02 + 6 ? { blink: 0 } : {}),
       gaze: f >= tSee ? 0.5 : -0.5, lookDown: soft(f, (g) => (g < tSee ? 8 : 0), 2),      // (his head comes up with his turn to her: five frames)
@@ -124,8 +127,9 @@ export const SEG: Segment = {
     ju.set({
       ...standing(JT.at.clone().add(V(0, tip, 0)), yawTo(JT.at, RO_AT), f, 2),
       pose: pointing ? { kind: "point", t: (f - b06) / 30, arm: 0 } : f >= huff && f < huff + 24 ? { kind: "wave", t: (f - huff) / 30, arm: 1 } : { kind: "idle", t: f / 30 },
-      // (v7, emo.ts 3 and 4) the order with a 坏笑; 暴怒 when the reporter will not go
-      expr: faceAt(f, [[0, "smitten"], [b06 - 6, EMO.b06Scheme ? "scheming" : "bossy"], [huff, EMO.b07Rage ? "rage" : "huffy"], [startOf("B08") + 4, "smitten"]]),
+      // (v7, emo.ts 3 and 4) the order with a 坏笑; 暴怒 when the reporter will not go. (v7.3, the owner: "DOnt make her
+      // look so anngry": the 坏笑 is the playful one, people.ts cheeky)
+      expr: faceAt(f, [[0, "smitten"], [b06 - 6, EMO.b06Scheme ? "cheeky" : "bossy"], [huff, EMO.b07Rage ? "rage" : "huffy"], [startOf("B08") + 4, "smitten"]]),
       ...talk("ju", f, 2), head: talkHead("ju", f, 2), gaze: -0.5, hide: ["vial"],
       // (v5) the order is given with her whole body: she tips toward him on "Go" and on "name"
       lean: lineBody(f, "B06", { lean: 4, dip: 3.5, sway: 0, words: ["name"] }),

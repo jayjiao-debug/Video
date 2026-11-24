@@ -43,7 +43,9 @@ export const maskStick = (o: { hand?: 0 | 1; col?: string; trim?: string; size?:
   return {
     name: "maskStick", slots: [hand ? "hand1" : "hand0"], key: ["rjMaskStick", hand, col, trim, k, o.stick ?? 0.1].join("|"),
     build(b) {
-      const g = b.held(hand, { offset: [out * 0.012, 0.0, 0.035], rot: [0.12, 0, -out * 0.12] });
+      // (v7.3, the owner on v7.2, f643: "His hand isnt actually holding the mask thing": 3.5 cm in front of the fist and
+      // 1.2 cm out, the stick passed beside his hand in his close-up. Now it runs through the fist, which hides its grip)
+      const g = b.held(hand, { offset: [0, 0.0, 0.006], rot: [0.12, 0, -out * 0.12] });
       // the stick: from below the fist up to the mask's lower outer corner. Short by default, so a hand at the belly
       // (~0.7 m) shows the mask at chest height, under the chin: the big toon head hides anything held higher.
       const top = (o.stick ?? 0.1) * k, mx = out * 0.07 * k, my = top + 0.032 * k;

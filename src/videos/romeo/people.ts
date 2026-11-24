@@ -295,6 +295,16 @@ export const FACES: Record<string, Expr | RigFace> = {
   // shut eyes, a wide smile, the brows up and easy, a blush; no hearts. (Until v7 his brows were knit, "dreamy", and
   // hers too, "swoon", over a smaller smile: it read as wistful.)
   inLove: face("relief", "relief", "relief", "relief"),
+  // (v7.3, the owner on v7.2, f655: "His eyes are so scary......") the first sight of her (emo.ts 2): his love eyes, big
+  // and bright, not the meme's ring eyes with pin pupils; the mouth falls open round (the meme's jaw, with its band of
+  // teeth, read as a shout under these eyes); the smitten face's easy brows
+  lovestruck: face("lick", "shock", "relief", "smile"),
+  // (v7.3, the owner on v7.2, f889 "Something square around her eyes?" and f901 "DOnt make her look so anngry") her order
+  // (emo.ts 3): a playful 坏笑, not the scheming meme face. Her love eyes (big pupils, the large light: she is sending him
+  // the reporter because she likes him) and easy brows over the wide smirk; no lowered lids, no knit brows (half-lidded
+  // smug eyes, and even her open resting ones under the smirk, still read as a glare) and no shadow over the upper face
+  // (on her redrawn eyes the shadow showed a square round them)
+  cheeky: face("lick", "scheming", "smile", "smile"),
 };
 /** test looks: one per kit hair kind (preview: who "hair:curly") */
 export const hairTest = (hair: Look["hair"], seed = 1597): Person => ({ name: `hair_${hair}_${seed}`, look: { ...ROMEO_LOOK, seed, hair }, acc: () => [] });
