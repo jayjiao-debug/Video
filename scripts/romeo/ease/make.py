@@ -19,7 +19,7 @@ LIM, QUIET, GAP, TURN = 0.10, 2.5, 8, 0.2
 # down at once, for a hand that only has to get AWAY from the thing: Romeo's off the end of the bier, where higher
 # would be through his own face). The key is the person, the jump's first frame and the hand; a key that no longer
 # meets a row is reported (a shot's timing changed: look again).
-OVER = {("juliet", 2163, 1): 0.08, ("friar", 4031, 0): 0.12, ("friar", 4076, 0): 0.12, ("friar", 4076, 1): 0.10}
+OVER = {("juliet", 2193, 1): 0.08, ("friar", 4061, 0): 0.12, ("friar", 4106, 0): 0.12, ("friar", 4106, 1): 0.10}   # (v7: +30 frames, B02 starts 1 s later)
 dist = math.dist
 cut = {i for i in range(1, n) if D[i]['seg'] != D[i-1]['seg'] or dist(D[i]['cam'], D[i-1]['cam']) > 0.25 or abs(D[i]['fov'] - D[i-1]['fov']) > 4}
 names = sorted({nm for fr in D for nm in fr['figs']})

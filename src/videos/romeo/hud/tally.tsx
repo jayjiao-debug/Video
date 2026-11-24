@@ -25,8 +25,12 @@ import { part, clamp01, easeOut, ring, burst, hash01, type Rect } from "../../..
 import { C, TONE, WAX, flapIn, flapOut, thunk } from "./skin";
 import { letterDefs, sheet, wax, quill, swashPath } from "./marks";
 
+// v7 (the owner on the v6.1 cut: "currently it looks like 2 halfs, make it 1, also centered the stamp number on the
+// right"): the slip has no fold down its middle any more (the crease at x 108 cut it in two), and the seal sits in the
+// middle of the room right of 插手 (x 168; it was at 143, hard against the word). The fresh 1 lands ON the struck 0, in
+// the same place (until v6 beside it, hanging over the slip's right edge).
 /** the tally's numbers: the slip's top left and size, the two seals' places on it (px in the slip's own frame) */
-export const TALLY = { x: 736, y: 350, w: 232, h: 96, rot: 1.2, zero: { x: 143, y: 48, r: 36 }, one: { x: 190, y: 51, r: 40 }, wordX: 15, wordPx: 43 } as const;
+export const TALLY = { x: 736, y: 350, w: 232, h: 96, rot: 1.2, zero: { x: 168, y: 48, r: 36 }, one: { x: 168, y: 48, r: 40 }, wordX: 15, wordPx: 43 } as const;
 /** the beats: the stamp-in's wax, a blink's length, the change's strike and new seal (frames after their own start) */
 export const TALLY_BEATS = { wax: 8, blink: 14, strike: 0, one: 5 } as const;
 export const tallyRect = (x: number = TALLY.x, y: number = TALLY.y, scale = 1): Rect => ({ x0: x - 4 * scale, y0: y - 6 * scale, x1: x + (TALLY.w + 2) * scale, y1: y + (TALLY.h + 8) * scale });
@@ -47,16 +51,16 @@ export const MeddleTally: React.FC<{ f: number; stampAt: number; blinks?: number
       <defs>{letterDefs(id)}</defs>
       <g transform={`translate(${x},${(y - A.lift + jolt + out.dy).toFixed(1)}) scale(${scale})`}>
         <g transform={`translate(${cx},${cy}) rotate(${(T.rot + A.rot + out.rot).toFixed(2)}) scale(${(A.s * out.s).toFixed(3)}) translate(${-cx},${-cy})`}>
-          {sheet(id, "slip", { x0: 0, y0: 0, x1: T.w, y1: T.h }, { shadow: "small", burn: 6, seed: 6, jag: 1.8, creases: [{ x: 108, a: 0, b: T.h }] },
+          {sheet(id, "slip", { x0: 0, y0: 0, x1: T.w, y1: T.h }, { shadow: "small", burn: 6, seed: 6, jag: 1.8 },
             quill(id, "word", "插手", T.wordX, T.h / 2 + 1, T.wordPx, C.ink, { anchor: "start", seed: 4, k: part(t, 3, 3) }))}
           {/* the 0 */}
           {zero.on && t < B.wax + 8 ? ring("zr", T.zero.x, T.zero.y, 30, 84, zero.ring, TONE.paperHi, 7) : null}
           {b !== undefined ? ring("br", T.zero.x, T.zero.y, 34, 62, clamp01((b + 1) / B.blink), WAX.red.hi, 5) : null}
-          <g opacity={changed && c >= B.one ? 0.82 : 1}>
+          <g opacity={changed && c >= B.one ? 0 : 1}>
             {wax(id, "zero", T.zero.x, T.zero.y, T.zero.r, { emblem: "0", seed: 7, rot: -5, scale: zero.s * (changed ? 1 : swell), squash: zero.squash, glint: b !== undefined ? clamp01((b + 1) / 10) : zero.glint })}
           </g>
           {/* the strike through the 0: one stroke of the quill, top right to bottom left */}
-          {changed ? <path d={swashPath(T.zero.x + 44, T.zero.y - 40, T.zero.x - 46, T.zero.y + 40, 5, 11, easeOut(part(c, B.strike, 3)))} fill={C.ink} filter={`url(#${id}-nib46)`} /> : null}
+          {changed && c < B.one ? <path d={swashPath(T.zero.x + 44, T.zero.y - 40, T.zero.x - 46, T.zero.y + 40, 5, 11, easeOut(part(c, B.strike, 3)))} fill={C.ink} filter={`url(#${id}-nib46)`} /> : null}
           {/* the fresh 1: the film's biggest thunk */}
           {changed && one.on ? (
             <>

@@ -23,7 +23,7 @@ type V3Like = [number, number, number] | THREE.Vector3;
 const toV = (p: V3Like) => (Array.isArray(p) ? V(p[0], p[1], p[2]) : p.clone());
 
 export type PropName =
-  | "sword" | "redCap" | "darkBottle" | "spill" | "letterSealed" | "quill" | "inkpot" | "waxStick" | "glassShards" | "horseRider" | "crumpledPage";
+  | "sword" | "redCap" | "darkBottle" | "spill" | "letterSealed" | "quill" | "inkpot" | "waxStick" | "glassShards" | "horseRider" | "crumpledPage" | "vialFree" | "sunBurst";
 /** what each prop is, where its origin is and which way its axes point (metres) */
 export const PROP_INFO: Record<PropName, string> = {
   sword: "a plain Renaissance RAPIER lying on the stones: blade 0.74 m toward +x, a cup hilt (no cross guard), knuckle bow, dark grip, ball pommel (SWORD). Origin = on the ground under the cup; rot = the yaw of the blade (the street's mark `sword` has facing 0.4)",
@@ -37,11 +37,13 @@ export const PROP_INFO: Record<PropName, string> = {
   glassShards: "CAMERA-GLASS SHARDS: six flat broken pieces and one domed piece of the front element, within 0.3 m round the origin, pale smoky glass. Origin = on the floor at the middle of the scatter (the tomb's shardFloor mark)",
   horseRider: "A HORSE WITH A SMALL CLOAKED RIDER (kit horse, grey; hooded grey-brown cloak), seen far away. Origin = on the ground under the horse's middle; the head toward +z (rot PI = riding toward -z, the Mantua mark `rider`). put({ go }) 0..1 = leaving (moves 9 m along its facing at a gallop, eased in), put({ gait }) = the shot moves it itself, { t } = the gait's seconds",
   crumpledPage: "a CRUMPLED PAGE: a lumpy paper ball r ~4.5 cm with creases and a few lines of writing. Origin = on the floor under it",
+  vialFree: "HER VIAL out of her hand (v7: she drinks it, it empties, she drops it): the pale teal round bottle she holds, 11 cm high at her size. Origin = under its foot, the neck up +y. put({ amount }) 0..1 how full; put({ go }) 0..1 the cork pulled and gone",
+  sunBurst: "HIS SUNBURST (v7 emote, emo.ts c03Sun): warm rays round his head, a flat unlit disc 1.24 m across BEHIND him (his head, hat and arm in front of it). Origin = its middle; put({ rot }) a quaternion turning +z to the lens; put({ amount }) 0..1 strength; put({ t }) seconds (it turns)",
 };
 export const PROP_NAMES = Object.keys(PROP_INFO) as PropName[];
 const BUILD: Record<PropName, T.Build> = {
   sword: T.sword, redCap: T.redCap, darkBottle: T.darkBottle, spill: T.spill, letterSealed: T.letterSealed, quill: T.quill, inkpot: T.inkpot,
-  waxStick: T.waxStick, glassShards: T.glassShards, horseRider: T.horseRider, crumpledPage: T.crumpledPage,
+  waxStick: T.waxStick, glassShards: T.glassShards, horseRider: T.horseRider, crumpledPage: T.crumpledPage, vialFree: T.vialFree, sunBurst: T.sunBurst,
 };
 
 export type PutOpts = {

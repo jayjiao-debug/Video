@@ -6,7 +6,8 @@ import { makeCaption } from "../../kit/day/hud/caption";
 import { makeVlog } from "../../kit/day/hud/vlog";
 import { CAPTIONS, captionAt, captionRuns, TRAILING_PUNCT } from "./captions";
 import { FPS, SCENES, SCENE_STAMP, SEGMENTS, segmentAt, line, type Speaker } from "./story";
-import { whisperCap } from "./whisper";
+import { WHISPER_LINES } from "./whisper";
+import { LINE_IDS } from "./captions";
 import { EN } from "../../kit/film/lang";
 
 /** the subtitle's colour per speaker: her warm white, Romeo a pale Montague blue, Juliet a Capulet red
@@ -15,7 +16,10 @@ export const SPEAKER_COL: Record<Speaker, string> = { ji: "#fff3e0", ro: "#dce9f
 /** her camera dies on this frame (the end: "……我得买新手机了。", then the power-off) */
 export const OFF_AT = line("I04").to + 22;
 export const CAP = makeCaption({
-  captions: CAPTIONS, captionAt: (f) => (whisperCap(f) ? null : captionAt(f)), captionRuns, trailingPunct: TRAILING_PUNCT, speakerCol: SPEAKER_COL,
+  captions: CAPTIONS, // (v7, the owner on the v6.1 cut: "for those 悄悄话 you also have 1 subtitle after the card folds away": the subtitle of
+  // a whispered line came back for the last frames of its screen, once her note had gone. A whispered line has no
+  // subtitle at all now, whatever the note is doing.)
+  captionAt: (f) => { const c = captionAt(f); return c && WHISPER_LINES.includes(LINE_IDS[c.line - 1]) ? null : c; }, captionRuns, trailingPunct: TRAILING_PUNCT, speakerCol: SPEAKER_COL,
 });
 export const VLOG = makeVlog({
   fps: FPS, scenes: SCENES, stamp: SCENE_STAMP!, segments: SEGMENTS, segmentAt, en: EN, offAt: OFF_AT,

@@ -241,3 +241,80 @@ export const crumpledPage: Build = (K, g) => {
   new Part(K).add(K.flat("#ffffff", { map: tex, rough: 0.9 }), q.translate(0, 0.039, 0), 0.004).into(g, "crumpledPage");
 };
 void C; void limb;
+
+// ===================================================================================================== her vial, free
+/** HER VIAL out of her hand (v7, the owner on the v6.1 cut: "let do a animation of where drinking the potion, the potion
+ *  empties, she drops it and starts to fall"): the same pale teal round bottle as the one she holds (acc/held.ts vial,
+ *  at her size 1.4), as a prop the shot can tip, drain and drop. Its foot at the origin, the neck up +y.
+ *  put({ amount }) 0..1 = how full (the drink is a darker band up to the shoulder, lowered as she drinks);
+ *  put({ go }) 0..1 = the cork pulled up and away (gone at 1). */
+export const VIAL_FREE = { h: 0.078 * 1.4, k: 1.4 };
+export const vialFree: Build = (K, g) => {
+  const k = VIAL_FREE.k, P = new Part(K);
+  const prof: [number, number][] = [[0, 0], [0.019 * k, 0], [0.021 * k, 0.03 * k], [0.0085 * k, 0.047 * k], [0.0085 * k, 0.064 * k], [0, 0.064 * k]];
+  const c = document.createElement("canvas"); c.width = 8; c.height = 128;
+  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
+  let drawn = -1;
+  const fill = (a: number) => {
+    const q = Math.round(a * 40) / 40;
+    if (q === drawn) return;
+    drawn = q;
+    const cg = c.getContext("2d")!;
+    cg.fillStyle = "#ffffff"; cg.fillRect(0, 0, 8, 128);
+    // the drink: from the foot up to (at most) the shoulder, along the profile's length (v 0 = foot, v 1 = top)
+    const top = 0.62 * q;
+    if (top > 0.005) { cg.fillStyle = "#5e9c95"; cg.fillRect(0, 128 * (1 - top), 8, 128 * top); }
+    tex.needsUpdate = true;
+  };
+  fill(1);
+  P.add(K.flat("#8fd0c4", { map: tex, rough: 0.2 }), turned(prof, 28, 40), 0.0055);
+  P.into(g, "vialFree");
+  const corkG = new THREE.Group(); g.add(corkG);
+  const CP = new Part(K);
+  CP.add(K.flat("#a9763f", { rough: 0.8 }), turned([[0, 0.06 * k], [0.0105 * k, 0.06 * k], [0.012 * k, 0.078 * k], [0, 0.078 * k]], 20), 0.005);
+  CP.into(corkG, "vialFree.cork");
+  return (o) => {
+    fill(o.amount ?? 1);
+    const go = o.go ?? 0;
+    corkG.visible = go < 1;
+    // pulled straight up out of the neck, then away to the side, turning
+    corkG.position.set(0.05 * Math.max(0, go - 0.4), 0.03 * Math.min(1, go * 2), 0);
+    corkG.rotation.set(0, 0, -1.2 * Math.max(0, go - 0.4));
+  };
+};
+
+// ===================================================================================================== his sunburst
+/** HIS SUNBURST (v7, emo.ts c03Sun, the owner: "more expressive emotes ... balcony"): on "and Juliet is the sun!" warm
+ *  rays round his head. A flat disc in the world BEHIND him, so his head, his hat and his raised arm stand in front of
+ *  it (drawn on top of the picture they covered his arm). Unlit, no ink line, no shadow. Its face toward +z.
+ *  put({ rot }) a quaternion that turns +z to the lens; put({ amount }) 0..1 its strength (it grows as it comes in and
+ *  shrinks as it goes); put({ t }) seconds (it turns slowly). SUN_BURST.r = its radius at full strength (m). */
+export const SUN_BURST = { r: 0.62, rays: 16 };
+export const sunBurst: Build = (_K, g) => {
+  const N = 512, m = N / 2, c = document.createElement("canvas"); c.width = c.height = N;
+  const x = c.getContext("2d")!;
+  x.translate(m, m);
+  const gr = x.createRadialGradient(0, 0, m * 0.16, 0, 0, m);
+  gr.addColorStop(0, "rgba(255,228,128,0.95)"); gr.addColorStop(0.5, "rgba(255,204,86,0.62)"); gr.addColorStop(1, "rgba(255,190,70,0)");
+  x.fillStyle = gr;
+  for (let i = 0; i < SUN_BURST.rays; i++) {
+    const a0 = (i / SUN_BURST.rays) * TAU, w = (TAU / SUN_BURST.rays) * 0.26;
+    x.beginPath(); x.moveTo(Math.cos(a0) * m * 0.1, Math.sin(a0) * m * 0.1);
+    x.lineTo(Math.cos(a0 - w) * m, Math.sin(a0 - w) * m); x.lineTo(Math.cos(a0 + w) * m, Math.sin(a0 + w) * m); x.closePath(); x.fill();
+  }
+  // the glow in the middle (behind his head)
+  const gl = x.createRadialGradient(0, 0, 0, 0, 0, m * 0.46);
+  gl.addColorStop(0, "rgba(255,246,204,0.92)"); gl.addColorStop(1, "rgba(255,232,150,0)");
+  x.fillStyle = gl; x.beginPath(); x.arc(0, 0, m * 0.46, 0, TAU); x.fill();
+  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
+  const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, toneMapped: false, side: THREE.DoubleSide });
+  const disc = new THREE.Mesh(new THREE.PlaneGeometry(2 * SUN_BURST.r, 2 * SUN_BURST.r), mat);
+  disc.layers.set(NOINK); disc.name = "sunBurst"; disc.castShadow = false; disc.receiveShadow = false;
+  g.add(disc);
+  return (o) => {
+    // (amount may overshoot 1 a little as it bursts in: the size takes it, the strength stops at 1)
+    const a = Math.max(0, o.amount ?? 1), k = Math.min(1, a);
+    mat.opacity = k; disc.visible = k > 0.003;
+    disc.scale.setScalar(0.5 + 0.5 * a); disc.rotation.z = (o.t ?? 0) * 0.35;
+  };
+};

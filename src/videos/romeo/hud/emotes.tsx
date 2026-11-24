@@ -181,3 +181,48 @@ export const Huff: React.FC<{ f: number; at: number; x: number; y: number; dir?:
   });
   return kids.length ? <Svg>{kids}</Svg> : null;
 };
+
+// ------------------------------------------------------------------------------------------------- her in his eyes
+/** SHE IS IN HIS EYES (v7, the owner on the v6.1 cut, scene B: "This moment can hold a bit longer, we zoom into his eyes
+ *  and see reflection of Juliet, instead of shifting to Juliet?"). Until v6 the lens tilted across the hall to her on
+ *  "Did my heart love till now?". Now it pushes in on his face and she is there, small, in each of his eyes: blonde
+ *  drill curls with their red bows, a red gown, on tiptoe, gently bobbing, a light over her. Drawn in the eye's own
+ *  axes (eyePx: ex, ey), so she sits on the eye's curve as the head turns. k = 0..1 her strength (fades in and out).
+ *    r     the eye's round in face units, where she is clipped (default 5.2: inside the rig's big "lick" pupil) */
+export const EYE_JULIET = { r: 5.2, scale: 0.9, hair: "#f0c64e", hairDeep: "#b5822c", skin: "#fbe6d6", gown: "#d0303c", gownDeep: "#8a1a26", bow: "#e0364e" } as const;
+export const EyeReflection: React.FC<{ f: number; eyes: EyePt[]; k: number; r?: number }> = ({ f, eyes, k, r = EYE_JULIET.r }) => {
+  if (k <= 0.01) return null;
+  const J = EYE_JULIET, bob = 0.25 * Math.sin(f / 6);
+  const kids = eyes.map((e, i) => {
+    if (e.on < 0.5 || !(e.u > 0)) return null;
+    const m = `matrix(${n1(e.ex[0])} ${n1(e.ex[1])} ${n1(e.ey[0])} ${n1(e.ey[1])} ${n1(e.x)} ${n1(e.y)})`, id = `rj-eye-ju-${i}`, s = J.scale;
+    return (
+      <g key={i} transform={m} opacity={k}>
+        <defs><clipPath id={id}><circle cx={0} cy={0} r={r} /></clipPath></defs>
+        <g clipPath={`url(#${id})`}>
+          <circle cx={0} cy={0} r={r} fill="#fff6e0" opacity={0.14} />
+          <g transform={`translate(0 ${n1(0.4 + bob)}) scale(${s})`}>
+            {/* a soft light behind her (the feast's torches, in his eye) */}
+            <ellipse cx={0} cy={-0.2} rx={2.9} ry={3.6} fill="#ffe7a8" opacity={0.28} />
+            {/* the drill curls, then the gown, the head, the crown of her hair, the bows */}
+            <ellipse cx={-1.45} cy={0.7} rx={0.55} ry={1.55} fill={J.hair} stroke={J.hairDeep} strokeWidth={0.18} />
+            <ellipse cx={1.45} cy={0.7} rx={0.55} ry={1.55} fill={J.hair} stroke={J.hairDeep} strokeWidth={0.18} />
+            <path d="M -0.95 0.55 L 0.95 0.55 L 2.15 4.6 L -2.15 4.6 Z" fill={J.gown} stroke={J.gownDeep} strokeWidth={0.2} strokeLinejoin="round" />
+            <path d="M -0.6 0.75 L 0.6 0.75 L 0.45 1.25 L -0.45 1.25 Z" fill="#f8f2e6" />
+            <circle cx={0} cy={-0.55} r={1.25} fill={J.skin} stroke="#2a1b18" strokeWidth={0.16} />
+            <path d="M -1.32 -0.45 C -1.4 -1.7 -0.6 -2.05 0 -2.05 C 0.6 -2.05 1.4 -1.7 1.32 -0.45 C 0.9 -1.0 0.3 -1.15 0 -0.85 C -0.3 -1.15 -0.9 -1.0 -1.32 -0.45 Z" fill={J.hair} stroke={J.hairDeep} strokeWidth={0.16} />
+            <circle cx={-1.3} cy={-0.5} r={0.32} fill={J.bow} />
+            <circle cx={1.3} cy={-0.5} r={0.32} fill={J.bow} />
+            {/* her eyes on him, two dots */}
+            <circle cx={-0.42} cy={-0.5} r={0.14} fill="#2a1b18" />
+            <circle cx={0.42} cy={-0.5} r={0.14} fill="#2a1b18" />
+          </g>
+          {/* the glass of the eye over her: a curved light across the top */}
+          <path d={`M ${n1(-r * 0.75)} ${n1(-r * 0.35)} A ${n1(r)} ${n1(r)} 0 0 1 ${n1(r * 0.55)} ${n1(-r * 0.7)}`} stroke="#ffffff" strokeWidth={0.55} fill="none" opacity={0.5} strokeLinecap="round" />
+          <circle cx={n1(-r * 0.45)} cy={n1(-r * 0.5)} r={0.75} fill="#ffffff" opacity={0.9} />
+        </g>
+      </g>
+    );
+  });
+  return <Svg>{kids}</Svg>;
+};

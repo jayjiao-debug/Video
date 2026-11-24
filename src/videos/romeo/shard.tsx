@@ -13,7 +13,7 @@ import { capWord } from "./captions";
 import { line, seg } from "./story";
 import { clamp01 } from "../group/story";
 
-export const THROW_AT = capWord("H05", "不要啊").from;
+export const THROW_AT = capWord("H05", "拍不下去").from;
 /** THE THROW IN SLOW MOTION (v5, the owner: "then we do a slow scene as the camera is being thrown, screen spinning in
  *  a sense"). The flight takes FLIGHT frames of film (until v4: 11). The world runs at full speed for the throw's first
  *  frames and for the last ones into the hit, and at SLOW_RATE of it between them: RAMP is the world's speed over the

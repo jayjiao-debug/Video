@@ -53,7 +53,7 @@ line("A05", "ji", "flat", "我只拍，不插手。", "I only film. I don't inte
 line("B01", "ji", "whisper", "为了罗瑟琳，混进仇家舞会。", "Sneaking into the enemy's ball, for Rosaline.",
      "Wide: torch-lit hall, dancers. Romeo in a half mask sulks along the wall.", tts="[whispers] 为了罗瑟琳，混进仇家舞会。", pre=0.6)
 line("B02", "ro", "struck, the mask slipping", "我以前那也叫爱？", "Did my heart love till now?",
-     "He stops mid-step. She tilts along his look to Juliet across the hall, and back.", tts="[awestruck, breathless] Did my heart love till now?")
+     "He stops mid-step. She tilts along his look to Juliet across the hall, and back.", tts="[awestruck, breathless] Did my heart love till now?", pre=1.0)
 line("B03", "ji", "innocent", "那罗瑟琳呢？", "And Rosaline?", "", tts="[innocently curious] 那罗瑟琳呢？")
 line("B04", "ro", "not blinking, not turning", "谁？", "Who?",
      "Hold. Her note in the gap: 失恋：一个白天.", tts="[distracted, not listening] Who?", after=1.0)
@@ -140,7 +140,7 @@ line("F08", "ji", "after a long beat, small", "……我只拍。", "…I only f
      tts="[small, hesitant] ……我只拍。", pre=0.9, after=1.3)
 line("F09", "ju", "alone, a small brave smile", "罗密欧，等我。这一杯，敬你。", "Romeo, I come! This do I drink to thee.",
      "Join: the cell door closes over the lens and opens on her room at night. She raises the bottle to the lens like a toast. Cut before it reaches her lips.",
-     tts="[softly, brave] Romeo, I come! This do I drink to thee.", pre=1.0, after=1.0)
+     tts="[softly, brave] Romeo, I come! This do I drink to thee.", pre=1.0, after=3.6)
 
 # ---------------------------------------------------------------- G · Wednesday noon · Mantua
 line("G01", "ji", "whisper", "先到的消息：朱丽叶死了。", "The news that got here first: Juliet is dead.",
@@ -164,13 +164,13 @@ line("H01", "ro", "soft, wondering", "死神，还没能夺走你的美。", "De
 line("H02", "ro", "the same", "你的嘴唇，你的脸，还是红的。", "Beauty's ensign yet is crimson in thy lips and in thy cheeks.",
      "His hand near her cheek, not touching.", screens=[("你的嘴唇，你的脸，", "Beauty's ensign yet is crimson"), ("还是红的。", "in thy lips and in thy cheeks.")],
      tts="[tender, quiet] Beauty's ensign yet is crimson in thy lips, and in thy cheeks.")
-line("H03", "ji", "whisper, to herself, shaking", "红的，是因为她活着！", "They're red because she's alive!",
-     "Her whisper to herself (Jay, 24 Nov): her bubble marked 悄悄说. He does not turn. Picture still; only her voice shakes.", tts="[whispers, voice shaking] 红的，是因为她活着！")
+line("H03", "ji", "whisper, to herself, shaking", "红的，是因为她还活着！", "They're red because she's still alive!",
+     "Her whisper to herself (Jay, 24 Nov): her bubble marked 悄悄说. He does not turn. Picture still; only her voice shakes.", tts="[whispers, voice shaking] 红的，是因为她还活着！")
 line("H04", "ro", "calm", "这一杯，敬我的爱人。", "Here's to my love!",
      "He raises the dark bottle with the same gesture Juliet used in F09. It never reaches his lips.", tts="[calm, tender] Here's to my love!")
-line("H05", "ji", "breaking", "我只拍……不要啊！", "I only film… No!",
+line("H05", "ji", "breaking, not loud", "我只拍……拍不下去了。", "I only film… I can't film this!",
      "The picture lurches. The camera leaves her hands: torch streaks, the bier, his hand filling the frame. Glass breaks. Stone. A crack splits the picture. Black. The REC display stutters and dies. Two seconds of silence.",
-     tts="[breaking] 我只拍……[screaming] 不要啊！", after=5.4)
+     tts="[voice breaking, quiet] 我只拍……[choked up, giving in, not shouting] 拍不下去了。", after=4.4)
 
 # ---------------------------------------------------------------- I · the shard
 line("I01", "ju", "waking, tender", "噢，我的罗密欧！", "O my Romeo!",

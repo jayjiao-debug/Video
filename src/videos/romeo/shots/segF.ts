@@ -20,12 +20,13 @@ import { povCam, keyCam, handheld, lensCam, toScreen, type CamKey } from "../cam
 import { V, VERBS, standing, yawTo, walkAlong, seated } from "./common";
 import { JULIET, FRIAR, FRIAR_VIAL, FRIAR_QUILL, FRIAR_LETTER, YOUNG_FRIAR } from "../people";
 import { whisperLean } from "../whisper";
-import { P, wv, spot, camAt, faceAt, talk, wordAt, startOf, endOf, ky, accent, rel, soft, REACT } from "./kit";
+import { P, wv, spot, camAt, faceAt, talk, wordAt, startOf, endOf, ky, accent, rel, soft, carry, REACT } from "./kit";
 import { h } from "./h";
 import { seatOn, stoolSeat } from "../../../kit/day/rig/seats";
 import { clamp01, easeInOutCubic, smooth } from "../../group/story";
 import { cap } from "../captions";
 import { hit, span, lineBody, leans, talkHead } from "./gest";
+import { setSeat } from "../../../kit/acc/garb";
 
 const S = seg("F");
 const BENCH = spot("cell", "friarBench"), DOOR = spot("cell", "door"), DESK = spot("cell", "desk"), BED = spot("bedroom", "julietBed");
@@ -37,12 +38,12 @@ const VIAL_UP = P("cell", 0.3, 1.12, -1.05);
 const FR_LENS = P("cell", 0.32, 0, -0.05), YF_WAIT = P("cell", -1.45, 0, -0.8), YF_TAKE = P("cell", -0.25, 0, -0.35);
 /** the door wipe's frames, and the place switch at its black */
 export const JOIN = { close: startOf("F09") - 26, black: startOf("F09") - 14, open: startOf("F09") - 11, done: startOf("F09") - 1 };
-/** the cut before the bottle can come back toward her: black from here to the end of the scene */
-export const TOAST_CUT = endOf("F09") + 16;
+/** the black after she has fallen (v7; until v6 the cut before the bottle could come back toward her, the line's end + 16) */
+export const TOAST_CUT = endOf("F09") + 100;
 
 export const SEG: Segment = {
   id: "F", from: S.from, to: S.to,
-  enter() {}, exit() {},
+  enter() {}, exit(w) { setSeat(w.actor(JULIET), null); },
   pose(w, f) {
     return f < JOIN.black ? cell(w, f) : room(w, f);
   },
@@ -160,6 +161,7 @@ function cell(w: Parameters<Segment["pose"]>[0], f: number) {
 
   // ---------------------------------------------------------------- Juliet: steady beside him; snatches the vial
   const ju = w.actor(JULIET);
+  setSeat(ju, null);
   const has = f >= tGive;
   // she stands a fifth of a turn open to the lens while they talk, and turns to follow him as he goes to the desk (the
   // 0.35 went in one frame at F06: her body's turn was eased, but the vial's place went with it at once, 10 cm, and
@@ -182,7 +184,8 @@ function cell(w: Parameters<Segment["pose"]>[0], f: number) {
     ...standing(JU_AT, juFacing, f, 2),
     pose: { kind: has ? "hold" : "idle", t: f / 30 },
     hands: grab > 0 ? [null, VIAL_UP.clone().lerp(rel(JU_AT, juFacing, 0.03, 0.82, 0.3), clamp01(1 - grab))] : has ? [null, rel(JU_AT, juFacing, 0.03, 0.82, 0.3)] : [null, null],
-    expr: faceAt(f, [[0, "brave"], [f04 - 2, "bossy"], [endOf("F04") + REACT, "brave"]]),
+    // (v7, the owner: "Juliet should be more sad rather then a smile?": sad through the plan, desperate on the snatch)
+    expr: faceAt(f, [[0, "sorrow"], [f04 - 2, "desperate"], [endOf("F04") + REACT, "sorrow"]]),
     ...talk("ju", f, 2), head: talkHead("ju", f, 2),
     // (v5) she leans in to the vial as he explains it, goes at it with her whole body on "Give me", and tells him off
     lean: leans({ pitch: 3 * span(f, f02 + 24, f04 - 6, 18, 8) + 7 * hit(f, tGive, 5, 12) }, lineBody(f, "F04", { lean: 3, dip: 3, sway: 0, words: ["tell"] })),
@@ -214,30 +217,101 @@ function cell(w: Parameters<Segment["pose"]>[0], f: number) {
 }
 
 // ------------------------------------------------------------------------------------------------------ her room
+/** HER ROOM (v7, the owner on the v6.1 cut: "let do a animation of where drinking the potion, the potion empties, she
+ *  drops it and starts to fall, then transition"; "Her dress is clipping with the bed, maybe make her sit closer up?";
+ *  "Juliet should be more sad rather then a smile?"). Until v6 she raised the bottle to the lens and the picture cut to
+ *  black before it came back to her. Now, from closer (waist up: the bed's edge, where the gown went into it, is under
+ *  the frame): the toast to the lens on "drink"; she brings the bottle to her lips, the cork comes away, she tips it up
+ *  with her eyes shut and it drains; she lowers it and looks at it, empty; it slips out of her fingers; she sways and
+ *  falls sideways onto the bed; the picture fades to black. Frames after the line's end: */
+export const ROOM = { lift: 2, cork: [5, 13], lips: 16, drain: [20, 46], lower: [48, 56], drop: 64, fall: [70, 92], fade: [90, 100] } as const;
+/** the vial's tilt while she drinks (rad, about the lens's axis: the neck to her mouth), how far it goes up */
+const DRINK_TILT = 2.0, FALL_TURN = 1.05;
+/** the mouth of a figure for this camera: below the head's centre on the front of the head, toward the lens */
+const mouthOf = (w: Parameters<Segment["pose"]>[0], r: { headWorld(): THREE.Vector3 }) => {
+  const hd = r.headWorld(), cam = (w.camera as THREE.PerspectiveCamera).position;
+  const toCam = cam.clone().sub(hd).setY(0).normalize();
+  return hd.clone().addScaledVector(toCam, 0.24).add(V(0, -0.075, 0));
+};
 function room(w: Parameters<Segment["pose"]>[0], f: number) {
   w.setPlace("bedroom");
-  const toast = wordAt("F09", "drink");
-  // a touch wider than the set's spot and a little to her left, so the raised bottle stands clear of her hair (stills v6:
-  // arms draw under the head, and at fov 44 the bottle hid behind her hair)
-  const tc = { look: wv("bedroom", [0.08, 1.0, -1.0]), fov: 50 };
+  const toast = wordAt("F09", "drink"), e = endOf("F09"), R = ROOM;
+  const at = (k: number) => e + k;
+  // closer than v6 (waist up), the bottle and her face both in; as she falls the lens tips down after her
+  const fallK = easeInOutCubic(clamp01((f - at(R.fall[0])) / (R.fall[1] - R.fall[0])));
+  const tc = { look: wv("bedroom", [0.07 - 0.22 * fallK, 1.06 - 0.16 * fallK, -1.0]), fov: 37 + 3 * fallK };
   const camera = povCam(f, [camAt("bedroom", "toast", JOIN.black, tc), camAt("bedroom", "toast", S.to, tc)], { mood: "calm", amp: 0.3 });
   w.setCamera(camera);
   const ju = w.actor(JULIET);
   const seat = seatOn(stoolSeat({ seat: 0.42, d: 0.4 }), BED.at, BED.facing);
-  // the bottle: in her lap, raised to the lens like a toast on "drink", held out; it never comes back toward her
+  // (v7) her gown lies on the bed and hangs from her knees in front of it (garb.ts setSeat), not down through it
+  setSeat(ju, seat, BED.facing);
+  // the bottle: in her lap, raised to the lens like a toast on "drink"
   const raise = ky(f, [[toast - 14, 0], [toast + 2, 1]]);
-  const lap = rel(BED.at, BED.facing, 0.1, 0.58, 0.3), out = rel(BED.at, BED.facing, 0.36, 1.12, 0.36);
-  ju.set({
+  const lapL = rel(BED.at, BED.facing, -0.1, 0.61, 0.3), lap = rel(BED.at, BED.facing, 0.1, 0.58, 0.3), out = rel(BED.at, BED.facing, 0.36, 1.12, 0.36);
+  const free = f >= at(R.lift);                       // the vial is a prop from here (she tips it, it drains, it falls)
+  const toLips = ky(f, [[at(R.lift), 0], [at(R.lips), 1], [at(R.lower[0]), 1], [at(R.lower[1]), 0]]);
+  const tilt = DRINK_TILT * ky(f, [[at(R.lips) - 2, 0], [at(R.drain[0]), 0.75], [at(R.drain[1]), 1], [at(R.lower[0]), 1], [at(R.lower[1]), 0.15]]);
+  const amount = 1 - clamp01((f - at(R.drain[0])) / (R.drain[1] - R.drain[0]));
+  const dropped = f >= at(R.drop), falling = f >= at(R.fall[0]);
+  // her face: sad (v7); eyes shut while she drinks; looking down at the empty bottle; shut again as she goes
+  const drinking = f >= at(R.lips) - 2 && f < at(R.lower[0]) + 2;
+  const lids = falling ? ky(f, [[at(R.fall[0]), 0.3], [at(R.fall[0]) + 8, 1]]) : drinking ? 1 : f >= at(R.drop) + 2 ? 0.35 : undefined;
+  const state = (hands: [THREE.Vector3 | null, THREE.Vector3 | null]) => ({
     ...standing(seat.top.clone(), BED.facing, f, 2),
     ...seated(seat, f / 30),
-    hands: [rel(BED.at, BED.facing, -0.1, 0.61, 0.3), lap.clone().lerp(out, easeInOutCubic(raise))],
-    expr: faceAt(f, [[0, "brave"], [toast - 4, "sure"]]),
+    // (v7, the ease check: the "sit" pose's elbow pole is out and back, and with the hand at her mouth the arm's swivel
+    // flipped the elbow up and down again, 22 and 25 cm in one frame, f4494 and f4531. "hold" keeps both elbows low
+    // and out, the way a bottle is drunk; she still sits on her seat.)
+    pose: { kind: "hold" as const, t: f / 30 },
+    hands,
+    expr: faceAt(f, [[0, "sorrow"], [at(R.fall[0]) + 6, "down"]]),
     ...talk("ju", f, 2),
     head: talkHead("ju", f, 2, accent("nod", f, toast)),
+    // her chin comes up as she drinks, down to the empty bottle, then her head goes with her body
+    lookDown: soft(f, (g) => (g >= at(R.lips) && g < at(R.lower[0]) ? -12 : g >= at(R.lower[1]) && g < at(R.fall[0]) ? 16 : 0), 3),
+    ...(lids !== undefined ? { blink: lids } : {}),
+    // (the bottle arm is drawn at its true depth through the whole room: switched on only as the vial came free, the
+    // stricter clearance swung the elbow 9 cm in one frame)
+    armFront: [undefined, true] as [boolean | undefined, boolean | undefined],
+    ...(free ? { hide: ["vial"] } : {}),
   });
+  const restHands: [THREE.Vector3 | null, THREE.Vector3 | null] = [lapL, lap.clone().lerp(out, easeInOutCubic(raise))];
+  ju.set(state(restHands));
   w.update();
+  let vialAt: THREE.Vector3 | null = null, vialQ: THREE.Quaternion | null = null;
+  if (free && !dropped) {
+    // where the bottle is: at the toast (out), or with its neck at her lips, tipped toward her mouth
+    const dir = V(-Math.sin(tilt), Math.cos(tilt), 0), H = 0.1;
+    const mouth = mouthOf(w, ju), atLips = mouth.clone().addScaledVector(dir, -H);
+    const atToast = out.clone().add(V(-0.01, -0.03, 0));
+    const atLook = rel(BED.at, BED.facing, 0.14, 0.95, 0.42);
+    vialAt = f < at(R.lower[0]) ? atToast.clone().lerp(atLips, easeInOutCubic(toLips)) : atLook.clone().lerp(atLips, easeInOutCubic(toLips));
+    vialQ = new THREE.Quaternion().setFromAxisAngle(V(0, 0, 1), tilt);
+    const hand = vialAt.clone().addScaledVector(dir, 0.035);
+    ju.set(state([lapL, hand]));
+    w.update();
+  } else if (dropped) {
+    // it slips from her fingers: from where it was held at the look, falling, turning; it stops on the floor
+    const t = (f - at(R.drop)) / 30, p0 = rel(BED.at, BED.facing, 0.14, 0.95, 0.42);
+    const y = Math.max(0.02, p0.y - 0.5 * 9.8 * t * t);
+    vialAt = V(p0.x + 0.12 * t, y, p0.z + 0.25 * t);
+    vialQ = new THREE.Quaternion().setFromAxisAngle(V(0.3, 0, 1).normalize(), 0.3 + 7 * t);
+    const handsNow: [THREE.Vector3 | null, THREE.Vector3 | null] = falling ? [null, null] : [lapL, rel(BED.at, BED.facing, 0.14, 0.93, 0.42)];
+    ju.set(state(handsNow));
+    w.update();
+  }
+  if (vialAt && vialQ) w.prop("vialFree").put(vialAt, { rot: vialQ, amount, go: clamp01((f - at(R.cork[0])) / (R.cork[1] - R.cork[0])) });
+  // SHE FALLS sideways onto the bed (the rig cannot lie: the seated figure is carried about her hips, kit.ts carry)
+  if (falling) {
+    const k = clamp01((f - at(R.fall[0])) / (R.fall[1] - R.fall[0])), ek = k * k * (3 - 2 * k) * (0.6 + 0.4 * k);
+    const settle = f > at(R.fall[1]) ? 0.04 * Math.sin(Math.min(1, (f - at(R.fall[1])) / 6) * Math.PI) : 0;
+    const q = new THREE.Quaternion().setFromAxisAngle(V(0, 0, 1), FALL_TURN * Math.min(1, ek) - settle);
+    carry(w, ju, q, seat.top.clone(), V(0, 0.02 * ek, 0), true);
+  }
   const opening = f < JOIN.done ? doorWipe(1 - clamp01((f - JOIN.open) / (JOIN.done - JOIN.open))) : undefined;
-  const top = f >= TOAST_CUT ? h("div", { style: { position: "absolute", inset: 0, background: "#000" } }) : undefined;
+  const fade = clamp01((f - at(R.fade[0])) / (R.fade[1] - R.fade[0]));
+  const top = fade > 0 ? h("div", { style: { position: "absolute", inset: 0, background: "#000", opacity: fade } }) : undefined;
   return { camera, overlays: opening, top, hud: f >= TOAST_CUT ? false : undefined, captions: f >= TOAST_CUT ? false : undefined };
 }
 

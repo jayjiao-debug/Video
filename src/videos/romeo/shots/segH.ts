@@ -70,7 +70,7 @@ const own = (p: number[]) => rel(STAND, RO_FACING, p[0], p[1], p[2]);
 /** her camera in her hands: the one slow push (fov 54 -> 49.5), and the lurch on 拍 of 「我只拍……」 (she has decided; until v5
  *  on 插 of 「不插……」) */
 const heldCam = (g: number) => {
-  const PUSH = camAt("tomb", "push", 0), h04 = startOf("H04"), tLurch = capWord("H05", "拍").from;
+  const PUSH = camAt("tomb", "push", 0), h04 = startOf("H04"), tLurch = capWord("H05", "拍拍").from;      // (v7: the line says 拍 twice, 「我只拍……拍不下去了」: "拍拍" is the first one's frame)
   const pk = (fr: number, o: Partial<CamKey> = {}): CamKey => ({ ...PUSH, f: fr, ...o });
   const c = povCam(g, [pk(S.from), pk(h04, { fov: 49.5 }), pk(THROW_AT, { fov: 49.5 })], { mood: "calm", amp: 0.15 });
   const lurch = ky(g, [[tLurch - 1, 0], [tLurch + 2, 1], [tLurch + 9, 0]]);

@@ -15,9 +15,10 @@
 import * as THREE from "three";
 import { seg, type Segment } from "../story";
 import { povCam, punchIn, CAM, type CamKey } from "../cam";
-import { V, standing, yawTo, walkAlong, speak, saying } from "./common";
-import { ROMEO, JULIET } from "../people";
-import { SplitDivider, EyeHearts } from "../hud/index";
+import { V, VERBS, standing, yawTo, walkAlong, speak, saying } from "./common";
+import { ROMEO, JULIET, JULIET_LOW } from "../people";
+import { SplitDivider, EyeHearts, Sparkles, DustPuff, Huff } from "../hud/index";
+import { EMO } from "../emo";
 import { P, wv, spot, camAt, ck, faceAt, talk, wordAt, startOf, endOf, ky, accent, rel, eyesPx, REACT } from "./kit";
 import { h, frag } from "./h";
 import { FONT_STACK } from "../../../kit/day/hud/style";
@@ -55,6 +56,10 @@ const SLAB_UNDER = P("balcony", 0.25, 2.43, -0.47);
  *  2.64: the orchard wall's face is at x 2.95, and his head with the beret on it is 0.35 wide to that side: it went
  *  11 cm into the stone as he left the frame; and a little further on, so he is still running when the edge takes him) */
 const RUN_PATH = [BELOW.at, P("balcony", 1.4, 0, 0.95), P("balcony", 2.42, 0, 1.25), P("balcony", 2.5, 0, 3.75)];
+/** (v7, emo.ts 6) the sunburst: how far behind his head it hangs (m, away from the lens) */
+const SUN_BACK = 0.4;
+/** (v7, emo.ts 8) her half second on "marriage": the flustered face's frames, the steam's delay after the word */
+const STEAM = { hold: 16, at: 3 };
 
 export const SEG: Segment = {
   id: "C", from: S.from, to: S.to,
@@ -106,7 +111,10 @@ export const SEG: Segment = {
     w.setCamera(camera);
 
     // ---------------------------------------------------------------- Juliet at the rail
-    const ju = w.actor(JULIET);
+    // (v7, the owner on the v6.1 cut, f1738: "Her hair is coming out her neck ... it looks like she have a beard": from
+    // the orchard the lens looks up at her, and the lowest rim of the hair at the back of her head showed under her chin,
+    // as it did from the floor of the vault. From the split on she is the figure scene I uses: people.ts JULIET_LOW.)
+    const ju = w.actor(f >= c08 ? JULIET_LOW : JULIET);
     const tSplitStop = endOf("C08") + 4;
     const onRail: [THREE.Vector3, THREE.Vector3] = [rel(RAIL.at, RAIL.facing, -0.17, 0.69, 0.38), rel(RAIL.at, RAIL.facing, 0.17, 0.69, 0.38)];
     const folded: [THREE.Vector3, THREE.Vector3] = [rel(RAIL.at, RAIL.facing, -0.05, 0.6, 0.24), rel(RAIL.at, RAIL.facing, 0.05, 0.6, 0.24)];
@@ -139,8 +147,11 @@ export const SEG: Segment = {
       // "my love as deep"; a soft smitten smile with hearts floating out of her eyes as the line ends, through the
       // reporter's "you met three hours ago?", until it lands (v5: no heart eyes: "the floatinng heart is enough");
       // smitten again when she finds him under the balcony
-      expr: faceAt(f, [[0, "smitten"], [endOf("C05") + 4, "smittenSoft"], [caughtAt, "caught"], [c07 - 2, "sure"], [endOf("C07") + REACT, "swoon"],
-        [tSplitStop, "caught"], [SPLIT.open + 14, "smitten"], [c10 - 2, "bossy"], [endOf("C11") + REACT, "sure"]]),
+      // (v7, emo.ts 7 and 8) 无语 when "three hours" lands; on "marriage" she is caught for half a second (flustered,
+      // steam off her head) and then all business again
+      expr: faceAt(f, [[0, "smitten"], [endOf("C05") + 4, "smittenSoft"], [caughtAt, EMO.c06Speechless ? "speechless" : "caught"], [c07 - 2, "sure"], [endOf("C07") + REACT, "swoon"],
+        [tSplitStop, "caught"], [SPLIT.open + 14, "smitten"], [c10 - 2, "bossy"], ...(EMO.c11Steam ? [[tMar, "flustered"], [tMar + STEAM.hold, "bossy"]] as [number, string][] : []),
+        [endOf("C11") + REACT, "sure"]]),
       ...talk("ju", f, 2),
       gaze: f < c05 ? 0.5 : 0,
       lookDown: looksDown, head: talkHead("ju", f, 2, accent("jolt", f, tSplitStop), f >= c08 && f < tSplitStop ? { tilt: 7 } : undefined),
@@ -183,6 +194,9 @@ export const SEG: Segment = {
         ...tk,
         head: talkHead("ro", f, 1, accent("pop", f, tSun)),
         lookDown: -6,
+        // (v7, the owner on the v6.1 cut, f1362: "His hand should be in front not at the back": the rig draws a head on
+        // top of its own figure's arms, so the raised hand was cut by his hair. That arm is drawn at its true depth.)
+        armFront: [true, undefined],
       };
     } else if (f < runFrom) {
       // standing in the bushes: eyes shut, sighing her name (his own take of C08, at the same moment); then he hears
@@ -215,8 +229,11 @@ export const SEG: Segment = {
       roAt = ruN.at; roFacing = ruN.facing;
       // (v5) "At the hour of nine!": he throws an arm up and back at her as he runs (up over his own head it was
       // hidden behind his hat)
-      roState = { pose: ruN.pose, expr: faceAt(f, [[0, "smittenOpen"]]), ...talk("ro", f, 1), turn: 0.4,
-        hands: [reach(rel(roAt, roFacing, -0.16, 1.45, -0.75), ky(f, [[c12 - 2, 0], [c12 + 7, 1]])), null] };
+      // (v7, the owner, f2192: "Again his hand here should be infront": the arm at its true depth)
+      roState = { pose: ruN.pose, expr: faceAt(f, [[0, "smittenOpen"]]), ...talk("ro", f, 1), turn: 0.4, armFront: [true, undefined],
+        // (v7: the hand goes up BEFORE him, beside his face on the lens's side, a wave over his shoulder as he runs. Thrown up
+        // and back it was behind his own head from here, whatever the drawing order.)
+        hands: [reach(rel(roAt, roFacing, -0.36, 1.5, 0.4), ky(f, [[c12 - 2, 0], [c12 + 7, 1]])), null] };
     }
     ro.set({
       ...standing(roAt, roFacing, f, 1),
@@ -227,6 +244,30 @@ export const SEG: Segment = {
     });
     w.update();
 
+    // ---------------------------------------------------------------- (v7) the emotes of emo.ts
+    const emotes: React.ReactNode[] = [];
+    // 5: sparkles round her head while she sighs her famous line (gone with the cut to him)
+    if (EMO.c01Sparkle && f < herCut) emotes.push(h(Sparkles, { key: "sp", f, from: startOf("C01") + 6, to: herCut, head: VERBS.headPx(w, ju) }));
+    // 6: the sunburst behind him: it bursts in on "sun" (with the snap zoom) and switches off on 半夜
+    if (EMO.c03Sun && interview) {
+      const off = wordAt("C04", "半夜"), k = ky(f, [[tSun - 2, 0], [tSun + 3, 1.08], [tSun + 7, 1], [off, 1], [off + 5, 0]]);
+      if (k > 0) {
+        const hd = ro.headWorld(), cam = (w.camera as THREE.PerspectiveCamera).position.clone();
+        const q = new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().lookAt(cam, hd, V(0, 1, 0)));
+        w.prop("sunBurst").put(hd.clone().addScaledVector(cam.clone().sub(hd).normalize(), -SUN_BACK), { rot: q, amount: k, t: f / 30 });
+      }
+    }
+    // 8: steam off the top of her head, both sides, as "marriage" lands
+    if (EMO.c11Steam && f >= tMar && f < tMar + 20) {
+      const hp = VERBS.headPx(w, ju);
+      for (const s of [-1, 1]) emotes.push(h(Huff, { key: `st${s}`, f, at: tMar + STEAM.at + (s > 0 ? 2 : 0), x: hp.x + s * 0.62 * hp.r, y: hp.y - 0.78 * hp.r, dir: [0.45 * s, -1], r: 0.14 * hp.r }));
+    }
+    // 9: the dust cloud where he stood: he is off before she has finished, and the lens tilts down onto it
+    if (EMO.c12Dust && f >= runFrom && f < runFrom + 40) {
+      const g0 = w.project(BELOW.at.clone().add(V(0, 0.18, 0))), right = CAM.camAxes(camera).right;
+      const g1 = w.project(BELOW.at.clone().add(V(0, 0.18, 0)).add(right)), gr = w.project(RUN_PATH[1].clone().add(V(0, 0.18, 0)));
+      if (g0.front) emotes.push(h(DustPuff, { key: "dust", f, at: runFrom + 2, x: g0.x, y: g0.y, s: Math.hypot(g1.x - g0.x, g1.y - g0.y), dir: [gr.x - g0.x, gr.y - g0.y] }));
+    }
     // ---------------------------------------------------------------- the split's torn edge (and a tint on each half)
     let overlays;
     if (f >= c08 && f < SPLIT.open + SPLIT.len + 1) {
@@ -246,6 +287,7 @@ export const SEG: Segment = {
       // the REC row)
       overlays = h(EyeHearts, { f, eyes: eyesPx(w, ju), from: endOf("C05") + 5, to: caughtAt, pop: caughtAt, dir: [0.12, -1], size: 0.75, far: 0.66 });
     const namesUp = f >= c08 && f < endOf("C08") + 8;
+    if (emotes.length) overlays = frag(overlays ?? null, ...emotes);
     return { camera, overlays, captions: namesUp ? false : undefined };
   },
 };

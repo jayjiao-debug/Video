@@ -264,6 +264,9 @@ export const FACES: Record<string, Expr | RigFace> = {
   sure: face("smile", "smile", "neutral"), bossy: { eyes: "smile", mouth: "smile", brows: "neutral", browsTo: "stern", k: 0.5, marks: "neutral" }, swoon: face("relief", "relief", "sad", "neutral"), caught: face("smile", "nervous", "shock", "nervous"), brave: face("neutral", "smile", "sad", "neutral"),
   // taste review of v1 (23 Nov): faces that fought their beats. wail had the laugh mouth (it read 笑哭) and caught had the
   // ring eyes (on Juliet they read as round spectacles); the bier, the waking and her sincere line get their own faces
+  // v7 (the owner on the v6.1 cut, scene F: "Juliet should be more sad rather then a smile?"): her Tuesday faces. sorrow:
+  // sad eyes, the mouth turned down, the brows up in the middle; desperate (the snatch): wide eyes, the mouth pulled
+  sorrow: face("sad", "sad", "sad", "neutral"), desperate: face("shock", "pained", "sad", "neutral"),
   tender: face("sad", "smile", "sad"), grief: face("sad", "sad", "sad"), waking: face("neutral", "sigh", "sad"),
   puzzled: face("smile", "whistle", "shock", "neutral"), soft: face("smile", "smile", "sad", "neutral"),
   // v3b (the owner, 23 Nov: "give them expressive emotion showing they are in love"): the love eyes (eyes.ts) by a rig
@@ -279,6 +282,15 @@ export const FACES: Record<string, Expr | RigFace> = {
   // hud/emotes.tsx Huff)
   huffy: face("huff", "stern", "huff", "rage"),
   weary: face("neutral", "smile", "sad"), dry: face("deadpan", "smug", "smug", "neutral"), worried: face("neutral", "nervous", "sad", "neutral"), warn: face("neutral", "neutral", "stern", "neutral"),
+  // v7 (the owner, 24 Nov: "IM thinking of adding more expressive emotes to the characters in that balcony, party
+  // scenes"): the series' approved meme faces (rig3d.ts FACES, 11 Nov) on the party and the balcony, each one only where
+  // emotes.ts switches it on. gloom 黑线 (a blue shade, hanging lines), aghast 惊掉下巴 (ring eyes, the jaw down), scheming
+  // 坏笑 (the stern eyes over a smirk, the upper face in shadow), rage 暴怒 (teeth, the anger mark), speechless 无语
+  // (bead eyes, a flat mouth, a drop of sweat)
+  gloom: face("gloom", "gloom", "gloom"), aghast: face("aghast", "aghast", "aghast"), scheming: face("scheming", "scheming", "scheming"),
+  rage: face("rage", "rage", "rage"), speechless: face("speechless", "speechless", "speechless"),
+  // flustered (her half second on 娶, emo.ts 8): her eyes, the wavy mouth, the brows up, a blush
+  flustered: face("smile", "nervous", "shock", "relief"),
 };
 /** test looks: one per kit hair kind (preview: who "hair:curly") */
 export const hairTest = (hair: Look["hair"], seed = 1597): Person => ({ name: `hair_${hair}_${seed}`, look: { ...ROMEO_LOOK, seed, hair }, acc: () => [] });

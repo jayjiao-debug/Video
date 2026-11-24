@@ -35,4 +35,5 @@ export * from "./stamp";
 export * from "./divider";
 export * from "./end";
 export * from "./emotes";
+export * from "./manpu";
 export * from "./sounds";

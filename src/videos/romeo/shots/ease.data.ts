@@ -12,79 +12,79 @@ export const HAND_EASE: HandEase[] = [
   { who: "romeo", i: 1, a: 252, b: 258, j0: 252, j1: 252, A: [0.1644, 0.0643, 0.0226], B: [0.2358, 0.6397, 0.2397] },   // A idle>cheer, 62 cm in one frame, after
   { who: "romeo", i: 0, a: 363, b: 371, j0: 366, j1: 368, A: [-0.3286, 0.6171, -0.148], B: [-0.1232, 0.4708, 0.3742] },   // A cheer>hold, 60 cm in one frame, across
   { who: "romeo", i: 1, a: 363, b: 370, j0: 366, j1: 368, A: [0.2359, 0.6536, 0.1753], B: [0.0618, 0.2064, 0.2019] },   // A cheer>hold, 61 cm in one frame, across
-  { who: "romeo", i: 1, a: 615, b: 619, j0: 617, j1: 617, A: [0.1534, 0.1953, 0.1974], B: [0.2443, 0.1953, 0.053] },   // B hold, 17 cm in one frame, across
-  { who: "juliet", i: 0, a: 853, b: 859, j0: 853, j1: 853, A: [-0.1564, 0.0145, 0.0218], B: [-0.1528, 0.3697, 0.3784] },   // B idle>point, 50 cm in one frame, after
-  { who: "juliet", i: 0, a: 925, b: 930, j0: 931, j1: 931, A: [-0.1528, 0.3695, 0.3773], B: [-0.1564, 0.0141, 0.0347] },   // B point>idle, 49 cm in one frame, before
-  { who: "juliet", i: 1, a: 936, b: 942, j0: 936, j1: 936, A: [0.1562, 0.0146, 0.0218], B: [0.3949, 0.5226, -0.0236] },   // B idle>wave, 56 cm in one frame, after, off screen
-  { who: "juliet", i: 1, a: 953, b: 959, j0: 960, j1: 960, A: [0.4315, 0.5147, -0.0383], B: [0.156, 0.015, 0.0177] },   // B wave>idle, 57 cm in one frame, before, off screen
-  { who: "juliet", i: 0, a: 1395, b: 1399, j0: 1397, j1: 1397, A: [-0.1661, 0.178, 0.3594], B: [0.0508, 0.2943, 0.216] },   // C hold, 28 cm in one frame, across, off screen
-  { who: "juliet", i: 0, a: 1554, b: 1558, j0: 1556, j1: 1556, A: [0.0538, 0.296, 0.2149], B: [-0.1654, 0.1798, 0.3615] },   // C hold, 29 cm in one frame, across
-  { who: "juliet", i: 0, a: 1606, b: 1610, j0: 1608, j1: 1608, A: [-0.166, 0.1766, 0.3588], B: [-0.05, 0.072, 0.24] },   // C hold, 20 cm in one frame, across
-  { who: "juliet", i: 1, a: 1606, b: 1610, j0: 1608, j1: 1608, A: [0.1657, 0.1771, 0.3578], B: [0.05, 0.072, 0.24] },   // C hold, 20 cm in one frame, across
-  { who: "juliet", i: 0, a: 1798, b: 1802, j0: 1800, j1: 1800, A: [-0.05, 0.396, 0.26], B: [-0.1663, 0.1766, 0.3605] },   // C hold, 27 cm in one frame, across
-  { who: "juliet", i: 1, a: 1798, b: 1802, j0: 1800, j1: 1800, A: [0.05, 0.396, 0.26], B: [0.166, 0.1772, 0.3596] },   // C hold, 27 cm in one frame, across
-  { who: "romeo", i: 0, a: 1800, b: 1805, j0: 1800, j1: 1800, A: [-0.0437, 0.3372, 0.2], B: [-0.1637, 0.0651, 0.031] },   // C idle, 34 cm in one frame, after
-  { who: "romeo", i: 1, a: 1800, b: 1805, j0: 1800, j1: 1800, A: [0.0563, 0.3353, 0.2], B: [0.1644, 0.0647, 0.0205] },   // C idle, 34 cm in one frame, after
-  { who: "juliet", i: 0, a: 1959, b: 1964, j0: 1959, j1: 1959, A: [-0.1736, 0.1887, 0.3647], B: [-0.3848, 0.525, 0.0884] },   // C hold>wave, 48 cm in one frame, after
-  { who: "juliet", i: 1, a: 1959, b: 1964, j0: 1959, j1: 1959, A: [0.1662, 0.1948, 0.3654], B: [0.1576, 0.0149, 0.0306] },   // C hold>wave, 38 cm in one frame, after
-  { who: "juliet", i: 0, a: 2075, b: 2086, j0: 2078, j1: 2084, A: [-0.4086, 0.5182, 0.144], B: [-0.1528, 0.3698, 0.3788] },   // C wave>point, 55 cm in one frame, across
-  { who: "juliet", i: 1, a: 2074, b: 2083, j0: 2078, j1: 2084, A: [0.1572, 0.0149, 0.0291], B: [0.1563, 0.0147, 0.0306] },   // C wave>point, 24 cm in one frame, before
-  { who: "juliet", i: 0, a: 2158, b: 2162, j0: 2163, j1: 2163, A: [-0.1528, 0.3696, 0.3795], B: [-0.17, 0.203, 0.3586] },   // C point>hold, 17 cm in one frame, before
-  { who: "juliet", i: 1, a: 2157, b: 2162, j0: 2163, j1: 2163, A: [0.1563, 0.0146, 0.0313], B: [0.17, 0.203, 0.3586], over: 0.08 },   // C point>hold, 38 cm in one frame, before, over (+8 cm)
-  { who: "juliet", i: 0, a: 2696, b: 2698, j0: 2696, j1: 2697, A: [-0.1566, 0.0146, 0.0231], B: [-0.1562, 0.0391, -0.1001] },   // D idle>walk, 28 cm in one frame, across, off screen
-  { who: "friar", i: 0, a: 2751, b: 2755, j0: 2753, j1: 2753, A: [-0.0305, 0.1297, 0.2298], B: [-0.2025, 0.025, 0.0573] },   // D hold>walk, 27 cm in one frame, across, off screen
-  { who: "friar", i: 1, a: 2751, b: 2755, j0: 2753, j1: 2753, A: [0.0838, 0.1529, 0.2375], B: [0.2025, 0.0272, -0.0094] },   // D hold>walk, 30 cm in one frame, across, off screen
-  { who: "juliet", i: 1, a: 2762, b: 2766, j0: 2764, j1: 2764, A: [0.1566, 0.0145, 0.0405], B: [0.3028, 0.135, 0.2119] },   // D idle, 26 cm in one frame, across
-  { who: "romeo", i: 0, a: 2762, b: 2766, j0: 2764, j1: 2764, A: [-0.1643, 0.0652, 0.0351], B: [-0.3134, 0.138, 0.1823] },   // D idle, 22 cm in one frame, across
-  { who: "friar", i: 0, a: 2783, b: 2787, j0: 2783, j1: 2783, A: [-0.2025, 0.0282, -0.01], B: [-0.0305, 0.1297, 0.2298] },   // D walk>hold, 31 cm in one frame, after
-  { who: "friar", i: 1, a: 2783, b: 2787, j0: 2783, j1: 2783, A: [0.2025, 0.0241, 0.0561], B: [0.0838, 0.1529, 0.2375] },   // D walk>hold, 25 cm in one frame, after
-  { who: "friar", i: 0, a: 3502, b: 3505, j0: 3504, j1: 3504, A: [-0.0305, 0.1297, 0.2298], B: [-0.1642, 0.1406, 0.2177] },   // F hold, 13 cm in one frame, across
-  { who: "juliet", i: 1, a: 3836, b: 3841, j0: 3839, j1: 3839, A: [0.1575, 0.0147, 0.0213], B: [0.2428, 0.3389, 0.0949] },   // F idle, 34 cm in one frame, across
-  { who: "friar", i: 0, a: 3846, b: 3852, j0: 3846, j1: 3846, A: [0.0324, 0.5023, 0.3752], B: [-0.2025, 0.0248, 0.0281] },   // F hold>idle, 64 cm in one frame, after/swap
-  { who: "friar", i: 1, a: 3846, b: 3850, j0: 3846, j1: 3846, A: [0.0838, 0.1529, 0.2375], B: [0.2025, 0.0244, 0.019] },   // F hold>idle, 28 cm in one frame, after/swap
-  { who: "juliet", i: 0, a: 3846, b: 3850, j0: 3846, j1: 3846, A: [-0.1536, 0.0144, 0.029], B: [-0.0187, 0.1275, 0.1889] },   // F idle>hold, 24 cm in one frame, after
-  { who: "friar", i: 0, a: 4022, b: 4026, j0: 4022, j1: 4022, A: [-0.2025, 0.0274, -0.0044], B: [-0.0305, 0.1297, 0.2298] },   // F walk>hold, 31 cm in one frame, after
-  { who: "friar", i: 1, a: 4022, b: 4026, j0: 4022, j1: 4022, A: [0.2025, 0.0244, 0.0623], B: [0.0838, 0.1529, 0.2375] },   // F walk>hold, 25 cm in one frame, after
-  { who: "friar", i: 0, a: 4028, b: 4033, j0: 4031, j1: 4031, A: [-0.0305, 0.1297, 0.2298], B: [-0.0756, 0.4385, 0.4206], over: 0.12 },   // F hold, 37 cm in one frame, across, over (+12 cm)
-  { who: "friar", i: 0, a: 4076, b: 4081, j0: 4076, j1: 4076, A: [-0.1398, 0.422, 0.4253], B: [-0.0305, 0.1297, 0.2298], over: 0.12 },   // F hold, 37 cm in one frame, after, over (+12 cm)
-  { who: "friar", i: 1, a: 4073, b: 4078, j0: 4076, j1: 4076, A: [0.0838, 0.1529, 0.2375], B: [-0.0105, 0.4498, 0.3967], over: 0.1 },   // F hold, 35 cm in one frame, across, at prop.letterSealed, over (+10 cm)
-  { who: "friar", i: 1, a: 4105, b: 4112, j0: 4105, j1: 4106, A: [-0.012, 0.3991, 0.4007], B: [0.2025, 0.0272, -0.0093] },   // F hold>walk, 31 cm in one frame, after/swap, at prop.letterSealed
-  { who: "friar", i: 0, a: 4104, b: 4108, j0: 4106, j1: 4106, A: [-0.0305, 0.1297, 0.2298], B: [-0.2025, 0.025, 0.0574] },   // F hold>walk, 27 cm in one frame, across
-  { who: "youngFriar", i: 0, a: 4134, b: 4136, j0: 4134, j1: 4134, A: [-0.1886, -0.0188, 0.0276], B: [-0.1882, 0.0234, 0.2015] },   // F idle>walk, 18 cm in one frame, across, off screen
-  { who: "youngFriar", i: 1, a: 4134, b: 4137, j0: 4134, j1: 4134, A: [0.1879, -0.0192, 0.0184], B: [0.1883, 0.0334, -0.1333] },   // F idle>walk, 16 cm in one frame, after*, off screen
-  { who: "friar", i: 0, a: 4141, b: 4146, j0: 4141, j1: 4141, A: [-0.2025, 0.0251, 0.0607], B: [-0.2095, 0.4351, 0.3287] },   // F walk>hold, 49 cm in one frame, after
-  { who: "friar", i: 1, a: 4141, b: 4145, j0: 4141, j1: 4141, A: [0.2025, 0.0268, -0.006], B: [0.0838, 0.1529, 0.2375] },   // F walk>hold, 30 cm in one frame, after
-  { who: "youngFriar", i: 0, a: 4276, b: 4282, j0: 4279, j1: 4279, A: [-0.1886, -0.0189, 0.0276], B: [0.0873, 0.3558, 0.2288] },   // F idle, 51 cm in one frame, across
-  { who: "friar", i: 0, a: 4285, b: 4290, j0: 4285, j1: 4285, A: [-0.2389, 0.3549, 0.242], B: [-0.2025, 0.0249, 0.0261] },   // F hold>idle, 40 cm in one frame, after/swap
-  { who: "friar", i: 1, a: 4285, b: 4289, j0: 4285, j1: 4285, A: [0.0838, 0.1529, 0.2375], B: [0.2025, 0.0245, 0.0183] },   // F hold>idle, 28 cm in one frame, after/swap
-  { who: "youngFriar", i: 1, a: 4283, b: 4293, j0: 4285, j1: 4292, A: [0.1882, -0.019, 0.0172], B: [0.1877, -0.0163, -0.0083] },   // F idle>walk, 28 cm in one frame, across
-  { who: "youngFriar", i: 0, a: 4287, b: 4297, j0: 4287, j1: 4292, A: [0.0851, 0.3545, 0.2288], B: [-0.1889, -0.0184, 0.0537] },   // F hold>walk, 30 cm in one frame, after
-  { who: "romeo", i: 0, a: 4883, b: 4887, j0: 4883, j1: 4883, A: [-0.1643, 0.0653, 0.0201], B: [-0.16, 0.2747, 0.24] },   // G idle>hold, 30 cm in one frame, after
-  { who: "romeo", i: 1, a: 4883, b: 4887, j0: 4883, j1: 4883, A: [0.1638, 0.0647, 0.02], B: [0.0619, 0.2067, 0.2035] },   // G idle>hold, 25 cm in one frame, after
-  { who: "romeo", i: 0, a: 4907, b: 4912, j0: 4907, j1: 4907, A: [-0.1103, 0.3773, 0.1669], B: [-0.1643, 0.0654, 0.0206] },   // G hold>idle, 35 cm in one frame, after
-  { who: "romeo", i: 1, a: 4905, b: 4909, j0: 4907, j1: 4907, A: [0.0619, 0.2068, 0.2035], B: [0.1638, 0.0645, 0.031] },   // G hold>idle, 25 cm in one frame, across
-  { who: "romeo", i: 0, a: 5901, b: 5905, j0: 5903, j1: 5903, A: [-0.0225, 0.1816, 0.1933], B: [-0.164, 0.0658, 0.0608] },   // I hold>walk, 23 cm in one frame, across
-  { who: "romeo", i: 1, a: 5901, b: 5905, j0: 5903, j1: 5903, A: [0.0619, 0.2064, 0.2016], B: [0.1641, 0.0672, -0.0165] },   // I hold>walk, 28 cm in one frame, across
-  { who: "juliet", i: 0, a: 5912, b: 5916, j0: 5914, j1: 5914, A: [-0.1019, 0.2112, 0.22], B: [0.1045, 0.2952, 0.2791] },   // I sit, 23 cm in one frame, across
-  { who: "juliet", i: 1, a: 5912, b: 5916, j0: 5914, j1: 5914, A: [0.0981, 0.213, 0.22], B: [0.184, 0.2183, 0.3815] },   // I sit, 18 cm in one frame, across
-  { who: "romeo", i: 0, a: 5911, b: 5917, j0: 5914, j1: 5914, A: [-0.1637, 0.0675, -0.0099], B: [-0.5183, 0.4502, 0.0771] },   // I walk>hold, 53 cm in one frame, across
-  { who: "romeo", i: 1, a: 5911, b: 5916, j0: 5914, j1: 5914, A: [0.1644, 0.0656, 0.0673], B: [-0.2005, 0.3303, 0.2629] },   // I walk>hold, 49 cm in one frame, across
+  { who: "romeo", i: 1, a: 645, b: 649, j0: 647, j1: 647, A: [0.1537, 0.1932, 0.1971], B: [0.2446, 0.1931, 0.0519] },   // B hold, 17 cm in one frame, across
+  { who: "juliet", i: 0, a: 883, b: 888, j0: 883, j1: 883, A: [-0.156, 0.0145, 0.0358], B: [-0.1528, 0.3697, 0.3784] },   // B idle>point, 49 cm in one frame, after
+  { who: "juliet", i: 0, a: 954, b: 960, j0: 961, j1: 961, A: [-0.1528, 0.3695, 0.3773], B: [-0.1567, 0.0145, 0.0207] },   // B point>idle, 50 cm in one frame, before
+  { who: "juliet", i: 1, a: 966, b: 972, j0: 966, j1: 966, A: [0.156, 0.015, 0.0184], B: [0.3949, 0.5226, -0.0237] },   // B idle>wave, 56 cm in one frame, after, off screen
+  { who: "juliet", i: 1, a: 983, b: 989, j0: 990, j1: 990, A: [0.4315, 0.5147, -0.0386], B: [0.1562, 0.0149, 0.0281] },   // B wave>idle, 57 cm in one frame, before, off screen
+  { who: "juliet", i: 0, a: 1425, b: 1429, j0: 1427, j1: 1427, A: [-0.1658, 0.1779, 0.358], B: [0.0508, 0.2923, 0.216] },   // C hold, 28 cm in one frame, across, off screen
+  { who: "juliet", i: 0, a: 1584, b: 1588, j0: 1586, j1: 1586, A: [0.0538, 0.2986, 0.2149], B: [-0.1657, 0.1799, 0.3631] },   // C hold, 29 cm in one frame, across
+  { who: "juliet", i: 0, a: 1636, b: 1640, j0: 1638, j1: 1638, A: [-0.1656, 0.1766, 0.3569], B: [-0.05, 0.0717, 0.24] },   // C hold, 20 cm in one frame, across
+  { who: "juliet", i: 1, a: 1636, b: 1640, j0: 1638, j1: 1638, A: [0.1653, 0.1772, 0.356], B: [0.05, 0.0717, 0.24] },   // C hold, 19 cm in one frame, across
+  { who: "juliet", i: 0, a: 1828, b: 1832, j0: 1830, j1: 1830, A: [-0.05, 0.3902, 0.26], B: [-0.1658, 0.1766, 0.3578] },   // C hold, 26 cm in one frame, across
+  { who: "juliet", i: 1, a: 1828, b: 1832, j0: 1830, j1: 1830, A: [0.05, 0.3902, 0.26], B: [0.1655, 0.1772, 0.3569] },   // C hold, 26 cm in one frame, across
+  { who: "romeo", i: 0, a: 1830, b: 1835, j0: 1830, j1: 1830, A: [-0.0455, 0.3317, 0.2], B: [-0.1639, 0.0651, 0.019] },   // C idle, 34 cm in one frame, after
+  { who: "romeo", i: 1, a: 1830, b: 1835, j0: 1830, j1: 1830, A: [0.0545, 0.3303, 0.2], B: [0.1643, 0.0643, 0.0216] },   // C idle, 34 cm in one frame, after
+  { who: "juliet", i: 0, a: 1989, b: 1994, j0: 1989, j1: 1989, A: [-0.1737, 0.1905, 0.3654], B: [-0.3848, 0.525, 0.0884] },   // C hold>wave, 48 cm in one frame, after
+  { who: "juliet", i: 1, a: 1989, b: 1994, j0: 1989, j1: 1989, A: [0.1662, 0.1971, 0.3654], B: [0.1576, 0.0149, 0.0306] },   // C hold>wave, 38 cm in one frame, after
+  { who: "juliet", i: 0, a: 2105, b: 2116, j0: 2108, j1: 2114, A: [-0.4086, 0.5182, 0.1439], B: [-0.1528, 0.3698, 0.3788] },   // C wave>point, 55 cm in one frame, across
+  { who: "juliet", i: 1, a: 2104, b: 2113, j0: 2108, j1: 2114, A: [0.1572, 0.0149, 0.0291], B: [0.1563, 0.0147, 0.0306] },   // C wave>point, 24 cm in one frame, before
+  { who: "juliet", i: 0, a: 2188, b: 2192, j0: 2193, j1: 2193, A: [-0.1528, 0.3696, 0.3795], B: [-0.17, 0.2044, 0.3586] },   // C point>hold, 17 cm in one frame, before
+  { who: "juliet", i: 1, a: 2187, b: 2192, j0: 2193, j1: 2193, A: [0.1563, 0.0146, 0.0313], B: [0.17, 0.2044, 0.3586], over: 0.08 },   // C point>hold, 38 cm in one frame, before, over (+8 cm)
+  { who: "juliet", i: 0, a: 2726, b: 2728, j0: 2726, j1: 2727, A: [-0.1562, 0.0147, 0.0179], B: [-0.1562, 0.0391, -0.1001] },   // D idle>walk, 28 cm in one frame, across, off screen
+  { who: "friar", i: 0, a: 2781, b: 2785, j0: 2783, j1: 2783, A: [-0.0305, 0.1297, 0.2298], B: [-0.2025, 0.025, 0.0573] },   // D hold>walk, 27 cm in one frame, across, off screen
+  { who: "friar", i: 1, a: 2781, b: 2785, j0: 2783, j1: 2783, A: [0.0838, 0.1529, 0.2375], B: [0.2025, 0.0272, -0.0094] },   // D hold>walk, 30 cm in one frame, across, off screen
+  { who: "juliet", i: 1, a: 2792, b: 2796, j0: 2794, j1: 2794, A: [0.1562, 0.0147, 0.0346], B: [0.306, 0.1256, 0.2119] },   // D idle, 26 cm in one frame, across
+  { who: "romeo", i: 0, a: 2792, b: 2796, j0: 2794, j1: 2794, A: [-0.1639, 0.065, 0.0432], B: [-0.31, 0.1436, 0.1823] },   // D idle, 22 cm in one frame, across
+  { who: "friar", i: 0, a: 2813, b: 2817, j0: 2813, j1: 2813, A: [-0.2025, 0.0282, -0.01], B: [-0.0305, 0.1297, 0.2298] },   // D walk>hold, 31 cm in one frame, after
+  { who: "friar", i: 1, a: 2813, b: 2817, j0: 2813, j1: 2813, A: [0.2025, 0.0241, 0.0561], B: [0.0838, 0.1529, 0.2375] },   // D walk>hold, 25 cm in one frame, after
+  { who: "friar", i: 0, a: 3532, b: 3535, j0: 3534, j1: 3534, A: [-0.0305, 0.1297, 0.2298], B: [-0.1642, 0.1396, 0.2177] },   // F hold, 13 cm in one frame, across
+  { who: "juliet", i: 1, a: 3866, b: 3871, j0: 3869, j1: 3869, A: [0.1579, 0.0151, 0.0197], B: [0.2341, 0.34, 0.0948] },   // F idle, 34 cm in one frame, across
+  { who: "friar", i: 0, a: 3876, b: 3882, j0: 3876, j1: 3876, A: [0.033, 0.4957, 0.3764], B: [-0.2025, 0.0253, 0.0181] },   // F hold>idle, 64 cm in one frame, after/swap
+  { who: "friar", i: 1, a: 3876, b: 3880, j0: 3876, j1: 3876, A: [0.0838, 0.1529, 0.2375], B: [0.2025, 0.0242, 0.0224] },   // F hold>idle, 28 cm in one frame, after/swap
+  { who: "juliet", i: 0, a: 3876, b: 3880, j0: 3876, j1: 3876, A: [-0.1533, 0.0151, 0.0188], B: [-0.0187, 0.1279, 0.1889] },   // F idle>hold, 24 cm in one frame, after
+  { who: "friar", i: 0, a: 4052, b: 4056, j0: 4052, j1: 4052, A: [-0.2025, 0.0274, -0.0044], B: [-0.0305, 0.1297, 0.2298] },   // F walk>hold, 31 cm in one frame, after
+  { who: "friar", i: 1, a: 4052, b: 4056, j0: 4052, j1: 4052, A: [0.2025, 0.0244, 0.0623], B: [0.0838, 0.1529, 0.2375] },   // F walk>hold, 25 cm in one frame, after
+  { who: "friar", i: 0, a: 4058, b: 4063, j0: 4061, j1: 4061, A: [-0.0305, 0.1297, 0.2298], B: [-0.1272, 0.4253, 0.4253], over: 0.12 },   // F hold, 37 cm in one frame, across, over (+12 cm)
+  { who: "friar", i: 0, a: 4106, b: 4111, j0: 4106, j1: 4106, A: [-0.1365, 0.4276, 0.4249], B: [-0.0305, 0.1297, 0.2298], over: 0.12 },   // F hold, 37 cm in one frame, after, over (+12 cm)
+  { who: "friar", i: 1, a: 4103, b: 4108, j0: 4106, j1: 4106, A: [0.0838, 0.1529, 0.2375], B: [-0.0106, 0.4473, 0.397], over: 0.1 },   // F hold, 35 cm in one frame, across, at prop.letterSealed, over (+10 cm)
+  { who: "friar", i: 1, a: 4135, b: 4142, j0: 4135, j1: 4136, A: [-0.012, 0.4042, 0.4006], B: [0.2025, 0.0272, -0.0093] },   // F hold>walk, 31 cm in one frame, after/swap, at prop.letterSealed
+  { who: "friar", i: 0, a: 4134, b: 4138, j0: 4136, j1: 4136, A: [-0.0305, 0.1297, 0.2298], B: [-0.2025, 0.025, 0.0574] },   // F hold>walk, 27 cm in one frame, across
+  { who: "youngFriar", i: 0, a: 4164, b: 4166, j0: 4164, j1: 4164, A: [-0.1876, -0.0185, 0.0171], B: [-0.1882, 0.0234, 0.2015] },   // F idle>walk, 19 cm in one frame, across, off screen
+  { who: "youngFriar", i: 1, a: 4164, b: 4167, j0: 4164, j1: 4164, A: [0.189, -0.0194, 0.0198], B: [0.1883, 0.0334, -0.1333] },   // F idle>walk, 16 cm in one frame, after*, off screen
+  { who: "friar", i: 0, a: 4171, b: 4176, j0: 4171, j1: 4171, A: [-0.2025, 0.0251, 0.0607], B: [-0.2094, 0.4334, 0.3287] },   // F walk>hold, 49 cm in one frame, after
+  { who: "friar", i: 1, a: 4171, b: 4175, j0: 4171, j1: 4171, A: [0.2025, 0.0268, -0.006], B: [0.0838, 0.1529, 0.2375] },   // F walk>hold, 30 cm in one frame, after
+  { who: "youngFriar", i: 0, a: 4306, b: 4312, j0: 4309, j1: 4309, A: [-0.1876, -0.0176, 0.0171], B: [0.0788, 0.3534, 0.2288] },   // F idle, 50 cm in one frame, across
+  { who: "friar", i: 0, a: 4315, b: 4320, j0: 4315, j1: 4315, A: [-0.2387, 0.3509, 0.2421], B: [-0.2025, 0.0253, 0.018] },   // F hold>idle, 40 cm in one frame, after/swap
+  { who: "friar", i: 1, a: 4315, b: 4319, j0: 4315, j1: 4315, A: [0.0838, 0.1529, 0.2375], B: [0.2025, 0.0242, 0.0241] },   // F hold>idle, 28 cm in one frame, after/swap
+  { who: "youngFriar", i: 1, a: 4313, b: 4323, j0: 4315, j1: 4322, A: [0.1891, -0.0186, 0.022], B: [0.1877, -0.0163, -0.0083] },   // F idle>walk, 28 cm in one frame, across
+  { who: "youngFriar", i: 0, a: 4317, b: 4327, j0: 4317, j1: 4322, A: [0.0852, 0.3509, 0.2288], B: [-0.1889, -0.0184, 0.0537] },   // F hold>walk, 29 cm in one frame, after
+  { who: "romeo", i: 0, a: 4991, b: 4995, j0: 4991, j1: 4991, A: [-0.1639, 0.0651, 0.0372], B: [-0.16, 0.2748, 0.24] },   // G idle>hold, 29 cm in one frame, after
+  { who: "romeo", i: 1, a: 4991, b: 4995, j0: 4991, j1: 4991, A: [0.1642, 0.0645, 0.0254], B: [0.0619, 0.2067, 0.2035] },   // G idle>hold, 25 cm in one frame, after
+  { who: "romeo", i: 0, a: 5015, b: 5020, j0: 5015, j1: 5015, A: [-0.1102, 0.3773, 0.1669], B: [-0.1643, 0.0653, 0.0245] },   // G hold>idle, 35 cm in one frame, after
+  { who: "romeo", i: 1, a: 5013, b: 5017, j0: 5015, j1: 5015, A: [0.0619, 0.2068, 0.2035], B: [0.1638, 0.0648, 0.0185] },   // G hold>idle, 25 cm in one frame, across
+  { who: "romeo", i: 0, a: 6000, b: 6004, j0: 6002, j1: 6002, A: [-0.0225, 0.1817, 0.1933], B: [-0.164, 0.0658, 0.061] },   // I hold>walk, 23 cm in one frame, across
+  { who: "romeo", i: 1, a: 6000, b: 6004, j0: 6002, j1: 6002, A: [0.0619, 0.2065, 0.2016], B: [0.1641, 0.0672, -0.0163] },   // I hold>walk, 28 cm in one frame, across
+  { who: "juliet", i: 0, a: 6011, b: 6015, j0: 6013, j1: 6013, A: [-0.1015, 0.2121, 0.22], B: [0.1047, 0.296, 0.2791] },   // I sit, 23 cm in one frame, across
+  { who: "juliet", i: 1, a: 6011, b: 6015, j0: 6013, j1: 6013, A: [0.0985, 0.2135, 0.22], B: [0.1843, 0.2186, 0.3819] },   // I sit, 18 cm in one frame, across
+  { who: "romeo", i: 0, a: 6010, b: 6016, j0: 6013, j1: 6013, A: [-0.1637, 0.0671, -0.0058], B: [-0.5177, 0.4513, 0.0826] },   // I walk>hold, 53 cm in one frame, across
+  { who: "romeo", i: 1, a: 6010, b: 6015, j0: 6013, j1: 6013, A: [0.1644, 0.0659, 0.0714], B: [-0.1977, 0.3312, 0.265] },   // I walk>hold, 49 cm in one frame, across
 ];
 // TURN_EASE: one row = one person whose facing jumped in a single frame (a turn to the lens, a walker snapping to
 // its path), and the frames over which it now turns:  j = the frame of the jump, d = the turn (rad, the short way),
 // a .. b = the frames it is eased on (half before the jump, half after).
 export type TurnEase = { who: string; a: number; b: number; j: number; d: number };
 export const TURN_EASE: TurnEase[] = [
-  { who: "romeo", a: 615, b: 619, j: 617, d: 0.8490 },   // B hold, 49 degrees in one frame
-  { who: "romeo", a: 2156, b: 2162, j: 2159, d: -1.7130 },   // C idle, 98 degrees in one frame, off screen
-  { who: "friar", a: 2249, b: 2253, j: 2251, d: -0.7750 },   // D hold, 44 degrees in one frame
-  { who: "romeo", a: 2316, b: 2320, j: 2318, d: -0.8460 },   // D idle, 48 degrees in one frame, off screen
-  { who: "friar", a: 2365, b: 2374, j: 2370, d: 2.8390 },   // D hold, 163 degrees in one frame
-  { who: "juliet", a: 2744, b: 2747, j: 2746, d: -0.3300 },   // D idle, 19 degrees in one frame
-  { who: "romeo", a: 2741, b: 2750, j: 2746, d: -2.5452 },   // D idle, 146 degrees in one frame
-  { who: "friar", a: 2748, b: 2755, j: 2752, d: -2.0430 },   // D hold, 117 degrees in one frame, off screen
-  { who: "romeo", a: 3200, b: 3209, j: 3205, d: -2.9820 },   // E idle>walk, 171 degrees in one frame
-  { who: "friar", a: 3986, b: 3994, j: 3990, d: 2.3770 },   // F idle, 136 degrees in one frame
-  { who: "friar", a: 4102, b: 4107, j: 4105, d: 1.2530 },   // F hold, 72 degrees in one frame
-  { who: "youngFriar", a: 4286, b: 4295, j: 4291, d: -2.9320 },   // F hold, 168 degrees in one frame
+  { who: "romeo", a: 645, b: 649, j: 647, d: 0.8490 },   // B hold, 49 degrees in one frame
+  { who: "romeo", a: 2186, b: 2192, j: 2189, d: -1.7130 },   // C idle, 98 degrees in one frame, off screen
+  { who: "friar", a: 2279, b: 2283, j: 2281, d: -0.7750 },   // D hold, 44 degrees in one frame
+  { who: "romeo", a: 2346, b: 2350, j: 2348, d: -0.8460 },   // D idle, 48 degrees in one frame, off screen
+  { who: "friar", a: 2395, b: 2404, j: 2400, d: 2.8390 },   // D hold, 163 degrees in one frame
+  { who: "juliet", a: 2774, b: 2777, j: 2776, d: -0.3300 },   // D idle, 19 degrees in one frame
+  { who: "romeo", a: 2771, b: 2780, j: 2776, d: -2.5452 },   // D idle, 146 degrees in one frame
+  { who: "friar", a: 2778, b: 2785, j: 2782, d: -2.0430 },   // D hold, 117 degrees in one frame, off screen
+  { who: "romeo", a: 3230, b: 3239, j: 3235, d: -2.9820 },   // E idle>walk, 171 degrees in one frame
+  { who: "friar", a: 4016, b: 4024, j: 4020, d: 2.3770 },   // F idle, 136 degrees in one frame
+  { who: "friar", a: 4132, b: 4137, j: 4135, d: 1.2530 },   // F hold, 72 degrees in one frame
+  { who: "youngFriar", a: 4316, b: 4325, j: 4321, d: -2.9320 },   // F hold, 168 degrees in one frame
 ];

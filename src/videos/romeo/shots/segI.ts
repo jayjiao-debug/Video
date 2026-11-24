@@ -21,6 +21,7 @@ import { EMPTY, BEND, STAND, JU_FEET, HEAD_DIR, RO_FACING } from "./segH";
 import { seatOn, stoolSeat } from "../../../kit/day/rig/seats";
 import type { RigHead } from "../../group/kit/rig3d";
 import { reach } from "./gest";
+import { setSeat } from "../../../kit/acc/garb";
 
 const S = seg("I");
 /** the reporter: standing where she threw from (they look up at her) */
@@ -29,12 +30,15 @@ const HER = P("tomb", 0.35, 1.45, 1.3);
  *  to him; Romeo steps from the bier's end (two short steps) to stand at her left: the embrace side by side, cheek to cheek,
  *  both faces to the lens on the floor (v5, 22 Nov: in profile at the bier's end the bier hid their bodies, her robe
  *  went into it, and the rig's short arms could not reach round each other) */
-const JU_SIT = P("tomb", 0.81, 0, -0.88), JU_FACING = 0.3;
+/** (v7, the owner on the v6.1 cut, f6065: "This dress clipping with the bench?": from the floor her gown went into the
+ *  bier's base. She sits DZ further forward, out over the slab's front edge, and the hug moves with her) */
+const DZ = 0.09;
+const JU_SIT = P("tomb", 0.81, 0, -0.88 + DZ), JU_FACING = 0.3;
 /** THE HUG (v6, the owner on the v5 cut: "Make them hug"; until v5 he stood beside her, both square to the lens, their
  *  inner arms behind each other's backs, the heads 5 cm apart: it read as two people posing). He comes in close and
  *  turns his body to her (his face still turns to the lens): his right arm round her back, his left round her front,
  *  at her waist; her left arm over his shoulder, her right hand on his arm round her; cheek to cheek, his head in front. */
-const RO_HUG = P("tomb", 1.28, 0, -0.62), RO_HUG_FACING = yawTo(RO_HUG, JU_SIT);
+const RO_HUG = P("tomb", 1.28, 0, -0.62 + DZ), RO_HUG_FACING = yawTo(RO_HUG, JU_SIT);
 
 /** where he stands when the light comes back: 14 cm nearer the bier than in scene H (he shifted his feet in the dark).
  *  From the floor the shard's right edge is close behind him: at H's 1.6 his head went 30 px past it as he straightened
@@ -63,7 +67,7 @@ const SIT_SWAP = 0.3, SIT_EDGE = 0.22, SIT_OVER = 0.05, Q_LIE = lieQ(HEAD_DIR, 0
 
 export const SEG: Segment = {
   id: "I", from: S.from, to: S.to,
-  enter() {}, exit() {},
+  enter() {}, exit(w) { setSeat(w.actor(JULIET_LOW), null); },
   pose(w, f) {
     w.setPlace("tomb");
     const B = I_BEATS;
@@ -102,8 +106,8 @@ export const SEG: Segment = {
     // his arm that goes round her, her right round his waist (the rig's arm reaches 0.4 m). (Her right hand was higher,
     // under his jaw: the elbow changed sides every second or so as her head breathed, 11 cm in a frame. At his waist
     // it holds still.)
-    const roRoundHer = P("tomb", 0.9, 0.98, -1.04), roFront = P("tomb", 0.95, 0.86, -0.64);
-    const juRoundHim = P("tomb", 1.10, 0.86, -0.58), juOnArm = P("tomb", 0.99, 0.95, -0.66);
+    const roRoundHer = P("tomb", 0.9, 0.98, -1.04 + DZ), roFront = P("tomb", 0.95, 0.86, -0.64 + DZ);
+    const juRoundHim = P("tomb", 1.10, 0.86, -0.58 + DZ), juOnArm = P("tomb", 0.99, 0.95, -0.66 + DZ);
     ro.set({
       ...standing(roAt, roFacing, f, 1),
       pose: step.moving ? step.pose : { kind: "hold", t: f / 30 },
@@ -136,6 +140,10 @@ export const SEG: Segment = {
     const waking = f >= B.fingers - 5 && f < B.sitUp + 7;
     const lying = sitK < SIT_SWAP;
     const seat = seatOn(stoolSeat({ seat: 0.62, d: 0.3 }), JU_SIT, JU_FACING);
+    // (v7, the owner on the v6.1 cut, f6065: "This dress clipping with the bench?": the gown is told what she sits on, the
+    // kit's way (garb.ts setSeat): it lies over her lap on the slab and hangs from her knees in front of it, instead of a
+    // column of cloth going down into the bier's base)
+    setSeat(ju, lying ? null : seat, JU_FACING);
     if (lying) {
       const twitch = f >= B.fingers ? 0.03 * Math.sin((f - B.fingers) * 0.8) : 0;
       ju.set({

@@ -168,6 +168,22 @@ export function facePx(w: World, r: Rig, x: number, y: number): { x: number; y: 
   const p = w.project(C.addScaledVector(hp, R));
   return { x: p.x, y: p.y, on: p.front && c > 0.05 && hp.dot(hc) < 0 ? fu.uFaceOn.value : 0 };
 }
+/** the same point of the drawn face in WORLD space (facePx before its projection): to aim a camera at an eye */
+export function faceWorld(w: World, r: Rig, x: number, y: number): THREE.Vector3 {
+  const fu = (r as unknown as { faceU: FaceUniforms }).faceU;
+  const H = fu.uHead.value, C = V(H.x, H.y, H.z), R = H.w, F = fu.uFF.value;
+  const sx = 1 / fu.uFR.value.length(), sy = 1 / fu.uFU.value.length();
+  const rf = fu.uFR.value.clone().multiplyScalar(sx), uf = fu.uFU.value.clone().multiplyScalar(sy);
+  const hc = C.clone().sub((w.camera as THREE.PerspectiveCamera).position), d2 = hc.lengthSq();
+  const qx = (x * 0.99) / 50, qy = ((1.5 - y) * 0.99) / 50, hp = V(0, 0, 0);
+  let k = 1;
+  for (let i = 0; i < 3; i++) {
+    const a = (qx * sx) / k, b = (qy * sy) / k, c = Math.sqrt(Math.max(0, 1 - a * a - b * b));
+    hp.copy(rf).multiplyScalar(a).addScaledVector(uf, b).addScaledVector(F, c);
+    k = d2 / Math.max(d2 + R * hp.dot(hc), 1e-4);
+  }
+  return C.addScaledVector(hp, R);
+}
 /** AN EYE OF A FIGURE ON SCREEN: a point of the face (the eye's middle is (side * 14, 0)) with the face's own axes
  *  there, in film px per u: ex along the face's x (screen right), ey along its y (down). side: -1 = the eye on the
  *  screen's left */

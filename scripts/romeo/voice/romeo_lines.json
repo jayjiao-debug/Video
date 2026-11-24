@@ -215,7 +215,8 @@
    ],
    "emo": "struck, the mask slipping",
    "pic": "He stops mid-step. She tilts along his look to Juliet across the hall, and back.",
-   "tts": "[awestruck, breathless] Did my heart love till now?"
+   "tts": "[awestruck, breathless] Did my heart love till now?",
+   "pre": 1.0
   },
   {
    "n": 8,
@@ -871,7 +872,7 @@
    "pic": "Join: the cell door closes over the lens and opens on her room at night. She raises the bottle to the lens like a toast. Cut before it reaches her lips.",
    "tts": "[softly, brave] Romeo, I come! This do I drink to thee.",
    "pre": 1.0,
-   "after": 1.0
+   "after": 3.6
   },
   {
    "n": 44,
@@ -1043,17 +1044,17 @@
    "id": "H03",
    "scene": "H",
    "who": "ji",
-   "zh": "红的，是因为她活着！",
-   "en": "They're red because she's alive!",
+   "zh": "红的，是因为她还活着！",
+   "en": "They're red because she's still alive!",
    "screens": [
     {
-     "zh": "红的，是因为她活着！",
-     "en": "They're red because she's alive!"
+     "zh": "红的，是因为她还活着！",
+     "en": "They're red because she's still alive!"
     }
    ],
    "emo": "whisper, to herself, shaking",
    "pic": "Her whisper to herself (Jay, 24 Nov): her bubble marked 悄悄说. He does not turn. Picture still; only her voice shakes.",
-   "tts": "[whispers, voice shaking] 红的，是因为她活着！"
+   "tts": "[whispers, voice shaking] 红的，是因为她还活着！"
   },
   {
    "n": 54,
@@ -1077,18 +1078,18 @@
    "id": "H05",
    "scene": "H",
    "who": "ji",
-   "zh": "我只拍……不要啊！",
-   "en": "I only film… No!",
+   "zh": "我只拍……拍不下去了。",
+   "en": "I only film… I can't film this!",
    "screens": [
     {
-     "zh": "我只拍……不要啊！",
-     "en": "I only film… No!"
+     "zh": "我只拍……拍不下去了。",
+     "en": "I only film… I can't film this!"
     }
    ],
-   "emo": "breaking",
+   "emo": "breaking, not loud",
    "pic": "The picture lurches. The camera leaves her hands: torch streaks, the bier, his hand filling the frame. Glass breaks. Stone. A crack splits the picture. Black. The REC display stutters and dies. Two seconds of silence.",
-   "tts": "[breaking] 我只拍……[screaming] 不要啊！",
-   "after": 5.4
+   "tts": "[voice breaking, quiet] 我只拍……[choked up, giving in, not shouting] 拍不下去了。",
+   "after": 4.4
   },
   {
    "n": 56,

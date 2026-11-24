@@ -16,12 +16,13 @@ import { seg, type Segment } from "../story";
 import { povCam, punchIn } from "../cam";
 import { V, standing, yawTo } from "./common";
 import { ROMEO_MASK as ROMEO, JULIET } from "../people";
-import { NameTab, EyeHearts, Huff, HEARTS } from "../hud/index";
+import { NameTab, EyeHearts, Huff, HEARTS, EyeReflection } from "../hud/index";
 import { whisperLean } from "../whisper";
-import { P, spot, camAt, ck, faceAt, talk, wordAt, startOf, endOf, ky, accent, headBox, rel, eyesPx, facePx, soft, REACT } from "./kit";
+import { P, wv, faceWorld, spot, camAt, ck, faceAt, talk, wordAt, startOf, endOf, ky, accent, headBox, rel, eyesPx, facePx, soft, REACT } from "./kit";
 import { h, frag } from "./h";
 import { JU_TAB } from "../fx";
 import { dancers } from "./dance";
+import { EMO } from "../emo";
 import { reach, hit, span, rock, lineBody, talkHead } from "./gest";
 
 const S = seg("B");
@@ -33,6 +34,10 @@ const RO_AT = RW.at.clone().add(V(0.12, 0, 0.1));
  *  from the frame's left, the dancers right of the middle (the frame is narrow: from the middle of the door end he was
  *  half cut off by the app) */
 const WIDE_POS: [number, number, number] = [-1.0, 1.5, 2.2], WIDE_LOOK: [number, number, number] = [-1.16, 1.15, -1.8];
+/** (v7) his eyes, where the push on B02 ends (world): his head's eye line as he stands by the wall */
+const EYES_AT = RO_AT.clone().add(V(0, 1.33, 0));
+/** where his eyes sit in the frame at the end of the push (a fraction of its height from the top) */
+const EYES_Y = 0.42;
 
 export const SEG: Segment = {
   id: "B", from: S.from, to: S.to,
@@ -46,11 +51,15 @@ export const SEG: Segment = {
       camera = povCam(f, [
         ck("hall", S.from, WIDE_POS, WIDE_LOOK, 52),
         ck("hall", S.from + 22, WIDE_POS, WIDE_LOOK, 52),
-        ck("hall", b02 - 2, [-0.15, 1.5, 0.95], [-1.45, 1.25, -0.95], 48),
-        // the tilt along his look to her, and back
-        { ...camAt("hall", "across", b02 + 10), fov: 30 },
-        { ...camAt("hall", "across", endOf("B02") - 4), fov: 30 },
-        ck("hall", endOf("B02") + 8, [-0.35, 1.5, 0.55], [-1.5, 1.28, -0.9], 42),
+        ck("hall", b02 - 30, [-0.15, 1.5, 0.95], [-1.45, 1.25, -0.95], 48),
+        // (v7, the owner on the v6.1 cut: "hold a bit longer, we zoom into his eyes and see reflection of Juliet, instead
+        // of shifting to Juliet"): the lens holds on him as he stops, pushes in on his face and on into his eyes through
+        // "Did my heart love till now?" (she is in them, hud/emotes.tsx EyeReflection), and comes back out after it.
+        // (Until v6 it tilted along his look across the hall to her and back.)
+        { f: b02 - 4, pos: wv("hall", [-0.15, 1.5, 0.95]), look: EYES_AT.toArray() as [number, number, number], fov: 21 },
+        { f: endOf("B02") - 6, pos: wv("hall", [-0.15, 1.5, 0.95]), look: EYES_AT.toArray() as [number, number, number], fov: 11.5 },
+        { f: endOf("B02") + 2, pos: wv("hall", [-0.15, 1.5, 0.95]), look: EYES_AT.toArray() as [number, number, number], fov: 11.5 },
+        ck("hall", endOf("B02") + 14, [-0.35, 1.5, 0.55], [-1.5, 1.28, -0.9], 42),
       ], { mood: "calm", amp: 0.5 });
     } else {
       camera = povCam(f, [
@@ -61,6 +70,10 @@ export const SEG: Segment = {
     }
     camera = whisperLean(f, camera);
     w.setCamera(camera);
+    // (v7) THE PUSH INTO HIS EYES is aimed at his eyes themselves: the figure is solved once with the keyed camera, the
+    // middle of his two drawn eyes is found in the world, and the look is turned so they sit at EYES_Y of the frame's
+    // height (above the subtitle), blended in and out with the push; then he is solved again for that camera
+    const aim = !switched ? ky(f, [[b02 - 30, 0], [b02 - 4, 1], [endOf("B02") + 2, 1], [endOf("B02") + 14, 0]]) : 0;
     // --- Romeo by the wall: sulking -> struck -> distracted (looking past her at Juliet)
     const ro = w.actor(ROMEO);
     const struck = wordAt("B02", "heart");
@@ -76,10 +89,23 @@ export const SEG: Segment = {
       // v3b (the owner: "give them expressive emotion showing they are in love"): struck, his eyes go big and bright
       // (smitten); asked about Rosaline he answers "Who?" with an open grin and hearts floating out of his eyes (v5,
       // the owner: "This eyes turning into heart is too much, the floatinng heart is enough": no heart IN an eye)
-      expr: faceAt(f, [[0, "hollow"], [b02 - 8, "smitten"], [startOf("B04") - 3, "smittenOpen"], [endOf("B04") + 18, "smitten"]]),
+      // (v7, emo.ts 1 and 2) sulking for Rosaline under a cloud (黑线); at the first sight of her his jaw drops (惊掉下巴, a
+      // hard cut, the shock), and as the lens reaches his eyes he melts into the smitten face and she is in them
+      expr: faceAt(f, [[0, EMO.b01Gloom ? "gloom" : "hollow"], ...(EMO.b02Aghast ? [[b02 - 10, "aghast"], [b02 + 3, "smitten"]] as [number, string][] : [[b02 - 8, "smitten"]] as [number, string][]),
+        [startOf("B04") - 3, "smittenOpen"], [endOf("B04") + 18, "smitten"]]),
       ...talk("ro", f, 1), gaze: f >= b02 - 8 ? 0.5 : -0.5, lookDown: soft(f, (g) => (g < b02 - 8 ? 8 : 0), 2),      // (his head comes up with his turn to her: five frames)
       head: talkHead("ro", f, 1, accent("pop", f, struck)), hide: ["letter"],
     });
+    if (aim > 0) {
+      w.update();
+      const eyes = faceWorld(w, ro, 0, 0), pos = new THREE.Vector3(...(camera.pos as [number, number, number]));
+      const look0 = new THREE.Vector3(...(camera.look as [number, number, number])), dist = eyes.distanceTo(pos);
+      const fwd = eyes.clone().sub(pos).normalize(), right = fwd.clone().cross(V(0, 1, 0)).normalize(), up = right.clone().cross(fwd).normalize();
+      const half = Math.tan(((camera.fov ?? 40) * Math.PI) / 360) * dist;
+      const aimed = eyes.clone().addScaledVector(up, -(1 - 2 * EYES_Y) * half);
+      camera = { ...camera, look: look0.lerp(aimed, aim).toArray() as [number, number, number] };
+      w.setCamera(camera);
+    }
     // --- Juliet across the hall: on tiptoe, staring back at him; pointing on her order
     const ju = w.actor(JULIET);
     const tip = 0.04 * (0.5 + 0.5 * Math.sin(f / 6));
@@ -89,7 +115,8 @@ export const SEG: Segment = {
     ju.set({
       ...standing(JT.at.clone().add(V(0, tip, 0)), yawTo(JT.at, RO_AT), f, 2),
       pose: pointing ? { kind: "point", t: (f - b06) / 30, arm: 0 } : f >= huff && f < huff + 24 ? { kind: "wave", t: (f - huff) / 30, arm: 1 } : { kind: "idle", t: f / 30 },
-      expr: faceAt(f, [[0, "smitten"], [b06 - 6, "bossy"], [huff, "huffy"], [startOf("B08") + 4, "smitten"]]),
+      // (v7, emo.ts 3 and 4) the order with a 坏笑; 暴怒 when the reporter will not go
+      expr: faceAt(f, [[0, "smitten"], [b06 - 6, EMO.b06Scheme ? "scheming" : "bossy"], [huff, EMO.b07Rage ? "rage" : "huffy"], [startOf("B08") + 4, "smitten"]]),
       ...talk("ju", f, 2), head: talkHead("ju", f, 2), gaze: -0.5, hide: ["vial"],
       // (v5) the order is given with her whole body: she tips toward him on "Go" and on "name"
       lean: lineBody(f, "B06", { lean: 4, dip: 3.5, sway: 0, words: ["name"] }),
@@ -111,7 +138,12 @@ export const SEG: Segment = {
     const herHearts = switched ? h(EyeHearts, { key: "jh", f, eyes: eyesPx(w, ju), from: b05 + 1, to: b06 - 6 - HEARTS.life, dir: [-0.75, -0.65], size: 0.8 }) : null;
     const nose = switched ? facePx(w, ju, -9, 17) : null, u = switched ? Math.abs(facePx(w, ju, 10, 0).x - facePx(w, ju, -10, 0).x) / 20 : 0;
     const puff = nose && nose.on > 0.5 ? h(Huff, { key: "hf", f, at: huff + 1, x: nose.x, y: nose.y, dir: [-1, -0.1], r: 5.2 * u }) : null;
-    const overlays = frag(hisHearts, herHearts, puff, tab);
+    // (v7) she is in his eyes while the lens is in on them
+    // (with emo.ts 2 she comes into them as his jaw closes: the aghast eyes are rings with pin pupils)
+    const eyesIn = EMO.b02Aghast ? [b02 + 3, b02 + 13] : [b02 - 12, b02 + 2];
+    const inEyes = !switched ? ky(f, [[eyesIn[0], 0], [eyesIn[1], 1], [endOf("B02") + 2, 1], [endOf("B02") + 10, 0]]) : 0;
+    const refl = inEyes > 0 ? h(EyeReflection, { key: "er", f, eyes: eyesPx(w, ro), k: inEyes }) : null;
+    const overlays = frag(refl, hisHearts, herHearts, puff, tab);
     return { camera, overlays };
   },
 };
