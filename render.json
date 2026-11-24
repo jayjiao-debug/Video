@@ -1,1 +1,1 @@
-{"id":"romeo-06","composition":"RomeoFilm","start":0,"end":6518,"chunks":40,"concurrency":1,"timeout":900000,"output":"romeo_v5","flags":"--crf=14"}
+{"id":"romeo-07","composition":"RomeoFilm","start":0,"end":6515,"chunks":40,"concurrency":1,"timeout":900000,"output":"romeo_v6","flags":"--crf=14"}
