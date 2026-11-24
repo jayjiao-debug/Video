@@ -1,5 +1,5 @@
 {
- "note": "采访罗密欧与朱丽叶的四天 sound plan v6 (24 Nov, the owner's notes on the v5 cut: the new lines, her two whispers to herself with their room dip, no gallop in Mantua). v5 (23 Nov, the owner's notes on the v4 cut: the duel's blades and falls and the slow-motion throw's swell, made in code; the 插手 tally's sounds only round her refusals; the rider rides on; one soft heartbeat where the heart eyes were). Frames from the picture's own dump (/home/user/romeo_work/sound/v5/frames.json, written from src/videos/romeo), as scene anchors by /home/user/romeo_work/sound/make_cues.py. Music: eight original lute pieces synthesised in code (no samples); none in the turn (E), the letter's failure (G) or the quiet scene (H). Effects from the library, the sound farm (romeo-sfx-01) and v5/synth.py.",
+ "note": "采访罗密欧与朱丽叶的四天 sound plan v7 (24 Nov, the owner's notes on the v6.1 cut: B02 a second later, the potion scene in her room with its cork, swallows, glass and fall, the throw on 拍不下去, the shorter black after it). v6 (24 Nov, the owner's notes on the v5 cut: the new lines, her two whispers to herself with their room dip, no gallop in Mantua). v5 (23 Nov, the owner's notes on the v4 cut: the duel's blades and falls and the slow-motion throw's swell, made in code; the 插手 tally's sounds only round her refusals; the rider rides on; one soft heartbeat where the heart eyes were). Frames from the picture's own dump (/home/user/romeo_work/sound/v7/frames.json, written from src/videos/romeo), as scene anchors by /home/user/romeo_work/sound/make_cues.py. Music: eight original lute pieces synthesised in code (no samples); none in the turn (E), the letter's failure (G) or the quiet scene (H). Effects from the library, the sound farm (romeo-sfx-01) and v5/synth.py.",
  "whisper_dip": {
   "db": -6,
   "ramp": 0.2,
@@ -230,12 +230,12 @@
    "until": [
     "F",
     "from",
-    35.1
+    37.9
    ],
    "gain": 11.0,
    "loop": true,
    "fade": 0.3,
-   "fade_out": 0.02,
+   "fade_out": 0.33,
    "note": " | level: clip -63.2 LUFS -> -46 LUFS in the mix"
   },
   {
@@ -308,7 +308,7 @@
    "until": [
     "H",
     "from",
-    16.233
+    17.133
    ],
    "gain": -7.1,
    "loop": true,
@@ -327,7 +327,7 @@
    "until": [
     "H",
     "from",
-    16.233
+    17.133
    ],
    "gain": -8.8,
    "loop": true,
@@ -346,7 +346,7 @@
    "until": [
     "H",
     "from",
-    16.233
+    17.133
    ],
    "gain": -15.1,
    "loop": true,
@@ -360,12 +360,12 @@
    "at": [
     "H",
     "from",
-    16.167
+    17.067
    ],
    "until": [
     "H",
     "from",
-    18.7
+    19.6
    ],
    "gain": -8.1,
    "loop": true,
@@ -383,12 +383,12 @@
    "at": [
     "H",
     "from",
-    16.167
+    17.067
    ],
    "until": [
     "H",
     "from",
-    18.7
+    19.6
    ],
    "gain": -8.8,
    "loop": true,
@@ -406,12 +406,12 @@
    "at": [
     "H",
     "from",
-    18.7
+    19.6
    ],
    "until": [
     "H",
     "from",
-    19.1
+    20.0
    ],
    "gain": -7.1,
    "loop": true,
@@ -425,12 +425,12 @@
    "at": [
     "H",
     "from",
-    18.7
+    19.6
    ],
    "until": [
     "H",
     "from",
-    19.1
+    20.0
    ],
    "gain": -8.8,
    "loop": true,
@@ -512,7 +512,7 @@
    "loop": false,
    "fade": 0.02,
    "fade_out": 0.03,
-   "note": " | level: clip -20.0 LUFS -> -30 LUFS in the mix | v6 frames 0-102"
+   "note": " | level: clip -20.0 LUFS -> -30 LUFS in the mix | v7 frames 0-102"
   },
   {
    "label": "A title sting: the rolled G major chord (0.9 s) lands on the seal (f188), the cadence the sobbing theme was denied",
@@ -532,7 +532,7 @@
    "fade": 0.01,
    "fade_out": 0.25,
    "sync": 0.9,
-   "note": " | level: clip -20.0 LUFS -> -25 LUFS in the mix | v6 frames 188-224"
+   "note": " | level: clip -20.0 LUFS -> -25 LUFS in the mix | v7 frames 188-224"
   },
   {
    "label": "A music: the sobbing theme comes back at bar 3 (4.0 s in) under A03, on to the cut into B",
@@ -552,7 +552,7 @@
    "fade": 0.25,
    "fade_out": 0.6,
    "in": 4.0,
-   "note": " | level: clip -20.0 LUFS -> -31 LUFS in the mix | v6 frames 230-510"
+   "note": " | level: clip -20.0 LUFS -> -31 LUFS in the mix | v7 frames 230-510"
   },
   {
    "label": "B music: the feast dance, looped for the whole party",
@@ -571,7 +571,7 @@
    "loop": true,
    "fade": 0.15,
    "fade_out": 0.3,
-   "note": " | level: clip -20.0 LUFS -> -31 LUFS in the mix | v6 frames 510-1035"
+   "note": " | level: clip -20.0 LUFS -> -31 LUFS in the mix | v7 frames 510-1065"
   },
   {
    "label": "C music: the balcony serenade; its swell (22-27.5 s) under the split screen, the scurry (37.5 s) on his run, the cheeky pluck (40.6 s) as he bursts into the cell",
@@ -590,7 +590,7 @@
    "loop": false,
    "fade": 0.3,
    "fade_out": 0.1,
-   "note": " | level: clip -20.0 LUFS -> -31 LUFS in the mix | v6 frames 1035-2265"
+   "note": " | level: clip -20.0 LUFS -> -31 LUFS in the mix | v7 frames 1065-2295"
   },
   {
    "label": "D music: the Friar's jig, 3.75 percent quick so that its G cadence (20.30 s) lands on the wedding stamp (f2852)",
@@ -611,7 +611,7 @@
    "fade_out": 0.2,
    "sync": 20.3,
    "rate": 1.0375,
-   "note": " | level: clip -20.0 LUFS -> -31 LUFS in the mix | v6 frames 2852-2872"
+   "note": " | level: clip -20.0 LUFS -> -31 LUFS in the mix | v7 frames 2882-2902"
   },
   {
    "label": "F music: the vial, falling sighs; sparse, so 3 dB under the others (the composer: its single plucks peak like the busy pieces); faded to nothing before the cell door closes",
@@ -630,26 +630,27 @@
    "loop": false,
    "fade": 0.5,
    "fade_out": 0.2,
-   "note": " | level: clip -20.0 LUFS -> -34 LUFS in the mix | v6 frames 3414-4320"
+   "note": " | level: clip -20.0 LUFS -> -34 LUFS in the mix | v7 frames 3444-4350"
   },
   {
-   "label": "F music: Juliet's toast, one fragile lute, sparse (3 dB under the busy pieces' level would be -34; -32 keeps it present under her line); cut dead with the picture at TOAST_CUT (f4329), before its A chord",
+   "label": "F music: Juliet's toast, one fragile lute (v7: played out; its unresolved A chord lands as the vial runs dry and is gone as the glass lands)",
    "clip": "mus_toast",
    "at": [
     "F",
     "from",
-    30.7
+    36.1
    ],
    "until": [
     "F",
     "from",
-    35.1
+    37.1
    ],
    "gain": -18.2,
    "loop": false,
    "fade": 0.05,
-   "fade_out": 0.02,
-   "note": " | level: clip -20.0 LUFS -> -32 LUFS in the mix | v6 frames 4335-4467"
+   "fade_out": 0.4,
+   "note": " | level: clip -20.0 LUFS -> -32 LUFS in the mix | v7 frames 4365-4581",
+   "sync": 5.02
   },
   {
    "label": "I music: the lute returns 0.6 s after the hug, under the last lines",
@@ -668,7 +669,7 @@
    "loop": false,
    "fade": 0.6,
    "fade_out": 0.3,
-   "note": " | level: clip -20.0 LUFS -> -31 LUFS in the mix | v6 frames 5932-6244"
+   "note": " | level: clip -20.0 LUFS -> -31 LUFS in the mix | v7 frames 6031-6343"
   },
   {
    "label": "I music: the same take on, 6 dB up after the camera dies; its D major chord (16.5 s) lands on the end card's seal (f6205) and rings to the clip's end over the end card's longer hold",
@@ -688,7 +689,7 @@
    "fade": 0.3,
    "fade_out": 0.6,
    "in": 10.8,
-   "note": " | level: clip -20.0 LUFS -> -25 LUFS in the mix | v6 frames 6235-6501"
+   "note": " | level: clip -20.0 LUFS -> -25 LUFS in the mix | v7 frames 6334-6600"
   }
  ],
  "hits": [
@@ -879,7 +880,7 @@
    "at": [
     "B",
     "from",
-    7.8
+    8.8
    ],
    "gain": -27.7,
    "sync": 0.025,
@@ -891,7 +892,7 @@
    "at": [
     "B",
     "from",
-    8.533
+    9.533
    ],
    "gain": -9.0,
    "in": 1.2,
@@ -905,7 +906,7 @@
    "at": [
     "B",
     "from",
-    9.833
+    10.833
    ],
    "gain": -28.0,
    "note": " | level: clip peak -0.2 dBFS -> about -22 dBFS in the mix"
@@ -916,7 +917,7 @@
    "at": [
     "B",
     "from",
-    10.067
+    11.067
    ],
    "gain": -15.4,
    "sync": 0.29,
@@ -928,7 +929,7 @@
    "at": [
     "B",
     "from",
-    10.567
+    11.567
    ],
    "gain": -10.6,
    "sync": 0.43,
@@ -940,7 +941,7 @@
    "at": [
     "B",
     "from",
-    10.867
+    11.867
    ],
    "gain": -30.9,
    "sync": 0.25,
@@ -953,7 +954,7 @@
    "at": [
     "B",
     "from",
-    11.3
+    12.3
    ],
    "gain": -8.6,
    "sync": 0.43,
@@ -965,7 +966,7 @@
    "at": [
     "B",
     "from",
-    13.433
+    14.433
    ],
    "gain": -8.6,
    "sync": 0.43,
@@ -977,7 +978,7 @@
    "at": [
     "B",
     "from",
-    13.7
+    14.7
    ],
    "gain": -12.7,
    "sync": 0.14,
@@ -989,7 +990,7 @@
    "at": [
     "B",
     "from",
-    14.6
+    15.6
    ],
    "gain": -30.9,
    "sync": 0.25,
@@ -1001,7 +1002,7 @@
    "at": [
     "B",
     "from",
-    14.733
+    15.733
    ],
    "gain": -32.9,
    "sync": 0.25,
@@ -1013,7 +1014,7 @@
    "at": [
     "B",
     "from",
-    15.8
+    16.8
    ],
    "gain": -14.6,
    "sync": 0.43,
@@ -1026,7 +1027,7 @@
    "at": [
     "B",
     "from",
-    14.433
+    15.433
    ],
    "gain": -14.6,
    "sync": 0.43,
@@ -1685,6 +1686,70 @@
    "note": " | level: clip peak -3.3 dBFS -> about -14 dBFS in the mix"
   },
   {
+   "label": "F the cork comes out of the vial",
+   "clip": "sfx_cork",
+   "at": [
+    "F",
+    "from",
+    34.867
+   ],
+   "gain": -31.9,
+   "sync": 0.13,
+   "note": " | level: clip peak -1.3 dBFS -> about -27 dBFS in the mix"
+  },
+  {
+   "label": "F she drinks: three swallows while it drains",
+   "clip": "sfx_gulp",
+   "at": [
+    "F",
+    "from",
+    35.333
+   ],
+   "gain": -31.9,
+   "sync": 0.01,
+   "note": " | level: clip peak -1.3 dBFS -> about -27 dBFS in the mix"
+  },
+  {
+   "label": "F the empty vial lands on the floor (glass: two small bounces, a short roll)",
+   "clip": "sfx_vial_clink",
+   "at": [
+    "F",
+    "from",
+    37.167
+   ],
+   "gain": -25.9,
+   "sync": 0.005,
+   "note": " | level: clip peak -1.3 dBFS -> about -21 dBFS in the mix"
+  },
+  {
+   "label": "F she sinks sideways onto the bed (her gown)",
+   "clip": "sfx_linen",
+   "at": [
+    "F",
+    "from",
+    36.967
+   ],
+   "gain": -25.6,
+   "sync": 0.0,
+   "fade_out": 0.3,
+   "note": " | level: clip peak -10.6 dBFS -> about -30 dBFS in the mix"
+  },
+  {
+   "label": "F she comes down on the bed (soft, muffled)",
+   "clip": "sfx_body_fall",
+   "at": [
+    "F",
+    "from",
+    37.5
+   ],
+   "gain": -35.9,
+   "sync": 0.0,
+   "lp": [
+    420
+   ],
+   "note": " | level: clip peak -1.3 dBFS -> about -31 dBFS in the mix"
+  },
+  {
    "label": "G the plague card: the seal",
    "clip": "sfx_wax_thunk_2",
    "at": [
@@ -1920,19 +1985,19 @@
    "at": [
     "H",
     "from",
-    10.033
+    10.933
    ],
    "gain": -20.6,
    "sync": 0.43,
    "note": " | level: clip peak -23.6 dBFS -> about -38 dBFS in the mix"
   },
   {
-   "label": "H 不要啊: she throws the camera (whoosh)",
+   "label": "H 拍不下去: she throws the camera (whoosh)",
    "clip": "sfx_toss_2",
    "at": [
     "H",
     "from",
-    16.133
+    17.033
    ],
    "gain": -13.5,
    "sync": 0.11,
@@ -1944,7 +2009,7 @@
    "at": [
     "H",
     "from",
-    16.3
+    17.2
    ],
    "gain": -21.5,
    "rate": 0.27,
@@ -1961,7 +2026,7 @@
    "at": [
     "H",
     "from",
-    18.7
+    19.6
    ],
    "gain": -19.9,
    "sync": 2.55,
@@ -1973,7 +2038,7 @@
    "at": [
     "H",
     "from",
-    16.867
+    17.767
    ],
    "gain": -28.7,
    "sync": 0.025,
@@ -1989,7 +2054,7 @@
    "at": [
     "H",
     "from",
-    17.733
+    18.633
    ],
    "gain": -25.7,
    "sync": 0.025,
@@ -2005,7 +2070,7 @@
    "at": [
     "H",
     "from",
-    18.633
+    19.533
    ],
    "gain": -25.0,
    "sync": 0.25,
@@ -2017,7 +2082,7 @@
    "at": [
     "H",
     "from",
-    18.7
+    19.6
    ],
    "gain": -13.1,
    "sync": 0.02,
@@ -2029,7 +2094,7 @@
    "at": [
     "H",
     "from",
-    18.8
+    19.7
    ],
    "gain": -14.3,
    "sync": 0.06,
@@ -2041,7 +2106,7 @@
    "at": [
     "H",
     "from",
-    18.933
+    19.833
    ],
    "gain": -25.8,
    "fade_out": 0.3,
@@ -2053,7 +2118,7 @@
    "at": [
     "H",
     "from",
-    18.8
+    19.7
    ],
    "gain": -19.4,
    "in": 0.9,
@@ -2068,7 +2133,7 @@
    "at": [
     "H",
     "from",
-    19.033
+    19.933
    ],
    "gain": -26.7,
    "sync": 0.05,

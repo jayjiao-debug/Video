@@ -260,7 +260,9 @@ export const SEG: Segment = {
     // 8: steam off the top of her head, both sides, as "marriage" lands
     if (EMO.c11Steam && f >= tMar && f < tMar + 20) {
       const hp = VERBS.headPx(w, ju);
-      for (const s of [-1, 1]) emotes.push(h(Huff, { key: `st${s}`, f, at: tMar + STEAM.at + (s > 0 ? 2 : 0), x: hp.x + s * 0.62 * hp.r, y: hp.y - 0.78 * hp.r, dir: [0.45 * s, -1], r: 0.14 * hp.r }));
+      // (two puffs each side, the second pair a few frames after the first; sized to her head: in the snap zoom it is
+      // about 140 px round, and puffs a seventh of that did not read)
+      for (const s of [-1, 1]) for (const d of [0, 6]) emotes.push(h(Huff, { key: `st${s}${d}`, f, at: tMar + STEAM.at + d + (s > 0 ? 2 : 0), x: hp.x + s * 0.58 * hp.r, y: hp.y - 0.85 * hp.r, dir: [0.5 * s, -1], r: (d ? 0.26 : 0.34) * hp.r }));
     }
     // 9: the dust cloud where he stood: he is off before she has finished, and the lens tilts down onto it
     if (EMO.c12Dust && f >= runFrom && f < runFrom + 40) {

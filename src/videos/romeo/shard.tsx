@@ -1,7 +1,7 @@
-// THE BROKEN LENS (script v2, H05 and scene I): she throws her camera on 「不要啊！」 (until v5 「不拍了！」), it knocks the bottle out of Romeo's
+// THE BROKEN LENS (script v2, H05 and scene I): she throws her camera on 「拍不下去了」 (v7; v6 「不要啊！」, until v5 「不拍了！」), it knocks the bottle out of Romeo's
 // hand and shatters; one big shard of the lens survives, and through it we see Juliet wake. Drawn UNDER her camera's UI
 // (the cracks are in the glass in front of the lens, the REC display is electronic and stays crisp above them).
-//   THROW_AT     the frame she throws (the first word of 不要啊)
+//   THROW_AT     the frame she throws (the first word of 拍不下去, in H05 「我只拍……拍不下去了。」)
 //   IMPACT_AT    the camera hits the bottle and the glass breaks, FLIGHT frames later: THE THROW IS IN SLOW MOTION
 //   worldF(f)    the world's own frame at film frame f (it runs slow through the flight): what moves in the picture
 //                (his hand, the torch flames, the dust) is timed by it, not by f
