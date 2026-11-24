@@ -1199,6 +1199,43 @@
    "note": " | level: clip peak -23.2 dBFS -> about -26 dBFS in the mix"
   },
   {
+   "label": "C emote 5: her sparkles start (a soft twinkle)",
+   "clip": "sfx_sparkle",
+   "at": [
+    "C",
+    "from",
+    0.7
+   ],
+   "gain": -33.9,
+   "sync": 0.004,
+   "note": " | level: clip peak -1.3 dBFS -> about -29 dBFS in the mix"
+  },
+  {
+   "label": "C emote 8: steam puffs off her head on 'marriage'",
+   "clip": "sfx_steam",
+   "at": [
+    "C",
+    "from",
+    35.6
+   ],
+   "gain": -28.9,
+   "sync": 0.004,
+   "note": " | level: clip peak -1.3 dBFS -> about -24 dBFS in the mix"
+  },
+  {
+   "label": "C emote 9: he dashes off, a dust cloud where he stood (whoosh)",
+   "clip": "sfx_whip",
+   "at": [
+    "C",
+    "from",
+    37.533
+   ],
+   "gain": -29.0,
+   "sync": 0.2,
+   "fade_out": 0.15,
+   "note": " | level: clip peak -0.2 dBFS -> about -23 dBFS in the mix"
+  },
+  {
    "label": "D Romeo bursts in (running steps)",
    "clip": "sfx_run_b",
    "at": [
