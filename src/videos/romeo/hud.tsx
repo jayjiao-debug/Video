@@ -9,9 +9,9 @@ import { FPS, SCENES, SCENE_STAMP, SEGMENTS, segmentAt, line, type Speaker } fro
 import { whisperCap } from "./whisper";
 import { EN } from "../../kit/film/lang";
 
-/** the subtitle's colour per speaker: her warm white, Romeo a pale Montague blue, Juliet a pale Capulet rose, the Friar
- *  pale parchment */
-export const SPEAKER_COL: Record<Speaker, string> = { ji: "#fff3e0", ro: "#dce9ff", ju: "#ffdfe2", fr: "#f4e6c6" };
+/** the subtitle's colour per speaker: her warm white, Romeo a pale Montague blue, Juliet a Capulet red
+ *  (stronger than his blue, since a pale red reads as white on a phone), the Friar pale parchment */
+export const SPEAKER_COL: Record<Speaker, string> = { ji: "#fff3e0", ro: "#dce9ff", ju: "#ffb4b4", fr: "#f4e6c6" };
 /** her camera dies on this frame (the end: "……我得买新手机了。", then the power-off) */
 export const OFF_AT = line("I04").to + 22;
 export const CAP = makeCaption({
