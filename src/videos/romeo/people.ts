@@ -291,6 +291,10 @@ export const FACES: Record<string, Expr | RigFace> = {
   rage: face("rage", "rage", "rage"), speechless: face("speechless", "speechless", "speechless"),
   // flustered (her half second on 娶, emo.ts 8): her eyes, the wavy mouth, the brows up, a blush
   flustered: face("smile", "nervous", "shock", "relief"),
+  // (v7.2, the owner on the v7 cut, f6073: "make them more happy and in love maybe but dont over do it") the hug: happy
+  // shut eyes, a wide smile, the brows up and easy, a blush; no hearts. (Until v7 his brows were knit, "dreamy", and
+  // hers too, "swoon", over a smaller smile: it read as wistful.)
+  inLove: face("relief", "relief", "relief", "relief"),
 };
 /** test looks: one per kit hair kind (preview: who "hair:curly") */
 export const hairTest = (hair: Look["hair"], seed = 1597): Person => ({ name: `hair_${hair}_${seed}`, look: { ...ROMEO_LOOK, seed, hair }, acc: () => [] });

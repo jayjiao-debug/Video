@@ -12,7 +12,7 @@ export const HAND_EASE: HandEase[] = [
   { who: "romeo", i: 1, a: 252, b: 258, j0: 252, j1: 252, A: [0.1644, 0.0643, 0.0226], B: [0.2358, 0.6397, 0.2397] },   // A idle>cheer, 62 cm in one frame, after
   { who: "romeo", i: 0, a: 363, b: 371, j0: 366, j1: 368, A: [-0.3286, 0.6171, -0.148], B: [-0.1232, 0.4708, 0.3742] },   // A cheer>hold, 60 cm in one frame, across
   { who: "romeo", i: 1, a: 363, b: 370, j0: 366, j1: 368, A: [0.2359, 0.6536, 0.1753], B: [0.0618, 0.2064, 0.2019] },   // A cheer>hold, 61 cm in one frame, across
-  { who: "romeo", i: 1, a: 645, b: 649, j0: 647, j1: 647, A: [0.1537, 0.1932, 0.1971], B: [0.2446, 0.1931, 0.0519] },   // B hold, 17 cm in one frame, across
+  { who: "romeo", i: 1, a: 627, b: 631, j0: 629, j1: 629, A: [0.1537, 0.1948, 0.1972], B: [0.2445, 0.1948, 0.052] },   // B hold, 17 cm in one frame, across
   { who: "juliet", i: 0, a: 883, b: 888, j0: 883, j1: 883, A: [-0.156, 0.0145, 0.0358], B: [-0.1528, 0.3697, 0.3784] },   // B idle>point, 49 cm in one frame, after
   { who: "juliet", i: 0, a: 954, b: 960, j0: 961, j1: 961, A: [-0.1528, 0.3695, 0.3773], B: [-0.1567, 0.0145, 0.0207] },   // B point>idle, 50 cm in one frame, before
   { who: "juliet", i: 1, a: 966, b: 972, j0: 966, j1: 966, A: [0.156, 0.015, 0.0184], B: [0.3949, 0.5226, -0.0237] },   // B idle>wave, 56 cm in one frame, after, off screen
@@ -63,19 +63,19 @@ export const HAND_EASE: HandEase[] = [
   { who: "romeo", i: 1, a: 4991, b: 4995, j0: 4991, j1: 4991, A: [0.1642, 0.0645, 0.0254], B: [0.0619, 0.2067, 0.2035] },   // G idle>hold, 25 cm in one frame, after
   { who: "romeo", i: 0, a: 5015, b: 5020, j0: 5015, j1: 5015, A: [-0.1102, 0.3773, 0.1669], B: [-0.1643, 0.0653, 0.0245] },   // G hold>idle, 35 cm in one frame, after
   { who: "romeo", i: 1, a: 5013, b: 5017, j0: 5015, j1: 5015, A: [0.0619, 0.2068, 0.2035], B: [0.1638, 0.0648, 0.0185] },   // G hold>idle, 25 cm in one frame, across
-  { who: "romeo", i: 0, a: 6000, b: 6004, j0: 6002, j1: 6002, A: [-0.0225, 0.1817, 0.1933], B: [-0.164, 0.0658, 0.061] },   // I hold>walk, 23 cm in one frame, across
-  { who: "romeo", i: 1, a: 6000, b: 6004, j0: 6002, j1: 6002, A: [0.0619, 0.2065, 0.2016], B: [0.1641, 0.0672, -0.0163] },   // I hold>walk, 28 cm in one frame, across
-  { who: "juliet", i: 0, a: 6011, b: 6015, j0: 6013, j1: 6013, A: [-0.1015, 0.2121, 0.22], B: [0.1047, 0.296, 0.2791] },   // I sit, 23 cm in one frame, across
-  { who: "juliet", i: 1, a: 6011, b: 6015, j0: 6013, j1: 6013, A: [0.0985, 0.2135, 0.22], B: [0.1843, 0.2186, 0.3819] },   // I sit, 18 cm in one frame, across
-  { who: "romeo", i: 0, a: 6010, b: 6016, j0: 6013, j1: 6013, A: [-0.1637, 0.0671, -0.0058], B: [-0.5177, 0.4513, 0.0826] },   // I walk>hold, 53 cm in one frame, across
-  { who: "romeo", i: 1, a: 6010, b: 6015, j0: 6013, j1: 6013, A: [0.1644, 0.0659, 0.0714], B: [-0.1977, 0.3312, 0.265] },   // I walk>hold, 49 cm in one frame, across
+  { who: "romeo", i: 0, a: 5961, b: 5965, j0: 5963, j1: 5963, A: [-0.0225, 0.1819, 0.1933], B: [-0.164, 0.0658, 0.0609] },   // I hold>walk, 23 cm in one frame, across
+  { who: "romeo", i: 1, a: 5961, b: 5965, j0: 5963, j1: 5963, A: [0.0619, 0.2066, 0.2016], B: [0.1641, 0.0672, -0.0163] },   // I hold>walk, 28 cm in one frame, across
+  { who: "juliet", i: 0, a: 5972, b: 5976, j0: 5974, j1: 5974, A: [-0.0972, 0.2184, 0.22], B: [0.1107, 0.2999, 0.2791] },   // I sit, 23 cm in one frame, across
+  { who: "juliet", i: 1, a: 5972, b: 5976, j0: 5974, j1: 5974, A: [0.1028, 0.2157, 0.22], B: [0.1886, 0.2186, 0.3828] },   // I sit, 18 cm in one frame, across
+  { who: "romeo", i: 0, a: 5971, b: 5977, j0: 5974, j1: 5974, A: [-0.1637, 0.0672, -0.0071], B: [-0.5126, 0.459, 0.1161] },   // I walk>hold, 54 cm in one frame, across
+  { who: "romeo", i: 1, a: 5971, b: 5977, j0: 5974, j1: 5974, A: [0.1644, 0.0658, 0.0702], B: [-0.1938, 0.3435, 0.2851] },   // I walk>hold, 50 cm in one frame, across
 ];
 // TURN_EASE: one row = one person whose facing jumped in a single frame (a turn to the lens, a walker snapping to
 // its path), and the frames over which it now turns:  j = the frame of the jump, d = the turn (rad, the short way),
 // a .. b = the frames it is eased on (half before the jump, half after).
 export type TurnEase = { who: string; a: number; b: number; j: number; d: number };
 export const TURN_EASE: TurnEase[] = [
-  { who: "romeo", a: 645, b: 649, j: 647, d: 0.8490 },   // B hold, 49 degrees in one frame
+  { who: "romeo", a: 627, b: 631, j: 629, d: 0.8490 },   // B hold, 49 degrees in one frame
   { who: "romeo", a: 2186, b: 2192, j: 2189, d: -1.7130 },   // C idle, 98 degrees in one frame, off screen
   { who: "friar", a: 2279, b: 2283, j: 2281, d: -0.7750 },   // D hold, 44 degrees in one frame
   { who: "romeo", a: 2346, b: 2350, j: 2348, d: -0.8460 },   // D idle, 48 degrees in one frame, off screen

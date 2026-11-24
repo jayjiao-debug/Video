@@ -62,10 +62,10 @@ export const VOICE_RAW: [number, number, number][] = [
   [53, 182.425, 185.895],
   [54, 186.145, 187.525],
   [55, 187.775, 190.525],
-  [56, 197.375, 199.695],
-  [57, 203.945, 206.275],
-  [58, 206.525, 207.465],
-  [59, 208.515, 210.715],
+  [56, 196.075, 198.395],
+  [57, 202.645, 204.975],
+  [58, 205.225, 206.165],
+  [59, 207.215, 209.415],
 ];
 /** [line number, id, scene, who, pre s (silent beat before it, for action), after s (held after it), zh, en] (the lines file) */
 export const LINE_RAW: [number, string, string, Speaker, number, number, string, string][] = [
@@ -123,17 +123,17 @@ export const LINE_RAW: [number, string, string, Speaker, number, number, string,
   [52, "H02", "H", "ro", 0, 0, "你的嘴唇，你的脸，还是红的。", "Beauty's ensign yet is crimson in thy lips and in thy cheeks."],
   [53, "H03", "H", "ji", 0, 0, "红的，是因为她还活着！", "They're red because she's still alive!"],
   [54, "H04", "H", "ro", 0, 0, "这一杯，敬我的爱人。", "Here's to my love!"],
-  [55, "H05", "H", "ji", 0, 4.4, "我只拍……拍不下去了。", "I only film… I can't film this!"],
+  [55, "H05", "H", "ji", 0, 3.1, "我只拍……拍不下去了。", "I only film… I can't film this!"],
   [56, "I01", "I", "ju", 2.2, 4.0, "噢，我的罗密欧！", "O my Romeo!"],
   [57, "I02", "I", "ju", 0, 0, "神父的信，你没收到？", "Did the friar's letter not reach thee?"],
   [58, "I03", "I", "ro", 0, 0.8, "什么信？", "What letter?"],
   [59, "I04", "I", "ji", 0, 6.0, "……我得买新手机了。", "…I'll have to buy a new phone."],
 ];
-export const VOICE_END_S = 210.715;
+export const VOICE_END_S = 209.415;
 /** frames before the first word, frames of film after the last word, the film's length in frames */
 export const VOICE_LEAD_F = 8;
 export const VOICE_TAIL_F = 294;
-export const VOICE_TOTAL_F = 6615;
+export const VOICE_TOTAL_F = 6576;
 /** each line is a quote of its speaker: [line, who, start s, end s, syllables (Han characters / English, estimated), the words said] */
 export const QUOTE_RAW: [number, Speaker, number, number, number, string][] = [
   [1, "ji", 0.25, 2.77, 9, "罗密欧，为朱丽叶哭呢？"],
@@ -191,10 +191,10 @@ export const QUOTE_RAW: [number, Speaker, number, number, number, string][] = [
   [53, "ji", 182.425, 185.895, 9, "红的，是因为她还活着！"],
   [54, "ro", 186.145, 187.525, 5, "Here's to my love!"],
   [55, "ji", 187.775, 190.525, 8, "我只拍……拍不下去了。"],
-  [56, "ju", 197.375, 199.695, 4, "O my Romeo!"],
-  [57, "ju", 203.945, 206.275, 8, "Did the friar's letter not reach thee?"],
-  [58, "ro", 206.525, 207.465, 3, "What letter?"],
-  [59, "ji", 208.515, 210.715, 7, "……我得买新手机了。"],
+  [56, "ju", 196.075, 198.395, 4, "O my Romeo!"],
+  [57, "ju", 202.645, 204.975, 8, "Did the friar's letter not reach thee?"],
+  [58, "ro", 205.225, 206.165, 3, "What letter?"],
+  [59, "ji", 207.215, 209.415, 7, "……我得买新手机了。"],
 ];
 /** the build segments = the scenes: [id, first line, last line, first frame, last frame (inclusive)]; a scene starts
  *  where its first line's silent beat (pre) starts (2 frames before its first word when it has none) */
@@ -206,8 +206,8 @@ export const SEGMENT_RAW: [string, number, number, number, number][] = [
   ["E", 32, 34, 2929, 3443],
   ["F", 35, 43, 3444, 4596],
   ["G", 44, 50, 4597, 5175],
-  ["H", 51, 55, 5176, 5854],
-  ["I", 56, 59, 5855, 6614],
+  ["H", 51, 55, 5176, 5815],
+  ["I", 56, 59, 5816, 6575],
 ];
 /** the fact cards: [line, line id, first frame, last frame (inclusive), zh, en]: from the end of the line (+ its "card_delay")
  *  for its "card_hold" seconds (else its "after", else 3.5 s) */

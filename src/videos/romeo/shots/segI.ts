@@ -38,7 +38,11 @@ const JU_SIT = P("tomb", 0.81, 0, -0.88 + DZ), JU_FACING = 0.3;
  *  inner arms behind each other's backs, the heads 5 cm apart: it read as two people posing). He comes in close and
  *  turns his body to her (his face still turns to the lens): his right arm round her back, his left round her front,
  *  at her waist; her left arm over his shoulder, her right hand on his arm round her; cheek to cheek, his head in front. */
-const RO_HUG = P("tomb", 1.28, 0, -0.62 + DZ), RO_HUG_FACING = yawTo(RO_HUG, JU_SIT);
+/** (v7.2, the owner on the v7 cut, f6073: "Slight clipping issue here with the face"): the two heads went 2 cm into each
+ *  other (centres 46 cm apart, radii 25 + 24 cm) and her cheek's ink line showed across his face. He stands HUG_DX
+ *  further from her and the heads tip HUG_TIP degrees each instead of 9: cheek to cheek with about 2 cm to spare. */
+const HUG_DX = 0.035, HUG_TIP = 7;
+const RO_HUG = P("tomb", 1.28 + HUG_DX, 0, -0.62 + DZ), RO_HUG_FACING = yawTo(RO_HUG, JU_SIT);
 
 /** where he stands when the light comes back: 14 cm nearer the bier than in scene H (he shifted his feet in the dark).
  *  From the floor the shard's right edge is close behind him: at H's 1.6 his head went 30 px past it as he straightened
@@ -119,9 +123,9 @@ export const SEG: Segment = {
       // it sinks to his side as he looks toward where the camera came from (held on in the world while his body
       // turned under it, its elbow flipped 18 cm in one frame, f5774)
       hands: hugging ? [roRoundHer, roFront] : [reach(rel(STAND, RO_FACING, EMPTY[0], EMPTY[1], EMPTY[2]), 1 - lookCam), null],
-      expr: faceAt(f, [[0, "blank"], [startOf("I01") + REACT, "caught"], [B.hug, "dreamy"], [startOf("I03") - 2, "blank"]]),
+      expr: faceAt(f, [[0, "blank"], [startOf("I01") + REACT, "caught"], [B.hug, "inLove"], [startOf("I03") - 2, "blank"]]),      // (v7.2: inLove, people.ts)
       ...roSay,
-      head: tilted(roSay.head, -9 * hugK),
+      head: tilted(roSay.head, -HUG_TIP * hugK),
       // (his eyes leave his empty hand as he turns toward where the camera came from: the head came up in one frame)
       lookDown: soft(f, (g) => { const u = ky(g, [[B.lookUp, 0], [B.lookUp + 20, 1]]); return g < S.from + 18 ? 14 : u > 0 ? -16 * u : 0; }),
       hide: ["letter", "darkBottle"],
@@ -165,9 +169,9 @@ export const SEG: Segment = {
         ...seated(seat, f / 30, { facing: up > 0 ? THREE.MathUtils.lerp(JU_FACING, juUp, 0.5 * up) : JU_FACING }),
         // the embrace: her right hand on his chest, her left round his back
         hands: hugging ? [juOnArm, juRoundHim] : downH,
-        expr: faceAt(f, [[0, "waking"], [B.hug, "swoon"], [startOf("I02") - 2, "puzzled"], [startOf("I03") + REACT, "blank"]]),
+        expr: faceAt(f, [[0, "waking"], [B.hug, "inLove"], [startOf("I02") - 2, "puzzled"], [startOf("I03") + REACT, "blank"]]),
         ...juSay,
-        head: tilted(juSay.head, 9 * hugK),
+        head: tilted(juSay.head, HUG_TIP * hugK),
         ...(waking ? { blink: lids } : {}),
         lookDown: up > 0 ? 4 - 16 * up : f < B.sitUp + 9 ? nod : 4,      // (the look up starts from where her head is: it started 4 degrees off, in one frame)
         hide: ["vial"],

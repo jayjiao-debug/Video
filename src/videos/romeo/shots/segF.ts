@@ -16,11 +16,11 @@
 //   8  F09      the toast to the lens; cut to black before the bottle comes back to her                  (the end of hope)
 import * as THREE from "three";
 import { seg, type Segment } from "../story";
-import { povCam, keyCam, handheld, lensCam, toScreen, type CamKey } from "../cam";
+import { povCam, keyCam, handheld, lensCam, toScreen, CAM, type CamKey } from "../cam";
 import { V, VERBS, standing, yawTo, walkAlong, seated } from "./common";
 import { JULIET, FRIAR, FRIAR_VIAL, FRIAR_QUILL, FRIAR_LETTER, YOUNG_FRIAR } from "../people";
 import { whisperLean } from "../whisper";
-import { P, wv, spot, camAt, faceAt, talk, wordAt, startOf, endOf, ky, accent, rel, soft, carry, REACT } from "./kit";
+import { P, wv, spot, camAt, faceAt, talk, wordAt, startOf, endOf, ky, accent, rel, soft, carry, faceWorld, REACT } from "./kit";
 import { h } from "./h";
 import { seatOn, stoolSeat } from "../../../kit/day/rig/seats";
 import { clamp01, easeInOutCubic, smooth } from "../../group/story";
@@ -225,13 +225,16 @@ function cell(w: Parameters<Segment["pose"]>[0], f: number) {
  *  with her eyes shut and it drains; she lowers it and looks at it, empty; it slips out of her fingers; she sways and
  *  falls sideways onto the bed; the picture fades to black. Frames after the line's end: */
 export const ROOM = { lift: 2, cork: [5, 13], lips: 16, drain: [20, 46], lower: [48, 56], drop: 64, fall: [70, 92], fade: [90, 100] } as const;
-/** the vial's tilt while she drinks (rad, about the lens's axis: the neck to her mouth), how far it goes up */
+/** the vial's tilt while she drinks (rad, in the picture's plane: 0 = upright, past pi/2 the foot is above the neck),
+ *  how far it goes up */
 const DRINK_TILT = 2.0, FALL_TURN = 1.05;
-/** the mouth of a figure for this camera: below the head's centre on the front of the head, toward the lens */
-const mouthOf = (w: Parameters<Segment["pose"]>[0], r: { headWorld(): THREE.Vector3 }) => {
-  const hd = r.headWorld(), cam = (w.camera as THREE.PerspectiveCamera).position;
-  const toCam = cam.clone().sub(hd).setY(0).normalize();
-  return hd.clone().addScaledVector(toCam, 0.24).add(V(0, -0.075, 0));
+/** HER MOUTH as drawn (v7.2, the owner on the v7 cut, f4507: "The potion and mouth is not aligning"): the middle of the
+ *  drawn mouth on the face (face units: the eyes at y 0, the mouth at about 19; shots/kit.ts faceWorld), a hair in
+ *  front of it toward the lens. (v7 guessed it from the head's centre, and missed it to the side and below.) */
+const MOUTH_Y = 20;
+const mouthOf = (w: Parameters<Segment["pose"]>[0], r: Parameters<typeof faceWorld>[1]) => {
+  const m = faceWorld(w, r, 0, MOUTH_Y), cam = (w.camera as THREE.PerspectiveCamera).position;
+  return m.addScaledVector(cam.clone().sub(m).normalize(), 0.012);
 };
 function room(w: Parameters<Segment["pose"]>[0], f: number) {
   w.setPlace("bedroom");
@@ -281,13 +284,16 @@ function room(w: Parameters<Segment["pose"]>[0], f: number) {
   w.update();
   let vialAt: THREE.Vector3 | null = null, vialQ: THREE.Quaternion | null = null;
   if (free && !dropped) {
-    // where the bottle is: at the toast (out), or with its neck at her lips, tipped toward her mouth
-    const dir = V(-Math.sin(tilt), Math.cos(tilt), 0), H = 0.1;
+    // where the bottle is: at the toast (out), or with its neck at her lips, tipped toward her mouth. (v7.2) It tips in
+    // the picture's own plane, the foot going up to the right of her face: v7 turned it about the world's z, which from
+    // this lens is nearly along the view, so it tipped toward the lens and its foot stayed below the neck.
+    const AX = CAM.camAxes(camera);
+    const dir = AX.right.clone().multiplyScalar(-Math.sin(tilt)).addScaledVector(AX.up, Math.cos(tilt)).normalize(), H = 0.1;
     const mouth = mouthOf(w, ju), atLips = mouth.clone().addScaledVector(dir, -H);
     const atToast = out.clone().add(V(-0.01, -0.03, 0));
     const atLook = rel(BED.at, BED.facing, 0.14, 0.95, 0.42);
     vialAt = f < at(R.lower[0]) ? atToast.clone().lerp(atLips, easeInOutCubic(toLips)) : atLook.clone().lerp(atLips, easeInOutCubic(toLips));
-    vialQ = new THREE.Quaternion().setFromAxisAngle(V(0, 0, 1), tilt);
+    vialQ = new THREE.Quaternion().setFromUnitVectors(V(0, 1, 0), dir);
     const hand = vialAt.clone().addScaledVector(dir, 0.035);
     ju.set(state([lapL, hand]));
     w.update();

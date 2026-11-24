@@ -170,7 +170,7 @@ line("H04", "ro", "calm", "这一杯，敬我的爱人。", "Here's to my love!"
      "He raises the dark bottle with the same gesture Juliet used in F09. It never reaches his lips.", tts="[calm, tender] Here's to my love!")
 line("H05", "ji", "breaking, not loud", "我只拍……拍不下去了。", "I only film… I can't film this!",
      "The picture lurches. The camera leaves her hands: torch streaks, the bier, his hand filling the frame. Glass breaks. Stone. A crack splits the picture. Black. The REC display stutters and dies. Two seconds of silence.",
-     tts="[voice breaking, quiet] 我只拍……[choked up, giving in, not shouting] 拍不下去了。", after=4.4)
+     tts="[voice breaking, quiet] 我只拍……[choked up, giving in, not shouting] 拍不下去了。", after=3.1)   # (v7.2, the owner on v7, f5740: "reduce by 2/5": the black 65 -> 39 frames, with the throw now 13 frames earlier on her real 拍)
 
 # ---------------------------------------------------------------- I · the shard
 line("I01", "ju", "waking, tender", "噢，我的罗密欧！", "O my Romeo!",

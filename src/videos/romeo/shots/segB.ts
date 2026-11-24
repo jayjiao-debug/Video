@@ -16,9 +16,9 @@ import { seg, type Segment } from "../story";
 import { povCam, punchIn } from "../cam";
 import { V, standing, yawTo } from "./common";
 import { ROMEO_MASK as ROMEO, JULIET } from "../people";
-import { NameTab, EyeHearts, Huff, HEARTS, EyeReflection } from "../hud/index";
+import { NameTab, EyeHearts, Huff, HEARTS } from "../hud/index";
 import { whisperLean } from "../whisper";
-import { P, wv, faceWorld, spot, camAt, ck, faceAt, talk, wordAt, startOf, endOf, ky, accent, headBox, rel, eyesPx, facePx, soft, REACT } from "./kit";
+import { P, faceWorld, spot, camAt, ck, faceAt, talk, wordAt, startOf, endOf, ky, accent, headBox, rel, eyesPx, facePx, soft, REACT } from "./kit";
 import { h, frag } from "./h";
 import { JU_TAB } from "../fx";
 import { dancers } from "./dance";
@@ -34,8 +34,9 @@ const RO_AT = RW.at.clone().add(V(0.12, 0, 0.1));
  *  from the frame's left, the dancers right of the middle (the frame is narrow: from the middle of the door end he was
  *  half cut off by the app) */
 const WIDE_POS: [number, number, number] = [-1.0, 1.5, 2.2], WIDE_LOOK: [number, number, number] = [-1.16, 1.15, -1.8];
-/** (v7) his eyes, where the push on B02 ends (world): his head's eye line as he stands by the wall */
-const EYES_AT = RO_AT.clone().add(V(0, 1.33, 0));
+/** (v7.2) THE STARE before B02: he sees her `see` frames before the line (the lens has been on him since b02 - 30), and
+ *  the slight push in on his face ends at STARE_FOV as the tilt to her begins */
+const STARE = { see: -26 } as const, STARE_FOV = 38;
 /** where his eyes sit in the frame at the end of the push (a fraction of its height from the top) */
 const EYES_Y = 0.42;
 
@@ -45,6 +46,7 @@ export const SEG: Segment = {
   pose(w, f) {
     w.setPlace("hall");
     const b02 = startOf("B02"), b03 = startOf("B03"), b05 = startOf("B05"), b06 = startOf("B06");
+    const tSee = b02 + STARE.see;            // (v7.2) he sees her: his turn, his eyes wide, the held stare begins
     const switched = f >= b05 - 3;          // the hard cut lands just before her question's first word
     let camera;
     if (!switched) {
@@ -52,14 +54,16 @@ export const SEG: Segment = {
         ck("hall", S.from, WIDE_POS, WIDE_LOOK, 52),
         ck("hall", S.from + 22, WIDE_POS, WIDE_LOOK, 52),
         ck("hall", b02 - 30, [-0.15, 1.5, 0.95], [-1.45, 1.25, -0.95], 48),
-        // (v7, the owner on the v6.1 cut: "hold a bit longer, we zoom into his eyes and see reflection of Juliet, instead
-        // of shifting to Juliet"): the lens holds on him as he stops, pushes in on his face and on into his eyes through
-        // "Did my heart love till now?" (she is in them, hud/emotes.tsx EyeReflection), and comes back out after it.
-        // (Until v6 it tilted along his look across the hall to her and back.)
-        { f: b02 - 4, pos: wv("hall", [-0.15, 1.5, 0.95]), look: EYES_AT.toArray() as [number, number, number], fov: 21 },
-        { f: endOf("B02") - 6, pos: wv("hall", [-0.15, 1.5, 0.95]), look: EYES_AT.toArray() as [number, number, number], fov: 11.5 },
-        { f: endOf("B02") + 2, pos: wv("hall", [-0.15, 1.5, 0.95]), look: EYES_AT.toArray() as [number, number, number], fov: 11.5 },
-        ck("hall", endOf("B02") + 14, [-0.35, 1.5, 0.55], [-1.5, 1.28, -0.9], 42),
+        // (v7.2, the owner on the v7 cut: "revert back to v6 here, just hold the stare a bit longer before transition and
+        // camera movement, we could do a slight zoom into his face of his eyes opening wide"): the lens arrives on him, he
+        // sees her and his eyes open wide, and it holds on the stare with a slight push in on his face (aimed at his eyes,
+        // below); then, as in v6, it tilts along his look across the hall to her, and back. (v7 pushed on into his eyes
+        // with her reflected in them; until v6 the lens left him the moment it arrived.)
+        ck("hall", tSee, [-0.15, 1.5, 0.95], [-1.45, 1.25, -0.95], 48),
+        ck("hall", b02 - 2, [-0.15, 1.5, 0.95], [-1.45, 1.25, -0.95], STARE_FOV),
+        { ...camAt("hall", "across", b02 + 10), fov: 30 },
+        { ...camAt("hall", "across", endOf("B02") - 4), fov: 30 },
+        ck("hall", endOf("B02") + 8, [-0.35, 1.5, 0.55], [-1.5, 1.28, -0.9], 42),
       ], { mood: "calm", amp: 0.5 });
     } else {
       camera = povCam(f, [
@@ -70,14 +74,15 @@ export const SEG: Segment = {
     }
     camera = whisperLean(f, camera);
     w.setCamera(camera);
-    // (v7) THE PUSH INTO HIS EYES is aimed at his eyes themselves: the figure is solved once with the keyed camera, the
-    // middle of his two drawn eyes is found in the world, and the look is turned so they sit at EYES_Y of the frame's
-    // height (above the subtitle), blended in and out with the push; then he is solved again for that camera
-    const aim = !switched ? ky(f, [[b02 - 30, 0], [b02 - 4, 1], [endOf("B02") + 2, 1], [endOf("B02") + 14, 0]]) : 0;
+    // (v7) THE PUSH is aimed at his eyes themselves: the figure is solved once with the keyed camera, the middle of his
+    // two drawn eyes is found in the world, and the look is turned so they sit at EYES_Y of the frame's height (above the
+    // subtitle), blended in with the push; then he is solved again for that camera. (v7.2) It lets go as the tilt to her
+    // begins.
+    const aim = !switched ? ky(f, [[tSee, 0], [b02 - 6, 1], [b02 - 2, 1], [b02 + 4, 0]]) : 0;
     // --- Romeo by the wall: sulking -> struck -> distracted (looking past her at Juliet)
     const ro = w.actor(ROMEO);
     const struck = wordAt("B02", "heart");
-    const roLook = f >= b02 - 8 ? yawTo(RO_AT, JT.at) : RW.facing + 0.4;
+    const roLook = f >= tSee ? yawTo(RO_AT, JT.at) : RW.facing + 0.4;
     // (v5: hands and bodies move with the words) "Did my HEART love till now?": his free hand goes to his heart on the
     // word and stays there; he leans after her and sways on his feet; on "Who?" the mask he has forgotten bobs
     const heartK = ky(f, [[struck - 5, 0], [struck + 4, 1]]), smit = span(f, struck, S.to + 30, 12, 1);
@@ -90,10 +95,14 @@ export const SEG: Segment = {
       // (smitten); asked about Rosaline he answers "Who?" with an open grin and hearts floating out of his eyes (v5,
       // the owner: "This eyes turning into heart is too much, the floatinng heart is enough": no heart IN an eye)
       // (v7, emo.ts 1 and 2) sulking for Rosaline under a cloud (黑线); at the first sight of her his jaw drops (惊掉下巴, a
-      // hard cut, the shock), and as the lens reaches his eyes he melts into the smitten face and she is in them
-      expr: faceAt(f, [[0, EMO.b01Gloom ? "gloom" : "hollow"], ...(EMO.b02Aghast ? [[b02 - 10, "aghast"], [b02 + 3, "smitten"]] as [number, string][] : [[b02 - 8, "smitten"]] as [number, string][]),
+      // hard cut, the shock: ring eyes, wide open, held without a blink through the stare, v7.2); he melts into the
+      // smitten face while the lens is across the hall on her
+      expr: faceAt(f, [[0, EMO.b01Gloom ? "gloom" : "hollow"], ...(EMO.b02Aghast ? [[tSee, "aghast"], [b02 + 4, "smitten"]] as [number, string][] : [[tSee, "smitten"]] as [number, string][]),
         [startOf("B04") - 3, "smittenOpen"], [endOf("B04") + 18, "smitten"]]),
-      ...talk("ro", f, 1), gaze: f >= b02 - 8 ? 0.5 : -0.5, lookDown: soft(f, (g) => (g < b02 - 8 ? 8 : 0), 2),      // (his head comes up with his turn to her: five frames)
+      ...talk("ro", f, 1),
+      // (v7.2) no blink through the stare: the lip-sync's own blink as B02 begins shut his wide eyes to two dashes
+      ...(f >= tSee - 2 && f < b02 + 6 ? { blink: 0 } : {}),
+      gaze: f >= tSee ? 0.5 : -0.5, lookDown: soft(f, (g) => (g < tSee ? 8 : 0), 2),      // (his head comes up with his turn to her: five frames)
       head: talkHead("ro", f, 1, accent("pop", f, struck)), hide: ["letter"],
     });
     if (aim > 0) {
@@ -138,12 +147,8 @@ export const SEG: Segment = {
     const herHearts = switched ? h(EyeHearts, { key: "jh", f, eyes: eyesPx(w, ju), from: b05 + 1, to: b06 - 6 - HEARTS.life, dir: [-0.75, -0.65], size: 0.8 }) : null;
     const nose = switched ? facePx(w, ju, -9, 17) : null, u = switched ? Math.abs(facePx(w, ju, 10, 0).x - facePx(w, ju, -10, 0).x) / 20 : 0;
     const puff = nose && nose.on > 0.5 ? h(Huff, { key: "hf", f, at: huff + 1, x: nose.x, y: nose.y, dir: [-1, -0.1], r: 5.2 * u }) : null;
-    // (v7) she is in his eyes while the lens is in on them
-    // (with emo.ts 2 she comes into them as his jaw closes: the aghast eyes are rings with pin pupils)
-    const eyesIn = EMO.b02Aghast ? [b02 + 3, b02 + 13] : [b02 - 12, b02 + 2];
-    const inEyes = !switched ? ky(f, [[eyesIn[0], 0], [eyesIn[1], 1], [endOf("B02") + 2, 1], [endOf("B02") + 10, 0]]) : 0;
-    const refl = inEyes > 0 ? h(EyeReflection, { key: "er", f, eyes: eyesPx(w, ro), k: inEyes }) : null;
-    const overlays = frag(refl, hisHearts, herHearts, puff, tab);
+    // (v7.2: no reflection in his eyes any more; the owner asked for the v6 move back)
+    const overlays = frag(hisHearts, herHearts, puff, tab);
     return { camera, overlays };
   },
 };
