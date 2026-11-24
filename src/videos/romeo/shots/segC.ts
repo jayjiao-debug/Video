@@ -60,6 +60,9 @@ const RUN_PATH = [BELOW.at, P("balcony", 1.4, 0, 0.95), P("balcony", 2.42, 0, 1.
 const SUN_BACK = 0.4;
 /** (v7, emo.ts 8) her half second on "marriage": the flustered face's frames, the steam's delay after the word */
 const STEAM = { hold: 16, at: 3 };
+/** (v7.1) the height (m) the lens looks at when it tilts down onto his empty spot. It was 0.95 until v7: with the dust
+ *  cloud on (emote 9) the cloud sat on the 九点整 subtitle; looking lower puts his spot higher in the picture */
+const DUST_LOOK = EMO.c12Dust ? 0.6 : 0.95;
 
 export const SEG: Segment = {
   id: "C", from: S.from, to: S.to,
@@ -100,8 +103,8 @@ export const SEG: Segment = {
         k(tMar - 5, [0.06, 2.7, -0.7], 40),
         k(tMar, [0.02, 3.72, -1.0], 31),                            // SNAP ZOOM onto her on "marriage"
         k(c12 - 3, [0.02, 3.72, -1.0], 31),
-        k(c12 + 9, [0.4, 0.95, 0.4], 42),                           // tilt down: his spot in the bushes, empty
-        k(c12 + 14, [0.55, 0.95, 0.5], 42),
+        k(c12 + 9, [0.4, DUST_LOOK, 0.4], 42),                      // tilt down: his spot in the bushes, empty
+        k(c12 + 14, [0.55, DUST_LOOK, 0.5], 42),
         k(c12 + 22, [2.05, 0.95, 1.7], 44),                         // finds him running along the wall
         k(c12 + 32, [2.35, 0.95, 2.1], 44),                         // and lets him run out of its right edge (about
         k(S.to, [2.35, 0.95, 2.1], 44),                             // f2203) before his path ends (f2207: v4 stills, the

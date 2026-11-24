@@ -63,15 +63,22 @@ export const DustPuff: React.FC<{ f: number; at: number; x: number; y: number; s
   // five puffs along the ground, leaning away from the way he went, the biggest in the middle
   const puffs: [number, number, number][] = [[-0.26, -0.02, 0.13], [-0.1, -0.1, 0.18], [0.08, -0.06, 0.16], [0.24, -0.01, 0.12], [-0.02, 0.02, 0.14]];
   const kids: React.ReactNode[] = [];
-  puffs.forEach(([px, py, pr], i) => {
+  const geo = puffs.map(([px, py, pr], i) => {
     const h = hash01(i, 191), r = s * pr * (0.55 + 0.6 * grow) * (0.9 + 0.2 * h);
-    const cx = x + s * (px - 0.18 * dx * grow) , cy = y + s * (py - 0.05 * grow - 0.06 * t / D.life);
-    kids.push(<circle key={`o${i}`} cx={n1(cx)} cy={n1(cy)} r={n1(r + 2.4)} fill={INK} opacity={o} />);
-    kids.push(<circle key={`f${i}`} cx={n1(cx)} cy={n1(cy)} r={n1(r)} fill={D.fill} opacity={o} />);
-    kids.push(<circle key={`s${i}`} cx={n1(cx + r * 0.22)} cy={n1(cy + r * 0.28)} r={n1(r * 0.55)} fill={D.shade} opacity={0.55 * o} />);
+    return { cx: x + s * (px - 0.18 * dx * grow), cy: y + s * (py - 0.05 * grow - 0.06 * t / D.life), r };
+  });
+  // (v7.1) never on the subtitles: while the lens is still tilting down onto the spot, the cloud passed through the
+  // subtitle band on its way up the picture. Below the marks' safe band it fades out (gone 60 px under it), so it comes
+  // into view as the lens arrives
+  const bottom = Math.max(...geo.map((g) => g.cy + g.r + 2.4)), vis = clamp01((SAFE.bottom + 60 - bottom) / 60);
+  if (vis <= 0) return null;
+  geo.forEach(({ cx, cy, r }, i) => {
+    kids.push(<circle key={`o${i}`} cx={n1(cx)} cy={n1(cy)} r={n1(r + 2.4)} fill={INK} opacity={o * vis} />);
+    kids.push(<circle key={`f${i}`} cx={n1(cx)} cy={n1(cy)} r={n1(r)} fill={D.fill} opacity={o * vis} />);
+    kids.push(<circle key={`s${i}`} cx={n1(cx + r * 0.22)} cy={n1(cy + r * 0.28)} r={n1(r * 0.55)} fill={D.shade} opacity={0.55 * o * vis} />);
   });
   // the speed lines: three, toward where he went, gone in the first half
-  const lo = clamp01((D.life * 0.55 - t) / 6);
+  const lo = clamp01((D.life * 0.55 - t) / 6) * vis;
   if (lo > 0) [-0.12, 0, 0.12].forEach((oy, i) => {
     const x0 = x + s * (0.3 + 0.1 * i) * dx, y0 = y + s * (oy - 0.12), L = s * (0.35 + 0.15 * hash01(i, 211)) * smooth(t / 5);
     kids.push(<line key={`l${i}`} x1={n1(x0)} y1={n1(y0)} x2={n1(x0 + dx * L)} y2={n1(y0 + dy * L)} stroke={INK} strokeWidth={n1(Math.max(2, s * 0.018))} strokeLinecap="round" opacity={0.8 * lo} />);
