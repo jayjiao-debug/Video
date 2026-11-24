@@ -1,7 +1,7 @@
-// THE BROKEN LENS (script v2, H05 and scene I): she throws her camera on 「不拍了！」, it knocks the bottle out of Romeo's
+// THE BROKEN LENS (script v2, H05 and scene I): she throws her camera on 「不要啊！」 (until v5 「不拍了！」), it knocks the bottle out of Romeo's
 // hand and shatters; one big shard of the lens survives, and through it we see Juliet wake. Drawn UNDER her camera's UI
 // (the cracks are in the glass in front of the lens, the REC display is electronic and stays crisp above them).
-//   THROW_AT     the frame she throws (the first word of 不拍了)
+//   THROW_AT     the frame she throws (the first word of 不要啊)
 //   IMPACT_AT    the camera hits the bottle and the glass breaks, FLIGHT frames later: THE THROW IS IN SLOW MOTION
 //   worldF(f)    the world's own frame at film frame f (it runs slow through the flight): what moves in the picture
 //                (his hand, the torch flames, the dust) is timed by it, not by f
@@ -13,7 +13,7 @@ import { capWord } from "./captions";
 import { line, seg } from "./story";
 import { clamp01 } from "../group/story";
 
-export const THROW_AT = capWord("H05", "不拍了").from;
+export const THROW_AT = capWord("H05", "不要啊").from;
 /** THE THROW IN SLOW MOTION (v5, the owner: "then we do a slow scene as the camera is being thrown, screen spinning in
  *  a sense"). The flight takes FLIGHT frames of film (until v4: 11). The world runs at full speed for the throw's first
  *  frames and for the last ones into the hit, and at SLOW_RATE of it between them: RAMP is the world's speed over the
@@ -50,7 +50,12 @@ export const worldF = (f: number) => (f <= THROW_AT ? f : f >= IMPACT_AT ? f - (
 const SETTLE = 26, DARK_IN = 10;
 /** scene I: the shard's light comes back over SHARD_IN frames; it flickers on her last line; the power-off ends it */
 const SHARD_IN = 22;
-const OFF = () => line("I04").to + 22;
+/** (v6, the owner on the v5 cut: "The broken camera filter should carry on until the letter and comes up at the end, I
+ *  see a split frame where it was back to normal") the shard holds through the power-off (hud.tsx OFF_AT, the REC
+ *  display dying over POWER_OFF frames) until the black the end card unfolds on (fx.tsx END_FROM). Until v5 it ended
+ *  at OFF_AT and the whole unbroken picture showed for those 14 frames. */
+const POWER_OFF = 14;
+const OFF = () => line("I04").to + 22 + POWER_OFF;
 
 export type ShardState = { phase: "crack" | "dark" | "shard"; k: number; t: number };
 export function shardAt(f: number): ShardState | null {

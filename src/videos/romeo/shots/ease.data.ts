@@ -17,8 +17,6 @@ export const HAND_EASE: HandEase[] = [
   { who: "juliet", i: 0, a: 925, b: 930, j0: 931, j1: 931, A: [-0.1528, 0.3695, 0.3773], B: [-0.1564, 0.0141, 0.0347] },   // B point>idle, 49 cm in one frame, before
   { who: "juliet", i: 1, a: 936, b: 942, j0: 936, j1: 936, A: [0.1562, 0.0146, 0.0218], B: [0.3949, 0.5226, -0.0236] },   // B idle>wave, 56 cm in one frame, after, off screen
   { who: "juliet", i: 1, a: 953, b: 959, j0: 960, j1: 960, A: [0.4315, 0.5147, -0.0383], B: [0.156, 0.015, 0.0177] },   // B wave>idle, 57 cm in one frame, before, off screen
-  { who: "juliet", i: 1, a: 1039, b: 1043, j0: 1041, j1: 1041, A: [0.04, 0.2746, 0.25], B: [0.25, 0.219, 0.1] },   // C hold, 26 cm in one frame, across
-  { who: "juliet", i: 1, a: 1193, b: 1197, j0: 1195, j1: 1195, A: [0.2565, 0.1655, 0.0823], B: [0.0504, 0.2699, 0.25] },   // C hold, 29 cm in one frame, across
   { who: "juliet", i: 0, a: 1395, b: 1399, j0: 1397, j1: 1397, A: [-0.1661, 0.178, 0.3594], B: [0.0508, 0.2943, 0.216] },   // C hold, 28 cm in one frame, across, off screen
   { who: "juliet", i: 0, a: 1554, b: 1558, j0: 1556, j1: 1556, A: [0.0538, 0.296, 0.2149], B: [-0.1654, 0.1798, 0.3615] },   // C hold, 29 cm in one frame, across
   { who: "juliet", i: 0, a: 1606, b: 1610, j0: 1608, j1: 1608, A: [-0.166, 0.1766, 0.3588], B: [-0.05, 0.072, 0.24] },   // C hold, 20 cm in one frame, across
@@ -36,8 +34,8 @@ export const HAND_EASE: HandEase[] = [
   { who: "juliet", i: 0, a: 2696, b: 2698, j0: 2696, j1: 2697, A: [-0.1566, 0.0146, 0.0231], B: [-0.1562, 0.0391, -0.1001] },   // D idle>walk, 28 cm in one frame, across, off screen
   { who: "friar", i: 0, a: 2751, b: 2755, j0: 2753, j1: 2753, A: [-0.0305, 0.1297, 0.2298], B: [-0.2025, 0.025, 0.0573] },   // D hold>walk, 27 cm in one frame, across, off screen
   { who: "friar", i: 1, a: 2751, b: 2755, j0: 2753, j1: 2753, A: [0.0838, 0.1529, 0.2375], B: [0.2025, 0.0272, -0.0094] },   // D hold>walk, 30 cm in one frame, across, off screen
-  { who: "juliet", i: 0, a: 2761, b: 2766, j0: 2764, j1: 2764, A: [-0.1561, 0.0141, 0.0331], B: [0.116, 0.1754, 0.2814] },   // D idle, 40 cm in one frame, across
-  { who: "romeo", i: 1, a: 2761, b: 2766, j0: 2764, j1: 2764, A: [0.1638, 0.0646, 0.043], B: [-0.0356, 0.1867, 0.3076] },   // D idle, 35 cm in one frame, across
+  { who: "juliet", i: 1, a: 2762, b: 2766, j0: 2764, j1: 2764, A: [0.1566, 0.0145, 0.0405], B: [0.3028, 0.135, 0.2119] },   // D idle, 26 cm in one frame, across
+  { who: "romeo", i: 0, a: 2762, b: 2766, j0: 2764, j1: 2764, A: [-0.1643, 0.0652, 0.0351], B: [-0.3134, 0.138, 0.1823] },   // D idle, 22 cm in one frame, across
   { who: "friar", i: 0, a: 2783, b: 2787, j0: 2783, j1: 2783, A: [-0.2025, 0.0282, -0.01], B: [-0.0305, 0.1297, 0.2298] },   // D walk>hold, 31 cm in one frame, after
   { who: "friar", i: 1, a: 2783, b: 2787, j0: 2783, j1: 2783, A: [0.2025, 0.0241, 0.0561], B: [0.0838, 0.1529, 0.2375] },   // D walk>hold, 25 cm in one frame, after
   { who: "friar", i: 0, a: 3502, b: 3505, j0: 3504, j1: 3504, A: [-0.0305, 0.1297, 0.2298], B: [-0.1642, 0.1406, 0.2177] },   // F hold, 13 cm in one frame, across
@@ -65,11 +63,12 @@ export const HAND_EASE: HandEase[] = [
   { who: "romeo", i: 1, a: 4883, b: 4887, j0: 4883, j1: 4883, A: [0.1638, 0.0647, 0.02], B: [0.0619, 0.2067, 0.2035] },   // G idle>hold, 25 cm in one frame, after
   { who: "romeo", i: 0, a: 4907, b: 4912, j0: 4907, j1: 4907, A: [-0.1103, 0.3773, 0.1669], B: [-0.1643, 0.0654, 0.0206] },   // G hold>idle, 35 cm in one frame, after
   { who: "romeo", i: 1, a: 4905, b: 4909, j0: 4907, j1: 4907, A: [0.0619, 0.2068, 0.2035], B: [0.1638, 0.0645, 0.031] },   // G hold>idle, 25 cm in one frame, across
-  { who: "romeo", i: 0, a: 5883, b: 5887, j0: 5885, j1: 5885, A: [-0.0225, 0.1818, 0.1933], B: [-0.164, 0.0656, 0.0572] },   // I hold>walk, 23 cm in one frame, across
-  { who: "romeo", i: 1, a: 5883, b: 5887, j0: 5885, j1: 5885, A: [0.0619, 0.2066, 0.2016], B: [0.1641, 0.0666, -0.0115] },   // I hold>walk, 27 cm in one frame, across
-  { who: "juliet", i: 1, a: 5893, b: 5898, j0: 5896, j1: 5896, A: [0.097, 0.2155, 0.22], B: [0.4252, 0.3044, 0.25] },   // I sit, 34 cm in one frame, across
-  { who: "romeo", i: 0, a: 5893, b: 5899, j0: 5896, j1: 5896, A: [-0.1641, 0.067, -0.0057], B: [-0.5149, 0.4534, -0.0325] },   // I walk>hold, 52 cm in one frame, across
-  { who: "romeo", i: 1, a: 5896, b: 5900, j0: 5896, j1: 5896, A: [0.1641, 0.0653, 0.0629], B: [0.0619, 0.2066, 0.2035] },   // I walk>hold, 22 cm in one frame, after
+  { who: "romeo", i: 0, a: 5901, b: 5905, j0: 5903, j1: 5903, A: [-0.0225, 0.1816, 0.1933], B: [-0.164, 0.0658, 0.0608] },   // I hold>walk, 23 cm in one frame, across
+  { who: "romeo", i: 1, a: 5901, b: 5905, j0: 5903, j1: 5903, A: [0.0619, 0.2064, 0.2016], B: [0.1641, 0.0672, -0.0165] },   // I hold>walk, 28 cm in one frame, across
+  { who: "juliet", i: 0, a: 5912, b: 5916, j0: 5914, j1: 5914, A: [-0.1019, 0.2112, 0.22], B: [0.1045, 0.2952, 0.2791] },   // I sit, 23 cm in one frame, across
+  { who: "juliet", i: 1, a: 5912, b: 5916, j0: 5914, j1: 5914, A: [0.0981, 0.213, 0.22], B: [0.184, 0.2183, 0.3815] },   // I sit, 18 cm in one frame, across
+  { who: "romeo", i: 0, a: 5911, b: 5917, j0: 5914, j1: 5914, A: [-0.1637, 0.0675, -0.0099], B: [-0.5183, 0.4502, 0.0771] },   // I walk>hold, 53 cm in one frame, across
+  { who: "romeo", i: 1, a: 5911, b: 5916, j0: 5914, j1: 5914, A: [0.1644, 0.0656, 0.0673], B: [-0.2005, 0.3303, 0.2629] },   // I walk>hold, 49 cm in one frame, across
 ];
 // TURN_EASE: one row = one person whose facing jumped in a single frame (a turn to the lens, a walker snapping to
 // its path), and the frames over which it now turns:  j = the frame of the jump, d = the turn (rad, the short way),
@@ -81,8 +80,8 @@ export const TURN_EASE: TurnEase[] = [
   { who: "friar", a: 2249, b: 2253, j: 2251, d: -0.7750 },   // D hold, 44 degrees in one frame
   { who: "romeo", a: 2316, b: 2320, j: 2318, d: -0.8460 },   // D idle, 48 degrees in one frame, off screen
   { who: "friar", a: 2365, b: 2374, j: 2370, d: 2.8390 },   // D hold, 163 degrees in one frame
-  { who: "juliet", a: 2744, b: 2747, j: 2746, d: -0.4960 },   // D idle, 28 degrees in one frame
-  { who: "romeo", a: 2741, b: 2750, j: 2746, d: -2.5962 },   // D idle, 149 degrees in one frame
+  { who: "juliet", a: 2744, b: 2747, j: 2746, d: -0.3300 },   // D idle, 19 degrees in one frame
+  { who: "romeo", a: 2741, b: 2750, j: 2746, d: -2.5452 },   // D idle, 146 degrees in one frame
   { who: "friar", a: 2748, b: 2755, j: 2752, d: -2.0430 },   // D hold, 117 degrees in one frame, off screen
   { who: "romeo", a: 3200, b: 3209, j: 3205, d: -2.9820 },   // E idle>walk, 171 degrees in one frame
   { who: "friar", a: 3986, b: 3994, j: 3990, d: 2.3770 },   // F idle, 136 degrees in one frame

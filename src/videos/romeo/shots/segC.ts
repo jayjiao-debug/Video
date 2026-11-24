@@ -23,7 +23,7 @@ import { h, frag } from "./h";
 import { FONT_STACK } from "../../../kit/day/hud/style";
 import { SPEAKER_COL } from "../hud";
 import { clamp01, easeInOutCubic } from "../../group/story";
-import { reach, hit, beat, rock, lineBody, leans, talkHead } from "./gest";
+import { reach, hit, beat, rock, lineBody, leans, talkHead, strokes } from "./gest";
 
 const S = seg("C");
 const RAIL = spot("balcony", "julietRail"), BELOW = spot("balcony", "romeoBelow");
@@ -33,8 +33,6 @@ const RO_POS: [number, number, number] = [0.9, 1.15, 1.9], RO_LOOK: [number, num
  *  crouch over `len` frames, landing on "sun" with a little overshoot; her lens rises with him */
 const RISE = { len: 9, drop: 0.38 };
 const RO_POS_UP: [number, number, number] = [0.9, 1.3, 1.9], RO_LOOK_UP: [number, number, number] = [0.32, 1.12, 0.35];
-/** (v3) her famous line: her left hand winds the curl of her left drill (a circle every 0.8 s) while she sighs */
-const TWIRL = { x: 0.25, y: 0.72, z: 0.1, r: 0.025, period: 24 };
 /** the split: the tear across the balcony's underside; it opens a few frames after the two names */
 export const SPLIT = { from: startOf("C08") - 3, open: endOf("C08") + 8, len: 20 };
 export const splitOpen = (f: number) => easeInOutCubic(clamp01((f - SPLIT.open) / SPLIT.len));
@@ -43,7 +41,10 @@ const COUNT3 = [wordAt("C07", "rash"), wordAt("C07", "unadvised"), wordAt("C07",
 /** his arm at her balcony (points in his own frame): thrown up on "east", sagging while he gets his breath, thrust
  *  straight up beside his hat on "sun". (Until v4 one point, far out to his side: in her close on his face the hand
  *  was at the frame's edge, under the part the app cuts off, and stood still for three seconds.) */
-const ARM_EAST = V(-0.55, 1.75, 0.1), ARM_SAG = V(-0.6, 1.42, 0.25), ARM_SUN = V(-0.42, 1.95, 0.05);
+// (v6, the owner on the v5 cut: "Keep his arm around this height, anything further back seems off": the hand he marked
+// is the sag's, out in front at the side of his face. Until v5 "east" and "sun" put it up behind his own head.) All
+// three now stay out at that height, in front of his shoulder: up a little on "east", the sag, thrust out on "sun".
+const ARM_EAST = V(-0.6, 1.5, 0.27), ARM_SAG = V(-0.6, 1.42, 0.25), ARM_SUN = V(-0.63, 1.56, 0.29);
 /** from his left shoulder to the moon (his own frame: it hangs over the orchard wall to his left as he faces her).
  *  Half way between up and out: his arm is 0.38 m long, and a hand held higher is hidden behind his own head */
 /** the oath's arm: how steeply it goes up toward the moon, in the picture's own plane (radians above level) */
@@ -119,9 +120,12 @@ export const SEG: Segment = {
     // burst and she is caught for half a second before she straightens up to answer (at the line's end the caught face
     // had one frame before her prim one took over)
     const caughtAt = startOf("C06") + Math.round((endOf("C06") - startOf("C06")) * 0.7);
-    const ang = (2 * Math.PI * (f - S.from)) / TWIRL.period;
-    const twirl: [THREE.Vector3, THREE.Vector3] = [clasp[0], rel(RAIL.at, RAIL.facing, TWIRL.x, TWIRL.y + TWIRL.r * Math.sin(ang), TWIRL.z + TWIRL.r * Math.cos(ang))];
-    const juHands = f < herCut ? (f >= S.from + 6 && f < herCut - 8 ? twirl : clasp) : f >= c05 - 4 && f < endOf("C05") + 8 ? heart
+    // (v6, the owner on the v5 cut: "Make her arm do a more natural gesture") her famous line is sighed with her hands
+    // clasped at her chest, pressed up a little to her heart on each "Romeo". (v3 to v5: her left hand wound the curl
+    // of her drill, out at her side; the arm stood out bent and the hand hung behind the curl.)
+    const press = 0.022 * beat(f, strokes("C01", "Wherefore"), 4, 12);
+    const sigh: [THREE.Vector3, THREE.Vector3] = [clasp[0].clone().add(V(0, press, 0)), clasp[1].clone().add(V(0, press, 0))];
+    const juHands = f < herCut ? sigh : f >= c05 - 4 && f < endOf("C05") + 8 ? heart
       : f >= c07 - 4 && f < c08 ? folded : f >= c08 && f < tSplitStop ? chin : f >= c10 && f < endOf("C11") + 6 ? null : onRail;
     const juPose = f >= c10 && f < c11 - 6 ? { kind: "wave" as const, t: (f - c10) / 30, arm: 0 as const }
       : f >= c11 && f < endOf("C11") + 6 ? { kind: "point" as const, t: (f - c11) / 30, arm: 0 as const } : { kind: "hold" as const, t: f / 30 };

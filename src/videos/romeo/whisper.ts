@@ -4,14 +4,17 @@
 //   WHISPER_LINES    THE LIST (scripts/kit/day/sound/build.py reads this one array for the room dip)
 //   whisperAt(f)     the aside running at f: { id, from, to, lean 0..1, edge 0..1, note 0..1 } or null
 //   whisperLean(f, cam)  the camera piece: a delta on any CamPose (a step in along the view and a small tip)
-// G07 is NOT here: from G07 on every effect is gone (script v2: "Plain words, no bubble"). C02 / C04 are whispered
-// questions to Romeo under the balcony, not asides: they keep normal subtitles.
+// G07 and H03 (v6, the owner on the v5 cut: "Here she is whispering to herself", "Here she is whispering to herself
+// too") are her words to herself: her note and the darkened edges; at the tomb the lens does not lean (segH never calls
+// whisperLean: the quiet scene keeps its one slow push). Until v5 both were plain subtitles (script v2: "from G07 on every
+// effect is gone"; H03 was said out loud). C02 / C04 are whispered questions to Romeo under the balcony, not asides:
+// they keep normal subtitles.
 import { FPS, line, type Pose } from "./story";
 import { cap } from "./captions";
 import { nudge } from "./cam";
 import { clamp01, easeInOutCubic } from "../group/story";
 
-export const WHISPER_LINES: string[] = ["B01", "B08", "E03", "F01", "G01"];
+export const WHISPER_LINES: string[] = ["B01", "B08", "E03", "F01", "G01", "G07", "H03"];
 
 /** the treatment's numbers (frames unless named) */
 export const WHISPER = { LEAN_IN: 10, LEAN_BACK: 14, EDGE_IN: 6, EDGE_OUT: 8, NOTE_HOLD: 8, step: 0.22, tilt: -2.2 };
