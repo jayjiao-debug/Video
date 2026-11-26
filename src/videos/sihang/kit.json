@@ -17,8 +17,22 @@
     "props.ts",
     "sets/index.ts",
     "hud.tsx",
+    "hud/skin.tsx",
+    "fx.tsx",
+    "Film.tsx",
+    "kit.world.ts",
+    "shots/kit.ts",
+    "shots/segA.ts",
+    "shots/segB.ts",
+    "shots/segC.ts",
+    "shots/segD.ts",
+    "shots/segE.ts",
+    "shots/segF.ts",
+    "shots/segG.ts",
+    "shots/segH.ts",
     "preview/look.ts",
-    "preview/people_lineup.ts"
+    "preview/people_lineup.ts",
+    "preview/frames.ts"
   ],
   "domOnly": [
     "hud/"

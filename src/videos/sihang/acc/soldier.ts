@@ -228,3 +228,18 @@ export const sackHeld = (o: { hand?: 0 | 1; col?: string } = {}): Acc => {
     },
   };
 };
+
+/** his own steel helmet in his hand (scene D's end: 满仓 has taken it off) */
+export const helmetHeld = (o: { hand?: 0 | 1; col?: string } = {}): Acc => {
+  const hand = o.hand ?? 1, col = o.col ?? UNI.steel;
+  return {
+    name: "helmetHeld", slots: [hand ? "hand1" : "hand0"], key: ["shHelmHeld", hand, col].join("|"),
+    build(b) {
+      const g = b.held(hand, { offset: [hand ? -0.07 : 0.07, -0.03, 0.08], rot: [-1.15, 0, 0], layer: "free" });
+      const dome = new THREE.SphereGeometry(0.2, 16, 10, 0, Math.PI * 2, 0, Math.PI / 2); dome.scale(1, 0.86, 1.08);
+      b.solid(g, dome, { col, ink: 0.007 });
+      const rim = new THREE.TorusGeometry(0.21, 0.02, 6, 20); rim.rotateX(Math.PI / 2); rim.scale(1.06, 1, 1.14);
+      b.solid(g, rim, { col: shade(col, 0.85), ink: 0.005 });
+    },
+  };
+};

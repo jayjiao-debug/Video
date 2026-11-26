@@ -14,7 +14,7 @@ import { legColours } from "../romeo/acc/figure";
 import { softBrows, bushyBrows, ageLines, cheeks, nose, freckles, shine } from "../romeo/acc/face";
 import { beard } from "../../kit/acc/facehair";
 import { moustache, glasses } from "../group/kit/rigacc";
-import { m35, fieldCap, brodie, fedora, tunic, rifle, sackHeld, UNI } from "./acc/soldier";
+import { m35, fieldCap, brodie, fedora, tunic, rifle, sackHeld, helmetHeld, UNI } from "./acc/soldier";
 
 export type Person = KitPerson & { limbs?: { hand?: string; arm?: string }; legs?: { leg?: string; foot?: string } };
 export function addPerson(rc: RigCast, p: Person): Rig {
@@ -39,7 +39,7 @@ export const MANCANG: Person = { name: "mancang", scale: 0.95, look: MC_LOOK, ..
 export const MANCANG_SACK: Person = { ...MANCANG, name: "mancangSack", acc: () => mcAcc([sackHeld({ hand: 1 })]) };
 export const MANCANG_RIFLE: Person = { ...MANCANG, name: "mancangRifle", acc: () => mcAcc([rifle({ hand: 0 })]) };
 /** bare-headed (scene D's end: he takes his helmet off) */
-export const MANCANG_BARE: Person = { ...MANCANG, name: "mancangBare", acc: () => mcAcc().filter((a) => a.name !== "m35") };
+export const MANCANG_BARE: Person = { ...MANCANG, name: "mancangBare", acc: () => [...mcAcc().filter((a) => a.name !== "m35"), helmetHeld({ hand: 1 })] };
 
 // ------------------------------------------------------------------------------------------------------- 老班长
 const LB_LOOK = soldierLook(1731, SKIN.tan, 1.04);
