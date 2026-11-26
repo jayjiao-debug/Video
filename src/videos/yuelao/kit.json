@@ -1,0 +1,12 @@
+{
+  "film": "yuelao",
+  "composition": "YuelaoFilm",
+  "dir": "src/videos/yuelao",
+  "story": "story.ts",
+  "hooks": "kit.world.ts",
+  "entries": { "overlay": "Film.tsx", "segFile": "shots/seg{SEG}" },
+  "tsc": ["world.ts", "people.ts", "places.ts", "props.ts", "sets/index.ts", "preview/look.ts", "preview/people_lineup.ts"],
+  "domOnly": ["hud/"],
+  "langs": ["zh"],
+  "work": "/home/user/yuelao_work"
+}

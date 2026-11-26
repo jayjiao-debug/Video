@@ -1,0 +1,1212 @@
+{
+ "film": "yuelao",
+ "version": 1,
+ "source": "script v1, written 26 Nov 2026 from the approved concept (Claude Doc 采访月老的一天: concept and beat outline)",
+ "title": {
+  "zh": "采访月老的一天",
+  "en": "A Day Interviewing the Old Man under the Moon"
+ },
+ "speakers": {
+  "ji": "记者 (the camera, never seen; standard Mandarin, the series voice)",
+  "yl": "月老 (the lead: old, quick, fussy, warm underneath)",
+  "xm": "林小满 (30, programmer, flat and tired)",
+  "ma": "小满妈 (praying at the temple, loud)",
+  "xq": "相亲男 (polite, checklist)",
+  "qs": "外卖骑手 (young, kind)"
+ },
+ "scenes": {
+  "A": {
+   "time": "年终考核日 08:00",
+   "en": "Review day, 08:00",
+   "place": "office"
+  },
+  "B": {
+   "time": "08:10",
+   "en": "08:10",
+   "place": "office"
+  },
+  "C": {
+   "time": "09:30",
+   "en": "09:30",
+   "place": "office"
+  },
+  "D": {
+   "time": "11:00",
+   "en": "11:00",
+   "place": "office"
+  },
+  "E": {
+   "time": "人间 14:00",
+   "en": "Mortal world, 14:00",
+   "place": "work"
+  },
+  "F": {
+   "time": "19:00",
+   "en": "19:00",
+   "place": "street"
+  },
+  "G": {
+   "time": "22:00",
+   "en": "22:00",
+   "place": "street"
+  },
+  "H": {
+   "time": "22:40",
+   "en": "22:40",
+   "place": "street"
+  },
+  "I": {
+   "time": "22:55",
+   "en": "22:55",
+   "place": "street"
+  },
+  "J": {
+   "time": "23:00",
+   "en": "23:00",
+   "place": "street"
+  }
+ },
+ "gap": 0.25,
+ "lead": 0.1,
+ "level_target_db": -23.75,
+ "engine": {
+  "spoken": {
+   "ji": "zh",
+   "yl": "zh",
+   "xm": "zh",
+   "ma": "zh",
+   "xq": "zh",
+   "qs": "zh"
+  },
+  "places": [
+   "office",
+   "work",
+   "street"
+  ],
+  "title_after": "A05",
+  "title_delay": 0.25,
+  "title_hold": 2.4,
+  "rate_zh": 4.4,
+  "tail_s": 0.4
+ },
+ "lines": [
+  {
+   "n": 1,
+   "id": "A01",
+   "scene": "A",
+   "who": "ji",
+   "zh": "月老？您被线绑架了？",
+   "en": "Yue Lao? Have the threads kidnapped you?",
+   "screens": [
+    {
+     "zh": "月老？您被线绑架了？",
+     "en": "Yue Lao? Have the threads kidnapped you?"
+    }
+   ],
+   "pre": 1.6,
+   "after": 0.15,
+   "tts": "[surprised, amused] 月老？您被线绑架了？"
+  },
+  {
+   "n": 2,
+   "id": "A02",
+   "scene": "A",
+   "who": "yl",
+   "zh": "别动！一动，三对离婚。",
+   "en": "Don't move! One tug and three couples divorce.",
+   "screens": [
+    {
+     "zh": "别动！一动，三对离婚。",
+     "en": "Don't move! One tug and three couples divorce."
+    }
+   ],
+   "after": 3.3,
+   "emo": "hissed through a thread in his teeth, dead serious",
+   "tts": "[urgent, hissing] 别动！一动，三对离婚。"
+  },
+  {
+   "n": 3,
+   "id": "A03",
+   "scene": "A",
+   "who": "yl",
+   "zh": "等等……您是天庭派来考核的吧？",
+   "en": "Wait... Heaven sent you for my review, didn't it?",
+   "screens": [
+    {
+     "zh": "等等……",
+     "en": "Wait... Heaven sent you"
+    },
+    {
+     "zh": "您是天庭派来考核的吧？",
+     "en": "for my review, didn't it?"
+    }
+   ],
+   "pre": 0.3,
+   "emo": "suspicious, then fawning",
+   "tts": "[suspicious] 等等……[nervous, fawning] 您是天庭派来考核的吧？"
+  },
+  {
+   "n": 4,
+   "id": "A04",
+   "scene": "A",
+   "who": "ji",
+   "zh": "啊？我其实是——",
+   "en": "Uh? Actually I'm...",
+   "screens": [
+    {
+     "zh": "啊？我其实是——",
+     "en": "Uh? Actually I'm..."
+    }
+   ],
+   "tts": "[confused] 啊？我其实是——"
+  },
+  {
+   "n": 5,
+   "id": "A05",
+   "scene": "A",
+   "who": "yl",
+   "zh": "懂！暗访。您记，随便记。",
+   "en": "Got it! Undercover. Write it all down, please.",
+   "screens": [
+    {
+     "zh": "懂！暗访。您记，随便记。",
+     "en": "Got it! Undercover. Write it all down, please."
+    }
+   ],
+   "after": 3.0,
+   "emo": "cuts her off, bowing",
+   "tts": "[cutting in, eager] 懂！暗访。[fawning] 您记，随便记。"
+  },
+  {
+   "n": 6,
+   "id": "B01",
+   "scene": "B",
+   "who": "yl",
+   "zh": "姻缘司，上下就我一个。别人九九六，我零零七。",
+   "en": "The Marriage Bureau is just me. Others work 996. I work 007.",
+   "screens": [
+    {
+     "zh": "姻缘司，上下就我一个。",
+     "en": "The Marriage Bureau is just me."
+    },
+    {
+     "zh": "别人九九六，我零零七。",
+     "en": "Others work 996. I work 007."
+    }
+   ],
+   "pre": 0.5,
+   "emo": "complaining, proud of it",
+   "tts": "[sighs] 姻缘司，上下就我一个。别人九九六，[dry] 我零零七。"
+  },
+  {
+   "n": 7,
+   "id": "B02",
+   "scene": "B",
+   "who": "ji",
+   "zh": "一天绑多少对？",
+   "en": "How many couples a day?",
+   "screens": [
+    {
+     "zh": "一天绑多少对？",
+     "en": "How many couples a day?"
+    }
+   ]
+  },
+  {
+   "n": 8,
+   "id": "B03",
+   "scene": "B",
+   "who": "yl",
+   "zh": "一万八千对。",
+   "en": "Eighteen thousand.",
+   "screens": [
+    {
+     "zh": "一万八千对。",
+     "en": "Eighteen thousand."
+    }
+   ],
+   "emo": "proud"
+  },
+  {
+   "n": 9,
+   "id": "B04",
+   "scene": "B",
+   "who": "yl",
+   "zh": "可一天，也散七千五。",
+   "en": "And seven and a half thousand split, the same day.",
+   "screens": [
+    {
+     "zh": "可一天，也散七千五。",
+     "en": "And seven and a half thousand split, the same day."
+    }
+   ],
+   "after": 2.4,
+   "emo": "deflating",
+   "tts": "[deflated] 可一天，也散七千五。",
+   "card": {
+    "zh": "2025年全国结婚登记676.3万对，离婚登记274.3万对（民政部）",
+    "en": "2025: 6.763M marriages, 2.743M divorces (Ministry of Civil Affairs)"
+   },
+   "card_hold": 2.6
+  },
+  {
+   "n": 10,
+   "id": "B05",
+   "scene": "B",
+   "who": "yl",
+   "zh": "现在的年轻人，线刚绑上，自己就剪了。",
+   "en": "Young people now: I tie it, they cut it.",
+   "screens": [
+    {
+     "zh": "现在的年轻人，",
+     "en": "Young people now: I"
+    },
+    {
+     "zh": "线刚绑上，自己就剪了。",
+     "en": "tie it, they cut it."
+    }
+   ],
+   "emo": "grumbling"
+  },
+  {
+   "n": 11,
+   "id": "B06",
+   "scene": "B",
+   "who": "yl",
+   "zh": "今年指标，就差一对。今晚子时截止。",
+   "en": "This year's target is one couple short. Deadline: midnight.",
+   "screens": [
+    {
+     "zh": "今年指标，就差一对。",
+     "en": "This year's target is"
+    },
+    {
+     "zh": "今晚子时截止。",
+     "en": "one couple short. Deadline: midnight."
+    }
+   ],
+   "emo": "tapping the board, anxious"
+  },
+  {
+   "n": 12,
+   "id": "B07",
+   "scene": "B",
+   "who": "ji",
+   "zh": "差一对会怎样？",
+   "en": "What if you're one short?",
+   "screens": [
+    {
+     "zh": "差一对会怎样？",
+     "en": "What if you're one short?"
+    }
+   ]
+  },
+  {
+   "n": 13,
+   "id": "B08",
+   "scene": "B",
+   "who": "yl",
+   "zh": "扣仙丹。还得写检讨。",
+   "en": "They dock my elixir. And I write a self-criticism.",
+   "screens": [
+    {
+     "zh": "扣仙丹。还得写检讨。",
+     "en": "They dock my elixir. And I write a self-criticism."
+    }
+   ],
+   "after": 0.5,
+   "emo": "miserable",
+   "tts": "[miserable] 扣仙丹。还得写检讨。"
+  },
+  {
+   "n": 14,
+   "id": "C01",
+   "scene": "C",
+   "who": "yl",
+   "zh": "不过您先看看，我的老业绩！",
+   "en": "But first, look at my past results!",
+   "screens": [
+    {
+     "zh": "不过您先看看，我的老业绩！",
+     "en": "But first, look at my past results!"
+    }
+   ],
+   "pre": 0.5,
+   "emo": "brightening, showing off"
+  },
+  {
+   "n": 15,
+   "id": "C02",
+   "scene": "C",
+   "who": "yl",
+   "zh": "牛郎织女。我绑的！牢吧？",
+   "en": "The Cowherd and the Weaver Girl. Mine! Solid, eh?",
+   "screens": [
+    {
+     "zh": "牛郎织女。我绑的！牢吧？",
+     "en": "The Cowherd and the Weaver Girl. Mine! Solid, eh?"
+    }
+   ],
+   "emo": "very proud",
+   "tts": "[proud] 牛郎织女。我绑的！牢吧？"
+  },
+  {
+   "n": 16,
+   "id": "C03",
+   "scene": "C",
+   "who": "ji",
+   "zh": "可他们一年见一次。",
+   "en": "They meet once a year.",
+   "screens": [
+    {
+     "zh": "可他们一年见一次。",
+     "en": "They meet once a year."
+    }
+   ]
+  },
+  {
+   "n": 17,
+   "id": "C04",
+   "scene": "C",
+   "who": "yl",
+   "zh": "……异地恋，也算成。",
+   "en": "...Long distance still counts.",
+   "screens": [
+    {
+     "zh": "……异地恋，也算成。",
+     "en": "...Long distance still counts."
+    }
+   ],
+   "after": 0.4,
+   "emo": "small",
+   "tts": "[awkward, quiet] ……异地恋，也算成。"
+  },
+  {
+   "n": 18,
+   "id": "C05",
+   "scene": "C",
+   "who": "yl",
+   "zh": "梁山伯祝英台。……变蝴蝶了。这单别记。",
+   "en": "Liang and Zhu. ...They became butterflies. Don't write that one.",
+   "screens": [
+    {
+     "zh": "梁山伯祝英台。",
+     "en": "Liang and Zhu."
+    },
+    {
+     "zh": "……变蝴蝶了。",
+     "en": "...They became butterflies."
+    },
+    {
+     "zh": "这单别记。",
+     "en": "Don't write that one."
+    }
+   ],
+   "after": 0.3,
+   "emo": "proud, then sees the file, shuts it fast",
+   "tts": "梁山伯祝英台。[hesitates] ……变蝴蝶了。[quickly] 这单别记。"
+  },
+  {
+   "n": 19,
+   "id": "C06",
+   "scene": "C",
+   "who": "yl",
+   "zh": "许仙白娘子。跨物种，审批走了一千年。",
+   "en": "Xu Xian and Lady White Snake. Cross-species: approval took a thousand years.",
+   "screens": [
+    {
+     "zh": "许仙白娘子。",
+     "en": "Xu Xian and Lady White Snake."
+    },
+    {
+     "zh": "跨物种，审批走了一千年。",
+     "en": "Cross-species: approval took a thousand years."
+    }
+   ],
+   "emo": "bureaucratic sigh"
+  },
+  {
+   "n": 20,
+   "id": "C07",
+   "scene": "C",
+   "who": "yl",
+   "zh": "宝玉黛玉。手一抖，绑成了宝钗。",
+   "en": "Baoyu and Daiyu. My hand slipped. He got Baochai.",
+   "screens": [
+    {
+     "zh": "宝玉黛玉。",
+     "en": "Baoyu and Daiyu. My"
+    },
+    {
+     "zh": "手一抖，绑成了宝钗。",
+     "en": "hand slipped. He got Baochai."
+    }
+   ],
+   "emo": "guilty",
+   "tts": "宝玉黛玉。[guilty, small] 手一抖，绑成了宝钗。"
+  },
+  {
+   "n": 21,
+   "id": "C08",
+   "scene": "C",
+   "who": "yl",
+   "zh": "读者骂了我两百多年。",
+   "en": "Readers have cursed me for two hundred years.",
+   "screens": [
+    {
+     "zh": "读者骂了我两百多年。",
+     "en": "Readers have cursed me for two hundred years."
+    }
+   ],
+   "after": 0.3,
+   "emo": "wounded"
+  },
+  {
+   "n": 22,
+   "id": "C09",
+   "scene": "C",
+   "who": "yl",
+   "zh": "董永七仙女——那是玉帝的亲闺女。",
+   "en": "Dong Yong and the Seventh Fairy. She was the Jade Emperor's own daughter.",
+   "screens": [
+    {
+     "zh": "董永七仙女——",
+     "en": "Dong Yong and the Seventh Fairy."
+    },
+    {
+     "zh": "那是玉帝的亲闺女。",
+     "en": "She was the Jade Emperor's own daughter."
+    }
+   ],
+   "emo": "whispering the second half",
+   "tts": "董永七仙女——[whispers] 那是玉帝的亲闺女。"
+  },
+  {
+   "n": 23,
+   "id": "C10",
+   "scene": "C",
+   "who": "ji",
+   "zh": "那玉帝……",
+   "en": "And the Jade Emperor...?",
+   "screens": [
+    {
+     "zh": "那玉帝……",
+     "en": "And the Jade Emperor...?"
+    }
+   ]
+  },
+  {
+   "n": 24,
+   "id": "C11",
+   "scene": "C",
+   "who": "yl",
+   "zh": "扣了我三百年仙丹。",
+   "en": "Docked three hundred years of elixir.",
+   "screens": [
+    {
+     "zh": "扣了我三百年仙丹。",
+     "en": "Docked three hundred years of elixir."
+    }
+   ],
+   "after": 0.9,
+   "emo": "flat, defeated",
+   "tts": "[flat] 扣了我三百年仙丹。"
+  },
+  {
+   "n": 25,
+   "id": "D01",
+   "scene": "D",
+   "who": "yl",
+   "zh": "来单了！月老庙，加急！",
+   "en": "An order! From my temple. Urgent!",
+   "screens": [
+    {
+     "zh": "来单了！月老庙，加急！",
+     "en": "An order! From my temple. Urgent!"
+    }
+   ],
+   "pre": 0.9,
+   "emo": "jumping up",
+   "tts": "[excited] 来单了！月老庙，加急！"
+  },
+  {
+   "n": 26,
+   "id": "D02",
+   "scene": "D",
+   "who": "ma",
+   "zh": "月老保佑！我闺女三十了，天天加班，就是不找对象！",
+   "en": "Bless us, Yue Lao! My girl is thirty, works every night, and won't find anyone!",
+   "screens": [
+    {
+     "zh": "月老保佑！我闺女三十了，",
+     "en": "Bless us, Yue Lao! My girl is"
+    },
+    {
+     "zh": "天天加班，就是不找对象！",
+     "en": "thirty, works every night, and won't find anyone!"
+    }
+   ],
+   "emo": "praying loudly, echo",
+   "tts": "[pleading, loud] 月老保佑！我闺女三十了，天天加班，就是不找对象！"
+  },
+  {
+   "n": 27,
+   "id": "D03",
+   "scene": "D",
+   "who": "ma",
+   "zh": "今年再不成，我就不起来了！",
+   "en": "If it doesn't happen this year, I'm not getting up!",
+   "screens": [
+    {
+     "zh": "今年再不成，我就不起来了！",
+     "en": "If it doesn't happen this year, I'm not getting up!"
+    }
+   ],
+   "after": 0.3,
+   "emo": "threatening the god",
+   "tts": "[stubborn] 今年再不成，我就不起来了！"
+  },
+  {
+   "n": 28,
+   "id": "D04",
+   "scene": "D",
+   "who": "yl",
+   "zh": "就她了！林小满。今晚必须绑上。",
+   "en": "Her! Lin Xiaoman. Tied by tonight.",
+   "screens": [
+    {
+     "zh": "就她了！林小满。",
+     "en": "Her! Lin Xiaoman."
+    },
+    {
+     "zh": "今晚必须绑上。",
+     "en": "Tied by tonight."
+    }
+   ],
+   "emo": "decisive"
+  },
+  {
+   "n": 29,
+   "id": "D05",
+   "scene": "D",
+   "who": "yl",
+   "zh": "您拿着线，跟我来！",
+   "en": "Hold the thread and follow me!",
+   "screens": [
+    {
+     "zh": "您拿着线，跟我来！",
+     "en": "Hold the thread and follow me!"
+    }
+   ],
+   "after": 0.8,
+   "emo": "thrusting the spool at the lens"
+  },
+  {
+   "n": 30,
+   "id": "E01",
+   "scene": "E",
+   "who": "yl",
+   "zh": "嘘。凡人看不见咱们。",
+   "en": "Shh. Mortals can't see us.",
+   "screens": [
+    {
+     "zh": "嘘。凡人看不见咱们。",
+     "en": "Shh. Mortals can't see us."
+    }
+   ],
+   "pre": 1.0,
+   "emo": "whisper",
+   "tts": "[whispers] 嘘。凡人看不见咱们。"
+  },
+  {
+   "n": 31,
+   "id": "E02",
+   "scene": "E",
+   "who": "ji",
+   "zh": "绑脚？不是绑手吗？",
+   "en": "The ankle? Not the wrist?",
+   "screens": [
+    {
+     "zh": "绑脚？不是绑手吗？",
+     "en": "The ankle? Not the wrist?"
+    }
+   ],
+   "pre": 0.8,
+   "tts": "[whispers, puzzled] 绑脚？不是绑手吗？"
+  },
+  {
+   "n": 32,
+   "id": "E03",
+   "scene": "E",
+   "who": "yl",
+   "zh": "唐朝起就绑脚。绑手，是电视剧瞎改的。",
+   "en": "Ankles, since the Tang. Wrists are a TV invention.",
+   "screens": [
+    {
+     "zh": "唐朝起就绑脚。",
+     "en": "Ankles, since the Tang."
+    },
+    {
+     "zh": "绑手，是电视剧瞎改的。",
+     "en": "Wrists are a TV invention."
+    }
+   ],
+   "after": 2.2,
+   "emo": "offended professional",
+   "card": {
+    "zh": "唐《续玄怪录·定婚店》：赤绳“以系夫妻之足”",
+    "en": "Tang tale 'The Inn of Betrothal': the red cord 'ties the feet of husband and wife'"
+   },
+   "card_hold": 2.4
+  },
+  {
+   "n": 33,
+   "id": "E04",
+   "scene": "E",
+   "who": "xm",
+   "zh": "不合适。不合适。下一个。",
+   "en": "No. No. Next.",
+   "screens": [
+    {
+     "zh": "不合适。不合适。下一个。",
+     "en": "No. No. Next."
+    }
+   ],
+   "pre": 0.3,
+   "emo": "flat, swiping without looking up",
+   "tts": "[flat, bored] 不合适。不合适。下一个。"
+  },
+  {
+   "n": 34,
+   "id": "E05",
+   "scene": "E",
+   "who": "yl",
+   "zh": "哎哎哎！她左滑一下，我断一根！",
+   "en": "Hey hey hey! Every left swipe snaps one of mine!",
+   "screens": [
+    {
+     "zh": "哎哎哎！",
+     "en": "Hey hey hey! Every left"
+    },
+    {
+     "zh": "她左滑一下，我断一根！",
+     "en": "swipe snaps one of mine!"
+    }
+   ],
+   "emo": "panicking",
+   "tts": "[panicking] 哎哎哎！她左滑一下，我断一根！"
+  },
+  {
+   "n": 35,
+   "id": "E06",
+   "scene": "E",
+   "who": "yl",
+   "zh": "这个……您记成“缘分未到”。",
+   "en": "This one... write it down as 'not fated yet'.",
+   "screens": [
+    {
+     "zh": "这个……您记成“缘分未到”。",
+     "en": "This one... write it down as 'not fated yet'."
+    }
+   ],
+   "after": 0.9,
+   "emo": "recovering, to the lens, a weak smile",
+   "tts": "[embarrassed] 这个……您记成，缘分未到。"
+  },
+  {
+   "n": 36,
+   "id": "F01",
+   "scene": "F",
+   "who": "yl",
+   "zh": "没事！她妈安排了相亲。这回稳了。",
+   "en": "No matter! Her mum set up a blind date. This one's safe.",
+   "screens": [
+    {
+     "zh": "没事！她妈安排了相亲。",
+     "en": "No matter! Her mum set up"
+    },
+    {
+     "zh": "这回稳了。",
+     "en": "a blind date. This one's safe."
+    }
+   ],
+   "pre": 0.9,
+   "emo": "confident again"
+  },
+  {
+   "n": 37,
+   "id": "F02",
+   "scene": "F",
+   "who": "xq",
+   "zh": "你好。有房吗？月薪多少？",
+   "en": "Hello. Own a flat? Monthly salary?",
+   "screens": [
+    {
+     "zh": "你好。有房吗？月薪多少？",
+     "en": "Hello. Own a flat? Monthly salary?"
+    }
+   ],
+   "pre": 0.5,
+   "emo": "polite, reading from a list"
+  },
+  {
+   "n": 38,
+   "id": "F03",
+   "scene": "F",
+   "who": "xm",
+   "zh": "你能接受九九六吗？",
+   "en": "Can you live with 996?",
+   "screens": [
+    {
+     "zh": "你能接受九九六吗？",
+     "en": "Can you live with 996?"
+    }
+   ],
+   "emo": "flat"
+  },
+  {
+   "n": 39,
+   "id": "F04",
+   "scene": "F",
+   "who": "xq",
+   "zh": "不好意思，我回个消息。",
+   "en": "Sorry, I need to answer a message.",
+   "screens": [
+    {
+     "zh": "不好意思，我回个消息。",
+     "en": "Sorry, I need to answer a message."
+    }
+   ],
+   "pre": 0.5
+  },
+  {
+   "n": 40,
+   "id": "F05",
+   "scene": "F",
+   "who": "xm",
+   "zh": "正好，我修个bug。",
+   "en": "Good. I'll fix a bug.",
+   "screens": [
+    {
+     "zh": "正好，我修个bug。",
+     "en": "Good. I'll fix a bug."
+    }
+   ],
+   "after": 1.0
+  },
+  {
+   "n": 41,
+   "id": "F06",
+   "scene": "F",
+   "who": "yl",
+   "zh": "……这个，也记“缘分未到”。",
+   "en": "...This one too. 'Not fated yet.'",
+   "screens": [
+    {
+     "zh": "……这个，也记“缘分未到”。",
+     "en": "...This one too. 'Not fated yet.'"
+    }
+   ],
+   "emo": "desperate",
+   "tts": "[defeated] ……这个，也记，缘分未到。"
+  },
+  {
+   "n": 42,
+   "id": "F07",
+   "scene": "F",
+   "who": "yl",
+   "zh": "要不……您别记了，歇会儿？",
+   "en": "Or... stop writing and take a break?",
+   "screens": [
+    {
+     "zh": "要不……您别记了，歇会儿？",
+     "en": "Or... stop writing and take a break?"
+    }
+   ],
+   "after": 0.8,
+   "emo": "pleading with the lens",
+   "tts": "[pleading] 要不……您别记了，歇会儿？"
+  },
+  {
+   "n": 43,
+   "id": "G01",
+   "scene": "G",
+   "who": "yl",
+   "zh": "线呢？我的线呢！",
+   "en": "Where's the thread? My thread!",
+   "screens": [
+    {
+     "zh": "线呢？我的线呢！",
+     "en": "Where's the thread? My thread!"
+    }
+   ],
+   "pre": 0.8,
+   "emo": "frantic",
+   "tts": "[frantic] 线呢？我的线呢！"
+  },
+  {
+   "n": 44,
+   "id": "G02",
+   "scene": "G",
+   "who": "yl",
+   "zh": "别动别动——缠您法器上了。",
+   "en": "Don't move, don't move. It's wound round your instrument.",
+   "screens": [
+    {
+     "zh": "别动别动——",
+     "en": "Don't move, don't move."
+    },
+    {
+     "zh": "缠您法器上了。",
+     "en": "It's wound round your instrument."
+    }
+   ],
+   "after": 0.5,
+   "emo": "picking at the lens, close"
+  },
+  {
+   "n": 45,
+   "id": "G03",
+   "scene": "G",
+   "who": "qs",
+   "zh": "林女士，您的外卖！",
+   "en": "Ms Lin, your delivery!",
+   "screens": [
+    {
+     "zh": "林女士，您的外卖！",
+     "en": "Ms Lin, your delivery!"
+    }
+   ],
+   "pre": 0.3,
+   "emo": "calling, a little out of breath, in the background",
+   "tts": "[calling out, cheerful] 林女士，您的外卖！"
+  },
+  {
+   "n": 46,
+   "id": "G04",
+   "scene": "G",
+   "who": "xm",
+   "zh": "谢谢。又是你啊。",
+   "en": "Thanks. You again.",
+   "screens": [
+    {
+     "zh": "谢谢。又是你啊。",
+     "en": "Thanks. You again."
+    }
+   ],
+   "emo": "tired, not unkind"
+  },
+  {
+   "n": 47,
+   "id": "G05",
+   "scene": "G",
+   "who": "yl",
+   "zh": "还剩一个时辰。……完了。",
+   "en": "One 'shichen' left. ...I'm done for.",
+   "screens": [
+    {
+     "zh": "还剩一个时辰。",
+     "en": "One 'shichen' left."
+    },
+    {
+     "zh": "……完了。",
+     "en": "...I'm done for."
+    }
+   ],
+   "after": 1.2,
+   "emo": "sinking onto the step",
+   "tts": "还剩一个时辰。[sighs, hopeless] ……完了。"
+  },
+  {
+   "n": 48,
+   "id": "H01",
+   "scene": "H",
+   "who": "ji",
+   "zh": "那您自己呢？",
+   "en": "And you yourself?",
+   "screens": [
+    {
+     "zh": "那您自己呢？",
+     "en": "And you yourself?"
+    }
+   ],
+   "pre": 0.8,
+   "after": 1.3,
+   "tts": "[gently] 那您自己呢？"
+  },
+  {
+   "n": 49,
+   "id": "H02",
+   "scene": "H",
+   "who": "yl",
+   "zh": "……我？",
+   "en": "...Me?",
+   "screens": [
+    {
+     "zh": "……我？",
+     "en": "...Me?"
+    }
+   ],
+   "after": 1.4,
+   "emo": "caught, very quiet",
+   "tts": "[quietly] ……我？"
+  },
+  {
+   "n": 50,
+   "id": "H03",
+   "scene": "H",
+   "who": "yl",
+   "zh": "当年太忙。想着忙完这阵，就给自己绑一根。",
+   "en": "I was too busy back then. I thought: after this rush, I'll tie one for myself.",
+   "screens": [
+    {
+     "zh": "当年太忙。",
+     "en": "I was too busy back"
+    },
+    {
+     "zh": "想着忙完这阵，",
+     "en": "then. I thought: after this"
+    },
+    {
+     "zh": "就给自己绑一根。",
+     "en": "rush, I'll tie one for myself."
+    }
+   ],
+   "after": 0.7,
+   "emo": "quiet, looking at the cut thread",
+   "tts": "[softly, slowly] 当年太忙。想着忙完这阵，就给自己绑一根。"
+  },
+  {
+   "n": 51,
+   "id": "H04",
+   "scene": "H",
+   "who": "yl",
+   "zh": "这一阵，忙了一千二百年。",
+   "en": "The rush has lasted twelve hundred years.",
+   "screens": [
+    {
+     "zh": "这一阵，忙了一千二百年。",
+     "en": "The rush has lasted twelve hundred years."
+    }
+   ],
+   "after": 1.6,
+   "emo": "a small dry laugh",
+   "tts": "[soft, wry] 这一阵，忙了一千二百年。"
+  },
+  {
+   "n": 52,
+   "id": "H05",
+   "scene": "H",
+   "who": "yl",
+   "zh": "我这个……也记“缘分未到”吧。",
+   "en": "Mine... write it down as 'not fated yet', too.",
+   "screens": [
+    {
+     "zh": "我这个……也记“缘分未到”吧。",
+     "en": "Mine... write it down as 'not fated yet', too."
+    }
+   ],
+   "after": 2.2,
+   "emo": "the gag, soft",
+   "tts": "[very softly] 我这个……也记，缘分未到吧。"
+  },
+  {
+   "n": 53,
+   "id": "I01",
+   "scene": "I",
+   "who": "yl",
+   "zh": "等等。这根线……不是我绑的。",
+   "en": "Wait. This thread... I didn't tie it.",
+   "screens": [
+    {
+     "zh": "等等。",
+     "en": "Wait. This thread..."
+    },
+    {
+     "zh": "这根线……不是我绑的。",
+     "en": "I didn't tie it."
+    }
+   ],
+   "pre": 0.6,
+   "emo": "noticing, slow",
+   "tts": "[noticing] 等等。[puzzled] 这根线……不是我绑的。"
+  },
+  {
+   "n": 54,
+   "id": "I02",
+   "scene": "I",
+   "who": "yl",
+   "zh": "早就在这儿了。让我的线，盖住了。",
+   "en": "It was here all along. Buried under mine.",
+   "screens": [
+    {
+     "zh": "早就在这儿了。",
+     "en": "It was here all"
+    },
+    {
+     "zh": "让我的线，盖住了。",
+     "en": "along. Buried under mine."
+    }
+   ],
+   "after": 0.5,
+   "emo": "wonder"
+  },
+  {
+   "n": 55,
+   "id": "I03",
+   "scene": "I",
+   "who": "yl",
+   "zh": "我急什么呢。",
+   "en": "What was I rushing for.",
+   "screens": [
+    {
+     "zh": "我急什么呢。",
+     "en": "What was I rushing for."
+    }
+   ],
+   "after": 0.9,
+   "emo": "a breath, a smile",
+   "tts": "[soft laugh] 我急什么呢。"
+  },
+  {
+   "n": 56,
+   "id": "I04",
+   "scene": "I",
+   "who": "qs",
+   "zh": "又加班啊？今天给你多加了个蛋。",
+   "en": "Late again? I had them add an extra egg today.",
+   "screens": [
+    {
+     "zh": "又加班啊？",
+     "en": "Late again? I had them"
+    },
+    {
+     "zh": "今天给你多加了个蛋。",
+     "en": "add an extra egg today."
+    }
+   ],
+   "pre": 0.4,
+   "emo": "shy"
+  },
+  {
+   "n": 57,
+   "id": "I05",
+   "scene": "I",
+   "who": "xm",
+   "zh": "……谢谢。你叫什么名字？",
+   "en": "...Thank you. What's your name?",
+   "screens": [
+    {
+     "zh": "……谢谢。你叫什么名字？",
+     "en": "...Thank you. What's your name?"
+    }
+   ],
+   "after": 1.6,
+   "emo": "looks up for the first time, a real smile",
+   "tts": "[surprised, warm] ……谢谢。你叫什么名字？"
+  },
+  {
+   "n": 58,
+   "id": "I06",
+   "scene": "I",
+   "who": "yl",
+   "zh": "成了！快记！我绑的！全是我绑的！",
+   "en": "Done! Write it! I tied it! All me!",
+   "screens": [
+    {
+     "zh": "成了！快记！",
+     "en": "Done! Write it! I"
+    },
+    {
+     "zh": "我绑的！全是我绑的！",
+     "en": "tied it! All me!"
+    }
+   ],
+   "emo": "exploding with joy",
+   "tts": "[shouting, overjoyed] 成了！快记！我绑的！全是我绑的！"
+  },
+  {
+   "n": 59,
+   "id": "I07",
+   "scene": "I",
+   "who": "ji",
+   "zh": "不是早就在那儿吗？",
+   "en": "Wasn't it there all along?",
+   "screens": [
+    {
+     "zh": "不是早就在那儿吗？",
+     "en": "Wasn't it there all along?"
+    }
+   ],
+   "tts": "[dry] 不是早就在那儿吗？"
+  },
+  {
+   "n": 60,
+   "id": "I08",
+   "scene": "I",
+   "who": "yl",
+   "zh": "咳……这句，记成“缘分已到”。",
+   "en": "Ahem... put that down as 'fated at last'.",
+   "screens": [
+    {
+     "zh": "咳……这句，记成“缘分已到”。",
+     "en": "Ahem... put that down as 'fated at last'."
+    }
+   ],
+   "after": 1.3,
+   "emo": "cough, dignified",
+   "tts": "[coughs] 咳……这句，记成，缘分已到。"
+  },
+  {
+   "n": 61,
+   "id": "J01",
+   "scene": "J",
+   "who": "ji",
+   "zh": "那我的那根呢？",
+   "en": "And my thread?",
+   "screens": [
+    {
+     "zh": "那我的那根呢？",
+     "en": "And my thread?"
+    }
+   ],
+   "pre": 0.5,
+   "after": 0.5,
+   "tts": "[curious, hopeful] 那我的那根呢？"
+  },
+  {
+   "n": 62,
+   "id": "J02",
+   "scene": "J",
+   "who": "yl",
+   "zh": "你的？早绑好了。",
+   "en": "Yours? Tied long ago.",
+   "screens": [
+    {
+     "zh": "你的？早绑好了。",
+     "en": "Yours? Tied long ago."
+    }
+   ],
+   "after": 0.6,
+   "emo": "flips the book, smiles at the lens",
+   "tts": "[warm] 你的？早绑好了。"
+  },
+  {
+   "n": 63,
+   "id": "J03",
+   "scene": "J",
+   "who": "yl",
+   "zh": "是你已经见过的人。",
+   "en": "It's someone you have already met.",
+   "screens": [
+    {
+     "zh": "是你已经见过的人。",
+     "en": "It's someone you have already met."
+    }
+   ],
+   "after": 4.2,
+   "emo": "warm, to the lens, slow",
+   "tts": "[warm, slowly] 是你已经见过的人。"
+  }
+ ]
+}
