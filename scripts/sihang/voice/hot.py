@@ -68,7 +68,10 @@ def main():
     vdir = os.path.join(a.work, "voice") if a.check else os.path.join(a.work, "hot")
     os.makedirs(vdir, exist_ok=True)
     os.chdir(ROOT)
-    if not a.check: assemble.main(a.lines_dir, vdir, [a.cuts], clip_gain=False)
+    if not a.check:
+        sys.path.insert(0, HERE)
+        import build_voice
+        assemble.main(build_voice.faded(a.lines_dir, vdir), vdir, [a.cuts], clip_gain=False)   # the clips as build_voice.py lays them
     timing = os.path.join(vdir, "voice_timing.json"); voice = os.path.join(vdir, "voice_48k.wav")
     bed_f = os.path.join(a.work, "hot", "bed.wav"); os.makedirs(os.path.dirname(bed_f), exist_ok=True)
     subprocess.run([sys.executable, BUILD, "--film", "sihang", "--timing", timing, "--voice", voice, "--clips", a.clips, "--cues", CUES,

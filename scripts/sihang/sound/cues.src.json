@@ -215,7 +215,7 @@
     "start",
     0.2
    ],
-   "lufs": -36,
+   "lufs": -38,
    "loop": true,
    "fade": 0.05,
    "fade_out": 1.4,
@@ -490,7 +490,7 @@
     "start",
     -0.27
    ],
-   "peak": -12,
+   "peak": -14,
    "len": 2.4,
    "fade_out": 1.5
   },
@@ -785,17 +785,17 @@
     -14,
     -10
    ],
-   "len": 1.8,
+   "len": 1.5,
    "peak_under": [
-    -23,
-    -19
+    -25,
+    -21
    ],
    "len_under": 1.4,
    "fade_under": 0.8,
    "lp_under": [
     900
    ],
-   "under_s": 1.3
+   "under_s": 1.6
   },
   {
    "label": "G 真事 seal",

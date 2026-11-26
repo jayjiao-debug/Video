@@ -9,16 +9,50 @@
   "langs": {
     "zh": {}
   },
-  "note": "v1 (26 Nov 2026). Chinese only, Douyin. Voice: the 58 line clips in {VOICE}/v1/lines (E01 = the clearer take), laid by build_voice.py at the house level with the hot syllables' clip gain; it stops if the result is out of step with voice.ts. Sound: the two music cues are made by code into {CLIPS} (make_music.py), then the kit's build.py with scripts/sihang/sound/cues.json (gains set by level_cues.py from the clips the Mac made). Mono mix about -19.4 LUFS, true peak about -2.3 dBTP.",
+  "note": "v2 (26 Nov 2026). Chinese only, Douyin. Voice: the 58 line clips in {VOICE}/v1/lines (E01 = the clearer take), laid by build_voice.py (8 / 12 ms edge fades, the house level, the hot syllables' clip gain); it stops if the result is out of step with voice.ts. Sound: the two music cues are made by code into {CLIPS} (make_music.py), then the kit's build.py with scripts/sihang/sound/cues.json (gains set by level_cues.py from the clips the Mac made). Mono mix about -19.4 LUFS, true peak about -2.3 dBTP. gate.accept: each entry was looked at on stills of the v1 render (26 Nov) and is intended.",
   "voice": {
     "build": "python3 scripts/sihang/voice/build_voice.py {VOICE}/v1/lines {VOICE}/v1/line_cuts.json {VOICE}"
   },
   "sound": {
     "build": "python3 scripts/sihang/sound/make_music.py {CLIPS} && python3 scripts/kit/day/sound/build.py --film sihang --work {WORK} --timing {VOICE}/voice_timing.json --voice {VOICE}/voice_48k.wav --clips {CLIPS} --cues scripts/sihang/sound/cues.json --out {MIX}",
     "stems": "python3 scripts/kit/day/sound/build.py --film sihang --work {WORK} --timing {VOICE}/voice_timing.json --voice {VOICE}/voice_48k.wav --clips {CLIPS} --cues scripts/sihang/sound/cues.json --only {GROUP} --nosafety --out {STEM}",
-    "groups": ["voice", "music", "amb", "sfx"]
+    "groups": [
+      "voice",
+      "music",
+      "amb",
+      "sfx"
+    ]
   },
   "drive": {
     "zh": "Juno"
+  },
+  "gate": {
+    "accept": [
+      {
+        "check": "clipping",
+        "match": "held:sack into \\S+\\.(body|leg[LR]|arm[LR]|hand[LR]) by .*held-holder",
+        "why": "a soft sack carried against the carrier's body: it rests on him (stills f94, f351)"
+      },
+      {
+        "check": "clipping",
+        "match": "xie\\.(legL|legR|body) into hall\\.dressing\\[4\\]",
+        "why": "谢晋元 sits at the crate desk: his legs are behind the crate and never seen (still f904)"
+      },
+      {
+        "check": "clipping",
+        "match": "^2:(4[89]|5[01])\\.\\d f\\d+: \\S+\\.(armR|handR) into \\S+\\.head .*self-head",
+        "why": "the salute on the roof: the hand at the brim, drawn in front of the head on purpose (armFront)"
+      },
+      {
+        "check": "clipping",
+        "match": "lao\\.armL into lao\\.(body|head) by .*\\((self|self-head), 1 frames\\)",
+        "why": "老班长's one-frame turn from the gun to the camera (the rig flips between its back and front view)"
+      },
+      {
+        "check": "ground",
+        "match": "^(1:10|3:07)\\.\\d: pixels pop",
+        "why": "the camera shakes when a shell lands close (C04, and the close one in scene G): intended, seen on ground_worst.jpg"
+      }
+    ]
   }
 }

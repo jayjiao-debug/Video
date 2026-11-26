@@ -66,9 +66,13 @@ export const loopWalk = (pts: THREE.Vector3[], speed: number, t: number) => {
 };
 /** a man sitting on something `top` m high at `at` (his floor point), facing `facing`: spread into put()'s `more` */
 export const sit = (at: THREE.Vector3, facing: number, top: number, t: number) => seated({ top: at.clone().setY(top), floor: at.y, back: 0, facing }, t);
-/** a soldier's salute: the right hand to the helmet's brim. k 0..1. Returns the hands for put() */
-export const saluteHands = (at: THREE.Vector3, facing: number, k: number, scale = 1): RigState["hands"] => {
+/** a soldier's salute: the right hand to the end of the helmet's brim. k 0..1. Returns the hands for put().
+ *  `cam` (the camera's world position): the hand is placed for the side the figure SHOWS (the rig turns a figure's
+ *  front toward the camera), not for its true facing: without it an officer seen from his left saluted across his own
+ *  face. A hand in front of the head is hidden by the rig (rule 4), so the hand sits beside the head. */
+export const saluteHands = (at: THREE.Vector3, facing: number, k: number, scale = 1, cam?: readonly number[]): RigState["hands"] => {
   if (k <= 0.01) return [null, null];
-  const down = hang(at, facing, 0), up = rel(at, facing, -0.2 * scale, 1.36 * scale, 0.14);
+  const shown = cam ? Math.atan2(cam[0] - at.x, cam[2] - at.z) : facing;
+  const down = hang(at, facing, 0), up = rel(at, shown, -0.3 * scale, 1.33 * scale, 0.05);
   return [down.lerp(up, smooth(k)), null];
 };

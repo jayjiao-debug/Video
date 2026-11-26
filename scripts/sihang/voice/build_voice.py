@@ -15,10 +15,29 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
 
 
+FADE_IN, FADE_OUT = 0.008, 0.012
+
+
+def faded(lines_dir, out):
+    """copies of the line clips with an 8 ms fade in and a 12 ms fade out, same length to the sample: several clips begin
+    or end on room tone a little above silence (the delivery gate's "still loud at its start / end"), which steps
+    against the film's digital silence; the words themselves start later than 8 ms in every clip"""
+    import subprocess
+    dst = os.path.join(out, "lines_faded"); os.makedirs(dst, exist_ok=True)
+    for fn in sorted(os.listdir(lines_dir)):
+        if not fn.endswith(".wav"): continue
+        src = os.path.join(lines_dir, fn)
+        d = float(subprocess.check_output(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", src]).decode())
+        subprocess.run(["ffmpeg", "-y", "-v", "error", "-i", src, "-af", "afade=t=in:d=%g,afade=t=out:st=%.5f:d=%g" % (FADE_IN, max(0.0, d - FADE_OUT), FADE_OUT),
+                        "-ar", "48000", "-ac", "1", "-c:a", "pcm_s16le", os.path.join(dst, fn)], check=True)
+    return dst
+
+
 def main():
     if len(sys.argv) != 4: sys.exit(__doc__)
     lines_dir, cuts_f, out = sys.argv[1], sys.argv[2], sys.argv[3]
     os.makedirs(out, exist_ok=True)
+    lines_dir = faded(lines_dir, out)
     cuts = json.load(open(cuts_f))
     if isinstance(cuts, dict):
         cuts = [dict(v, id=k) if isinstance(v, dict) and "id" not in v else v for k, v in cuts.items()]

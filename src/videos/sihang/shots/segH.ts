@@ -127,8 +127,8 @@ export const SEG: Segment = {
       // the newsman behind the sandbags, a hand to his mouth; the people behind the cordon
       const call = win(f, h04 - 8, e04 + 6, 6, 8);
       put(w, f, NEWSMAN, {
-        at: NEWS, facing: -0.58, id: 8, who: "th", expr: [[CUT, "alert"], [h04 - 4, "shout"], [e04 + 2, "alert"]],
-        hands: call > 0.02 ? [hang(NEWS, -0.58, 0).lerp(rel(NEWS, -0.58, -0.13, 1.3, 0.2), call), null] : undefined,
+        at: NEWS, facing: -0.58, id: 8, who: "th", expr: [[CUT, "calm"], [h04 - 4, "call"], [e04 + 2, "calm"]],   // a newsman calling a question across, not an angry man
+        hands: call > 0.02 ? [hang(NEWS, -0.58, 0).lerp(rel(NEWS, -0.58, -0.21, 1.15, 0.12), call), null] : undefined, more: call > 0.02 ? { armFront: [true, undefined] } : undefined,
       });
       [[4.1, -23.5, -0.5], [3.5, -24.5, -0.4], [-2.7, -23.6, 0.45], [-3.7, -24.3, 0.5], [-4.4, -23.4, 0.6]].forEach(([x, z, fc], i) => put(w, f, CIVS[i % CIVS.length], { at: P("bridge", x, 0, z), facing: fc, id: 90 + i, expr: "calm" }, `c${i}`));
       // seen when she turns round: men still coming over the bridge toward her

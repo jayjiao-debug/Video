@@ -91,12 +91,16 @@ export const SEG: Segment = {
       ], { mood: "calm", amp: 0.6, walk: [[t0, 0], [LOOK - 16, 0], [LOOK - 8, 1], [LOOK + 22, 1], [LOOK + 30, 0]] });
       w.setCamera(camera);
       const FACE = 1.9, people = [MANCANG, LAO, MEN[3], MEN[4], MEN[5], MEN[6], MEN[7], RUNNER];
+      // the saluting arm is drawn in front of its own head (the rig hides an arm under the head otherwise: the salute did not show)
+      const cpos = camera.pos as unknown as number[] | { x: number; y: number; z: number };
+      const CAMP: readonly number[] = Array.isArray(cpos) ? cpos : [cpos.x, cpos.y, cpos.z];
+      const FRONT = sal > 0.01 ? { armFront: [true, undefined] as [boolean | undefined, boolean | undefined] } : undefined;
       ROOF_ROW.forEach(([x, z], i) => {
         const at = P("roof", x, 0, z), sc = people[i].scale ?? 1;
-        put(w, f, people[i], { at, facing: FACE, id: i === 0 ? 1 : i === 1 ? 3 : 60 + i, expr: i === 0 ? "awe" : i === 1 ? "heavy" : "calm", lookDown: -16, hands: i >= 2 && i <= 4 ? undefined : saluteHands(at, FACE, sal * (i % 2 ? 1 : Math.min(1, sal * 1.2)), sc) }, i < 2 ? "" : `t${i}`);   // the men under arms stand to attention
+        put(w, f, people[i], { at, facing: FACE, id: i === 0 ? 1 : i === 1 ? 3 : 60 + i, expr: i === 0 ? "awe" : i === 1 ? "heavy" : "calm", lookDown: -16, hands: i >= 2 && i <= 4 ? undefined : saluteHands(at, FACE, sal * (i % 2 ? 1 : Math.min(1, sal * 1.2)), sc, CAMP), more: FRONT }, i < 2 ? "" : `t${i}`);   // the men under arms stand to attention
       });
-      put(w, f, XIE_CAP, { at: P("roof", 0.2, 0, -4.9), facing: FACE + 0.1, id: 4, expr: "grave", lookDown: -16, hands: saluteHands(P("roof", 0.2, 0, -4.9), FACE + 0.1, sal, 1.02) });
-      put(w, f, YANG, { at: P("roof", -0.5, 0, -5.6), facing: FACE + 0.1, id: 5, expr: "hard", lookDown: -16, hands: saluteHands(P("roof", -0.5, 0, -5.6), FACE + 0.1, sal, 1.03) });
+      put(w, f, XIE_CAP, { at: P("roof", 0.2, 0, -4.9), facing: FACE + 0.1, id: 4, expr: "grave", lookDown: -16, hands: saluteHands(P("roof", 0.2, 0, -4.9), FACE + 0.1, sal, 1.02, CAMP), more: FRONT });
+      put(w, f, YANG, { at: P("roof", -0.5, 0, -5.6), facing: FACE + 0.1, id: 5, expr: "hard", lookDown: -16, hands: saluteHands(P("roof", -0.5, 0, -5.6), FACE + 0.1, sal, 1.03, CAMP), more: FRONT });
       w.update();
       overlays = null;
     }
