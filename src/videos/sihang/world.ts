@@ -7,13 +7,11 @@ import { FPS, W, H, lensFov, type Place } from "./story";
 import { buildSets, type SihangSet } from "./sets";
 import { buildProps, type Props, type Prop, type PropName } from "./props";
 import { addPerson, type Person } from "./people";
-import { standUp } from "../romeo/shots/kit";
+
 
 export class World extends DayWorld<Place, Person, SihangSet, Props, PropName, Prop> {
   constructor(gl: THREE.WebGLRenderer, camera: THREE.PerspectiveCamera) {
-    super(gl, camera, { name: "sihang", fps: FPS, W, H, lensFov, buildSets, buildProps, addPerson, bakedLight: BAKED_LIGHT, firstPlace: "hall",
-      // a figure laid down on a frame (lieDown: the wounded on the stretcher) stands up again before every solve
-      onUpdate: (_w, r) => standUp(r) });
+    super(gl, camera, { name: "sihang", fps: FPS, W, H, lensFov, buildSets, buildProps, addPerson, bakedLight: BAKED_LIGHT, firstPlace: "hall" });
   }
   /** the figures' names (the checker, previews) */
   get figureNames() { return this.names; }

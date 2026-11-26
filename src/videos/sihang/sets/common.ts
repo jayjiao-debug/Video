@@ -177,7 +177,8 @@ const skyTex = () => paint(8, 256, (g, W, H) => { const gr = g.createLinearGradi
 export type Bank = { group: THREE.Group; setMode(m: BankMode): void; setBoard(n: number): void; setCheer(k: number): void; animate(t: number): void; skyCol(m: BankMode): string };
 /** THE SOUTH BANK, built round x = ox with the warehouse's south face at z = zs (everything further south is at smaller
  *  z). Ground level y = base (the roof looks down on it: base = -(the roof's height)). Unlit cards and boxes, all NOINK. */
-export const buildBank = (ox: number, zs: number, base = 0): Bank => {
+export const buildBank = (ox: number, zs: number, base = 0, o: { gap?: number } = {}): Bank => {
+  const gap = o.gap ?? 0;
   const group = new THREE.Group(); group.name = "bank.far";
   const basic = (c: string, o: THREE.MeshBasicMaterialParameters = {}) => new THREE.MeshBasicMaterial({ color: c, fog: false, ...o });
   const add = <T extends THREE.Object3D>(m: T, name: string) => { m.name = name; m.traverse((q) => q.layers.set(NOINK)); (m as unknown as THREE.Mesh).castShadow = false; (m as unknown as THREE.Mesh).receiveShadow = false; group.add(m); return m; };
@@ -195,13 +196,14 @@ export const buildBank = (ox: number, zs: number, base = 0): Bank => {
     fragmentShader: "uniform vec3 uA; uniform vec3 uB; varying vec2 vUv; void main(){ gl_FragColor = vec4(mix(uB, uA, smoothstep(0.0, 0.75, vUv.y)), 1.0); }",
   });
   void skyTex;
-  add(new THREE.Mesh(new THREE.PlaneGeometry(420, 150).translate(ox, base + 55, zb - 40), mSky), "bank.sky");
+  add(new THREE.Mesh(new THREE.PlaneGeometry(1600, 150).translate(ox, base + 55, zb - 40), mSky), "bank.sky");
   // the buildings: a row of blocks of different heights (their fronts painted), a gas holder at the east end
   const r = rng(1937), builds: { m: THREE.MeshBasicMaterial; lit: THREE.MeshBasicMaterial }[] = [];
   let x = -64;
   const tops: [number, number, number][] = [];
   for (let k = 0; x < 64; k++) {
     const w = 8 + 9 * r(), hgt = 9 + 16 * r(), floors = Math.max(3, Math.round(hgt / 3.4)), bays = Math.max(3, Math.round(w / 2.6));
+    if (gap && x < gap && x + w > -gap) { x = gap; continue; }     // the street the bridge runs into stays open
     const base0 = ["#cfc6b2", "#b9ad98", "#d8ccb4", "#a89c8c", "#c2b6a6"][k % 5], trim = ["#8a7f6e", "#6e665a", "#9a8e7a"][k % 3];
     const m = basic("#ffffff", { map: facadeTex(100 + k, floors, bays, base0, trim) });
     add(new THREE.Mesh(new THREE.PlaneGeometry(w, hgt).translate(ox + x + w / 2, base + hgt / 2 + 0.15, zb), m), "bank.building");
@@ -217,12 +219,13 @@ export const buildBank = (ox: number, zs: number, base = 0): Bank => {
   add(new THREE.Mesh(new THREE.CylinderGeometry(11, 11, 20, 28, 1, true).translate(ox + 47, base + 10, zb - 16), mTank), "bank.tank");
   // neon signs: a board, the lit letters (HDR colour: they bloom), a halo, and their streak on the water
   const neon: { m: THREE.MeshBasicMaterial; col: [number, number, number]; halo: THREE.MeshBasicMaterial; streak: THREE.MeshBasicMaterial; ph: number }[] = [];
-  const stk = streakTex();
+  const stk = streakTex(), signboards: THREE.MeshBasicMaterial[] = [];
   SIGNS.forEach((s, i) => {
     const n = s.text.length, w = s.h / n;
     const m = basic("#ffffff", { map: signTex(s.text), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false });
     const sm = add(new THREE.Mesh(new THREE.PlaneGeometry(w, s.h).translate(ox + s.x, base + s.y + s.h / 2, zb + 0.5), m), "bank.neon"); sm.renderOrder = 3;
-    add(new THREE.Mesh(new THREE.PlaneGeometry(w * 1.1, s.h * 1.03).translate(ox + s.x, base + s.y + s.h / 2, zb + 0.45), basic("#14161e")), "bank.signboard");
+    const sb = basic("#20222a", { map: m.map }); signboards.push(sb);
+    add(new THREE.Mesh(new THREE.PlaneGeometry(w * 1.1, s.h * 1.03).translate(ox + s.x, base + s.y + s.h / 2, zb + 0.45), sb), "bank.signboard");
     const halo = basic("#ffffff", { map: (glowCard(1, "#ffffff", 1).material as THREE.MeshBasicMaterial).map, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, opacity: 0.4 });
     const hm = add(new THREE.Mesh(new THREE.PlaneGeometry(w * 5, s.h * 1.7).translate(ox + s.x, base + s.y + s.h / 2, zb + 0.55), halo), "bank.neonglow"); hm.renderOrder = 3;
     const streak = basic("#ffffff", { map: stk, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, opacity: 0.5 });
@@ -235,9 +238,10 @@ export const buildBank = (ox: number, zs: number, base = 0): Bank => {
     const m = basic("#ffffff", { map: crowdTex(seed, n), transparent: true, alphaTest: 0.3 });
     add(new THREE.Mesh(new THREE.PlaneGeometry(w, h).translate(ox + cx, base + y + h / 2, z), m), "bank.crowd"); crowdMats.push(m);
   };
-  add(new THREE.Mesh(boxG(ox - 90, ox + 90, base + 0.15, base + 1.15, zq - 0.25, zq - 0.1), basic("#3a3c44")), "bank.rail");
-  strip(-30, 0.15, zq - 0.4, 56, 2.3, 11, 170); strip(28, 0.15, zq - 0.4, 56, 2.3, 12, 170);
-  strip(-30, 0.15, zq - 1.6, 56, 2.6, 13, 150); strip(28, 0.15, zq - 1.6, 56, 2.6, 14, 150);
+  // (a bridge lands on the quay: `gap` m either side of x 0 stay clear of the rail and the crowd)
+  for (const sgn of [-1, 1]) add(new THREE.Mesh(boxG(ox + (sgn < 0 ? -90 : gap), ox + (sgn < 0 ? -gap : 90), base + 0.15, base + 1.15, zq - 0.25, zq - 0.1), basic("#3a3c44")), "bank.rail");
+  strip(-29 - gap, 0.15, zq - 0.4, 56, 2.3, 11, 170); strip(29 + gap, 0.15, zq - 0.4, 56, 2.3, 12, 170);
+  strip(-29 - gap, 0.15, zq - 1.6, 56, 2.6, 13, 150); strip(29 + gap, 0.15, zq - 1.6, 56, 2.6, 14, 150);
   const lowRoofs = tops.filter(([, h]) => h < 17).slice(0, 5);
   lowRoofs.forEach(([cx, h, w], i) => strip(cx, h + 0.15, zb - 0.6, w * 0.92, 1.9, 20 + i, Math.round(w * 2.4)));
   // the wavers: small cards over the crowd that bob and tip (white handkerchiefs, dark hats, straw hats)
@@ -246,16 +250,18 @@ export const buildBank = (ox: number, zs: number, base = 0): Bank => {
   for (let i = 0; i < NW; i++) {
     const onRoof = i % 6 === 0 && lowRoofs.length > 0, lr = lowRoofs[i % Math.max(1, lowRoofs.length)];
     wb.push(onRoof ? { x: lr[0] + (wr() - 0.5) * lr[2] * 0.8, y: lr[1] + 2.0, z: zb - 0.5, ph: wr() * 7, sp: 5 + 4 * wr(), amp: 0.3 + 0.3 * wr() }
-      : { x: (wr() - 0.5) * 110, y: 2.35 + 0.5 * wr(), z: zq - 0.35 - 1.2 * (i % 2), ph: wr() * 7, sp: 5 + 4 * wr(), amp: 0.3 + 0.35 * wr() });
+      : { x: ((q) => (gap && Math.abs(q) < gap + 1 ? Math.sign(q || 1) * (gap + 1 + Math.abs(q)) : q))((wr() - 0.5) * 110), y: 2.35 + 0.5 * wr(), z: zq - 0.35 - 1.2 * (i % 2), ph: wr() * 7, sp: 5 + 4 * wr(), amp: 0.3 + 0.35 * wr() });
     wav.setColorAt(i, new THREE.Color(["#f4f0e6", "#f4f0e6", "#2e2a28", "#cdb98a", "#ffffff"][i % 5]));
   }
   wav.instanceMatrix.setUsage(THREE.DynamicDrawUsage); add(wav, "bank.wavers"); wav.frustumCulled = false;
-  // the blackboard: held up on the roof of the lowest block near the middle, facing the warehouse
-  const mid = tops.reduce((a, b) => (Math.abs(b[0]) + b[1] * 0.4 < Math.abs(a[0]) + a[1] * 0.4 ? b : a), tops[0]);
+  // THE PEOPLE STRAIGHT ACROSS (the lens punches in on them): a sharper strip in front of the long ones
+  { const m = basic("#ffffff", { map: crowdTex(31, 46, 2048, 256), transparent: true, alphaTest: 0.3 }); add(new THREE.Mesh(new THREE.PlaneGeometry(18, 2.5).translate(ox + (gap ? gap + 10 : 0), base + 0.15 + 1.25, zq - 0.3), m), "bank.crowd"); crowdMats.push(m); }
+  // THE BLACKBOARD: held up over the heads on the quay, straight across from the warehouse
+  const bx = gap ? gap + 10 : 0;
   const boardMats = BOARDS.map((t) => (t ? basic("#ffffff", { map: boardTex(t) }) : null));
-  const board = add(new THREE.Mesh(new THREE.PlaneGeometry(9.6, 2.4).translate(ox + mid[0], base + mid[1] + 0.15 + 2.2, zb + 0.2), boardMats[1]!), "bank.board");
-  for (const s of [-1, 1]) add(new THREE.Mesh(boxG(ox + mid[0] + s * 4.2 - 0.1, ox + mid[0] + s * 4.2 + 0.1, base + mid[1] + 0.15, base + mid[1] + 1.2, zb + 0.1, zb + 0.2), basic("#5c432c")), "bank.boardleg");
-  board.visible = false;
+  const board = add(new THREE.Mesh(new THREE.PlaneGeometry(9.6, 2.4).translate(ox + bx, base + 0.15 + 4.1, zq - 0.9), boardMats[1]!), "bank.board");
+  const legs = [-1, 1].map((sg) => add(new THREE.Mesh(boxG(ox + bx + sg * 4.2 - 0.08, ox + bx + sg * 4.2 + 0.08, base + 0.15, base + 0.15 + 2.9, zq - 1.0, zq - 0.9), basic("#5c432c")), "bank.boardleg"));
+  board.visible = false; for (const l of legs) l.visible = false;
   let mode: BankMode = "night", cheer = 0;
   const dummy = new THREE.Object3D(), col = new THREE.Color();
   const api: Bank = {
@@ -264,15 +270,16 @@ export const buildBank = (ox: number, zs: number, base = 0): Bank => {
     setMode(m) {
       mode = m; const B = BANK[m];
       (mSky.uniforms.uA.value as THREE.Color).set(B.sky[0]); (mSky.uniforms.uB.value as THREE.Color).set(B.sky[1]);
-      mWater.color.set(B.water); mQuay.color.set(B.quay); mRoad.color.set(mix("#000000", B.quay, 1) as unknown as THREE.ColorRepresentation); mRoad.color.set(B.quay).multiplyScalar(1.15);
+      mWater.color.set(B.water); mQuay.color.set(B.quay); mRoad.color.set(B.quay).multiplyScalar(1.15);
       for (const b of builds) { b.m.color.set(B.build); b.lit.opacity = B.lit; b.lit.visible = B.lit > 0.01; }
       mTank.color.set(B.build).multiplyScalar(0.55);
       for (const n of neon) { n.m.visible = n.halo.visible = n.streak.visible = B.neon > 0.01; }
+      for (const sb of signboards) sb.color.set(m === "day" ? "#b4ada0" : m === "dawn" ? "#6e7078" : "#22242c");
       for (const c of crowdMats) { c.visible = B.crowd > 0.01; c.color.set(col.set(B.build).lerp(new THREE.Color("#ffffff"), m === "day" ? 1 : 0.35)); }
       wav.visible = B.crowd > 0.5;
       (boardMats.filter(Boolean) as THREE.MeshBasicMaterial[]).forEach((bm) => bm.color.set(m === "day" ? "#ffffff" : m === "dawn" ? "#c9cfdb" : "#8a90a4"));
     },
-    setBoard(n) { const bm = boardMats[n]; board.visible = !!bm; if (bm) board.material = bm; },
+    setBoard(n) { const bm = boardMats[n]; board.visible = !!bm; for (const l of legs) l.visible = !!bm; if (bm) board.material = bm; },
     setCheer(k) { cheer = k; },
     animate(t) {
       const B = BANK[mode];

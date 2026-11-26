@@ -25,7 +25,7 @@ export function addPerson(rc: RigCast, p: Person): Rig {
 }
 const face = (eyes: Expr, mouth: Expr, brows: Expr, marks?: Expr): RigFace => ({ eyes, mouth, brows, marks: marks ?? brows });
 
-export const SKIN = { boy: "#f0cfa8", tan: "#dcb489", pale: "#f2d6b6", brit: "#f4d3bd" } as const;
+export const SKIN = { boy: "#e4ba8e", tan: "#d3a87c", pale: "#e0b98f", brit: "#efc7ae" } as const;
 const HAIR = "#2a2420";
 const soldierLook = (seed: number, skin: string, width = 0.95, hair: Look["hair"] = "buzz"): Look => ({
   seed, skin, top: "tee", topCol: UNI.cloth, bottom: "chinos", botCol: UNI.trousers, shoes: UNI.shoe, shoeSole: "#2e281f", hair, hairCol: HAIR, part: 1, width,

@@ -906,12 +906,8 @@
    "en": "A flag. A schoolgirl brought it over from the other bank.",
    "screens": [
     {
-     "zh": "旗。",
-     "en": "A flag."
-    },
-    {
-     "zh": "对岸一个女学生送来的。",
-     "en": "A schoolgirl brought it over from the other bank."
+     "zh": "旗。对岸一个女学生送来的。",
+     "en": "A flag. A schoolgirl brought it over from the other bank."
     }
    ],
    "pre": 0.9,
@@ -1015,12 +1011,8 @@
    "en": "Withdraw? Didn't we say live or die here?",
    "screens": [
     {
-     "zh": "撤？",
-     "en": "Withdraw? Didn't"
-    },
-    {
-     "zh": "不是讲共存亡吗？",
-     "en": "we say live or die here?"
+     "zh": "撤？不是讲共存亡吗？",
+     "en": "Withdraw? Didn't we say live or die here?"
     }
    ],
    "emo": "stunned, hurt"

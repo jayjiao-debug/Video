@@ -46,15 +46,17 @@ export const UNI = {
 export const m35 = (o: { col?: string; size?: number; tip?: number; lean?: number } = {}): Acc => {
   const col = o.col ?? UNI.steel, k = o.size ?? 1, tip = o.tip ?? 0, lean = o.lean ?? 0;
   return {
-    name: "m35", slots: ["hat", "crown"], key: ["shM35", col, k, tip, lean].join("|"), hat: { rim: k > 1.05 ? 66 : 61 },
+    name: "m35", slots: ["hat", "crown"], key: ["shM35", col, k, tip, lean].join("|"), hat: { rim: k > 1.05 ? 63 : 59 },
     build(b) {
-      const r = 1.1 * k, sq = 1.03, to = k > 1.05 ? 66 : 62, rimR = r * Math.sin(rad(to)), rimY = r * Math.cos(rad(to)) * sq, rIn = 0.6, droop = 0.42;
+      const r = 1.1 * k, sq = 1.03, to = k > 1.05 ? 62 : 58, rimR = r * Math.sin(rad(to)), rimY = r * Math.cos(rad(to)) * sq, rIn = rimR - 0.24;
       if (tip || lean) b.tilt(lean, -tip);
       const m = b.paint("head", { col });
       b.shell({ r, to, squash: sq, mat: m });
-      // the skirt: a short peak over the brows, flaring wide over the ears and the nape
-      const past = (az: number) => { const c = Math.cos(rad(az)); return (c > 0 ? 0.1 + 0.07 * c ** 2 : 0.1 + 0.15 * Math.min(1, -c * 1.6)) * k + 0.05 * Math.sin(rad(az)) ** 2; };
-      b.solid("head", b.brim({ rIn, y: rimY + droop * (rimR - rIn) + 0.012, out: (az) => rimR - rIn + past(az), droop, thick: 0.09, taper: 0.7, join: rimR + 0.003 }), { mat: m });
+      // the German-pattern shape: a short peak over the brows, and a skirt that comes straight DOWN over the ears and
+      // the nape, flaring a little (two brims: the peak nearly level, the skirt steep)
+      const dv = 0.36, ds = 1.3, sm = (a: number, c: number, x: number) => { const q = Math.max(0, Math.min(1, (x - a) / (c - a))); return q * q * (3 - 2 * q); };
+      b.solid("head", b.brim({ rIn, y: rimY + dv * (rimR - rIn) + 0.012, out: (az) => rimR - rIn + 0.03 + 0.2 * k * Math.max(0, Math.cos(rad(az * 1.3))) ** 1.4, from: -68, to: 68, droop: dv, thick: 0.09, taper: 0.7, join: rimR + 0.003 }), { mat: m });
+      b.solid("head", b.brim({ rIn, y: rimY + ds * (rimR - rIn) + 0.012, out: (az) => rimR - rIn + 0.03 + 0.2 * k * sm(0.72, 0.15, Math.cos(rad(az))), from: 38, to: 322, droop: ds, thick: 0.09, taper: 0.75, join: rimR + 0.003 }), { mat: m });
       // the two vent rivets, one a side, and the chin strap's stud
       for (const s of [-1, 1]) b.put(b.solid("head", new THREE.SphereGeometry(0.035 * b.R, 8, 6), { col: shade(col, 0.72), ink: 0 }), s * r * 0.86, 0.5 * sq, 0.28);
       if (tip || lean) b.tilt(0, 0);
