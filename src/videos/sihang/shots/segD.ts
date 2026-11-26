@@ -53,6 +53,7 @@ export const SEG: Segment = {
     w.update();
     const top = frag(
       h(Wash, { key: "w", k: 0.85 * hit(f, BLAST, 16), col: "#fff6e6" }),
+      h(Black, { key: "dim", k: 0.52 * win(f, WORDS - 10, OFF - 2, 12, 12) }),      // the picture dims under the words (white on a dawn sky does not read)
       h(WhiteWords, { key: "t", f, rows: [{ text: "陈树生，二十一岁。", from: WORDS }, { text: "1937年10月28日。", from: WORDS + 34, px: 46 }], to: OFF - 6, y: 1010 }),
       h(Black, { key: "b", k: win(f, BLACK, S.to + 30, 6, 2) }),
     );

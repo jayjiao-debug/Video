@@ -59,7 +59,7 @@ export const SEG: Segment = {
     camera = punchIn(camera, f, b01 - 2, { k: 1, len: 2 });
     w.setCamera(camera);
     // --- the haulers go on in the back (fewer: it is late)
-    [LANES[0], LANES[3], LANES[4]].forEach((L, i) => {
+    [LANES[0], LANES[1], LANES[4]].forEach((L, i) => {      // none in the lane behind the desk: nobody walks behind 谢晋元 while he writes
       const leg = loopWalk(lanePath(L), 1.0, f / 30 + L[4]);
       put(w, f, MEN[i], { at: leg.at, facing: leg.facing, id: 20 + i, pose: leg.pose, expr: "calm" }, `h${i}`);
     });
