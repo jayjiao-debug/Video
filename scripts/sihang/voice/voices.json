@@ -1,0 +1,12 @@
+{
+ "note": "采访八百壮士的一天: who speaks how. The owner asked (26 Nov 2026) for each man's voice to carry the accent of his home. Two engines: ElevenLabs eleven_v4 (\"el\": public library voices) and CosyVoice 3 on the Mac (\"cosy\": instruct dialect, timbre from a reference clip of an ElevenLabs voice). Full 上海话 and 广东话 from CosyVoice came out unreadable to Whisper in the lab (26 Nov), so 谢晋元 speaks through a voice whose Mandarin has a Cantonese accent and the Shanghai reporter stays in standard Mandarin. Lines of three characters or fewer do not come out clean in CosyVoice: they are spoken by the reference voice itself (\"short\").",
+ "cast": {
+  "ji": {"engine": "el", "name": "Lin", "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a", "voice_id": "I23uc91tu5zY2PA1tKEN", "home": "the reporter: standard Mandarin (the series voice)"},
+  "mc": {"engine": "cosy", "ref": "man_cang", "dialect": "湖北话", "short": {"name": "Danyu Zhao", "voice_id": "BWN0mOtkGHghA3CYFzFK"}, "home": "满仓: 湖北通城"},
+  "lb": {"engine": "cosy", "ref": "lao_ban", "dialect": "河南话", "short": {"name": "Martin Li", "voice_id": "WuLq5z7nEcrhppO0ZQJw"}, "home": "老班长: 河南"},
+  "yr": {"engine": "cosy", "ref": "yang", "dialect": "天津话", "short": {"name": "Vincent", "voice_id": "WkcRFJo38X9XEP8kGExm"}, "home": "杨瑞符: 天津"},
+  "xj": {"engine": "el", "name": "Loh", "owner": "2ecf7da8e3fc9a937829c981c5d577aaf5133b884e052353a6aabdaf438316c1", "voice_id": "LtsCwaGioUKf3ipISxqZ", "home": "谢晋元: 广东蕉岭 (Mandarin with a Cantonese accent)"},
+  "cl": {"engine": "el", "name": "Jordan Li", "voice_id": "EttSxNTvxX50EUdRPQQl", "home": "the runner: plain"},
+  "th": {"engine": "el", "name": "Jing", "voice_id": "zYD0xJl1ponKr8TwFBmJ", "home": "the Shanghai reporter: standard Mandarin, fast"}
+ }
+}
