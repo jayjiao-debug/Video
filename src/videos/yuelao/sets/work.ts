@@ -37,7 +37,7 @@ const PARAMS: Record<string, ParamValue> = { glow: 1, late: 0 };
 /** where things stand on her desk (local) */
 const DK = { x: D.desk.x, z: D.desk.z, top: D.desk.top, x0: D.desk.x - D.desk.w / 2, x1: D.desk.x + D.desk.w / 2, z0: D.desk.z - D.desk.d / 2, z1: D.desk.z + D.desk.d / 2 };
 /** the laptop: its base centre on the desk, the hinge (on the +z side: the screen faces her), the lid's tilt back */
-export const LAPTOP = { x: D.desk.x, z: D.desk.z + 0.05, w: 0.3, d: 0.2, lid: 0.2, tilt: 0.26 };
+export const LAPTOP = { x: D.desk.x, z: D.desk.z - 0.21, w: 0.3, d: 0.2, lid: 0.2, tilt: 0.26 };
 const lidTop = DK.top + 0.012 + LAPTOP.lid * Math.cos(LAPTOP.tilt);   // 0.825
 void lidTop;
 /** the side desks: column centres (x) and row centres (z) */
@@ -281,7 +281,7 @@ const build = (K: Kit): PlaceBuild => {
   chair(D.chair.x, D.chair.z, D.chair.top, 0);
   // THE LAPTOP: base, lid hinged on the +z side and tilted back, its back toward the lens
   {
-    const L = LAPTOP, mAlu = M("#a9b0bb", 0.4), hinge = DK.z + 0.05 + L.d / 2;
+    const L = LAPTOP, mAlu = M("#a9b0bb", 0.4), hinge = L.z + L.d / 2;
     P.add(mAlu, new THREE.BoxGeometry(L.w, 0.012, L.d).translate(X(L.x), DK.top + 0.006, L.z), 0.004);
     P.add(mDark, new THREE.PlaneGeometry(L.w - 0.04, L.d * 0.5).rotateX(-Math.PI / 2).translate(X(L.x), DK.top + 0.0125, L.z + 0.01), 0);   // keys
     const lm = new THREE.Matrix4().makeRotationX(L.tilt).setPosition(X(L.x), DK.top + 0.012, hinge);

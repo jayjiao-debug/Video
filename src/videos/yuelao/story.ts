@@ -17,7 +17,8 @@ export { PLACES };
 export const FPS = 30;
 export const W = 1080, H = 1920;
 export const { lensTan, lensFov } = makeLens(H);
-export type Pose = DayPose;
+/** a shot's pose; shown = the effects it lays over the picture with their boxes (shots/fx.ts), for the overlay check */
+export type Pose = DayPose<{ shown?: { what: string; kind: "card" | "effect"; from: number; to: number; rect: { x0: number; y0: number; x1: number; y1: number } }[] }>;
 export type Segment = DaySegment<World, Pose>;
 
 /** minutes from 00:00 of each scene's first frame */

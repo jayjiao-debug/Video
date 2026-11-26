@@ -6,6 +6,7 @@ import { HC } from "../../kit/day/hud/style";
 import { CAPTIONS, captionAt, captionRuns, TRAILING_PUNCT } from "./captions";
 import { FPS, SCENES, SCENE_STAMP, SEGMENTS, segmentAt, line, CLOCK_MIN, type Speaker } from "./story";
 import { EN } from "../../kit/film/lang";
+import { JOINS } from "./beats";
 
 /** each speaker's subtitle colour: her warm white; 月老 a pale foil gold; the mortals cool whites */
 export const SPEAKER_COL: Record<Speaker, string> = { ji: HC.warm, yl: "#ffe2a0", xm: "#e4ecf6", ma: "#f6dfe6", xq: "#e4ecf6", qs: "#fff0c8" };
@@ -13,7 +14,7 @@ export const SPEAKER_COL: Record<Speaker, string> = { ji: HC.warm, yl: "#ffe2a0"
 export const OFF_AT = line("J03").to + Math.round(2.9 * FPS);
 export const CAP = makeCaption({ captions: CAPTIONS, captionAt, captionRuns, trailingPunct: TRAILING_PUNCT, speakerCol: SPEAKER_COL });
 export const VLOG = makeVlog({
-  fps: FPS, scenes: SCENES, stamp: SCENE_STAMP!, segments: SEGMENTS, segmentAt, en: EN, offAt: OFF_AT,
+  fps: FPS, scenes: SCENES, stamp: SCENE_STAMP!, segments: SEGMENTS, segmentAt, en: EN, offAt: OFF_AT, joins: JOINS,
   battery: { min0: CLOCK_MIN.A, pct0: 97, min1: CLOCK_MIN.J, pct1: 6, drain: 1, lastDrain: 2 },
 });
 export const { Caption } = CAP;

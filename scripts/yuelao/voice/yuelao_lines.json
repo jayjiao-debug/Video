@@ -85,7 +85,7 @@
   ],
   "title_after": "A05",
   "title_delay": 0.25,
-  "title_hold": 2.4,
+  "title_hold": 1.85,
   "rate_zh": 4.4,
   "tail_s": 0.4
  },
@@ -141,7 +141,7 @@
      "en": "for my review, didn't it?"
     }
    ],
-   "pre": 0.3,
+   "pre": 1.15,
    "emo": "suspicious, then fawning",
    "tts": "[suspicious] 等等……[nervous, fawning] 您是天庭派来考核的吧？"
   },
@@ -173,7 +173,7 @@
      "en": "Got it! Undercover. Write it all down, please."
     }
    ],
-   "after": 2.6,
+   "after": 2.1,
    "emo": "cuts her off, bowing",
    "tts": "[cutting in, eager] 懂！暗访。[fawning] 您记，随便记。"
   },
@@ -240,7 +240,7 @@
      "en": "And seven and a half thousand split, the same day."
     }
    ],
-   "after": 2.4,
+   "after": 2.5,
    "emo": "deflating",
    "tts": "[deflated] 可一天，也散七千五。",
    "card": {

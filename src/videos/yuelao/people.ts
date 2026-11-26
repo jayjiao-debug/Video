@@ -15,7 +15,7 @@ import { bushyBrows, softBrows, ageLines, cheeks, nose, shine, lashes } from "..
 import { beard } from "../../kit/acc/facehair";
 import { robe, pendant } from "../../kit/acc/garb";
 import { topknot } from "../../kit/acc/headwear";
-import { moustache, glasses } from "../group/kit/rigacc";
+import { moustache, glasses, phone, finger, pen } from "../group/kit/rigacc";
 import { hardHat } from "../group/kit/rigacc/hardhat";
 
 export type Person = SuPerson & { legs?: { leg?: string; foot?: string } };
@@ -50,6 +50,7 @@ const ylAcc = (extra: Acc[] = []): Acc[] => [
   bushyBrows({ col: COL.white, weight: 4.4, droop: 1.5 }), cheeks({ k: 0.6, col: "#f08a7a" }), nose({ tint: "#f0a090" }), ageLines({ k: 0.5 }), shine(),
   topknot({ band: COL.red, pin: COL.gold, size: 1.15, pinLen: 0.3, guan: COL.red }),
   pendant({ col: COL.red, cord: COL.gold, side: 1 }),
+  finger({ hand: 1, col: SKIN.old }), pen({ hand: 0, col: "#b8935a" }),
   ...extra,
 ];
 export const YUELAO: Person = { name: "yuelao", scale: 0.98, expr: face("smile", "nervous", "sad") as unknown as Expr, look: YL_LOOK, acc: () => ylAcc(), limbs: { hand: SKIN.old, arm: COL.red }, nape: false };
@@ -61,7 +62,7 @@ const modern = (seed: number, o: Partial<Look> & Pick<Look, "top" | "topCol" | "
 export const XIAOMAN: Person = {
   name: "xiaoman", scale: 0.97, expr: face("deadpan", "neutral", "neutral") as unknown as Expr,
   look: modern(3107, { top: "hoodie", topCol: COL.hoodie, trim: "#e9edf2", hair: "bob", width: 0.86, lanyard: "#2f6fd0" }),
-  acc: () => [glasses({ kind: "square", col: "#2a2c34" }), softBrows({ weight: 3.0, col: "#2a2428" }), lashes({})],
+  acc: () => [glasses({ kind: "square", col: "#2a2c34" }), softBrows({ weight: 3.0, col: "#2a2428" }), lashes({}), phone({ col: "#e0567a", hand: 1 })],
   limbs: { hand: SKIN.fair, arm: COL.hoodie }, legs: { leg: COL.jeans, foot: "#e8e4dc" },
 };
 export const MA: Person = {
@@ -73,7 +74,7 @@ export const MA: Person = {
 export const XIANGQIN: Person = {
   name: "xiangqin", scale: 1.0, expr: face("neutral", "smile", "neutral") as unknown as Expr,
   look: modern(3301, { top: "jacket", topCol: COL.navy, inner: "#f2f2f0", hair: "side", bottom: "chinos", botCol: "#7a7466", width: 0.98, shoes: "#3a2c24" }),
-  acc: () => [glasses({ kind: "round", col: "#2a2c34" }), softBrows({ weight: 3.4, col: "#2a2428" })],
+  acc: () => [glasses({ kind: "round", col: "#2a2c34" }), softBrows({ weight: 3.4, col: "#2a2428" }), phone({ col: "#2f4a7a", hand: 0 })],
   limbs: { hand: SKIN.fair, arm: COL.navy }, legs: { leg: "#7a7466", foot: "#3a2c24" },
 };
 export const RIDER: Person = {
@@ -92,6 +93,10 @@ export const FACES: Record<string, Expr | RigFace> = {
   suspicious: face("focus", "neutral", "focus", "neutral"), sly: face("smug", "smug", "neutral"), sag: face("sad", "sigh", "sad", "neutral"), quiet: face("sad", "neutral", "sad", "neutral"),
   wry: face("sad", "smile", "sad", "neutral"), wonder: face("neutral", "whistle", "sad", "neutral"), joy: face("happy", "laugh", "neutral"), warm: face("smile", "smile", "neutral"),
   cough: face("smile_closed", "hush", "neutral"), shout: face("stern", "shock", "stern", "neutral"), hush: face("smile", "hush", "neutral"),
+  // a thread in his teeth: busy / caught / hissing / grave
+  bite: face("focus", "wince", "stern", "neutral"), caught: face("shock", "wince", "sad", "neutral"), hiss: face("stern", "wince", "stern", "neutral"), grave: face("deadpan", "wince", "stern", "neutral"),
+  eager: face("happy", "smile", "sad", "neutral"), hope: face("smile", "smile", "sad", "neutral"), dread: face("shock", "nervous", "sad", "nervous"), sheepish: face("smile_closed", "nervous", "sad", "nervous"),
+  resolve: face("stern", "grin", "stern", "neutral"), peer: face("focus", "whistle", "focus", "neutral"), tender: face("smile_closed", "smile", "sad", "neutral"), lost: face("sad", "nervous", "sad", "neutral"),
   // the mortals
   flat: face("deadpan", "neutral", "neutral"), tired: face("deadpan", "sigh", "sad", "neutral"), look: face("smile", "neutral", "neutral"), smile: face("smile", "smile", "neutral"),
   beam: face("happy", "grin", "neutral"), plead: face("sad", "shock", "sad", "neutral"), polite: face("smile", "smile", "neutral"), shy: face("smile", "nervous", "sad", "relief"),

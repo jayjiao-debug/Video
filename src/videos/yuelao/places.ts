@@ -21,7 +21,7 @@ export const OFFICE = {
   /** 月老's desk, pushed toward the back wall: centre, top height, size (x by z). He stands or sits BEHIND it (z < desk.z) or beside it */
   desk: { x: 0.35, z: -1.25, top: 0.62, w: 1.5, d: 0.7 },
   /** his stool behind the desk: seat centre and height */
-  stool: { x: 0.35, z: -1.95, top: 0.34 },
+  stool: { x: 0.35, z: -1.84, top: 0.34 },
   /** THE CASE-FILE CABINET: a wall of small square drawers (like a medicine chest) covering the -x wall from z -2.3 to 1.2,
    *  floor to 2.3 m; its front face is at x = cabinetX. Each drawer has a small paper label. Scene C plays in front of it */
   cabinetX: -2.72, cabinet: { z0: -2.3, z1: 1.2, top: 2.3 },
@@ -44,9 +44,9 @@ export const WORK = {
    *  so we see her face over her laptop. The laptop stands on the desk at (desk.x, top, desk.z + 0.05), its screen's back toward the camera */
   desk: { x: 0, z: -0.9, top: 0.62, w: 1.5, d: 0.7 },
   /** her chair's seat: centre and height (a low office chair with a back) */
-  chair: { x: 0, z: -1.55, top: 0.34 },
+  chair: { x: 0, z: -1.46, top: 0.34 },
   /** where 月老 crouches to tie her ankle: at the desk's +x end, beside her chair */
-  tie: { x: 1.05, z: -1.35 },
+  tie: { x: 0.62, z: -1.62 },
   /** other desks: two rows receding to the left and right with dark monitors, a few chairs; nobody else is in */
 } as const;
 

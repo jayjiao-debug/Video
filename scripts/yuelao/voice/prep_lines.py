@@ -51,7 +51,12 @@ def main():
                 if a > k0 and b < k1 and b - a > MAXSIL: removed.append([a + MAXSIL / 2, b - MAXSIL / 2])
                 i = j
             else: i += 1
-        removed = sorted(removed + [d for d in drops])
+        removed = sorted(removed + [list(d) for d in drops])
+        merged = []                      # overlapping spans (an inner pause that runs into a dropped span) count once
+        for a, b in removed:
+            if merged and a <= merged[-1][1]: merged[-1][1] = max(merged[-1][1], b)
+            else: merged.append([a, b])
+        removed = merged
         keep = []; t = k0
         for a, b in removed:
             keep.append([t, a]); t = b

@@ -84,6 +84,8 @@ export const OFFICE_P = (x: number, y: number, z: number) => P("office", x, y, z
 export const toward = (a: THREE.Vector3, b: THREE.Vector3, d: number) => a.clone().add(b.clone().sub(a).normalize().multiplyScalar(d));
 /** the point of a figure's mouth, a little in front of the head toward the camera */
 export const mouthOf = (w: World, r: Rig) => { const hd = r.headWorld(); return toward(hd, w.camera.position, 0.2).add(V(0, -0.09, 0)); };
+/** the point of a figure's mouth when its head keeps a true facing `yaw` (a profile, a back view: state.turn 1) */
+export const mouthAt = (r: Rig, yaw: number) => r.headWorld().add(V(Math.sin(yaw) * 0.215, -0.09, Math.cos(yaw) * 0.215));
 /** 月老 standing somewhere with his face and his words: the lead's default acting (a worried resting face) */
 export const lead = (w: World, f: number, a: Omit<Act, "id" | "who">, key = "") => put(w, f, YUELAO, { id: 1, who: "yl", ...a }, key);
 /** a thread from a to b hanging with `sag`, shown this frame */
@@ -100,3 +102,21 @@ export const inHand = (w: World, name: Parameters<World["prop"]>[0], r: Rig, han
   w.prop(name, o.key).put(r.handWorld(hand).add(V(0, o.dy ?? 0, 0)), { yaw: o.yaw, pitch: o.pitch, roll: o.roll, scale: o.scale });
 /** both hands in front of the chest (holding something up): k 0..1 raises them from the sides */
 export const holdUp = (at: THREE.Vector3, facing: number, k: number, y = 0.92, dx = 0.11, z = 0.24): RigState["hands"] => k <= 0.01 ? undefined : [hang(at, facing, 0).lerp(rel(at, facing, -dx, y, z), smooth(k)), hang(at, facing, 1).lerp(rel(at, facing, dx, y, z), smooth(k))];
+
+// ---- THE SEATS of the film's furniture (rig/seats.ts): a sitter's hip, knees and desk always match what is built.
+// Each is the Seat act({ seat }) takes; the robe is told about it there (garb.setSeat).
+import { chairSeat, stoolSeat, seatOn } from "../../../kit/day/rig/seats";
+import { OFFICE, WORK, STREET } from "../places";
+const STOOL_SPEC = stoolSeat({ seat: OFFICE.stool.top, d: 0.34 }), NOODLE_SPEC = stoolSeat({ seat: 0.34, d: 0.31 });
+const CHAIR_SPEC = chairSeat({ seat: WORK.chair.top, d: 0.34, backZ: -0.175, backTop: 0.75 });
+export const SEATS = {
+  /** 月老's stool behind his desk, facing the door (+z): the desk's near edge is 0.32 in front of the seat's centre */
+  stool: seatOn(STOOL_SPEC, P("office", OFFICE.stool.x, 0, OFFICE.stool.z), 0, { floor: 0, desk: { edge: OFFICE.desk.z - OFFICE.desk.d / 2 - 0.03 - OFFICE.stool.z, top: OFFICE.desk.top } }),
+  /** 小满's office chair behind her desk, facing the lens */
+  chair: seatOn(CHAIR_SPEC, P("work", WORK.chair.x, 0, WORK.chair.z), 0, { floor: 0, desk: { edge: WORK.desk.z - WORK.desk.d / 2 - WORK.chair.z, top: WORK.desk.top } }),
+  /** the noodle table's two stools, each facing the table */
+  noodleL: seatOn(NOODLE_SPEC, P("street", STREET.stools[0].x, 0, STREET.stools[0].z), Math.PI / 2, { floor: 0, desk: { edge: STREET.table.x - STREET.table.r - STREET.stools[0].x, top: STREET.table.top } }),
+  noodleR: seatOn(NOODLE_SPEC, P("street", STREET.stools[1].x, 0, STREET.stools[1].z), -Math.PI / 2, { floor: 0, desk: { edge: STREET.stools[1].x - STREET.table.x - STREET.table.r, top: STREET.table.top } }),
+  /** the lowest step in front of the tower's door, left part: he sits on its tread, feet on the pavement */
+  step: seatOn(stoolSeat({ seat: STREET.steps.rise, d: STREET.steps.run }), P("street", STREET.sit.x, 0, STREET.steps.front - STREET.steps.run / 2), 0, { floor: 0 }),
+} as const;

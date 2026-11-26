@@ -27,14 +27,14 @@ R = [
  # A: cold open
  ("A01","ji","月老？您被线绑架了？","Yue Lao? Have the threads kidnapped you?",dict(pre=1.2,after=0.15,tts="[surprised, amused] 月老？您被线绑架了？")),
  ("A02","yl","别动！一动，三对离婚。","Don't move! One tug and three couples divorce.",dict(after=3.0,emo="hissed through a thread in his teeth, dead serious",tts="[urgent, hissing] 别动！一动，三对离婚。")),
- ("A03","yl","等等……您是天庭派来考核的吧？","Wait... Heaven sent you for my review, didn't it?",dict(pre=0.3,screens="等等……|您是天庭派来考核的吧？",emo="suspicious, then fawning",tts="[suspicious] 等等……[nervous, fawning] 您是天庭派来考核的吧？")),
+ ("A03","yl","等等……您是天庭派来考核的吧？","Wait... Heaven sent you for my review, didn't it?",dict(pre=1.15,screens="等等……|您是天庭派来考核的吧？",emo="suspicious, then fawning",tts="[suspicious] 等等……[nervous, fawning] 您是天庭派来考核的吧？")),
  ("A04","ji","啊？我其实是——","Uh? Actually I'm...",dict(tts="[confused] 啊？我其实是——")),
- ("A05","yl","懂！暗访。您记，随便记。","Got it! Undercover. Write it all down, please.",dict(after=2.6,emo="cuts her off, bowing",tts="[cutting in, eager] 懂！暗访。[fawning] 您记，随便记。")),
+ ("A05","yl","懂！暗访。您记，随便记。","Got it! Undercover. Write it all down, please.",dict(after=2.1,emo="cuts her off, bowing",tts="[cutting in, eager] 懂！暗访。[fawning] 您记，随便记。")),
  # B: the office
  ("B01","yl","姻缘司，上下就我一个。别人九九六，我零零七。","The Marriage Bureau is just me. Others work 996. I work 007.",dict(pre=0.5,screens="姻缘司，上下就我一个。|别人九九六，我零零七。",emo="complaining, proud of it",tts="[sighs] 姻缘司，上下就我一个。别人九九六，[dry] 我零零七。")),
  ("B02","ji","一天绑多少对？","How many couples a day?",dict()),
  ("B03","yl","一万八千对。","Eighteen thousand.",dict(emo="proud")),
- ("B04","yl","可一天，也散七千五。","And seven and a half thousand split, the same day.",dict(after=2.4,emo="deflating",tts="[deflated] 可一天，也散七千五。",card={"zh":"2025年全国结婚登记676.3万对，离婚登记274.3万对（民政部）","en":"2025: 6.763M marriages, 2.743M divorces (Ministry of Civil Affairs)"},card_hold=2.6)),
+ ("B04","yl","可一天，也散七千五。","And seven and a half thousand split, the same day.",dict(after=2.5,emo="deflating",tts="[deflated] 可一天，也散七千五。",card={"zh":"2025年全国结婚登记676.3万对，离婚登记274.3万对（民政部）","en":"2025: 6.763M marriages, 2.743M divorces (Ministry of Civil Affairs)"},card_hold=2.6)),
  ("B05","yl","现在的年轻人，线刚绑上，自己就剪了。","Young people now: I tie it, they cut it.",dict(screens="现在的年轻人，|线刚绑上，自己就剪了。",emo="grumbling")),
  ("B06","yl","今年指标，就差一对。今晚子时截止。","This year's target is one couple short. Deadline: midnight.",dict(screens="今年指标，就差一对。|今晚子时截止。",emo="tapping the board, anxious")),
  ("B07","ji","差一对会怎样？","What if you're one short?",dict()),
@@ -112,7 +112,7 @@ J = {"film": "yuelao", "version": 1, "source": "script v1, written 26 Nov 2026 f
      "title": {"zh": "采访月老的一天", "en": "A Day Interviewing the Old Man under the Moon"},
      "speakers": SPEAKERS, "scenes": SCENES, "gap": 0.18, "lead": 0.1, "level_target_db": -23.75,
      "engine": {"spoken": {k: "zh" for k in SPEAKERS}, "places": ["office", "work", "street"],
-                "title_after": "A05", "title_delay": 0.25, "title_hold": 2.4, "rate_zh": 4.4, "tail_s": 0.4},
+                "title_after": "A05", "title_delay": 0.25, "title_hold": 1.85, "rate_zh": 4.4, "tail_s": 0.4},
      "lines": lines}
 json.dump(J, open(os.path.join(HERE, "yuelao_lines.json"), "w"), ensure_ascii=False, indent=1)
 print(len(lines), "lines,", sum(len(l["zh"]) for l in lines), "chars")

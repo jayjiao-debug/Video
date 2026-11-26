@@ -219,9 +219,10 @@ export const Truth: React.FC<{ f: number; from: number; to: number; x: number; y
   );
 };
 /** A FACT CARD: a cream slip tied on with thread, rows of ink type, an optional source line; centred on x 540 */
-export const Fact: React.FC<{ f: number; from: number; to: number; y: number; rows: string[]; src?: string; px?: number }> = ({ f, from, to, y, rows, src, px = 40 }) => {
+export const factSize = (rows: string[], src?: string, px = 40) => ({ w: Math.min(780, Math.max(...rows.map((r) => [...r].length)) * px * 1.02 + 90), h: rows.length * (px + 16) + (src ? 44 : 0) + 34 });
+export const Fact: React.FC<{ f: number; from: number; to: number; y: number; rows: string[]; src?: string; px?: number; seal?: "真事" | "传说" | "演绎" }> = ({ f, from, to, y, rows, src, px = 40, seal }) => {
   const A = tug(f, from, to, 7, 6); if (!A) return null;
-  const w = Math.min(780, Math.max(...rows.map((r) => [...r].length)) * px * 1.02 + 90), h = rows.length * (px + 16) + (src ? 44 : 0) + 34;
+  const { w, h } = factSize(rows, src, px), st = seal ? slap(f - from, 9, 1.8) : 0;
   return (
     <Svg>
       <g opacity={A.o} transform={`translate(${540 - w / 2} ${y + A.dy + (1 - A.a) * -24})`}>
@@ -229,6 +230,36 @@ export const Fact: React.FC<{ f: number; from: number; to: number; y: number; ro
         <g transform={`translate(${w - 44} 0)`}><Knot s={0.42} /></g>
         {rows.map((r, i) => <T key={i} x={w / 2} y={36 + i * (px + 16)} px={px} anchor="middle">{r}</T>)}
         {src && <T x={w / 2} y={h - 30} px={26} fill={SK.inkSoft} anchor="middle">{src}</T>}
+        {seal && st > 0 && (
+          <g transform={`translate(26 ${h - 22}) rotate(-12) scale(${st * 0.62})`} opacity={0.95}>
+            <circle r={58} fill={SK.cream} /><circle r={58} fill="none" stroke={SK.red} strokeWidth={7} /><circle r={46} fill="none" stroke={SK.red} strokeWidth={2.5} />
+            <T x={0} y={2} px={44} fill={SK.red} anchor="middle" ls={2}>{seal}</T>
+          </g>
+        )}
+      </g>
+    </Svg>
+  );
+};
+/** A SIDE CHARACTER'S CARD: a small tag that travels with the person for a few seconds: a red tab with the name in
+ *  cream, a cream slip with one line about them, tied on with a short thread toward the person (tx, ty = the point on
+ *  the person the thread runs to). Top-left at (x, y); SIDE_W x SIDE_H; s = its scale. */
+export const SIDE_W = 430, SIDE_H = 150;
+export const SideCard: React.FC<{ f: number; from: number; to: number; x: number; y: number; s?: number; name: string; note: string; tx: number; ty: number }> = ({ f, from, to, x, y, s = 1, name, note, tx, ty }) => {
+  const A = tug(f, from, to, 6, 6); if (!A) return null;
+  const t = f - from, row = part(t, 7, 6), cx = x + (SIDE_W * s) / 2, cy = y + (SIDE_H * s) / 2;
+  const ax = Math.max(x, Math.min(x + SIDE_W * s, tx)), ay = Math.max(y, Math.min(y + SIDE_H * s, ty)), k = easeOut(part(t, 3, 7), 2);
+  return (
+    <Svg>
+      <g opacity={A.o}>
+        <path d={`M${ax} ${ay} Q${(ax + tx) / 2} ${(ay + ty) / 2 + 26} ${ax + (tx - ax) * k} ${ay + (ty - ay) * k}`} fill="none" stroke={SK.redDeep} strokeWidth={9} strokeLinecap="round" />
+        <path d={`M${ax} ${ay} Q${(ax + tx) / 2} ${(ay + ty) / 2 + 26} ${ax + (tx - ax) * k} ${ay + (ty - ay) * k}`} fill="none" stroke={SK.redHi} strokeWidth={5} strokeLinecap="round" />
+        <g transform={`translate(${cx} ${cy + A.dy}) scale(${A.s * s}) translate(${-SIDE_W / 2} ${-SIDE_H / 2})`}>
+          <Cream w={SIDE_W} h={SIDE_H} r={14} />
+          <rect x={10} y={10} width={SIDE_W - 20} height={74} rx={10} fill={SK.red} />
+          <T x={30} y={48} px={56} fill={SK.cream} ls={6}>{name}</T>
+          <g transform={`translate(${SIDE_W - 64} 47) rotate(8)`}><SealMark text="凡人" size={58} col={SK.gold} fg={SK.redDeep} /></g>
+          <T x={30} y={116} px={32} fill={SK.ink} opacity={row}>{note}</T>
+        </g>
       </g>
     </Svg>
   );
@@ -303,8 +334,10 @@ const CasePic = ({ kind, t }: { kind: CaseKind; t: number }) => {
 };
 /** A CASE FILE pulled from the cabinet: a cream folder tied with red thread: its number, the couple's names, a little
  *  picture, a note typed on, and the verdict stamped across it `stampAt` frames in. Centre at (x, y), about 560 x 420. */
-export const CaseFile: React.FC<{ f: number; from: number; to: number; x: number; y: number; kind: CaseKind; stampAt: number; rot?: number }> = ({ f, from, to, x, y, kind, stampAt, rot = -3 }) => {
-  const A = tug(f, from, to, 6, 5); if (!A) return null;
+export const CASE_W = 580, CASE_H = 400;
+export const CaseFile: React.FC<{ f: number; from: number; to: number; x: number; y: number; kind: CaseKind; stampAt: number; rot?: number; s?: number; seal?: boolean }> = ({ f, from, to, x, y, kind, stampAt, rot = -3, s = 1, seal }) => {
+  const A0 = tug(f, from, to, 6, 5); if (!A0) return null;
+  const A = { ...A0, s: A0.s * s };
   const c = CASES[kind], t = f - from, W = 580, H = 400, st = slap(t, stampAt, 2.0), note = part(t, 8, 6);
   return (
     <Svg>
@@ -325,6 +358,12 @@ export const CaseFile: React.FC<{ f: number; from: number; to: number; x: number
           </g>
         )}
         <g transform={`translate(${W * 0.2} 0)`}><Knot s={0.45} /></g>
+        {seal && slap(t, 12, 1.8) > 0 && (
+          <g transform={`translate(${W - 58} ${H - 52}) rotate(-12) scale(${slap(t, 12, 1.8) * 0.66})`} opacity={0.95}>
+            <circle r={58} fill={SK.cream} /><circle r={58} fill="none" stroke={SK.red} strokeWidth={7} /><circle r={46} fill="none" stroke={SK.red} strokeWidth={2.5} />
+            <T x={0} y={2} px={44} fill={SK.red} anchor="middle" ls={2}>传说</T>
+          </g>
+        )}
       </g>
     </Svg>
   );
