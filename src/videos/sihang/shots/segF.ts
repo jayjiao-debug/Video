@@ -61,7 +61,7 @@ export const SEG: Segment = {
       if (offer > 0.5 && f < f03 - 4) w.prop("tin").put(tinAt, {});
       // 老班长: takes the tin and opens it on the bayonet's point; then the paper; then the cloth
       const tinL = f >= f03 - 4 && f < f04 - 10, paper = f >= f04 - 10 && f < f07 - 12, cloth = f >= f07 - 12;
-      const hl = rel(LB, LF, -0.14, 0.92, 0.3), hr = rel(LB, LF, 0.14, 0.92, 0.3);
+      const hl = rel(LB, LF, -0.14, 0.92, 0.4), hr = rel(LB, LF, 0.14, 0.92, 0.4);
       put(w, f, LAO, {
         at: LB, facing: LF, id: 3, who: "lb",
         expr: [[S.from, "dry"], [f03 - 2, "halfLaugh"], [x03 + 8, "dry"], [f04 - 2, "alert"], [x04 + 2, "dry"], [f06 - 2, "kind"], [f07 - 4, "heavy"], [x07 + 6, "kind"]],

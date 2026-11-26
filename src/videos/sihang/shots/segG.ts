@@ -37,8 +37,8 @@ export const SEG: Segment = {
     w.set.param("time", "siege"); w.set.param("lamp", "mid"); w.set.param("hole", true);
     w.set.param("flash", Math.min(1, flash + near));
     w.set.param("dust", Math.min(1, ky(f, [[S.from, 0.4], [STOP, 0.4], [STOP + 90, 0.18]]) + 0.8 * hit(f, NEAR, 70)));
-    const LB = P("hall", -6.3, 0, 1.85), MC = P("hall", -5.55, 0, 3.05), RUN = P("hall", -1.95, 0, 2.75);
-    const LBH = [-6.3, 1.16, 1.85], MCH = [-5.55, 1.1, 3.05], RUNH = [-1.95, 1.12, 2.75], HOLE = [-7.2, 1.2, 1.25];
+    const LB = P("hall", -6.3, 0, 1.85), MC = P("hall", -5.1, 0, 3.0), RUN = P("hall", -1.95, 0, 2.75);
+    const LBH = [-6.3, 1.16, 1.85], MCH = [-5.1, 1.1, 3.0], RUNH = [-1.95, 1.12, 2.75], HOLE = [-7.2, 1.2, 1.25];
     const EYE = [-3.7, 1.5, 2.3];
     let camera = povCam(f, [
       ck("hall", S.from, [-3.3, 1.5, 2.1], HOLE, 62),
@@ -59,11 +59,11 @@ export const SEG: Segment = {
     camera = shake(camera, f, NEAR, 30, 3, 20);
     w.setCamera(camera);
     // --- the gun in the hole
-    w.prop("mg").put(P("hall", -6.72, 0.76, 1.25), { yaw: -Math.PI / 2 });
+    w.prop("mg").put(P("hall", -6.68, 0.86, 1.25), { yaw: -Math.PI / 2 });
     // --- 老班长: on the gun, his back to her -> a half turn for his line -> back -> G07: turned to the boy, hands down
     const turn = Math.max(win(f, g01 - 10, g02 - 2, 8, 8), ky(f, [[e05 + 2, 0], [e05 + 16, 1]]));
     const lbF = -2.25 + (0.85 + 2.25) * turn;
-    const gunR = P("hall", -6.28, 1.05, 1.3), gunL = P("hall", -6.62, 1.1, 1.27);
+    const gunR = P("hall", -6.24, 1.15, 1.3), gunL = P("hall", -6.58, 1.2, 1.27);
     const onGun = 1 - ky(f, [[e05 + 2, 0], [e05 + 14, 1]]);
     put(w, f, LAO, {
       at: LB, facing: lbF, id: 3, who: "lb",

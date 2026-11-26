@@ -12,13 +12,14 @@
 import { seg, line, type Segment } from "../story";
 import { povCam, punchIn } from "../cam";
 import { MANCANG, LAO_RIFLE, XIE, MEN } from "../people";
+import { LANES, lanePath } from "./segA";
 import { P, ck, put, loopWalk, sit, startOf, screenOf, endOf, ky, rel, h, frag, V, win } from "./kit";
 import { NameStrip, QuoteSeal, Letter, type LetterCol } from "../hud/skin";
 
 const S = seg("B");
 /** the letter so far, column by column (the frames each is written on come from the lines) */
 export const letterCols = (): LetterCol[] => {
-  const b11a = screenOf("B11", 1), b11b = screenOf("B11", 2), e11 = endOf("B11");
+  const b11a = startOf("B11") + 8, b11b = screenOf("B11", 1), e11 = endOf("B11");
   return [
     { text: "娘：", from: b11a + 8, to: b11a + 22 },
     { text: "儿在上海。", from: b11a + 26, to: b11b - 2 },
@@ -58,8 +59,8 @@ export const SEG: Segment = {
     camera = punchIn(camera, f, b01 - 2, { k: 1, len: 2 });
     w.setCamera(camera);
     // --- the haulers go on in the back (fewer: it is late)
-    [[-5.6, 0.0], [-4.3, 6.5], [5.3, 5.0]].forEach(([x, ph], i) => {
-      const leg = loopWalk([P("hall", x, 0, 3.4), P("hall", x + 0.25, 0, -4.7), P("hall", x + 0.75, 0, -4.7), P("hall", x + 0.9, 0, 3.4)], 1.0, f / 30 + ph);
+    [LANES[0], LANES[3], LANES[4]].forEach((L, i) => {
+      const leg = loopWalk(lanePath(L), 1.0, f / 30 + L[4]);
       put(w, f, MEN[i], { at: leg.at, facing: leg.facing, id: 20 + i, pose: leg.pose, expr: "calm" }, `h${i}`);
     });
     // --- 老班长 on his sack, a hand on his rifle; he tips his chin at the desk on "一个坐着的"
@@ -84,13 +85,13 @@ export const SEG: Segment = {
     const mcAt = atSlit ? SLIT : MC0, mcF = atSlit ? -2.56 + 2.1 * turn : 0.14;
     put(w, f, MANCANG, {
       at: mcAt, facing: mcF, id: 1, who: "mc",
-      expr: [[S.from, "bright"], [startOf("B02") - 2, "shy"], [b03, "bright"], [b06 - 4, "awe"], [b09 - 4, "shy"], [b11 - 2, "think"], [screenOf("B11", 1) + 4, "bright"], [startOf("B12") - 2, "think"]],
+      expr: [[S.from, "bright"], [startOf("B02") - 2, "shy"], [b03, "bright"], [b06 - 4, "awe"], [b09 - 4, "shy"], [b11 - 2, "think"], [startOf("B11") + 12, "bright"], [startOf("B12") - 2, "think"]],
       hands: f >= b06 - 2 && f < e06 ? [rel(SLIT, -2.56, -0.1, 1.2, 0.42), null] : undefined,
-      gaze: f >= startOf("B12") ? 1 : 0, lookDown: f >= screenOf("B11", 1) && f < startOf("B12") ? -8 : 0,
+      gaze: f >= startOf("B12") ? 1 : 0, lookDown: f >= startOf("B11") + 8 && f < startOf("B12") ? -8 : 0,
     });
     w.update();
     // --- over the picture
-    const cols = letterCols(), paperK = win(f, screenOf("B11", 1) - 4, S.to - 2, 12, 10);
+    const cols = letterCols(), paperK = win(f, startOf("B11") + 4, S.to - 2, 12, 10);
     const overlays = frag(
       h(NameStrip, { key: "lb", f, from: b03 + 8, to: e03 + 12, x: 420, y: 520, name: "老班长", sub: "在淞沪打了三个月", invented: true, rot: 2 }),
       h(NameStrip, { key: "xj", f, from: b04 + 4, to: b05 + 62, x: 400, y: 500, name: "谢晋元", sub: "三十二岁 · 广东蕉岭 · 中校团附" }),

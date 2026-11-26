@@ -15,7 +15,10 @@ import { P, ck, put, loopWalk, sit, startOf, endOf, ky, rel, h, frag, sec, win, 
 import { Tally, UnitCard, NameStrip, Fact, Count } from "../hud/skin";
 
 const S = seg("A");
-const LANES: [number, number, number][] = [[-5.6, 0, 0.0], [-4.3, 0, 6.5], [-1.7, 0, 3.1], [3.4, 0, 9.2], [5.3, 0, 5.0], [6.4, 0, 12.5]];
+// the haulers' lanes: [x going south, x coming back, north end z, south end z, phase s]. Each keeps clear of the columns,
+// the seats, the desk, the crates and the sack stacks (the clearance checker's findings, 26 Nov)
+export const LANES: [number, number, number, number, number][] = [[-4.45, -3.9, 3.0, -4.4, 0.0], [-4.45, -3.9, 3.0, -4.4, 7.4], [-1.75, -1.05, 3.0, -3.9, 3.1], [4.45, 4.95, 2.2, -4.2, 9.2], [5.6, 6.15, 2.0, -4.4, 5.0], [5.6, 6.15, 2.0, -4.4, 12.3]];
+export const lanePath = ([xa, xb, zn, zs]: [number, number, number, number, number]) => [P("hall", xa, 0, zn), P("hall", xa + 0.05, 0, zs), P("hall", xb, 0, zs), P("hall", xb - 0.05, 0, zn)];
 export const UNIT = { from: line("A06").from - sec(3.55), to: line("A06").from - 4 };
 
 export const SEG: Segment = {
@@ -43,8 +46,8 @@ export const SEG: Segment = {
     const wp = whip(camera, f, S.to - 3, { dir: 1, deg: 30 }); camera = wp.cam;
     w.setCamera(camera);
     // --- the haulers: six men walking sacks from the piles to the windows and back, each in his own lane
-    LANES.forEach(([x, , ph], i) => {
-      const leg = loopWalk([P("hall", x, 0, 3.4), P("hall", x + 0.25, 0, -4.7), P("hall", x + 0.75, 0, -4.7), P("hall", x + 0.9, 0, 3.4)], 1.05, f / 30 + ph);
+    LANES.forEach((L, i) => {
+      const leg = loopWalk(lanePath(L), 1.05, f / 30 + L[4]);
       put(w, f, MEN[i % MEN.length], { at: leg.at, facing: leg.facing, id: 20 + i, pose: leg.pose, expr: "calm" }, `h${i}`);
     });
     // 老班长, further along the wall, cleaning nothing yet: he sits and watches (he is scene B's)

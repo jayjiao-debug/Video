@@ -168,7 +168,7 @@
      "en": "...To outsiders, we all say eight hundred."
     }
    ],
-   "after": 2.9,
+   "after": 2.7,
    "emo": "lower, a glance round, a small grin",
    "pic": "The title: a 号外 front page slams on."
   },
@@ -189,7 +189,7 @@
      "en": "This time the barn really is full."
     }
    ],
-   "pre": 3.7,
+   "pre": 3.3,
    "after": 1.5,
    "emo": "shy, pleased with his own joke",
    "pic": "The unit's clipping card over the live picture, then his banner; the sacks piled to the ceiling."
@@ -334,7 +334,7 @@
     }
    ],
    "pre": 0.4,
-   "after": 2.1,
+   "after": 1.6,
    "emo": "a breath, a country boy",
    "pic": "His face half warm lamp, half cold neon. Hold two seconds."
   },
@@ -378,16 +378,12 @@
    "en": "My ma. ...Write: Ma, I'm in Shanghai. I live in a foreign-style building, very tall.",
    "screens": [
     {
-     "zh": "我娘。",
-     "en": "My ma."
-    },
-    {
-     "zh": "……就写：娘，儿在上海。",
-     "en": "...Write: Ma, I'm in Shanghai. I live in"
+     "zh": "我娘。……就写：娘，儿在上海。",
+     "en": "My ma. ...Write: Ma, I'm in Shanghai. I live"
     },
     {
      "zh": "住的洋楼，高得很。",
-     "en": "a foreign-style building, very tall."
+     "en": "in a foreign-style building, very tall."
     }
    ],
    "after": 0.6,
@@ -407,7 +403,7 @@
      "en": "The rest, I'll think about."
     }
    ],
-   "after": 1.7,
+   "after": 1.3,
    "emo": "scratching his helmet",
    "pic": "The REC clock runs to 27 Oct 08:20; the neon goes out, daylight."
   },
@@ -424,7 +420,7 @@
      "en": "East side. Ready."
     }
    ],
-   "pre": 4.6,
+   "pre": 4.2,
    "after": 1.1,
    "emo": "low, level",
    "pic": "First the south bank: roofs and balconies full of people; a blackboard. Then the attack: the camera ducks behind the sacks."
@@ -490,7 +486,7 @@
      "en": "...Thank you."
     }
    ],
-   "after": 2.3,
+   "after": 1.6,
    "pic": "Silence. Then cheering from across the river.",
    "tts": "[whispers, shaken] ……谢谢。",
    "whisper": true
@@ -614,7 +610,7 @@
      "en": "You..."
     }
    ],
-   "after": 8.2,
+   "after": 7.6,
    "pic": "The window is empty. A blast below; dust drifts in. Hold. White words: 陈树生，二十一岁。 满仓 takes off his helmet. Black.",
    "tts": "[startled, breaking off] 你——"
   },
@@ -635,7 +631,7 @@
      "en": "Never say there is only one battalion."
     }
    ],
-   "pre": 2.2,
+   "pre": 1.6,
    "after": 1.7,
    "emo": "gruff, low, to the wounded on the stretchers",
    "pic": "The wounded are carried out at the back. His banner; the seal 原话."
@@ -653,7 +649,7 @@
      "en": "So that's Commander Xie."
     }
    ],
-   "pre": 2.0,
+   "pre": 1.6,
    "after": 0.4,
    "emo": "a whisper of surprise",
    "pic": "The companies stand in rows. The battalion commander brings forward the man who was writing."
@@ -672,7 +668,7 @@
     }
    ],
    "pre": 0.5,
-   "after": 2.8,
+   "after": 2.4,
    "emo": "level, to every man",
    "pic": "The seal 原话 · 10月28日晚. Paper is handed down the rows; pencils."
   },
@@ -689,7 +685,7 @@
      "en": "Shall we go on?"
     }
    ],
-   "pre": 0.9,
+   "pre": 0.7,
    "pic": "From here no effects: one slow push.",
    "tts": "[softly] 接着写？"
   },
@@ -767,7 +763,7 @@
      "en": "will rest easy when she hears it."
     }
    ],
-   "after": 1.7,
+   "after": 1.2,
    "emo": "simple, sure; nobody laughs"
   },
   {
@@ -788,7 +784,7 @@
     }
    ],
    "pre": 0.3,
-   "after": 3.8,
+   "after": 3.0,
    "emo": "aside, quiet",
    "pic": "满仓 presses a thumbprint in lamp soot. The push ends on three lines and the print."
   },
@@ -805,7 +801,7 @@
      "en": "Reporter eats first."
     }
    ],
-   "pre": 4.2,
+   "pre": 3.8,
    "after": 0.4,
    "emo": "generous, grinning",
    "pic": "A rope through the wall hole: sacks of bread, biscuits, tins, medicine. He holds a tin out to the lens."
@@ -928,7 +924,7 @@
      "en": "A window, courtesy of the enemy."
     }
    ],
-   "pre": 3.8,
+   "pre": 3.2,
    "after": 0.8,
    "emo": "dry, loud over the guns",
    "pic": "Searchlights, shells. The west wall is holed; he sets the machine gun in the new hole."
@@ -981,7 +977,7 @@
      "en": "home to cut the rice!"
     }
    ],
-   "after": 2.6,
+   "after": 2.2,
    "emo": "shouting, almost laughing",
    "pic": "The fourth line, shaky. The battery: 7%. Midnight: the field telephone rings."
   },
@@ -998,7 +994,7 @@
      "en": "Orders: the whole battalion withdraws into the Settlement!"
     }
    ],
-   "pre": 1.7,
+   "pre": 1.5,
    "after": 0.6,
    "emo": "out of breath, loud"
   },
@@ -1030,7 +1026,7 @@
      "en": "It's an order."
     }
    ],
-   "after": 2.8,
+   "after": 2.4,
    "emo": "flat, heavy",
    "pic": "谢晋元 looks back at the building. A searchlight whites the lens out."
   },
@@ -1047,8 +1043,8 @@
      "en": "Head down!"
     }
    ],
-   "pre": 2.6,
-   "after": 2.4,
+   "pre": 2.2,
+   "after": 2.0,
    "emo": "a shout",
    "pic": "The bridge under searchlights; they run in batches; his hand presses the camera down."
   },
@@ -1065,7 +1061,7 @@
      "en": "Reporter. The letter."
     }
    ],
-   "pre": 3.2,
+   "pre": 3.0,
    "after": 0.6,
    "emo": "out of breath, small",
    "pic": "South side. Rifles are piled up; he holds his a second, then lets go. The goods slip: four lines and a thumbprint."
@@ -1083,7 +1079,7 @@
      "en": "I've got it."
     }
    ],
-   "after": 1.7,
+   "after": 1.5,
    "pic": "The battery: 2%, the red lamp blinking.",
    "tts": "[softly, steady] 放心。"
   },

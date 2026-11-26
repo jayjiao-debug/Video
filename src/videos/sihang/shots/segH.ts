@@ -68,8 +68,8 @@ export const SEG: Segment = {
         head: turned ? { dy: -0.1 * down } : undefined,
       });
       // others ahead of them, backs, running
-      [[1.7, 7.5, 3], [-2.3, 10.5, 4], [0.4, 14.0, 5], [2.6, 17.5, 6]].forEach(([x, d, m], i) => {
-        const z = zc - d - (f - S.from) * 0.012 * (i + 1);
+      [[1.7, 5.5, 3], [-2.3, 8.0, 4], [0.9, 10.5, 5], [2.6, 13.0, 6]].forEach(([x, d, m], i) => {
+        const z = zc - d - (f - S.from) * 0.006 * (i + 1);
         put(w, f, MEN[m], { at: P("bridge", x, 0, z), facing: Math.PI, id: 70 + i, turn: 1, pose: { kind: "walk", phase: ((((20 - z) / 1.5 + i * 0.3) % 1) + 1) % 1, stride: 0.42, amount: 1 } as never, expr: "alert" }, `r${i}`);
       });
       w.update();
@@ -77,14 +77,14 @@ export const SEG: Segment = {
       // ------------------------------------------------------------------------------------------ the south end
       const LAY = h02 - 34;
       w.set.param("beam", north ? 0.8 : 0.5); w.set.param("tracer", 0); w.set.param("flash", 0.15);
-      const MC0 = P("bridge", 0.75, 0, -21.0), GAPH = [0.2, 1.1, -24.0];
+      const MC0 = P("bridge", 0.3, 0, -21.0), GAPH = [0.2, 1.1, -24.0];
       const EYE = [0.3, 1.5, -19.5], NEWS = P("bridge", 2.75, 0, -23.35), NEWSH = [2.75, 1.22, -23.35];
       const camS = povCam(f, [
-        ck("bridge", CUT, [0.3, 1.5, -16.6], [0.9, 0.8, -21.4], 60),
-        ck("bridge", LAY - 20, [0.3, 1.5, -18.6], [1.15, 0.7, -21.05], 58),
-        ck("bridge", LAY + 12, [0.3, 1.5, -19.2], [1.1, 0.75, -21.05], 56),
-        ck("bridge", h02 - 6, EYE, [0.75, 1.1, -21.0], 54),
-        ck("bridge", e03 + 8, EYE, [0.75, 1.1, -21.0], 52),
+        ck("bridge", CUT, [0.3, 1.5, -16.6], [0.7, 0.8, -21.4], 60),
+        ck("bridge", LAY - 20, [0.3, 1.5, -18.6], [0.8, 0.7, -21.1], 58),
+        ck("bridge", LAY + 12, [0.3, 1.5, -19.2], [0.75, 0.75, -21.1], 56),
+        ck("bridge", h02 - 6, EYE, [0.3, 1.1, -21.0], 54),
+        ck("bridge", e03 + 8, EYE, [0.3, 1.1, -21.0], 52),
         ck("bridge", e03 + 34, EYE, GAPH, 52),
         ck("bridge", h04 - 12, EYE, GAPH, 50),
         ck("bridge", h04 - 2, EYE, NEWSH, 40),
@@ -99,14 +99,14 @@ export const SEG: Segment = {
       camera = wp.cam; if (wp.post) post = { ...post, ...wp.post };
       w.setCamera(camera);
       // the pile, the two British soldiers (plain khaki: no badge, no flag)
-      w.prop("rifles").put(P("bridge", 1.75, 0, -21.1), {});
+      w.prop("rifles").put(P("bridge", 1.25, 0, -21.3), {});
       put(w, f, BRIT_A, { at: P("bridge", -2.25, 0, -21.6), facing: 0.5, id: 80, expr: "calm" });
       put(w, f, BRIT_B, { at: P("bridge", -1.25, 0, -23.7), facing: 0.6, id: 81, expr: "calm" });
       // 满仓: at the pile, looking at his rifle -> lays it down -> turns to her -> nods -> walks through the gap
       const armed = f < LAY, lay = win(f, LAY - 10, LAY + 16, 8, 10);
       const WALK = e03 + 16, leg = walkAlong([MC0, P("bridge", 0.25, 0, -22.7), P("bridge", 0.1, 0, -27.5)], 1.25, (f - WALK) / 30);
       const toHer = ky(f, [[LAY + 14, 0], [LAY + 28, 1]]);
-      const mcF = f >= WALK ? leg.facing : 1.35 + (-0.33 - 1.35) * toHer;
+      const mcF = f >= WALK ? leg.facing : 1.88 * (1 - toHer);
       const mcAt = f >= WALK ? leg.at : MC0;
       const nod = hit(f, e03 + 4, 14);
       put(w, f, armed ? MANCANG_RIFLE : MANCANG, {
