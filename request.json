@@ -1,10 +1,12 @@
 {
- "id": "yuelao-voices-01",
+ "id": "yuelao-voices-02",
  "own_branch": true,
  "items": [
-  {"type": "voices", "name": "zh_old_male", "lang": "zh", "gender": "male", "age": "old", "n": 30},
-  {"type": "voices", "name": "zh_mid_female", "lang": "zh", "gender": "female", "age": "middle_aged", "n": 25},
-  {"type": "voices", "name": "zh_young_female", "lang": "zh", "gender": "female", "age": "young", "n": 30},
-  {"type": "voices", "name": "zh_young_male", "lang": "zh", "gender": "male", "age": "young", "n": 30}
+  {"type": "voices", "name": "martin", "lang": "zh", "search": "Martin Li", "n": 10},
+  {"type": "voices", "name": "old1", "lang": "zh", "search": "old man", "gender": "male", "n": 20},
+  {"type": "voices", "name": "old2", "lang": "zh", "search": "grandpa", "n": 15},
+  {"type": "voices", "name": "old3", "lang": "zh", "search": "elderly", "n": 15},
+  {"type": "voices", "name": "old4", "lang": "zh", "search": "老", "gender": "male", "n": 20},
+  {"type": "voices", "name": "char", "lang": "zh", "gender": "male", "use_case": "characters_animation", "n": 25}
  ]
 }
