@@ -129,3 +129,19 @@ export const through = (f: number, keys: [number, THREE.Vector3][]): THREE.Vecto
 };
 /** the shortest turn from angle a to b, k of the way */
 export const turnTo = (a: number, b: number, k: number) => { let d = (b - a) % (2 * Math.PI); if (d > Math.PI) d -= 2 * Math.PI; if (d < -Math.PI) d += 2 * Math.PI; return a + d * k; };
+
+// ---- A SHOT'S CAMERA BY WHAT IS WHERE ON THE FRAME (cam.ts lensCam): each key says where the lens is and which world
+// point sits on which px of the 1080 x 1920 frame; her hand's breathing goes on top (mood, amp, walk).
+import { lensCam, handheld } from "../cam";
+import type { LensKey, HandO } from "../../../kit/day/cam";
+export type ShotKey = { f: number; pos: readonly number[] | ((f: number) => readonly number[]); at: readonly number[] | THREE.Vector3 | ((f: number) => THREE.Vector3 | readonly number[]); sx: number; sy: number; fov: number; roll?: number };
+export const shotCam = (place: Place, f: number, keys: ShotKey[], o: HandO = {}) => {
+  const off = ISLAND[place];
+  const pt = (p: readonly number[] | THREE.Vector3, local: boolean): [number, number, number] => p instanceof THREE.Vector3 ? [p.x, p.y, p.z] : [p[0] + (local ? off : 0), p[1], p[2]];
+  const ks: LensKey[] = keys.map((k) => ({
+    f: k.f, sx: k.sx, sy: k.sy, fov: k.fov, roll: k.roll,
+    pos: typeof k.pos === "function" ? (g: number) => pt((k.pos as (f: number) => readonly number[])(g), true) : pt(k.pos, true),
+    at: typeof k.at === "function" ? (g: number) => pt((k.at as (f: number) => THREE.Vector3 | readonly number[])(g), true) : pt(k.at, true),
+  }));
+  return handheld(lensCam(f, ks), f, o);
+};

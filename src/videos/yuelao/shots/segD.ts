@@ -1,63 +1,126 @@
-// SCENE D · 11:00. THE ORDER: the burner smokes: a rush prayer from the 月老 temple. He runs over; the mother's voice
-// comes out of the smoke (her daughter is 30, works every night, "I am not getting up until it is done"); the order slip
-// builds on screen. He picks the case: 林小满, tonight. He pushes the spool at the lens and hurries her out.
-// CAMERA: a whip to the burner as he runs; she steps in on the smoke; he comes up to the lens with the spool and leaves
-// past her shoulder.
+// SCENE D · 11:00. THE RUSH ORDER. He is still drooping at the cabinet when the burner by the door begins to smoke: a
+// prayer from the 月老 temple, marked urgent. He runs to it. The mother appears in the smoke, small, kneeling on a
+// cloud, praying at him (her daughter is thirty, works every night, will not look for anyone); then she bows right
+// down: "I am not getting up until it is done". The smoke gathers into the order slip, which drops into his hands:
+// 林小满, tonight. He tucks the slip away, pulls a spool from his robe, and tosses it at her lens (hold the thread): follow me.
+// CAMERA PLAN (her eyes, one take from scene C; 17 s, four moves):
+//   open     LOOK AT him small before his open drawers      wide (scene C's last frame; the clock races)   still
+//   来单了    him running across the room                    he grows as he passes her                     a pan right with him to the burner
+//   D02-D03  the two of them: he on the left, the vision    medium two-shot                                still (the acting is theirs)
+//            in the smoke on the right
+//   就她了    him with the slip; the order's card beside    medium, he is on the right                     a step to the right as he turns to her with it
+//   跟我来    the spool thrown at the lens                   it fills the frame                             still; THE JOIN (the spool comes away from her lens in scene E)
+import * as THREE from "three";
 import { seg, type Segment } from "../story";
-import { povCam, whip, whipSmear } from "../cam";
-import { P, ck, lead, startOf, endOf, wordAt, ky, h, frag, hit, walkAlong, faceTo, v3, rel, inHand } from "./kit";
-import { OrderSlip, Hua } from "../hud/skin";
+import { toScreen } from "../cam";
+import { P, startOf, endOf, wordAt, ky, rel, V, smooth, walkAlong, hang, faceTo, v3, through, turnTo, hit, shotCam, inHand, VERBS, wv, type ShotKey } from "./kit";
+import { act, YL, MAMA_MINI, wring, flail, type MoodKey } from "./act";
+import { orderSlip, spoolLens, draw, type Fx } from "./fx";
+import { droop, FLAT } from "./thread";
+import { CAM_C1, cabinetMess } from "./segC";
 
 const S = seg("D");
+const BASE = P("office", -2.1, 0, -0.3), BURN = P("office", 1.66, 0, 0.78), SMOKE = P("office", 2.3, 0, 1.0), HEAD = 1.195;
+const RUN = [BASE, P("office", -1.2, 0, -0.55), P("office", 0.2, 0, -0.6), P("office", 1.3, 0, 0.25), BURN];
+const CAMB: [number, number, number] = [0.95, 1.5, 3.0], CAMS: [number, number, number] = [1.2, 1.5, 2.75];
 export const SEG: Segment = {
   id: "D", from: S.from, to: S.to, enter() {}, exit() {},
   pose(w, f) {
-    w.setPlace("office"); w.set.param("tangle", 0.42); w.set.param("kpi", 0);
+    w.setPlace("office"); w.set.param("tangle", 0.46); w.set.param("kpi", 0);
     const d01 = startOf("D01"), d02 = startOf("D02"), d03 = startOf("D03"), e03 = endOf("D03"), d04 = startOf("D04"), d05 = startOf("D05"), e05 = endOf("D05");
-    w.set.param("smoke", ky(f, [[S.from + 2, 0], [d01, 1], [e03, 1], [d04 + 20, 0.25]]));
-    const CAB = P("office", -1.95, 0, -0.35), BURN = P("office", 1.7, 0, 0.4), NEAR = P("office", 0.75, 0, 1.75);
-    const run = walkAlong([CAB, P("office", -0.4, 0, 0.3), BURN], 3.0, (f - (d01 - 4)) / 30, {});
-    const come = d05 - 8, out = e05 + 2;
-    const leg2 = f >= out ? walkAlong([NEAR, P("office", 0.75, 0, 2.6), P("office", 0.7, 0, 3.6)], 2.2, (f - out) / 30, {}) : f >= come ? walkAlong([BURN, NEAR], 2.0, (f - come) / 30, {}) : null;
-    const camA = povCam(f, [
-      ck("office", S.from, [-0.6, 1.48, 1.3], [-1.95, 1.36, -0.35], 55),
-      ck("office", d01 - 6, [-0.6, 1.48, 1.3], [-1.95, 1.3, -0.35], 55),
-    ], { mood: "calm", amp: 0.7 });
-    const camB = povCam(f, [
-      ck("office", d01, [0.1, 1.5, 2.45], [1.55, 1.05, 0.6], 56),
-      ck("office", d02 + 10, [0.25, 1.48, 2.3], [1.2, 1.1, 0.6], 54),
-      ck("office", d04 - 4, [0.25, 1.48, 2.3], [1.2, 1.1, 0.6], 54),
-      ck("office", d04 + 8, [0.2, 1.48, 2.4], [1.6, 1.02, 0.45], 54),
-      ck("office", come, [0.2, 1.48, 2.4], [1.6, 1.02, 0.45], 54),
-      ck("office", come + 14, [0.2, 1.48, 2.5], [0.75, 1.0, 1.75], 56),
-      ck("office", out + 2, [0.2, 1.48, 2.5], [0.75, 1.0, 1.75], 56),
-      ck("office", out + 22, [0.15, 1.5, 2.55], [0.9, 1.1, 3.0], 58),
-    ], { mood: "calm", amp: 0.8, walk: [[d01, 0], [d02, 0.3], [d02 + 10, 0], [out, 0], [out + 10, 0.6]] });
-    const Wp = whip(camA, f, d01 - 5, { dir: 1, to: camB });
-    const camera = f < d01 - 5 ? camA : Wp.cam;
+    const urgent = wordAt("D01", "加急"), thirty = wordAt("D02", "三十"), overtime = wordAt("D02", "天天"), nobody = wordAt("D02", "就是"), notUp = wordAt("D03", "我就"), her = wordAt("D04", "林小满"), tonight = wordAt("D04", "今晚"), must = wordAt("D04", "必须"), follow = wordAt("D05", "跟我");
+    const puff = S.from + 8, go = d01 - 9, speed = 3.4, arrive = go + Math.ceil((VERBS.walkTime(RUN, speed)) * 30), fall = e03 + 3, got = fall + 10, thrown = e05 + 2, land = thrown + 12;
+    w.set.param("smoke", ky(f, [[puff, 0], [puff + 12, 0.8], [d02 - 8, 1], [e03, 1], [got, 0.3], [S.to, 0.2]]));
+    // ---------------------------------------------------------------------------------------------- where he is
+    const leg = walkAlong(RUN, speed, (f - go) / 30), moving = leg.moving && f >= go;
+    const at = f < go ? BASE.clone() : leg.at.clone();
+    const headAt = (g: number) => (g < go ? BASE : walkAlong(RUN, speed, (g - go) / 30).at).clone().add(V(0, HEAD, 0));
+    // ---------------------------------------------------------------------------------------------- the camera
+    const c1 = { pos: wv("office", CAM_C1.pos), look: wv("office", CAM_C1.look), fov: CAM_C1.fov }, s1 = toScreen(c1, [BASE.x, HEAD, BASE.z]);
+    const keys: ShotKey[] = [
+      { f: S.from, pos: CAM_C1.pos, at: [BASE.x, HEAD, BASE.z], sx: s1.x, sy: s1.y, fov: CAM_C1.fov },
+      { f: go, pos: CAM_C1.pos, at: [BASE.x, HEAD, BASE.z], sx: s1.x, sy: s1.y, fov: CAM_C1.fov },
+      { f: go + 20, pos: [0.0, 1.5, 2.0], at: headAt, sx: 520, sy: 880, fov: 58 },
+      { f: arrive + 4, pos: CAMB, at: headAt, sx: 285, sy: 930, fov: 54 },
+      { f: got - 6, pos: CAMB, at: [BURN.x, HEAD, BURN.z], sx: 285, sy: 930, fov: 54 },
+      { f: got + 10, pos: CAMS, at: [BURN.x, HEAD, BURN.z], sx: 770, sy: 900, fov: 54 },
+      { f: thrown, pos: CAMS, at: [BURN.x, HEAD, BURN.z], sx: 770, sy: 900, fov: 54 },
+      { f: land, pos: [1.21, 1.5, 2.81], at: [BURN.x, HEAD, BURN.z], sx: 770, sy: 880, fov: 54 },
+    ];
+    const camera = shotCam("office", f, keys, { mood: "calm", amp: 0.6, walk: [[S.from, 0], [go, 0], [go + 6, 0.5], [arrive, 0.5], [arrive + 6, 0], [got - 6, 0], [got, 0.3], [got + 10, 0]] });
     w.setCamera(camera);
     const camP = v3(camera.pos);
-    const leg = leg2 ?? run, walking = leg.pose.kind === "walk";
-    const facing = walking ? leg.facing : f < d04 - 6 ? faceTo(leg.at, P("office", 2.3, 0, 1.0)) * 0.55 + faceTo(leg.at, camP) * 0.45 : faceTo(leg.at, camP);
-    const slipK = ky(f, [[d04 - 10, 0], [d04 - 2, 1], [d05 - 12, 1], [d05 - 6, 0]]), give = ky(f, [[come + 10, 0], [come + 18, 1], [out, 1], [out + 6, 0]]);
-    const at = leg.at;
-    const hands = give > 0.02 ? [rel(at, facing, -0.05, 0.62 + 0.42 * give, 0.1 + 0.34 * give), null] as [typeof at, null] : slipK > 0.02 && !walking ? [null, rel(at, facing, 0.14, 0.6 + 0.2 * slipK, 0.26)] as [null, typeof at] : undefined;
-    const r = lead(w, f, {
-      at, facing, pose: walking ? leg.pose : undefined, hands,
-      expr: [[S.from, "sag"], [S.from + 8, "wonder"], [d01 - 2, "shout"], [d02 - 2, "look"], [d02 + 50, "worry"], [d03 - 2, "panic"], [d04 - 4, "proud"], [wordAt("D04", "今晚") - 2, "shout"], [d05 - 2, "beam"], [out, "proud"]],
-      head: { dy: 0.06 * hit(f, d04, 8) + 0.05 * hit(f, wordAt("D04", "今晚"), 8) },
-      lookDown: 8 * ky(f, [[d02, 0], [d02 + 10, 1], [d04 - 8, 1], [d04 - 2, 0]]),
+    // ---------------------------------------------------------------------------------------------- 月老
+    const front = faceTo(at, camP), atBurner = f >= arrive;
+    const listen = ky(f, [[arrive + 2, 0], [arrive + 10, 1], [got - 4, 1], [got + 6, 0]]);     // turned a little to the smoke
+    const facing = moving ? leg.facing : turnTo(front, faceTo(BURN, SMOKE), 0.38 * listen);
+    const H = (dx: number, y: number, z: number) => rel(at, facing, dx, y, z), hangR = hang(at, facing, 0), hangL = hang(at, facing, 1);
+    const sag = ky(f, [[S.from, 1], [puff + 2, 1], [puff + 8, 0]]), pointK = ky(f, [[urgent - 5, 0], [urgent + 2, 1], [d02 - 4, 1], [d02 + 6, 0]]);
+    const worryK = ky(f, [[d02 + 8, 0], [d02 + 18, 1], [notUp + 6, 1], [notUp + 12, 0]]), alarm = ky(f, [[notUp + 8, 0], [notUp + 14, 1], [fall - 2, 1], [fall + 4, 0]]);
+    const lensPt = camP.clone().add(v3(camera.look).sub(camP).normalize().multiplyScalar(0.16)).add(V(0, -0.02, 0));
+    const K0: [number, THREE.Vector3][] = [
+      [got - 8, hangR], [got, H(-0.08, 0.9, 0.27)], [d04 - 3, H(-0.08, 0.9, 0.27)], [d04 + 4, H(-0.17, 1.02, 0.3)], [her - 12, H(-0.17, 1.02, 0.3)], [her - 3, H(-0.07, 0.9, 0.28)],
+      [tonight - 4, H(-0.07, 0.9, 0.28)], [tonight + 4, H(-0.16, 0.8, 0.24)], [d05 - 10, H(-0.16, 0.8, 0.24)], [d05 - 3, H(-0.03, 0.8, 0.2)], [d05 + 2, H(-0.03, 0.8, 0.2)],
+      [d05 + 11, H(-0.12, 0.96, 0.3)], [follow, H(-0.12, 0.96, 0.3)], [follow + 9, H(-0.22, 0.7, 0.02)], [thrown - 4, H(-0.22, 0.7, 0.02)], [thrown, H(-0.13, 1.0, 0.36)], [thrown + 10, H(-0.1, 0.92, 0.32)],
+    ];
+    const K1: [number, THREE.Vector3][] = [
+      [got - 8, hangL], [got, H(0.08, 0.9, 0.27)], [d04 - 3, H(0.08, 0.9, 0.27)], [d04 + 4, hangL], [her - 12, hangL], [her - 3, H(0.07, 0.9, 0.28)],
+      [tonight - 4, H(0.07, 0.9, 0.28)], [tonight + 3, H(0.2, 0.9, 0.2)], [must - 2, H(0.2, 0.9, 0.2)], [must + 2, H(0.21, 1.0 , 0.22)], [must + 7, H(0.2, 0.9, 0.2)], [d05 - 6, H(0.2, 0.9, 0.2)], [d05 + 2, hangL], [follow, hangL], [follow + 8, H(0.24, 0.96, 0.2)], [thrown + 10, H(0.24, 0.96, 0.2)],
+    ];
+    const hands: [THREE.Vector3 | null, THREE.Vector3 | null] | undefined = moving ? undefined
+      : f >= got - 8 ? [through(f, K0), through(f, K1)]
+      : alarm > 0.02 ? flail(w, at, facing, f, alarm, 0.3, 1.0) as [THREE.Vector3, THREE.Vector3]
+      : pointK > 0.02 ? [null, hangL.clone().lerp(H(0.31, 0.98, 0.14), smooth(pointK))]
+      : worryK > 0.02 ? wring(at, facing, f, worryK, 0.68) as [THREE.Vector3, THREE.Vector3] : undefined;
+    const faces: MoodKey[] = [
+      [S.from, "lost"], [puff + 5, "wonder", "take", 0.7], [d01 - 2, "shout"], [arrive + 2, "peer"], [urgent - 1, "shout", "take", 0.6], [d02 + 8, "look"],
+      [thirty + 6, "worry"], [overtime + 12, "sheepish"], [nobody + 14, "wry"], [d03 + 6, "worry"], [notUp + 12, "panic", "take"], [fall + 2, "peer"],
+      [d04 - 2, "resolve"], [her - 4, "peer"], [her + 12, "eager"], [tonight - 2, "shout"], [d05 - 3, "eager"], [follow - 2, "proud"],
+    ];
+    const r = act(w, f, YL, {
+      at, facing, faces, pose: moving ? leg.pose : undefined, hands,
+      lookDown: 10 * sag + (f >= her - 6 && f < her + 12 ? 10 : 0) - 8 * ky(f, [[fall, 0], [fall + 4, 1], [got - 2, 1], [got + 2, 0]]),
+      gaze: f < puff + 4 ? undefined : f < go ? 1 : atBurner && f < got - 6 && !(f >= d01 - 4 && f < d02 - 6) ? gazeSide(w, at, SMOKE) : f >= her - 6 && f < her + 10 ? 0 : undefined,
+      lean: { pitch: 6 * sag - 6 * ky(f, [[follow + 2, 0], [follow + 9, 1], [thrown - 3, 1], [thrown + 2, -1.2], [thrown + 10, 0]]) },
+      head: { dy: -0.06 * sag + 0.05 * hit(f, d04, 8) + 0.06 * hit(f, must, 7), tilt: 6 * listen * (f < got - 6 ? 1 : 0) },
     });
+    // ---------------------------------------------------------------------------------------------- the vision in the smoke
+    const seen = f >= d02 - 7 && f < fall + 2;
+    if (seen) {
+      const s = 0.42, bob = 0.012 * Math.sin(f * 0.11), mAt = SMOKE.clone().add(V(0, 0.98 + bob, 0)), mFace = faceTo(SMOKE, BURN) * 0.62 + faceTo(SMOKE, camP) * 0.38;
+      const down = ky(f, [[notUp + 6, 0], [notUp + 14, 1]]), pray = 0.5 + 0.5 * Math.sin(f * 0.21), bow = Math.max(down, 0.28 * pray * (f < d03 - 4 ? 1 : 0.3));
+      const mh = (dx: number, y: number, z: number) => rel(mAt, mFace, dx * s, y * s, z * s);
+      act(w, f, MAMA_MINI, {
+        at: mAt, facing: mFace,
+        faces: [[S.from, "plead"], [overtime - 2, "grumble"], [nobody - 2, "plead"], [d03 - 2, "shout"], [notUp + 10, "resolve"]],
+        hands: [mh(-0.03, 0.86 - 0.1 * bow, 0.27 + 0.05 * bow), mh(0.03, 0.86 - 0.1 * bow, 0.27 + 0.05 * bow)],
+        lean: { pitch: 30 * bow }, lookDown: 26 * bow, talkGaze: 0,
+        head: f < d02 - 3 ? VERBS.accent("pop", f, d02 - 7) : undefined,
+      });
+      w.prop("cloud").put(mAt.clone().add(V(0, 0.115, 0)), { yaw: 0.3 });
+    }
     w.update();
-    if (slipK > 0.3 && !walking && !give) inHand(w, "slip", r, 1, { dy: 0.04, yaw: facing });
-    if (give > 0.3) inHand(w, "spool", r, 0, { dy: 0.0, yaw: facing });
-    const overlays = frag(
-      whipSmear(Wp.smear, 1),
-      h(Hua, { key: "a", f, from: wordAt("D01", "加急") - 1, to: d02 + 6, text: "加急！", x: 300, y: 620, px: 130, rot: -8 }),
-      h(OrderSlip, { key: "s", f, from: d02 + 8, to: d04 + 6, x: 300, y: 660 }),
-      h(Hua, { key: "b", f, from: wordAt("D03", "不起来") - 1, to: e03 + 6, text: "妈妈跪了", x: 740, y: 1120, px: 92, rot: 6, col: "#f8efd8" }),
-      h(Hua, { key: "c", f, from: wordAt("D04", "今晚") - 1, to: d05 - 4, text: "今晚必须成！", x: 540, y: 600, px: 100, rot: -4 }),
-    );
-    return { camera, overlays, post: Wp.post };
+    // ---------------------------------------------------------------------------------------------- the slip, the spool
+    if (f >= fall && f < got) {
+      const u = (f - fall) / (got - fall), from = SMOKE.clone().add(V(0, 1.5, 0)), to = r.handWorld(0).clone().lerp(r.handWorld(1), 0.5).add(V(0, -0.12, 0)), p = from.lerp(to, smooth(u));
+      w.prop("slip").put(p.add(V(0.06 * Math.sin(u * 9), 0, 0)), { yaw: facing, roll: 0.5 * Math.sin(u * 8) * (1 - u), pitch: -0.3 * Math.sin(u * 5) * (1 - u) });
+    } else if (f >= got && f < d05 - 3) {
+      const one = f >= d04 - 3 && f < her - 12 || f >= tonight - 2, hp = one ? r.handWorld(0) : r.handWorld(0).clone().lerp(r.handWorld(1), 0.5);
+      w.prop("slip").put(hp.add(V(0, one ? -0.05 : -0.12, 0)).add(V(Math.sin(facing), 0, Math.cos(facing)).multiplyScalar(0.015)), { yaw: facing, pitch: -0.15 });
+    }
+    // the spool: out of his robe, shown, thrown underhand at her lens, its thread paying out behind it from his fingers
+    if (f >= d05 + 2 && f < thrown) inHand(w, "spool", r, 0, { dy: -0.03, yaw: facing });
+    else if (f >= thrown) {
+      const u = Math.min(1, (f - thrown) / (land - thrown)), from = r.handWorld(0), p = from.clone().lerp(lensPt, u); p.y += 0.16 * 4 * u * (1 - u);
+      w.prop("spool").put(p, { yaw: facing + 7 * u, pitch: 1.3 + 9 * u });
+      w.props.thread("pay", droop(from, p, 0.05 + 0.1 * u, FLAT, { n: 8 }), { r: 0.006 });
+    }
+    cabinetMess(w, f);
+    // ---------------------------------------------------------------------------------------------- over the picture
+    const FX: Fx[] = [orderSlip(f, { from: d04 + 6, to: d05 - 4, x: 322, y: 556, s: 0.8 })];
+    const cover = ky(f, [[land - 4, 0], [land, 0.85], [land + 2, 1]]);
+    return { camera, overlays: [draw(f, FX), spoolLens(cover)], shown: FX, post: { bloom: 0.5 } };
   },
 };
+/** which way the eyes go to look at a world point (screen side) */
+const gazeSide = (w: { project(p: THREE.Vector3): { x: number; y: number } }, at: THREE.Vector3, to: THREE.Vector3) => (w.project(to.clone().setY(1.2)).x > w.project(at.clone().setY(1.2)).x ? 1 : -1);

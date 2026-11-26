@@ -374,12 +374,12 @@ export const Disclaimer: React.FC<{ f: number; from: number; to: number; y: numb
   return <Svg><g opacity={L.k}><T x={x} y={y} px={30} fill={SK.cream} anchor="middle" stroke="rgba(20,6,4,0.75)" sw={8}>{text}</T></g></Svg>;
 };
 /** THE ORDER SLIP (scene D): the prayer arrives as a red order slip: 加急 · the temple, her name, the mother's demands ticking in */
-export const OrderSlip: React.FC<{ f: number; from: number; to: number; x: number; y: number }> = ({ f, from, to, x, y }) => {
+export const OrderSlip: React.FC<{ f: number; from: number; to: number; x: number; y: number; s?: number }> = ({ f, from, to, x, y, s = 1 }) => {
   const A = tug(f, from, to, 7, 6); if (!A) return null;
   const t = f - from, W = 520, H = 470, rows = ["姓名：林小满（女，30）", "职业：程序员（天天加班）", "要求：有房 · 有车 · 一米八", "备注：今年必须成！！"];
   return (
     <Svg>
-      <g opacity={A.o} transform={`translate(${x} ${y + A.dy}) rotate(3) scale(${A.s}) translate(${-W / 2} ${-H / 2})`}>
+      <g opacity={A.o} transform={`translate(${x} ${y + A.dy}) rotate(3) scale(${A.s * s}) translate(${-W / 2} ${-H / 2})`}>
         <RedPaper w={W} h={H} seed={21} />
         <T x={W / 2} y={62} px={54} fill={SK.gold} anchor="middle" ls={6}>月老庙 · 求姻缘</T>
         <g transform={`translate(${W - 78} 62) rotate(14) scale(${slap(t, 9, 1.9) || 0.001})`}><SealMark text="加急" size={84} col={SK.gold} fg={SK.redDeep} /></g>
@@ -405,4 +405,22 @@ export const Snaps: React.FC<{ f: number; from: number; to: number; x: number; y
 export const EndLine: React.FC<{ f: number; from: number; to: number; rows: string[] }> = ({ f, from, to, rows }) => {
   const L = life(f, from, to, 10, 1); if (!L) return null;
   return <Svg><g opacity={L.arrive}>{rows.map((r, i) => <T key={i} x={540} y={900 + i * 64} px={i === 0 ? 40 : 30} fill={i === 0 ? SK.cream : "#b9ad98"} anchor="middle">{r}</T>)}</g></Svg>;
+};
+
+/** THE SPOOL OVER THE LENS (the join of scenes D and E): he pushes the spool of red thread right into her lens: the
+ *  wound thread fills the frame (k 0..1), turn by turn, then the dark of its core. Drawn over the picture. */
+export const SpoolLens: React.FC<{ k: number }> = ({ k }) => {
+  if (k <= 0.001) return null;
+  const e = Math.min(1, k), R = 180 + 1900 * e * e, cx = 540, cy = 1000, n = 26;
+  return (
+    <Svg>
+      <g opacity={Math.min(1, e * 2.5)}>
+        <circle cx={cx} cy={cy} r={R} fill="#b3261c" />
+        {Array.from({ length: n }, (_, i) => <circle key={i} cx={cx} cy={cy} r={R * (0.14 + (0.86 * i) / n)} fill="none" stroke={i % 2 ? "#8f1a12" : "#d8362a"} strokeWidth={Math.max(3, R * 0.012)} opacity={0.75} />)}
+        <circle cx={cx} cy={cy} r={R * 0.13} fill="#2a1410" />
+        <circle cx={cx} cy={cy} r={R} fill="none" stroke="#c9a063" strokeWidth={Math.max(10, R * 0.05)} />
+      </g>
+      {e > 0.9 ? <rect x={0} y={0} width={1080} height={1920} fill="#8f1a12" opacity={(e - 0.9) * 10} /> : null}
+    </Svg>
+  );
 };

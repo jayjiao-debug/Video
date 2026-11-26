@@ -18,7 +18,7 @@ import { hash } from "../../group/story";
 import { setSeat } from "../../../kit/acc/garb";
 import type { Seat } from "../../../kit/day/verbs";
 import { FPS, line, type Speaker } from "../story";
-import { FACES, YUELAO, XIAOMAN, MA, XIANGQIN, RIDER, type Person } from "../people";
+import { FACES, YUELAO, XIAOMAN, MA, MA_MINI, XIANGQIN, RIDER, type Person } from "../people";
 import type { World } from "../world";
 import { VERBS, V, rel, hang, saying, speak, smooth, clamp01, wordAt } from "./kit";
 
@@ -46,6 +46,8 @@ export const YL: Profile = { person: YUELAO, id: 1, who: "yl", rest: "worry", bl
 export const XM: Profile = { person: XIAOMAN, id: 2, who: "xm", rest: "flat", blinkK: 0.62, restless: 0.08, talkHead: 0.4, amp: 0.5, lean: { pitch: 5 }, hide: ["phone"] };
 /** 小满妈: loud, pleading */
 export const MAMA: Profile = { person: MA, id: 3, who: "ma", rest: "plead", blinkK: 1, restless: 0.2, talkHead: 1.3, amp: 1 };
+/** her vision in the smoke (scene D) */
+export const MAMA_MINI: Profile = { person: MA_MINI, id: 6, who: "ma", rest: "plead", blinkK: 1, restless: 0.1, talkHead: 1.3, amp: 1 };
 /** 相亲男: upright, polite, a clerk's small nods */
 export const XQ: Profile = { person: XIANGQIN, id: 4, who: "xq", rest: "polite", blinkK: 0.9, restless: 0.25, talkHead: 0.6, amp: 0.6, lean: { pitch: -3 }, hide: ["phone"] };
 /** 骑手: young, kind, a little shy; bouncy */

@@ -71,6 +71,8 @@ export const MA: Person = {
   acc: () => [softBrows({ weight: 3.2, col: "#4a4448" }), ageLines({ k: 0.4 }), cheeks({ k: 0.3 })],
   limbs: { hand: SKIN.warm, arm: COL.plum }, legs: { leg: "#5a4d5a", foot: "#3a3034" },
 };
+/** the mother as the vision in the incense smoke (scene D): the same woman, 0.42 of her size */
+export const MA_MINI: Person = { ...MA, name: "ma_mini", scale: 0.42 };
 export const XIANGQIN: Person = {
   name: "xiangqin", scale: 1.0, expr: face("neutral", "smile", "neutral") as unknown as Expr,
   look: modern(3301, { top: "jacket", topCol: COL.navy, inner: "#f2f2f0", hair: "side", bottom: "chinos", botCol: "#7a7466", width: 0.98, shoes: "#3a2c24" }),

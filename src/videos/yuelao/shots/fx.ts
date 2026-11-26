@@ -6,7 +6,7 @@
 // never repeats the subtitle, at most one every 8 seconds; cards belong to the sources' voice (facts, files, seals).
 import React from "react";
 import { FRAME_9x16, rectOf, slots, fit, type Rect } from "../../../kit/overlay/frame";
-import { Hua, FateStamp, OS, CaseFile, Disclaimer, OrderSlip, Snaps, SideCard, SIDE_W, SIDE_H, CASE_W, CASE_H, type CaseKind } from "../hud/skin";
+import { SpoolLens, Hua, FateStamp, OS, CaseFile, Disclaimer, OrderSlip, Snaps, SideCard, SIDE_W, SIDE_H, CASE_W, CASE_H, type CaseKind } from "../hud/skin";
 
 export type Fx = { what: string; kind: "card" | "effect"; from: number; to: number; rect: Rect; node: React.ReactNode };
 const h = React.createElement;
@@ -37,8 +37,10 @@ export const caseFile = (f: number, o: { from: number; to: number; x: number; y:
 export const disclaimer = (f: number, o: { from: number; to: number; y: number; text: string; x?: number }): Fx =>
   ({ what: "注「纯属演绎」", kind: "card", from: o.from, to: o.to, rect: rectOf(o.x ?? 540, o.y, em(o.text) * 30 + 16, 44), node: h(Disclaimer, { key: `dc${o.from}`, f, ...o }) });
 /** the temple's order slip, centred on (x, y) */
-export const orderSlip = (f: number, o: { from: number; to: number; x: number; y: number }): Fx =>
-  ({ what: "加急单", kind: "card", from: o.from, to: o.to, rect: turned(o.x + 3, o.y + 5, 528, 480, 3), node: h(OrderSlip, { key: `ord${o.from}`, f, ...o }) });
+export const orderSlip = (f: number, o: { from: number; to: number; x: number; y: number; s?: number }): Fx =>
+  ({ what: "加急单", kind: "card", from: o.from, to: o.to, rect: turned(o.x + 3, o.y + 5, 528 * (o.s ?? 1), 480 * (o.s ?? 1), 3), node: h(OrderSlip, { key: `ord${o.from}`, f, ...o }) });
+/** the spool pushed into her lens (k 0..1): the join of D and E */
+export const spoolLens = (k: number) => h(SpoolLens, { key: "spoolLens", k });
 /** the snapped-thread counter, centred near (x + 35, y) */
 export const snaps = (f: number, o: { from: number; to: number; x: number; y: number; hits: number[] }): Fx =>
   ({ what: "计数「已断 n 根」", kind: "effect", from: o.from, to: o.to, rect: turned(o.x + 35, o.y, 360, 150, -4), node: h(Snaps, { key: `sn${o.from}`, f, ...o }) });

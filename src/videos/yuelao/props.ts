@@ -8,7 +8,7 @@ import { makeKit, Part, box, ball, V, paint, FONT, NOINK } from "../../kit/props
 
 export const RED = "#d8362a";
 
-export type PropName = "spool" | "book" | "bookShut" | "phone" | "laptop" | "bag" | "file" | "slip" | "bowl" | "moon" | "drawer" | "stack" | "wing" | "egg";
+export type PropName = "spool" | "book" | "bookShut" | "phone" | "laptop" | "bag" | "file" | "slip" | "bowl" | "moon" | "drawer" | "stack" | "wing" | "egg" | "cloud";
 export type PutO = { yaw?: number; pitch?: number; roll?: number; scale?: number };
 export type Prop = { group: THREE.Group; put(at: THREE.Vector3 | [number, number, number], o?: PutO): Prop };
 
@@ -159,6 +159,13 @@ export const buildProps = (M: Mats) => {
       });
       const m = new THREE.Mesh(new THREE.PlaneGeometry(0.075, 0.094).rotateX(-Math.PI / 2).translate(0.0375, 0, 0), new THREE.MeshBasicMaterial({ map: t, transparent: true, alphaTest: 0.4, side: THREE.DoubleSide }));
       m.layers.set(NOINK); m.name = "wing.face"; g.add(m); return g;
+    },
+    // a small auspicious cloud (the mother's vision kneels in it, in the incense smoke): soft white puffs
+    cloud: () => {
+      const g = new THREE.Group(), P = new Part(K), m = flat("#f6f1ea", 0.95);
+      for (const [x, y, z, r] of [[0, 0, 0, 0.1], [-0.11, -0.012, 0.01, 0.075], [0.11, -0.01, -0.01, 0.08], [-0.05, 0.02, 0.07, 0.07], [0.06, 0.015, 0.075, 0.066], [-0.17, -0.03, 0, 0.05], [0.18, -0.03, 0.01, 0.052], [0.0, 0.03, -0.06, 0.07]] as [number, number, number, number][])
+        P.add(m, ball(V(x, y, z), r, [1, 0.72, 1]), 0.0035);
+      return P.into(g, "cloud");
     },
     // a braised egg (the rider's extra): a small brown egg
     egg: () => {
