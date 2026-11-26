@@ -47,13 +47,21 @@ export const snaps = (f: number, o: { from: number; to: number; x: number; y: nu
 /** A SIDE CHARACTER'S CARD, travelling with the person: placed each frame in a free slot beside the face (`side`
  *  names the slot the shot wants; the next free one is taken when that one is too small). face = the person's head
  *  on screen { x, y, r } (verbs headPx); keep = boxes that must stay visible (another face). */
-export const sideCard = (f: number, o: { from: number; to: number; name: string; note: string; face: { x: number; y: number; r: number }; side?: "left" | "right" | "above" | "below"; keep?: Rect[] }): Fx => {
+export const sideCard = (f: number, o: { from: number; to: number; name: string; note: string; face: { x: number; y: number; r: number }; side?: "left" | "right" | "above" | "below"; keep?: Rect[]; at?: { x: number; y: number; s?: number } }): Fx => {
   const F = o.face, box = rectOf(F.x, F.y, F.r * 2.3, F.r * 2.3);
-  const all = slots(FRAME_9x16, box, { gap: 28, reach: 260, keep: o.keep, min: 150 });
-  const S = all.find((s) => s.name === (o.side ?? "right") && s.clear && s.w >= SIDE_W * 0.7 && s.h >= SIDE_H * 0.7) ?? all.find((s) => s.clear) ?? all[0];
-  const B = S ? fit({ w: SIDE_W + 10, h: SIDE_H + 12 }, S.r, { ax: S.name === "left" ? 1 : S.name === "right" ? 0 : 0.5, ay: S.name === "above" ? 1 : S.name === "below" ? 0 : 0.35 }) : { r: rectOf(540, 500, SIDE_W, SIDE_H), s: 1 };
-  const r = B.r, s = Math.min(1, B.s);
-  return { what: `人物卡 ${o.name}`, kind: "card", from: o.from, to: o.to, rect: r, node: h(SideCard, { key: `side${o.from}`, f, from: o.from, to: o.to, x: r.x0, y: r.y0, s, name: o.name, note: o.note, tx: F.x + (r.x0 > F.x ? F.r * 0.9 : r.x1 < F.x ? -F.r * 0.9 : 0), ty: F.y + (r.y0 > F.y + F.r ? F.r : 0) }) };
+  let r: Rect, s: number;
+  if (o.at) {
+    // the shot says where the card sits (its top-left corner and its scale)
+    s = o.at.s ?? 1; r = { x0: o.at.x, y0: o.at.y, x1: o.at.x + (SIDE_W + 10) * s, y1: o.at.y + (SIDE_H + 12) * s };
+  } else {
+    const all = slots(FRAME_9x16, box, { gap: 28, reach: 260, keep: o.keep, min: 150 });
+    const S = all.find((q) => q.name === (o.side ?? "right") && q.clear && q.w >= SIDE_W * 0.7 && q.h >= SIDE_H * 0.7) ?? all.find((q) => q.clear) ?? all[0];
+    const B = S ? fit({ w: SIDE_W + 10, h: SIDE_H + 12 }, S.r, { ax: S.name === "left" ? 1 : S.name === "right" ? 0 : 0.5, ay: S.name === "above" ? 1 : S.name === "below" ? 0 : 0.35 }) : { r: rectOf(540, 500, SIDE_W, SIDE_H), s: 1 };
+    r = B.r; s = Math.min(1, B.s);
+  }
+  // the card's thread ends on the rim of the head, on the side the card is on: never across the face
+  const ax = Math.max(r.x0, Math.min(r.x1, F.x)), ay = Math.max(r.y0, Math.min(r.y1, F.y)), d = Math.hypot(ax - F.x, ay - F.y) || 1;
+  return { what: `人物卡 ${o.name}`, kind: "card", from: o.from, to: o.to, rect: r, node: h(SideCard, { key: `side${o.from}`, f, from: o.from, to: o.to, x: r.x0, y: r.y0, s, name: o.name, note: o.note, tx: F.x + ((ax - F.x) / d) * F.r * 1.04, ty: F.y + ((ay - F.y) / d) * F.r * 1.04 }) };
 };
 /** the nodes of the effects that show on frame f, as one fragment */
 export const draw = (f: number, list: Fx[]) => h(React.Fragment, null, ...list.filter((x) => f >= x.from && f <= x.to).map((x) => x.node));

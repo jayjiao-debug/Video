@@ -66,12 +66,23 @@ export const buildProps = (M: Mats) => {
     },
     // a laptop, open (lid toward +z leaning back): put with yaw so the lid's back faces the camera or the screen faces its user
     laptop: () => {
-      const g = new THREE.Group(), P = new Part(K);
+      // the lid is its own group ("laptop.lid", hinged along the base's far edge): rotation.x -PI/2 = shut, -0.3 = the
+      // half-open lid of scene E (her face shows over it), +0.25 = open and leaning back
+      const g = new THREE.Group(), P = new Part(K), lid = new THREE.Group(), Q = new Part(K);
       P.add(flat("#b9bec8", 0.4), box(0.3, 0.014, 0.2, 0, 0.007, 0), 0.005);
-      const lid = new THREE.Matrix4().makeRotationX(-0.3).setPosition(0, 0.012, 0.1);
-      P.add(flat("#aeb4c0", 0.4), box(0.3, 0.2, 0.01, 0, 0.1, 0), 0.005, lid);
-      const scr = new THREE.Mesh(new THREE.PlaneGeometry(0.27, 0.17).rotateY(Math.PI).translate(0, 0.1, -0.006).applyMatrix4(lid), new THREE.MeshBasicMaterial({ color: "#bfe0ff" })); scr.layers.set(NOINK); scr.name = "laptop.screen";
-      P.into(g, "laptop"); g.add(scr); return g;
+      P.into(g, "laptop");
+      lid.name = "laptop.lid"; lid.position.set(0, 0.014, 0.1); lid.rotation.x = -0.3;
+      Q.add(flat("#aeb4c0", 0.4), box(0.3, 0.2, 0.01, 0, 0.1, 0.005), 0.005);
+      Q.into(lid, "laptop.lidface");
+      // the screen: a dark editor, a few lines of code, one of them underlined in red (the bug)
+      const code = paint(256, 160, (cg, w, h) => {
+        cg.fillStyle = "#1c2230"; cg.fillRect(0, 0, w, h); cg.fillStyle = "#2a3246"; cg.fillRect(0, 0, w, h * 0.1); cg.fillRect(0, 0, w * 0.1, h);
+        const cols = ["#7fd4ff", "#f2c14e", "#b6e37a", "#e8e8f0", "#f08ab0"];
+        for (let r = 0; r < 9; r++) { let x = w * (0.14 + 0.05 * ((r * 3) % 3)); for (let k = 0; k < 2 + ((r * 5) % 3); k++) { const len = w * (0.08 + 0.07 * ((r * 7 + k * 3) % 4)); cg.fillStyle = cols[(r + k * 2) % 5]; cg.fillRect(x, h * (0.16 + r * 0.09), len, h * 0.04); x += len + w * 0.03; } }
+        cg.fillStyle = "#ff4a4a"; cg.fillRect(w * 0.19, h * 0.565, w * 0.42, h * 0.02);
+      });
+      const scr = new THREE.Mesh(new THREE.PlaneGeometry(0.27, 0.17).rotateY(Math.PI).translate(0, 0.1, -0.001), new THREE.MeshBasicMaterial({ map: code })); scr.layers.set(NOINK); scr.name = "laptop.screen";
+      lid.add(scr); g.add(lid); return g;
     },
     // a takeaway bag: brown paper, twisted handles, a receipt stapled on
     bag: () => {

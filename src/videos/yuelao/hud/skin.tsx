@@ -248,6 +248,8 @@ export const SideCard: React.FC<{ f: number; from: number; to: number; x: number
   const A = tug(f, from, to, 6, 6); if (!A) return null;
   const t = f - from, row = part(t, 7, 6), cx = x + (SIDE_W * s) / 2, cy = y + (SIDE_H * s) / 2;
   const ax = Math.max(x, Math.min(x + SIDE_W * s, tx)), ay = Math.max(y, Math.min(y + SIDE_H * s, ty)), k = easeOut(part(t, 3, 7), 2);
+  // the note always fits its row: a long one is set smaller (never under 26 px)
+  const noteEm = [...note].reduce((a, c) => a + (c.charCodeAt(0) < 0x2e80 ? (c === " " ? 0.3 : 0.58) : 1), 0), notePx = Math.max(26, Math.min(32, Math.floor((SIDE_W - 60) / noteEm)));
   return (
     <Svg>
       <g opacity={A.o}>
@@ -258,7 +260,7 @@ export const SideCard: React.FC<{ f: number; from: number; to: number; x: number
           <rect x={10} y={10} width={SIDE_W - 20} height={74} rx={10} fill={SK.red} />
           <T x={30} y={48} px={56} fill={SK.cream} ls={6}>{name}</T>
           <g transform={`translate(${SIDE_W - 64} 47) rotate(8)`}><SealMark text="凡人" size={58} col={SK.gold} fg={SK.redDeep} /></g>
-          <T x={30} y={116} px={32} fill={SK.ink} opacity={row}>{note}</T>
+          <T x={30} y={116} px={notePx} fill={SK.ink} opacity={row}>{note}</T>
         </g>
       </g>
     </Svg>
@@ -376,15 +378,15 @@ export const Disclaimer: React.FC<{ f: number; from: number; to: number; y: numb
 /** THE ORDER SLIP (scene D): the prayer arrives as a red order slip: 加急 · the temple, her name, the mother's demands ticking in */
 export const OrderSlip: React.FC<{ f: number; from: number; to: number; x: number; y: number; s?: number }> = ({ f, from, to, x, y, s = 1 }) => {
   const A = tug(f, from, to, 7, 6); if (!A) return null;
-  const t = f - from, W = 520, H = 470, rows = ["姓名：林小满（女，30）", "职业：程序员（天天加班）", "要求：有房 · 有车 · 一米八", "备注：今年必须成！！"];
+  const t = f - from, W = 520, H = 470, rows = ["姓名：林小满（女，30）", "职业：程序员（天天加班）", "要求：有房、有车、一米八", "备注：今年必须成！！"];
   return (
     <Svg>
       <g opacity={A.o} transform={`translate(${x} ${y + A.dy}) rotate(3) scale(${A.s * s}) translate(${-W / 2} ${-H / 2})`}>
         <RedPaper w={W} h={H} seed={21} />
-        <T x={W / 2} y={62} px={54} fill={SK.gold} anchor="middle" ls={6}>月老庙 · 求姻缘</T>
+        <T x={40} y={62} px={46} fill={SK.gold} ls={3}>月老庙 · 求姻缘</T>
         <g transform={`translate(${W - 78} 62) rotate(14) scale(${slap(t, 9, 1.9) || 0.001})`}><SealMark text="加急" size={84} col={SK.gold} fg={SK.redDeep} /></g>
         <rect x={34} y={104} width={W - 68} height={H - 138} rx={8} fill={SK.cream} />
-        {rows.map((r, i) => { const k = part(t, 12 + i * 9, 5); return <T key={i} x={56} y={154 + i * 76} px={i === 3 ? 40 : 36} fill={i === 3 ? SK.red : SK.ink} opacity={k}>{r}</T>; })}
+        {rows.map((r, i) => { const k = part(t, 12 + i * 9, 5); return <T key={i} x={56} y={154 + i * 76} px={i === 3 ? 40 : 34} fill={i === 3 ? SK.red : SK.ink} opacity={k}>{r}</T>; })}
       </g>
     </Svg>
   );

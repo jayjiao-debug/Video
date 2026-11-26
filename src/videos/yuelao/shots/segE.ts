@@ -119,9 +119,9 @@ export const SEG: Segment = {
     });
     // ---------------------------------------------------------------------------------------------- over the picture
     const FX: Fx[] = [
-      sideCard(f, { from: S.from + 24, to: e01 + 30, name: "林小满", note: "30 岁 · 程序员 · 今天也加班", face: VERBS.headPx(w, xm), side: "above", keep: [(() => { const q = VERBS.headPx(w, r); return { x0: q.x - q.r * 1.2, y0: q.y - q.r * 1.6, x1: q.x + q.r * 1.2, y1: q.y + q.r * 1.2 }; })()] }),
+      sideCard(f, { from: S.from + 24, to: e01 + 30, name: "林小满", note: "30 岁 · 程序员 · 今天也加班", face: VERBS.headPx(w, xm), at: { x: 116, y: 486 } }),
       snaps(f, { from: hits[0] - 2, to: e06 - 8, x: 470, y: 480, hits }),
-      stamp(f, { from: wordAt("E06", "未到") + 8, to: S.to - 2, x: 470, y: 500 }),
+      stamp(f, { from: wordAt("E06", "未到") + 8, to: S.to - 2, x: 432, y: 566 }),
     ];
     const cover = ky(f, [[S.from, 1], [S.from + 3, 0.85], [S.from + 13, 0]]);
     return { camera, overlays: [draw(f, FX), spoolLens(cover)], shown: FX, post: { bloom: 0.4 } };

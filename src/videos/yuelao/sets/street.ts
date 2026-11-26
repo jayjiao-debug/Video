@@ -171,7 +171,7 @@ const shopTex = () => paint(768, 704, (g, W, H) => {
   // the counter (wood, a red strip), two bowls on it, a chopstick tube
   g.fillStyle = "#8a5a36"; g.fillRect(0, 440, W, H - 440); g.fillStyle = "#a66c40"; g.fillRect(0, 430, W, 22);
   g.fillStyle = "#b8322a"; g.fillRect(0, 500, W, 16);
-  for (const x of [200, 560]) { g.fillStyle = "#f4f0e6"; g.beginPath(); g.ellipse(x, 428, 46, 14, 0, 0, 7); g.fill(); g.fillStyle = "#c97a3a"; g.beginPath(); g.ellipse(x, 424, 38, 9, 0, 0, 7); g.fill(); blotch(g, x, 380, 40, "#ffffff", 0.3); }
+  for (const x of [96, 592]) { g.fillStyle = "#f4f0e6"; g.beginPath(); g.ellipse(x, 428, 46, 14, 0, 0, 7); g.fill(); g.fillStyle = "#c97a3a"; g.beginPath(); g.ellipse(x, 424, 38, 9, 0, 0, 7); g.fill(); blotch(g, x, 380, 40, "#ffffff", 0.3); }
   g.fillStyle = "#6a8a4a"; g.fillRect(360, 380, 26, 50);
   // a lucky cat and a red paper lantern
   g.fillStyle = "#f6f2e8"; g.beginPath(); g.arc(680, 400, 22, 0, 7); g.fill(); g.fillStyle = "#d84030"; g.fillRect(668, 410, 24, 6);
@@ -374,7 +374,7 @@ const build = (K: Kit): PlaceBuild => {
     const T = S.table, mTop = Mk.flat("#d8c8a8", 0.6), mLeg = Mk.flat("#4a4e56", 0.4), mSeat = Mk.flat("#a8744a", 0.7);
     P.add(mTop, new THREE.CylinderGeometry(T.r, T.r, 0.035, 28).translate(X(T.x), T.top - 0.0175, T.z), 0.006);
     P.add(mLeg, new THREE.CylinderGeometry(0.035, 0.035, T.top - 0.05, 10).translate(X(T.x), (T.top - 0.05) / 2 + 0.02, T.z), 0.005);
-    P.add(mLeg, new THREE.CylinderGeometry(0.22, 0.24, 0.025, 20).translate(X(T.x), 0.0125, T.z), 0.005);
+    P.add(mLeg, new THREE.CylinderGeometry(0.22, 0.24, 0.025, 44).translate(X(T.x), 0.0125, T.z), 0.005);
     for (const s of S.stools) {
       P.add(mSeat, new THREE.CylinderGeometry(0.16, 0.15, 0.04, 20).translate(X(s.x), s.top - 0.02, s.z), 0.006);
       for (let k = 0; k < 4; k++) { const a = k * Math.PI / 2 + 0.785; P.add(mLeg, bar(V(X(s.x) + 0.1 * Math.cos(a), s.top - 0.04, s.z + 0.1 * Math.sin(a)), V(X(s.x) + 0.14 * Math.cos(a), 0, s.z + 0.14 * Math.sin(a)), 0.012), 0.004); }

@@ -196,12 +196,14 @@ export const SEG: Segment = {
     }
     // ---------------------------------------------------------------------------------------------- over the picture
     // (each card is up only while he stands and shows that file: when he goes to a drawer his head passes under the spot)
-    const X = 346, Y = 540, s = 0.8, card = (from: number, to: number, kind: Parameters<typeof caseFile>[1]["kind"], stampOn: number, rot: number): Fx[] =>
-      [caseFile(f, { from, to, x: X, y: Y, s, kind, stampAt: stampOn - from, rot, seal: true }), disclaimer(f, { from: from + 10, to, x: X, y: Y + 196, text: "以上卷宗，纯属演绎" })];
+    const Y = 540, card = (from: number, to: number, kind: Parameters<typeof caseFile>[1]["kind"], stampOn: number, rot: number, s = 0.8): Fx[] => {
+      const X = 114 + 290 * s;   // its left edge stays on the phone-safe line
+      return [caseFile(f, { from, to, x: X, y: Y, s, kind, stampAt: stampOn - from, rot, seal: true }), disclaimer(f, { from: from + 10, to, x: X, y: Y + 245 * s, text: "以上卷宗，纯属演绎" })];
+    };
     const FX: Fx[] = [
       ...card(g1 + 27, b1 - 2, "niulang", wordAt("C04", "异地"), -3),
       ...card(g2 + 27, g3 - 14, "liangzhu", wordAt("C05", "变"), 2),
-      ...card(g3 + 33, g4 - 2, "baishe", kua + 4, -2),
+      ...card(g3 + 33, g4 - 2, "baishe", kua + 4, -2, 0.72),   // smaller: he stands close beside it over the bale
       ...card(g4 + 28, g5 - 2, "baodai", wordAt("C07", "绑成"), 3),
       ...card(c10 + 2, e11 + 6, "qixian", c10 + 16, -3),
     ];
