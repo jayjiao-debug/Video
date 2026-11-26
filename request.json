@@ -1,12 +1,1207 @@
 {
- "id": "yuelao-voices-02",
+ "id": "yuelao-vo-01",
  "own_branch": true,
+ "model_prefs": [
+  "eleven_v4"
+ ],
+ "words": true,
  "items": [
-  {"type": "voices", "name": "martin", "lang": "zh", "search": "Martin Li", "n": 10},
-  {"type": "voices", "name": "old1", "lang": "zh", "search": "old man", "gender": "male", "n": 20},
-  {"type": "voices", "name": "old2", "lang": "zh", "search": "grandpa", "n": 15},
-  {"type": "voices", "name": "old3", "lang": "zh", "search": "elderly", "n": 15},
-  {"type": "voices", "name": "old4", "lang": "zh", "search": "老", "gender": "male", "n": 20},
-  {"type": "voices", "name": "char", "lang": "zh", "gender": "male", "use_case": "characters_animation", "n": 25}
+  {
+   "type": "dialogue",
+   "name": "A01",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[surprised, amused] 月老？您被线绑架了？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "A02",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[urgent, hissing] 别动！一动，三对离婚。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "A03",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[suspicious] 等等……[nervous, fawning] 您是天庭派来考核的吧？",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "A04",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[confused] 啊？我其实是——",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "A05",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[cutting in, eager] 懂！暗访。[fawning] 您记，随便记。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "B01",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[sighs] 姻缘司，上下就我一个。别人九九六，[dry] 我零零七。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "B02",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "一天绑多少对？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "B03",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "一万八千对。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "B04",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[deflated] 可一天，也散七千五。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "B05",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "现在的年轻人，线刚绑上，自己就剪了。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "B06",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "今年指标，就差一对。今晚子时截止。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "B07",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "差一对会怎样？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "B08",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[miserable] 扣仙丹。还得写检讨。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "C01",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "不过您先看看，我的老业绩！",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "C02",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[proud] 牛郎织女。我绑的！牢吧？",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "C03",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "可他们一年见一次。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "C04",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[awkward, quiet] ……异地恋，也算成。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "C05",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "梁山伯祝英台。[hesitates] ……变蝴蝶了。[quickly] 这单别记。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "C06",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "许仙白娘子。跨物种，审批走了一千年。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "C07",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "宝玉黛玉。[guilty, small] 手一抖，绑成了宝钗。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "C08",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "读者骂了我两百多年。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "C09",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "董永七仙女——[whispers] 那是玉帝的亲闺女。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "C10",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "那玉帝……",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "C11",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[flat] 扣了我三百年仙丹。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "D01",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[excited] 来单了！月老庙，加急！",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "D02",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[pleading, loud] 月老保佑！我闺女三十了，天天加班，就是不找对象！",
+     "voice": {
+      "owner": "55d99057033dbfa209e1bf6399a22dfbc7f80488a87d5dc2f701f38d5aae5675",
+      "voice_id": "gxNo8imssaxOYWaG726C",
+      "name": "Mona"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "D03",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[stubborn] 今年再不成，我就不起来了！",
+     "voice": {
+      "owner": "55d99057033dbfa209e1bf6399a22dfbc7f80488a87d5dc2f701f38d5aae5675",
+      "voice_id": "gxNo8imssaxOYWaG726C",
+      "name": "Mona"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "D04",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "就她了！林小满。今晚必须绑上。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "D05",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "您拿着线，跟我来！",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "E01",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[whispers] 嘘。凡人看不见咱们。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "E02",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[whispers, puzzled] 绑脚？不是绑手吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "E03",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "唐朝起就绑脚。绑手，是电视剧瞎改的。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "E04",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[flat, bored] 不合适。不合适。下一个。",
+     "voice": {
+      "owner": "af2e2cefdb699d43191b113f7afe70f104fd32f875cee9a8a2eb2e7618a7739c",
+      "voice_id": "5eoK8NqMBsMdqUmImHNs",
+      "name": "Yating Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "E05",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[panicking] 哎哎哎！她左滑一下，我断一根！",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "E06",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[embarrassed] 这个……您记成，缘分未到。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "F01",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "没事！她妈安排了相亲。这回稳了。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "F02",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "你好。有房吗？月薪多少？",
+     "voice": {
+      "owner": "6293b9dfc6ac413ab58d3844addcf7871b250281ecd7013106d13a2fbe6cfeef",
+      "voice_id": "MI36FIkp9wRP7cpWKPTl",
+      "name": "Evan Zhao"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "F03",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "你能接受九九六吗？",
+     "voice": {
+      "owner": "af2e2cefdb699d43191b113f7afe70f104fd32f875cee9a8a2eb2e7618a7739c",
+      "voice_id": "5eoK8NqMBsMdqUmImHNs",
+      "name": "Yating Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "F04",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "不好意思，我回个消息。",
+     "voice": {
+      "owner": "6293b9dfc6ac413ab58d3844addcf7871b250281ecd7013106d13a2fbe6cfeef",
+      "voice_id": "MI36FIkp9wRP7cpWKPTl",
+      "name": "Evan Zhao"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "F05",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "正好，我修个bug。",
+     "voice": {
+      "owner": "af2e2cefdb699d43191b113f7afe70f104fd32f875cee9a8a2eb2e7618a7739c",
+      "voice_id": "5eoK8NqMBsMdqUmImHNs",
+      "name": "Yating Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "F06",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[defeated] ……这个，也记，缘分未到。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "F07",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[pleading] 要不……您别记了，歇会儿？",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "G01",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[frantic] 线呢？我的线呢！",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "G02",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "别动别动——缠您法器上了。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "G03",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[calling out, cheerful] 林女士，您的外卖！",
+     "voice": {
+      "owner": "dd0f5bb9ac12aaca6570a8c8d9c32a6e97f7c05c673d9864fbccc662fb7b03d7",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "name": "Karo Yang"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "G04",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "谢谢。又是你啊。",
+     "voice": {
+      "owner": "af2e2cefdb699d43191b113f7afe70f104fd32f875cee9a8a2eb2e7618a7739c",
+      "voice_id": "5eoK8NqMBsMdqUmImHNs",
+      "name": "Yating Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "G05",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "还剩一个时辰。[sighs, hopeless] ……完了。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "H01",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[gently] 那您自己呢？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "H02",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[quietly] ……我？",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "H03",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[softly, slowly] 当年太忙。想着忙完这阵，就给自己绑一根。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "H04",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[soft, wry] 这一阵，忙了一千二百年。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "H05",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[very softly] 我这个……也记，缘分未到吧。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "I01",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[noticing] 等等。[puzzled] 这根线……不是我绑的。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "I02",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "早就在这儿了。让我的线，盖住了。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "I03",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[soft laugh] 我急什么呢。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "I04",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "又加班啊？今天给你多加了个蛋。",
+     "voice": {
+      "owner": "dd0f5bb9ac12aaca6570a8c8d9c32a6e97f7c05c673d9864fbccc662fb7b03d7",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "name": "Karo Yang"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "I05",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[surprised, warm] ……谢谢。你叫什么名字？",
+     "voice": {
+      "owner": "af2e2cefdb699d43191b113f7afe70f104fd32f875cee9a8a2eb2e7618a7739c",
+      "voice_id": "5eoK8NqMBsMdqUmImHNs",
+      "name": "Yating Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "I06",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[shouting, overjoyed] 成了！快记！我绑的！全是我绑的！",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "I07",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[dry] 不是早就在那儿吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "I08",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[coughs] 咳……这句，记成，缘分已到。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "J01",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[curious, hopeful] 那我的那根呢？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "J02",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[warm] 你的？早绑好了。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "J03",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[warm, slowly] 是你已经见过的人。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "Martin Li"
+     }
+    }
+   ]
+  }
  ]
 }
