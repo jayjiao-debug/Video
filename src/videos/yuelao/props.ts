@@ -8,7 +8,7 @@ import { makeKit, Part, box, ball, V, paint, FONT, NOINK } from "../../kit/props
 
 export const RED = "#d8362a";
 
-export type PropName = "spool" | "book" | "bookShut" | "phone" | "laptop" | "bag" | "file" | "slip" | "bowl" | "moon";
+export type PropName = "spool" | "book" | "bookShut" | "phone" | "laptop" | "bag" | "file" | "slip" | "bowl" | "moon" | "drawer" | "stack" | "wing" | "egg";
 export type PutO = { yaw?: number; pitch?: number; roll?: number; scale?: number };
 export type Prop = { group: THREE.Group; put(at: THREE.Vector3 | [number, number, number], o?: PutO): Prop };
 
@@ -115,6 +115,56 @@ export const buildProps = (M: Mats) => {
       for (let i = 0; i < uv.count; i++) uv.setXY(i, ps.getX(i) / 1.72 + 0.5, ps.getY(i) / 1.72 + 0.5);
       const m = new THREE.Mesh(cg0, new THREE.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false, toneMapped: false }));
       m.layers.set(NOINK); m.name = "moon.card"; m.renderOrder = 2; g.add(m); return g;
+    },
+    // A DRAWER of the case-file cabinet, pulled out: +x = out of the wall, the origin = the middle of its front face.
+    // Put it over a cell of the cabinet (sets/office.ts CAB: 0.25 wide, 0.26 tall) at (cabinetX + out, the cell's middle, its z).
+    drawer: () => {
+      const g = new THREE.Group(), P = new Part(K), wood = flat("#5e3c26", 0.75), dark = flat("#3a2216", 0.8);
+      P.add(wood, box(0.018, 0.236, 0.232, -0.009, 0, 0), 0.004);                                   // the front
+      P.add(dark, box(0.34, 0.012, 0.22, -0.188, -0.106, 0), 0.003);                                // the bottom
+      for (const sz of [-1, 1]) P.add(dark, box(0.34, 0.2, 0.012, -0.188, -0.012, sz * 0.108), 0.003);
+      P.add(flat("#eadcb8", 0.95), box(0.003, 0.058, 0.12, 0.0015, 0.066, 0), 0);                   // the label
+      P.add(flat("#b08a44", 0.45), ball(V(0.014, -0.031, 0), 0.014), 0.003);                        // the pull
+      // the files standing in it (their tops show over the sides), thread tied round each
+      for (let k = 0; k < 4; k++) {
+        const x = -0.06 - k * 0.062, tilt = new THREE.Matrix4().makeRotationZ(0.1 - 0.05 * k).setPosition(x, 0.0, 0);
+        P.add(flat(k % 2 ? "#e9dcb8" : "#dccba0", 0.95), box(0.02, 0.23, 0.19, 0, 0.02, 0), 0.003, tilt);
+        P.add(flat(RED, 0.8), box(0.024, 0.012, 0.194, 0, 0.06, 0), 0, tilt);
+      }
+      return P.into(g, "drawer");
+    },
+    // THE THICK FILE (许仙 × 白娘子: a thousand years of approvals): a bale of folders tied twice with red thread, lying flat
+    stack: () => {
+      const g = new THREE.Group(), P = new Part(K);
+      let y = 0;
+      for (let k = 0; k < 9; k++) {
+        const hgt = 0.022 + 0.006 * ((k * 5) % 3), m = new THREE.Matrix4().makeRotationY(0.07 * (((k * 7) % 5) - 2)).setPosition(0.006 * (((k * 3) % 5) - 2), y + hgt / 2, 0);
+        P.add(flat(k % 3 === 1 ? "#dccba0" : k % 3 === 2 ? "#f1e6c6" : "#e9dcb8", 0.95), new THREE.BoxGeometry(0.21, hgt, 0.27), 0.003, m);
+        y += hgt;
+      }
+      for (const z of [-0.07, 0.07]) P.add(flat(RED, 0.8), box(0.226, y + 0.012, 0.014, 0, y / 2, z), 0);
+      P.add(flat(RED, 0.8), box(0.014, y + 0.014, 0.286, 0.03, y / 2, 0), 0);
+      P.add(flat("#f8f1dc", 0.95), box(0.07, 0.003, 0.15, -0.05, y + 0.0015, 0), 0);
+      return P.into(g, "stack");
+    },
+    // one WING of a paper butterfly (梁祝): a flat paper wing (cream, a red edge, the same on both sides), hinged on its
+    // local z axis at x = 0 and reaching out along +x. Two of them, the second with yaw + PI, flap by their roll.
+    wing: () => {
+      const g = new THREE.Group();
+      const t = paint(128, 160, (cg, w, h) => {
+        cg.clearRect(0, 0, w, h);
+        const path = () => { cg.beginPath(); cg.moveTo(2, h * 0.52); cg.quadraticCurveTo(w * 0.2, h * 0.02, w * 0.92, h * 0.06); cg.quadraticCurveTo(w * 1.02, h * 0.36, w * 0.66, h * 0.5); cg.quadraticCurveTo(w * 0.98, h * 0.62, w * 0.74, h * 0.95); cg.quadraticCurveTo(w * 0.3, h * 1.0, 2, h * 0.6); cg.closePath(); };
+        path(); cg.fillStyle = "#f6c544"; cg.fill(); cg.lineWidth = 10; cg.strokeStyle = "#b02a20"; cg.stroke();
+        cg.fillStyle = "#c8382c"; cg.beginPath(); cg.arc(w * 0.62, h * 0.26, w * 0.09, 0, 7); cg.fill(); cg.beginPath(); cg.arc(w * 0.56, h * 0.76, w * 0.07, 0, 7); cg.fill();
+      });
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(0.075, 0.094).rotateX(-Math.PI / 2).translate(0.0375, 0, 0), new THREE.MeshBasicMaterial({ map: t, transparent: true, alphaTest: 0.4, side: THREE.DoubleSide }));
+      m.layers.set(NOINK); m.name = "wing.face"; g.add(m); return g;
+    },
+    // a braised egg (the rider's extra): a small brown egg
+    egg: () => {
+      const g = new THREE.Group(), P = new Part(K);
+      P.add(flat("#a8743c", 0.6), ball(V(0, 0.022, 0), 0.022, [1, 1.25, 1]), 0.003);
+      return P.into(g, "egg");
     },
     // a bowl of noodles with an egg on top
     bowl: () => {

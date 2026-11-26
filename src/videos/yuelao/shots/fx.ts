@@ -34,8 +34,8 @@ export const caseFile = (f: number, o: { from: number; to: number; x: number; y:
   return { what: `卷宗 ${o.kind}`, kind: "card", from: o.from, to: o.to, rect: turned(o.x, o.y + 4, (CASE_W + 8) * s, (CASE_H + 10) * s, o.rot ?? -3), node: h(CaseFile, { key: `cf${o.from}`, f, ...o }) };
 };
 /** the small note under the files: one line of 30 px type centred on x 540 */
-export const disclaimer = (f: number, o: { from: number; to: number; y: number; text: string }): Fx =>
-  ({ what: "注「纯属演绎」", kind: "card", from: o.from, to: o.to, rect: rectOf(540, o.y, em(o.text) * 30 + 16, 44), node: h(Disclaimer, { key: `dc${o.from}`, f, ...o }) });
+export const disclaimer = (f: number, o: { from: number; to: number; y: number; text: string; x?: number }): Fx =>
+  ({ what: "注「纯属演绎」", kind: "card", from: o.from, to: o.to, rect: rectOf(o.x ?? 540, o.y, em(o.text) * 30 + 16, 44), node: h(Disclaimer, { key: `dc${o.from}`, f, ...o }) });
 /** the temple's order slip, centred on (x, y) */
 export const orderSlip = (f: number, o: { from: number; to: number; x: number; y: number }): Fx =>
   ({ what: "加急单", kind: "card", from: o.from, to: o.to, rect: turned(o.x + 3, o.y + 5, 528, 480, 3), node: h(OrderSlip, { key: `ord${o.from}`, f, ...o }) });

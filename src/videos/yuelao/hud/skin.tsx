@@ -369,9 +369,9 @@ export const CaseFile: React.FC<{ f: number; from: number; to: number; x: number
   );
 };
 /** the note under the case files: all five are this film's invention */
-export const Disclaimer: React.FC<{ f: number; from: number; to: number; y: number; text: string }> = ({ f, from, to, y, text }) => {
+export const Disclaimer: React.FC<{ f: number; from: number; to: number; y: number; text: string; x?: number }> = ({ f, from, to, y, text, x = 540 }) => {
   const L = life(f, from, to, 6, 6); if (!L) return null;
-  return <Svg><g opacity={L.k}><T x={540} y={y} px={30} fill={SK.cream} anchor="middle" stroke="rgba(20,6,4,0.75)" sw={8}>{text}</T></g></Svg>;
+  return <Svg><g opacity={L.k}><T x={x} y={y} px={30} fill={SK.cream} anchor="middle" stroke="rgba(20,6,4,0.75)" sw={8}>{text}</T></g></Svg>;
 };
 /** THE ORDER SLIP (scene D): the prayer arrives as a red order slip: 加急 · the temple, her name, the mother's demands ticking in */
 export const OrderSlip: React.FC<{ f: number; from: number; to: number; x: number; y: number }> = ({ f, from, to, x, y }) => {

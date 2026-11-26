@@ -120,3 +120,12 @@ export const SEATS = {
   /** the lowest step in front of the tower's door, left part: he sits on its tread, feet on the pavement */
   step: seatOn(stoolSeat({ seat: STREET.steps.rise, d: STREET.steps.run }), P("street", STREET.sit.x, 0, STREET.steps.front - STREET.steps.run / 2), 0, { floor: 0 }),
 } as const;
+
+/** a point eased through keys [frame, point] (a smooth ease inside each interval; holds before the first and after the last) */
+export const through = (f: number, keys: [number, THREE.Vector3][]): THREE.Vector3 => {
+  if (f <= keys[0][0]) return keys[0][1].clone();
+  for (let i = 0; i + 1 < keys.length; i++) if (f <= keys[i + 1][0]) return keys[i][1].clone().lerp(keys[i + 1][1], smooth((f - keys[i][0]) / Math.max(1, keys[i + 1][0] - keys[i][0])));
+  return keys[keys.length - 1][1].clone();
+};
+/** the shortest turn from angle a to b, k of the way */
+export const turnTo = (a: number, b: number, k: number) => { let d = (b - a) % (2 * Math.PI); if (d > Math.PI) d -= 2 * Math.PI; if (d < -Math.PI) d += 2 * Math.PI; return a + d * k; };

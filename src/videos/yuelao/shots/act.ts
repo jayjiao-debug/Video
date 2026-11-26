@@ -63,7 +63,7 @@ export const F = (n: string): RigFace => {
   return typeof e === "string" ? { eyes: e, mouth: e, brows: e, marks: e } : { marks: e.mouth, ...e };
 };
 const same = (a: RigFace) => (a.eyes === a.mouth && a.mouth === a.brows && (a.marks ?? a.mouth) === a.eyes ? (a.eyes as Expr) : a);
-const TAKE = new Set(["shock", "aghast", "rage"]), QUIET_EYES = new Set(["sad", "deadpan", "sleep", "doze", "gloom", "down", "sigh"]), QUIET_MOUTH = new Set(["neutral", "sigh", "sad", "deadpan", "sleep", "gloom", "nervous"]);
+const TAKE = new Set(["shock", "aghast", "rage"]), QUIET_EYES = new Set(["sad", "deadpan", "sleep", "doze", "gloom", "sigh"]), QUIET_MOUTH = new Set(["neutral", "sigh", "sad", "deadpan", "sleep", "gloom", "nervous"]);
 /** how a face changes into `to` when the shot does not say: alarm = a take; a face that goes quiet = a sink; else a blink */
 const howOf = (from: RigFace, to: RigFace): RigMoodHow =>
   TAKE.has(to.eyes) || TAKE.has(to.mouth) ? "take" : QUIET_EYES.has(to.eyes) && QUIET_MOUTH.has(to.mouth) && !(QUIET_EYES.has(from.eyes) && QUIET_MOUTH.has(from.mouth)) ? "sink" : "blink";
