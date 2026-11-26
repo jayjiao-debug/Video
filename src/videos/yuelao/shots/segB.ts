@@ -14,7 +14,7 @@ export const SEG: Segment = {
   pose(w, f) {
     w.setPlace("office"); w.set.param("tangle", 0.42); w.set.param("kpi", 0); w.set.param("smoke", 0);
     const b01 = startOf("B01"), b02 = startOf("B02"), b03 = startOf("B03"), b04 = startOf("B04"), e04 = endOf("B04"), b05 = startOf("B05"), e05 = endOf("B05"), b06 = startOf("B06"), b07 = startOf("B07"), b08 = startOf("B08");
-    const go = e05 - 4, STOOL = P("office", 0.35, 0, -1.95), BOARD = P("office", 2.5, 0, -1.6);
+    const go = e05 - 4, STOOL = P("office", 0.35, 0, -1.95), BOARD = P("office", 2.35, 0, -1.4);
     const path = [STOOL, P("office", 1.5, 0, -1.95), BOARD], leg = f >= go + 8 ? walkAlong(path, 1.5, (f - go - 8) / 30, { endFacing: -0.75 }) : null;
     const rise = ky(f, [[go, 0], [go + 8, 1]]);
     const camera0 = povCam(f, [

@@ -16,7 +16,7 @@ export const SEG: Segment = {
     w.setPlace("office"); w.set.param("tangle", 0.42); w.set.param("kpi", 0); w.set.param("smoke", 0);
     const c01 = startOf("C01"), c02 = startOf("C02"), c03 = startOf("C03"), c04 = startOf("C04"), e04 = endOf("C04"), c05 = startOf("C05"), c06 = startOf("C06"), c07 = startOf("C07"), c08 = startOf("C08"), c09 = startOf("C09"), c10 = startOf("C10"), c11 = startOf("C11"), e11 = endOf("C11");
     const CAB = P("office", -1.95, 0, -0.35), go = S.from + 4;
-    const leg = walkAlong([P("office", 2.5, 0, -1.6), P("office", 1.3, 0, -0.5), P("office", -0.9, 0, -0.1), CAB], 1.9, (f - go) / 30, {});
+    const leg = walkAlong([P("office", 2.35, 0, -1.4), P("office", 1.3, 0, -0.5), P("office", -0.9, 0, -0.1), CAB], 1.9, (f - go) / 30, {});
     const walking = leg.pose.kind === "walk";
     const whisper = wordAt("C09", "那是");
     const camera0 = povCam(f, [
@@ -41,7 +41,7 @@ export const SEG: Segment = {
     const drop = ky(f, [[e11 - 4, 1], [e11 + 6, 0]]);
     const up = f >= cases[0] ? k * drop : 0, shakeK = hit(f, wordAt("C07", "抖"), 14);
     const facing = walking ? leg.facing : faceTo(CAB, camP) + 0.12;
-    const hands = !walking && up > 0.02 ? holdUp(leg.at, facing, up, 0.74 + 0.03 * Math.sin(f * 1.9) * shakeK * 3, 0.12, 0.26) : undefined;
+    const hands = !walking && up > 0.02 ? holdUp(leg.at, facing, up, 0.66 + 0.03 * Math.sin(f * 1.9) * shakeK * 3, 0.12, 0.31) : undefined;
     const sagK = (a: number, b: number) => ky(f, [[a, 0], [a + 8, 1], [b - 4, 1], [b + 4, 0]]);
     const low = Math.max(sagK(c04 - 2, e04 + 4), sagK(wordAt("C05", "变") - 2, c06 - 6), sagK(c08 - 2, c09 - 6), sagK(c11 - 2, e11 + 20));
     const r = lead(w, f, {
@@ -62,7 +62,7 @@ export const SEG: Segment = {
       h(CaseFile, { key: "3", f, from: c06, to: c07 - 6, x: X, y: Y, kind: "baishe", stampAt: wordAt("C06", "跨") - c06, rot: -2 }),
       h(CaseFile, { key: "4", f, from: c07, to: c09 - 6, x: X, y: Y, kind: "baodai", stampAt: wordAt("C07", "绑成") - c07, rot: 3 }),
       h(CaseFile, { key: "5", f, from: c09, to: e11 + 4, x: X, y: Y, kind: "qixian", stampAt: wordAt("C09", "亲闺女") - c09, rot: -3 }),
-      h(Disclaimer, { key: "d", f, from: c02 + 10, to: e11 + 4, y: 392, text: "以上卷宗，纯属演绎" }),
+      h(Disclaimer, { key: "d", f, from: c02 + 10, to: e11 + 4, y: 905, text: "以上卷宗，纯属演绎" }),
       h(Truth, { key: "t", f, from: c02 + 14, to: c03 - 2, x: 880, y: 500, kind: "传说" }),
       h(Hua, { key: "h1", f, from: wordAt("C02", "牢") - 1, to: c03 - 2, text: "牢！", x: 250, y: 1020, px: 130, rot: -8 }),
       h(Hua, { key: "h2", f, from: wordAt("C05", "这单") , to: c06 - 4, text: "别记！", x: 800, y: 1040, px: 110, rot: 7 }),
