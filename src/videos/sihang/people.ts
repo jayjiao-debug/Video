@@ -102,7 +102,7 @@ export const PEOPLE = {
 export const FACES: Record<string, Expr | RigFace> = {
   bright: face("smile", "smile", "neutral"), proud: face("smile", "grin", "neutral"), awe: face("smile", "whistle", "sad", "neutral"), shy: face("smile", "nervous", "sad", "relief"),
   think: face("focus", "neutral", "focus", "neutral"), hurt: face("neutral", "sad", "sad", "neutral"), shout: face("stern", "shock", "stern", "neutral"), steady: face("smile", "neutral", "neutral"),
-  sorrow: face("sad", "sad", "sad", "neutral"), stunned: face("shock", "neutral", "sad", "neutral"), grinShout: face("smile", "laugh", "neutral"),
+  sorrow: face("sad", "sad", "sad", "neutral"), stunned: face("smile", "shock", "sad", "neutral"), grinShout: face("smile", "laugh", "neutral"),
   dry: face("deadpan", "neutral", "neutral"), alert: face("stern", "neutral", "stern", "neutral"), kind: face("deadpan", "smile", "sad", "neutral"), heavy: face("deadpan", "sad", "sad", "neutral"), halfLaugh: face("deadpan", "smug", "sad", "neutral"),
   loud: face("neutral", "laugh", "neutral"), protest: face("smile", "sad", "sad", "neutral"), calm: face("neutral", "neutral", "neutral"), hard: face("stern", "stern", "stern"), grave: face("neutral", "neutral", "sad", "neutral"),
 };

@@ -59,6 +59,10 @@
  },
  "gap": 0.25,
  "lead": 0.1,
+ "level_target_db": -23.75,
+ "voice": {
+  "clip_gain": "scripts/sihang/voice/clip_gain.json"
+ },
  "engine": {
   "spoken": {
    "ji": "zh",

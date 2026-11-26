@@ -39,8 +39,8 @@ export const SEG: Segment = {
     let camera, overlays: React.ReactNode = null, post: Record<string, unknown> = { bloom: 0.6 };
     if (!south) {
       // ------------------------------------------------------------------------------------------------ the run
-      const burst = win(f, h01 - 12, e01 + 26, 5, 12);
-      w.set.param("beam", 1); w.set.param("tracer", burst); w.set.param("flash", 0.25 + 0.5 * burst + 0.3 * hit(f, h01 - 12, 10));
+      const burst = win(f, h01 - 22, e01 + 26, 5, 12);
+      w.set.param("beam", 1); w.set.param("tracer", burst); w.set.param("flash", 0.25 + 0.5 * burst + 0.3 * hit(f, h01 - 22, 10));
       const STOP = h01 - 6, GO = e01 + 30;
       const zc = ky(f, [[S.from, 15.5], [STOP, 6.6], [GO, 6.2], [CUT + 8, -0.5]]);
       const moving = f < STOP || f >= GO;
@@ -55,7 +55,7 @@ export const SEG: Segment = {
         ck("bridge", CUT + 8, [0.5, 1.5, zc], [0.1, 1.15, zc - 30], 62),
       ], { mood: "scared", amp: 0.9, walk: [[S.from, 1.5], [STOP, 1.5], [STOP + 6, 0], [GO, 0], [GO + 6, 1.5]] });
       camera = duck(camera, f, h01 - 2, GO - 6, { to: 0.98, len: 6 });
-      camera = shake(camera, f, h01 - 12, 10, 3, 10);
+      camera = shake(camera, f, h01 - 22, 10, 3, 10);
       w.setCamera(camera);
       // 满仓: running ahead (his back) -> stopped, turned to her, a hand pushing down -> on again
       const turned = !moving || (f >= STOP - 4 && f < GO + 4);

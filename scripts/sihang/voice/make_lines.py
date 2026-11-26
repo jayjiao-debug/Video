@@ -128,6 +128,10 @@ def main():
         "source": "script v1 (Claude Doc 采访八百壮士的一天 · 剧本 v1, 25 Nov 2026) with the changes in scripts/sihang/voice/make_lines.py",
         "title": {"zh": "采访八百壮士的一天", "en": "A Day Interviewing the Eight Hundred"},
         "speakers": SPEAKERS, "scenes": SCENES, "gap": 0.25, "lead": 0.1,
+        # the lines arrive at about -20 dBFS speech RMS; the house level is Newton's (-23.75), which the mix's +6.2 dB master gain expects
+        "level_target_db": -23.75,
+        # the hot syllables' clip gain (scripts/sihang/voice/hot.py writes it; assemble.py applies it; path from the repo root)
+        "voice": {"clip_gain": "scripts/sihang/voice/clip_gain.json"},
         "engine": {"spoken": {k: "zh" for k in SPEAKERS}, "places": ["hall", "roof", "bridge"], "title_after": "A05", "title_delay": 0.2, "title_hold": 2.5, "rate_zh": 4.0, "tail_s": 0.4},
         "lines": lines,
     }
