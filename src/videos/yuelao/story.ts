@@ -32,7 +32,7 @@ export const T = makeTimeline<Speaker, SceneId, Place, CaptionGroup, Pose>({
     F: "attempt two: the blind date", G: "rock bottom: the thread round her lens; the rider passes", H: "the turn and the quiet scene (no effects)",
     I: "the fix: the thread that was already there", J: "the button: yours was tied long ago",
   },
-  clock: { min: CLOCK_MIN, digits: { A: true, B: true, C: true, D: true, E: true, F: true, G: true, H: true, I: true, J: true } },
+  clock: { min: CLOCK_MIN, word: { A: ["年终考核日", "Review day"], B: ["天庭", "Heaven"], C: ["天庭", "Heaven"], D: ["天庭", "Heaven"], E: ["人间", "Mortal world"], F: ["人间", "Mortal world"], G: ["人间", "Mortal world"], H: ["人间", "Mortal world"], I: ["人间", "Mortal world"], J: ["人间", "Mortal world"] }, digits: { A: true, B: true, C: true, D: true, E: true, F: true, G: true, H: true, I: true, J: true } },
 });
 export const {
   SCENES, SCENE, SCENE_STAMP, SCENE_TIME, LINES, line, lineId, lineAt, lineNo, QUOTES, quote, TOTAL, SEGMENTS, segmentAt, seg,

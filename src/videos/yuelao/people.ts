@@ -10,7 +10,6 @@ import type { Expr, Look } from "../group/kit/toon";
 import type { Acc, Rig, RigCast, RigFace } from "../group/kit/rig3d";
 import { classmate } from "../group/kit/cast";
 import { addPerson as addSuPerson, type Person as SuPerson } from "../su/people";
-import { NAPE_BEARD } from "../su/acc/figure";
 import { legColours } from "../romeo/acc/figure";
 import { bushyBrows, softBrows, ageLines, cheeks, nose, shine, lashes } from "../romeo/acc/face";
 import { beard } from "../../kit/acc/facehair";
@@ -29,7 +28,7 @@ const face = (eyes: Expr, mouth: Expr, brows: Expr, marks?: Expr): RigFace => ({
 
 /** the film's colours: 朱红 is his alone */
 export const COL = {
-  red: "#d23a2a", redBand: "#f0c04a", redDeep: "#a82a20", gold: "#f0c04a", white: "#f6f3ec", whiteLo: "#dcd7cc",
+  red: "#d23a2a", redBand: "#f0c04a", redDeep: "#a82a20", gold: "#f0c04a", white: "#dfe5ee", whiteLo: "#c4ccd8",
   hoodie: "#7d8fa6", jeans: "#3d4a66", plum: "#8a5a7a", navy: "#34425e", rider: "#f2c21a", riderLo: "#3a3d46",
 } as const;
 const SKIN = { old: "#f2c9a4", fair: "#f6d9bd", warm: "#f0cfae", tan: "#e3b58d" } as const;
@@ -37,17 +36,23 @@ const SKIN = { old: "#f2c9a4", fair: "#f6d9bd", warm: "#f0cfae", tan: "#e3b58d" 
 // ------------------------------------------------------------------------------------------------------- 月老
 const YL_LOOK: Look = {
   seed: classmate(64).seed, skin: SKIN.old, top: "tee", topCol: COL.red, bottom: "chinos", botCol: COL.redDeep, shoes: "#3a2a26", shoeSole: "#221815",
-  hair: "buzz", hairCol: COL.white, part: 1, width: 1.26, head: { nTop: 2.1, nBot: 2.0, egg: 0.12 },
+  hair: "short", hairCol: COL.white, part: 1, width: 1.26, head: { nTop: 2.1, nBot: 2.0, egg: 0.12 },
+};
+/** his beard: the kit's long 3D beard hanging over the chest, but drawn on the face as a chin tuft only (no sideburns:
+ *  with white hair the kit's sideburns framed his face like a hood) */
+const longBeard = (len = 2.7, wide = 1.15): Acc => {
+  const Lg = beard({ kind: "long", col: COL.white, len, wide }), G = beard({ kind: "goatee", col: COL.white });
+  return { ...Lg, faceUnder: (G as never as { faceUnder: never }).faceUnder, sideburn: false, key: Lg.key + "|goat" } as never as Acc;
 };
 const ylAcc = (extra: Acc[] = []): Acc[] => [
   robe({ col: COL.red, band: COL.redBand, sash: COL.gold, inner: "#fff6e4" }),
-  beard({ kind: "long", col: COL.white, len: 2.5, wide: 1.05 }), moustache({ kind: "walrus", col: COL.white }),
+  longBeard(), moustache({ kind: "walrus", col: COL.white }),
   bushyBrows({ col: COL.white, weight: 4.4, droop: 1.5 }), cheeks({ k: 0.6, col: "#f08a7a" }), nose({ tint: "#f0a090" }), ageLines({ k: 0.5 }), shine(),
-  topknot({ band: COL.red, pin: COL.gold, size: 0.95 } as never),
+  topknot({ band: COL.red, pin: COL.gold, size: 1.15, pinLen: 0.3, guan: COL.red }),
   pendant({ col: COL.red, cord: COL.gold, side: 1 }),
   ...extra,
 ];
-export const YUELAO: Person = { name: "yuelao", scale: 0.98, expr: face("smile", "nervous", "sad") as unknown as Expr, look: YL_LOOK, acc: () => ylAcc(), limbs: { hand: SKIN.old, arm: COL.red }, nape: NAPE_BEARD };
+export const YUELAO: Person = { name: "yuelao", scale: 0.98, expr: face("smile", "nervous", "sad") as unknown as Expr, look: YL_LOOK, acc: () => ylAcc(), limbs: { hand: SKIN.old, arm: COL.red }, nape: false };
 
 // ------------------------------------------------------------------------------------------------------- the mortals
 const modern = (seed: number, o: Partial<Look> & Pick<Look, "top" | "topCol" | "hair">): Look => ({
@@ -73,7 +78,7 @@ export const XIANGQIN: Person = {
 };
 export const RIDER: Person = {
   name: "rider", scale: 1.0, expr: face("smile", "smile", "neutral") as unknown as Expr,
-  look: modern(3407, { top: "run", topCol: COL.rider, trim: COL.riderLo, hair: "short", bottom: "chinos", botCol: COL.riderLo, width: 0.96, skin: SKIN.tan, shoes: "#2e3038" }),
+  look: modern(3407, { top: "run", topCol: COL.rider, trim: COL.riderLo, hair: "short", bottom: "chinos", botCol: COL.riderLo, width: 0.96, skin: SKIN.fair, shoes: "#2e3038" }),
   acc: () => [hardHat({ col: COL.rider }), softBrows({ weight: 3.2, col: "#2a2428" }), cheeks({ k: 0.35 })],
   limbs: { hand: SKIN.tan, arm: COL.rider }, legs: { leg: COL.riderLo, foot: "#2e3038" },
 };

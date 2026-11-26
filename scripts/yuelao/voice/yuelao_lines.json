@@ -66,7 +66,7 @@
    "place": "street"
   }
  },
- "gap": 0.25,
+ "gap": 0.18,
  "lead": 0.1,
  "level_target_db": -23.75,
  "engine": {
@@ -103,7 +103,7 @@
      "en": "Yue Lao? Have the threads kidnapped you?"
     }
    ],
-   "pre": 1.6,
+   "pre": 1.2,
    "after": 0.15,
    "tts": "[surprised, amused] 月老？您被线绑架了？"
   },
@@ -120,7 +120,7 @@
      "en": "Don't move! One tug and three couples divorce."
     }
    ],
-   "after": 3.3,
+   "after": 3.0,
    "emo": "hissed through a thread in his teeth, dead serious",
    "tts": "[urgent, hissing] 别动！一动，三对离婚。"
   },
@@ -173,7 +173,7 @@
      "en": "Got it! Undercover. Write it all down, please."
     }
    ],
-   "after": 3.0,
+   "after": 2.6,
    "emo": "cuts her off, bowing",
    "tts": "[cutting in, eager] 懂！暗访。[fawning] 您记，随便记。"
   },
@@ -508,7 +508,7 @@
      "en": "Docked three hundred years of elixir."
     }
    ],
-   "after": 0.9,
+   "after": 0.6,
    "emo": "flat, defeated",
    "tts": "[flat] 扣了我三百年仙丹。"
   },
@@ -525,7 +525,7 @@
      "en": "An order! From my temple. Urgent!"
     }
    ],
-   "pre": 0.9,
+   "pre": 0.6,
    "emo": "jumping up",
    "tts": "[excited] 来单了！月老庙，加急！"
   },
@@ -598,7 +598,7 @@
      "en": "Hold the thread and follow me!"
     }
    ],
-   "after": 0.8,
+   "after": 0.5,
    "emo": "thrusting the spool at the lens"
   },
   {
@@ -614,7 +614,7 @@
      "en": "Shh. Mortals can't see us."
     }
    ],
-   "pre": 1.0,
+   "pre": 0.7,
    "emo": "whisper",
    "tts": "[whispers] 嘘。凡人看不见咱们。"
   },
@@ -631,7 +631,7 @@
      "en": "The ankle? Not the wrist?"
     }
    ],
-   "pre": 0.8,
+   "pre": 0.4,
    "tts": "[whispers, puzzled] 绑脚？不是绑手吗？"
   },
   {
@@ -709,7 +709,7 @@
      "en": "This one... write it down as 'not fated yet'."
     }
    ],
-   "after": 0.9,
+   "after": 0.6,
    "emo": "recovering, to the lens, a weak smile",
    "tts": "[embarrassed] 这个……您记成，缘分未到。"
   },
@@ -730,7 +730,7 @@
      "en": "a blind date. This one's safe."
     }
    ],
-   "pre": 0.9,
+   "pre": 0.6,
    "emo": "confident again"
   },
   {
@@ -792,7 +792,7 @@
      "en": "Good. I'll fix a bug."
     }
    ],
-   "after": 1.0
+   "after": 0.9
   },
   {
    "n": 41,
@@ -807,28 +807,12 @@
      "en": "...This one too. 'Not fated yet.'"
     }
    ],
+   "after": 0.8,
    "emo": "desperate",
    "tts": "[defeated] ……这个，也记，缘分未到。"
   },
   {
    "n": 42,
-   "id": "F07",
-   "scene": "F",
-   "who": "yl",
-   "zh": "要不……您别记了，歇会儿？",
-   "en": "Or... stop writing and take a break?",
-   "screens": [
-    {
-     "zh": "要不……您别记了，歇会儿？",
-     "en": "Or... stop writing and take a break?"
-    }
-   ],
-   "after": 0.8,
-   "emo": "pleading with the lens",
-   "tts": "[pleading] 要不……您别记了，歇会儿？"
-  },
-  {
-   "n": 43,
    "id": "G01",
    "scene": "G",
    "who": "yl",
@@ -840,12 +824,12 @@
      "en": "Where's the thread? My thread!"
     }
    ],
-   "pre": 0.8,
+   "pre": 0.5,
    "emo": "frantic",
    "tts": "[frantic] 线呢？我的线呢！"
   },
   {
-   "n": 44,
+   "n": 43,
    "id": "G02",
    "scene": "G",
    "who": "yl",
@@ -865,7 +849,7 @@
    "emo": "picking at the lens, close"
   },
   {
-   "n": 45,
+   "n": 44,
    "id": "G03",
    "scene": "G",
    "who": "qs",
@@ -882,7 +866,7 @@
    "tts": "[calling out, cheerful] 林女士，您的外卖！"
   },
   {
-   "n": 46,
+   "n": 45,
    "id": "G04",
    "scene": "G",
    "who": "xm",
@@ -897,7 +881,7 @@
    "emo": "tired, not unkind"
   },
   {
-   "n": 47,
+   "n": 46,
    "id": "G05",
    "scene": "G",
    "who": "yl",
@@ -913,12 +897,12 @@
      "en": "...I'm done for."
     }
    ],
-   "after": 1.2,
+   "after": 0.9,
    "emo": "sinking onto the step",
    "tts": "还剩一个时辰。[sighs, hopeless] ……完了。"
   },
   {
-   "n": 48,
+   "n": 47,
    "id": "H01",
    "scene": "H",
    "who": "ji",
@@ -931,11 +915,11 @@
     }
    ],
    "pre": 0.8,
-   "after": 1.3,
+   "after": 1.0,
    "tts": "[gently] 那您自己呢？"
   },
   {
-   "n": 49,
+   "n": 48,
    "id": "H02",
    "scene": "H",
    "who": "yl",
@@ -947,12 +931,12 @@
      "en": "...Me?"
     }
    ],
-   "after": 1.4,
+   "after": 1.0,
    "emo": "caught, very quiet",
    "tts": "[quietly] ……我？"
   },
   {
-   "n": 50,
+   "n": 49,
    "id": "H03",
    "scene": "H",
    "who": "yl",
@@ -977,7 +961,7 @@
    "tts": "[softly, slowly] 当年太忙。想着忙完这阵，就给自己绑一根。"
   },
   {
-   "n": 51,
+   "n": 50,
    "id": "H04",
    "scene": "H",
    "who": "yl",
@@ -989,12 +973,12 @@
      "en": "The rush has lasted twelve hundred years."
     }
    ],
-   "after": 1.6,
+   "after": 1.2,
    "emo": "a small dry laugh",
    "tts": "[soft, wry] 这一阵，忙了一千二百年。"
   },
   {
-   "n": 52,
+   "n": 51,
    "id": "H05",
    "scene": "H",
    "who": "yl",
@@ -1006,12 +990,12 @@
      "en": "Mine... write it down as 'not fated yet', too."
     }
    ],
-   "after": 2.2,
+   "after": 1.8,
    "emo": "the gag, soft",
    "tts": "[very softly] 我这个……也记，缘分未到吧。"
   },
   {
-   "n": 53,
+   "n": 52,
    "id": "I01",
    "scene": "I",
    "who": "yl",
@@ -1032,7 +1016,7 @@
    "tts": "[noticing] 等等。[puzzled] 这根线……不是我绑的。"
   },
   {
-   "n": 54,
+   "n": 53,
    "id": "I02",
    "scene": "I",
    "who": "yl",
@@ -1052,7 +1036,7 @@
    "emo": "wonder"
   },
   {
-   "n": 55,
+   "n": 54,
    "id": "I03",
    "scene": "I",
    "who": "yl",
@@ -1069,7 +1053,7 @@
    "tts": "[soft laugh] 我急什么呢。"
   },
   {
-   "n": 56,
+   "n": 55,
    "id": "I04",
    "scene": "I",
    "who": "qs",
@@ -1089,7 +1073,7 @@
    "emo": "shy"
   },
   {
-   "n": 57,
+   "n": 56,
    "id": "I05",
    "scene": "I",
    "who": "xm",
@@ -1101,12 +1085,12 @@
      "en": "...Thank you. What's your name?"
     }
    ],
-   "after": 1.6,
+   "after": 1.2,
    "emo": "looks up for the first time, a real smile",
    "tts": "[surprised, warm] ……谢谢。你叫什么名字？"
   },
   {
-   "n": 58,
+   "n": 57,
    "id": "I06",
    "scene": "I",
    "who": "yl",
@@ -1126,7 +1110,7 @@
    "tts": "[shouting, overjoyed] 成了！快记！我绑的！全是我绑的！"
   },
   {
-   "n": 59,
+   "n": 58,
    "id": "I07",
    "scene": "I",
    "who": "ji",
@@ -1141,7 +1125,7 @@
    "tts": "[dry] 不是早就在那儿吗？"
   },
   {
-   "n": 60,
+   "n": 59,
    "id": "I08",
    "scene": "I",
    "who": "yl",
@@ -1153,12 +1137,12 @@
      "en": "Ahem... put that down as 'fated at last'."
     }
    ],
-   "after": 1.3,
+   "after": 1.0,
    "emo": "cough, dignified",
    "tts": "[coughs] 咳……这句，记成，缘分已到。"
   },
   {
-   "n": 61,
+   "n": 60,
    "id": "J01",
    "scene": "J",
    "who": "ji",
@@ -1175,7 +1159,7 @@
    "tts": "[curious, hopeful] 那我的那根呢？"
   },
   {
-   "n": 62,
+   "n": 61,
    "id": "J02",
    "scene": "J",
    "who": "yl",
@@ -1192,7 +1176,7 @@
    "tts": "[warm] 你的？早绑好了。"
   },
   {
-   "n": 63,
+   "n": 62,
    "id": "J03",
    "scene": "J",
    "who": "yl",
@@ -1204,7 +1188,7 @@
      "en": "It's someone you have already met."
     }
    ],
-   "after": 4.2,
+   "after": 3.6,
    "emo": "warm, to the lens, slow",
    "tts": "[warm, slowly] 是你已经见过的人。"
   }

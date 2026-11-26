@@ -1,0 +1,11 @@
+{
+ "note": "采访月老的一天 cast (public ElevenLabs library voices, eleven_v4). The reporter keeps the series voice Lin. 月老 = Martin Li (the raspiest, oldest-sounding Mandarin male in the library; played the old man in 孟婆). Chosen from the library's descriptions on 26 Nov 2026 with nobody listening: the owner's ear is the test.",
+ "cast": {
+  "ji": {"name": "Lin", "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a", "voice_id": "I23uc91tu5zY2PA1tKEN"},
+  "yl": {"name": "Martin Li", "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99", "voice_id": "WuLq5z7nEcrhppO0ZQJw"},
+  "xm": {"name": "Yating Lin", "owner": "af2e2cefdb699d43191b113f7afe70f104fd32f875cee9a8a2eb2e7618a7739c", "voice_id": "5eoK8NqMBsMdqUmImHNs"},
+  "ma": {"name": "Mona", "owner": "55d99057033dbfa209e1bf6399a22dfbc7f80488a87d5dc2f701f38d5aae5675", "voice_id": "gxNo8imssaxOYWaG726C"},
+  "xq": {"name": "Evan Zhao", "owner": "6293b9dfc6ac413ab58d3844addcf7871b250281ecd7013106d13a2fbe6cfeef", "voice_id": "MI36FIkp9wRP7cpWKPTl"},
+  "qs": {"name": "Karo Yang", "owner": "dd0f5bb9ac12aaca6570a8c8d9c32a6e97f7c05c673d9864fbccc662fb7b03d7", "voice_id": "5mZxJZhSmJTjL7GoYfYI"}
+ }
+}

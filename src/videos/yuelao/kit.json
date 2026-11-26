@@ -1,12 +1,48 @@
 {
-  "film": "yuelao",
-  "composition": "YuelaoFilm",
-  "dir": "src/videos/yuelao",
-  "story": "story.ts",
-  "hooks": "kit.world.ts",
-  "entries": { "overlay": "Film.tsx", "segFile": "shots/seg{SEG}" },
-  "tsc": ["world.ts", "people.ts", "places.ts", "props.ts", "sets/index.ts", "preview/look.ts", "preview/people_lineup.ts"],
-  "domOnly": ["hud/"],
-  "langs": ["zh"],
-  "work": "/home/user/yuelao_work"
+ "film": "yuelao",
+ "composition": "YuelaoFilm",
+ "dir": "src/videos/yuelao",
+ "story": "story.ts",
+ "hooks": "kit.world.ts",
+ "entries": {
+  "overlay": "Film.tsx",
+  "segFile": "shots/seg{SEG}"
+ },
+ "tsc": [
+  "world.ts",
+  "story.ts",
+  "cam.ts",
+  "people.ts",
+  "places.ts",
+  "props.ts",
+  "freeze.ts",
+  "beats.ts",
+  "sets/index.ts",
+  "hud.tsx",
+  "hud/skin.tsx",
+  "fx.tsx",
+  "Film.tsx",
+  "kit.world.ts",
+  "shots/kit.ts",
+  "shots/segA.ts",
+  "shots/segB.ts",
+  "shots/segC.ts",
+  "shots/segD.ts",
+  "shots/segE.ts",
+  "shots/segF.ts",
+  "shots/segG.ts",
+  "shots/segH.ts",
+  "shots/segI.ts",
+  "shots/segJ.ts",
+  "preview/look.ts",
+  "preview/people_lineup.ts",
+  "preview/frames.ts"
+ ],
+ "domOnly": [
+  "hud/"
+ ],
+ "langs": [
+  "zh"
+ ],
+ "work": "/home/user/yuelao_work"
 }

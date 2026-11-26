@@ -15,6 +15,7 @@ import { NewtonFilm, NEWTON_FRAMES } from "./videos/newton/Film";
 import { DayTemplateFilm, DAY_TEMPLATE_FRAMES } from "./videos/day_template/Film";
 import { RomeoFilm, ROMEO_FRAMES } from "./videos/romeo/Film";
 import { SihangFilm, SIHANG_FRAMES } from "./videos/sihang/Film";
+import { YuelaoFilm, YUELAO_FRAMES } from "./videos/yuelao/Film";
 export const Root: React.FC = () => <>
   <Composition id="BtCannon" component={BtCannon} durationInFrames={BT_FRAMES} fps={30} width={1080} height={1920} />
   <Composition id="BtOil" component={BtOil} durationInFrames={OIL_FRAMES} fps={30} width={1080} height={1920} />
@@ -30,5 +31,6 @@ export const Root: React.FC = () => <>
   <Composition id="NewtonFilm" component={NewtonFilm} durationInFrames={NEWTON_FRAMES} fps={30} width={1080} height={1920} />
   <Composition id="RomeoFilm" component={RomeoFilm} durationInFrames={ROMEO_FRAMES} fps={30} width={1080} height={1920} />
   <Composition id="SihangFilm" component={SihangFilm} durationInFrames={SIHANG_FRAMES} fps={30} width={1080} height={1920} />
+  <Composition id="YuelaoFilm" component={YuelaoFilm} durationInFrames={YUELAO_FRAMES} fps={30} width={1080} height={1920} />
   <Composition id="DayTemplate" component={DayTemplateFilm} durationInFrames={DAY_TEMPLATE_FRAMES} fps={30} width={1080} height={1920} />
 </>;
