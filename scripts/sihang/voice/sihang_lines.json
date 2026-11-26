@@ -1,0 +1,1138 @@
+{
+ "film": "sihang",
+ "version": 1,
+ "source": "script v1 (Claude Doc 采访八百壮士的一天 · 剧本 v1, 25 Nov 2026) with the changes in scripts/sihang/voice/make_lines.py",
+ "title": {
+  "zh": "采访八百壮士的一天",
+  "en": "A Day Interviewing the Eight Hundred"
+ },
+ "speakers": {
+  "ji": "记者 (the camera, never seen; standard Mandarin)",
+  "mc": "满仓 (演绎人物, 19, 湖北通城)",
+  "lb": "老班长 (演绎人物, 河南)",
+  "xj": "谢晋元 (中校团附, 广东蕉岭; sourced quotes only)",
+  "yr": "杨瑞符 (营长, 天津; sourced quote only)",
+  "cl": "传令兵",
+  "th": "同行记者 (上海)"
+ },
+ "scenes": {
+  "A": {
+   "time": "10月26日 深夜",
+   "en": "26 Oct, late night",
+   "place": "hall"
+  },
+  "B": {
+   "time": "10月26日 深夜",
+   "en": "26 Oct, late night",
+   "place": "hall"
+  },
+  "C": {
+   "time": "10月27日 上午",
+   "en": "27 Oct, morning",
+   "place": "hall"
+  },
+  "D": {
+   "time": "10月28日 拂晓",
+   "en": "28 Oct, dawn",
+   "place": "hall"
+  },
+  "E": {
+   "time": "10月28日 晚",
+   "en": "28 Oct, evening",
+   "place": "hall"
+  },
+  "F": {
+   "time": "10月28日 夜",
+   "en": "28 Oct, night",
+   "place": "hall"
+  },
+  "G": {
+   "time": "10月30日 夜",
+   "en": "30 Oct, night",
+   "place": "hall"
+  },
+  "H": {
+   "time": "10月31日 凌晨",
+   "en": "31 Oct, before dawn",
+   "place": "bridge"
+  }
+ },
+ "gap": 0.25,
+ "lead": 0.1,
+ "engine": {
+  "spoken": {
+   "ji": "zh",
+   "mc": "zh",
+   "lb": "zh",
+   "xj": "zh",
+   "yr": "zh",
+   "cl": "zh",
+   "th": "zh"
+  },
+  "places": [
+   "hall",
+   "roof",
+   "bridge"
+  ],
+  "title_after": "A05",
+  "title_delay": 0.2,
+  "title_hold": 2.5,
+  "rate_zh": 4.0,
+  "tail_s": 0.4
+ },
+ "lines": [
+  {
+   "n": 1,
+   "id": "A01",
+   "scene": "A",
+   "who": "ji",
+   "zh": "他们说，这里有八百人。",
+   "en": "They say there are eight hundred men in here.",
+   "screens": [
+    {
+     "zh": "他们说，这里有八百人。",
+     "en": "They say there are eight hundred men in here."
+    }
+   ],
+   "pre": 0.15,
+   "after": 0.1,
+   "pic": "Frame 0: lamp light, soldiers hauling grain sacks to the windows; the camera pans along them.",
+   "tts": "[whispers] 他们说，这里有八百人。",
+   "whisper": true
+  },
+  {
+   "n": 2,
+   "id": "A02",
+   "scene": "A",
+   "who": "ji",
+   "zh": "我数了三遍——四百二十。",
+   "en": "I counted three times: four hundred and twenty.",
+   "screens": [
+    {
+     "zh": "我数了三遍——",
+     "en": "I counted three times: four"
+    },
+    {
+     "zh": "四百二十。",
+     "en": "hundred and twenty."
+    }
+   ],
+   "after": 0.55,
+   "pic": "The head count lands on three helmets: 418, 419, 420.",
+   "tts": "[whispers, flat] 我数了三遍——四百二十。",
+   "whisper": true
+  },
+  {
+   "n": 3,
+   "id": "A03",
+   "scene": "A",
+   "who": "ji",
+   "zh": "你们这儿，多少人？",
+   "en": "How many of you are here?",
+   "screens": [
+    {
+     "zh": "你们这儿，多少人？",
+     "en": "How many of you are here?"
+    }
+   ],
+   "pre": 0.15,
+   "tts": "[curious, bright] 你们这儿，多少人？"
+  },
+  {
+   "n": 4,
+   "id": "A04",
+   "scene": "A",
+   "who": "mc",
+   "zh": "八百！",
+   "en": "Eight hundred!",
+   "screens": [
+    {
+     "zh": "八百！",
+     "en": "Eight hundred!"
+    }
+   ],
+   "after": 0.95,
+   "emo": "at once, proud, loud",
+   "pic": "满仓 with a sack on his shoulder, helmet a size too big."
+  },
+  {
+   "n": 5,
+   "id": "A05",
+   "scene": "A",
+   "who": "mc",
+   "zh": "……对外，都讲八百。",
+   "en": "...To outsiders, we all say eight hundred.",
+   "screens": [
+    {
+     "zh": "……对外，都讲八百。",
+     "en": "...To outsiders, we all say eight hundred."
+    }
+   ],
+   "after": 2.9,
+   "emo": "lower, a glance round, a small grin",
+   "pic": "The title: a 号外 front page slams on."
+  },
+  {
+   "n": 6,
+   "id": "A06",
+   "scene": "A",
+   "who": "mc",
+   "zh": "我叫满仓。这回，仓真是满的。",
+   "en": "I'm Mancang, 'full barn'. This time the barn really is full.",
+   "screens": [
+    {
+     "zh": "我叫满仓。",
+     "en": "I'm Mancang, 'full barn'."
+    },
+    {
+     "zh": "这回，仓真是满的。",
+     "en": "This time the barn really is full."
+    }
+   ],
+   "pre": 3.7,
+   "after": 1.5,
+   "emo": "shy, pleased with his own joke",
+   "pic": "The unit's clipping card over the live picture, then his banner; the sacks piled to the ceiling."
+  },
+  {
+   "n": 7,
+   "id": "B01",
+   "scene": "B",
+   "who": "ji",
+   "zh": "哪位是谢团附？",
+   "en": "Which one is Commander Xie?",
+   "screens": [
+    {
+     "zh": "哪位是谢团附？",
+     "en": "Which one is Commander Xie?"
+    }
+   ],
+   "pre": 0.9,
+   "tts": "[curious] 哪位是谢团附？"
+  },
+  {
+   "n": 8,
+   "id": "B02",
+   "scene": "B",
+   "who": "mc",
+   "zh": "我也不认得。我才来三个月。",
+   "en": "I don't know him either. I've only been here three months.",
+   "screens": [
+    {
+     "zh": "我也不认得。",
+     "en": "I don't know him either."
+    },
+    {
+     "zh": "我才来三个月。",
+     "en": "I've only been here three months."
+    }
+   ],
+   "after": 0.5,
+   "emo": "honest shrug"
+  },
+  {
+   "n": 9,
+   "id": "B03",
+   "scene": "B",
+   "who": "lb",
+   "zh": "全楼，就一个坐着的。",
+   "en": "Only one man in this building is sitting down.",
+   "screens": [
+    {
+     "zh": "全楼，就一个坐着的。",
+     "en": "Only one man in this building is sitting down."
+    }
+   ],
+   "after": 1.5,
+   "emo": "dry, not looking up",
+   "pic": "The camera pans to the one man seated at a crate, writing by a lamp."
+  },
+  {
+   "n": 10,
+   "id": "B04",
+   "scene": "B",
+   "who": "ji",
+   "zh": "团附，写什么呢？",
+   "en": "Commander, what are you writing?",
+   "screens": [
+    {
+     "zh": "团附，写什么呢？",
+     "en": "Commander, what are you writing?"
+    }
+   ],
+   "tts": "[gently, respectful] 团附，写什么呢？"
+  },
+  {
+   "n": 11,
+   "id": "B05",
+   "scene": "B",
+   "who": "xj",
+   "zh": "晋元决心殉国，誓不轻易撤退，亦不作片刻偷生之计。",
+   "en": "I am resolved to die for my country. I swear not to retreat lightly, nor to seek a moment's survival.",
+   "screens": [
+    {
+     "zh": "晋元决心殉国，",
+     "en": "I am resolved to die for"
+    },
+    {
+     "zh": "誓不轻易撤退，",
+     "en": "my country. I swear not to"
+    },
+    {
+     "zh": "亦不作片刻偷生之计。",
+     "en": "retreat lightly, nor to seek a moment's survival."
+    }
+   ],
+   "pre": 0.7,
+   "after": 2.2,
+   "emo": "calm, even, as he writes; no heroics",
+   "pic": "His banner; the seal 原话 · 遗书. He folds it, hands it to a runner, looks at the lens, nods."
+  },
+  {
+   "n": 12,
+   "id": "B06",
+   "scene": "B",
+   "who": "mc",
+   "zh": "记者，对面亮的是么事？",
+   "en": "Reporter, what's that shining over there?",
+   "screens": [
+    {
+     "zh": "记者，对面亮的是么事？",
+     "en": "Reporter, what's that shining over there?"
+    }
+   ],
+   "pre": 1.0,
+   "emo": "wonder, quiet",
+   "pic": "Through the window slit: neon across the Suzhou Creek, sixty metres away."
+  },
+  {
+   "n": 13,
+   "id": "B07",
+   "scene": "B",
+   "who": "ji",
+   "zh": "霓虹灯。",
+   "en": "Neon lights.",
+   "screens": [
+    {
+     "zh": "霓虹灯。",
+     "en": "Neon lights."
+    }
+   ],
+   "tts": "[softly] 霓虹灯。"
+  },
+  {
+   "n": 14,
+   "id": "B08",
+   "scene": "B",
+   "who": "mc",
+   "zh": "……上海，真亮啊。",
+   "en": "...Shanghai is so bright.",
+   "screens": [
+    {
+     "zh": "……上海，真亮啊。",
+     "en": "...Shanghai is so bright."
+    }
+   ],
+   "pre": 0.4,
+   "after": 2.1,
+   "emo": "a breath, a country boy",
+   "pic": "His face half warm lamp, half cold neon. Hold two seconds."
+  },
+  {
+   "n": 15,
+   "id": "B09",
+   "scene": "B",
+   "who": "mc",
+   "zh": "记者，你会写字吧？",
+   "en": "Reporter, you can write, can't you?",
+   "screens": [
+    {
+     "zh": "记者，你会写字吧？",
+     "en": "Reporter, you can write, can't you?"
+    }
+   ],
+   "emo": "shy, sudden"
+  },
+  {
+   "n": 16,
+   "id": "B10",
+   "scene": "B",
+   "who": "ji",
+   "zh": "写给谁？",
+   "en": "To whom?",
+   "screens": [
+    {
+     "zh": "写给谁？",
+     "en": "To whom?"
+    }
+   ],
+   "pic": "A pencil and a warehouse goods slip come into the frame.",
+   "tts": "[warm] 写给谁？"
+  },
+  {
+   "n": 17,
+   "id": "B11",
+   "scene": "B",
+   "who": "mc",
+   "zh": "我娘。……就写：娘，儿在上海。住的洋楼，高得很。",
+   "en": "My ma. ...Write: Ma, I'm in Shanghai. I live in a foreign-style building, very tall.",
+   "screens": [
+    {
+     "zh": "我娘。",
+     "en": "My ma."
+    },
+    {
+     "zh": "……就写：娘，儿在上海。",
+     "en": "...Write: Ma, I'm in Shanghai. I live in"
+    },
+    {
+     "zh": "住的洋楼，高得很。",
+     "en": "a foreign-style building, very tall."
+    }
+   ],
+   "after": 0.6,
+   "emo": "dictating slowly, proud",
+   "pic": "The letter's first line appears on the goods slip."
+  },
+  {
+   "n": 18,
+   "id": "B12",
+   "scene": "B",
+   "who": "mc",
+   "zh": "后面的，我再想想。",
+   "en": "The rest, I'll think about.",
+   "screens": [
+    {
+     "zh": "后面的，我再想想。",
+     "en": "The rest, I'll think about."
+    }
+   ],
+   "after": 1.7,
+   "emo": "scratching his helmet",
+   "pic": "The REC clock runs to 27 Oct 08:20; the neon goes out, daylight."
+  },
+  {
+   "n": 19,
+   "id": "C01",
+   "scene": "C",
+   "who": "lb",
+   "zh": "东边，准备。",
+   "en": "East side. Ready.",
+   "screens": [
+    {
+     "zh": "东边，准备。",
+     "en": "East side. Ready."
+    }
+   ],
+   "pre": 4.6,
+   "after": 1.1,
+   "emo": "low, level",
+   "pic": "First the south bank: roofs and balconies full of people; a blackboard. Then the attack: the camera ducks behind the sacks."
+  },
+  {
+   "n": 20,
+   "id": "C02",
+   "scene": "C",
+   "who": "lb",
+   "zh": "这是咱的。",
+   "en": "That one's ours.",
+   "screens": [
+    {
+     "zh": "这是咱的。",
+     "en": "That one's ours."
+    }
+   ],
+   "after": 0.55,
+   "emo": "counting shots like weather"
+  },
+  {
+   "n": 21,
+   "id": "C03",
+   "scene": "C",
+   "who": "lb",
+   "zh": "这也是咱的。",
+   "en": "That one's ours too.",
+   "screens": [
+    {
+     "zh": "这也是咱的。",
+     "en": "That one's ours too."
+    }
+   ],
+   "after": 0.55
+  },
+  {
+   "n": 22,
+   "id": "C04",
+   "scene": "C",
+   "who": "lb",
+   "zh": "——这是他们的。",
+   "en": "...That one's theirs.",
+   "screens": [
+    {
+     "zh": "——这是他们的。",
+     "en": "...That one's theirs."
+    }
+   ],
+   "after": 1.3,
+   "emo": "same tone",
+   "pic": "His hand presses the camera down. A sack over her leaks wheat."
+  },
+  {
+   "n": 23,
+   "id": "C05",
+   "scene": "C",
+   "who": "ji",
+   "zh": "……谢谢。",
+   "en": "...Thank you.",
+   "screens": [
+    {
+     "zh": "……谢谢。",
+     "en": "...Thank you."
+    }
+   ],
+   "after": 2.3,
+   "pic": "Silence. Then cheering from across the river.",
+   "tts": "[whispers, shaken] ……谢谢。",
+   "whisper": true
+  },
+  {
+   "n": 24,
+   "id": "C06",
+   "scene": "C",
+   "who": "mc",
+   "zh": "他们……给我们喊好？",
+   "en": "They're... cheering for us?",
+   "screens": [
+    {
+     "zh": "他们……给我们喊好？",
+     "en": "They're... cheering for us?"
+    }
+   ],
+   "pre": 0.3,
+   "after": 1.2,
+   "emo": "amazed"
+  },
+  {
+   "n": 25,
+   "id": "C07",
+   "scene": "C",
+   "who": "ji",
+   "zh": "几点换班呀？",
+   "en": "What time is the shift change?",
+   "screens": [
+    {
+     "zh": "几点换班呀？",
+     "en": "What time is the shift change?"
+    }
+   ],
+   "pre": 0.6,
+   "tts": "[innocently] 几点换班呀？"
+  },
+  {
+   "n": 26,
+   "id": "C08",
+   "scene": "C",
+   "who": "lb",
+   "zh": "换班？四百二十个人，守一栋楼……",
+   "en": "Shift change? Four hundred and twenty men, holding one building...",
+   "screens": [
+    {
+     "zh": "换班？",
+     "en": "Shift change?"
+    },
+    {
+     "zh": "四百二十个人，守一栋楼……",
+     "en": "Four hundred and twenty men, holding one building..."
+    }
+   ],
+   "emo": "a tired half laugh"
+  },
+  {
+   "n": 27,
+   "id": "C09",
+   "scene": "C",
+   "who": "mc",
+   "zh": "八百。",
+   "en": "Eight hundred.",
+   "screens": [
+    {
+     "zh": "八百。",
+     "en": "Eight hundred."
+    }
+   ],
+   "emo": "correcting him, serious"
+  },
+  {
+   "n": 28,
+   "id": "C10",
+   "scene": "C",
+   "who": "lb",
+   "zh": "对，八百。——八百也不换。",
+   "en": "Right, eight hundred. ...Eight hundred don't change shifts either.",
+   "screens": [
+    {
+     "zh": "对，八百。",
+     "en": "Right, eight hundred."
+    },
+    {
+     "zh": "——八百也不换。",
+     "en": "...Eight hundred don't change shifts either."
+    }
+   ],
+   "after": 1.7,
+   "emo": "dry",
+   "pic": "Seal: four days and nights, no relief. Shell dust whites the lens out."
+  },
+  {
+   "n": 29,
+   "id": "D01",
+   "scene": "D",
+   "who": "lb",
+   "zh": "在挖墙脚。要炸楼。",
+   "en": "They're digging at the foot of the wall. To blow the building.",
+   "screens": [
+    {
+     "zh": "在挖墙脚。要炸楼。",
+     "en": "They're digging at the foot of the wall. To blow the building."
+    }
+   ],
+   "pre": 2.4,
+   "after": 1.8,
+   "emo": "very low",
+   "pic": "Digging under the wall. A young soldier, back to us, ties grenades on and steps onto the sill."
+  },
+  {
+   "n": 30,
+   "id": "D02",
+   "scene": "D",
+   "who": "ji",
+   "zh": "你——",
+   "en": "You...",
+   "screens": [
+    {
+     "zh": "你——",
+     "en": "You..."
+    }
+   ],
+   "after": 8.2,
+   "pic": "The window is empty. A blast below; dust drifts in. Hold. White words: 陈树生，二十一岁。 满仓 takes off his helmet. Black.",
+   "tts": "[startled, breaking off] 你——"
+  },
+  {
+   "n": 31,
+   "id": "E01",
+   "scene": "E",
+   "who": "yr",
+   "zh": "你们就说有八百人，决不可说只有一营人。",
+   "en": "Say there are eight hundred men. Never say there is only one battalion.",
+   "screens": [
+    {
+     "zh": "你们就说有八百人，",
+     "en": "Say there are eight hundred men."
+    },
+    {
+     "zh": "决不可说只有一营人。",
+     "en": "Never say there is only one battalion."
+    }
+   ],
+   "pre": 2.2,
+   "after": 1.7,
+   "emo": "gruff, low, to the wounded on the stretchers",
+   "pic": "The wounded are carried out at the back. His banner; the seal 原话."
+  },
+  {
+   "n": 32,
+   "id": "E02",
+   "scene": "E",
+   "who": "mc",
+   "zh": "原来他就是谢团附。",
+   "en": "So that's Commander Xie.",
+   "screens": [
+    {
+     "zh": "原来他就是谢团附。",
+     "en": "So that's Commander Xie."
+    }
+   ],
+   "pre": 2.0,
+   "after": 0.4,
+   "emo": "a whisper of surprise",
+   "pic": "The companies stand in rows. The battalion commander brings forward the man who was writing."
+  },
+  {
+   "n": 33,
+   "id": "E03",
+   "scene": "E",
+   "who": "xj",
+   "zh": "与最后阵地共存亡。",
+   "en": "We live or die with this last position.",
+   "screens": [
+    {
+     "zh": "与最后阵地共存亡。",
+     "en": "We live or die with this last position."
+    }
+   ],
+   "pre": 0.5,
+   "after": 2.8,
+   "emo": "level, to every man",
+   "pic": "The seal 原话 · 10月28日晚. Paper is handed down the rows; pencils."
+  },
+  {
+   "n": 34,
+   "id": "E04",
+   "scene": "E",
+   "who": "ji",
+   "zh": "接着写？",
+   "en": "Shall we go on?",
+   "screens": [
+    {
+     "zh": "接着写？",
+     "en": "Shall we go on?"
+    }
+   ],
+   "pre": 0.9,
+   "pic": "From here no effects: one slow push.",
+   "tts": "[softly] 接着写？"
+  },
+  {
+   "n": 35,
+   "id": "E05",
+   "scene": "E",
+   "who": "mc",
+   "zh": "写……顿顿有粮吃，粮食堆到房顶。",
+   "en": "Write... there's grain at every meal. Grain piled up to the roof.",
+   "screens": [
+    {
+     "zh": "写……顿顿有粮吃，",
+     "en": "Write... there's grain at every meal. Grain"
+    },
+    {
+     "zh": "粮食堆到房顶。",
+     "en": "piled up to the roof."
+    }
+   ],
+   "after": 1.0,
+   "emo": "searching, then pleased",
+   "pic": "Behind him the sack wall, shot through, leaking."
+  },
+  {
+   "n": 36,
+   "id": "E06",
+   "scene": "E",
+   "who": "mc",
+   "zh": "我们人多，有八百人。莫挂念。",
+   "en": "There are a lot of us, eight hundred. Don't worry.",
+   "screens": [
+    {
+     "zh": "我们人多，有八百人。",
+     "en": "There are a lot of us, eight"
+    },
+    {
+     "zh": "莫挂念。",
+     "en": "hundred. Don't worry."
+    }
+   ],
+   "after": 0.6,
+   "emo": "steady"
+  },
+  {
+   "n": 37,
+   "id": "E07",
+   "scene": "E",
+   "who": "ji",
+   "zh": "……八百？",
+   "en": "...Eight hundred?",
+   "screens": [
+    {
+     "zh": "……八百？",
+     "en": "...Eight hundred?"
+    }
+   ],
+   "after": 0.5,
+   "tts": "[very softly] ……八百？"
+  },
+  {
+   "n": 38,
+   "id": "E08",
+   "scene": "E",
+   "who": "mc",
+   "zh": "写八百。娘听了放心。",
+   "en": "Write eight hundred. Ma will rest easy when she hears it.",
+   "screens": [
+    {
+     "zh": "写八百。",
+     "en": "Write eight hundred. Ma"
+    },
+    {
+     "zh": "娘听了放心。",
+     "en": "will rest easy when she hears it."
+    }
+   ],
+   "after": 1.7,
+   "emo": "simple, sure; nobody laughs"
+  },
+  {
+   "n": 39,
+   "id": "E09",
+   "scene": "E",
+   "who": "lb",
+   "zh": "他娘不识字。信到了，村里先生念给她听。",
+   "en": "His mother can't read. When it comes, the village teacher reads it to her.",
+   "screens": [
+    {
+     "zh": "他娘不识字。",
+     "en": "His mother can't read."
+    },
+    {
+     "zh": "信到了，村里先生念给她听。",
+     "en": "When it comes, the village teacher reads it to her."
+    }
+   ],
+   "pre": 0.3,
+   "after": 3.8,
+   "emo": "aside, quiet",
+   "pic": "满仓 presses a thumbprint in lamp soot. The push ends on three lines and the print."
+  },
+  {
+   "n": 40,
+   "id": "F01",
+   "scene": "F",
+   "who": "mc",
+   "zh": "记者先吃。",
+   "en": "Reporter eats first.",
+   "screens": [
+    {
+     "zh": "记者先吃。",
+     "en": "Reporter eats first."
+    }
+   ],
+   "pre": 4.2,
+   "after": 0.4,
+   "emo": "generous, grinning",
+   "pic": "A rope through the wall hole: sacks of bread, biscuits, tins, medicine. He holds a tin out to the lens."
+  },
+  {
+   "n": 41,
+   "id": "F02",
+   "scene": "F",
+   "who": "ji",
+   "zh": "……没有拉环？",
+   "en": "...No pull tab?",
+   "screens": [
+    {
+     "zh": "……没有拉环？",
+     "en": "...No pull tab?"
+    }
+   ],
+   "after": 0.5,
+   "tts": "[whispers, puzzled] ……没有拉环？",
+   "whisper": true
+  },
+  {
+   "n": 42,
+   "id": "F03",
+   "scene": "F",
+   "who": "lb",
+   "zh": "城里人。",
+   "en": "City folk.",
+   "screens": [
+    {
+     "zh": "城里人。",
+     "en": "City folk."
+    }
+   ],
+   "after": 1.3,
+   "emo": "dry",
+   "pic": "He opens it with his bayonet."
+  },
+  {
+   "n": 43,
+   "id": "F04",
+   "scene": "F",
+   "who": "lb",
+   "zh": "八百孤军，死守四行。",
+   "en": "Eight hundred lone soldiers hold Sihang to the death.",
+   "screens": [
+    {
+     "zh": "八百孤军，死守四行。",
+     "en": "Eight hundred lone soldiers hold Sihang to the death."
+    }
+   ],
+   "pre": 0.9,
+   "after": 0.5,
+   "emo": "reading a headline slowly",
+   "pic": "A newspaper from under the sacks: the front page close up."
+  },
+  {
+   "n": 44,
+   "id": "F05",
+   "scene": "F",
+   "who": "mc",
+   "zh": "……登报了？我娘看得见不？",
+   "en": "...We're in the paper? Can my ma see it?",
+   "screens": [
+    {
+     "zh": "……登报了？",
+     "en": "...We're in the paper?"
+    },
+    {
+     "zh": "我娘看得见不？",
+     "en": "Can my ma see it?"
+    }
+   ],
+   "emo": "eyes wide"
+  },
+  {
+   "n": 45,
+   "id": "F06",
+   "scene": "F",
+   "who": "lb",
+   "zh": "村里先生看得见。",
+   "en": "The village teacher can.",
+   "screens": [
+    {
+     "zh": "村里先生看得见。",
+     "en": "The village teacher can."
+    }
+   ],
+   "after": 1.2,
+   "emo": "kindly"
+  },
+  {
+   "n": 46,
+   "id": "F07",
+   "scene": "F",
+   "who": "lb",
+   "zh": "旗。对岸一个女学生送来的。",
+   "en": "A flag. A schoolgirl brought it over from the other bank.",
+   "screens": [
+    {
+     "zh": "旗。",
+     "en": "A flag."
+    },
+    {
+     "zh": "对岸一个女学生送来的。",
+     "en": "A schoolgirl brought it over from the other bank."
+    }
+   ],
+   "pre": 0.9,
+   "after": 8.4,
+   "emo": "quiet, almost to himself",
+   "pic": "A roll of cloth. The seal. Then dawn on the roof: the flag's shadow slides over upturned faces; the south bank roars; a blackboard."
+  },
+  {
+   "n": 47,
+   "id": "G01",
+   "scene": "G",
+   "who": "lb",
+   "zh": "鬼子给开的窗。",
+   "en": "A window, courtesy of the enemy.",
+   "screens": [
+    {
+     "zh": "鬼子给开的窗。",
+     "en": "A window, courtesy of the enemy."
+    }
+   ],
+   "pre": 3.8,
+   "after": 0.8,
+   "emo": "dry, loud over the guns",
+   "pic": "Searchlights, shells. The west wall is holed; he sets the machine gun in the new hole."
+  },
+  {
+   "n": 48,
+   "id": "G02",
+   "scene": "G",
+   "who": "mc",
+   "zh": "记者！信上再加一句！",
+   "en": "Reporter! Add one more line to the letter!",
+   "screens": [
+    {
+     "zh": "记者！信上再加一句！",
+     "en": "Reporter! Add one more line to the letter!"
+    }
+   ],
+   "pre": 0.4,
+   "emo": "shouting over the shelling"
+  },
+  {
+   "n": 49,
+   "id": "G03",
+   "scene": "G",
+   "who": "ji",
+   "zh": "加什么？",
+   "en": "Add what?",
+   "screens": [
+    {
+     "zh": "加什么？",
+     "en": "Add what?"
+    }
+   ],
+   "tts": "[shouting over noise] 加什么？"
+  },
+  {
+   "n": 50,
+   "id": "G04",
+   "scene": "G",
+   "who": "mc",
+   "zh": "等打完仗——我回去割稻！",
+   "en": "When the fighting's done, I'm going home to cut the rice!",
+   "screens": [
+    {
+     "zh": "等打完仗——",
+     "en": "When the fighting's done, I'm going"
+    },
+    {
+     "zh": "我回去割稻！",
+     "en": "home to cut the rice!"
+    }
+   ],
+   "after": 2.6,
+   "emo": "shouting, almost laughing",
+   "pic": "The fourth line, shaky. The battery: 7%. Midnight: the field telephone rings."
+  },
+  {
+   "n": 51,
+   "id": "G05",
+   "scene": "G",
+   "who": "cl",
+   "zh": "命令——全营撤进租界！",
+   "en": "Orders: the whole battalion withdraws into the Settlement!",
+   "screens": [
+    {
+     "zh": "命令——全营撤进租界！",
+     "en": "Orders: the whole battalion withdraws into the Settlement!"
+    }
+   ],
+   "pre": 1.7,
+   "after": 0.6,
+   "emo": "out of breath, loud"
+  },
+  {
+   "n": 52,
+   "id": "G06",
+   "scene": "G",
+   "who": "mc",
+   "zh": "撤？不是讲共存亡吗？",
+   "en": "Withdraw? Didn't we say live or die here?",
+   "screens": [
+    {
+     "zh": "撤？",
+     "en": "Withdraw? Didn't"
+    },
+    {
+     "zh": "不是讲共存亡吗？",
+     "en": "we say live or die here?"
+    }
+   ],
+   "emo": "stunned, hurt"
+  },
+  {
+   "n": 53,
+   "id": "G07",
+   "scene": "G",
+   "who": "lb",
+   "zh": "是命令。",
+   "en": "It's an order.",
+   "screens": [
+    {
+     "zh": "是命令。",
+     "en": "It's an order."
+    }
+   ],
+   "after": 2.8,
+   "emo": "flat, heavy",
+   "pic": "谢晋元 looks back at the building. A searchlight whites the lens out."
+  },
+  {
+   "n": 54,
+   "id": "H01",
+   "scene": "H",
+   "who": "mc",
+   "zh": "低头！",
+   "en": "Head down!",
+   "screens": [
+    {
+     "zh": "低头！",
+     "en": "Head down!"
+    }
+   ],
+   "pre": 2.6,
+   "after": 2.4,
+   "emo": "a shout",
+   "pic": "The bridge under searchlights; they run in batches; his hand presses the camera down."
+  },
+  {
+   "n": 55,
+   "id": "H02",
+   "scene": "H",
+   "who": "mc",
+   "zh": "记者，信。",
+   "en": "Reporter. The letter.",
+   "screens": [
+    {
+     "zh": "记者，信。",
+     "en": "Reporter. The letter."
+    }
+   ],
+   "pre": 3.2,
+   "after": 0.6,
+   "emo": "out of breath, small",
+   "pic": "South side. Rifles are piled up; he holds his a second, then lets go. The goods slip: four lines and a thumbprint."
+  },
+  {
+   "n": 56,
+   "id": "H03",
+   "scene": "H",
+   "who": "ji",
+   "zh": "放心。",
+   "en": "I've got it.",
+   "screens": [
+    {
+     "zh": "放心。",
+     "en": "I've got it."
+    }
+   ],
+   "after": 1.7,
+   "pic": "The battery: 2%, the red lamp blinking.",
+   "tts": "[softly, steady] 放心。"
+  },
+  {
+   "n": 57,
+   "id": "H04",
+   "scene": "H",
+   "who": "th",
+   "zh": "喂——里面到底多少人？",
+   "en": "Hey! How many were really in there?",
+   "screens": [
+    {
+     "zh": "喂——",
+     "en": "Hey! How"
+    },
+    {
+     "zh": "里面到底多少人？",
+     "en": "many were really in there?"
+    }
+   ],
+   "pre": 0.9,
+   "after": 2.4,
+   "emo": "shouting from behind the cordon, a newsman",
+   "pic": "The camera looks back: 满仓, 老班长, the tired line of men."
+  },
+  {
+   "n": 58,
+   "id": "H05",
+   "scene": "H",
+   "who": "ji",
+   "zh": "八百。",
+   "en": "Eight hundred.",
+   "screens": [
+    {
+     "zh": "八百。",
+     "en": "Eight hundred."
+    }
+   ],
+   "after": 16.6,
+   "pic": "The battery dies. Black. The end slate: five white lines.",
+   "tts": "[quiet, sure, after a breath] 八百。"
+  }
+ ]
+}
