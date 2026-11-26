@@ -234,14 +234,14 @@ export const WhiteWords: React.FC<{ f: number; rows: { text: string; from: numbe
 /** THE END SLATE: white on black, a block at a time; the small print in the corner comes last */
 export const EndSlate: React.FC<{ f: number; from: number; blocks: { rows: string[]; at: number }[]; note: string[]; noteAt: number }> = ({ f, from, blocks, note, noteAt }) => {
   if (f < from) return null;
-  let y = 430;
+  let y = 400;
   return (
     <Svg>
       {blocks.map((b, i) => {
-        const k = clamp01((f - b.at) / 12), y0 = y; y += b.rows.length * 62 + 58;
+        const k = clamp01((f - b.at) / 12), y0 = y; y += b.rows.length * 62 + 46;
         return k <= 0 ? null : <g key={i} opacity={k}>{b.rows.map((r, j) => <T key={j} x={130} y={y0 + j * 62} px={i === blocks.length - 1 ? 52 : 42} fill={SK.white}>{r}</T>)}</g>;
       })}
-      {f >= noteAt && <g opacity={0.62 * clamp01((f - noteAt) / 12)}>{note.map((r, j) => <T key={j} x={130} y={1560 + j * 40} px={26} fill={SK.white}>{r}</T>)}</g>}
+      {f >= noteAt && <g opacity={0.62 * clamp01((f - noteAt) / 12)}>{note.map((r, j) => <T key={j} x={130} y={1440 + j * 40} px={26} fill={SK.white}>{r}</T>)}</g>}
     </Svg>
   );
 };

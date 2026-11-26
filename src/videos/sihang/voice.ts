@@ -53,18 +53,18 @@ export const VOICE_RAW: [number, number, number][] = [
   [44, 165.55, 167.8],
   [45, 168.05, 169.8],
   [46, 172.15, 174.9],
-  [47, 187.35, 188.85],
-  [48, 190.3, 192.3],
-  [49, 192.55, 193.3],
-  [50, 193.55, 196.1],
-  [51, 200.65, 202.95],
-  [52, 203.8, 205.8],
-  [53, 206.05, 206.8],
-  [54, 212.45, 212.95],
-  [55, 218.8, 219.55],
-  [56, 220.4, 220.9],
-  [57, 223.75, 226.05],
-  [58, 228.7, 229.2],
+  [47, 188.35, 189.85],
+  [48, 191.3, 193.3],
+  [49, 193.55, 194.3],
+  [50, 194.55, 197.1],
+  [51, 201.65, 203.95],
+  [52, 204.8, 206.8],
+  [53, 207.05, 207.8],
+  [54, 213.45, 213.95],
+  [55, 219.8, 220.55],
+  [56, 221.4, 221.9],
+  [57, 224.75, 227.05],
+  [58, 229.7, 230.2],
 ];
 /** [line number, id, scene, who, pre s (silent beat before it, for action), after s (held after it), zh, en] (the lines file) */
 export const LINE_RAW: [number, string, string, Speaker, number, number, string, string][] = [
@@ -113,7 +113,7 @@ export const LINE_RAW: [number, string, string, Speaker, number, number, string,
   [43, "F04", "F", "lb", 0.9, 0.5, "八百孤军，死守四行。", "Eight hundred lone soldiers hold Sihang to the death."],
   [44, "F05", "F", "mc", 0, 0, "……登报了？我娘看得见不？", "...We're in the paper? Can my ma see it?"],
   [45, "F06", "F", "lb", 0, 1.2, "村里先生看得见。", "The village teacher can."],
-  [46, "F07", "F", "lb", 0.9, 8.4, "旗。对岸一个女学生送来的。", "A flag. A schoolgirl brought it over from the other bank."],
+  [46, "F07", "F", "lb", 0.9, 9.4, "旗。对岸一个女学生送来的。", "A flag. A schoolgirl brought it over from the other bank."],
   [47, "G01", "G", "lb", 3.8, 0.8, "鬼子给开的窗。", "A window, courtesy of the enemy."],
   [48, "G02", "G", "mc", 0.4, 0, "记者！信上再加一句！", "Reporter! Add one more line to the letter!"],
   [49, "G03", "G", "ji", 0, 0, "加什么？", "Add what?"],
@@ -125,13 +125,13 @@ export const LINE_RAW: [number, string, string, Speaker, number, number, string,
   [55, "H02", "H", "mc", 3.2, 0.6, "记者，信。", "Reporter. The letter."],
   [56, "H03", "H", "ji", 0, 1.7, "放心。", "I've got it."],
   [57, "H04", "H", "th", 0.9, 2.4, "喂——里面到底多少人？", "Hey! How many were really in there?"],
-  [58, "H05", "H", "ji", 0, 16.6, "八百。", "Eight hundred."],
+  [58, "H05", "H", "ji", 0, 18.3, "八百。", "Eight hundred."],
 ];
-export const VOICE_END_S = 229.2;
+export const VOICE_END_S = 230.2;
 /** frames before the first word, frames of film after the last word, the film's length in frames */
 export const VOICE_LEAD_F = 8;
-export const VOICE_TAIL_F = 510;
-export const VOICE_TOTAL_F = 7386;
+export const VOICE_TAIL_F = 561;
+export const VOICE_TOTAL_F = 7467;
 /** each line is a quote of its speaker: [line, who, start s, end s, syllables (Han characters / English, estimated), the words said] */
 export const QUOTE_RAW: [number, Speaker, number, number, number, string][] = [
   [1, "ji", 0.25, 2.5, 9, "他们说，这里有八百人。"],
@@ -180,18 +180,18 @@ export const QUOTE_RAW: [number, Speaker, number, number, number, string][] = [
   [44, "mc", 165.55, 167.8, 9, "……登报了？我娘看得见不？"],
   [45, "lb", 168.05, 169.8, 7, "村里先生看得见。"],
   [46, "lb", 172.15, 174.9, 11, "旗。对岸一个女学生送来的。"],
-  [47, "lb", 187.35, 188.85, 6, "鬼子给开的窗。"],
-  [48, "mc", 190.3, 192.3, 8, "记者！信上再加一句！"],
-  [49, "ji", 192.55, 193.3, 3, "加什么？"],
-  [50, "mc", 193.55, 196.1, 9, "等打完仗——我回去割稻！"],
-  [51, "cl", 200.65, 202.95, 8, "命令——全营撤进租界！"],
-  [52, "mc", 203.8, 205.8, 8, "撤？不是讲共存亡吗？"],
-  [53, "lb", 206.05, 206.8, 3, "是命令。"],
-  [54, "mc", 212.45, 212.95, 2, "低头！"],
-  [55, "mc", 218.8, 219.55, 3, "记者，信。"],
-  [56, "ji", 220.4, 220.9, 2, "放心。"],
-  [57, "th", 223.75, 226.05, 8, "喂——里面到底多少人？"],
-  [58, "ji", 228.7, 229.2, 2, "八百。"],
+  [47, "lb", 188.35, 189.85, 6, "鬼子给开的窗。"],
+  [48, "mc", 191.3, 193.3, 8, "记者！信上再加一句！"],
+  [49, "ji", 193.55, 194.3, 3, "加什么？"],
+  [50, "mc", 194.55, 197.1, 9, "等打完仗——我回去割稻！"],
+  [51, "cl", 201.65, 203.95, 8, "命令——全营撤进租界！"],
+  [52, "mc", 204.8, 206.8, 8, "撤？不是讲共存亡吗？"],
+  [53, "lb", 207.05, 207.8, 3, "是命令。"],
+  [54, "mc", 213.45, 213.95, 2, "低头！"],
+  [55, "mc", 219.8, 220.55, 3, "记者，信。"],
+  [56, "ji", 221.4, 221.9, 2, "放心。"],
+  [57, "th", 224.75, 227.05, 8, "喂——里面到底多少人？"],
+  [58, "ji", 229.7, 230.2, 2, "八百。"],
 ];
 /** the build segments = the scenes: [id, first line, last line, first frame, last frame (inclusive)]; a scene starts
  *  where its first line's silent beat (pre) starts (2 frames before its first word when it has none) */
@@ -201,9 +201,9 @@ export const SEGMENT_RAW: [string, number, number, number, number][] = [
   ["C", 19, 28, 1901, 2836],
   ["D", 29, 30, 2837, 3292],
   ["E", 31, 39, 3293, 4559],
-  ["F", 40, 46, 4560, 5505],
-  ["G", 47, 53, 5506, 6295],
-  ["H", 54, 58, 6296, 7385],
+  ["F", 40, 46, 4560, 5535],
+  ["G", 47, 53, 5536, 6325],
+  ["H", 54, 58, 6326, 7466],
 ];
 /** the fact cards: [line, line id, first frame, last frame (inclusive), zh, en]: from the end of the line (+ its "card_delay")
  *  for its "card_hold" seconds (else its "after", else 3.5 s) */

@@ -39,7 +39,7 @@ const LOOK: PlaceLook = {
   fill: FILL,
   bloom: 0.35,
 };
-const PARAMS: Record<string, ParamValue> = { raise: 0, cheer: 0 };
+const PARAMS: Record<string, ParamValue> = { raise: 0, cheer: 0, board: 0 };
 
 const roofTex = () => paint(512, 512, (g, W, H) => {
   const r = rng(61); g.fillStyle = "#77736c"; g.fillRect(0, 0, W, H);
@@ -120,6 +120,7 @@ const build = (K: Kit): PlaceBuild => {
     setParam(name: string, v: ParamValue) {
       if (name === "raise") raise = Math.max(0, Math.min(1, Number(v)));
       else if (name === "cheer") bank.setCheer(Number(v));
+      else if (name === "board") bank.setBoard(Number(v) | 0);
     },
     cast(): Partial<CastLight> { return {}; },
   };

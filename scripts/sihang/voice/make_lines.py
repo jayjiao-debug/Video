@@ -83,7 +83,7 @@ L = [
     ["F04", "lb", ["八百孤军，死守四行。"], "Eight hundred lone soldiers hold Sihang to the death.", {"pre": 0.9, "after": 0.5, "emo": "reading a headline slowly", "pic": "A newspaper from under the sacks: the front page close up."}],
     ["F05", "mc", ["……登报了？", "我娘看得见不？"], "...We're in the paper? Can my ma see it?", {"emo": "eyes wide"}],
     ["F06", "lb", ["村里先生看得见。"], "The village teacher can.", {"after": 1.2, "emo": "kindly"}],
-    ["F07", "lb", ["旗。对岸一个女学生送来的。"], "A flag. A schoolgirl brought it over from the other bank.", {"pre": 0.9, "after": 8.4, "emo": "quiet, almost to himself", "pic": "A roll of cloth. The seal. Then dawn on the roof: the flag's shadow slides over upturned faces; the south bank roars; a blackboard."}],
+    ["F07", "lb", ["旗。对岸一个女学生送来的。"], "A flag. A schoolgirl brought it over from the other bank.", {"pre": 0.9, "after": 9.4, "emo": "quiet, almost to himself", "pic": "A roll of cloth. The seal. Then dawn on the roof: the flag's shadow slides over upturned faces; the south bank roars; a blackboard."}],
     # ------------------------------------------------------------------ G · 30 Oct, night: a shell a second
     ["G01", "lb", ["鬼子给开的窗。"], "A window, courtesy of the enemy.", {"pre": 3.8, "after": 0.8, "emo": "dry, loud over the guns", "pic": "Searchlights, shells. The west wall is holed; he sets the machine gun in the new hole."}],
     ["G02", "mc", ["记者！信上再加一句！"], "Reporter! Add one more line to the letter!", {"pre": 0.4, "emo": "shouting over the shelling"}],
@@ -97,7 +97,7 @@ L = [
     ["H02", "mc", ["记者，信。"], "Reporter. The letter.", {"pre": 3.2, "after": 0.6, "emo": "out of breath, small", "pic": "South side. Rifles are piled up; he holds his a second, then lets go. The goods slip: four lines and a thumbprint."}],
     ["H03", "ji", ["放心。"], "I've got it.", {"after": 1.7, "tts": "[softly, steady] 放心。", "pic": "The battery: 2%, the red lamp blinking."}],
     ["H04", "th", ["喂——", "里面到底多少人？"], "Hey! How many were really in there?", {"pre": 0.9, "after": 2.4, "emo": "shouting from behind the cordon, a newsman", "pic": "The camera looks back: 满仓, 老班长, the tired line of men."}],
-    ["H05", "ji", ["八百。"], "Eight hundred.", {"after": 16.6, "tts": "[quiet, sure, after a breath] 八百。", "pic": "The battery dies. Black. The end slate: five white lines."}],
+    ["H05", "ji", ["八百。"], "Eight hundred.", {"after": 18.3, "tts": "[quiet, sure, after a breath] 八百。", "pic": "The battery dies. Black. The end slate: five white lines."}],
 ]
 
 def split_en(en, screens):

@@ -56,7 +56,7 @@ const houseTex = () => paint(1024, 512, (g, W, H) => {
   for (let j = 0; j < fl; j++) for (let i = 0; i < bays; i++) {
     const x = i * bw + bw * 0.2, y = H * 0.14 + j * fh + fh * 0.18;
     g.fillStyle = "#07080e"; g.fillRect(x, y, bw * 0.6, fh * 0.56);
-    if (r() < 0.75) { g.fillStyle = "#3a3626"; g.fillRect(x, y + fh * 0.2, bw * 0.6, fh * 0.36); }           // sacks in the window
+    if (r() < 0.75) { g.fillStyle = "#24252a"; g.fillRect(x, y + fh * 0.2, bw * 0.6, fh * 0.36); }           // sacks in the window
     if (r() < 0.07) { g.fillStyle = "rgba(255,150,70,0.5)"; g.fillRect(x, y, bw * 0.6, fh * 0.2); }
   }
   g.fillStyle = "#222738"; g.fillRect(0, H * 0.1, W, H * 0.03);
@@ -90,11 +90,11 @@ const build = (K: Kit): PlaceBuild => {
   }
   // THE NORTH END: the warehouse, dark, at the bridge's north-west corner; fire light low behind it
   const mHouse = Mk.basic("#ffffff", { map: houseTex(), transparent: true }); mHouse.alphaTest = 0.3; mHouse.depthWrite = true;
-  Mk.mesh("bridge.warehouse", new THREE.PlaneGeometry(64, 30).translate(X(-26), 13.5, B.zn + 16), mHouse, { cast: false, receive: false, noink: true });
-  Mk.mesh("bridge.north.block", new THREE.PlaneGeometry(40, 16).translate(X(30), 7, B.zn + 22), Mk.basic("#0c0f1a"), { cast: false, receive: false, noink: true });
+  Mk.mesh("bridge.warehouse", new THREE.PlaneGeometry(64, 30).rotateY(Math.PI).translate(X(-26), 13.5, B.zn + 16), mHouse, { cast: false, receive: false, noink: true });
+  Mk.mesh("bridge.north.block", new THREE.PlaneGeometry(40, 16).rotateY(Math.PI).translate(X(30), 7, B.zn + 22), Mk.basic("#0c0f1a"), { cast: false, receive: false, noink: true });
   const mGlowN = Mk.basic("#ff6a2a", { map: (glowCard(1, "#ffffff", 1).material as THREE.MeshBasicMaterial).map, additive: true, opacity: 0.5 });
-  const glowN = Mk.mesh("bridge.north.glow", new THREE.PlaneGeometry(120, 44).translate(X(6), 6, B.zn + 30), mGlowN, { cast: false, receive: false, noink: true }); glowN.renderOrder = 1;
-  Mk.mesh("bridge.north.sky", new THREE.PlaneGeometry(260, 110).translate(X(0), 40, B.zn + 46), Mk.basic("#0a0d1c"), { cast: false, receive: false, noink: true });
+  const glowN = Mk.mesh("bridge.north.glow", new THREE.PlaneGeometry(170, 84).rotateY(Math.PI).translate(X(-16), 25, B.zn + 30), mGlowN, { cast: false, receive: false, noink: true }); glowN.renderOrder = 1;   // the burning quarter behind the warehouse: its light stands over the roof line
+  Mk.mesh("bridge.north.sky", new THREE.PlaneGeometry(260, 110).rotateY(Math.PI).translate(X(0), 40, B.zn + 46), Mk.basic("#0a0d1c"), { cast: false, receive: false, noink: true });
   // THE SOUTH END: the cordon (sandbags either side of a 3.4 m gap), wire trestles pulled aside, a sentry box, the lamp
   const P = new Part(K), sm = sackMats(K), mWood = Mk.flat("#5c4a36", 0.85), mWire = Mk.flat("#6a6c74", 0.5);
   stackSacks(P, sm, { x0: X(-B.hw), x1: X(-1.7), y0: 0, rows: 6, z: B.cordon, seed: 41 }); stackSacks(P, sm, { x0: X(-B.hw), x1: X(-1.7), y0: 0, rows: 4, z: B.cordon + 0.38, seed: 42 });
@@ -147,7 +147,7 @@ const build = (K: Kit): PlaceBuild => {
       const foot = tmp.set(X(fx), 0, fz), d = foot.clone().sub(SRC), len = d.length();
       beam.position.copy(SRC); q.setFromUnitVectors(up, d.normalize()); beam.quaternion.copy(q); beam.scale.set(4.2, len, 4.2);
       mBeam.opacity = 0.16 * beamK; beam.visible = beamK > 0.01;
-      mGlowN.opacity = 0.42 + 0.08 * Math.sin(t * 3.1) + 0.3 * flash;
+      mGlowN.opacity = 0.5 + 0.06 * Math.sin(t * 3.1) + 0.3 * flash;
       for (let i = 0; i < NT; i++) {
         const s = trS[i], u = ((t / s.per + s.ph) % 1 + 1) % 1, on = tracerK > 0.01 && (Math.floor(t / s.per + s.ph) * 7 + i) % 3 !== 0 && i < Math.ceil(NT * tracerK);
         tr[i].visible = on; if (on) tr[i].position.set(X(s.x), s.y + 0.4 * u, B.zn + 20 - u * 80);

@@ -11,7 +11,7 @@
 import { seg, line, TITLE_BLOCK, type Segment } from "../story";
 import { povCam, punchIn, whip } from "../cam";
 import { MANCANG_SACK, LAO, MEN } from "../people";
-import { P, ck, put, loopWalk, startOf, endOf, ky, rel, h, frag, sec, win, hit, V } from "./kit";
+import { P, ck, put, loopWalk, sit, startOf, endOf, ky, rel, h, frag, sec, win, hit, V } from "./kit";
 import { Tally, UnitCard, NameStrip, Fact, Count } from "../hud/skin";
 
 const S = seg("A");
@@ -30,14 +30,14 @@ export const SEG: Segment = {
     let camera = povCam(f, [
       ck("hall", S.from, [0.2, 1.5, 0.9], [-5.2, 1.15, -4.6], 62),
       ck("hall", a03 - 20, [0.5, 1.5, -0.2], [-1.2, 1.2, -5.0], 62),
-      ck("hall", a03 + 6, [0.75, 1.48, -1.45], [1.05, 1.16, -3.3], 58),
-      ck("hall", a05 - 2, [0.75, 1.48, -1.45], [1.05, 1.16, -3.3], 58),
-      ck("hall", a05 + 16, [0.82, 1.42, -1.75], [1.03, 1.2, -3.1], 56),
-      ck("hall", e05 + 20, [0.82, 1.42, -1.75], [1.03, 1.2, -3.1], 56),
-      ck("hall", T0 + 30, [0.3, 1.5, 0.3], [-0.9, 1.25, -5.0], 64),
-      ck("hall", T1 - 20, [0.1, 1.5, 0.5], [-1.6, 1.25, -5.0], 64),
-      ck("hall", a06 - 2, [0.75, 1.48, -1.5], [1.05, 1.15, -3.3], 58),
-      ck("hall", S.to, [0.75, 1.48, -1.5], [1.05, 1.15, -3.3], 58),
+      ck("hall", a03 + 6, [0.7, 1.48, -0.85], [1.05, 1.1, -3.3], 58),
+      ck("hall", a05 - 2, [0.7, 1.48, -0.85], [1.05, 1.1, -3.3], 58),
+      ck("hall", a05 + 16, [0.8, 1.42, -1.25], [1.0, 1.14, -3.0], 56),
+      ck("hall", e05 + 20, [0.8, 1.42, -1.25], [1.0, 1.14, -3.0], 56),
+      ck("hall", T0 + 30, [0.3, 1.5, 0.3], [0.3, 1.2, -5.0], 64),
+      ck("hall", T1 - 20, [0.1, 1.5, 0.6], [-0.2, 1.2, -5.0], 64),
+      ck("hall", a06 - 2, [0.7, 1.48, -0.9], [1.05, 1.1, -3.3], 58),
+      ck("hall", S.to, [0.7, 1.48, -0.9], [1.05, 1.1, -3.3], 58),
     ], { mood: "calm", amp: 0.8, walk: [[S.from, 0.5], [a03 + 6, 0.5], [a03 + 16, 0], [e05 + 20, 0], [T0 + 20, 0.4], [T0 + 34, 0], [a06 - 24, 0.4], [a06 - 4, 0]] });
     camera = punchIn(camera, f, a04 - 1, { k: 0.76, len: 5, off: a05 - 6 });
     const wp = whip(camera, f, S.to - 3, { dir: 1, deg: 30 }); camera = wp.cam;
@@ -48,7 +48,7 @@ export const SEG: Segment = {
       put(w, f, MEN[i % MEN.length], { at: leg.at, facing: leg.facing, id: 20 + i, pose: leg.pose, expr: "calm" }, `h${i}`);
     });
     // 老班长, further along the wall, cleaning nothing yet: he sits and watches (he is scene B's)
-    put(w, f, LAO, { at: P("hall", 2.25, 0, -3.5), facing: 0.9, id: 3, expr: "dry", lookDown: 12, more: {} });
+    put(w, f, LAO, { at: P("hall", 2.2, 0, -3.36), facing: 0.5, id: 3, expr: "dry", lookDown: 10, more: sit(P("hall", 2.2, 0, -3.36), 0.5, 0.45, f / 30) });
     // --- 满仓: stacking at the window (back to her) -> turned to her -> chest out -> leaning in -> back to work -> his name
     const AT = P("hall", 1.05, 0, -3.3), WALL = P("hall", 0.9, 0, -4.9);
     const turnK = ky(f, [[a03 - 4, 0], [a03 + 8, 1], [e05 + 26, 1], [e05 + 40, 0], [a06 - 22, 0], [a06 - 8, 1]]);
@@ -58,12 +58,13 @@ export const SEG: Segment = {
     const pat = f >= a06 ? 0.5 + 0.5 * Math.sin((f - a06) * 0.55) : 0;
     const r = put(w, f, MANCANG_SACK, {
       at, facing, id: 1, who: "mc",
-      expr: [[S.from, "think"], [a03 + 4, "bright"], [a04 - 2, "proud"], [a05 - 8, "shy"], [e05 + 16, "bright"], [a06 - 4, "proud"]],
+      expr: [[S.from, "think"], [a03 + 4, "bright"], [a04 - 2, "loud"], [a05 - 8, "shy"], [e05 + 16, "bright"], [a06 - 4, "proud"]],
       head: f >= a04 - 2 && f < a04 + 14 ? { dy: 0.05 * hit(f, a04 - 2, 14) } : undefined,
       lean: inK > 0.01 ? { pitch: 7 * inK } : f >= a04 && f < a05 - 8 ? { pitch: -5 } : undefined,
       gaze: f >= a05 - 12 && f < a05 + 4 ? (f < a05 - 4 ? -1 : 1) : 0,
       hands: f >= a06 && f <= e06 + 6 ? [rel(at, facing, -0.02, 0.66 + 0.05 * pat, 0.24), null] : undefined,
       pose: turnK < 0.5 ? { kind: "hold", t: f / 30 } as never : undefined,
+      more: f >= a04 - 3 && f < a04 + 16 ? { blink: 0 } : undefined,
     });
     void r;
     w.update();

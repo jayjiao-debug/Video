@@ -209,11 +209,16 @@ const build = (K: Kit): PlaceBuild => {
 
   // ============================================================================================ light
   const sdir = V(...SUN).normalize().negate(), shafts: THREE.Mesh[] = [];
+  // each shaft's axis (start, length, half width): a lens standing inside one would see only its veil, so a shaft
+  // thins out as the lens comes into it (see view)
+  const shaftAx: { a: THREE.Vector3; len: number; r: number }[] = [];
   for (const c of D.win) {
     const z = D.z0 - 0.02, y0 = D.sill + slitRow * SACK.h, y1 = y0 + 2 * SACK.h;
     shafts.push(sunShaft([V(X(c + 0.3), y0, z), V(X(c - 0.3), y0, z), V(X(c - 0.3), y1, z), V(X(c + 0.3), y1, z)], sdir, 3.2, "#fff2d8", 0.2));
+    shaftAx.push({ a: V(X(c), (y0 + y1) / 2, z), len: 3.2, r: 0.42 });
     const t0 = D.sill + 13 * SACK.h;
     shafts.push(sunShaft([V(X(c + hw), t0, z), V(X(c - hw), t0, z), V(X(c - hw), D.head, z), V(X(c + hw), D.head, z)], sdir, 5.2, "#fff2d8", 0.2));
+    shaftAx.push({ a: V(X(c), (t0 + D.head) / 2, z), len: 5.2, r: hw + 0.1 });
   }
   for (const s of shafts) { s.name = "hall.shaft"; group.add(s); }
   const Lr = lightRig(group, { dir: TL_.night.key, k: TL_.night.keyK, col: TL_.night.keyCol, at: [X(0.5), 0, -1.5], half: 10, hemi: TL_.night.hemi, point: { col: "#ffb676", k: 7, at: [X(LAMPS.south[0]), LAMPS.south[1] + 0.35, LAMPS.south[2]], dist: 9 } });
@@ -257,10 +262,18 @@ const build = (K: Kit): PlaceBuild => {
   };
   applyTime("night");
 
-  const camP = new THREE.Vector3();
+  const camP = new THREE.Vector3(), tmpV = new THREE.Vector3();
   return {
     group,
-    view(c: THREE.Vector3) { camP.copy(c); for (const f of Object.values(fires)) f.face(c); },
+    view(c: THREE.Vector3) {
+      camP.copy(c); for (const f of Object.values(fires)) f.face(c);
+      const L = TL_[time];
+      if (L.shaft > 0.001) shafts.forEach((sh, i) => {
+        const ax = shaftAx[i], t = Math.max(0, Math.min(ax.len, tmpV.copy(c).sub(ax.a).dot(sdir))), d = tmpV.copy(ax.a).addScaledVector(sdir, t).distanceTo(c);
+        const q = Math.max(0, Math.min(1, (d - ax.r * 0.7) / (ax.r * 0.9))), k = q * q * (3 - 2 * q);
+        (sh.material as THREE.MeshBasicMaterial).opacity = L.shaft * (0.12 + 0.88 * k);
+      });
+    },
     animate(t: number) {
       for (const f of Object.values(fires)) f.animate(t);
       fk = lamp !== "none" ? fires[lamp].level(t) : 1;

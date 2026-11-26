@@ -21,7 +21,7 @@ export const buildProps = (M: Mats) => {
   const BUILD: Record<PropName, () => THREE.Group> = {
     sack: () => {
       const g = new THREE.Group(), P = new Part(K);
-      const t = paint(128, 64, (cg, w, h) => { cg.fillStyle = "#cdbd97"; cg.fillRect(0, 0, w, h); cg.strokeStyle = "rgba(90,70,40,0.3)"; cg.lineWidth = 2; for (let x = 4; x < w; x += 8) { cg.beginPath(); cg.moveTo(x, 0); cg.lineTo(x, h); cg.stroke(); } cg.fillStyle = "rgba(150,60,40,0.55)"; cg.fillRect(44, 24, 30, 5); cg.fillRect(44, 34, 20, 5); });
+      const t = paint(128, 64, (cg, w, h) => { cg.fillStyle = "#b9aa86"; cg.fillRect(0, 0, w, h); cg.strokeStyle = "rgba(90,70,40,0.1)"; cg.lineWidth = 2; for (let x = 4; x < w; x += 8) { cg.beginPath(); cg.moveTo(x, 0); cg.lineTo(x, h); cg.stroke(); } cg.fillStyle = "rgba(150,60,40,0.55)"; cg.fillRect(44, 24, 30, 5); cg.fillRect(44, 34, 20, 5); });
       P.add(K.flat("#ffffff", { map: t, rough: 0.95 }), ball(V(0, 0.13, 0), 1, [0.36, 0.13, 0.22], 16), 0.008);
       return P.into(g, "sack");
     },
