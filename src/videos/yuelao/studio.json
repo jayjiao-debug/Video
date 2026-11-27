@@ -75,5 +75,9 @@
    }
   ]
  },
- "_note": "No sound.build yet: the owner auditions the audio later (27 Nov), so a studio run without --mix makes a silent master on purpose (the sound check stays FAIL until then). The gate.accept rules turn the clipping classes accepted in the film's own clipping notes into INFO, each with its reason."
+ "sound": {
+  "build": "bash scripts/yuelao/sound/build_sound.sh {WORK}/sound {MIX}",
+  "stems": "python3 scripts/kit/day/sound/build.py --film yuelao --work {WORK}/sound --timing {WORK}/sound/voice/voice_timing.json --voice {WORK}/sound/voice/voice_48k_ride.wav --clips {WORK}/sound/clips --cues scripts/yuelao/sound/cues.json --only {GROUP} --nosafety --out {STEM}"
+ },
+ "_note": "Sound (27 Nov 2026, after the owner's audition): scripts/yuelao/sound/build_sound.sh rebuilds the whole mix from the repo and the voice farm's public takes: the 63 lines cut by the committed cut list (voice/takes.json: each line exactly the length the picture was timed to; it stops if the rebuilt timing is out of step with voice/timing_ref.json), the music and effects made in code (make_sound.py), the cues on the picture's own frames (cues.json from make_cues.py + events.ts), the voice ridden under the bed (voice_ride.py), then the kit's build.py. Mono mix about -18.9 LUFS, true peak about -2.3 dBTP. The stems command needs the build's {WORK}/sound from the same run. The gate.accept rules turn the clipping classes accepted in the film's own clipping notes into INFO, each with its reason."
 }
