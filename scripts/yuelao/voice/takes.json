@@ -1,0 +1,880 @@
+{
+"sr": 48000,
+"lines": [
+{
+"id": "A01",
+"branch": "vo-yuelao-vo-01",
+"file": "A01.mp3",
+"keep": [
+[
+0.0,
+2.67
+]
+],
+"run": "vo01"
+},
+{
+"id": "A02",
+"branch": "vo-yuelao-vo-01",
+"file": "A02.mp3",
+"keep": [
+[
+0.009999999999999995,
+2.35
+]
+],
+"run": "vo01"
+},
+{
+"id": "A03",
+"branch": "vo-yuelao-vo-01",
+"file": "A03.mp3",
+"keep": [
+[
+0.15999999999999998,
+3.68
+]
+],
+"run": "vo01"
+},
+{
+"id": "A04",
+"branch": "vo-yuelao-vo-01",
+"file": "A04.mp3",
+"keep": [
+[
+0.009999999999999995,
+2.45
+]
+],
+"run": "vo01"
+},
+{
+"id": "A05",
+"branch": "vo-yuelao-vo-01",
+"file": "A05.mp3",
+"keep": [
+[
+0.0,
+2.8400000000000003
+]
+],
+"run": "vo01"
+},
+{
+"id": "B01",
+"branch": "vo-yuelao-vo-01",
+"file": "B01.mp3",
+"keep": [
+[
+0.009999999999999995,
+3.6
+],
+[
+3.79,
+5.38
+],
+[
+5.48,
+6.83
+]
+],
+"run": "vo01"
+},
+{
+"id": "B02",
+"branch": "vo-yuelao-vo-01",
+"file": "B02.mp3",
+"keep": [
+[
+0.0,
+1.76
+]
+],
+"run": "vo01"
+},
+{
+"id": "B03",
+"branch": "vo-yuelao-vo-01",
+"file": "B03.mp3",
+"keep": [
+[
+0.0,
+1.44
+]
+],
+"run": "vo01"
+},
+{
+"id": "B04",
+"branch": "vo-yuelao-vo-01",
+"file": "B04.mp3",
+"keep": [
+[
+0.03,
+2.77
+]
+],
+"run": "vo01"
+},
+{
+"id": "B05",
+"branch": "vo-yuelao-vo-01",
+"file": "B05.mp3",
+"keep": [
+[
+0.0,
+3.9
+]
+],
+"run": "vo01"
+},
+{
+"id": "B06",
+"branch": "vo-yuelao-vo-01",
+"file": "B06.mp3",
+"keep": [
+[
+0.0,
+2.25
+],
+[
+2.28,
+3.97
+]
+],
+"run": "vo01"
+},
+{
+"id": "B07",
+"branch": "vo-yuelao-vo-01",
+"file": "B07.mp3",
+"keep": [
+[
+0.0,
+1.58
+]
+],
+"run": "vo01"
+},
+{
+"id": "B08",
+"branch": "vo-yuelao-vo-01",
+"file": "B08.mp3",
+"keep": [
+[
+0.0,
+1.2
+],
+[
+2.82,
+4.37
+]
+],
+"run": "vo01"
+},
+{
+"id": "C01",
+"branch": "vo-yuelao-vo-01",
+"file": "C01.mp3",
+"keep": [
+[
+0.0,
+2.7
+]
+],
+"run": "vo01"
+},
+{
+"id": "C02",
+"branch": "vo-yuelao-vo-01",
+"file": "C02.mp3",
+"keep": [
+[
+0.0,
+2.96
+]
+],
+"run": "vo01"
+},
+{
+"id": "C03",
+"branch": "vo-yuelao-vo-01",
+"file": "C03.mp3",
+"keep": [
+[
+0.0,
+2.0
+]
+],
+"run": "vo01"
+},
+{
+"id": "C04",
+"branch": "vo-yuelao-vo-01",
+"file": "C04.mp3",
+"keep": [
+[
+0.0,
+2.42
+]
+],
+"run": "vo01"
+},
+{
+"id": "C05",
+"branch": "vo-yuelao-vo-01",
+"file": "C05.mp3",
+"keep": [
+[
+0.0,
+1.7
+],
+[
+1.71,
+3.54
+],
+[
+3.56,
+4.64
+]
+],
+"run": "vo01"
+},
+{
+"id": "C06",
+"branch": "vo-yuelao-vo-01",
+"file": "C06.mp3",
+"keep": [
+[
+0.0,
+1.73
+],
+[
+1.98,
+5.36
+]
+],
+"run": "vo01"
+},
+{
+"id": "C07",
+"branch": "vo-yuelao-vo-01",
+"file": "C07.mp3",
+"keep": [
+[
+0.0,
+1.57
+],
+[
+1.72,
+4.49
+]
+],
+"run": "vo01"
+},
+{
+"id": "C08",
+"branch": "vo-yuelao-vo-01",
+"file": "C08.mp3",
+"keep": [
+[
+0.0,
+2.23
+]
+],
+"run": "vo01"
+},
+{
+"id": "C09",
+"branch": "vo-yuelao-vo-01",
+"file": "C09.mp3",
+"keep": [
+[
+0.0,
+1.79
+],
+[
+1.9500000000000002,
+4.06
+]
+],
+"run": "vo01"
+},
+{
+"id": "C10",
+"branch": "vo-yuelao-vo-01",
+"file": "C10.mp3",
+"keep": [
+[
+0.0,
+1.3599999999999999
+]
+],
+"run": "vo01"
+},
+{
+"id": "C11",
+"branch": "vo-yuelao-vo-01",
+"file": "C11.mp3",
+"keep": [
+[
+0.03,
+2.08
+]
+],
+"run": "vo01"
+},
+{
+"id": "D01",
+"branch": "vo-yuelao-vo-01",
+"file": "D01.mp3",
+"keep": [
+[
+0.020000000000000004,
+2.31
+]
+],
+"run": "vo01"
+},
+{
+"id": "D02",
+"branch": "vo-yuelao-audition-01",
+"file": "ma_3_Susan.mp3",
+"keep": [
+[
+0.039999999999999994,
+5.07
+]
+],
+"run": "aud01",
+"fit": {
+"cuts": [],
+"tempo": null,
+"samples": 250560,
+"q16": true
+}
+},
+{
+"id": "D03",
+"branch": "vo-yuelao-recast-01",
+"file": "D03.mp3",
+"keep": [
+[
+0.05,
+2.5
+]
+],
+"run": "recast01",
+"fit": {
+"cuts": [],
+"tempo": 1.03376,
+"samples": 113760,
+"q16": true
+}
+},
+{
+"id": "D04",
+"branch": "vo-yuelao-vo-01",
+"file": "D04.mp3",
+"keep": [
+[
+0.0,
+3.56
+]
+],
+"run": "vo01"
+},
+{
+"id": "D05",
+"branch": "vo-yuelao-vo-01",
+"file": "D05.mp3",
+"keep": [
+[
+0.0,
+1.6800000000000002
+]
+],
+"run": "vo01"
+},
+{
+"id": "E01",
+"branch": "vo-yuelao-vo-01",
+"file": "E01.mp3",
+"keep": [
+[
+0.0,
+2.8400000000000003
+]
+],
+"run": "vo01"
+},
+{
+"id": "E02",
+"branch": "vo-yuelao-vo-01",
+"file": "E02.mp3",
+"keep": [
+[
+0.06,
+2.46
+]
+],
+"run": "vo01"
+},
+{
+"id": "E03",
+"branch": "vo-yuelao-vo-01",
+"file": "E03.mp3",
+"keep": [
+[
+0.0,
+1.77
+],
+[
+1.8399999999999999,
+4.44
+]
+],
+"run": "vo01"
+},
+{
+"id": "E04",
+"branch": "vo-yuelao-vo-01",
+"file": "E04.mp3",
+"keep": [
+[
+0.03,
+2.17
+],
+[
+2.23,
+3.17
+]
+],
+"run": "vo01"
+},
+{
+"id": "E05",
+"branch": "vo-yuelao-vo-01",
+"file": "E05.mp3",
+"keep": [
+[
+0.0,
+2.72
+]
+],
+"run": "vo01"
+},
+{
+"id": "E06",
+"branch": "vo-yuelao-vo-01",
+"file": "E06.mp3",
+"keep": [
+[
+0.36,
+4.23
+]
+],
+"run": "vo01"
+},
+{
+"id": "F01",
+"branch": "vo-yuelao-vo-01",
+"file": "F01.mp3",
+"keep": [
+[
+0.0,
+3.5500000000000003
+]
+],
+"run": "vo01"
+},
+{
+"id": "F02",
+"branch": "vo-yuelao-audition-01",
+"file": "xq_2_LiuPing.mp3",
+"keep": [
+[
+0.06,
+2.9
+]
+],
+"run": "aud01",
+"fit": {
+"cuts": [
+[
+0.7011111111111111,
+0.7788888888888889
+],
+[
+1.6388888888888888,
+1.761111111111111
+]
+],
+"tempo": null,
+"samples": 126720,
+"q16": true
+}
+},
+{
+"id": "F03",
+"branch": "vo-yuelao-vo-01",
+"file": "F03.mp3",
+"keep": [
+[
+0.020000000000000004,
+1.83
+]
+],
+"run": "vo01"
+},
+{
+"id": "F04",
+"branch": "vo-yuelao-recast-01",
+"file": "F04.mp3",
+"keep": [
+[
+0.009999999999999995,
+2.3600000000000003
+]
+],
+"run": "recast01",
+"fit": {
+"cuts": [
+[
+0.9700000000000001,
+1.09
+]
+],
+"tempo": 1.13199,
+"samples": 94560,
+"q16": true
+}
+},
+{
+"id": "F05",
+"branch": "vo-yuelao-vo-01",
+"file": "F05.mp3",
+"keep": [
+[
+0.0,
+1.6400000000000001
+]
+],
+"run": "vo01"
+},
+{
+"id": "F06",
+"branch": "vo-yuelao-vo-01",
+"file": "F06.mp3",
+"keep": [
+[
+0.009999999999999995,
+2.44
+],
+[
+2.46,
+3.76
+]
+],
+"run": "vo01"
+},
+{
+"id": "F07",
+"branch": "vo-yuelao-vo-01",
+"file": "F07.mp3",
+"keep": [
+[
+0.05,
+2.95
+]
+],
+"run": "vo01"
+},
+{
+"id": "G01",
+"branch": "vo-yuelao-vo-01",
+"file": "G01.mp3",
+"keep": [
+[
+0.0,
+1.7599999999999998
+]
+],
+"run": "vo01"
+},
+{
+"id": "G02",
+"branch": "vo-yuelao-vo-01",
+"file": "G02.mp3",
+"keep": [
+[
+0.0,
+2.3000000000000003
+]
+],
+"run": "vo01"
+},
+{
+"id": "G03",
+"branch": "vo-yuelao-recast-02",
+"file": "G03_s2027.mp3",
+"keep": [
+[
+0.0,
+1.84
+]
+],
+"run": "recast02f",
+"fit": {
+"cuts": [],
+"tempo": null,
+"samples": 90720,
+"q16": true
+}
+},
+{
+"id": "G04",
+"branch": "vo-yuelao-vo-01",
+"file": "G04.mp3",
+"keep": [
+[
+0.0,
+2.07
+]
+],
+"run": "vo01"
+},
+{
+"id": "G05",
+"branch": "vo-yuelao-vo-01",
+"file": "G05.mp3",
+"keep": [
+[
+0.0,
+1.57
+],
+[
+1.85,
+3.84
+]
+],
+"run": "vo01"
+},
+{
+"id": "H01",
+"branch": "vo-yuelao-vo-01",
+"file": "H01.mp3",
+"keep": [
+[
+0.039999999999999994,
+1.7200000000000002
+]
+],
+"run": "vo01"
+},
+{
+"id": "H02",
+"branch": "vo-yuelao-vo-01",
+"file": "H02.mp3",
+"keep": [
+[
+0.039999999999999994,
+1.1099999999999999
+]
+],
+"run": "vo01"
+},
+{
+"id": "H03",
+"branch": "vo-yuelao-vo-01",
+"file": "H03.mp3",
+"keep": [
+[
+0.06,
+1.67
+],
+[
+1.94,
+5.36
+]
+],
+"run": "vo01"
+},
+{
+"id": "H04",
+"branch": "vo-yuelao-vo-01",
+"file": "H04.mp3",
+"keep": [
+[
+0.009999999999999995,
+3.25
+]
+],
+"run": "vo01"
+},
+{
+"id": "H05",
+"branch": "vo-yuelao-vo-01",
+"file": "H05.mp3",
+"keep": [
+[
+0.020000000000000004,
+3.6
+]
+],
+"run": "vo01"
+},
+{
+"id": "I01",
+"branch": "vo-yuelao-vo-01",
+"file": "I01.mp3",
+"keep": [
+[
+0.0,
+0.94
+],
+[
+1.06,
+3.64
+]
+],
+"run": "vo01"
+},
+{
+"id": "I02",
+"branch": "vo-yuelao-vo-01",
+"file": "I02.mp3",
+"keep": [
+[
+0.0,
+3.3200000000000003
+]
+],
+"run": "vo01"
+},
+{
+"id": "I03",
+"branch": "vo-yuelao-vo-01",
+"file": "I03.mp3",
+"keep": [
+[
+0.0,
+2.03
+]
+],
+"run": "vo01"
+},
+{
+"id": "I04",
+"branch": "vo-yuelao-audition-01",
+"file": "qs_2_DanyuZhao.mp3",
+"keep": [
+[
+0.020000000000000004,
+3.48
+]
+],
+"run": "aud01",
+"fit": {
+"cuts": [
+[
+1.185,
+1.415
+]
+],
+"tempo": null,
+"samples": 155040,
+"q16": true
+}
+},
+{
+"id": "I05",
+"branch": "vo-yuelao-vo-01",
+"file": "I05.mp3",
+"keep": [
+[
+0.0,
+2.3600000000000003
+]
+],
+"run": "vo01"
+},
+{
+"id": "I06",
+"branch": "vo-yuelao-vo-01",
+"file": "I06.mp3",
+"keep": [
+[
+0.009999999999999995,
+3.5500000000000003
+]
+],
+"run": "vo01"
+},
+{
+"id": "I07",
+"branch": "vo-yuelao-vo-01",
+"file": "I07.mp3",
+"keep": [
+[
+0.15999999999999998,
+1.75
+]
+],
+"run": "vo01"
+},
+{
+"id": "I08",
+"branch": "vo-yuelao-vo-01",
+"file": "I08.mp3",
+"keep": [
+[
+0.05,
+1.13
+],
+[
+1.48,
+4.83
+]
+],
+"run": "vo01"
+},
+{
+"id": "J01",
+"branch": "vo-yuelao-vo-01",
+"file": "J01.mp3",
+"keep": [
+[
+0.0,
+1.56
+]
+],
+"run": "vo01"
+},
+{
+"id": "J02",
+"branch": "vo-yuelao-vo-01",
+"file": "J02.mp3",
+"keep": [
+[
+0.0,
+1.7999999999999998
+]
+],
+"run": "vo01"
+},
+{
+"id": "J03",
+"branch": "vo-yuelao-vo-01",
+"file": "J03.mp3",
+"keep": [
+[
+0.0,
+2.18
+]
+],
+"run": "vo01"
+}
+]
+}

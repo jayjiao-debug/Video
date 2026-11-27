@@ -1,5 +1,5 @@
 {
- "note": "采访月老的一天 sound plan v1: everything is made in code (make_sound.py). Scene H01-H02 has only the street and the night pad's tail.",
+ "note": "采访月老的一天 sound plan v2 (27 Nov): everything is made in code (make_sound.py). Hits on things seen sit on the picture's own frames (events.ts). Scene H01-H02 has only the street and the night pad's tail.",
  "cards": {
   "clip": "sfx_ding",
   "gain": -22.0
@@ -195,9 +195,9 @@
    "label": "A yank",
    "clip": "sfx_twang",
    "at": [
-    "A02",
-    "end",
-    3.2
+    "A",
+    "from",
+    10.433
    ],
    "gain": -20.0
   },
@@ -205,19 +205,29 @@
    "label": "A title thread",
    "clip": "sfx_whoosh",
    "at": [
-    "A05",
-    "end",
-    0.2
+    "A",
+    "from",
+    20.567
    ],
    "gain": -22.0
+  },
+  {
+   "label": "A title paper",
+   "clip": "sfx_pop",
+   "at": [
+    "A",
+    "from",
+    21.033
+   ],
+   "gain": -28.0
   },
   {
    "label": "A title seal",
    "clip": "sfx_stamp",
    "at": [
-    "A05",
-    "end",
-    1.0
+    "A",
+    "from",
+    21.3
    ],
    "gain": -20.0
   },
@@ -272,12 +282,22 @@
    "gain": -22.0
   },
   {
+   "label": "B-C whip",
+   "clip": "sfx_whoosh",
+   "at": [
+    "B",
+    "from",
+    29.367
+   ],
+   "gain": -22.0
+  },
+  {
    "label": "C file 1",
    "clip": "sfx_whoosh",
    "at": [
-    "C02",
-    "start",
-    0.0
+    "C",
+    "from",
+    3.567
    ],
    "gain": -23.0
   },
@@ -285,9 +305,9 @@
    "label": "C stamp 1",
    "clip": "sfx_stamp",
    "at": [
-    "C04",
-    "start",
-    0.4
+    "C",
+    "from",
+    9.167
    ],
    "gain": -20.0
   },
@@ -295,19 +315,29 @@
    "label": "C file 2",
    "clip": "sfx_whoosh",
    "at": [
-    "C05",
-    "start",
-    -0.05
+    "C",
+    "from",
+    12.133
    ],
    "gain": -23.0
+  },
+  {
+   "label": "C butterflies",
+   "clip": "sfx_sparkle",
+   "at": [
+    "C",
+    "from",
+    13.967
+   ],
+   "gain": -26.0
   },
   {
    "label": "C stamp 2",
    "clip": "sfx_stamp",
    "at": [
-    "C05",
-    "start",
-    2.55
+    "C",
+    "from",
+    14.633
    ],
    "gain": -20.0
   },
@@ -315,9 +345,9 @@
    "label": "C file 3",
    "clip": "sfx_whoosh",
    "at": [
-    "C06",
-    "start",
-    -0.05
+    "C",
+    "from",
+    17.333
    ],
    "gain": -23.0
   },
@@ -325,9 +355,9 @@
    "label": "C stamp 3",
    "clip": "sfx_stamp",
    "at": [
-    "C06",
-    "start",
-    2.07
+    "C",
+    "from",
+    19.067
    ],
    "gain": -20.0
   },
@@ -335,9 +365,9 @@
    "label": "C file 4",
    "clip": "sfx_whoosh",
    "at": [
-    "C07",
-    "start",
-    -0.05
+    "C",
+    "from",
+    22.733
    ],
    "gain": -23.0
   },
@@ -345,9 +375,9 @@
    "label": "C stamp 4",
    "clip": "sfx_stamp",
    "at": [
-    "C07",
-    "start",
-    3.29
+    "C",
+    "from",
+    25.433
    ],
    "gain": -20.0
   },
@@ -362,12 +392,26 @@
    "gain": -24.0
   },
   {
+   "label": "C drawer slam",
+   "clip": "sfx_stamp",
+   "at": [
+    "C",
+    "from",
+    30.767
+   ],
+   "gain": -21.0,
+   "rate": 0.72,
+   "lp": [
+    2400
+   ]
+  },
+  {
    "label": "C file 5",
    "clip": "sfx_whoosh",
    "at": [
-    "C09",
-    "start",
-    -0.05
+    "C",
+    "from",
+    33.633
    ],
    "gain": -23.0
   },
@@ -375,9 +419,9 @@
    "label": "C stamp 5",
    "clip": "sfx_stamp",
    "at": [
-    "C09",
-    "start",
-    3.2
+    "C",
+    "from",
+    34.233
    ],
    "gain": -20.0
   },
@@ -422,14 +466,45 @@
    "gain": -23.0
   },
   {
-   "label": "D tonight",
+   "label": "D catches the slip",
+   "clip": "sfx_pop",
+   "at": [
+    "D",
+    "from",
+    11.267
+   ],
+   "gain": -24.0
+  },
+  {
+   "label": "D slip seal",
    "clip": "sfx_stamp",
    "at": [
-    "D04",
-    "start",
-    2.08
+    "D",
+    "from",
+    11.833
    ],
    "gain": -22.0
+  },
+  {
+   "label": "D spool thrown",
+   "clip": "sfx_whoosh",
+   "at": [
+    "D",
+    "from",
+    16.767
+   ],
+   "gain": -23.0
+  },
+  {
+   "label": "D spool on the lens",
+   "clip": "sfx_pop",
+   "at": [
+    "D",
+    "from",
+    17.2
+   ],
+   "gain": -22.0,
+   "rate": 0.8
   },
   {
    "label": "E tie",
@@ -445,9 +520,9 @@
    "label": "E snap 1",
    "clip": "sfx_snap",
    "at": [
-    "E04",
-    "start",
-    0.678
+    "E",
+    "from",
+    14.5
    ],
    "gain": -20.0
   },
@@ -455,9 +530,9 @@
    "label": "E snap 2",
    "clip": "sfx_snap",
    "at": [
-    "E04",
-    "start",
-    1.694
+    "E",
+    "from",
+    15.3
    ],
    "gain": -20.0
   },
@@ -465,9 +540,9 @@
    "label": "E snap 3",
    "clip": "sfx_snap",
    "at": [
-    "E04",
-    "start",
-    2.834
+    "E",
+    "from",
+    16.433
    ],
    "gain": -20.0
   },
@@ -475,9 +550,9 @@
    "label": "E stamp",
    "clip": "sfx_stamp",
    "at": [
-    "E06",
-    "start",
-    2.83
+    "E",
+    "from",
+    23.5
    ],
    "gain": -18.0
   },
@@ -506,11 +581,25 @@
    "label": "F stamp",
    "clip": "sfx_stamp",
    "at": [
-    "F06",
-    "start",
-    2.92
+    "F",
+    "from",
+    18.533
    ],
    "gain": -18.0
+  },
+  {
+   "label": "F mitten on the lens",
+   "clip": "sfx_pop",
+   "at": [
+    "F",
+    "from",
+    19.433
+   ],
+   "gain": -26.0,
+   "rate": 0.6,
+   "lp": [
+    900
+   ]
   },
   {
    "label": "G where",
@@ -587,9 +676,9 @@
    "label": "I stamp ok",
    "clip": "sfx_stamp",
    "at": [
-    "I08",
-    "start",
-    3.19
+    "I",
+    "from",
+    29.0
    ],
    "gain": -18.0
   },
@@ -597,9 +686,9 @@
    "label": "I stamp ok shine",
    "clip": "sfx_sparkle",
    "at": [
-    "I08",
-    "start",
-    3.24
+    "I",
+    "from",
+    29.067
    ],
    "gain": -24.0
   },
@@ -617,9 +706,9 @@
    "label": "power off",
    "clip": "sfx_poweroff",
    "at": [
-    "J03",
-    "end",
-    2.9
+    "J",
+    "from",
+    10.8
    ],
    "gain": -16.0
   }
