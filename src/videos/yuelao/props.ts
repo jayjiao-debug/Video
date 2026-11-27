@@ -5,6 +5,7 @@
 import * as THREE from "three";
 import type { Mats } from "../bt/pbr";
 import { makeKit, Part, box, ball, V, paint, FONT, NOINK } from "../../kit/props/kit";
+import { buildPopBooks } from "./popbook";
 
 export const RED = "#d8362a";
 
@@ -261,6 +262,8 @@ export const buildProps = (M: Mats) => {
     for (let i = 0; i <= n + 1; i++) { const u = i / (n + 1), p = a.clone().lerp(b, u); p.y -= sag * 4 * u * (1 - u); if (wob) p.x += wob * Math.sin(u * Math.PI) ; out.push(p); }
     return out;
   };
-  return { group, prop, thread, hang, begin() { for (const p of made.values()) p.group.visible = false; for (const t of threads.values()) { t.core.visible = false; t.hull.visible = false; } } };
+  // THE CASE BOOKS (popbook.ts): w.props.book(kind).put(at, o).set({ open, g, t })
+  const books = buildPopBooks(K); group.add(books.group);
+  return { group, prop, thread, hang, book: books.book, begin() { for (const p of made.values()) p.group.visible = false; for (const t of threads.values()) { t.core.visible = false; t.hull.visible = false; } books.begin(); } };
 };
 export type Props = ReturnType<typeof buildProps>;
