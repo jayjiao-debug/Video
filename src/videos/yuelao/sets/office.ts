@@ -3,10 +3,15 @@
 // warm floor boards, a round moon window in the back wall (-z) with a blue-gold morning sky, a pale moon and clouds
 // outside; the key comes in through it. RED THREAD EVERYWHERE: hanks from the beams, lines strung across the room,
 // spools on the shelves, baskets and skeins against the walls; THE TANGLE heap on the floor. The case-file cabinet (a
-// medicine chest of drawers) fills the -x wall; the KPI board hangs on the +x wall; the burner stands by the door.
+// medicine chest of drawers) fills the -x wall; heaven's decree hangs on the +x wall; the burner stands by the door.
+// v6 (owner's notes 1, 10 and 13 on v5: threads "too 3D", "more texture and detail", "too modern, more 神仙ly"): the
+// KPI board is now a 考绩令 scroll from heaven's Board of Personnel; a lacquer plaque 千里姻缘一线牵 crowns the moon window
+// between two couplets; the beams are painted, the pillars banded in gold, the plaster stencilled with clouds; clouds
+// drift in at the floor and below the window; two coils of incense hang from the back beam; every thread in the room
+// is the film's outlined cord (sets/cord.ts), and THE TANGLE is loose cord in lazy coils over a low mound.
 // All marks: places.ts OFFICE (local; world x = ISLAND.office + x).
 // PARAMS
-//   kpi     0 | 1   the KPI board's sheet: 0 = 年度指标 / 还差 1 对 / 今晚子时截止; 1 = 年度指标 / 达标 + a red stamp
+//   kpi     0 | 1   the decree: 0 = his own red brush beside it, 就差一对; 1 = the Board's 考绩合格 seal across it
 //   smoke   0..1    the burner's thin column of pale smoke (the prayers arriving)
 //   tangle  0..1    THE TANGLE's height (0 hides it)
 import * as THREE from "three";
@@ -17,9 +22,11 @@ import { BAKED_LIGHT } from "../../../kit/day/sets";
 import type { CastLight } from "../../group/kit/cast";
 import type { EnvSpec } from "../../bt/pbr";
 import type { PlaceBuild, PlaceLook, ParamValue } from "../../../kit/day/types";
-import { ceilQuad, lathe, plasterTex, boardsTex, sunShaft, dustMotes } from "../../romeo/sets/parts/b_common";
+import { ceilQuad, lathe, boardsTex, sunShaft, dustMotes } from "../../romeo/sets/parts/b_common";
 import { ISLAND, OFFICE as D } from "../places";
 import { maker, boxG, paint, rng, css, mix, blotch, NOINK, levelQuad, tileUV, bar, FONT, lightRig, V, flatFace } from "./common";
+import { cordMat, cordGeo, cordRing, sagPts, CORD_INK, CORD_REDS } from "./cord";
+import { decreeTex, DECREE_PX, plaqueTex, PLAQUE_PX, coupletTex, COUPLET_PX, beamTex, wallTex, moundTex, cloudTex, CLOUD_PX, apronTex } from "./office_art";
 
 const X0 = ISLAND.office, WT = 0.22;
 const X = (x: number) => X0 + x;
@@ -42,6 +49,8 @@ const LOOK: PlaceLook = {
 const PARAMS: Record<string, ParamValue> = { kpi: 0, smoke: 0, tangle: 1 };
 
 const REDS = ["#c3242b", "#9c1820", "#de4a4a"];
+/** the decree scroll: its width along the wall and the height of its lower edge (above the wainscot's rail at 1.05) */
+const DECREE = { w: 0.86, y0: 1.12 } as const;
 
 // ===================================================================================================== paintings
 const floorTex = () => boardsTex({ seed: 301, n: 5, base: "#9a6a44", lo: "#5e3a22" });
@@ -75,8 +84,8 @@ const skyTex = () => paint(1024, 1024, (g, W, H) => {
   gr.addColorStop(0, "#7fa6cf"); gr.addColorStop(0.45, "#a9c3dc"); gr.addColorStop(0.72, "#efdcae"); gr.addColorStop(1, "#f2c784");
   g.fillStyle = gr; g.fillRect(0, 0, W, H);
   // the pale moon, upper right of the window
-  const mx = W * 0.6, my = H * 0.33, mr = W * 0.07;
-  const mg = g.createRadialGradient(mx, my, 0, mx, my, mr * 2.4); mg.addColorStop(0, "rgba(255,252,238,0.55)"); mg.addColorStop(1, "rgba(255,252,238,0)");
+  const mx = W * 0.63, my = H * 0.38, mr = W * 0.1;
+  const mg = g.createRadialGradient(mx, my, 0, mx, my, mr * 2.2); mg.addColorStop(0, "rgba(255,252,238,0.55)"); mg.addColorStop(1, "rgba(255,252,238,0)");
   g.fillStyle = mg; g.fillRect(0, 0, W, H);
   g.fillStyle = "#f8f3e2"; g.beginPath(); g.arc(mx, my, mr, 0, 7); g.fill();
   g.fillStyle = css("#dcd6c6", 0.6); for (const [dx, dy, s] of [[-0.3, -0.2, 0.22], [0.25, 0.2, 0.16], [0.1, -0.4, 0.1]]) { g.beginPath(); g.arc(mx + dx * mr, my + dy * mr, s * mr, 0, 7); g.fill(); }
@@ -167,33 +176,6 @@ const cabTex = (len: number, hgt: number) => {
   });
 };
 
-/** THE KPI SHEET: 0 = 还差 1 对, 1 = 达标 with a stamp */
-const kpiTex = (done: boolean) => paint(1040, 800, (g, W, H) => {
-  const r = rng(done ? 322 : 321);
-  g.fillStyle = "#efe2c2"; g.fillRect(0, 0, W, H);
-  for (let i = 0; i < 16; i++) blotch(g, W * r(), H * r(), W * (0.05 + 0.12 * r()), r() < 0.6 ? "#d8c49a" : "#f8eed6", 0.18);
-  g.strokeStyle = css("#b04030", 0.7); g.lineWidth = 6; g.strokeRect(34, 34, W - 68, H - 68);
-  g.strokeStyle = css("#b04030", 0.4); g.lineWidth = 2; g.strokeRect(48, 48, W - 96, H - 96);
-  g.textAlign = "center"; g.textBaseline = "middle";
-  g.fillStyle = "#2a1c14"; g.font = `900 112px ${FONT}`; g.fillText("年度指标", W / 2, 150);
-  g.fillStyle = css("#2a1c14", 0.6); g.fillRect(W * 0.2, 222, W * 0.6, 5);
-  if (!done) {
-    g.fillStyle = "#c01e22"; g.font = `900 230px ${FONT}`;
-    g.save(); g.translate(W / 2, 430); g.rotate(-0.025); g.fillText("还差 1 对", 0, 0); g.restore();
-    g.fillStyle = "#3a2a20"; g.font = `900 66px ${FONT}`; g.fillText("今晚子时截止", W / 2, 640);
-  } else {
-    g.fillStyle = "#c01e22"; g.font = `900 300px ${FONT}`;
-    g.save(); g.translate(W / 2 - 130, 460); g.rotate(-0.03); g.fillText("达标", 0, 0); g.restore();
-    // the round stamp, lower right, a little crooked
-    g.save(); g.translate(W * 0.8, H * 0.73); g.rotate(-0.3); g.scale(0.9, 0.9);
-    g.strokeStyle = css("#c8202a", 0.88); g.lineWidth = 16; g.beginPath(); g.arc(0, 0, 135, 0, 7); g.stroke();
-    g.lineWidth = 5; g.beginPath(); g.arc(0, 0, 108, 0, 7); g.stroke();
-    g.fillStyle = css("#c8202a", 0.88); g.font = `900 74px ${FONT}`; g.fillText("姻缘司", 0, -14);
-    g.font = `900 40px ${FONT}`; g.fillText("★ 准 ★", 0, 58);
-    g.restore();
-  }
-});
-
 /** the 缘 on the wall: a red 斗方 (a square of red paper hung on its corner, as a 福 is), gold-edged, the character in gold.
  *  Drawn turned an eighth, so that it stands upright once the square hangs on its corner. */
 const scrollTex = () => paint(512, 512, (g, W, H) => {
@@ -249,10 +231,11 @@ const smokeTex = () => paint(64, 128, (g, W, H) => {
 const build = (K: Kit): PlaceBuild => {
   const group = new THREE.Group(); group.name = "office";
   const Mk = maker(K, group);
-  const mPlaster = Mk.tex(plasterTex(306, "#d6bf98", "#b49a72", "#ead8b4"), 0.95), mWain = Mk.tex(wainTex(), 0.85), mFloor = Mk.tex(floorTex(), 0.88), mCeil = Mk.tex(ceilTex(), 0.9);
+  const mPlaster = Mk.tex(wallTex(), 0.95), mWain = Mk.tex(wainTex(), 0.85), mFloor = Mk.tex(floorTex(), 0.88), mCeil = Mk.tex(ceilTex(), 0.9);
   const mDark = Mk.tex(darkWoodTex(307), 0.8), mDesk = Mk.tex(darkWoodTex(308, "#62402a"), 0.7), mLac = Mk.tex(lacquerTex(), 0.6), mBeam = Mk.tex(darkWoodTex(309, "#4a2c1c"), 0.85);
   const mBrass = Mk.flat("#b08a44", 0.45), mBronze = Mk.flat("#7a6040", 0.5), mPaper = Mk.flat("#eadcb8", 0.95), mInk = Mk.flat("#1e1a1c", 0.6);
-  const mRed = REDS.map((c) => Mk.flat(c, 0.9)), mRedDeep = Mk.flat("#741218", 0.95), mCord = Mk.flat("#3a2618", 0.9);
+  const mRed = REDS.map((c) => Mk.flat(c, 0.9)), mCord = Mk.flat("#3a2618", 0.9);
+  const RC = CORD_REDS.map((c) => cordMat(K, c)), mBeamPaint = Mk.tex(beamTex(), 0.8), mGold = Mk.flat("#c9a04a", 0.4);
   const wall = (name: string, x0: number, x1: number, y0: number, y1: number, z0: number, z1: number, m: THREE.Material = mPlaster) => Mk.mesh(name, tileUV(boxG(X(x0), X(x1), y0, y1, z0, z1), 1.6), m);
   const WAIN = 1.0;
 
@@ -286,16 +269,18 @@ const build = (K: Kit): PlaceBuild => {
     Mk.mesh("office.door.sill", boxG(X(D.door.x - DOOR.w / 2), X(D.door.x + DOOR.w / 2), 0, 0.05, D.z1 - 0.04, D.z1 + WT), mBeam),
   ];
   // pillars: the four corners and a pair flanking the moon window, half sunk in the walls
+  const bands = (x: number, z: number, r: number) => [0.2, 2.98].map((y) => Mk.mesh("office.pillar.band", new THREE.CylinderGeometry(r + 0.012, r + 0.012, 0.055, 20).translate(X(x), y, z), mGold));
   const pil = (x: number, z: number, r = 0.13) => {
     Mk.mesh("office.pillar", tileUV(new THREE.CylinderGeometry(r, r, D.h, 20).translate(X(x), D.h / 2, z), 0.6), mLac);
     Mk.mesh("office.pillar.foot", new THREE.CylinderGeometry(r + 0.05, r + 0.07, 0.1, 20).translate(X(x), 0.05, z), mDark);
+    bands(x, z, r);
   };
   pil(D.x0 + 0.1, D.z0 + 0.1); pil(D.x1 - 0.1, D.z0 + 0.1); pil(-1.25, D.z0 + 0.02, 0.12); pil(1.65, D.z0 + 0.02, 0.12);
   const frontPil = [D.x0 + 0.1, D.x1 - 0.1].map((x) => { const m = Mk.mesh("office.pillar", tileUV(new THREE.CylinderGeometry(0.13, 0.13, D.h, 20).translate(X(x), D.h / 2, D.z1 - 0.1), 0.6), mLac); return m; });
-  front.push(...frontPil);
+  front.push(...frontPil, ...[D.x0 + 0.1, D.x1 - 0.1].flatMap((x) => bands(x, D.z1 - 0.1, 0.13)));
   // beams across the room (x), under the ceiling, and a rail along the walls at the wainscot's top
   const BEAMS = [-1.55, 0.55, 2.45], BY = 3.06;
-  for (const z of BEAMS) Mk.mesh("office.beam", tileUV(boxG(X(D.x0), X(D.x1), BY, D.h, z - 0.1, z + 0.1), 1.2), mBeam);
+  for (const z of BEAMS) Mk.mesh("office.beam", bandUV(boxG(X(D.x0), X(D.x1), BY, D.h, z - 0.1, z + 0.1), 1.2), mBeamPaint);
   Mk.mesh("office.rail", boxG(X(D.x0), X(D.x1), WAIN, WAIN + 0.05, D.z0, D.z0 + 0.04), mDark);
   right.push(Mk.mesh("office.rail", boxG(X(D.x1 - 0.04), X(D.x1), WAIN, WAIN + 0.05, D.z0, D.z1), mDark));
   // the moon window: lacquer ring, the sky outside
@@ -327,12 +312,13 @@ const build = (K: Kit): PlaceBuild => {
         P.add(mPaper, new THREE.PlaneGeometry(cw * 0.5, rh * 0.22).rotateY(Math.PI / 2).translate(X(cx + out + 0.002), yTop - rh * 0.25, zc), 0);
         P.add(mBrass, new THREE.SphereGeometry(0.014, 10, 8).translate(X(cx + out + 0.015), yc, zc), 0.003);
         // thread over the lip
-        for (let k = 0; k < 3; k++) {
-          const z = zc + (k - 1) * 0.05, hang = 0.12 + 0.25 * r();
-          const cur = new THREE.CatmullRomCurve3([V(X(cx + out - 0.06), yd + dy - 0.01, z), V(X(cx + out + 0.01), yd + dy + 0.01, z + 0.01), V(X(cx + out + 0.03), yd + dy - hang * 0.5, z + 0.03 * (r() - 0.5)), V(X(cx + out + 0.02 + 0.03 * r()), yd + dy - hang, z + 0.05 * (r() - 0.5))]);
-          P.add(mRed[k % 3], new THREE.TubeGeometry(cur, 16, 0.006, 5), 0.002);
+        // two cords over the drawer's front lip (they rest ON the lip, then hang), a coil lying on the drawer's top
+        for (let k = 0; k < 2; k++) {
+          const z = zc + (k - 0.5) * 0.06, hang = 0.12 + 0.25 * r(), lip = yd + dy + 0.0066;
+          const cur = new THREE.CatmullRomCurve3([V(X(cx + out - 0.07), lip, z), V(X(cx + out - 0.005), lip, z + 0.005), V(X(cx + out + 0.012), lip - 0.02, z + 0.008), V(X(cx + out + 0.016), yd + dy - hang * 0.5, z + 0.02 * (r() - 0.5)), V(X(cx + out + 0.014 + 0.02 * r()), yd + dy - hang, z + 0.04 * (r() - 0.5))]);
+          P.add(RC[k % 3], cordGeo(cur), CORD_INK);
         }
-        P.add(mRed[0], new THREE.TorusGeometry(0.05, 0.012, 6, 16).rotateX(Math.PI / 2).translate(X(cx + out * 0.5), yd + dy + 0.005, zc), 0.002);
+        P.add(RC[0], cordRing(0.045).rotateX(Math.PI / 2).translate(X(cx + out * 0.45), yd + dy + 0.0066, zc), CORD_INK);
       } else {
         P.add(mBrass, new THREE.CylinderGeometry(0.011, 0.014, 0.024, 10).rotateZ(Math.PI / 2).translate(X(cx + 0.012), yc, zc), 0.003);
       }
@@ -342,7 +328,7 @@ const build = (K: Kit): PlaceBuild => {
     P.add(mBeam, boxG(X(-2.96), X(-2.78), top + 0.3, top + 0.44, -1.95, -1.62), 0.005);
     for (let k = 0; k < 5; k++) P.add(mPaper, new THREE.CylinderGeometry(0.03, 0.03, 0.36, 10).rotateX(Math.PI / 2).rotateY(0.2 * (r() - 0.5)).translate(X(-2.86 + 0.02 * (k % 2)), top + 0.11 + 0.055 * Math.floor(k / 2), -0.9 + 0.06 * k), 0.003);
     for (let k = 0; k < 6; k++) addSpool(P, mRed[k % 3], mBeam, X(-2.84), top + 0.08, -0.1 + 0.13 * k, 1);
-    threadBasket(P, mRed, mCord, X(-2.85), top + 0.08, 0.85, 0.16, 0.14, 402);
+    threadBasket(P, mRed, RC, mCord, X(-2.85), top + 0.08, 0.85, 0.16, 0.14, 402);
   }
 
   // ---------------------------------------------------------------- the desk, the stool, the things on the desk
@@ -350,7 +336,8 @@ const build = (K: Kit): PlaceBuild => {
     const d = D.desk, x0 = X(d.x - d.w / 2), x1 = X(d.x + d.w / 2), z0 = d.z - d.d / 2, z1 = d.z + d.d / 2, t = d.top;
     P.add(mDesk, boxG(x0 - 0.03, x1 + 0.03, t - 0.05, t, z0 - 0.03, z1 + 0.03), 0.006);
     for (const [lx, lz] of [[x0 + 0.04, z0 + 0.04], [x1 - 0.04, z0 + 0.04], [x0 + 0.04, z1 - 0.04], [x1 - 0.04, z1 - 0.04]]) P.add(mDark, boxG(lx - 0.03, lx + 0.03, 0, t - 0.05, lz - 0.03, lz + 0.03), 0.005);
-    P.add(mDark, boxG(x0 + 0.02, x1 - 0.02, t - 0.13, t - 0.05, z1 - 0.05, z1 - 0.02), 0.004);   // front apron
+    P.add(mDark, boxG(x0 + 0.02, x1 - 0.02, t - 0.16, t - 0.05, z1 - 0.05, z1 - 0.02), 0.004);   // front apron, carved (below)
+    Mk.mesh("office.desk.apron", new THREE.PlaneGeometry(x1 - x0 - 0.04, 0.11).translate((x0 + x1) / 2, t - 0.105, z1 - 0.0195), Mk.tex(apronTex(), 0.7), { cast: false, noink: true });
     P.add(mDark, boxG(x0 + 0.02, x1 - 0.02, t - 0.13, t - 0.05, z0 + 0.02, z0 + 0.05), 0.004);
     P.add(mDark, boxG(x0 + 0.04, x1 - 0.04, 0.1, 0.14, d.z - 0.02, d.z + 0.02), 0.004);           // foot stretcher
     // the side cupboard at the +x end: a stack of drawers
@@ -402,8 +389,11 @@ const build = (K: Kit): PlaceBuild => {
     P.add(Mk.flat("#ece4d2", 0.4), lathe([[0, 0], [0.025, 0], [0.04, 0.045], [0.037, 0.045], [0.022, 0.006], [0, 0.006]], 16).translate(X(-0.2), t, d.z + 0.2), 0.003);
     P.add(Mk.flat("#ece4d2", 0.4), new THREE.CylinderGeometry(0.06, 0.055, 0.008, 16).translate(X(-0.2), t + 0.004, d.z + 0.2), 0.003);
     P.add(Mk.flat("#8a6a2a", 0.4), new THREE.CylinderGeometry(0.034, 0.034, 0.002, 12).translate(X(-0.2), t + 0.035, d.z + 0.2), 0);
-    // a loose red thread across the desk, off its edge
-    P.add(mRed[0], new THREE.TubeGeometry(new THREE.CatmullRomCurve3([V(X(0.1), t + 0.035, d.z - 0.05), V(X(0.4), t + 0.004, d.z + 0.22), V(X(0.6), t + 0.003, d.z + 0.3), V(X(0.68), t - 0.1, z1 + 0.04), V(X(0.62), t - 0.35, z1 + 0.05)]), 24, 0.004, 5), 0.0015);
+    // a loose cord across the desk: out from under the book's edge, lying ON the top, over the front edge, hanging
+    {
+      const cr = 0.0065, on = t + cr + 0.0005, edge = z1 + 0.03 + cr;
+      P.add(RC[0], cordGeo([V(X(0.12), t + 0.012 + cr + 0.0005, d.z + 0.04), V(X(0.2), on, d.z + 0.1), V(X(0.42), on, d.z + 0.22), V(X(0.58), on, z1 + 0.015), V(X(0.62), t + 0.004, edge), V(X(0.64), t - 0.06, edge + 0.004), V(X(0.63), t - 0.3, edge + 0.006)], cr), CORD_INK);
+    }
     // the stool
     const s = D.stool;
     P.add(mDesk, new THREE.CylinderGeometry(0.17, 0.17, 0.045, 20).translate(X(s.x), s.top - 0.0225, s.z), 0.005);
@@ -423,11 +413,11 @@ const build = (K: Kit): PlaceBuild => {
         addSpool(P, mRed[Math.floor(r() * 3)], mBeam, X(sx0 + 0.07 + k * ((sx1 - sx0 - 0.14) / (n - 1))), y, z + 0.08 + 0.06 * r(), 0.9 + 0.3 * r());
       }
       // a hank drooping off the shelf's edge
-      if (y < 2) P.add(mRed[1], new THREE.TorusGeometry(0.06, 0.008, 5, 18).scale(1, 2.2, 1).translate(X(sx0 + 0.35 + y * 0.1), y - 0.12, z + 0.25), 0.002);
+      if (y < 2) P.add(RC[1], cordRing(0.06, 0.0065, 2.2).translate(X(sx0 + 0.35 + y * 0.1), y - 0.12, z + 0.25), CORD_INK);
     }
     // under them, a basket of skeins and a heap on the floor
-    threadBasket(P, mRed, mCord, X(2.3), 0, D.z0 + 0.32, 0.24, 0.32, 403);
-    skeinHeap(P, mRed, X(2.75), D.z0 + 0.4, 0.3, 404);
+    threadBasket(P, mRed, RC, mCord, X(2.3), 0, D.z0 + 0.32, 0.24, 0.32, 403);
+    skeinHeap(P, RC, X(2.75), D.z0 + 0.4, 0.3, 404);
   }
 
   // ---------------------------------------------------------------- the 缘 (back wall, left of the window): a red 斗方 hung
@@ -438,33 +428,38 @@ const build = (K: Kit): PlaceBuild => {
     Mk.mesh("office.scroll", new THREE.PlaneGeometry(side, side).rotateZ(Math.PI / 4).translate(X(sx), cy, D.z0 + 0.012), Mk.tex(scrollTex(), 0.95), { cast: false, noink: false });
     P.add(mBrass, new THREE.SphereGeometry(0.012, 8, 6).translate(X(sx), cy + d - 0.012, D.z0 + 0.02), 0.002);
     // a heap of skeins on the floor below it, by the desk's left
-    skeinHeap(P, mRed, X(-1.75), D.z0 + 0.4, 0.34, 405);
-    threadBasket(P, mRed, mCord, X(-0.95), 0, D.z0 + 0.3, 0.2, 0.26, 406);
+    skeinHeap(P, RC, X(-1.75), D.z0 + 0.4, 0.34, 405);
+    threadBasket(P, mRed, RC, mCord, X(-0.95), 0, D.z0 + 0.3, 0.2, 0.26, 406);
   }
 
-  // ---------------------------------------------------------------- THE KPI BOARD (+x wall)
+  // ---------------------------------------------------------------- THE PLAQUE over the moon window, THE COUPLETS beside it
+  // 千里姻缘一线牵 in gold on dark lacquer in a carved red frame, between the window's ring and the ceiling; the two lines
+  // of the old 月老祠 couplet on red paper flecked with gold, between the ring and the pillars, above the rail.
+  {
+    const pw = 1.7, ph = pw * PLAQUE_PX.h / PLAQUE_PX.w, py0 = D.moon.y + D.moon.r + 0.1, z = D.z0;
+    P.add(mLac, boxG(X(D.moon.x - pw / 2 - 0.02), X(D.moon.x + pw / 2 + 0.02), py0 - 0.02, py0 + ph + 0.02, z, z + 0.05), 0.005);
+    Mk.mesh("office.plaque", new THREE.PlaneGeometry(pw, ph).translate(X(D.moon.x), py0 + ph / 2, z + 0.0515), Mk.tex(plaqueTex(), 0.6), { cast: false, noink: true });
+    const cw = 0.21, ch = cw * COUPLET_PX.h / COUPLET_PX.w, cy0 = 1.12;
+    for (const [x, text, seed] of [[1.33, "愿天下有情人都成了眷属", 1361], [-0.93, "是前生注定事莫错过姻缘", 1362]] as const) {
+      Mk.mesh("office.couplet", new THREE.PlaneGeometry(cw, ch).translate(X(x), cy0 + ch / 2, z + 0.012), Mk.tex(coupletTex(text, seed), 0.9), { cast: false });
+      P.add(mDark, bar(V(X(x - cw / 2 - 0.012), cy0 + ch + 0.008, z + 0.02), V(X(x + cw / 2 + 0.012), cy0 + ch + 0.008, z + 0.02), 0.008, 0.008, 8), 0.003);
+    }
+  }
+
+  // ---------------------------------------------------------------- THE DECREE (+x wall, where the KPI board hung)
+  // 考绩令 from heaven's Board of Personnel, a hanging scroll: the painted silk and mount on one sheet just off the wall,
+  // a top stick on a cord to a brass nail, a heavy roller with jade ends at the bottom. It hangs ABOVE the wall's rail.
   const kpiMeshes: THREE.Mesh[] = [];
   {
-    const b = D.board, bx = D.boardX, fx = X(bx);
-    Mk.mesh("office.kpi.board", boxG(fx, X(D.x1 - 0.01), b.y - b.h / 2, b.y + b.h / 2, b.z - b.w / 2, b.z + b.w / 2), mDesk);
-    // frame: four bars proud of the board
-    const fr = 0.06, fd = 0.035;
-    for (const [y0, y1, z0, z1] of [[b.y + b.h / 2 - fr, b.y + b.h / 2, b.z - b.w / 2, b.z + b.w / 2], [b.y - b.h / 2, b.y - b.h / 2 + fr, b.z - b.w / 2, b.z + b.w / 2], [b.y - b.h / 2, b.y + b.h / 2, b.z - b.w / 2, b.z - b.w / 2 + fr], [b.y - b.h / 2, b.y + b.h / 2, b.z + b.w / 2 - fr, b.z + b.w / 2]])
-      Mk.mesh("office.kpi.frame", boxG(fx - fd, fx, y0, y1, z0, z1), mDark);
-    const pw = b.w - 0.2, ph = b.h - 0.2;
-    for (const done of [false, true]) {
-      const m = Mk.mesh("office.kpi.sheet", new THREE.PlaneGeometry(pw, ph).rotateY(-Math.PI / 2).translate(fx - 0.006, b.y - 0.01, b.z), Mk.tex(kpiTex(done), 0.95), { cast: false });
-      kpiMeshes.push(m);
-    }
-    for (const [dz, dy] of [[-1, 1], [1, 1], [-1, -1], [1, -1]]) P.add(Mk.flat("#b8262a", 0.5), new THREE.SphereGeometry(0.014, 8, 6).translate(fx - 0.012, b.y - 0.01 + dy * (ph / 2 - 0.03), b.z + dz * (pw / 2 - 0.03)), 0.002);
-    // a little roof board over it, red thread tied in a bow at its top corners
-    P.add(mDark, boxG(fx - 0.1, X(D.x1), b.y + b.h / 2 + 0.02, b.y + b.h / 2 + 0.06, b.z - b.w / 2 - 0.08, b.z + b.w / 2 + 0.08), 0.004);
-    for (const dz of [-1, 1]) {
-      const z = b.z + dz * (b.w / 2 + 0.02), y = b.y + b.h / 2 + 0.02;
-      P.add(mRed[0], new THREE.TorusGeometry(0.035, 0.007, 5, 14).rotateY(Math.PI / 2).translate(fx - 0.05, y - 0.03, z - 0.03), 0.002);
-      P.add(mRed[0], new THREE.TorusGeometry(0.035, 0.007, 5, 14).rotateY(Math.PI / 2).translate(fx - 0.05, y - 0.03, z + 0.03), 0.002);
-      P.add(mRed[0], bar(V(fx - 0.05, y - 0.05, z), V(fx - 0.06, y - 0.3, z + 0.04 * dz), 0.006, 0.006, 5), 0.0015);
-    }
+    const b = D.board, fx = X(D.x1), sw = DECREE.w, sh = sw * DECREE_PX.h / DECREE_PX.w, y0 = DECREE.y0, y1 = y0 + sh;
+    for (const done of [false, true]) kpiMeshes.push(Mk.mesh("office.decree.sheet", new THREE.PlaneGeometry(sw, sh).rotateY(-Math.PI / 2).translate(fx - 0.014, (y0 + y1) / 2, b.z), Mk.tex(decreeTex(done), 0.95), { cast: false }));
+    P.add(mDark, bar(V(fx - 0.02, y1 + 0.008, b.z - sw / 2 - 0.012), V(fx - 0.02, y1 + 0.008, b.z + sw / 2 + 0.012), 0.009, 0.009, 10), 0.004);
+    P.add(mDark, bar(V(fx - 0.03, y0 - 0.014, b.z - sw / 2 - 0.015), V(fx - 0.03, y0 - 0.014, b.z + sw / 2 + 0.015), 0.018, 0.018, 12), 0.005);
+    const mJade = Mk.flat("#5e9a7e", 0.4);
+    for (const sg of [-1, 1]) P.add(mJade, new THREE.CylinderGeometry(0.024, 0.024, 0.045, 12).rotateX(Math.PI / 2).translate(fx - 0.03, y0 - 0.014, b.z + sg * (sw / 2 + 0.036)), 0.004);
+    const nail = V(fx - 0.012, y1 + 0.2, b.z);
+    P.add(mBrass, new THREE.SphereGeometry(0.014, 8, 6).translate(nail.x, nail.y, nail.z), 0.003);
+    P.add(RC[1], cordGeo([V(fx - 0.02, y1 + 0.016, b.z - sw * 0.32), V(fx - 0.016, y1 + 0.11, b.z - sw * 0.15), nail, V(fx - 0.016, y1 + 0.11, b.z + sw * 0.15), V(fx - 0.02, y1 + 0.016, b.z + sw * 0.32)]), CORD_INK);
   }
 
   // memo slips pinned on the +x wall round the board
@@ -507,56 +502,54 @@ const build = (K: Kit): PlaceBuild => {
     // hanks hanging from the beams
     const hankAt = (x: number, z: number, len: number, seed: number) => {
       const q = rng(seed), y0 = BY;
-      const n = 4 + Math.floor(q() * 3), mat = mRed[Math.floor(q() * 3)];
+      const n = 3 + Math.floor(q() * 2), mat = RC[Math.floor(q() * 3)];
       for (let k = 0; k < n; k++) {
         const rr = 0.04 + 0.02 * q(), sy = len / (2 * rr);
-        const g = new THREE.TorusGeometry(rr, 0.006, 5, 22).scale(1, sy, 1).rotateY(q() * Math.PI).rotateZ((q() - 0.5) * 0.12).translate(X(x) + 0.02 * (q() - 0.5), y0 - len / 2 - 0.02, z + 0.02 * (q() - 0.5));
-        P.add(k % 2 ? mat : mRed[(Math.floor(q() * 3))], g, 0.0015);
+        const g = cordRing(rr, 0.0065, sy).rotateY(q() * Math.PI).rotateZ((q() - 0.5) * 0.12).translate(X(x) + 0.02 * (q() - 0.5), y0 - len / 2 - 0.02, z + 0.02 * (q() - 0.5));
+        P.add(k % 2 ? mat : RC[(Math.floor(q() * 3))], g, CORD_INK);
       }
       P.add(mCord, new THREE.CylinderGeometry(0.018, 0.018, 0.05, 8).translate(X(x), y0 - 0.04, z), 0.002);   // the knot
     };
-    const HANKS: [number, number, number][] = [[-2.3, BEAMS[0], 0.55], [-1.9, BEAMS[0], 0.4], [-0.6, BEAMS[0], 0.62], [1.2, BEAMS[0], 0.5], [2.4, BEAMS[0], 0.6],
-      [-2.4, BEAMS[1], 0.45], [-1.5, BEAMS[1], 0.6], [0.9, BEAMS[1], 0.42], [2.2, BEAMS[1], 0.55], [-2.2, BEAMS[2], 0.6], [-1.2, BEAMS[2], 0.4], [1.3, BEAMS[2], 0.6], [2.5, BEAMS[2], 0.45]];
+    const HANKS: [number, number, number][] = [[-1.9, BEAMS[0], 0.4], [-0.6, BEAMS[0], 0.62], [1.2, BEAMS[0], 0.5],
+      [-2.4, BEAMS[1], 0.45], [-1.5, BEAMS[1], 0.6], [2.2, BEAMS[1], 0.55], [-2.2, BEAMS[2], 0.6], [1.3, BEAMS[2], 0.6]];
     HANKS.forEach(([x, z, l], i) => hankAt(x, z + (i % 2 ? 0.06 : -0.06), l, 500 + i));
     // lines strung across the room, sagging, with little paper name tags
     const line = (a: THREE.Vector3, b: THREE.Vector3, sag: number, mat: THREE.Material, tags: number, seed: number) => {
       const q = rng(seed), pts: THREE.Vector3[] = [];
       for (let i = 0; i <= 12; i++) { const s = i / 12; pts.push(a.clone().lerp(b, s).add(V(0, -sag * 4 * s * (1 - s), 0))); }
       const cur = new THREE.CatmullRomCurve3(pts);
-      P.add(mat, new THREE.TubeGeometry(cur, 36, 0.006, 5), 0.0015);
+      P.add(mat, cordGeo(cur), CORD_INK);
       for (let k = 0; k < tags; k++) {
         const p = cur.getPoint((k + 0.5 + 0.3 * (q() - 0.5)) / tags), ang = Math.atan2(b.x - a.x, b.z - a.z) + Math.PI / 2;
         P.add(mPaper, new THREE.BoxGeometry(0.035, 0.07, 0.002).translate(0, -0.05, 0).rotateY(ang + (q() - 0.5) * 0.6).translate(p.x, p.y, p.z), 0.0015);
-        P.add(mat, new THREE.CylinderGeometry(0.0015, 0.0015, 0.016, 3).translate(p.x, p.y - 0.008, p.z), 0);
+        P.add(mat, cordGeo([p.clone().add(V(0, -0.004, 0)), p.clone().add(V(0, -0.02, 0))], 0.006, false, 2), 0.002);
       }
     };
-    line(V(X(-2.7), 2.75, -1.9), V(X(2.95), 2.6, 0.3), 0.35, mRed[0], 6, 601);
-    line(V(X(-2.7), 2.6, 1.6), V(X(2.95), 2.8, -1.8), 0.4, mRed[1], 5, 602);
-    line(V(X(-2.0), BY, BEAMS[1]), V(X(-0.2), BY, BEAMS[2]), 0.45, mRed[2], 3, 603);
-    line(V(X(0.6), BY, BEAMS[0]), V(X(2.5), BY, BEAMS[1]), 0.5, mRed[0], 3, 604);
-    line(V(X(-2.95), 2.4, 2.4), V(X(-1.2), BY, BEAMS[2]), 0.25, mRed[1], 2, 605);
-    line(V(X(-1.2), 2.9, D.z0 + 0.02), V(X(1.6), 2.9, D.z0 + 0.02), 0.32, mRed[0], 4, 606);   // a garland over the moon window
+    line(V(X(-2.7), 2.75, -1.9), V(X(2.95), 2.6, 0.3), 0.35, RC[0], 5, 601);
+    line(V(X(-2.7), 2.6, 1.6), V(X(2.95), 2.8, -1.8), 0.4, RC[1], 4, 602);
+    line(V(X(0.6), BY, BEAMS[0]), V(X(2.5), BY, BEAMS[1]), 0.5, RC[2], 3, 604);
+    // (v6: the garland over the moon window made way for the plaque)
     // pegs on the walls with loops hanging
     const peg = (x: number, y: number, z: number, nx: number, seed: number) => {
       const q = rng(seed), out = V(nx, 0, nx === 0 ? 1 : 0);
       const p0 = V(X(x), y, z), p1 = p0.clone().addScaledVector(out, 0.1).add(V(0, 0.015, 0));
       P.add(mDark, bar(p0, p1, 0.012, 0.012, 6), 0.003);
-      for (let k = 0; k < 3 + Math.floor(q() * 3); k++) {
+      for (let k = 0; k < 2 + Math.floor(q() * 2); k++) {
         const rr = 0.05 + 0.04 * q(), len = 0.2 + 0.25 * q();
-        const g = new THREE.TorusGeometry(rr, 0.006, 5, 20).scale(1, len / (2 * rr), 1).rotateY(nx === 0 ? 0 : Math.PI / 2).rotateY((q() - 0.5) * 0.6).translate(p1.x - out.x * 0.04, p1.y - len / 2 + 0.01, p1.z - out.z * 0.04);
-        P.add(mRed[Math.floor(q() * 3)], g, 0.0015);
+        const g = cordRing(rr, 0.0065, len / (2 * rr)).rotateY(nx === 0 ? 0 : Math.PI / 2).rotateY((q() - 0.5) * 0.6).translate(p1.x - out.x * 0.04, p1.y - len / 2 + 0.01, p1.z - out.z * 0.04);
+        P.add(RC[Math.floor(q() * 3)], g, CORD_INK);
       }
     };
     peg(D.x0 + 0.02, 1.95, 1.75, 1, 611); peg(D.x0 + 0.02, 1.95, 2.35, 1, 612); peg(D.x0 + 0.02, 1.7, 2.9, 1, 613);
     peg(D.x1 - 0.02, 1.95, 1.85, -1, 614); peg(D.x1 - 0.02, 1.95, 2.5, -1, 615); peg(D.x1 - 0.02, 1.9, -2.15, -1, 616); peg(D.x1 - 0.02, 2.15, 0.75, -1, 617);
     // baskets and heaps against the walls (the centre floor stays clear)
-    threadBasket(P, mRed, mCord, X(-2.55), 0, 1.75, 0.22, 0.3, 621);
-    skeinHeap(P, mRed, X(-2.6), 2.5, 0.32, 622);
-    skeinHeap(P, mRed, X(2.6), 2.4, 0.3, 623);
-    threadBasket(P, mRed, mCord, X(2.6), 0, 1.85, 0.2, 0.26, 624);
-    skeinHeap(P, mRed, X(1.4), D.z1 - 0.35, 0.26, 625);
-    skeinHeap(P, mRed, X(-1.5), D.z1 - 0.35, 0.3, 626);
-    skeinHeap(P, mRed, X(2.65), -2.0, 0.25, 627);
+    threadBasket(P, mRed, RC, mCord, X(-2.55), 0, 1.75, 0.22, 0.3, 621);
+    skeinHeap(P, RC, X(-2.6), 2.5, 0.32, 622);
+    skeinHeap(P, RC, X(2.6), 2.4, 0.3, 623);
+    threadBasket(P, mRed, RC, mCord, X(2.6), 0, 1.85, 0.2, 0.26, 624);
+    skeinHeap(P, RC, X(1.4), D.z1 - 0.35, 0.26, 625);
+    skeinHeap(P, RC, X(-1.5), D.z1 - 0.35, 0.3, 626);
+    skeinHeap(P, RC, X(2.65), -2.0, 0.25, 627);
   }
 
   // ---------------------------------------------------------------- lanterns
@@ -567,55 +560,102 @@ const build = (K: Kit): PlaceBuild => {
     P.add(mDark, new THREE.CylinderGeometry(0.075, 0.075, 0.04, 16).translate(X(x), yb - 0.01, z), 0.003);
     P.add(mDark, new THREE.CylinderGeometry(0.085, 0.085, 0.04, 16).translate(X(x), yb + 0.33, z), 0.003);
     P.add(mCord, bar(V(X(x), yb + 0.35, z), V(X(x), BY, z), 0.004, 0.004, 4), 0.0015);
-    for (let k = 0; k < 5; k++) P.add(mRed[0], new THREE.CylinderGeometry(0.004, 0.006, 0.18, 4).translate(X(x) + 0.01 * (k - 2), yb - 0.12, z + 0.006 * (k % 2)), 0.0015);
+    for (let k = 0; k < 3; k++) P.add(RC[0], cordGeo([V(X(x) + 0.012 * (k - 1), yb - 0.02, z + 0.006 * (k % 2)), V(X(x) + 0.016 * (k - 1), yb - 0.21, z + 0.006 * (k % 2))], 0.006, false, 4), 0.003);
   };
   lantern(0.45, BEAMS[1], 2.55, "#e8c890", 701);   // (in the title's wide it hangs between the REC clock and the battery, not behind either)
   lantern(-1.9, BEAMS[2], 2.4, "#c84a34", 702);
   lantern(-0.6, BEAMS[0], 2.45, "#e8c890", 703);
 
-  // ---------------------------------------------------------------- THE TANGLE
+  // ---------------------------------------------------------------- THE TANGLE (v6: loose cord in lazy coils, not noise)
+  // A low mound painted with loops (so a gap never shows a plain blob), wound round with about thirty long lengths of the
+  // film's cord: coils lying round it at different heights, each a little tilted, layered outward so they cross OVER
+  // one another; arcs over its shoulders from floor to floor; flat coils on the floor round its foot; a few ends running
+  // off. No cord comes within 0.33 m of the middle (where he stands waist-deep in scene A): nothing passes through him.
   const tangle = new THREE.Group(); tangle.name = "office.tangle"; tangle.position.set(X(D.tangle.x), 0, D.tangle.z); group.add(tangle);
   {
-    const T = new Part(K), q = rng(801), R = D.tangle.r, H = D.tangle.h;
-    // the lumpy core (dark red), never smooth
-    const core = new THREE.SphereGeometry(1, 36, 18), cp = core.attributes.position as THREE.BufferAttribute;
-    for (let i = 0; i < cp.count; i++) {
-      const v = V(cp.getX(i), cp.getY(i), cp.getZ(i)), n = 1 + 0.12 * Math.sin(v.x * 7 + 1.3) * Math.cos(v.z * 6) + 0.08 * Math.sin(v.y * 9 + v.x * 4);
-      cp.setXYZ(i, v.x * R * 0.74 * n, Math.max(-0.05, v.y) * H * 0.8 * n, v.z * R * 0.74 * n);
-    }
+    const T = new Part(K), q = rng(801), R = D.tangle.r, H = D.tangle.h, a = R * 0.8, b = H * 0.86, cr = 0.0085, gap = cr * 2.3;
+    const lump = (x: number, y: number, z: number) => 1 + 0.07 * Math.sin(x * 7 + 1.3) * Math.cos(z * 6) + 0.05 * Math.sin(y * 9 + x * 4);
+    const core = new THREE.SphereGeometry(1, 40, 16, 0, Math.PI * 2, 0, Math.PI / 2), cp = core.attributes.position as THREE.BufferAttribute;
+    for (let i = 0; i < cp.count; i++) { const x = cp.getX(i), y = cp.getY(i), z = cp.getZ(i), n = lump(x, y, z); cp.setXYZ(i, x * a * n, y * b * n, z * a * n); }
     core.computeVertexNormals();
-    T.add(mRedDeep, core, 0);
-    // the loops: many overlapping tori in three reds, mostly on the surface
-    for (let i = 0; i < 380; i++) {
-      const a = q() * Math.PI * 2, rad = Math.sqrt(q()) * R * 0.98, hmax = H * Math.sqrt(Math.max(0, 1 - (rad / R) ** 2));
-      const y = Math.max(0.02, hmax * (0.6 + 0.4 * q())), tr = 0.035 + 0.11 * q() * q() + 0.03 * q();
-      const m = new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(q() * Math.PI, q() * Math.PI, q() * Math.PI));
-      m.setPosition(Math.cos(a) * rad, y, Math.sin(a) * rad);
-      T.add(mRed[i % 3], new THREE.TorusGeometry(tr, 0.005 + 0.004 * q(), 5, 22).scale(1, 0.6 + 0.6 * q(), 1), 0.0012, m);
+    T.add(Mk.tex(moundTex(), 0.9), core, 0.004);
+    /** a point on the mound at azimuth th and elevation phi, pushed out by `out` */
+    const on = (th: number, phi: number, out: number) => {
+      const ux = Math.cos(phi) * Math.cos(th), uy = Math.sin(phi), uz = Math.cos(phi) * Math.sin(th), n = lump(ux, uy, uz);
+      return V(ux * a * n, uy * b * n, uz * a * n).addScaledVector(V(ux, (uy * a) / b, uz).normalize(), out);
+    };
+    /** out along the floor from a point at the mound's foot, lying on the floor */
+    const floorRun = (from: THREE.Vector3, th: number, len: number, seed: number) => {
+      const w = rng(seed), pts: THREE.Vector3[] = []; let ang = th;
+      for (let k = 1; k <= 4; k++) { ang += (w() - 0.5) * 0.7; const rr = Math.hypot(from.x, from.z) + (len * k) / 4; pts.push(V(Math.cos(ang) * rr, cr, Math.sin(ang) * rr)); }
+      return pts;
+    };
+    // coils round the mound
+    for (let i = 0; i < 24; i++) {
+      const phi0 = 0.1 + 0.72 * (i / 23) ** 0.85 + 0.04 * (q() - 0.5), tilt = 0.06 + 0.08 * q(), th0 = q() * Math.PI * 2, span = Math.PI * (1.3 + 0.7 * q()), out = cr + gap * (i % 3) + 0.002;
+      const pts: THREE.Vector3[] = [], N = 40;
+      for (let k = 0; k <= N; k++) { const th = th0 + (span * k) / N; pts.push(on(th, Math.max(0.05, phi0 + tilt * Math.sin(th - th0 * 1.7)), out)); }
+      // one end drops off the mound to the floor and runs out a little
+      if (i % 2 === 0) { const e = pts[pts.length - 1]; const foot = on(th0 + span + 0.15, 0.02, out); pts.push(V(foot.x, Math.max(cr, foot.y), foot.z), ...floorRun(foot, th0 + span + 0.15, 0.12 + 0.2 * q(), 900 + i)); void e; }
+      T.add(RC[i % 3], cordGeo(pts, cr), CORD_INK);
     }
-    // a skirt of loops round the foot of the heap (the core never shows at the floor)
-    for (let i = 0; i < 140; i++) {
-      const a = q() * Math.PI * 2, rad = R * (0.7 + 0.32 * q()), y = 0.03 + 0.2 * q() * (1.1 - rad / R) + 0.04 * q();
-      const m = new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(q() * Math.PI, q() * Math.PI, q() * Math.PI));
-      m.setPosition(Math.cos(a) * rad, y, Math.sin(a) * rad);
-      T.add(mRed[(i + 2) % 3], new THREE.TorusGeometry(0.04 + 0.08 * q(), 0.005 + 0.004 * q(), 5, 20).scale(1, 0.5 + 0.5 * q(), 1), 0.0012, m);
-    }
-    // wandering strands across the heap
-    for (let i = 0; i < 26; i++) {
-      const pts: THREE.Vector3[] = []; let a = q() * Math.PI * 2;
-      for (let k = 0; k < 6; k++) {
-        a += (q() - 0.5) * 1.6; const rad = R * (0.2 + 0.8 * q()), hmax = H * Math.sqrt(Math.max(0, 1 - (rad / R) ** 2));
-        pts.push(V(Math.cos(a) * rad, hmax * (0.75 + 0.3 * q()) + 0.01, Math.sin(a) * rad));
-      }
-      T.add(mRed[(i + 1) % 3], new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 40, 0.006, 5), 0.0015);
-    }
-    // trailing threads running off across the floor
+    // arcs over its shoulders, floor to floor, outermost: each along a chord that passes 0.36 to 0.5 m from the middle
     for (let i = 0; i < 9; i++) {
-      const a = (i / 9) * Math.PI * 2 + q() * 0.5, l = 0.5 + 0.9 * q(), pts: THREE.Vector3[] = [];
-      for (let k = 0; k <= 5; k++) { const s = k / 5, rad = R * 0.9 + l * s; pts.push(V(Math.cos(a + 0.25 * Math.sin(s * 5 + i)) * rad, k === 0 ? 0.08 : 0.007, Math.sin(a + 0.25 * Math.sin(s * 5 + i)) * rad)); }
-      T.add(mRed[i % 3], new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 24, 0.005, 5), 0.0015);
+      const al = (i / 9) * Math.PI * 2 + 0.4 * q(), d = 0.36 + 0.14 * q(), half = Math.sqrt(Math.max(0.01, a * a - d * d)) * 0.98;
+      const out = cr + gap * 3 + 0.003 + 0.002 * (i % 2), pts: THREE.Vector3[] = [], N = 26;
+      for (let k = 0; k <= N; k++) {
+        const sc = -half + (2 * half * k) / N, x = d * Math.cos(al) - sc * Math.sin(al), z = d * Math.sin(al) + sc * Math.cos(al);
+        pts.push(on(Math.atan2(z, x), Math.acos(Math.min(0.999, Math.hypot(x, z) / a)), out));
+      }
+      const s0 = pts[0], s1 = pts[pts.length - 1];
+      T.add(RC[(i + 1) % 3], cordGeo([...floorRun(s0, Math.atan2(s0.z, s0.x), 0.1 + 0.12 * q(), 950 + i).reverse(), V(s0.x, Math.max(cr, s0.y), s0.z), ...pts.slice(1, -1), V(s1.x, Math.max(cr, s1.y), s1.z), ...floorRun(s1, Math.atan2(s1.z, s1.x), 0.08 + 0.12 * q(), 970 + i)], cr), CORD_INK);
+    }
+    // flat coils on the floor round the foot (each rises a cord's width as it crosses itself)
+    for (let i = 0; i < 7; i++) {
+      const ang = (i / 7) * Math.PI * 2 + 0.5 * q(), rr0 = a * (1.02 + 0.22 * q()), cx = Math.cos(ang) * rr0, cz = Math.sin(ang) * rr0;
+      const rx = 0.07 + 0.08 * q(), rz = 0.05 + 0.06 * q(), turns = 1.25 + 0.3 * q(), N = 34, pts: THREE.Vector3[] = [];
+      for (let k = 0; k <= N; k++) { const u = k / N, t = u * turns * Math.PI * 2 + ang; pts.push(V(cx + Math.cos(t) * rx * (1 - 0.25 * u), cr + gap * Math.max(0, (u * turns - 0.85) / (turns - 0.85)), cz + Math.sin(t) * rz * (1 - 0.25 * u))); }
+      T.add(RC[i % 3], cordGeo(pts, cr), CORD_INK);
+    }
+    // ends running off across the floor
+    for (let i = 0; i < 5; i++) {
+      const ang = (i / 5) * Math.PI * 2 + 0.9 + 0.4 * q(), foot = on(ang, 0.03, cr + 0.002);
+      T.add(RC[(i + 2) % 3], cordGeo([V(foot.x, Math.max(cr, foot.y), foot.z), ...floorRun(foot, ang, 0.5 + 0.8 * q(), 990 + i)], cr), CORD_INK);
     }
     T.into(tangle, "office.tangle.part", { cast: true, receive: true });
+  }
+
+  // ---------------------------------------------------------------- INCENSE COILS hanging from the back beam
+  {
+    const mInc = Mk.flat("#8a5a3a", 0.85);
+    for (const [x, seed] of [[-2.25, 1371], [2.45, 1372]] as const) {
+      const q2 = rng(seed), top = V(X(x), BY - 0.02, BEAMS[0] + 0.0), yb = 2.42, N = 120, turns = 6, pts: THREE.Vector3[] = [];
+      for (let k = 0; k <= N; k++) { const u = k / N, th = u * turns * Math.PI * 2 + q2(); void th; const t2 = u * turns * Math.PI * 2; pts.push(V(top.x + Math.cos(t2) * (0.15 - 0.12 * u), yb + 0.3 * u, top.z + Math.sin(t2) * (0.15 - 0.12 * u))); }
+      P.add(mInc, cordGeo(pts, 0.006), 0.003);
+      // three hangers from the beam to the coil's rim, a red tag under it, the ember at the outer end
+      for (let k = 0; k < 3; k++) { const t2 = (k / 3) * Math.PI * 2; P.add(mCord, cordGeo([top.clone(), V(top.x + Math.cos(t2) * 0.15, yb, top.z + Math.sin(t2) * 0.15)], 0.006, false, 6), 0.002); }
+      P.add(mRed[0], boxG(top.x - 0.03, top.x + 0.03, yb - 0.2, yb - 0.04, top.z - 0.002, top.z + 0.002), 0.003);
+      P.add(Mk.basic("#ffb070"), new THREE.SphereGeometry(0.008, 8, 6).translate(pts[0].x, pts[0].y, pts[0].z), 0);
+    }
+  }
+
+  // ---------------------------------------------------------------- CLOUDS: heaven comes in at the floor and under the window
+  // flat 祥云 cards (their own painted outline, NOINK), standing in the floor along the walls (turned to the camera) and
+  // just outside the moon window's lower rim (facing in); each drifts a little, a pure function of t.
+  const clouds: { m: THREE.Mesh; x: number; amp: number; ph: number; sp: number; turn: boolean }[] = [];
+  {
+    const tex = [cloudTex(1401), cloudTex(1402), cloudTex(1403), cloudTex(1404)], ar = CLOUD_PX.h / CLOUD_PX.w;
+    const put = (x: number, y: number, z: number, w: number, i: number, turn = true, amp = 0.06) => {
+      const h = w * ar, m = new THREE.Mesh(new THREE.PlaneGeometry(w, h).translate(0, h * 0.36, 0), new THREE.MeshBasicMaterial({ map: tex[i % tex.length], color: "#efe6d8", transparent: true, depthWrite: false, fog: false }));
+      m.position.set(X(x), y, z); m.name = "office.cloud.card"; m.layers.set(NOINK); m.castShadow = m.receiveShadow = false; m.renderOrder = 4; group.add(m);
+      clouds.push({ m, x: X(x), amp, ph: i * 1.7, sp: 0.18 + 0.05 * (i % 3), turn });
+    };
+    put(-1.9, -0.03, D.z0 + 0.36, 1.8, 0); put(0.25, -0.03, D.z0 + 0.3, 1.2, 3); put(1.45, -0.03, D.z0 + 0.36, 1.6, 1);   // along the back wall, behind the desk
+    put(-2.42, -0.03, -2.1, 1.2, 2); put(-2.42, -0.03, 1.3, 1.3, 3);                        // at the cabinet's two ends
+    put(2.48, -0.03, -2.0, 1.3, 1); put(2.45, -0.03, 2.15, 1.5, 2);                         // along the right wall
+    put(-2.3, -0.03, D.z1 - 0.5, 1.4, 3); put(2.3, -0.03, D.z1 - 0.5, 1.4, 0);              // the front corners
+    put(D.moon.x - 0.25, D.moon.y - D.moon.r - 0.1, D.z0 - WT - 0.06, 0.8, 1, false, 0.04); // outside the window, at its lower rim
+    put(D.moon.x + 0.4, D.moon.y - D.moon.r - 0.06, D.z0 - WT - 0.12, 0.6, 2, false, 0.03);
   }
 
   P.into(group, "office.dressing", { cast: true, receive: true });
@@ -655,13 +695,14 @@ const build = (K: Kit): PlaceBuild => {
       for (const o of left) o.visible = lx > D.x0 + 0.3;
       for (const o of right) o.visible = lx < D.x1 - 0.3;
       camYaw = Math.atan2(c.x - smokeBase.x, c.z - smokeBase.z);
+      for (const k of clouds) if (k.turn) k.m.rotation.set(0, Math.atan2(c.x - k.m.position.x, c.z - k.m.position.z), 0);
       smokeAt(lastT);
     },
-    animate(t: number) { lastT = t; smokeAt(t); dust.update(t, 1); },
+    animate(t: number) { lastT = t; smokeAt(t); dust.update(t, 1); for (const k of clouds) k.m.position.x = k.x + k.amp * Math.sin(t * k.sp + k.ph); },
     setParam(name: string, v: ParamValue) {
       if (name === "kpi") applyKpi(Number(v));
       else if (name === "smoke") { smoke = clamp01(Number(v)); smokeAt(lastT); }
-      else if (name === "tangle") { const k = clamp01(Number(v)); tangle.visible = k > 0.001; tangle.scale.set(0.85 + 0.15 * k, Math.max(0.001, k), 0.85 + 0.15 * k); }
+      else if (name === "tangle") { const k = clamp01(Number(v)); tangle.visible = k > 0.001; tangle.scale.set(1, 0.8 + 0.2 * k, 1); }   // (v6: the heap keeps its shape; it only settles a little once he is out)
     },
     cast(): Partial<CastLight> { return {}; },
   };
@@ -675,19 +716,19 @@ function addSpool(P: Part, red: THREE.Material, wood: THREE.Material, x: number,
   P.add(wood, new THREE.CylinderGeometry(0.042 * s, 0.042 * s, 0.012 * s, 14).translate(x, y + 0.088 * s, z), 0.002);
 }
 /** a round wicker basket (radius, height) on y, heaped with loops of thread */
-function threadBasket(P: Part, reds: THREE.Material[], wicker: THREE.Material, x: number, y: number, z: number, rad: number, h: number, seed: number) {
+function threadBasket(P: Part, reds: THREE.Material[], cords: THREE.Material[], wicker: THREE.Material, x: number, y: number, z: number, rad: number, h: number, seed: number) {
   const q = rng(seed);
   P.add(wicker, lathe([[0, 0], [rad * 0.85, 0], [rad, h], [rad - 0.015, h], [rad * 0.85 - 0.015, 0.015], [0, 0.015]], 18).translate(x, y, z), 0.004);
   P.add(wicker, new THREE.TorusGeometry(rad, 0.012, 6, 24).rotateX(Math.PI / 2).translate(x, y + h, z), 0.003);
   P.add(reds[1], new THREE.SphereGeometry(rad * 0.92, 14, 8, 0, Math.PI * 2, 0, Math.PI / 2).scale(1, 0.5, 1).translate(x, y + h - 0.02, z), 0.002);
-  for (let i = 0; i < 22; i++) {
+  for (let i = 0; i < 12; i++) {
     const a = q() * Math.PI * 2, rr = rad * 0.75 * Math.sqrt(q());
     const m = new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(q() * 3, q() * 3, q() * 3)).setPosition(x + Math.cos(a) * rr, y + h + rad * 0.3 * (1 - rr / rad) - 0.01, z + Math.sin(a) * rr);
-    P.add(reds[i % 3], new THREE.TorusGeometry(0.04 + 0.05 * q(), 0.007, 5, 18), 0.0015, m);
+    P.add(cords[i % 3], cordRing(0.04 + 0.05 * q()), CORD_INK, m);
   }
   // one loop hanging over the rim
   const a = q() * Math.PI * 2;
-  P.add(reds[0], new THREE.TorusGeometry(0.06, 0.007, 5, 18).scale(1, 1.8, 1).rotateY(-a).translate(x + Math.cos(a) * rad, y + h - 0.07, z + Math.sin(a) * rad), 0.0015);
+  P.add(cords[0], cordRing(0.06, 0.0065, 1.8).rotateY(-a).translate(x + Math.cos(a) * (rad + 0.008), y + h - 0.07, z + Math.sin(a) * (rad + 0.008)), CORD_INK);
 }
 /** a heap of skeins (coiled hanks) lying on the floor */
 function skeinHeap(P: Part, reds: THREE.Material[], x: number, z: number, rad: number, seed: number) {
@@ -697,8 +738,20 @@ function skeinHeap(P: Part, reds: THREE.Material[], x: number, z: number, rad: n
     const m = new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(Math.PI / 2 + (q() - 0.5) * 0.5, (q() - 0.5) * 0.5, q() * 3));
     const tr = 0.07 + 0.05 * q(), tube = 0.022 + 0.01 * q();
     m.setPosition(x + Math.cos(a) * rr, tube + layer * 0.04, z + Math.sin(a) * rr);
-    P.add(reds[i % 3], new THREE.TorusGeometry(tr, tube, 8, 22).scale(1, 1.6, 1), 0.003, m);
+    P.add(reds[i % 3], cordRing(tr, tube, 1.6), 0.004, m);
   }
+}
+
+/** UVs for a painted beam (a box along x): u = x / unit along it, v = 0..1 across each long face */
+function bandUV(g0: THREE.BufferGeometry, unit: number) {
+  const g = g0.index ? g0.toNonIndexed() : g0; g.computeBoundingBox(); const bb = g.boundingBox!;
+  const p = g.attributes.position as THREE.BufferAttribute, n = g.attributes.normal as THREE.BufferAttribute, uv = new Float32Array(p.count * 2);
+  for (let i = 0; i < p.count; i++) {
+    uv[2 * i] = p.getX(i) / unit;
+    uv[2 * i + 1] = Math.abs(n.getY(i)) > 0.5 ? (p.getZ(i) - bb.min.z) / (bb.max.z - bb.min.z) : (p.getY(i) - bb.min.y) / (bb.max.y - bb.min.y);
+  }
+  g.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
+  return g;
 }
 
 export const OFFICE_PLACE: PlaceDef = { look: LOOK, params: PARAMS, build };

@@ -25,7 +25,7 @@ export const OFFICE = {
   /** THE CASE-FILE CABINET: a wall of small square drawers (like a medicine chest) covering the -x wall from z -2.3 to 1.2,
    *  floor to 2.3 m; its front face is at x = cabinetX. Each drawer has a small paper label. Scene C plays in front of it */
   cabinetX: -2.72, cabinet: { z0: -2.3, z1: 1.2, top: 2.3 },
-  /** THE KPI BOARD on the +x wall: a wooden notice board, centre (boardX, 1.55, boardZ), 1.3 wide (along z) x 1.0 tall. Its text is a set param */
+  /** THE DECREE on the +x wall (v6; it was the KPI board): a hanging scroll centred on board.z (sets/office.ts DECREE: 0.86 wide, its lower edge at 1.12). Its state is a set param */
   boardX: 2.93, board: { z: -0.6, y: 1.55, w: 1.3, h: 1.0 },
   /** the prayer burner: a small bronze incense burner on a low side table (top 0.5) by the +x wall, nearer the door; the prayers arrive as its smoke */
   burner: { x: 2.3, z: 1.0, top: 0.5 },
