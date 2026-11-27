@@ -24,7 +24,7 @@ import { OFFICE } from "../places";
 import type { World } from "../world";
 
 const S = seg("C");
-const CABX = OFFICE.cabinetX, OUT = 0.22;
+const CABX = OFFICE.cabinetX, OUT = 0.22, CRACK = 0.045;   // (the secret drawer only ever opens a crack)
 type Cell = { z: number; y: number; knob: number };
 const cell = (c: number, r: number): Cell => { const top = 2.2 - r * 0.26; return { z: OFFICE.cabinet.z1 - (c + 0.5) * 0.25, y: top - 0.13, knob: top - 0.161 }; };
 /** the five drawers: 牛郎织女, 梁祝 and 宝黛 at his waist (under his head and beard, so an open one stands clear of him),
@@ -41,7 +41,7 @@ const T = () => {
   return {
     c02, c05, c06, c07, c09, mine: wordAt("C01", "我的"), g1: c02 - 26, b1: wordAt("C04", "也算") + 2, g2: c05 - 12, bf: wordAt("C05", "变") - 8, hide: wordAt("C05", "这单"),
     g3: c06 - 14, kua: wordAt("C06", "跨"), wipe: wordAt("C06", "审批"), g4: c07 - 6, shake: wordAt("C07", "手"), slip: wordAt("C07", "绑成") - 6, chai: wordAt("C07", "宝钗"),
-    g5: c09 - 12, slam: wordAt("C09", "那是") - 12, that: wordAt("C09", "那是"),
+    g5: c09 - 12, slam: wordAt("C09", "仙女") + 10, that: wordAt("C09", "那是"),   // (the slam right after 七仙女, then a beat before the whisper)
   };
 };
 /** how far each of the five drawers is out on frame f */
@@ -52,7 +52,7 @@ const outs = (f: number) => {
     ky(f, [[t.g2 + 5, 0], [t.g2 + 11, OUT]]),
     ky(f, [[t.g3 + 6, 0], [t.g3 + 13, 0.3]]),
     ky(f, [[t.g4 + 5, 0], [t.g4 + 11, OUT]]),
-    f < t.slam ? ky(f, [[t.g5 + 6, 0], [t.g5 + 11, 0.1]]) : ky(f, [[t.slam, 0.1], [t.slam + 4, 0]]),
+    f < t.slam ? ky(f, [[t.g5 + 6, 0], [t.g5 + 11, CRACK]]) : ky(f, [[t.slam, CRACK], [t.slam + 3, 0]]),   // a crack only, and slammed shut
   ];
 };
 /** where the bale and the dropped file lie on the floor */
@@ -74,19 +74,22 @@ export const SEG: Segment = {
     const { c02, c05, c06, c07, c09, mine, g1, b1, g2, bf, hide, g3, kua, wipe, g4, shake, slip, chai, g5, slam, that } = t;
     const out = outs(f), [C1, C2, C3, C4, C5] = CELLS;
     // ---------------------------------------------------------------------------------------------- the camera
-    const CP: [number, number, number] = [-0.55, 1.5, 1.2], C0 = { pos: CP, look: [-2.72, 0.87, -0.4], fov: 55 }, UP = { pos: CP, look: [-2.6, 1.44, -0.42], fov: 55 };   // the tilt after the butterflies: his mouth stays above the subtitles
-    const DOWN = { pos: C0.pos, look: [-2.2, 0.36, -0.12], fov: 55 }, HEAD: [number, number, number] = [-2.1, 1.17, -0.3];
+    const CP: [number, number, number] = [-0.55, 1.5, 1.2], C0 = { pos: CP, look: [-2.72, 0.87, -0.4], fov: 55 }, UP = { pos: CP, look: [-2.35, 1.32, -0.76], fov: 55 };   // after the butterflies: up and along to the right with them (cabinets, not bare ceiling); his mouth stays above the subtitles
+    const HEAD: [number, number, number] = [-2.1, 1.17, -0.3];
+    // the snap down to the bale: the bale itself in the middle of the frame (well above the subtitles) and his head gone off
+    // the top (it no longer rises into the corner under the battery)
+    const DOWN = aimCam(CP, [-1.64, 0.15, -0.06], 620, 900, 55) as { pos: number[]; look: number[]; fov: number };
     // the snap zoom and the lean-in aim by where his head lands on the frame (clear of the card, the face above the subtitles)
     const FACE = aimCam(CP, HEAD, 690, 1030, 41) as { pos: number[]; look: number[]; fov: number }, LEAN = aimCam([-1.0, 1.43, 0.66] as [number, number, number], HEAD, 560, 890, 52) as { pos: number[]; look: number[]; fov: number };
     const K = (at: number, c: { pos: number[]; look: number[]; fov: number }, roll = 0) => ck("office", at, c.pos, c.look, c.fov, { roll });
     let camera = povCam(f, [
-      K(S.from, C0), K(bf + 3, C0), K(bf + 15, UP), K(hide - 16, UP), K(hide - 8, C0),   // (back down on him before the file starts round his side)
+      K(S.from, C0), K(bf + 6, C0), K(bf + 18, UP), K(hide - 16, UP), K(hide - 8, C0),   // (his eyes and head go first, the lens follows)   // (back down on him before the file starts round his side)
       K(kua + 1, C0), K(kua + 6, DOWN), K(kua + 22, DOWN), K(kua + 34, C0),
       K(chai - 6, C0), K(chai - 1, FACE), K(c08 + 14, FACE), K(c08 + 26, C0),
-      K(that - 9, C0), K(that + 3, LEAN, -6), K(c10 - 2, LEAN, -6), K(c10 + 10, C0),   // (this aim and tip keep the drawer tags out from under the REC clock and the battery)
+      K(that - 6, C0), K(that + 6, LEAN, -6), K(c10 - 2, LEAN, -6), K(c10 + 10, C0),   // (this aim and tip keep the drawer tags out from under the REC clock and the battery)
       K(c11 + 14, C0), K(e11 + 4, CAM_C1), K(S.to, CAM_C1),
     ], { mood: "calm", amp: 0.6, walk: [[S.from, 0], [c11 + 14, 0], [c11 + 20, 0.3], [e11 + 4, 0]] });
-    camera = kick(camera, f, kua + 4, 0.035);
+    camera = kick(kick(camera, f, kua + 4, 0.035), f, slam + 3, 0.02);   // the bale's thud; the secret drawer slammed shut
     const W = whip(camera, f, S.from - 4, { dir: -1, to: camera });
     camera = W.cam;
     w.setCamera(camera);
@@ -120,7 +123,7 @@ export const SEG: Segment = {
     // ---------------------------------------------------------------------------------------------- his hands
     const tremble = hit(f, shake - 2, 30) > 0 && f < slip ? 0.012 * Math.sin(f * 2.9) : 0, lowerK = ky(f, [[c03 + 46, 0], [c03 + 66, 1]]) * (f < b1 + 8 ? 1 : 0);
     // a file shown: held out at arm's length in front of the beard (the beard is 26 cm deep at the chest), sinking a little with his pride
-    const upK = ky(f, [[bf + 4, 0], [bf + 14, 1], [hide - 18, 1], [hide - 10, 0]]);   // watching the butterflies go: the file drifts a little out from under his lifted beard
+    const upK = ky(f, [[bf + 1, 0], [bf + 9, 1], [hide - 18, 1], [hide - 10, 0]]);   // watching the butterflies go: the file drifts a little out from under his lifted beard
     const holdR = H(-0.105, 0.77 - 0.05 * lowerK + tremble + 0.01 * upK, 0.32 - 0.01 * lowerK + 0.018 * upK), holdL = H(0.105, 0.77 - 0.05 * lowerK - tremble + 0.01 * upK, 0.32 - 0.01 * lowerK + 0.018 * upK), hangR = hang(at, facing, 0), hangL = hang(at, facing, 1);
     const lowR = H(-0.13, 0.57, 0.25), lowL = H(0.13, 0.57, 0.25);
     // 这单别记: the file goes BEHIND HIS BACK, each hand round its own side of him (never through him); k 0 = held out in front, 1 = behind
@@ -139,7 +142,7 @@ export const SEG: Segment = {
       [g3, hangR], [g3 + 6, knob(C3, 0).add(V(0, 0, -0.045))], [g3 + 13, knob(C3, 0.3).add(V(0, 0, -0.045))], [g3 + 19, P("office", CABX + 0.14, C3.y + 0.1, C3.z - 0.12)], [g3 + 31, lowR],
       [kua - 2, lowR], [kua + 5, H(-0.24, 0.66, 0.16)], [wipe - 6, restR], [wipe + 2, browA], [wipe + 10, browB], [wipe + 18, browA], [wipe + 26, browB], [wipe + 35, restR], [g4 - 8, restR], [g4 - 1, hangR],
       ...take(g4, C4, OUT, holdR), [slip + 2, holdR], [slip + 5, H(-0.15, 0.86, 0.26)], [c08 - 6, H(-0.15, 0.86, 0.26)], [c08 + 6, H(-0.05, 0.64, 0.2)], [g5 - 1, H(-0.05, 0.64, 0.2)],
-      [g5, hangR], [g5 + 6, knob(C5, 0)], [g5 + 11, knob(C5, 0.1)], [slam, knob(C5, 0.1)], [slam + 4, knob(C5, 0)], [slam + 10, hangR],
+      [g5, hangR], [g5 + 6, knob(C5, 0)], [g5 + 11, knob(C5, CRACK)], [slam, knob(C5, CRACK)], [slam + 3, knob(C5, 0)], [slam + 10, hangR],
     ];
     const K1: [number, THREE.Vector3][] = [
       [S.from, hangL], [mine - 5, hangL], [mine + 3, H(0.3, 0.84, 0.12)], [g1 + 2, H(0.3, 0.84, 0.12)], [g1 + 9, hangL],
@@ -165,15 +168,17 @@ export const SEG: Segment = {
     const sagK = ky(f, [[c03 + 50, 0], [c03 + 62, 1], [b1 + 20, 1], [g2, 0]]) + ky(f, [[c08 - 2, 0], [c08 + 10, 0.8], [g5 - 4, 0.8], [g5 + 2, 0]]) + ky(f, [[c11 - 2, 0], [c11 + 12, 1]]);
     const haulK = ky(f, [[g3 + 19, 0], [g3 + 31, 1], [kua - 2, 1], [kua + 6, 0]]), pant = ky(f, [[kua + 6, 0], [kua + 8, 1], [wipe - 8, 1], [wipe, 0.2], [wipe + 34, 0.2], [wipe + 40, 0.7], [g4 - 12, 0.7], [g4 - 6, 0]]), up = upK;
     const peek = ky(f, [[g5 + 8, 0], [g5 + 14, 1], [slam - 2, 1], [slam + 4, 0]]), working = side > 0.5 || low > 0.5;
+    // his eyes go with the butterflies (up and off to the picture's right), smoothly, before the lens does
+    const bflyGaze = smooth((f - bf) / 6) * (1 - smooth((f - (hide - 16)) / 8)) * (0.5 + 0.5 * smooth((f - bf - 8) / 10));
     const r = act(w, f, YL, {
       at, facing, faces,
       pose: walking ? leg.pose : hush ? { kind: "shh", t: f / 30, arm: 1, amount: ky(f, [[that - 5, 0], [that + 2, 1], [c10 - 8, 1], [c10 - 2, 0]]) } : undefined,
       hands, show: hush ? ["finger"] : undefined, armFront: wiping ? [true, undefined] : undefined,
       turn: low > 0.5 ? 1 : side > 0.5 ? 0.6 : undefined,
       lookDown: 10 * Math.min(1, sagK) + 14 * bend + (working && low < 0.5 ? 6 : 0) - 8 * up,   // (more than this and the beard's tip swings through the file he holds)
-      gaze: working ? 0 : up > 0.5 ? (f >= bf + 22 ? 0.5 : 0) : f >= kua + 2 && f < kua + 30 ? 0 : undefined,
+      gaze: working ? 0 : f >= bf && f < hide - 8 ? bflyGaze : f >= kua + 2 && f < kua + 30 ? 0 : undefined,
       lean: { pitch: pullUp + 22 * bend - 9 * haulK + 6 * Math.min(1, sagK) + 4 * pant * Math.sin(f * 0.42) + 7 * leanIn, roll: leanIn > 0.01 ? -6 * leanIn : 3.5 * haulK * Math.sin(f * 0.5) },
-      head: { dy: -0.06 * Math.min(1, sagK) - 0.06 * wipeK + 0.05 * up + 0.05 * hit(f, wordAt("C02", "我绑"), 8) - 0.03 * hit(f, CAB_AT - 1, 9), tilt: peek * -9 + (up > 0.3 ? 5 * Math.sin(f * 0.16) : 0) },
+      head: { dy: -0.06 * Math.min(1, sagK) - 0.06 * wipeK + 0.05 * up + 0.05 * hit(f, wordAt("C02", "我绑"), 8) - 0.03 * hit(f, CAB_AT - 1, 9), tilt: peek * -9 + (up > 0.3 ? 5 * Math.sin(f * 0.16) : 0) + 6 * bflyGaze },   // (his head goes over toward the butterflies)
     });
     w.update();
     // ---------------------------------------------------------------------------------------------- the drawers and the files
@@ -215,13 +220,15 @@ export const SEG: Segment = {
     // the two paper butterflies of 梁祝: out of the folder's top, up in a wavering spiral, and away along the cabinets: to the
     // picture's right, so they never pass behind the case card or the REC display, and are gone before the camera is back on him
     if (f >= bf && f < bf + 50) {
-      const start = rel(BASE, front, 0.09, 0.99, 0.4);   // out of the folder's end by his left hand: they go up past his cheek, not across his face
       [0, 1].forEach((i) => {
         const tt = (f - bf - i * 6) / 30; if (tt < 0) return;
-        const a = tt * (2.4 + i * 0.5) + [3.6, 2.4][i], rad = 0.05 + 0.08 * Math.min(1, tt), go = 0.1 * (1 - Math.exp(-8 * tt)) + 0.24 * tt * tt;
+        // out of the top of the folder by his left hand, and out to that side as they rise: past his cheek, never across his head
+        const start = rel(BASE, front, 0.1 + 0.2 * (1 - Math.exp(-6 * tt)), 0.86, 0.36);
+        const a = tt * (2.4 + i * 0.5) + [3.6, 2.4][i], rad = 0.05 + 0.08 * Math.min(1, tt), go = 0.06 * (1 - Math.exp(-8 * tt)) + 0.14 * tt * tt;   // (mostly UP: they stay inside the phone's frame)
         const p = start.clone().add(V(Math.sin(a) * rad + 0.5 * go, 0.5 * (1 - Math.exp(-3.2 * tt)) + 0.22 * tt + 0.035 * Math.sin(tt * 9 + i), Math.cos(a) * rad * 0.7 - 0.86 * go));
         const yaw = a + Math.PI / 2, flap = 0.2 + 1.0 * Math.abs(Math.sin(tt * 17 + i * 1.3));
-        w.prop("wing", `b${i}a`).put(p, { yaw, roll: flap, scale: 1.25 }); w.prop("wing", `b${i}b`).put(p, { yaw: yaw + Math.PI, roll: flap, scale: 1.25 });
+        const sc = 2.0 * (0.3 + 0.7 * smooth((f - bf - i * 6) / 5));   // they unfold out of the folder, then fly big enough to see
+        w.prop("wing", `b${i}a`).put(p, { yaw, roll: flap, scale: sc }); w.prop("wing", `b${i}b`).put(p, { yaw: yaw + Math.PI, roll: flap, scale: sc });
       });
     }
     // ---------------------------------------------------------------------------------------------- over the picture

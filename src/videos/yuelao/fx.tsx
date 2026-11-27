@@ -7,10 +7,11 @@ import { ThreadTitle, LeadCard, Meter, Fact, factSize } from "./hud/skin";
 import { CARD, PORTRAIT } from "./freeze";
 import { METER } from "./beats";
 
-/** the fact cards by the line they follow: the rows as set, the source, the seal, where the card's top sits */
+/** the fact cards by the line they follow: the rows as set, the source, the seal, where the card's top sits. Short on
+ *  purpose: each lives only in the silence after its line (2.6 s and 2.4 s), so every word must read in that time */
 export const FACTS: Record<string, { rows: string[]; src: string; seal: "真事" | "传说"; y: number }> = {
-  B04: { rows: ["2025年全国结婚登记 676.3 万对", "离婚登记 274.3 万对"], src: "数据：民政部", seal: "真事", y: 1034 },
-  E03: { rows: ["唐《续玄怪录 · 定婚店》", "赤绳“以系夫妻之足”"], src: "作者：李复言（唐）", seal: "传说", y: 1034 },
+  B04: { rows: ["2025年 结婚 676.3 万对", "离婚 274.3 万对"], src: "民政部数据", seal: "真事", y: 1034 },
+  E03: { rows: ["唐《定婚店》", "赤绳“以系夫妻之足”"], src: "李复言《续玄怪录》", seal: "传说", y: 1034 },
 };
 /** THE TITLE hangs in the room from the title block's first frame to the cut into scene B: its thread is strung once he has
  *  turned to go (threadAt), and the paper drops onto it when he has trotted out from under it (paperAt): it never covers him */

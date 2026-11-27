@@ -43,9 +43,9 @@ export const SEG: Segment = {
       { f: go + 20, pos: [0.0, 1.5, 2.0], at: headAt, sx: 520, sy: 880, fov: 58 },
       { f: arrive + 4, pos: CAMB, at: headAt, sx: 285, sy: 930, fov: 54 },
       { f: got - 6, pos: CAMB, at: [BURN.x, HEAD, BURN.z], sx: 285, sy: 930, fov: 54 },
-      { f: got + 10, pos: CAMS, at: [BURN.x, HEAD, BURN.z], sx: 770, sy: 900, fov: 54 },
-      { f: thrown, pos: CAMS, at: [BURN.x, HEAD, BURN.z], sx: 770, sy: 900, fov: 54 },
-      { f: land, pos: [1.21, 1.5, 2.81], at: [BURN.x, HEAD, BURN.z], sx: 770, sy: 880, fov: 54 },
+      { f: got + 10, pos: CAMS, at: [BURN.x, HEAD, BURN.z], sx: 770, sy: 850, fov: 54 },
+      { f: thrown, pos: CAMS, at: [BURN.x, HEAD, BURN.z], sx: 770, sy: 850, fov: 54 },
+      { f: land, pos: [1.21, 1.5, 2.81], at: [BURN.x, HEAD, BURN.z], sx: 770, sy: 840, fov: 54 },
     ];
     const camera = shotCam("office", f, keys, { mood: "calm", amp: 0.6, walk: [[S.from, 0], [go, 0], [go + 6, 0.5], [arrive, 0.5], [arrive + 6, 0], [got - 6, 0], [got, 0.3], [got + 10, 0]] });
     w.setCamera(camera);
@@ -59,13 +59,13 @@ export const SEG: Segment = {
     const worryK = ky(f, [[d02 + 8, 0], [d02 + 18, 1], [notUp + 6, 1], [notUp + 12, 0]]), alarm = ky(f, [[notUp + 8, 0], [notUp + 14, 1], [fall - 2, 1], [fall + 4, 0]]);
     const lensPt = camP.clone().add(v3(camera.look).sub(camP).normalize().multiplyScalar(0.16)).add(V(0, -0.02, 0));
     const K0: [number, THREE.Vector3][] = [
-      [got - 8, hangR], [got, H(-0.08, 0.88, 0.33)], [d04 - 3, H(-0.08, 0.88, 0.33)], [d04 + 4, H(-0.17, 1.02, 0.3)], [her - 12, H(-0.17, 1.02, 0.3)], [her - 3, H(-0.07, 0.88, 0.33)],
-      [tonight - 4, H(-0.07, 0.88, 0.33)], [tonight + 4, H(-0.2, 0.8, 0.26)], [d05 - 10, H(-0.2, 0.8, 0.26)], [d05 - 3, H(-0.03, 0.8, 0.2)], [d05 + 2, H(-0.03, 0.8, 0.2)],
+      [got - 8, hangR], [got, H(-0.08, 0.88, 0.33)], [d04 - 3, H(-0.08, 0.88, 0.33)], [d04 + 4, H(-0.25, 1.2, 0.3)], [her - 1, H(-0.25, 1.2, 0.3)], [her + 3, H(-0.25, 1.23, 0.31)],
+      [her + 9, H(-0.25, 1.2, 0.3)], [d05 - 10, H(-0.25, 1.2, 0.3)], [d05 - 3, H(-0.03, 0.8, 0.2)], [d05 + 2, H(-0.03, 0.8, 0.2)],
       [d05 + 11, H(-0.12, 0.96, 0.3)], [follow, H(-0.12, 0.96, 0.3)], [follow + 9, H(-0.22, 0.7, 0.02)], [thrown - 4, H(-0.22, 0.7, 0.02)], [thrown, H(-0.13, 1.0, 0.36)], [thrown + 10, H(-0.1, 0.92, 0.32)],
     ];
     const K1: [number, THREE.Vector3][] = [
-      [got - 8, hangL], [got, H(0.08, 0.88, 0.33)], [d04 - 3, H(0.08, 0.88, 0.33)], [d04 + 4, hangL], [her - 12, hangL], [her - 3, H(0.07, 0.88, 0.33)],
-      [tonight - 4, H(0.07, 0.88, 0.33)], [tonight + 3, H(0.2, 0.9, 0.2)], [must - 2, H(0.2, 0.9, 0.2)], [must + 2, H(0.21, 1.0 , 0.22)], [must + 7, H(0.2, 0.9, 0.2)], [d05 - 6, H(0.2, 0.9, 0.2)], [d05 + 2, hangL], [follow, hangL], [follow + 8, H(0.24, 0.96, 0.2)], [thrown + 10, H(0.24, 0.96, 0.2)],
+      [got - 8, hangL], [got, H(0.08, 0.88, 0.33)], [d04 - 3, H(0.08, 0.88, 0.33)], [d04 + 4, hangL], [her - 8, hangL], [her - 1, H(0.19, 0.96, 0.25)],
+      [tonight - 2, H(0.19, 0.96, 0.25)], [tonight + 3, H(0.2, 0.9, 0.2)], [must - 2, H(0.2, 0.9, 0.2)], [must + 2, H(0.21, 1.0 , 0.22)], [must + 7, H(0.2, 0.9, 0.2)], [d05 - 6, H(0.2, 0.9, 0.2)], [d05 + 2, hangL], [follow, hangL], [follow + 8, H(0.24, 0.96, 0.2)], [thrown + 10, H(0.24, 0.96, 0.2)],
     ];
     const hands: [THREE.Vector3 | null, THREE.Vector3 | null] | undefined = moving ? undefined
       : f >= got - 8 ? [through(f, K0), through(f, K1)]
@@ -118,8 +118,13 @@ export const SEG: Segment = {
       const u = (f - fall) / (got - fall), from = SMOKE.clone().add(V(0, 1.5, 0)), to = r.handWorld(0).clone().lerp(r.handWorld(1), 0.5).add(V(0, -0.12, 0)), p = from.lerp(to, smooth(u));
       w.prop("slip").put(p.add(V(0.06 * Math.sin(u * 9), 0, 0)), { yaw: facing, roll: 0.5 * Math.sin(u * 8) * (1 - u), pitch: -0.3 * Math.sin(u * 5) * (1 - u), scale: 0.25 + 0.75 * smooth((f - fall + 1) / 4) });
     } else if (f >= got && f < d05 - 3) {
-      const one = f >= d04 - 3 && f < her - 12 || f >= tonight - 2, hp = one ? r.handWorld(0) : r.handWorld(0).clone().lerp(r.handWorld(1), 0.5);
-      w.prop("slip").put(hp.add(V(0, one ? -0.05 : -0.12, 0)).add(V(Math.sin(facing), 0, Math.cos(facing)).multiplyScalar(0.015)), { yaw: facing, pitch: -0.15 });
+      // it lands in both hands, then his right hand raises it beside the beard and keeps it up through the line, holding it
+      // by its TOP edge (the slip's origin is its foot and its 缘 sits near the foot: a mitten there would cover it; the
+      // mitten just overlaps the top edge, clear of 求). The hand-over blends, never jumps.
+      const oneK = smooth(ky(f, [[d04 - 3, 0], [d04 + 3, 1]]));
+      const tuck = 1 - 0.85 * smooth((f - (d05 - 8)) / 5);   // into the front of his robe: it shrinks up into his fingers
+      const two = r.handWorld(0).clone().lerp(r.handWorld(1), 0.5).add(V(0, -0.12, 0)), one = r.handWorld(0).clone().add(V(0, -0.32 * tuck, 0));
+      w.prop("slip").put(two.lerp(one, oneK).add(V(Math.sin(facing), 0, Math.cos(facing)).multiplyScalar(0.015)), { yaw: facing, pitch: -0.15, scale: tuck });
     }
     // the spool: out of his robe, shown, thrown underhand at her lens, its thread paying out behind it from his fingers
     if (f >= d05 + 2 && f < thrown) inHand(w, "spool", r, 0, { dy: -0.03, yaw: facing });

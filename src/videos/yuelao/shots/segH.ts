@@ -44,16 +44,31 @@ export const SEG: Segment = {
     const eyes = -(0.5 + 0.5 * awayK) * (1 - toHer);
     const lookDown = ky(f, [[S.from, 15], [h01 + 26, 15], [h02 - 6, 2], [x02 + 12, 2], [h03 - 2, -7], [plan - 6, -7], [plan + 10, 0], [tie - 12, 6], [x03 + 8, 4], [h04 - 4, 10], [years, 14], [x04 + 14, 14], [h05 - 6, 2], [x05 + 12, 2], [x05 + 30, 13]]);
     const SH = (dx: number, y: number, z: number) => rel(STEP.top.clone().setY(0), 0, dx, y, z);
-    // 就给自己绑一根: his near hand lifts off his knee, thumb and finger turn a small loop in the air, and it sinks back
-    const tieK = win(f, tie - 22, tie + 26, 12, 16), loop = f * 0.5;
-    const kneeR = SH(-0.1, 0.42, 0.26), kneeL = SH(0.1, 0.42, 0.26), tying = SH(0.15 + 0.024 * Math.cos(loop), 0.68 + 0.024 * Math.sin(loop), 0.3);
+    // 就给自己绑一根: both mittens lift a hand's breadth off his knees, close together over his lap, and wind round each
+    // other the way he ties every couple's knot; they pull it tight... on nothing, and the pull ends with a mitten over
+    // each knee. A beat with the empty hands apart, then they sink back onto his knees. (A mime with no thread: there is
+    // no thread for him.) The knot is tied low, over the knees and clear of the beard: tied out in front of the beard
+    // (0.6 high, 0.4 out) the arms went straight through it. armFront for the beard's tip.
+    const kneeR = SH(-0.1, 0.42, 0.26), kneeL = SH(0.1, 0.42, 0.26), TC = SH(0.08, 0.48, 0.32);
+    const tieK = win(f, tie - 24, tie + 40, 12, 18), windK = smooth((f - (tie - 12)) / 20), pullK = smooth((f - (tie + 8)) / 4);
+    // He sits side-on to her, so the winding turns in his up-and-forward plane (the one she sees): the two mittens circle
+    // round each other there, half a turn apart, over his near (left) knee, so the near arm never crosses the beard. The
+    // pull is cheated toward her too: the left mitten goes out in front and up, the right one only drops a little (back
+    // toward him it went into the beard).
+    const th = windK * Math.PI * 5, wob = 1 - pullK;
+    const mime = (side: number) => {
+      const a = th + (side > 0 ? Math.PI : 0), r = 0.045 * wob;
+      return TC.clone().add(side > 0 ? rel(V(0, 0, 0), 0, 0.03 + 0.06 * pullK, r * Math.sin(a) + 0.02 * pullK, r * Math.cos(a) + 0.1 * pullK)
+        : rel(V(0, 0, 0), 0, -0.03, r * Math.sin(a) - 0.02 * pullK, r * Math.cos(a)));
+    };
+    const tying = (side: number, knee: THREE.Vector3) => knee.clone().lerp(mime(side), tieK);
     const sink = ky(f, [[h04 - 4, 0], [years + 10, 1], [h05 - 10, 1], [h05, 0.4]]);
     const faces: MoodKey[] = [
-      [S.from, "sag"], [h01 + 24, "lost"], [h02 - 5, "look", "take", 0.5], [h03 - 6, "quiet"], [plan - 2, "wry"], [x03 + 8, "quiet"], [years - 2, "sag", "sink"], [h05 - 5, "wry"], [x05 + 16, "quiet"],
+      [S.from, "sag"], [h01 + 24, "lost"], [h02 - 5, "look", "take", 0.5], [h03 - 6, "quiet"], [plan - 2, "wry"], [tie - 8, "hope"], [tie + 13, "quiet"], [years - 2, "sag", "sink"], [h05 - 5, "wry"], [x05 + 16, "quiet"],
     ];
     act(w, f, YL, {
       at: STEP.top.clone().setY(0), facing: 0, seat: STEP, faces, turn: 1, twist, lookDown, still: true,
-      gaze: eyes, talkGaze: eyes, hands: [kneeR, kneeL.clone().lerp(tying, tieK)],
+      gaze: eyes, talkGaze: eyes, hands: tieK > 0.001 ? [tying(-1, kneeR), tying(1, kneeL)] : [kneeR, kneeL], armFront: tieK > 0.3 ? [true, true] : undefined,
       lean: { pitch: 5 + 4 * sink }, head: { dy: -0.02 - 0.02 * sink },
     });
     w.update();
