@@ -268,18 +268,31 @@ export const SideCard: React.FC<{ f: number; from: number; to: number; x: number
 };
 /** RED THREAD WOUND ROUND HER LENS (scene G): soft, out-of-focus strands across the picture, as a thread on the glass
  *  looks. on[i] 1 = strand i is on the lens .. 0 = pulled off: it slides away along its `out`. f = the frame (they
- *  tremble a little with her hand). */
-export const LensThreads: React.FC<{ on: number[]; f: number }> = ({ on, f }) => {
-  const S: { d: number[]; w: number; out: [number, number] }[] = [
-    { d: [-90, 455, 520, 600, 1170, 500], w: 44, out: [1, 0.35] },      // across his hat and brow: drawn off to the right, down to his hand
-    { d: [-90, 1030, 500, 1230, 1170, 1150], w: 54, out: [-1, 0.4] },   // across the beard: drawn off to the left
-    { d: [730, -70, 770, 700, 1000, 1990], w: 58, out: [0.35, 1] },     // down the right side (left of the battery): off the bottom
-    { d: [470, -70, 360, 380, 300, 700], w: 36, out: [-0.45, 1] },      // a loose end hanging in from the top (right of the REC display): down and out to the left
+ *  tremble a little with her hand). pulls[i] = the frame strand i is pulled: HIS MITTEN is seen doing it, right at the
+ *  lens (big and out of focus like the strands): it comes in from the side his arm left the picture on, pinches the
+ *  strand at `grab`, and goes off with it. */
+export const LensThreads: React.FC<{ on: number[]; f: number; pulls?: number[] }> = ({ on, f, pulls }) => {
+  const S: { d: number[]; w: number; out: [number, number]; grab: [number, number]; from: [number, number] }[] = [
+    { d: [-90, 455, 520, 600, 1170, 500], w: 44, out: [1, 0.35], grab: [960, 522], from: [1, 0.08] },        // across his hat and brow: drawn off to the right
+    { d: [-90, 1030, 500, 1230, 1170, 1150], w: 54, out: [-1, 0.4], grab: [110, 1086], from: [-1, 0.1] },    // across the beard: drawn off to the left
+    { d: [730, -70, 770, 700, 1000, 1990], w: 58, out: [0.35, 1], grab: [852, 1085], from: [1, 0.2] },        // down the right side (left of the battery): off the bottom
+    { d: [470, -70, 360, 380, 300, 700], w: 36, out: [-0.45, 1], grab: [272, 716], from: [-1, 0.2] },        // a loose end hanging in from the top (right of the REC display): down and out to the left
   ];
+  const mitt = (i: number): { x: number; y: number; s: number } | null => {
+    const p = pulls?.[i]; if (p === undefined) return null;
+    const t = f - p, q = S[i], k = on[i] ?? 0;
+    if (t < -9 || k <= 0.001) return null;
+    if (t < 0) { const u = Math.min(1, (t + 9) / 7), e = 1 - (1 - u) * (1 - u), far = 720 * (1 - e); return { x: q.grab[0] + q.from[0] * far, y: q.grab[1] + q.from[1] * far, s: t >= -2 ? 0.93 : 1 }; }
+    const off = (1 - k) * (1 - k) * 1700;
+    return { x: q.grab[0] + q.out[0] * off, y: q.grab[1] + q.out[1] * off, s: 0.93 };
+  };
   if (!on.some((k) => k > 0.001)) return null;
   return (
     <Svg>
-      <defs><filter id="lensThreadBlur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="13" /></filter></defs>
+      <defs>
+        <filter id="lensThreadBlur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="13" /></filter>
+        <filter id="lensMittBlur" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="9" /></filter>
+      </defs>
       {S.map((q, i) => {
         const k = on[i] ?? 0; if (k <= 0.001) return null;
         const off = (1 - k) * (1 - k) * 1700, wob = 5 * Math.sin(f * 0.17 + i * 2.1), d = `M${q.d[0]} ${q.d[1]} Q${q.d[2]} ${q.d[3]} ${q.d[4]} ${q.d[5]}`;
@@ -288,6 +301,19 @@ export const LensThreads: React.FC<{ on: number[]; f: number }> = ({ on, f }) =>
             <path d={d} fill="none" stroke="#4a0c08" strokeWidth={q.w + 16} strokeLinecap="round" opacity={0.45} />
             <path d={d} fill="none" stroke="#cf261c" strokeWidth={q.w} strokeLinecap="round" />
             <path d={d} fill="none" stroke="#ff7654" strokeWidth={q.w * 0.3} strokeLinecap="round" opacity={0.75} />
+          </g>
+        );
+      })}
+      {S.map((q, i) => {
+        const m = mitt(i); if (!m) return null;
+        const ax = m.x + q.from[0] * 1500, ay = m.y + q.from[1] * 1500, R = 138 * m.s;
+        return (
+          <g key={`m${i}`} filter="url(#lensMittBlur)">
+            <line x1={m.x + q.from[0] * 90} y1={m.y + q.from[1] * 90} x2={ax} y2={ay} stroke="#231c18" strokeWidth={224} strokeLinecap="round" />
+            <line x1={m.x + q.from[0] * 90} y1={m.y + q.from[1] * 90} x2={ax} y2={ay} stroke="#d23a2a" strokeWidth={196} strokeLinecap="round" />
+            <circle cx={m.x} cy={m.y} r={R + 9} fill="#231c18" />
+            <circle cx={m.x} cy={m.y} r={R} fill="#f2c9a4" />
+            <circle cx={m.x - q.from[0] * R * 0.3} cy={m.y - R * 0.3} r={R * 0.42} fill="#fbe2c8" opacity={0.6} />
           </g>
         );
       })}

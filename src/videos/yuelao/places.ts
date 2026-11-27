@@ -43,8 +43,9 @@ export const WORK = {
   /** her desk: centre, top, size. She sits BEHIND it (z < desk.z) facing +z (toward the camera), her back to the window,
    *  so we see her face over her laptop. The laptop stands on the desk at (desk.x, top, desk.z + 0.05), its screen's back toward the camera */
   desk: { x: 0, z: -0.9, top: 0.62, w: 1.5, d: 0.7 },
-  /** her chair's seat: centre and height (a low office chair with a back) */
-  chair: { x: 0, z: -1.46, top: 0.34 },
+  /** her chair's seat: centre and height (a low office chair with a back). 0.285 is the height at which her feet stand
+   *  flat on the floor (her shin is 0.28 m; at 0.34 they hung 5 cm in the air) */
+  chair: { x: 0, z: -1.46, top: 0.285 },
   /** where 月老 crouches to tie her ankle: at the desk's +x end, beside her chair */
   tie: { x: 0.62, z: -1.62 },
   /** other desks: two rows receding to the left and right with dark monitors, a few chairs; nobody else is in */

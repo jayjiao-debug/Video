@@ -7,7 +7,9 @@
 //   taut     pulled straight; a pluck makes it sing for a second
 //   recoil   one half of a thread that has just snapped: springs toward its anchor, falls, hangs or lies there
 //   anklet   a loop tied snug round an ankle;  bowKnot  the bow of that tie
-//   join     several pieces as one run of points
+//   limp     a loose end hanging from a hand: it drops, swings in under the hand and hangs; it trails a moving hand
+//   retract  the far half of a snapped thread, pulled back the way it came until it is gone
+//   join     several pieces as one run of points;  blend  one shape of a thread turning into another
 import * as THREE from "three";
 import { ISLAND, STREET } from "../places";
 
@@ -131,4 +133,60 @@ export const part = (pts: THREE.Vector3[], k: number): THREE.Vector3[] => {
     out.push(pts[i - 1].clone().lerp(pts[i], (want - ds[i - 1]) / (ds[i] - ds[i - 1]))); break;
   }
   return out;
+};
+/** A LOOSE END HANGING FROM A HAND (or any anchor): a thread that went slack `d` frames ago, when its free end was at
+ *  `from` (cut, snapped or let go while it was held out). It drops, swings in under the hand like a pendulum whose far
+ *  end learns last, and comes to rest hanging straight down; what does not fit lies on the ground toward where it came
+ *  from. It never stretches. `trail(u)` = how far behind the hand the point at share u of its length still is (the
+ *  hand's place a few frames ago minus now): a hand that shakes sends waves down it. */
+export const limp = (anchor: THREE.Vector3, from: THREE.Vector3, d: number, floor: Floor = FLAT, o: { r?: number; n?: number; trail?: (u: number) => THREE.Vector3 } = {}): THREE.Vector3[] => {
+  const r = o.r ?? R, n = o.n ?? 14, out = from.clone().sub(anchor), L = out.length() || 1e-6, ds = L / n;
+  const flat = V(out.x, 0, out.z), fl = flat.length(); if (fl > 1e-5) flat.multiplyScalar(1 / fl); else flat.set(1, 0, 0);
+  const g = floor(anchor.x, anchor.z) + r, dropH = Math.max(0, anchor.y - g);
+  const w = (Math.sqrt(9.81 / Math.max(0.12, Math.min(L, dropH || L))) / 30) * 1.2, tau = 15;
+  const pts: THREE.Vector3[] = [anchor.clone()];
+  for (let i = 1; i <= n; i++) {
+    const u = i / n, s = L * u, start = anchor.clone().addScaledVector(out, u), dd = Math.max(0, d - 2 * u);
+    const rest = s <= dropH ? V(anchor.x, anchor.y - s, anchor.z) : V(anchor.x + flat.x * (s - dropH) * 0.8, g, anchor.z + flat.z * (s - dropH) * 0.8);
+    const k = Math.exp(-dd / tau) * Math.cos(w * dd), fall = 0.5 * 9.81 * (dd / 30) ** 2;
+    const q = V(rest.x + (start.x - rest.x) * k, Math.max(rest.y, start.y - fall), rest.z + (start.z - rest.z) * k);
+    if (o.trail) q.addScaledVector(o.trail(u), u);
+    // it cannot be longer than it is: each point stays within one step of the one before
+    const prev = pts[i - 1], v = q.clone().sub(prev), vl = v.length();
+    if (vl > ds) q.copy(prev).addScaledVector(v, ds / vl);
+    const gg = floor(q.x, q.z) + r; if (q.y < gg) q.y = gg;
+    pts.push(q);
+  }
+  return pts;
+};
+/** THE FAR HALF OF A SNAPPED THREAD, whose other end is tied to someone out of sight: the pull that held it taut takes
+ *  it back the way it came, whipping, until it is gone (d = frames since the break; gone after `over`: returns []). */
+export const retract = (far: THREE.Vector3, tip: THREE.Vector3, d: number, o: { over?: number; n?: number; whip?: number } = {}): THREE.Vector3[] => {
+  const over = o.over ?? 12, n = o.n ?? 12;
+  if (d >= over) return [];
+  if (d <= 0) return taut(far, tip, 0, [], { n });
+  const e = (d / over) ** 1.5, end = tip.clone().lerp(far, e), amp = (o.whip ?? 0.06) * Math.min(1, far.distanceTo(end)) * (1 - e);
+  const dir = tip.clone().sub(far).normalize(), side = new THREE.Vector3().crossVectors(dir, V(0, 1, 0)).normalize(), up = new THREE.Vector3().crossVectors(side, dir);
+  const pts: THREE.Vector3[] = [];
+  for (let i = 0; i <= n; i++) { const u = i / n, p = far.clone().lerp(end, u), wv = amp * u * Math.sin(u * 10 - d * 1.7); p.addScaledVector(up, wv).addScaledVector(side, 0.5 * wv * Math.cos(d * 0.9)); pts.push(p); }
+  return pts;
+};
+/** n + 1 points evenly spaced along a run */
+export const resample = (pts: THREE.Vector3[], n: number): THREE.Vector3[] => {
+  if (pts.length < 2) return Array.from({ length: n + 1 }, () => (pts[0] ?? V()).clone());
+  const ds: number[] = [0];
+  for (let i = 1; i < pts.length; i++) ds.push(ds[i - 1] + pts[i].distanceTo(pts[i - 1]));
+  const L = ds[ds.length - 1] || 1e-6, out: THREE.Vector3[] = [];
+  for (let j = 0, i = 1; j <= n; j++) {
+    const want = (j / n) * L;
+    while (i < pts.length - 1 && ds[i] < want) i++;
+    out.push(pts[i - 1].clone().lerp(pts[i], Math.max(0, Math.min(1, (want - ds[i - 1]) / ((ds[i] - ds[i - 1]) || 1e-6)))));
+  }
+  return out;
+};
+/** one shape of a thread turning into another (k 0..1), point for point along their lengths */
+export const blend = (a: THREE.Vector3[], b: THREE.Vector3[], k: number, n = 16): THREE.Vector3[] => {
+  if (k <= 0) return a; if (k >= 1) return b;
+  const A = resample(a, n), B = resample(b, n);
+  return A.map((p, i) => p.lerp(B[i], k));
 };

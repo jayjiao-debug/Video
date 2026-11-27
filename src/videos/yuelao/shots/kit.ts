@@ -95,6 +95,12 @@ export const ring = (w: World, key: string, c: THREE.Vector3, r = 0.045, tilt = 
   const pts: THREE.Vector3[] = []; for (let i = 0; i < 8; i++) { const a = (i / 8) * Math.PI * 2; pts.push(c.clone().add(V(Math.cos(a) * r, Math.sin(a) * r * tilt, Math.sin(a) * r))); }
   w.props.thread(key, pts, { closed: true, r: 0.008 });
 };
+/** A SEATED FIGURE'S SHIN (after w.update()): its ankle joint and the unit direction up the shin to the knee. The rig
+ *  keeps the seated leg to itself (legW); it is only read here. */
+export const seatedShin = (r: Rig, i: 0 | 1): { a: THREE.Vector3; up: THREE.Vector3 } => {
+  const W = (r as unknown as { legW?: { k: THREE.Vector3; a: THREE.Vector3 }[] }).legW?.[i];
+  return W ? { a: W.a.clone(), up: W.k.clone().sub(W.a).normalize() } : { a: r.footWorld(i), up: V(0, 1, 0) };
+};
 /** the facing that turns a figure at `at` toward `to` */
 export const faceTo = (at: THREE.Vector3, to: THREE.Vector3) => Math.atan2(to.x - at.x, to.z - at.z);
 /** a small prop in a figure's hand (after w.update()): hand 0 | 1, lifted dy */
@@ -108,7 +114,7 @@ export const holdUp = (at: THREE.Vector3, facing: number, k: number, y = 0.92, d
 import { chairSeat, stoolSeat, seatOn } from "../../../kit/day/rig/seats";
 import { OFFICE, WORK, STREET } from "../places";
 const STOOL_SPEC = stoolSeat({ seat: OFFICE.stool.top, d: 0.34 }), NOODLE_SPEC = stoolSeat({ seat: 0.34, d: 0.31 });
-const CHAIR_SPEC = chairSeat({ seat: WORK.chair.top, d: 0.34, backZ: -0.175, backTop: 0.75 });
+const CHAIR_SPEC = chairSeat({ seat: WORK.chair.top, d: 0.34, backZ: -0.175, backTop: WORK.chair.top + 0.41 });
 export const SEATS = {
   /** 月老's stool behind his desk, facing the door (+z): the desk's near edge is 0.32 in front of the seat's centre */
   stool: seatOn(STOOL_SPEC, P("office", OFFICE.stool.x, 0, OFFICE.stool.z), 0, { floor: 0, desk: { edge: OFFICE.desk.z - OFFICE.desk.d / 2 - 0.03 - OFFICE.stool.z, top: OFFICE.desk.top } }),

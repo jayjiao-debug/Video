@@ -333,7 +333,12 @@ const build = (K: Kit): PlaceBuild => {
     into.add(mSteel, boxG(X(x0), X(x1), y0, y0 + t, z - 0.03, z + 0.03), 0.005); into.add(mSteel, boxG(X(x0), X(x1), y1 - t, y1, z - 0.03, z + 0.03), 0.005);
     into.add(mSteel, boxG(X(x0), X(x0) + t, y0, y1, z - 0.03, z + 0.03), 0.005); into.add(mSteel, boxG(X(x1) - t, X(x1), y0, y1, z - 0.03, z + 0.03), 0.005);
   };
-  for (const [a, b] of [[BAY.x0, -hw], [hw, BAY.x1]] as const) { frame(a, b, LY, BAY.top, gZ); P.add(mGlass, new THREE.PlaneGeometry(b - a, BAY.top - LY).translate(X((a + b) / 2), (BAY.top + LY) / 2, gZ), 0); }
+  // the frosted safety band across all the glass at these people's waist height (0.6 m: higher, it crossed the face of anyone inside): on the leaves it shows the door sliding open
+  const mBand = new THREE.MeshBasicMaterial({ color: "#f2f6ff", transparent: true, opacity: 0.42, depthWrite: false, fog: false, side: THREE.DoubleSide }), BAND_Y = LY + 0.6;
+  for (const [a, b] of [[BAY.x0, -hw], [hw, BAY.x1]] as const) {
+    frame(a, b, LY, BAY.top, gZ); P.add(mGlass, new THREE.PlaneGeometry(b - a, BAY.top - LY).translate(X((a + b) / 2), (BAY.top + LY) / 2, gZ), 0);
+    P.add(mBand, new THREE.PlaneGeometry(b - a - 0.14, 0.11).translate(X((a + b) / 2), BAND_Y, gZ + 0.004), 0);
+  }
   frame(-hw, hw, dh, BAY.top, gZ); P.add(mGlass, new THREE.PlaneGeometry(D.w, BAY.top - dh).translate(X(0), (BAY.top + dh) / 2, gZ), 0);
   P.add(mSteel, boxG(X(-hw - 0.04), X(hw + 0.04), dh - 0.04, dh + 0.04, gZ - 0.14, gZ + 0.03), 0.005);   // the door head
   const leaves: THREE.Group[] = [];
@@ -342,6 +347,7 @@ const build = (K: Kit): PlaceBuild => {
     const L = new Part(K), x0 = sgn < 0 ? -hw : 0, x1 = sgn < 0 ? 0 : hw, z = gZ - 0.09;
     frame(x0, x1, LY, dh - 0.04, z, 0.05, L);
     L.add(mGlass, new THREE.PlaneGeometry(hw - 0.04, dh - LY - 0.06).translate(X((x0 + x1) / 2), (LY + dh) / 2, z), 0);
+    L.add(mBand, new THREE.PlaneGeometry(hw - 0.12, 0.11).translate(X((x0 + x1) / 2), BAND_Y, z + 0.004), 0);
     L.add(mSteel, bar(V(X(sgn * 0.12), LY + 0.7, z + 0.06), V(X(sgn * 0.12), LY + 1.5, z + 0.06), 0.016), 0.004);   // the pull bar
     L.into(lg, "street.door.leaf", { cast: false, receive: true });
   }
@@ -350,7 +356,9 @@ const build = (K: Kit): PlaceBuild => {
   const mPlate = Mk.basic("#ffffff", { map: plateTex() });
   Mk.mesh("street.sign.plate", new THREE.PlaneGeometry(2.3, 0.38).translate(X(0), 3.7, WZ + 0.052), mPlate, UNLIT);
   frame(3.3, 6.7, 0.45, 3.05, WZ + 0.03); for (const x of [4.43, 5.57]) P.add(mSteel, boxG(X(x - 0.03), X(x + 0.03), 0.45, 3.05, WZ, WZ + 0.06), 0.005);   // the dark shopfront's frame
-  const doorGlow = glowCard(1.7, "#ffcf8a", 0.3); doorGlow.position.set(X(0), 1.6, WZ + 0.08); group.add(doorGlow);
+  // the lobby's glow sits INSIDE, behind anyone who walks in the lobby: a person behind the glass is a solid person in a
+  // bright room (in front of the glass it washed her out like a ghost)
+  const doorGlow = glowCard(1.7, "#ffcf8a", 0.3); doorGlow.position.set(X(0), 1.6, WB - 1.0); group.add(doorGlow);
 
   // ------------------------------------------------------------------------------------------ the noodle shop
   const shopMats: [THREE.MeshBasicMaterial, THREE.Color][] = [];
