@@ -1,0 +1,553 @@
+plan: {'tier': 'creator', 'character_count': 118374, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "H05_p_2131", "type": "dialogue", "lang": "", "lines": ["我这个……也记，缘分未到吧。"], "status": 200, "model": "eleven_v4", "file": "H05_p_2131.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 4.4, "character_start_index": 0, "character_end_index": 14, "dialogue_input_index": 0}]}
+{"name": "H05_p_2137", "type": "dialogue", "lang": "", "lines": ["我这个……也记，缘分未到吧。"], "status": 200, "model": "eleven_v4", "file": "H05_p_2137.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 4.08, "character_start_index": 0, "character_end_index": 14, "dialogue_input_index": 0}]}
+{"name": "H05_s_2131", "type": "dialogue", "lang": "", "lines": ["[softly] 我这个……也记，缘分未到吧。"], "status": 200, "model": "eleven_v4", "file": "H05_s_2131.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 3.84, "character_start_index": 0, "character_end_index": 23, "dialogue_input_index": 0}]}
+{"name": "H05_s_2137", "type": "dialogue", "lang": "", "lines": ["[softly] 我这个……也记，缘分未到吧。"], "status": 200, "model": "eleven_v4", "file": "H05_s_2137.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 3.92, "character_start_index": 0, "character_end_index": 23, "dialogue_input_index": 0}]}
+removed kept voices: {'WuLq5z7nEcrhppO0ZQJw': 200}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "H05_p_2131",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "我这个……也记，缘分未到吧。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "H05_p_2131.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 4.4,
+    "character_start_index": 0,
+    "character_end_index": 14,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "我",
+    "这",
+    "个",
+    "…",
+    "…",
+    "也",
+    "记",
+    "，",
+    "缘",
+    "分",
+    "未",
+    "到",
+    "吧",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.32,
+    0.64,
+    0.96,
+    1.4,
+    1.84,
+    2.08,
+    2.32,
+    3.04,
+    3.24,
+    3.44,
+    3.6,
+    3.84,
+    4.0
+   ],
+   "character_end_times_seconds": [
+    0.32,
+    0.64,
+    0.96,
+    1.4,
+    1.84,
+    2.08,
+    2.32,
+    3.04,
+    3.24,
+    3.44,
+    3.6,
+    3.84,
+    4.0,
+    4.4
+   ]
+  },
+  "words": [
+   [
+    "我",
+    0.0,
+    0.2
+   ],
+   [
+    "這個",
+    0.2,
+    0.56
+   ],
+   [
+    "也",
+    0.56,
+    1.94
+   ],
+   [
+    "記",
+    1.94,
+    2.22
+   ],
+   [
+    "緣",
+    2.98,
+    3.2
+   ],
+   [
+    "份",
+    3.2,
+    3.36
+   ],
+   [
+    "未",
+    3.36,
+    3.54
+   ],
+   [
+    "到",
+    3.54,
+    3.74
+   ],
+   [
+    "吧",
+    3.74,
+    3.94
+   ]
+  ],
+  "heard": "我這個也記 緣份未到吧",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.995,
+  "seconds": 4.32
+ },
+ {
+  "name": "H05_p_2137",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "我这个……也记，缘分未到吧。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "H05_p_2137.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 4.08,
+    "character_start_index": 0,
+    "character_end_index": 14,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "我",
+    "这",
+    "个",
+    "…",
+    "…",
+    "也",
+    "记",
+    "，",
+    "缘",
+    "分",
+    "未",
+    "到",
+    "吧",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.32,
+    0.64,
+    0.96,
+    1.28,
+    1.6,
+    1.84,
+    2.08,
+    2.72,
+    2.96,
+    3.2,
+    3.36,
+    3.6,
+    3.76
+   ],
+   "character_end_times_seconds": [
+    0.32,
+    0.64,
+    0.96,
+    1.28,
+    1.6,
+    1.84,
+    2.08,
+    2.72,
+    2.96,
+    3.2,
+    3.36,
+    3.6,
+    3.76,
+    4.08
+   ]
+  },
+  "words": [
+   [
+    "我",
+    0.0,
+    0.2
+   ],
+   [
+    "这个",
+    0.2,
+    0.54
+   ],
+   [
+    "也",
+    0.54,
+    1.72
+   ],
+   [
+    "计,",
+    1.72,
+    2.08
+   ],
+   [
+    "缘",
+    2.78,
+    2.94
+   ],
+   [
+    "分",
+    2.94,
+    3.12
+   ],
+   [
+    "未",
+    3.12,
+    3.28
+   ],
+   [
+    "到",
+    3.28,
+    3.48
+   ],
+   [
+    "吧",
+    3.48,
+    3.7
+   ]
+  ],
+  "heard": "我这个也计,缘分未到吧",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 4.0
+ },
+ {
+  "name": "H05_s_2131",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "[softly] 我这个……也记，缘分未到吧。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "H05_s_2131.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.84,
+    "character_start_index": 0,
+    "character_end_index": 23,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "[",
+    "s",
+    "o",
+    "f",
+    "t",
+    "l",
+    "y",
+    "]",
+    " ",
+    "我",
+    "这",
+    "个",
+    "…",
+    "…",
+    "也",
+    "记",
+    "，",
+    "缘",
+    "分",
+    "未",
+    "到",
+    "吧",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.08,
+    0.09,
+    0.1,
+    0.11,
+    0.12,
+    0.14,
+    0.16,
+    0.2,
+    0.24,
+    0.4,
+    0.64,
+    0.88,
+    1.16,
+    1.44,
+    1.68,
+    1.84,
+    2.56,
+    2.76,
+    2.96,
+    3.2,
+    3.36,
+    3.44
+   ],
+   "character_end_times_seconds": [
+    0.08,
+    0.09,
+    0.1,
+    0.11,
+    0.12,
+    0.14,
+    0.16,
+    0.2,
+    0.24,
+    0.4,
+    0.64,
+    0.88,
+    1.16,
+    1.44,
+    1.68,
+    1.84,
+    2.56,
+    2.76,
+    2.96,
+    3.2,
+    3.36,
+    3.44,
+    3.84
+   ]
+  },
+  "words": [
+   [
+    "我",
+    0.0,
+    0.32
+   ],
+   [
+    "这个",
+    0.32,
+    0.6
+   ],
+   [
+    "也",
+    0.6,
+    1.52
+   ],
+   [
+    "记",
+    1.52,
+    1.84
+   ],
+   [
+    "缘",
+    2.56,
+    2.68
+   ],
+   [
+    "分",
+    2.68,
+    2.86
+   ],
+   [
+    "未",
+    2.86,
+    3.02
+   ],
+   [
+    "到",
+    3.02,
+    3.24
+   ],
+   [
+    "吧",
+    3.24,
+    3.46
+   ]
+  ],
+  "heard": "我这个也记 缘分未到吧",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.979,
+  "seconds": 3.76
+ },
+ {
+  "name": "H05_s_2137",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "[softly] 我这个……也记，缘分未到吧。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "H05_s_2137.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.92,
+    "character_start_index": 0,
+    "character_end_index": 23,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "[",
+    "s",
+    "o",
+    "f",
+    "t",
+    "l",
+    "y",
+    "]",
+    " ",
+    "我",
+    "这",
+    "个",
+    "…",
+    "…",
+    "也",
+    "记",
+    "，",
+    "缘",
+    "分",
+    "未",
+    "到",
+    "吧",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.08,
+    0.09,
+    0.1,
+    0.11,
+    0.12,
+    0.14,
+    0.16,
+    0.2,
+    0.24,
+    0.4,
+    0.68,
+    0.96,
+    1.24,
+    1.52,
+    1.76,
+    1.92,
+    2.8,
+    2.96,
+    3.12,
+    3.36,
+    3.52,
+    3.6
+   ],
+   "character_end_times_seconds": [
+    0.08,
+    0.09,
+    0.1,
+    0.11,
+    0.12,
+    0.14,
+    0.16,
+    0.2,
+    0.24,
+    0.4,
+    0.68,
+    0.96,
+    1.24,
+    1.52,
+    1.76,
+    1.92,
+    2.8,
+    2.96,
+    3.12,
+    3.36,
+    3.52,
+    3.6,
+    3.92
+   ]
+  },
+  "words": [
+   [
+    "我",
+    0.0,
+    0.3
+   ],
+   [
+    "这个",
+    0.3,
+    0.62
+   ],
+   [
+    "也",
+    0.62,
+    1.58
+   ],
+   [
+    "记",
+    1.58,
+    1.88
+   ],
+   [
+    "缘",
+    2.7,
+    2.84
+   ],
+   [
+    "分",
+    2.84,
+    2.98
+   ],
+   [
+    "未",
+    2.98,
+    3.14
+   ],
+   [
+    "到",
+    3.14,
+    3.34
+   ],
+   [
+    "吧",
+    3.34,
+    3.56
+   ]
+  ],
+  "heard": "我这个也记 缘分未到吧",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.981,
+  "seconds": 3.84
+ }
+]
