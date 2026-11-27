@@ -40,7 +40,7 @@ export const SEG: Segment = {
     const short = wordAt("B06", "就差"), tonight = wordAt("B06", "今晚"), also = wordAt("B08", "还得");
     // ---------------------------------------------------------------------------------------------- the camera
     const HIM: [number, number, number] = [0.35, 0.98, -1.84], BOARD: [number, number, number] = [2.93, 1.52, -0.62];
-    const BOOK = { pos: [0.9, 1.5, -0.5], look: [0.34, 0.82, -1.6], fov: 50 }, FRONT = { pos: [0.28, 1.38, -0.12], look: HIM, fov: 52 };
+    const BOOK = { pos: [0.9, 1.5, -0.5], look: [0.378, 0.74, -1.62], fov: 55 }, FRONT = { pos: [0.28, 1.38, -0.12], look: HIM, fov: 52 };
     const LOW = { pos: [0.18, 0.9, -0.2], look: [0.35, 1.08, -1.84], fov: 50 }, WIDE = { pos: [0.3, 1.4, 0.45], look: [0.35, 0.74, -1.84], fov: 56 };
     const HANDS = { pos: [0.3, 1.34, -0.32], look: [0.35, 0.92, -1.62], fov: 46 }, FACE = { pos: [0.3, 1.36, -0.5], look: [0.35, 1.0, -1.84], fov: 50 };
     const K = (at: number, c: { pos: number[]; look: number[]; fov: number }, roll = 0) => ck("office", at, c.pos, c.look, c.fov, { roll });

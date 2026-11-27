@@ -1,0 +1,10 @@
+{
+ "film": "yuelao",
+ "title": "采访月老的一天",
+ "composition": "YuelaoFilm",
+ "branch": "render-farm-yuelao",
+ "render": {"crf": 16, "gl": "angle", "concurrency": "50%"},
+ "langs": {"zh": {}},
+ "gate": {},
+ "_note": "No sound.build yet: the owner auditions the audio later (27 Nov), so a studio run without --mix makes a silent master on purpose."
+}
