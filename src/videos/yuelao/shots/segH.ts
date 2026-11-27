@@ -36,8 +36,12 @@ export const SEG: Segment = {
     // ---------------------------------------------------------------------------------------------- 月老
     // his upper body: turned a little her way; to her for 我？; away into the night for the telling; to her for 也记
     // (the rig draws a face only within about 45 degrees of the lens: his head never turns further from her than that)
-    const twist = ky(f, [[S.from, 0.35], [h02 - 16, 0.35], [h02 - 4, 0.85], [x02 + 16, 0.85], [h03 - 6, 0.3], [h05 - 14, 0.3], [h05 - 2, 0.85], [x05 + 14, 0.85], [x05 + 30, 0.35]]);
-    const toHer = smooth((twist - 0.4) / 0.4), away = f >= h03 - 6 && f < h05 - 14;
+    // Every turn is slow (two thirds of a second) and led by the head: the eyes and the face go first, the shoulders
+    // follow five frames later. The gaze is a smooth value, never a step: a stepped gaze threw his whole head round in
+    // one frame.
+    const TW: [number, number][] = [[S.from, 0.35], [h02 - 22, 0.35], [h02 - 3, 0.85], [x02 + 10, 0.85], [h03 - 2, 0.3], [h05 - 20, 0.3], [h05 - 1, 0.85], [x05 + 12, 0.85], [x05 + 34, 0.35]];
+    const twist = ky(f, TW), toHer = smooth((ky(f + 5, TW) - 0.4) / 0.4), awayK = win(f + 5, h03 - 12, h05 - 10, 16, 16);
+    const eyes = -(0.5 + 0.5 * awayK) * (1 - toHer);
     const lookDown = ky(f, [[S.from, 15], [h01 + 26, 15], [h02 - 6, 2], [x02 + 12, 2], [h03 - 2, -7], [plan - 6, -7], [plan + 10, 0], [tie - 12, 6], [x03 + 8, 4], [h04 - 4, 10], [years, 14], [x04 + 14, 14], [h05 - 6, 2], [x05 + 12, 2], [x05 + 30, 13]]);
     const SH = (dx: number, y: number, z: number) => rel(STEP.top.clone().setY(0), 0, dx, y, z);
     // 就给自己绑一根: his near hand lifts off his knee, thumb and finger turn a small loop in the air, and it sinks back
@@ -49,7 +53,7 @@ export const SEG: Segment = {
     ];
     act(w, f, YL, {
       at: STEP.top.clone().setY(0), facing: 0, seat: STEP, faces, turn: 1, twist, lookDown, still: true,
-      gaze: toHer > 0.5 ? 0 : away ? -1 : -0.5, talkGaze: toHer > 0.5 ? 0 : away ? -1 : -0.5, hands: [kneeR, kneeL.clone().lerp(tying, tieK)],
+      gaze: eyes, talkGaze: eyes, hands: [kneeR, kneeL.clone().lerp(tying, tieK)],
       lean: { pitch: 5 + 4 * sink }, head: { dy: -0.02 - 0.02 * sink },
     });
     w.update();

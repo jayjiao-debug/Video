@@ -18,7 +18,7 @@ import { povCam, punchIn, whip, whipSmear } from "../cam";
 import { P, ck, wv, startOf, endOf, wordAt, ky, rel, hit, V, SEATS, VERBS, smooth, walkAlong } from "./kit";
 import { OFFICE } from "../places";
 import { act, YL, stroke, type MoodKey } from "./act";
-import { taut, recoil, FLAT } from "./thread";
+import { droop, taut, recoil, type Floor } from "./thread";
 import { draw, type Fx } from "./fx";
 import { FOV } from "../cam";
 
@@ -64,12 +64,15 @@ export const SEG: Segment = {
     const t = f / 30, writing = f < only - 4 || (f > e04 + 26 && f < b05 - 12);
     const proudK = ky(f, [[b03 - 3, 0], [b03 + 5, 1], [b04 - 4, 1], [b04 + 4, 0]]);
     const slump = ky(f, [[b04 + 2, 0], [b04 + 16, 1], [b05 - 14, 1], [b05 - 2, 0.25], [b06 - 4, 0.25], [b06 + 4, 0]]) + 0.8 * ky(f, [[b08 + 2, 0], [b08 + 14, 0.6], [also, 0.6], [also + 12, 1]]);
-    const knotK = ky(f, [[b05 + 2, 0], [b05 + 12, 1], [e05 + 4, 1], [e05 + 12, 0]]);          // both hands up with a thread
-    const pull = ky(f, [[tied - 2, 0], [tied + 8, 1], [cut - 1, 1.15], [cut + 3, 2.6], [cut + 20, 2.2]]);
+    const knotK = ky(f, [[b05 + 2, 0], [b05 + 12, 1], [e05 + 4, 1], [e05 + 12, 0]]);          // both hands up IN FRONT of his beard with a thread
+    // he ties it where she can see: the hands come together, wind once, part, and a bow sits in the middle; on 剪了 it parts
+    const tieK = ky(f, [[tied - 9, 0], [tied - 2, 1], [tied + 6, 1], [tied + 13, 0]]), TIED = tied + 9;
+    const snapK = ky(f, [[cut - 1, 0], [cut + 3, 1], [cut + 14, 0.55]]);
     const pointK = ky(f, [[short - 9, 0], [short - 1, 1], [tonight + 6, 1], [tonight + 16, 0]]);
-    const chest = (dx: number, dy = 0, dz = 0) => rel(AT, 0, dx, 0.8 + dy, 0.27 + dz);
-    const hx = 0.05 + 0.05 * pull;
-    const hands = knotK > 0.02 ? [VERBS.hang(AT, 0, 0).setY(0.66).lerp(chest(-hx, 0.01 * Math.sin(f * 0.7)), smooth(knotK)), VERBS.hang(AT, 0, 1).setY(0.66).lerp(chest(hx, -0.01 * Math.sin(f * 0.7)), smooth(knotK))] as [ReturnType<typeof V>, ReturnType<typeof V>]
+    const chest = (dx: number, dy = 0, dz = 0) => rel(AT, 0, dx, 0.8 + dy, 0.33 + dz);
+    const hx = 0.105 - 0.08 * smooth(tieK) + 0.03 * (f >= TIED ? 1 : 0) * (1 - smooth(tieK)) + 0.05 * snapK, wind = tieK > 0.5 ? (f - tied) * 0.9 : 0;
+    const rest = (sg: number) => rel(AT, 0, sg * 0.1, OFFICE.desk.top + 0.03, 0.31);   // where his hands lie on the desk
+    const hands = knotK > 0.02 ? [rest(-1).lerp(chest(-hx, 0.012 * Math.sin(wind) * tieK + 0.02 * snapK, 0.012 * Math.cos(wind) * tieK), smooth(knotK)), rest(1).lerp(chest(hx, -0.012 * Math.sin(wind) * tieK + 0.02 * snapK, -0.012 * Math.cos(wind) * tieK), smooth(knotK))] as [ReturnType<typeof V>, ReturnType<typeof V>]
       : proudK > 0.02 ? (() => { const s = stroke(AT, 0, f, proudK); return s ? [s[0]!.add(V(0, -0.02, 0.07)), null] as [ReturnType<typeof V>, null] : undefined; })()
       : pointK > 0.02 ? [null, VERBS.hang(AT, 0, 1).setY(0.7).lerp(rel(AT, 0, 0.42, 0.97, 0.16), smooth(pointK))] as [null, ReturnType<typeof V>]
       : undefined;
@@ -85,7 +88,7 @@ export const SEG: Segment = {
       : act(w, f, YL, {
         at: AT, facing: 0, seat, rise: riseK, faces,
         pose: writing ? { kind: "write", t, arm: 0 } : hands ? { kind: "hold", t } : { kind: "desk", t },
-        show: writing ? ["pen"] : undefined, hands: writing ? undefined : hands,
+        show: writing ? ["pen"] : undefined, hands: writing ? undefined : hands, armFront: knotK > 0.3 ? [true, true] : undefined,
         lookDown: writing ? undefined : 16 * Math.min(1, slump) * (1 - riseK) + (knotK > 0.5 && f < cut ? 8 : 0),
         lean: { pitch: (9 * Math.min(1, slump) - 7 * proudK) * (1 - riseK) },
         gaze: writing ? 0 : pointK > 0.5 && f < tonight - 4 ? 1 : knotK > 0.5 && f < cut ? 0 : riseK > 0.3 ? -1 : undefined,
@@ -94,10 +97,30 @@ export const SEG: Segment = {
       });
     w.update();
     // ---------------------------------------------------------------------------------------------- the thread he shows her
-    if (knotK > 0.3) {
+    const DESK: Floor = () => OFFICE.desk.top + 0.012, th = { r: 0.0075 }, LET_GO = e05 + 2;
+    if (knotK > 0.3 && f < cut) {
       const h0 = r.handWorld(0), h1 = r.handWorld(1), mid = h0.clone().lerp(h1, 0.5);
-      if (f < cut) w.props.thread("show", taut(h0, h1, f, [tied + 8], { sag: 0.02 * (1.2 - Math.min(1.2, pull)), amp: 0.008 }), { r: 0.0075 });
-      else { const d = f - cut; w.props.thread("show", recoil(h0, mid, d, FLAT, { n: 6, whip: 0.5 }), { r: 0.0075 }); w.props.thread("show2", recoil(h1, mid, d, FLAT, { n: 6, whip: 0.5 }), { r: 0.0075 }); }
+      if (f < TIED) w.props.thread("show", droop(h0, h1, 0.34 * (1 - 0.8 * smooth(tieK)), DESK, { n: 10 }), th);                 // slack between his hands, wound up as they meet
+      else {
+        // tied: drawn straight, a bow in the middle with two short tails (in the plane that faces her lens)
+        const k = smooth((f - TIED) / 5), sz = 0.034 * (0.5 + 0.5 * k), bow: ReturnType<typeof V>[] = [];
+        for (let i = 0; i < 16; i++) { const a = (i / 16) * Math.PI * 2; bow.push(mid.clone().add(V(sz * Math.sin(a), sz * 0.55 * Math.sin(2 * a) + 0.004, 0.006))); }
+        w.props.thread("show", taut(h0, h1, f, [TIED + 4], { sag: 0.006, amp: 0.006 }), th);
+        w.props.thread("bow", bow, { ...th, closed: true });
+        w.props.thread("bowt0", [mid.clone().add(V(-0.004, 0, 0.006)), mid.clone().add(V(-0.014, -0.022, 0.008)), mid.clone().add(V(-0.012, -0.046 * k, 0.008))], th);
+        w.props.thread("bowt1", [mid.clone().add(V(0.004, 0, 0.006)), mid.clone().add(V(0.015, -0.02, 0.008)), mid.clone().add(V(0.017, -0.04 * k, 0.008))], th);
+      }
+    } else if (f >= cut) {
+      // it parts in the middle: each half springs back to its hand and hangs from it; he lets them go as his hands sink,
+      // and the two ends lie on the desk for the rest of the scene
+      const d = f - cut, k = smooth((f - LET_GO) / 6);
+      [0, 1].forEach((i) => {
+        const sg = i ? 1 : -1, y = DESK(0, 0) + 0.0075;
+        const lie = Array.from({ length: 9 }, (_, j) => rel(AT, 0, sg * (0.2 - 0.012 * j), y, 0.4 + 0.012 * Math.sin(j * 0.9 + i)));
+        if (k <= 0) { const h = [r.handWorld(0), r.handWorld(1)]; w.props.thread(i ? "show2" : "show", recoil(h[i], h[0].clone().lerp(h[1], 0.5), d, DESK, { n: 8, whip: 0.45 }), th); return; }
+        const hk = rest(sg).lerp(chest(sg * 0.155, 0.011), 1), hang = recoil(hk, hk.clone().add(V(-sg * 0.1, 0, 0)), LET_GO - cut, DESK, { n: 8, whip: 0.45 });
+        w.props.thread(i ? "show2" : "show", hang.map((q, j) => q.clone().lerp(lie[j], k)), th);
+      });
     }
     const FX: Fx[] = [];
     return { camera, overlays: [draw(f, FX), whipSmear(W.smear, -1)], shown: FX, post: W.post };

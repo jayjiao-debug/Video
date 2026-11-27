@@ -28,7 +28,8 @@ const S = seg("G"), HALF = Math.PI / 2;
 const Z0 = P("street", -0.3, 0, 0.9), Z1 = P("street", -0.3, 0, 1.55), Z2 = P("street", -0.3, 0, 1.0);
 const CREEP = 0.75, BACKING = 0.9, TRUDGE = 1.7, TROT = 2.3, STROLL = 1.6, HER_PACE = 1.3;
 const AWAY = [Z2, STAND_AT], AWAY_YAW = Math.atan2(STAND_AT.x - Z2.x, STAND_AT.z - Z2.z);
-const RIDER_LEN = VERBS.walkTime(RIDER_UP, 1), RIDER_DOWN = [...RIDER_UP].reverse(), WAY_IN = [...WAY_OUT].reverse();
+/** her way back in: through the door and on across the lobby to the lifts (she is never switched off behind the glass) */
+const RIDER_LEN = VERBS.walkTime(RIDER_UP, 1), RIDER_DOWN = [...RIDER_UP].reverse(), WAY_IN = [...WAY_OUT].reverse().concat([P("street", -0.55, 0.51, -6.2), P("street", -0.7, 0.51, -8.35)]);   // past the plant (x -1.9..-1.1, z -7.5) to the left lift
 const DOWN_YAW = Math.atan2(RIDER_DOWN[1].x - RIDER_DOWN[0].x, RIDER_DOWN[1].z - RIDER_DOWN[0].z);
 /** where the bag changes hands, between the two of them */
 const HAND_PT = P("street", 0.09, 0.51 + 0.84, -3.14);
@@ -46,8 +47,9 @@ export const SEG: Segment = {
     const tug = g05 + 62, drop0 = over + 4, fell = drop0 + 10, up0 = x05 + 5;
     // the delivery: the rider's trot up, the door, her way out, the bag, her way in, his way down
     const rgo = g03 - 37, rtop = rgo + Math.ceil((RIDER_LEN / TROT) * 30), out0 = g03 + 12, out1 = out0 + Math.ceil(VERBS.walkTime(WAY_OUT, HER_PACE) * 30), take = g04 + 6;
-    const in0 = x04 + 10, in1 = in0 + Math.ceil(VERBS.walkTime(WAY_IN, HER_PACE) * 30), down0 = x04 + 62;
-    const doorK = ky(f, [[g03 + 6, 0], [g03 + 17, 1], [in0 + 24, 1], [in0 + 38, 0]]);
+    const in0 = x04 + 10, down0 = x04 + 62;
+    // the glass door is locked at night: it slides open for her as she comes up to it from inside, and shuts behind her
+    const doorK = ky(f, [[out0 + 8, 0], [out0 + 22, 1], [in0 + 24, 1], [in0 + 38, 0]]);
     w.setPlace("street"); w.set.param("time", "night"); w.set.param("door", doorK); w.set.param("lit", 0.5); w.set.param("moon", 0.3);
     const t = f / 30;
     // ---------------------------------------------------------------------------------------------- the camera
@@ -80,9 +82,10 @@ export const SEG: Segment = {
     // his hands: patting himself down; empty (我的线呢！); at the lens, one at each lower corner of the picture: each pull is
     // a reach in and up, then a jerk down and out; then together round the knot; on his knees
     const pat = Math.sin(f * 0.85), patR = H(-0.12, 0.8 + 0.07 * pat, 0.2), patL = H(0.12, 0.74 - 0.07 * pat, 0.205), sh = 0.012 * Math.sin(f * 1.5) * (f < x01 + 2 ? 1 : 0);
-    const reachOf = (i: number) => smooth((f - (pulls[i] - 8)) / 6) * (1 - smooth((f - pulls[i]) / 3)), jerkOf = (i: number) => smooth((f - pulls[i]) / 3) * (1 - smooth((f - (pulls[i] + 4)) / 6));
-    const rr = reachOf(1) + reachOf(3), rj = jerkOf(1) + jerkOf(3), lr = reachOf(2) + reachOf(0), lj = jerkOf(2) + jerkOf(0);
-    const lensR = H(-0.13 + 0.035 * rr - 0.02 * rj, 1.1 + 0.05 * rr - 0.08 * rj, 0.3), lensL = H(0.13 - 0.035 * lr + 0.02 * lj, 1.1 + 0.05 * lr - 0.08 * lj, 0.3);
+    // each pull: that hand goes up and out of the picture on its own side, to the lens (there it is the big soft mitten
+    // of the lens overlay, which pinches the strand and takes it off), and comes back with what it pulled
+    const awayOf = (i: number) => win(f, pulls[i] - 10, pulls[i] + 9, 5, 5), aR = Math.max(awayOf(1), awayOf(3)), aL = Math.max(awayOf(2), awayOf(0));
+    const lensR = H(-0.13, 1.1, 0.3).lerp(H(-0.44, 1.2, 0.3), aR), lensL = H(0.13, 1.1, 0.3).lerp(H(0.44, 1.2, 0.3), aL);
     const fid = 0.012 * Math.sin(f * 0.55), lapR = SH(-0.07 - fid, 0.44 + 0.006 * Math.sin(f * 0.8), 0.27), lapL = SH(0.07 + fid * 0.6, 0.44 - 0.006 * Math.sin(f * 0.8), 0.27);
     const strainK = win(f, tug, tug + 22, 4, 5), dropK = smooth((f - drop0) / 7);
     let hands: [THREE.Vector3 | null, THREE.Vector3 | null] | undefined;
@@ -127,17 +130,19 @@ export const SEG: Segment = {
       head: { tilt: 3 * shyK }, lookDown: 4 * shyK,
     });
     // ---------------------------------------------------------------------------------------------- 林小满
-    const here = f >= out0 && f < in1 + 2;
+    // she is in the lobby the whole scene: waiting inside the glass on her phone (her delivery is on its way), out for
+    // the bag, and back across the lobby to the lifts
+    const waiting = f < out0 - 5;
     let xm = null as ReturnType<typeof act> | null;
-    if (here) {
-      const legX = f < in0 ? walkAlong(WAY_OUT, HER_PACE, (f - out0) / 30) : walkAlong(WAY_IN, HER_PACE, (f - in0) / 30);
+    {
+      const legX = f < in0 ? walkAlong(WAY_OUT, HER_PACE, (f - out0) / 30, { startFacing: 0.5 }) : walkAlong(WAY_IN, HER_PACE, (f - in0) / 30);
       const xAt = legX.at, xFace = legX.moving || f >= in0 ? legX.facing : turnTo(turnTo(legX.facing, HALF, smooth((f - out1) / 7)), Math.PI, smooth((f - (in0 - 7)) / 7));
       const reach = ky(f, [[take - 9, 0], [take, 1], [take + 4, 1], [take + 16, 0]]), XH = (dx: number, y: number, z: number) => rel(xAt, xFace, dx, y, z);
       const hold = XH(-0.2, 0.66, 0.06), hr = hang(xAt, xFace, 0).lerp(hold, smooth((f - take) / 12)).lerp(HAND_PT.clone().add(V(-0.035, 0, 0.02)), reach);
       xm = act(w, f, XM, {
-        at: xAt, facing: xFace, pose: legX.moving ? legX.pose : undefined, hands: f >= take - 9 ? [hr, null] : undefined,
-        faces: [[out0, "tired"], [g04 - 2, "polite"], [again - 1, "look", "take", 0.4], [again + 14, "smile"], [in0 + 2, "smile"]],
-        talkGaze: 0, gaze: f >= out1 && f < in0 ? 1 : undefined, lookDown: 8 * win(f, take - 8, again - 4, 5, 5), turn: f >= in0 - 7 ? Math.min(1, 0.55 + 0.45 * smooth((f - (in0 - 7)) / 7)) : f >= out1 ? 0.55 * smooth((f - out1) / 7) : undefined,
+        at: xAt, facing: xFace, pose: legX.moving ? legX.pose : waiting ? { kind: "phone", t, amount: 0.34, arm: 1 } : undefined, show: waiting ? ["phone"] : undefined, hands: f >= take - 9 ? [hr, null] : undefined,
+        faces: [[S.from, "tired"], [g03 + 4, "look", "take", 0.4], [out0 + 6, "tired"], [g04 - 2, "polite"], [again - 1, "look", "take", 0.4], [again + 14, "smile"], [in0 + 2, "smile"]],
+        talkGaze: 0, gaze: f >= out1 && f < in0 ? 1 : undefined, lookDown: 8 * win(f, take - 8, again - 4, 5, 5) + (waiting ? 7 : 0), turn: f >= in0 - 7 ? Math.min(1, 0.55 + 0.45 * smooth((f - (in0 - 7)) / 7)) : f >= out1 ? 0.55 * smooth((f - out1) / 7) : undefined,
         head: { tilt: -2 * win(f, again, x04 + 6, 5, 6) },
       });
     }
@@ -146,11 +151,18 @@ export const SEG: Segment = {
     if (f < take + 2) w.prop("bag", "order").put(rd.handWorld(1).add(V(0, -0.27, 0)), { yaw: rFace });
     else if (xm) w.prop("bag", "order").put(xm.handWorld(0).add(V(0, -0.27, 0)), { yaw: HALF });
     // ---------------------------------------------------------------------------------------------- the knot
-    if (f >= back0 + 2) {
+    // what each hand has pulled off so far: a wad of thread in it (it grows with the second strand); as he backs away
+    // the two hands come together and it is one knot
+    if (f < back0 + 3) {
+      const wadL = f >= pulls[2] + 7 ? (f >= pulls[0] + 7 ? 0.46 : 0.32) : 0, wadR = f >= pulls[1] + 7 ? (f >= pulls[3] + 7 ? 0.46 : 0.32) : 0;
+      if (wadL) w.prop("tangle", "wadL").put(r.handWorld(1).add(V(0.01, -0.04, 0.02)), { yaw: 0.6, scale: wadL });
+      if (wadR) w.prop("tangle", "wadR").put(r.handWorld(0).add(V(-0.01, -0.04, 0.02)), { yaw: 2.1, scale: wadR });
+    }
+    if (f >= back0 + 3) {
       const mid = r.handWorld(0).add(r.handWorld(1)).multiplyScalar(0.5).add(V(0, -0.05, 0)), left = r.handWorld(1).add(V(0, -0.075, 0));
       const fall = smooth((f - (drop0 + 6)) / 4), bounce = 0.02 * Math.max(0, Math.sin(((f - fell) / 7) * Math.PI)) * (f >= fell && f < fell + 7 ? 1 : 0);
       const knot = f < drop0 ? mid : mid.lerp(left, dropK).lerp(COIL_AT, fall).add(V(0, bounce, 0));
-      w.prop("tangle", "his").put(knot, { yaw: 0.6 + (f < drop0 ? 0.25 * Math.sin(f * 0.3) * (seated ? 1 : 0) : 0.9 * fall), scale: ky(f, [[back0 + 2, 0.5], [back0 + 7, 1]]) });
+      w.prop("tangle", "his").put(knot, { yaw: 0.6 + (f < drop0 ? 0.25 * Math.sin(f * 0.3) * (seated ? 1 : 0) : 0.9 * fall), scale: ky(f, [[back0 + 3, 0.72], [back0 + 8, 1]]) });
     }
     // ---------------------------------------------------------------------------------------------- the old thread
     const herOut = xm && xm.group.position.z > -3.55 ? xm.footWorld(0) : undefined;
@@ -158,6 +170,6 @@ export const SEG: Segment = {
     oldLine(w, 0, { her: herOut, his: dNow > 0.05 ? [...trail(dNow).slice(0, -1), rd.footWorld(1)] : undefined });
     // ---------------------------------------------------------------------------------------------- over the picture
     const on = pulls.map((p) => 1 - smooth((f - p) / 6)), cover = 1 - smooth((f - (S.from + 3)) / 9);
-    return { camera, overlays: [f < back0 ? lensThreads(on, f) : null, palm(cover)], shown: [], post: { bloom: 0.45 } };
+    return { camera, overlays: [f < back0 + 8 ? lensThreads(on, f, pulls) : null, palm(cover)], shown: [], post: { bloom: 0.45 } };
   },
 };

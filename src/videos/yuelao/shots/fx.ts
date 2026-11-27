@@ -41,8 +41,8 @@ export const orderSlip = (f: number, o: { from: number; to: number; x: number; y
   ({ what: "加急单", kind: "card", from: o.from, to: o.to, rect: turned(o.x + 3, o.y + 5, 528 * (o.s ?? 1), 480 * (o.s ?? 1), 3), node: h(OrderSlip, { key: `ord${o.from}`, f, ...o }) });
 /** the spool pushed into her lens (k 0..1): the join of D and E */
 export const spoolLens = (k: number) => h(SpoolLens, { key: "spoolLens", k });
-/** his thread wound round her lens (scene G): on[i] 1 = strand i is there .. 0 = pulled off */
-export const lensThreads = (on: number[], f: number) => h(LensThreads, { key: "lensThreads", on, f });
+/** his thread wound round her lens (scene G): on[i] 1 = strand i is there .. 0 = pulled off; pulls[i] = the frame his mitten pulls it */
+export const lensThreads = (on: number[], f: number, pulls?: number[]) => h(LensThreads, { key: "lensThreads", on, f, pulls });
 /** the snapped-thread counter, centred near (x + 35, y) */
 export const snaps = (f: number, o: { from: number; to: number; x: number; y: number; hits: number[] }): Fx =>
   ({ what: "计数「已断 n 根」", kind: "effect", from: o.from, to: o.to, rect: turned(o.x + 35, o.y, 360, 150, -4), node: h(Snaps, { key: `sn${o.from}`, f, ...o }) });
