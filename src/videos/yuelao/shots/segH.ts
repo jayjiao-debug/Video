@@ -18,7 +18,7 @@ const S = seg("H");
 export const CAM_H: [number, number, number] = [0.45, 0.78, -1.15];
 export const HEAD_H: [number, number, number] = [-0.85, 0.8, -2.16];
 /** the framing the scene ends on (scene I starts from it) */
-export const END_H = { pos: CAM_H, at: HEAD_H, sx: 560, sy: 790, fov: 62 };
+export const END_H = { pos: CAM_H, at: HEAD_H, sx: 560, sy: 735, fov: 62 };   // (a little higher in the frame than at first: the shop's neon sign stays clear above the REC display)
 
 export const SEG: Segment = {
   id: "H", from: S.from, to: S.to, enter() {}, exit() {},
@@ -28,7 +28,7 @@ export const SEG: Segment = {
     const h04 = startOf("H04"), years = wordAt("H04", "一千"), x04 = endOf("H04"), h05 = startOf("H05"), fate = wordAt("H05", "缘分"), x05 = endOf("H05");
     // ---------------------------------------------------------------------------------------------- the camera
     const keys: ShotKey[] = [
-      { f: S.from, pos: CAM_H, at: HEAD_H, sx: 540, sy: 760, fov: 78 }, { f: h01 + 12, pos: CAM_H, at: HEAD_H, sx: 540, sy: 760, fov: 78 },
+      { f: S.from, pos: CAM_H, at: HEAD_H, sx: 540, sy: 700, fov: 78 }, { f: h01 + 12, pos: CAM_H, at: HEAD_H, sx: 540, sy: 700, fov: 78 },   // (his head lands where scene G's moon was: MOON in segG)
       { f: h03 - 4, ...END_H }, { f: S.to, ...END_H },
     ];
     const camera = shotCam("street", f, keys, { mood: "calm", amp: 0.22 });

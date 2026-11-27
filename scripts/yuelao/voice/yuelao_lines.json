@@ -705,8 +705,12 @@
    "en": "This one... write it down as 'not fated yet'.",
    "screens": [
     {
-     "zh": "这个……您记成“缘分未到”。",
-     "en": "This one... write it down as 'not fated yet'."
+     "zh": "这个……您记成",
+     "en": "This one... write it down as"
+    },
+    {
+     "zh": "“缘分未到”。",
+     "en": "'not fated yet'."
     }
    ],
    "after": 0.6,
@@ -803,8 +807,12 @@
    "en": "...This one too. 'Not fated yet.'",
    "screens": [
     {
-     "zh": "……这个，也记“缘分未到”。",
-     "en": "...This one too. 'Not fated yet.'"
+     "zh": "……这个，也记",
+     "en": "...This one too."
+    },
+    {
+     "zh": "“缘分未到”。",
+     "en": "'Not fated yet.'"
     }
    ],
    "after": 0.8,
@@ -986,8 +994,12 @@
    "en": "Mine... write it down as 'not fated yet', too.",
    "screens": [
     {
-     "zh": "我这个……也记“缘分未到”吧。",
-     "en": "Mine... write it down as 'not fated yet', too."
+     "zh": "我这个……也记",
+     "en": "Mine... write it down as"
+    },
+    {
+     "zh": "“缘分未到”吧。",
+     "en": "'not fated yet', too."
     }
    ],
    "after": 1.8,
@@ -1133,8 +1145,12 @@
    "en": "Ahem... put that down as 'fated at last'.",
    "screens": [
     {
-     "zh": "咳……这句，记成“缘分已到”。",
-     "en": "Ahem... put that down as 'fated at last'."
+     "zh": "咳……这句，记成",
+     "en": "Ahem... put that down as"
+    },
+    {
+     "zh": "“缘分已到”。",
+     "en": "'fated at last'."
     }
    ],
    "after": 1.0,

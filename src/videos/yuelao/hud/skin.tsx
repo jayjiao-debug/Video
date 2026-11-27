@@ -84,11 +84,13 @@ const tug = (f: number, from: number, to: number, nin = 7, nout = 6) => {
 // ------------------------------------------------------------------------------------------------------- the title
 /** THE TITLE: a red thread is pulled across the frame and ties a sheet of red wedding paper to it; 月老 in foil gold,
  *  采访 / 的一天 small in cream beside it, the seal 缘 pressed on last. */
-export const ThreadTitle: React.FC<{ f: number; from: number; to: number }> = ({ f, from, to }) => {
-  const L = life(f, from, to, 4, 8); if (!L) return null;
+export const ThreadTitle: React.FC<{ f: number; from: number; to: number; threadAt?: number; paperAt?: number; cut?: boolean }> = ({ f, from, to, threadAt = 0, paperAt = 4, cut = false }) => {
+  // threadAt / paperAt: the frames into its life on which the thread is strung and the paper drops onto it; cut = it hangs
+  // there until the picture cuts away (no leaving move)
+  const L = life(f, from, to, 4, cut ? 0 : 8); if (!L || L.t < threadAt) return null;
   const t = L.t, out = easeIn(L.leave, 2), W = 820, H = 330, X = 130, Y = 470;
-  const pull = easeOut(part(t, 0, 7), 3), paper = tug(f, from + 4, to, 7, 8), seal = slap(t, 22, 1.8);
-  const sway = 6 * Math.sin(t * 0.22) * Math.exp(-t * 0.03);
+  const pull = easeOut(part(t, threadAt, 7), 3), paper = tug(f, from + paperAt, to, 7, cut ? 0 : 8), seal = slap(t, paperAt + 11, 1.8);
+  const sway = 6 * Math.sin((t - threadAt) * 0.22) * Math.exp(-(t - threadAt) * 0.03);
   const thread = `M-40 ${Y - 60} C200 ${Y - 20 + sway} 380 ${Y - 4 - sway} 540 ${Y - 6} C700 ${Y - 4 + sway} 880 ${Y - 30 - sway} 1120 ${Y - 80}`;
   return (
     <Svg style={{ opacity: 1 - out }}>
@@ -320,6 +322,29 @@ export const LensThreads: React.FC<{ on: number[]; f: number; pulls?: number[] }
     </Svg>
   );
 };
+/** HIS MITTEN OVER HER LENS (the join of scenes F and G; k 0..1): his own cream mitten with its dark outline comes up
+ *  from the lower right, soft with nearness; its palm shadows the lens from the middle outward, and at 1 the frame is the
+ *  palm's dark warm brown (never pure black). The same shape and path as the kit's palm, in his hand's colours. */
+export const MittenCover: React.FC<{ k: number }> = ({ k }) => {
+  if (k <= 0.001) return null;
+  const e = Math.min(1, k), r = 260 + 2140 * e, cx = 1180 - 560 * e, cy = 2050 - 950 * e, dark = Math.min(100, Math.round(100 * (0.08 + 1.25 * e)));
+  return (
+    <Svg>
+      <defs>
+        <radialGradient id="mittCoverFill" cx="45%" cy="45%" r="52%">
+          <stop offset="0%" stopColor="#2a1d19" /><stop offset={`${Math.max(0, dark - 30)}%`} stopColor="#3b2a22" /><stop offset={`${dark}%`} stopColor="#f2c9a4" /><stop offset="100%" stopColor="#fbe2c8" />
+        </radialGradient>
+        <filter id="mittCoverBlur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation={6 + 6 * e} /></filter>
+      </defs>
+      <g filter="url(#mittCoverBlur)">
+        <ellipse cx={cx} cy={cy} rx={r + 16} ry={r * 1.15 + 16} fill="#231c18" />
+        <ellipse cx={cx} cy={cy} rx={r} ry={r * 1.15} fill="url(#mittCoverFill)" />
+      </g>
+      {/* (no flat fill at 1: from k 0.9 the ellipse already covers the frame, and its soft dark centre and lighter rim keep
+          the covered frames alive instead of a dead flat brown) */}
+    </Svg>
+  );
+};
 /** 记者OS: what she thinks and does not say: a small cream tag with a red tab, top-left at (x, y) */
 export const OS: React.FC<{ f: number; from: number; to: number; x: number; y: number; text: string }> = ({ f, from, to, x, y, text }) => {
   const A = tug(f, from, to, 6, 5); if (!A) return null;
@@ -391,10 +416,12 @@ const CasePic = ({ kind, t }: { kind: CaseKind; t: number }) => {
 /** A CASE FILE pulled from the cabinet: a cream folder tied with red thread: its number, the couple's names, a little
  *  picture, a note typed on, and the verdict stamped across it `stampAt` frames in. Centre at (x, y), about 560 x 420. */
 export const CASE_W = 580, CASE_H = 400;
-export const CaseFile: React.FC<{ f: number; from: number; to: number; x: number; y: number; kind: CaseKind; stampAt: number; rot?: number; s?: number; seal?: boolean }> = ({ f, from, to, x, y, kind, stampAt, rot = -3, s = 1, seal }) => {
+export const CaseFile: React.FC<{ f: number; from: number; to: number; x: number; y: number; kind: CaseKind; stampAt: number; noteAt?: number; rot?: number; s?: number; seal?: boolean }> = ({ f, from, to, x, y, kind, stampAt, noteAt = 8, rot = -3, s = 1, seal }) => {
   const A0 = tug(f, from, to, 6, 5); if (!A0) return null;
   const A = { ...A0, s: A0.s * s };
-  const c = CASES[kind], t = f - from, W = 580, H = 400, st = slap(t, stampAt, 2.0), note = part(t, 8, 6);
+  // the note is TYPED ON, a character every frame and a half, from `noteAt` (the frame the line is said: a card never
+  // prints the punchline before it is spoken); until then its row is an empty rule waiting to be filled in
+  const c = CASES[kind], t = f - from, W = 580, H = 400, st = slap(t, stampAt, 2.0), chars = [...c.note], typed = Math.max(0, Math.min(chars.length, Math.floor((t - noteAt) / 1.5) + 1)), noteX = W / 2 - (chars.length * 36) / 2;
   return (
     <Svg>
       <g opacity={A.o} transform={`translate(${x} ${y + A.dy + (1 - A.a) * 60}) rotate(${rot}) scale(${A.s}) translate(${-W / 2} ${-H / 2})`}>
@@ -405,7 +432,9 @@ export const CaseFile: React.FC<{ f: number; from: number; to: number; x: number
         <T x={W / 2} y={104} px={[...c.name].length > 8 ? 54 : 62} anchor="middle" ls={2}>{c.name}</T>
         <rect x={60} y={146} width={W - 120} height={3} fill={SK.red} opacity={0.7} />
         <g transform={`translate(${W / 2} 246)`}><CasePic kind={kind} t={t} /></g>
-        <T x={W / 2} y={H - 42} px={36} fill={SK.inkSoft} anchor="middle" opacity={note}>{c.note}</T>
+        {t < noteAt ? <path d={`M${noteX} ${H - 26} L${noteX + chars.length * 36} ${H - 26}`} stroke={SK.inkSoft} strokeWidth={2.5} strokeDasharray="5 7" opacity={0.45} />
+          : <T x={noteX} y={H - 42} px={36} fill={SK.inkSoft}>{chars.slice(0, typed).join("")}</T>}
+        {t >= noteAt && typed < chars.length && <rect x={noteX + typed * 36 + 3} y={H - 60} width={4} height={36} fill={SK.red} />}
         <path d={`M0 ${H * 0.56} L${W} ${H * 0.56}`} stroke={SK.redHi} strokeWidth={5} opacity={0.0} />
         {st > 0 && (
           <g transform={`translate(${W - 150} 222) rotate(-12) scale(${st})`} opacity={0.93}>
@@ -463,20 +492,20 @@ export const EndLine: React.FC<{ f: number; from: number; to: number; rows: stri
   return <Svg><g opacity={L.arrive}>{rows.map((r, i) => <T key={i} x={540} y={900 + i * 64} px={i === 0 ? 40 : 30} fill={i === 0 ? SK.cream : "#b9ad98"} anchor="middle">{r}</T>)}</g></Svg>;
 };
 
-/** THE SPOOL OVER THE LENS (the join of scenes D and E): he pushes the spool of red thread right into her lens: the
- *  wound thread fills the frame (k 0..1), turn by turn, then the dark of its core. Drawn over the picture. */
-export const SpoolLens: React.FC<{ k: number }> = ({ k }) => {
+/** THE SPOOL OVER THE LENS (the join of scenes D and E): he throws the spool of red thread right at her lens: its end
+ *  fills the frame (k 0..1), the wound thread turn by turn round the dark of its core, on every frame. In scene E it comes
+ *  away SOLID and falls out of the bottom of the frame (drop px, growing as k falls). Drawn over the picture. */
+export const SpoolLens: React.FC<{ k: number; drop?: number }> = ({ k, drop = 0 }) => {
   if (k <= 0.001) return null;
-  const e = Math.min(1, k), R = 180 + 1900 * e * e, cx = 540, cy = 1000, n = 26;
+  const e = Math.min(1, k), R = 180 + 1900 * e * e, cx = 540, cy = 1000 + drop, n = 26;
   return (
     <Svg>
-      <g opacity={Math.min(1, e * 2.5)}>
+      <g opacity={drop > 0 ? 1 : Math.min(1, e * 2.5)}>
         <circle cx={cx} cy={cy} r={R} fill="#b3261c" />
         {Array.from({ length: n }, (_, i) => <circle key={i} cx={cx} cy={cy} r={R * (0.14 + (0.86 * i) / n)} fill="none" stroke={i % 2 ? "#8f1a12" : "#d8362a"} strokeWidth={Math.max(3, R * 0.012)} opacity={0.75} />)}
         <circle cx={cx} cy={cy} r={R * 0.13} fill="#2a1410" />
         <circle cx={cx} cy={cy} r={R} fill="none" stroke="#c9a063" strokeWidth={Math.max(10, R * 0.05)} />
       </g>
-      {e > 0.9 ? <rect x={0} y={0} width={1080} height={1920} fill="#8f1a12" opacity={(e - 0.9) * 10} /> : null}
     </Svg>
   );
 };

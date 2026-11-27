@@ -16,10 +16,10 @@
 import * as THREE from "three";
 import { seg, type Segment } from "../story";
 import { povCam, whip, whipSmear, aimCam } from "../cam";
-import { P, ck, startOf, endOf, wordAt, ky, rel, V, VERBS, smooth, walkAlong, kick, hang, faceTo, v3, through, turnTo, hit } from "./kit";
+import { P, ck, startOf, endOf, wordAt, ky, rel, V, VERBS, smooth, kick, hang, faceTo, v3, through, turnTo, hit } from "./kit";
 import { act, YL, type MoodKey } from "./act";
 import { caseFile, disclaimer, draw, type Fx } from "./fx";
-import { CAM_C0, TO_CAB, GO_CAB, CAB_SPEED } from "./segB";
+import { CAM_C0, toCab, CAB_AT } from "./segB";
 import { OFFICE } from "../places";
 import type { World } from "../world";
 
@@ -80,7 +80,7 @@ export const SEG: Segment = {
     const FACE = aimCam(CP, HEAD, 690, 1030, 41) as { pos: number[]; look: number[]; fov: number }, LEAN = aimCam([-1.0, 1.43, 0.66] as [number, number, number], HEAD, 560, 890, 52) as { pos: number[]; look: number[]; fov: number };
     const K = (at: number, c: { pos: number[]; look: number[]; fov: number }, roll = 0) => ck("office", at, c.pos, c.look, c.fov, { roll });
     let camera = povCam(f, [
-      K(S.from, C0), K(bf + 3, C0), K(bf + 15, UP), K(hide - 12, UP), K(hide - 2, C0),
+      K(S.from, C0), K(bf + 3, C0), K(bf + 15, UP), K(hide - 16, UP), K(hide - 8, C0),   // (back down on him before the file starts round his side)
       K(kua + 1, C0), K(kua + 6, DOWN), K(kua + 22, DOWN), K(kua + 34, C0),
       K(chai - 6, C0), K(chai - 1, FACE), K(c08 + 14, FACE), K(c08 + 26, C0),
       K(that - 9, C0), K(that + 3, LEAN, -6), K(c10 - 2, LEAN, -6), K(c10 + 10, C0),   // (this aim and tip keep the drawer tags out from under the REC clock and the battery)
@@ -92,8 +92,8 @@ export const SEG: Segment = {
     w.setCamera(camera);
     const camP = v3(camera.pos);
     // ---------------------------------------------------------------------------------------------- where he stands
-    const leg = walkAlong(TO_CAB, CAB_SPEED, (f - GO_CAB) / 30);
-    const walking = leg.moving;
+    // he comes in from the right as the whip pan lands: the last steps of his run, slowing, turning to her as he pulls up
+    const leg = toCab(f), walking = f < CAB_AT, turnK = smooth((f - (CAB_AT - 5)) / 11);
     const win = (a: number, up: number, hold: number, down: number) => ky(f, [[a, 0], [a + up, 1], [hold, 1], [hold + down, 0]]);
     // side-on at a drawer: he stands a step short of it, facing along the wall, and LEANS IN to take the knob with his right
     // hand; he straightens as it comes out, so the open drawer stands clear of his head and beard. Back-on at the bottom drawer
@@ -107,7 +107,10 @@ export const SEG: Segment = {
     const front = faceTo(BASE, camP), side = Math.max(...wk);
     let facing = turnTo(front, -0.15, smooth(side));
     facing = turnTo(facing, -1.05, smooth(low));
-    if (walking) { at.copy(leg.at); facing = leg.facing; }
+    if (walking) at.copy(leg.at);
+    if (turnK < 1) facing = turnTo(leg.facing, facing, turnK);
+    // into the run, back on his heels as he stops, settled
+    const pullUp = f < CAB_AT + 10 ? ky(f, [[CAB_AT - 9, 8], [CAB_AT - 2, -5], [CAB_AT + 3, -2.5], [CAB_AT + 10, 0]]) : 0;
     const H = (dx: number, y: number, z: number) => rel(at, facing, dx, y, z);
     // the lean to the knob: in as the hand lands on it, back as the drawer comes out (and in again to push one shut);
     // at the secret drawer he stays half in, peeking
@@ -117,12 +120,13 @@ export const SEG: Segment = {
     // ---------------------------------------------------------------------------------------------- his hands
     const tremble = hit(f, shake - 2, 30) > 0 && f < slip ? 0.012 * Math.sin(f * 2.9) : 0, lowerK = ky(f, [[c03 + 46, 0], [c03 + 66, 1]]) * (f < b1 + 8 ? 1 : 0);
     // a file shown: held out at arm's length in front of the beard (the beard is 26 cm deep at the chest), sinking a little with his pride
-    const upK = ky(f, [[bf + 4, 0], [bf + 14, 1], [hide - 14, 1], [hide - 6, 0]]);   // watching the butterflies go: the file drifts a little out from under his lifted beard
+    const upK = ky(f, [[bf + 4, 0], [bf + 14, 1], [hide - 18, 1], [hide - 10, 0]]);   // watching the butterflies go: the file drifts a little out from under his lifted beard
     const holdR = H(-0.105, 0.77 - 0.05 * lowerK + tremble + 0.01 * upK, 0.32 - 0.01 * lowerK + 0.018 * upK), holdL = H(0.105, 0.77 - 0.05 * lowerK - tremble + 0.01 * upK, 0.32 - 0.01 * lowerK + 0.018 * upK), hangR = hang(at, facing, 0), hangL = hang(at, facing, 1);
     const lowR = H(-0.13, 0.57, 0.25), lowL = H(0.13, 0.57, 0.25);
     // 这单别记: the file goes BEHIND HIS BACK, each hand round its own side of him (never through him); k 0 = held out in front, 1 = behind
     const swing = (arm: 0 | 1, k: number) => { const phi = ((18 + 137 * k) * Math.PI) / 180, r = 0.337 - 0.117 * k + 0.04 * Math.sin(Math.PI * k); return H((arm ? 1 : -1) * r * Math.sin(phi), 0.77 - 0.15 * k, r * Math.cos(phi)); };
-    const hideR = f < g3 - 12 ? smooth((f - (hide - 5)) / 8) : 1 - 0.5 * smooth((f - (g3 - 12)) / 4), hideL = f < g3 - 10 ? smooth((f - (hide - 5)) / 8) : 1 - 0.45 * smooth((f - (g3 - 10)) / 4);
+    const hide0 = hide - 10, HIDE_N = 14;   // (fourteen frames round his side: she sees it go)
+    const hideR = f < g3 - 12 ? smooth((f - hide0) / HIDE_N) : 1 - 0.5 * smooth((f - (g3 - 12)) / 4), hideL = f < g3 - 10 ? smooth((f - hide0) / HIDE_N) : 1 - 0.45 * smooth((f - (g3 - 10)) / 4);
     // 审批跑了我一千年: his head hangs and the back of his hand goes across his brow, twice (his arm is short: the brow comes
     // down to the hand; the head leans 3 degrees from the hip, so its front is 3 cm ahead of the body's)
     const headF = 0.64 * Math.sin((3 * Math.PI) / 180), browA = H(-0.135, 1.24, headF + 0.19), browB = H(-0.055, 1.25, headF + 0.222), restR = H(-0.2, 0.62, 0.13);
@@ -131,7 +135,7 @@ export const SEG: Segment = {
     const K0: [number, THREE.Vector3][] = [
       [S.from, hangR], [mine - 5, hangR], [mine + 3, H(-0.33, 0.92, 0.02)], [g1 - 1, H(-0.33, 0.92, 0.02)],
       ...take(g1, C1, OUT, holdR), [b1, holdR], [b1 + 8, inD(C1, OUT).add(V(0, 0.2, 0))], [b1 + 13, inD(C1, OUT)], [b1 + 18, knob(C1, OUT)], [b1 + 23, knob(C1, 0)], [b1 + 30, hangR],
-      ...take(g2, C2, OUT, holdR), [hide - 5, holdR], [g3 - 8, swing(0, 0.5)], [g3 - 4, inD(C2, OUT).add(V(0, 0.1, 0))],
+      ...take(g2, C2, OUT, holdR), [hide0, holdR], [g3 - 8, swing(0, 0.5)], [g3 - 4, inD(C2, OUT).add(V(0, 0.1, 0))],
       [g3, hangR], [g3 + 6, knob(C3, 0).add(V(0, 0, -0.045))], [g3 + 13, knob(C3, 0.3).add(V(0, 0, -0.045))], [g3 + 19, P("office", CABX + 0.14, C3.y + 0.1, C3.z - 0.12)], [g3 + 31, lowR],
       [kua - 2, lowR], [kua + 5, H(-0.24, 0.66, 0.16)], [wipe - 6, restR], [wipe + 2, browA], [wipe + 10, browB], [wipe + 18, browA], [wipe + 26, browB], [wipe + 35, restR], [g4 - 8, restR], [g4 - 1, hangR],
       ...take(g4, C4, OUT, holdR), [slip + 2, holdR], [slip + 5, H(-0.15, 0.86, 0.26)], [c08 - 6, H(-0.15, 0.86, 0.26)], [c08 + 6, H(-0.05, 0.64, 0.2)], [g5 - 1, H(-0.05, 0.64, 0.2)],
@@ -140,14 +144,14 @@ export const SEG: Segment = {
     const K1: [number, THREE.Vector3][] = [
       [S.from, hangL], [mine - 5, hangL], [mine + 3, H(0.3, 0.84, 0.12)], [g1 + 2, H(0.3, 0.84, 0.12)], [g1 + 9, hangL],
       [g1 + 19, hangL], [g1 + 27, holdL], [b1, holdL], [b1 + 7, hangL],
-      [g2 + 19, hangL], [g2 + 27, holdL], [hide - 5, holdL], [g3 - 6, swing(1, 0.55)], [g3 - 2, hangL],
+      [g2 + 19, hangL], [g2 + 27, holdL], [hide0, holdL], [g3 - 6, swing(1, 0.55)], [g3 - 2, hangL],
       [g3, hangL], [g3 + 6, knob(C3, 0).add(V(0, 0, 0.045))], [g3 + 13, knob(C3, 0.3).add(V(0, 0, 0.045))], [g3 + 19, P("office", CABX + 0.14, C3.y + 0.1, C3.z + 0.12)], [g3 + 31, lowL],
       [kua - 2, lowL], [kua + 5, H(0.24, 0.66, 0.16)], [wipe - 6, H(0.2, 0.6, 0.12)], [wipe + 3, H(0.16, 0.52, 0.1)], [g4 - 1, hangL],
       [g4 + 19, hangL], [g4 + 27, holdL], [slip + 2, holdL], [slip + 5, H(0.15, 0.86, 0.26)], [c08 - 6, H(0.15, 0.86, 0.26)], [c08 + 6, H(0.05, 0.64, 0.2)], [g5 - 1, H(0.05, 0.64, 0.2)], [g5 + 6, hangL],
     ];
     const hush = f >= that - 5 && f < c10 - 2;
     const hands: [THREE.Vector3, THREE.Vector3] | undefined = walking || hush || f < mine - 5 || f > slam + 10 ? undefined
-      : [f >= hide - 5 && f <= g3 - 8 ? swing(0, hideR) : through(f, K0), f >= hide - 5 && f <= g3 - 6 ? swing(1, hideL) : through(f, K1)];
+      : [f >= hide0 && f <= g3 - 8 ? swing(0, hideR) : through(f, K0), f >= hide0 && f <= g3 - 6 ? swing(1, hideL) : through(f, K1)];
     const wiping = f >= wipe - 2 && f < wipe + 33;
     // ---------------------------------------------------------------------------------------------- his face
     const faces: MoodKey[] = [
@@ -168,8 +172,8 @@ export const SEG: Segment = {
       turn: low > 0.5 ? 1 : side > 0.5 ? 0.6 : undefined,
       lookDown: 10 * Math.min(1, sagK) + 14 * bend + (working && low < 0.5 ? 6 : 0) - 8 * up,   // (more than this and the beard's tip swings through the file he holds)
       gaze: working ? 0 : up > 0.5 ? (f >= bf + 22 ? 0.5 : 0) : f >= kua + 2 && f < kua + 30 ? 0 : undefined,
-      lean: { pitch: 22 * bend - 9 * haulK + 6 * Math.min(1, sagK) + 4 * pant * Math.sin(f * 0.42) + 7 * leanIn, roll: leanIn > 0.01 ? -6 * leanIn : 3.5 * haulK * Math.sin(f * 0.5) },
-      head: { dy: -0.06 * Math.min(1, sagK) - 0.06 * wipeK + 0.05 * up + 0.05 * hit(f, wordAt("C02", "我绑"), 8), tilt: peek * -9 + (up > 0.3 ? 5 * Math.sin(f * 0.16) : 0) },
+      lean: { pitch: pullUp + 22 * bend - 9 * haulK + 6 * Math.min(1, sagK) + 4 * pant * Math.sin(f * 0.42) + 7 * leanIn, roll: leanIn > 0.01 ? -6 * leanIn : 3.5 * haulK * Math.sin(f * 0.5) },
+      head: { dy: -0.06 * Math.min(1, sagK) - 0.06 * wipeK + 0.05 * up + 0.05 * hit(f, wordAt("C02", "我绑"), 8) - 0.03 * hit(f, CAB_AT - 1, 9), tilt: peek * -9 + (up > 0.3 ? 5 * Math.sin(f * 0.16) : 0) },
     });
     w.update();
     // ---------------------------------------------------------------------------------------------- the drawers and the files
@@ -182,7 +186,7 @@ export const SEG: Segment = {
     };
     if (f >= g1 + 17 && f < b1 + 13) carry("f1", f < b1 ? (f - g1 - 19) / 8 : 1 - (f - b1) / 7, Math.PI / 2);
     if (f >= g2 + 17 && f < g3 - 4) {
-      const back = ky(f, [[hide - 5, 0], [hide + 3, 1]]);
+      const back = ky(f, [[hide0, 0], [hide0 + 8, 1]]);
       if (back < 0.02) carry("f2", (f - g2 - 19) / 8, Math.PI / 2);
       else {
         // in his right hand round his right side, flat against him all the way, then between both hands behind his back;
@@ -222,16 +226,18 @@ export const SEG: Segment = {
     }
     // ---------------------------------------------------------------------------------------------- over the picture
     // (each card is up only while he stands and shows that file: when he goes to a drawer his head passes under the spot)
-    const Y = 540, card = (from: number, to: number, kind: Parameters<typeof caseFile>[1]["kind"], stampOn: number, rot: number, s = 0.76): Fx[] => {
+    // A card never tells the joke first: it comes up with the names and the picture, its note is typed on as the
+    // line is SAID (noteOn), and the verdict is stamped on its own word (stampOn).
+    const Y = 540, card = (from: number, to: number, kind: Parameters<typeof caseFile>[1]["kind"], stampOn: number, noteOn: number, rot: number, s = 0.76): Fx[] => {
       const X = 114 + 290 * s;   // its left edge stays on the phone-safe line
-      return [caseFile(f, { from, to, x: X, y: Y, s, kind, stampAt: stampOn - from, rot, seal: true }), disclaimer(f, { from: from + 10, to, x: X, y: Y + 245 * s, text: "以上卷宗，纯属演绎" })];
+      return [caseFile(f, { from, to, x: X, y: Y, s, kind, stampAt: stampOn - from, noteAt: noteOn - from, rot, seal: true }), disclaimer(f, { from: from + 10, to, x: X, y: Y + 245 * s, text: "以上卷宗，纯属演绎" })];
     };
     const FX: Fx[] = [
-      ...card(g1 + 27, b1 - 2, "niulang", wordAt("C04", "异地"), -3),
-      ...card(g2 + 27, g3 - 14, "liangzhu", wordAt("C05", "变"), 2),
-      ...card(g3 + 33, g4 - 2, "baishe", kua + 4, -2, 0.72),   // smaller: he stands close beside it over the bale
-      ...card(g4 + 28, g5 - 2, "baodai", wordAt("C07", "绑成"), 3),
-      ...card(c10 + 2, e11 + 6, "qixian", c10 + 16, -3),
+      ...card(g1 + 27, b1 - 2, "niulang", wordAt("C04", "异地"), wordAt("C03", "一年") - 2, -3),          // she says it: 可他们一年见一次
+      ...card(g2 + 27, g3 - 14, "liangzhu", wordAt("C05", "变") + 10, wordAt("C05", "变") - 2, 2),         // 变蝴蝶了: typed as he says it, then the stamp
+      ...card(g3 + 33, g4 - 2, "baishe", kua + 4, wipe - 2, -2, 0.72),   // smaller: he stands close beside it over the bale; 审批走了一千年
+      ...card(g4 + 28, g5 - 2, "baodai", wordAt("C07", "绑成"), chai - 2, 3),                              // 绑成了 / 宝钗
+      ...card(c10 + 10, e11 + 12, "qixian", c10 + 24, wordAt("C11", "三百") - 11, -3),   // (in once her lens has pulled back off him: it never lands on his hat)                      // 扣了我三百年仙丹: 三百年 is typed as he says it
     ];
     return { camera, overlays: [draw(f, FX), whipSmear(W.smear, -1)], shown: FX, post: W.post };
   },

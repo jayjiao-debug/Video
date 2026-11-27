@@ -180,7 +180,8 @@ export const SEG: Segment = {
       snaps(f, { from: hits[0] - 2, to: one - 6, x: 755, y: 440, hits }),
       stamp(f, { from: wordAt("E06", "未到") + 8, to: S.to - 2, x: 366, y: 560 }),
     ];
-    const cover = ky(f, [[S.from, 1], [S.from + 3, 0.85], [S.from + 13, 0]]);
-    return { camera, overlays: [draw(f, FX), spoolLens(cover)], shown: FX, post: { bloom: 0.4 } };
+    // the spool comes away from her lens: smaller, solid, falling out of the bottom of the frame (gone by S.from + 13)
+    const cover = f < S.from + 13 ? ky(f, [[S.from, 1], [S.from + 3, 0.85], [S.from + 13, 0.2]]) : 0;
+    return { camera, overlays: [draw(f, FX), spoolLens(cover, 2200 * (1 - cover) * (1 - cover))], shown: FX, post: { bloom: 0.4 } };
   },
 };

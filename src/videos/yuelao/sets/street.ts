@@ -218,7 +218,8 @@ const lobbyBackTex = () => paint(512, 448, (g, W, H) => {
   for (let i = 0; i < 20; i++) { g.strokeStyle = css("#c8a478", 0.4); g.lineWidth = 2; g.beginPath(); let x = W * r(), y = H * r(); g.moveTo(x, y); for (let k = 0; k < 4; k++) { x += 40 * (r() - 0.3); y += 30 * (r() - 0.5); g.lineTo(x, y); } g.stroke(); }
   // two lift doors (steel), their lit floor numbers
   for (const x of [120, 300]) { g.fillStyle = "#b4b2ae"; g.fillRect(x, 150, 92, H - 150); g.fillStyle = "#8e8c88"; g.fillRect(x + 45, 150, 2, H - 150); g.fillStyle = "#6a4a2a"; g.fillRect(x - 8, 142, 108, 8); g.fillStyle = "#ffb050"; g.fillRect(x + 36, 118, 20, 14); }
-  g.fillStyle = "#b08a4a"; g.font = `bold 34px ${FONT}`; g.textAlign = "center"; g.fillText("云海大厦", W / 2, 70);
+  // (no lettering on this wall: the tower's name is on the sign over the door outside; across the top of this wall it sat
+  // right behind her camera's REC display in every level shot of the door)
 });
 const lobbyFloorTex = () => paint(256, 256, (g, W, H) => {
   g.fillStyle = "#d2b48a"; g.fillRect(0, 0, W, H);

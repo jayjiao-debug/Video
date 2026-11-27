@@ -21,11 +21,12 @@ import { anklet, knotAt, bowKnot, lay, type Floor } from "./thread";
 import { oldLine, oldCol } from "./night";
 import { C2, FRONT, TAB, KNOT_END, MEET_R, HER_FOOT } from "./segI";
 
-const S = seg("J"), HALF = Math.PI / 2, ISL = P("street", 0, 0, 0).x;
+const S = seg("J"), HALF = Math.PI / 2, ISL = P("street", 0, 0, 0).x, STROLL = 1.0;
 /** where she stands on the pavement at the end of the follow (over her thread, looking down the street) */
 const P2: [number, number, number] = [-0.9, 1.5, 1.95];
-/** where he turns to wave, his way there, and his way off into the night */
-const BYE_AT = P("street", 4.5, 0, 1.2), GO = [FRONT, P("street", 2.0, 0, 1.15), BYE_AT], AWAY = [BYE_AT, P("street", 9, 0, 1.2), P("street", 22, 0, 1.2)];
+/** where he turns to wave (a few steps back from her, toward the tower: from where she ends up, the two he has just
+ *  tied are behind his shoulder and the scooter is beside him), and his way off into the night, past the scooter */
+const BYE_AT = P("street", 0.6, 0, 0.2), GO = [FRONT, BYE_AT], AWAY = [BYE_AT, P("street", 2.4, 0, 0.75), P("street", 9, 0, 1.0), P("street", 22, 0, 1.0)];
 /** the street under her feet: the road she stands in, the kerb, the pavement */
 const ROAD: Floor = (_x, z) => (z > 2.4 ? -0.12 : z > 2.2 ? 0.03 : 0);
 /** HER OWN THREAD: from her ankle (behind her lens), over the kerb, then away along the pavement, down the whole street */
@@ -105,7 +106,10 @@ export const SEG: Segment = {
     const f = Math.min(f0, OFF_AT);                                                          // the picture holds from the off click
     const j01 = startOf("J01"), j02 = startOf("J02"), early = wordAt("J02", "早"), x02 = endOf("J02"), j03 = startOf("J03"), x03 = endOf("J03");
     // he looks round at them; back to her; the nod; her lens drops; he goes; she follows the thread; back to him; he waves; he goes
-    const round0 = S.from + 8, back0 = j01 + 12, tilt0 = x02 + 3, go0 = tilt0 + 6, on0 = tilt0 + 3, fl0 = j03 - 14, fl1 = j03 + 36, b0 = x03 + 19, wave0 = b0 + 6, leave = b0 + 50;
+    // (the lens stays on her own thread for half a second before it follows it: its light has to wake under her and
+    // run away from her first, or it is just another thread; the line 是你已经见过的人 starts as she begins to follow it)
+    const TILT = 14, WHIP = 26;
+    const round0 = S.from + 8, back0 = j01 + 12, tilt0 = x02 + 1, go0 = tilt0 + 8, on0 = tilt0 + 9, fl0 = j03 - 4, fl1 = fl0 + 54, b0 = x03 + 8, wave0 = b0 + 19, leave = b0 + 50;
     const p0 = S.from + 14, p1 = S.from + 84;
     w.setPlace("street"); w.set.param("time", "night"); w.set.param("door", 0); w.set.param("lit", 0.35); w.set.param("moon", 0.8);
     const t = f / 30;
@@ -115,17 +119,18 @@ export const SEG: Segment = {
     const PHI0 = 58.5 * Math.PI / 180, PHI1 = 2.1 * Math.PI / 180;
     const seen = (g: number) => seenAt(camW(g), PHI0 + (PHI1 - PHI0) * smooth((g - fl0) / (fl1 - fl0)));
     // back to him: she swings round the short way (past the tower's door) to where he has got to
-    const byeAim = P("street", BYE_AT.x - ISL, 1.12, BYE_AT.z), WHIP = 13;
+    // (when he walks off, her lens goes with him a little: the lead walks, so the camera may move)
+    const offAt = (g: number) => walkAlong(AWAY, STROLL, (g - (leave + 8)) / 30).at, byeAimAt = (g: number) => { const o = g > leave + 8 ? offAt(g).sub(BYE_AT).multiplyScalar(0.8) : V(0, 0, 0); return P("street", BYE_AT.x - ISL, 1.02, BYE_AT.z).add(o); };
     const aim = (g: number) => {
       if (g <= b0) return seen(g);
-      const c = camW(g), a = seen(b0).sub(c), b = byeAim.clone().sub(c), k = smooth((g - b0) / WHIP);
+      const c = camW(g), a = seen(b0).sub(c), b = byeAimAt(g).sub(c), k = smooth((g - b0) / WHIP);
       const ya = Math.atan2(a.x, a.z), yb = Math.atan2(b.x, b.z) - 2 * Math.PI, yaw = ya + (yb - ya) * k;
       const da = Math.hypot(a.x, a.z), db = Math.hypot(b.x, b.z), d = da + (db - da) * k;
       return c.clone().add(V(Math.sin(yaw) * d, a.y + (b.y - a.y) * k, Math.cos(yaw) * d));
     };
-    const DOWN = { sx: 590, sy: 1200, fov: 62 }, FAR = { sx: 449, sy: 857, fov: 50 }, BYE = { sx: 420, sy: 880, fov: 36 };
+    const DOWN = { sx: 590, sy: 1200, fov: 62 }, FAR = { sx: 449, sy: 857, fov: 50 }, BYE = { sx: 600, sy: 930, fov: 56 };
     const keys: ShotKey[] = [
-      { f: S.from, ...TAB }, { f: tilt0, ...TAB }, { f: tilt0 + 10, pos: camAt, at: aim, ...DOWN },
+      { f: S.from, ...TAB }, { f: tilt0, ...TAB }, { f: tilt0 + TILT, pos: camAt, at: aim, ...DOWN },
       { f: fl0, pos: camAt, at: aim, ...DOWN }, { f: fl1, pos: camAt, at: aim, ...FAR }, { f: b0, pos: camAt, at: aim, ...FAR },
       { f: b0 + WHIP, pos: camAt, at: aim, ...BYE }, { f: S.to, pos: camAt, at: aim, ...BYE },
     ];
@@ -135,7 +140,7 @@ export const SEG: Segment = {
     const camG = P("street", C2[0], 0, C2[2]), cam2G = P("street", P2[0], 0, P2[2]), lensYaw = faceTo(FRONT, camG), byeYaw = faceTo(BYE_AT, cam2G);
     // he looks round at the two over his left shoulder (his face stays in her lens), hands clasped behind his back
     const roundK = smooth((f - round0) / 12) * (1 - smooth((f - back0) / 10));
-    const go = walkAlong(GO, 1.4, (f - go0) / 30, { endFacing: byeYaw }), away = walkAlong(AWAY, 1.2, (f - (leave + 8)) / 30);
+    const go = walkAlong(GO, 1.4, (f - go0) / 30, { endFacing: byeYaw }), away = walkAlong(AWAY, STROLL, (f - (leave + 8)) / 30);
     const going = f >= go0 && go.moving, leaving = f >= leave, walksOff = leaving && away.moving;
     const at = leaving ? away.at : f >= go0 ? go.at : FRONT;
     const facing = leaving ? turnTo(byeYaw, away.facing, smooth((f - leave) / 12)) : going ? turnTo(lensYaw, go.facing, smooth((f - go0) / 7)) : f >= go0 ? go.facing : lensYaw + 1.35 * roundK;
@@ -146,15 +151,16 @@ export const SEG: Segment = {
     const waveK = smooth((f - wave0) / 6) * (1 - smooth((f - leave) / 8)), wv = (f - wave0) * 0.42;
     const waveHand = hang(at, facing, 1).lerp(H(0.36 + 0.06 * Math.sin(wv), 1.25 + 0.02 * Math.cos(2 * wv), 0.05), waveK);
     // 那我的那根呢？ oh? | 你的？ warm, his head on one side | 早绑好了 eyes shut in a grin, a slow nod down at her feet
-    const faces: MoodKey[] = [[S.from, "fawn"], [round0 + 3, "warm"], [back0 + 6, "oh", "take", 0.6], [j02 - 10, "warm"], [early - 3, "proud"], [go0 + 3, "warm"], [wave0 - 6, "joy"], [leave + 2, "warm"]];
+    // (eyes OPEN through 早绑好了: a look down at her feet cannot be read on a face with its eyes shut in a grin)
+    const faces: MoodKey[] = [[S.from, "fawn"], [round0 + 3, "warm"], [back0 + 6, "oh", "take", 0.6], [j02 - 10, "warm"], [go0 + 3, "warm"], [wave0 - 6, "joy"], [leave + 2, "warm"]];
     act(w, f, YL, {
       at, facing, faces, turn: leaving ? 0.5 + 0.5 * smooth((f - leave - 4) / 10) : 0.5,
       pose: walksOff ? away.pose : going ? go.pose : undefined,
       hands: f < go0 ? [handR, handL] : waveK > 0.01 ? [null, waveHand] : undefined,
-      lookDown: f < go0 ? ky(f, [[S.from, -8], [round0, -8], [round0 + 10, -2], [back0, -2], [back0 + 10, -8], [early + 2, -8], [early + 11, 13], [go0, 13]]) : waveK > 0.01 ? -4 : 0,
+      lookDown: f < go0 ? ky(f, [[S.from, -8], [round0, -8], [round0 + 10, -2], [back0, -2], [back0 + 10, -8], [early + 2, -8], [early + 8, 21], [early + 15, 15], [early + 21, 23], [go0, 23]]) : waveK > 0.01 ? -4 : 0,
       gaze: f < go0 ? ky(f, [[round0, 0], [round0 + 8, 1], [back0, 1], [back0 + 8, 0]]) : 0,
-      lean: { pitch: f < go0 ? ky(f, [[S.from, 2], [round0 + 10, -3], [back0, -3], [back0 + 12, 2], [early + 2, 2], [early + 11, 8]]) : 0, roll: 2.5 * waveK * Math.sin(wv) },
-      head: { tilt: 5 * win(f, j02 - 3, early - 2, 6, 6) + 4 * roundK + 3 * waveK * Math.sin(wv), dy: -0.02 * hit(f, early + 10, 9) },
+      lean: { pitch: f < go0 ? ky(f, [[S.from, 2], [round0 + 10, -3], [back0, -3], [back0 + 12, 2], [early + 2, 2], [early + 9, 10], [early + 15, 7], [early + 21, 11]]) : 0, roll: 2.5 * waveK * Math.sin(wv) },
+      head: { tilt: 5 * win(f, j02 - 3, early - 2, 6, 6) + 4 * roundK + 3 * waveK * Math.sin(wv), dy: -0.03 * hit(f, early + 8, 9) - 0.02 * hit(f, early + 21, 8) },
     });
     // ---------------------------------------------------------------------------------------------- the two
     // they swap numbers: his phone out, hers over it; then they just go on talking
@@ -186,7 +192,7 @@ export const SEG: Segment = {
     // away along it, ahead of her lens, to the far end of the street.
     if (f >= tilt0) {
       const total = laid().s[laid().s.length - 1];
-      const front = ky(f, [[on0, 0.3], [fl0, 3.4], [fl0 + 20, 9], [fl1 - 8, 34], [fl1 + 16, total]]), pulse = 0.5 + 0.5 * Math.sin((f - on0) * 0.21);
+      const front = ky(f, [[on0, 0.3], [fl0, 3.4], [fl0 + 20, 9], [fl1 - 8, 34], [fl1 + 8, total]]), pulse = 0.5 + 0.5 * Math.sin((f - on0) * 0.21);
       for (let i = 0; i + 1 < BANDS.length; i++) {
         const a = BANDS[i], b = Math.min(BANDS[i + 1], total);
         if (a >= total) break;

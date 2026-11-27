@@ -103,6 +103,6 @@ export const FACES: Record<string, Expr | RigFace> = {
   intent: face("smile", "whistle", "focus", "neutral"), resolve: face("stern", "grin", "stern", "neutral"), peer: face("focus", "whistle", "focus", "neutral"), tender: face("smile_closed", "smile", "sad", "neutral"), lost: face("sad", "nervous", "sad", "neutral"),
   // the mortals
   flat: face("deadpan", "neutral", "neutral"), tired: face("deadpan", "sigh", "sad", "neutral"), look: face("smile", "neutral", "neutral"), smile: face("smile", "smile", "neutral"),
-  beam: face("happy", "grin", "neutral"), plead: face("sad", "shock", "sad", "neutral"), polite: face("smile", "smile", "neutral"), shy: face("smile", "nervous", "sad", "relief"),
+  beam: face("happy", "grin", "neutral"), plead: face("sad", "shock", "sad", "neutral"), beg: face("shock", "nervous", "sad", "neutral"), wail: face("wince", "shock", "sad", "neutral"), polite: face("smile", "smile", "neutral"), shy: face("smile", "nervous", "sad", "relief"),
   calm: face("neutral", "neutral", "neutral"),
 };

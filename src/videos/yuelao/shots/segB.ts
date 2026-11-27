@@ -28,8 +28,16 @@ const SEAT = SEATS.stool, AT = SEAT.top.clone().setY(0);
 export const CAM_C0 = { pos: wv("office", [-0.55, 1.5, 1.2]), look: wv("office", [-2.72, 1.0, -0.4]), fov: 56 };
 /** HE IS OFF TO THE CABINET before the whip pan: up from the stool (he slides off its left side), round the desk's end,
  *  across to the wall of drawers. Scene C goes on with the same walk. */
-export const HOP = 0.42, CAB_SPEED = 2.8, GO_CAB = endOf("B08") + 10;
+export const HOP = 0.42, CAB_SPEED = 2.8, GO_CAB = endOf("B08") + 14, CAB_AT = C0 + 10, BRAKE = 8;
 export const TO_CAB = [P("office", OFFICE.stool.x - HOP, 0, OFFICE.stool.z), P("office", -0.75, 0, -1.72), P("office", -1.55, 0, -0.95), P("office", -2.1, 0, -0.3)];
+/** HIS RUN, both sides of the whip pan. The pan hides the middle of it: in scene B he is off as the lens starts to turn
+ *  (GO_CAB), in scene C he is a step from his place when the lens lands and pulls up at CAB_AT, slowing over BRAKE frames. */
+export const toCab = (f: number) => {
+  if (f < C0) return walkAlong(TO_CAB, CAB_SPEED, (f - GO_CAB) / 30);
+  const T = VERBS.walkTime(TO_CAB, CAB_SPEED), left = CAB_AT - f;
+  if (left <= 0) return walkAlong(TO_CAB, CAB_SPEED, T + 0.001 - left / 30);
+  return walkAlong(TO_CAB, CAB_SPEED, T - (left >= BRAKE ? (left - BRAKE / 2) / 30 : (left * left) / (2 * BRAKE * 30)));
+};
 export const SEG: Segment = {
   id: "B", from: S.from, to: S.to, enter() {}, exit() {},
   pose(w, f) {
@@ -78,10 +86,11 @@ export const SEG: Segment = {
       : undefined;
     const faces: MoodKey[] = [
       [S.from, "tired"], [only - 2, "grumble"], [others - 2, "flat"], [b02 + 14, "look"], [b03 - 2, "proud"], [b04 + 4, "sag", "sink"],
-      [b05 - 2, "grumble"], [cut + 1, "small", "take", 0.6], [b06 - 2, "worry"], [tonight - 2, "dread", "take", 0.7], [b07 + 10, "lost"], [b08 - 1, "sag", "sink"], [also - 2, "small"], [e08 + 4, "eager"],
+      [b05 - 2, "grumble"], [cut + 1, "small", "take", 0.6], [b06 - 2, "worry"], [tonight - 2, "dread", "take", 0.7], [b07 + 10, "lost"], [b08 - 1, "sag", "sink"], [also - 2, "small"], [e08 + 2, "oh", "take", 0.6], [GO_CAB - 5, "eager"],
     ];
-    // a thought: his old results! He is off the stool and away to the cabinet (the whip pan goes after him)
-    const riseK = ky(f, [[e08 + 3, 0], [e08 + 10, 1]]), leg = f >= GO_CAB ? walkAlong(TO_CAB, CAB_SPEED, (f - GO_CAB) / 30) : null;
+    // a thought: his old results! His head comes up and his eyes go to the cabinet (ideaK); a beat, then he is off the stool
+    // and away, out of her frame as the whip pan starts after him
+    const riseK = ky(f, [[GO_CAB - 7, 0], [GO_CAB, 1]]), ideaK = ky(f, [[e08 + 1, 0], [e08 + 7, 1]]), upK = Math.max(riseK, ideaK), leg = f >= GO_CAB ? toCab(f) : null;
     const seat = riseK > 0 ? { ...SEAT, top: SEAT.top.clone().add(V(-HOP * smooth(riseK), 0, 0)) } : SEAT;
     const r = leg
       ? act(w, f, YL, { at: leg.at, facing: leg.facing, faces, pose: leg.pose })
@@ -89,11 +98,11 @@ export const SEG: Segment = {
         at: AT, facing: 0, seat, rise: riseK, faces,
         pose: writing ? { kind: "write", t, arm: 0 } : hands ? { kind: "hold", t } : { kind: "desk", t },
         show: writing ? ["pen"] : undefined, hands: writing ? undefined : hands, armFront: knotK > 0.3 ? [true, true] : undefined,
-        lookDown: writing ? undefined : 16 * Math.min(1, slump) * (1 - riseK) + (knotK > 0.5 && f < cut ? 8 : 0),
-        lean: { pitch: (9 * Math.min(1, slump) - 7 * proudK) * (1 - riseK) },
-        gaze: writing ? 0 : pointK > 0.5 && f < tonight - 4 ? 1 : knotK > 0.5 && f < cut ? 0 : riseK > 0.3 ? -1 : undefined,
+        lookDown: writing ? undefined : 16 * Math.min(1, slump) * (1 - upK) + (knotK > 0.5 && f < cut ? 8 : 0),
+        lean: { pitch: (9 * Math.min(1, slump) - 7 * proudK) * (1 - upK) },
+        gaze: writing ? 0 : pointK > 0.5 && f < tonight - 4 ? 1 : knotK > 0.5 && f < cut ? 0 : ideaK > 0 ? -smooth(ideaK) : undefined,
         talkGaze: f < only ? 0 : undefined,
-        head: { dy: -0.05 * Math.min(1, slump) * (1 - riseK) + 0.05 * hit(f, b03, 8), tilt: pointK > 0.5 && f < tonight - 4 ? -6 : 0 },
+        head: { dy: -0.05 * Math.min(1, slump) * (1 - upK) + 0.05 * hit(f, b03, 8) + 0.035 * hit(f, e08 + 2, 9), tilt: pointK > 0.5 && f < tonight - 4 ? -6 : 0 },
       });
     w.update();
     // ---------------------------------------------------------------------------------------------- the thread he shows her

@@ -569,7 +569,7 @@ const build = (K: Kit): PlaceBuild => {
     P.add(mCord, bar(V(X(x), yb + 0.35, z), V(X(x), BY, z), 0.004, 0.004, 4), 0.0015);
     for (let k = 0; k < 5; k++) P.add(mRed[0], new THREE.CylinderGeometry(0.004, 0.006, 0.18, 4).translate(X(x) + 0.01 * (k - 2), yb - 0.12, z + 0.006 * (k % 2)), 0.0015);
   };
-  lantern(1.0, BEAMS[1], 2.35, "#e8c890", 701);
+  lantern(0.45, BEAMS[1], 2.55, "#e8c890", 701);   // (in the title's wide it hangs between the REC clock and the battery, not behind either)
   lantern(-1.9, BEAMS[2], 2.4, "#c84a34", 702);
   lantern(-0.6, BEAMS[0], 2.45, "#e8c890", 703);
 
