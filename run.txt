@@ -1,0 +1,835 @@
+plan: {'tier': 'creator', 'character_count': 118326, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "G02_q1_2101", "type": "dialogue", "lang": "", "lines": ["……别动。别动。缠您法器上了。"], "status": 200, "model": "eleven_v4", "file": "G02_q1_2101.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 3.2800000000000002, "character_start_index": 0, "character_end_index": 15, "dialogue_input_index": 0}]}
+{"name": "G02_q1_2113", "type": "dialogue", "lang": "", "lines": ["……别动。别动。缠您法器上了。"], "status": 200, "model": "eleven_v4", "file": "G02_q1_2113.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 3.2800000000000002, "character_start_index": 0, "character_end_index": 15, "dialogue_input_index": 0}]}
+{"name": "G02_q2_2101", "type": "dialogue", "lang": "", "lines": ["[calmly] 别动，别动。缠您法器上了。"], "status": 200, "model": "eleven_v4", "file": "G02_q2_2101.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 3.04, "character_start_index": 0, "character_end_index": 22, "dialogue_input_index": 0}]}
+{"name": "G02_q2_2113", "type": "dialogue", "lang": "", "lines": ["[calmly] 别动，别动。缠您法器上了。"], "status": 200, "model": "eleven_v4", "file": "G02_q2_2113.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 2.96, "character_start_index": 0, "character_end_index": 22, "dialogue_input_index": 0}]}
+{"name": "G02_q3_2101", "type": "dialogue", "lang": "", "lines": ["别动……别动……缠您法器上了。"], "status": 200, "model": "eleven_v4", "file": "G02_q3_2101.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 3.3600000000000003, "character_start_index": 0, "character_end_index": 15, "dialogue_input_index": 0}]}
+{"name": "G02_q3_2113", "type": "dialogue", "lang": "", "lines": ["别动……别动……缠您法器上了。"], "status": 200, "model": "eleven_v4", "file": "G02_q3_2113.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 3.3600000000000003, "character_start_index": 0, "character_end_index": 15, "dialogue_input_index": 0}]}
+removed kept voices: {'WuLq5z7nEcrhppO0ZQJw': 200}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "G02_q1_2101",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "……别动。别动。缠您法器上了。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "G02_q1_2101.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.2800000000000002,
+    "character_start_index": 0,
+    "character_end_index": 15,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "…",
+    "…",
+    "别",
+    "动",
+    "。",
+    "别",
+    "动",
+    "。",
+    "缠",
+    "您",
+    "法",
+    "器",
+    "上",
+    "了",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.06,
+    0.08,
+    0.24,
+    0.4,
+    0.88,
+    1.04,
+    1.2,
+    1.84,
+    2.0,
+    2.16,
+    2.4,
+    2.64,
+    2.76,
+    2.88
+   ],
+   "character_end_times_seconds": [
+    0.06,
+    0.08,
+    0.24,
+    0.4,
+    0.88,
+    1.04,
+    1.2,
+    1.84,
+    2.0,
+    2.16,
+    2.4,
+    2.64,
+    2.76,
+    2.88,
+    3.28
+   ]
+  },
+  "words": [
+   [
+    "别",
+    0.0,
+    0.14
+   ],
+   [
+    "动",
+    0.14,
+    0.32
+   ],
+   [
+    "别",
+    0.7,
+    0.92
+   ],
+   [
+    "动",
+    0.92,
+    1.2
+   ],
+   [
+    "缠",
+    1.72,
+    1.94
+   ],
+   [
+    "您",
+    1.94,
+    2.06
+   ],
+   [
+    "法",
+    2.06,
+    2.3
+   ],
+   [
+    "器",
+    2.3,
+    2.54
+   ],
+   [
+    "上",
+    2.54,
+    2.74
+   ],
+   [
+    "啊",
+    2.74,
+    2.92
+   ]
+  ],
+  "heard": "别动 别动缠您法器上啊",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.28
+ },
+ {
+  "name": "G02_q1_2113",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "……别动。别动。缠您法器上了。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "G02_q1_2113.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.2800000000000002,
+    "character_start_index": 0,
+    "character_end_index": 15,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "…",
+    "…",
+    "别",
+    "动",
+    "。",
+    "别",
+    "动",
+    "。",
+    "缠",
+    "您",
+    "法",
+    "器",
+    "上",
+    "了",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.06,
+    0.08,
+    0.24,
+    0.48,
+    0.96,
+    1.12,
+    1.28,
+    1.84,
+    2.0,
+    2.16,
+    2.4,
+    2.64,
+    2.8,
+    2.96
+   ],
+   "character_end_times_seconds": [
+    0.06,
+    0.08,
+    0.24,
+    0.48,
+    0.96,
+    1.12,
+    1.28,
+    1.84,
+    2.0,
+    2.16,
+    2.4,
+    2.64,
+    2.8,
+    2.96,
+    3.28
+   ]
+  },
+  "words": [
+   [
+    "别",
+    0.0,
+    0.18
+   ],
+   [
+    "动",
+    0.18,
+    0.38
+   ],
+   [
+    "别",
+    0.8,
+    1.02
+   ],
+   [
+    "动",
+    1.02,
+    1.28
+   ],
+   [
+    "缠",
+    1.28,
+    1.98
+   ],
+   [
+    "您",
+    1.98,
+    2.1
+   ],
+   [
+    "法",
+    2.1,
+    2.32
+   ],
+   [
+    "器",
+    2.32,
+    2.56
+   ],
+   [
+    "上",
+    2.56,
+    2.76
+   ],
+   [
+    "了",
+    2.76,
+    2.92
+   ]
+  ],
+  "heard": "别动 别动缠您法器上了",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.2
+ },
+ {
+  "name": "G02_q2_2101",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "[calmly] 别动，别动。缠您法器上了。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "G02_q2_2101.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.04,
+    "character_start_index": 0,
+    "character_end_index": 22,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "[",
+    "c",
+    "a",
+    "l",
+    "m",
+    "l",
+    "y",
+    "]",
+    " ",
+    "别",
+    "动",
+    "，",
+    "别",
+    "动",
+    "。",
+    "缠",
+    "您",
+    "法",
+    "器",
+    "上",
+    "了",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.046,
+    0.053,
+    0.061,
+    0.069,
+    0.091,
+    0.103,
+    0.114,
+    0.137,
+    0.16,
+    0.32,
+    0.64,
+    0.76,
+    0.88,
+    0.96,
+    1.6,
+    1.76,
+    2.0,
+    2.24,
+    2.4,
+    2.52,
+    2.64
+   ],
+   "character_end_times_seconds": [
+    0.046,
+    0.053,
+    0.061,
+    0.069,
+    0.091,
+    0.103,
+    0.114,
+    0.137,
+    0.16,
+    0.32,
+    0.64,
+    0.76,
+    0.88,
+    0.96,
+    1.6,
+    1.76,
+    2.0,
+    2.24,
+    2.4,
+    2.52,
+    2.64,
+    3.04
+   ]
+  },
+  "words": [
+   [
+    "別",
+    0.0,
+    0.22
+   ],
+   [
+    "動",
+    0.22,
+    0.4
+   ],
+   [
+    "別",
+    0.66,
+    0.74
+   ],
+   [
+    "動",
+    0.74,
+    1.0
+   ],
+   [
+    "纏",
+    1.5,
+    1.66
+   ],
+   [
+    "您",
+    1.66,
+    1.8
+   ],
+   [
+    "髮",
+    1.8,
+    2.06
+   ],
+   [
+    "器",
+    2.06,
+    2.24
+   ],
+   [
+    "上",
+    2.24,
+    2.44
+   ],
+   [
+    "了",
+    2.44,
+    2.62
+   ]
+  ],
+  "heard": "別動 別動 纏您髮器上了",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.04
+ },
+ {
+  "name": "G02_q2_2113",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "[calmly] 别动，别动。缠您法器上了。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "G02_q2_2113.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 2.96,
+    "character_start_index": 0,
+    "character_end_index": 22,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "[",
+    "c",
+    "a",
+    "l",
+    "m",
+    "l",
+    "y",
+    "]",
+    " ",
+    "别",
+    "动",
+    "，",
+    "别",
+    "动",
+    "。",
+    "缠",
+    "您",
+    "法",
+    "器",
+    "上",
+    "了",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.046,
+    0.053,
+    0.061,
+    0.069,
+    0.091,
+    0.103,
+    0.114,
+    0.137,
+    0.16,
+    0.32,
+    0.64,
+    0.72,
+    0.88,
+    1.24,
+    1.6,
+    1.76,
+    2.0,
+    2.16,
+    2.4,
+    2.48,
+    2.56
+   ],
+   "character_end_times_seconds": [
+    0.046,
+    0.053,
+    0.061,
+    0.069,
+    0.091,
+    0.103,
+    0.114,
+    0.137,
+    0.16,
+    0.32,
+    0.64,
+    0.72,
+    0.88,
+    1.24,
+    1.6,
+    1.76,
+    2.0,
+    2.16,
+    2.4,
+    2.48,
+    2.56,
+    2.96
+   ]
+  },
+  "words": [
+   [
+    "别",
+    0.0,
+    0.22
+   ],
+   [
+    "动",
+    0.22,
+    0.38
+   ],
+   [
+    "别",
+    0.62,
+    0.72
+   ],
+   [
+    "动",
+    0.72,
+    1.02
+   ],
+   [
+    "缠",
+    1.02,
+    1.64
+   ],
+   [
+    "您",
+    1.64,
+    1.78
+   ],
+   [
+    "法",
+    1.78,
+    1.98
+   ],
+   [
+    "器",
+    1.98,
+    2.2
+   ],
+   [
+    "上",
+    2.2,
+    2.4
+   ],
+   [
+    "了",
+    2.4,
+    2.56
+   ]
+  ],
+  "heard": "别动 别动缠您法器上了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.96
+ },
+ {
+  "name": "G02_q3_2101",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "别动……别动……缠您法器上了。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "G02_q3_2101.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.3600000000000003,
+    "character_start_index": 0,
+    "character_end_index": 15,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "别",
+    "动",
+    "…",
+    "…",
+    "别",
+    "动",
+    "…",
+    "…",
+    "缠",
+    "您",
+    "法",
+    "器",
+    "上",
+    "了",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.24,
+    0.4,
+    0.64,
+    0.88,
+    1.04,
+    1.2,
+    1.52,
+    1.84,
+    2.0,
+    2.24,
+    2.48,
+    2.72,
+    2.88,
+    3.04
+   ],
+   "character_end_times_seconds": [
+    0.24,
+    0.4,
+    0.64,
+    0.88,
+    1.04,
+    1.2,
+    1.52,
+    1.84,
+    2.0,
+    2.24,
+    2.48,
+    2.72,
+    2.88,
+    3.04,
+    3.36
+   ]
+  },
+  "words": [
+   [
+    "別",
+    0.0,
+    0.16
+   ],
+   [
+    "動",
+    0.16,
+    0.32
+   ],
+   [
+    "別",
+    0.72,
+    0.94
+   ],
+   [
+    "動",
+    0.94,
+    1.2
+   ],
+   [
+    "纏",
+    1.8,
+    2.0
+   ],
+   [
+    "緊",
+    2.0,
+    2.14
+   ],
+   [
+    "髮",
+    2.14,
+    2.42
+   ],
+   [
+    "器",
+    2.42,
+    2.6
+   ],
+   [
+    "上",
+    2.6,
+    2.84
+   ],
+   [
+    "了",
+    2.84,
+    3.0
+   ]
+  ],
+  "heard": "別動 別動 纏緊髮器上了",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.28
+ },
+ {
+  "name": "G02_q3_2113",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "别动……别动……缠您法器上了。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "G02_q3_2113.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.3600000000000003,
+    "character_start_index": 0,
+    "character_end_index": 15,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "别",
+    "动",
+    "…",
+    "…",
+    "别",
+    "动",
+    "…",
+    "…",
+    "缠",
+    "您",
+    "法",
+    "器",
+    "上",
+    "了",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.24,
+    0.32,
+    0.64,
+    0.96,
+    1.12,
+    1.28,
+    1.6,
+    1.92,
+    2.08,
+    2.24,
+    2.48,
+    2.72,
+    2.84,
+    2.96
+   ],
+   "character_end_times_seconds": [
+    0.24,
+    0.32,
+    0.64,
+    0.96,
+    1.12,
+    1.28,
+    1.6,
+    1.92,
+    2.08,
+    2.24,
+    2.48,
+    2.72,
+    2.84,
+    2.96,
+    3.36
+   ]
+  },
+  "words": [
+   [
+    "别",
+    0.0,
+    0.16
+   ],
+   [
+    "动",
+    0.16,
+    0.32
+   ],
+   [
+    "别",
+    0.66,
+    1.02
+   ],
+   [
+    "动",
+    1.02,
+    1.24
+   ],
+   [
+    "缠",
+    1.8,
+    2.0
+   ],
+   [
+    "捻",
+    2.0,
+    2.18
+   ],
+   [
+    "发",
+    2.18,
+    2.36
+   ],
+   [
+    "气",
+    2.36,
+    2.62
+   ],
+   [
+    "上",
+    2.62,
+    2.8
+   ],
+   [
+    "了",
+    2.8,
+    2.96
+   ]
+  ],
+  "heard": "别动 别动 缠捻发气上了",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.28
+ }
+]
