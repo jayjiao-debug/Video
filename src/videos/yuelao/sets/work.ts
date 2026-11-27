@@ -20,7 +20,7 @@ import type { PlaceBuild, PlaceLook, ParamValue } from "../../../kit/day/types";
 import { ceilQuad, wallQuad, plasterTex } from "../../romeo/sets/parts/b_common";
 import { farCard } from "../../../kit/sets/okit";
 import { ISLAND, WORK as D } from "../places";
-import { maker, boxG, paint, rng, css, mix, blotch, NOINK, glowCard, lightPool, levelQuad, bar, FONT, lightRig, V } from "./common";
+import { maker, boxG, paint, rng, css, mix, blotch, NOINK, glowCard, lightPool, levelQuad, bar, FONT, lightRig, V, flatFace } from "./common";
 
 const X0 = ISLAND.work;
 const FILL: EnvSpec = { frame: "world", stops: [[-90, [0.3, 0.31, 0.35]], [0, [0.58, 0.6, 0.66]], [90, [0.68, 0.72, 0.8]]], boxes: [{ az: 180, el: 20, rot: 0, w: 40, h: 24, soft: 18, col: [1.0, 1.04, 1.12] }] };
@@ -29,7 +29,7 @@ const LATE_CAST = { key: [0.05, 0.85, 0.52], tint: [0.88, 0.92, 1.0], tintK: 0.6
 const LOOK: PlaceLook = {
   bg: "#7d8aa0",
   ao: { aoRadius: 0.5, distanceFalloff: 1.0, intensity: 1.6, color: "#2a2c3a" },
-  cast: { grad: 0.22, bodyGrad: 0.16, sideTint: [0.9, 0.92, 1.0], wrap: [30, 60], edge: 0.14, bodySat: 0.13, lift: 0.03, contactLen: 0.3, ...DAY_CAST, ...BAKED_LIGHT } as unknown as CastLight,
+  cast: flatFace({ grad: 0.22, bodyGrad: 0.16, sideTint: [0.9, 0.92, 1.0], wrap: [30, 60], edge: 0.14, bodySat: 0.13, lift: 0.03, contactLen: 0.3, ...DAY_CAST, ...BAKED_LIGHT }) as unknown as CastLight,
   fill: FILL, bloom: 0.35,
 };
 const PARAMS: Record<string, ParamValue> = { glow: 1, late: 0 };
@@ -426,7 +426,7 @@ const build = (K: Kit): PlaceBuild => {
         const a = DAY_CAST[k], b = LATE_CAST[k];
         o[k] = Array.isArray(a) ? (a as number[]).map((x, i) => lerp(x, (b as number[])[i], late)) : lerp(a as number, b as number, late);
       }
-      return o as Partial<CastLight>;
+      return flatFace(o, 0.1 * late) as Partial<CastLight>;
     },
   };
 };

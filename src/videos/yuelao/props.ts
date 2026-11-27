@@ -217,29 +217,43 @@ export const buildProps = (M: Mats) => {
     }
     return p;
   };
-  // ---- THE RED THREADS: tubes through a few points, rebuilt each frame they are shown. Only her lens sees them, so
-  // they glow a little: an unlit red core and a soft additive sleeve.
-  type Th = { core: THREE.Mesh; glow: THREE.Mesh };
+  // ---- THE RED THREADS (v6, owner's notes 1 and 21 on v5: "too 3D", "give them a more fitting style like our other
+  // props"): drawn exactly like every other prop: a braided cord in the film's red with a lighter twist painted along it
+  // (a canvas texture, mip-mapped, its stripes a fixed 2.2 cm apart whatever the thread's length), lit by the place like
+  // the props, and the kit's black back-face hull round it, so it reads as a drawn cord with an ink outline from any side.
+  // No glow sleeve: a thread is a thing, not a light. Rebuilt each frame it is shown.
+  type Th = { core: THREE.Mesh; hull: THREE.Mesh };
   const threads = new Map<string, Th>();
-  const coreMat = (col: string) => new THREE.MeshBasicMaterial({ color: col });
-  const glowMat = new THREE.MeshBasicMaterial({ color: "#ff5a3c", transparent: true, opacity: 0.22, depthWrite: false, blending: THREE.AdditiveBlending });
-  const CORE: Record<string, THREE.MeshBasicMaterial> = {};
-  /** a thread through `pts` (world): r = radius (default 0.007), glow 0..1, col (default the film's red), tension 0..1 (0.5), cut 0..1 = draw only that share from the start */
+  const twist = (col: string) => paint(64, 16, (g, w, h) => {
+    g.fillStyle = col; g.fillRect(0, 0, w, h);
+    // two lighter strands winding round the cord: diagonal bands across the texture (u along the cord, v round it)
+    g.fillStyle = "rgba(255,190,170,0.42)";
+    for (const o of [0, 32]) { g.beginPath(); g.moveTo(o, 0); g.lineTo(o + 14, 0); g.lineTo(o + 14 - 16, h); g.lineTo(o - 16, h); g.closePath(); g.fill(); g.beginPath(); g.moveTo(o + 64, 0); g.lineTo(o + 78, 0); g.lineTo(o + 62, h); g.lineTo(o + 48, h); g.closePath(); g.fill(); }
+    g.fillStyle = "rgba(60,8,6,0.35)";
+    for (const o of [18, 50]) { g.beginPath(); g.moveTo(o, 0); g.lineTo(o + 4, 0); g.lineTo(o - 12, h); g.lineTo(o - 16, h); g.closePath(); g.fill(); }
+  });
+  const CORE: Record<string, THREE.Material> = {};
+  const coreMat = (col: string) => { const t = twist(col); t.wrapS = t.wrapT = THREE.RepeatWrapping; return K.flat("#ffffff", { map: t, rough: 0.8 }); };
+  const PERIOD = 0.022, INK = 0.0034;
+  /** a thread through `pts` (world): r = radius (default 0.0065), col (default the film's red), cut 0..1 = draw only
+   *  that share from the start, closed = a loop. (glow is accepted and ignored: v6 threads do not glow.) */
   const thread = (key: string, pts: THREE.Vector3[], o: { r?: number; glow?: number; col?: string; cut?: number; closed?: boolean } = {}) => {
     let t = threads.get(key);
     if (!t) {
-      const core = new THREE.Mesh(new THREE.BufferGeometry(), coreMat(RED)), glow = new THREE.Mesh(new THREE.BufferGeometry(), glowMat.clone());
-      for (const m of [core, glow]) { m.layers.set(NOINK); m.frustumCulled = false; m.castShadow = m.receiveShadow = false; group.add(m); }
-      core.name = `thread.${key}`; glow.name = `thread.${key}.glow`; glow.renderOrder = 4;
-      t = { core, glow }; threads.set(key, t);
+      const core = new THREE.Mesh(new THREE.BufferGeometry(), coreMat(RED)), hull = new THREE.Mesh(new THREE.BufferGeometry(), K.ink);
+      for (const m of [core, hull]) { m.layers.set(NOINK); m.frustumCulled = false; m.castShadow = m.receiveShadow = false; group.add(m); }
+      core.name = `thread.${key}`; hull.name = `thread.${key}.ink`;
+      t = { core, hull }; threads.set(key, t);
     }
     if (pts.length < 2) return;
     const col = o.col ?? RED; t.core.material = (CORE[col] ??= coreMat(col));
-    const curve = new THREE.CatmullRomCurve3(pts, !!o.closed, "catmullrom", 0.5), n = Math.max(12, Math.min(160, pts.length * 10)), r = o.r ?? 0.007;
-    t.core.geometry.dispose(); t.glow.geometry.dispose();
-    t.core.geometry = new THREE.TubeGeometry(curve, n, r, 6, !!o.closed); t.glow.geometry = new THREE.TubeGeometry(curve, n, r * 3.2, 6, !!o.closed);
-    if (o.cut !== undefined && o.cut < 1) { const c = Math.max(0, Math.floor(n * o.cut)) * 6 * 6; t.core.geometry.setDrawRange(0, c); t.glow.geometry.setDrawRange(0, c); }
-    t.core.visible = true; t.glow.visible = (o.glow ?? 0) > 0.01; (t.glow.material as THREE.MeshBasicMaterial).opacity = 0.34 * (o.glow ?? 0);
+    const curve = new THREE.CatmullRomCurve3(pts, !!o.closed, "catmullrom", 0.5), L = curve.getLength(), n = Math.max(12, Math.min(220, Math.ceil(L / 0.012))), r = Math.max(0.006, o.r ?? 0.0065);
+    t.core.geometry.dispose(); t.hull.geometry.dispose();
+    const cg = new THREE.TubeGeometry(curve, n, r, 8, !!o.closed), uv = cg.attributes.uv as THREE.BufferAttribute;
+    for (let i = 0; i < uv.count; i++) uv.setX(i, (uv.getX(i) * L) / PERIOD);
+    t.core.geometry = cg; t.hull.geometry = new THREE.TubeGeometry(curve, n, r + INK, 8, !!o.closed);
+    if (o.cut !== undefined && o.cut < 1) { const c = Math.max(0, Math.floor(n * o.cut)) * 8 * 6; t.core.geometry.setDrawRange(0, c); t.hull.geometry.setDrawRange(0, c); }
+    t.core.visible = true; t.hull.visible = true;
   };
   /** points of a thread hanging from a to b with `sag` metres of droop in the middle, n inner points; wob = a small sway */
   const hang = (a: THREE.Vector3, b: THREE.Vector3, sag = 0.15, n = 5, wob = 0) => {
@@ -247,6 +261,6 @@ export const buildProps = (M: Mats) => {
     for (let i = 0; i <= n + 1; i++) { const u = i / (n + 1), p = a.clone().lerp(b, u); p.y -= sag * 4 * u * (1 - u); if (wob) p.x += wob * Math.sin(u * Math.PI) ; out.push(p); }
     return out;
   };
-  return { group, prop, thread, hang, begin() { for (const p of made.values()) p.group.visible = false; for (const t of threads.values()) { t.core.visible = false; t.glow.visible = false; } } };
+  return { group, prop, thread, hang, begin() { for (const p of made.values()) p.group.visible = false; for (const t of threads.values()) { t.core.visible = false; t.hull.visible = false; } } };
 };
 export type Props = ReturnType<typeof buildProps>;

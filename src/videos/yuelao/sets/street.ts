@@ -20,7 +20,7 @@ import type { EnvSpec } from "../../bt/pbr";
 import type { PlaceBuild, PlaceLook, ParamValue } from "../../../kit/day/types";
 import { ceilQuad } from "../../romeo/sets/parts/b_common";
 import { ISLAND, STREET as S } from "../places";
-import { maker, boxG, paint, rng, css, blotch, NOINK, glowCard, lightPool, levelQuad, tileUV, bar, FONT, lightRig, V } from "./common";
+import { maker, boxG, paint, rng, css, blotch, NOINK, glowCard, lightPool, levelQuad, tileUV, bar, FONT, lightRig, V, flatFace } from "./common";
 
 const X0 = ISLAND.street;
 const WZ: number = S.wallZ, WB = WZ - 0.3;             // the podium wall's front and back faces
@@ -48,12 +48,12 @@ const TL_: Record<StreetTime, TL> = {
   dusk: {
     key: [-0.45, 0.55, 0.7], keyCol: "#ffb890", keyK: 0.6, hemi: ["#7a8cd0", "#363648", 1.3], lampK: 3.5,
     env: 1.0, tint: "#f0f0ff", sky: 0, skyline: "#5d6688", tower: "#8c98bc", shop: 1.0, shopPool: 0.3, lobby: 0.84, spill: 0.22, moon: false, litK: 1,
-    cast: { key: [0.62, 0.5, 0.6], tint: [1.0, 0.88, 0.76], tintK: 0.55, gain: 0.96, grad: 0.22, shade: [0.92, 0.96, 1.4], shadeK: 0.44, broad: 0.24, sheen: 0.16, edge: 0.16 } as unknown as Partial<CastLight>,
+    cast: flatFace({ key: [0.62, 0.5, 0.6], tint: [1.0, 0.88, 0.76], tintK: 0.55, gain: 0.96, grad: 0.22, shade: [0.92, 0.96, 1.4], shadeK: 0.44, broad: 0.24, sheen: 0.16, edge: 0.16 }) as unknown as Partial<CastLight>,
   },
   night: {
     key: [-0.4, 0.8, 0.45], keyCol: "#9fb2e0", keyK: 0.25, hemi: ["#3e4c80", "#1a1822", 1.0], lampK: 9,
     env: 0.4, tint: "#a4acc4", sky: 1, skyline: "#222a44", tower: "#4c5674", shop: 0.62, shopPool: 0.16, lobby: 0.9, spill: 0.42, moon: true, litK: 0.45,
-    cast: { key: [0.66, 0.52, 0.54], tint: [1.0, 0.8, 0.6], tintK: 0.72, gain: 0.9, grad: 0.24, shade: [0.88, 0.94, 1.5], shadeK: 0.5, broad: 0.3, sheen: 0.26, edge: 0.2 } as unknown as Partial<CastLight>,
+    cast: flatFace({ key: [0.66, 0.52, 0.54], tint: [1.0, 0.8, 0.6], tintK: 0.72, gain: 0.9, grad: 0.24, shade: [0.88, 0.94, 1.5], shadeK: 0.5, broad: 0.3, sheen: 0.26, edge: 0.2 }, 0.1) as unknown as Partial<CastLight>,
   },
 };
 const FILL: EnvSpec = {

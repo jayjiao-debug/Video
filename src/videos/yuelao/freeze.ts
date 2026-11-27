@@ -7,8 +7,10 @@ import { line, FPS, W, type Pose } from "./story";
 import type { World } from "./world";
 import { YUELAO } from "./people";
 
-/** the card's frames: it starts just after 「一动，三对离婚。」 and holds for 2.9 s inside that line's gap */
-export const CARD = (() => { const from = line("A02").to + 5; return { from, to: from + Math.round(2.9 * FPS) }; })();
+/** the card's frames. v6 (owner's note 5 on v5: viewers scroll away on a freeze card): NO FRAMES, the picture never stops;
+ *  his name comes in on a hanging jade token while he carries on (fx.tsx TOKEN). Kept as an empty span so the old beats
+ *  that count from it still compile until scene A is rebuilt. */
+export const CARD = (() => { const from = line("A02").to + 5; return { from, to: from - 1 }; })();
 export const cardAt = (f: number) => f >= CARD.from && f <= CARD.to;
 /** the frame the world is posed at */
 export const hold = (f: number) => (cardAt(f) ? CARD.from : f);

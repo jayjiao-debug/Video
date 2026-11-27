@@ -19,7 +19,7 @@ import type { EnvSpec } from "../../bt/pbr";
 import type { PlaceBuild, PlaceLook, ParamValue } from "../../../kit/day/types";
 import { ceilQuad, lathe, plasterTex, boardsTex, sunShaft, dustMotes } from "../../romeo/sets/parts/b_common";
 import { ISLAND, OFFICE as D } from "../places";
-import { maker, boxG, paint, rng, css, mix, blotch, NOINK, levelQuad, tileUV, bar, FONT, lightRig, V } from "./common";
+import { maker, boxG, paint, rng, css, mix, blotch, NOINK, levelQuad, tileUV, bar, FONT, lightRig, V, flatFace } from "./common";
 
 const X0 = ISLAND.office, WT = 0.22;
 const X = (x: number) => X0 + x;
@@ -35,7 +35,7 @@ const FILL: EnvSpec = {
 const LOOK: PlaceLook = {
   bg: "#3a2a20",
   ao: { aoRadius: 0.45, distanceFalloff: 1.0, intensity: 1.35, color: "#3a2418" },
-  cast: { key: [-0.22, 0.7, 0.68], tint: [1.0, 0.93, 0.82], tintK: 0.5, gain: 1.06, grad: 0.2, bodyGrad: 0.14, sideTint: [1.0, 0.94, 0.88], shade: [1.0, 0.92, 1.18], shadeK: 0.38, wrap: [32, 64], edge: 0.16, broad: 0.26, bodySat: 0.12, sheen: 0.14, lift: 0.05, contactLen: 0.25, ...BAKED_LIGHT } as unknown as CastLight,
+  cast: flatFace({ key: [-0.22, 0.7, 0.68], tint: [1.0, 0.93, 0.82], tintK: 0.5, gain: 1.06, grad: 0.2, bodyGrad: 0.14, sideTint: [1.0, 0.94, 0.88], shade: [1.0, 0.92, 1.18], shadeK: 0.38, wrap: [32, 64], edge: 0.16, broad: 0.26, bodySat: 0.12, sheen: 0.14, lift: 0.05, contactLen: 0.25, ...BAKED_LIGHT }) as unknown as CastLight,
   fill: FILL,
   bloom: 0.3,
 };
