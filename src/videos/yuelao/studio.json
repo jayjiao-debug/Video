@@ -3,8 +3,77 @@
  "title": "采访月老的一天",
  "composition": "YuelaoFilm",
  "branch": "render-farm-yuelao",
- "render": {"crf": 16, "gl": "angle", "concurrency": "50%"},
- "langs": {"zh": {}},
- "gate": {},
- "_note": "No sound.build yet: the owner auditions the audio later (27 Nov), so a studio run without --mix makes a silent master on purpose."
+ "render": {
+  "crf": 16,
+  "gl": "angle",
+  "concurrency": "50%"
+ },
+ "langs": {
+  "zh": {}
+ },
+ "gate": {
+  "accept": [
+   {
+    "check": "clipping",
+    "match": "yuelao\\.acc:robe into office\\.tangle",
+    "why": "by design: in the cold open he is wound into the heap of thread and wades out of it"
+   },
+   {
+    "check": "clipping",
+    "match": "\\(self-head,",
+    "why": "the rig's rule: an arm or hand drawn under its own head (his beard hangs over his arms when his hands meet in front); the mother's praying hands are drawn in front of her face on purpose"
+   },
+   {
+    "check": "clipping",
+    "match": "\\(self,",
+    "why": "a hanging or clasped hand resting against its own robe, body or pendant (the rig's own cloth; nothing cut on stills)"
+   },
+   {
+    "check": "clipping",
+    "match": "\\(held-holder,",
+    "why": "a held prop touching whoever holds it: the knot in his teeth, the bale hugged to his belly, files and the slip passing his beard, the pen at his chin, the order bag on the rider"
+   },
+   {
+    "check": "clipping",
+    "match": "\\(float,",
+    "why": "thrown, falling or flying things: the spool, the slip, the cloud, the butterflies, the dropped bale and file, the thrown knot"
+   },
+   {
+    "check": "clipping",
+    "match": "prop:drawer\\S* into office\\.cab|office\\.cab\\S* into prop:drawer",
+    "why": "a drawer in its own cabinet"
+   },
+   {
+    "check": "clipping",
+    "match": "prop:drawer\\S* into prop:(file|stack)|prop:(file|stack)\\S* into prop:drawer",
+    "why": "a file or the bale inside its drawer"
+   },
+   {
+    "check": "clipping",
+    "match": "prop:cloud\\S* into ma_mini\\.leg|ma_mini\\.leg\\S* into prop:cloud",
+    "why": "the mother kneels on her cloud"
+   },
+   {
+    "check": "clipping",
+    "match": "yuelao\\.acc:robe into street\\.step|street\\.step\\S* into yuelao\\.acc:robe",
+    "why": "seated on the steps: the back of his robe presses against the riser behind him (3.6 cm)"
+   },
+   {
+    "check": "clipping",
+    "match": "yuelao\\.(head|handR|handL|armR|armL) into office\\.dressing|office\\.dressing\\S* into yuelao\\.",
+    "why": "at his desk his beard rests on the open book and his hands lie on the pages (up to 4.6 cm; nothing cut on stills 767, 1110, 1136, 1541)"
+   },
+   {
+    "check": "clipping",
+    "match": "prop:tangle\\S* into street\\.step|street\\.step\\S* into prop:tangle",
+    "why": "the dropped knot and the old thread lie on the steps; their loops dip into the tread (up to 2.8 cm)"
+   },
+   {
+    "check": "clipping",
+    "match": "prop:stack\\S* into yuelao\\.acc:robe|prop:file\\S* into yuelao\\.acc:robe",
+    "why": "his hem swings against the bale beside him as he starts (4 frames); the falling file passes his robe (1 frame)"
+   }
+  ]
+ },
+ "_note": "No sound.build yet: the owner auditions the audio later (27 Nov), so a studio run without --mix makes a silent master on purpose (the sound check stays FAIL until then). The gate.accept rules turn the clipping classes accepted in the film's own clipping notes into INFO, each with its reason."
 }

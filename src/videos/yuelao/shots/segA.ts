@@ -37,8 +37,8 @@ export const SEG: Segment = {
     // ---------------------------------------------------------------------------------------------- the camera
     let camera = povCam(f, [
       ck("office", S.from, [0.22, 1.52, 3.3], [-0.42, 0.78, 0.5], 60),   // (looking down at the heap: the red 缘 on the wall stays above the REC clock)
-      ck("office", a01 - 3, [0.12, 1.5, 2.5], [-0.5, 1.0, 0.5], 58),
-      ck("office", CARD.to, [0.12, 1.5, 2.5], [-0.5, 1.0, 0.5], 58),
+      ck("office", a01 - 3, [0.12, 1.5, 2.5], [-0.5, 0.92, 0.5], 58),     // (aimed a little low: in the snap zoom on 三对 his hands and the
+      ck("office", CARD.to, [0.12, 1.5, 2.5], [-0.5, 0.92, 0.5], 58),     //  taut thread stay above the subtitles, the hat pins clear of the REC display)
       ck("office", CARD.to + 12, [0.14, 1.5, 2.6], [-0.3, 0.95, 0.5], 58),      // (he is a little left of centre: both fists of the snap stay inside the phone-safe frame)
       ck("office", wade0, [0.14, 1.5, 2.6], [-0.3, 0.95, 0.5], 58),
       ck("office", wade0 + 36, [0.16, 1.5, 2.95], [-0.3, 1.0, 1.12], 58),
@@ -48,7 +48,7 @@ export const SEG: Segment = {
       ck("office", T0 + 22, [0.0, 1.52, 3.15], [0.72, 1.2, -1.6], 64),
       ck("office", S.to, [0.0, 1.52, 3.1], [0.74, 1.18, -1.6], 64),
     ], { mood: "calm", amp: 0.6, walk: [[S.from, 0.75], [a01 - 9, 0.75], [a01 - 2, 0], [wade0 + 4, 0], [wade0 + 14, 0.35], [wade0 + 34, 0], [go + 2, 0], [go + 10, 0.3], [T0 + 22, 0]] });
-    camera = punchIn(camera, f, three - 5, { k: 0.72, len: 5, off: CARD.to + 9 });
+    camera = punchIn(camera, f, three - 5, { k: 0.75, len: 5, off: CARD.to + 9 });   // (a quarter tighter: his hat pins stay between the REC display and the battery)
     camera = kick(camera, f, snap, 0.03);
     w.setCamera(camera);
     // ---------------------------------------------------------------------------------------------- 月老
@@ -62,6 +62,9 @@ export const SEG: Segment = {
     const jig = busy ? Math.sin(f * 0.95) : 0, apart = ky(f, [[CARD.to + 4, 0], [snap - 1, 0.7], [snap, 0.75]]);
     const bowK = ky(f, [[bowAt - 2, 0], [bowAt + 8, 1], [e05 + 2, 1], [e05 + 10, 0]]), hush = f >= hushAt - 4 && f < bowAt - 3;
     const fawnK = ky(f, [[you - 4, 0], [you + 6, 1], [a05 - 6, 1], [a05, 0]]);
+    // while she tries to correct him he is not listening: quick knowing nods on her 我其实是, leaning in further, and 懂！
+    // cuts her off with one big nod as he straightens up
+    const nod0 = wordAt("A04", "我其"), NODS = [nod0, wordAt("A04", "其实"), wordAt("A04", "实是"), wordAt("A04", "是")].map((n) => n + 1);
     // the knot between his hands in front of his chest, drawn tight until the thread is wider than his beard; at the
     // snap his arms are FLUNG WIDE (a fist out on each side, clear of his robe, an end dangling from each), then sink
     const HALF_AT_SNAP = 0.085 + 0.15 * 0.75;
@@ -77,7 +80,7 @@ export const SEG: Segment = {
     const faces: MoodKey[] = [
       [S.from, "bite"], [a01 + 15, "caught", "take"], [a02 - 1, "hiss", "take", 0.8], [wordAt("A02", "一动") - 2, "grave"],
       [CARD.to + 5, "bite"], [snap, "panic", "take"], [a03 - 3, "suspicious"], [you - 1, "fawn"],
-      [a04 + 10, "eager"], [a05 - 1, "sly"], [hushAt - 1, "hush"], [bowAt - 1, "fawn"], [go + 4, "proud"],
+      [a04 + 3, "eager", "take", 0.5], [wordAt("A04", "其实") - 3, "sly"], [a05 - 1, "sly"], [hushAt - 1, "hush"], [bowAt - 1, "fawn"], [go + 4, "proud"],
     ];
     const r = act(w, f, YL, {
       at, facing, faces, pose: leg && leg.moving ? leg.pose : hush ? { kind: "shh", t: f / 30, arm: 1, amount: ky(f, [[hushAt - 4, 0], [hushAt + 3, 1], [bowAt - 9, 1], [bowAt - 3, 0]]) } : undefined,
@@ -85,8 +88,8 @@ export const SEG: Segment = {
       turn: busy ? 1 : f < turn0 + 7 ? 1 - round : trot && f > go + 10 ? ky(f, [[go + 10, 0], [go + 26, 0.9]]) : undefined,
       lookDown: busy ? 12 : careful ? 16 : undefined,
       gaze: busy || careful ? 0 : f >= snap && f < snap + 9 ? 0 : undefined,
-      lean: busy ? { roll: 4 * jig, pitch: 6 } : wade && !trot && f < a05 ? { pitch: 7 } : undefined,
-      head: f >= a05 && f < a05 + 9 ? VERBS.accent("nod", f, a05 + 1, { amp: 1.2 }) : undefined,
+      lean: busy ? { roll: 4 * jig, pitch: 6 } : wade && !trot && f < a05 + 8 ? { pitch: (7 + 5 * smooth((f - nod0) / 14)) * (1 - smooth((f - a05 + 2) / 9)) } : undefined,
+      head: VERBS.heads(VERBS.accent("nod", f, a04 + 4, { amp: 0.5 }), ...NODS.map((n) => VERBS.accent("nod", f, n, { amp: 0.75 })), VERBS.accent("nod", f, a05 + 1, { amp: 1.2 })),
       more: bowK > 0.01 ? VERBS.salute(bowK, at, facing, f / 30) : undefined,
     });
     w.update();

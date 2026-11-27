@@ -222,8 +222,8 @@ export const SEGMENT_RAW: [string, number, number, number, number][] = [
 /** the fact cards: [line, line id, first frame, last frame (inclusive), zh, en]: from the end of the line (+ its "card_delay")
  *  for its "card_hold" seconds (else its "after", else 3.5 s) */
 export const CARD_RAW: [number, string, number, number, string, string][] = [
-  [9, "B04", 1079, 1156, "2025年全国结婚登记676.3万对，离婚登记274.3万对（民政部）", "2025: 6.763M marriages, 2.743M divorces (Ministry of Civil Affairs)"],
-  [32, "E03", 3548, 3619, "唐《续玄怪录·定婚店》：赤绳“以系夫妻之足”", "Tang tale 'The Inn of Betrothal': the red cord 'ties the feet of husband and wife'"],
+  [9, "B04", 1079, 1156, "2025年结婚676.3万对，离婚274.3万对（民政部）", "2025: 6.763M marriages, 2.743M divorces (Ministry of Civil Affairs)"],
+  [32, "E03", 3548, 3619, "唐《定婚店》：赤绳“以系夫妻之足”", "Tang tale 'The Inn of Betrothal': the red cord 'ties the feet of husband and wife'"],
 ];
 /** the title block (PLAN 5): [first frame, last frame (inclusive), title zh, title en, subtitle zh, subtitle en]: on the
  *  shut door, 0.25 s after the last word of A05, for 1.85 s */
