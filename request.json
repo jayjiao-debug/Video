@@ -1,5 +1,5 @@
 {
- "id": "yuelao-v6-yl-02",
+ "id": "yuelao-v6-yl-03",
  "own_branch": true,
  "model_prefs": [
   "eleven_v4"
@@ -8,15 +8,15 @@
  "items": [
   {
    "type": "dialogue",
-   "name": "C02_c2051",
+   "name": "G02_q1_2101",
    "model": "eleven_v4",
-   "seed": 2051,
+   "seed": 2101,
    "settings": {
     "stability": 0.8
    },
    "lines": [
     {
-     "text": "牛郎织女。我绑的。牢吧？",
+     "text": "……别动。别动。缠您法器上了。",
      "voice": {
       "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
       "voice_id": "WuLq5z7nEcrhppO0ZQJw",
@@ -27,15 +27,15 @@
   },
   {
    "type": "dialogue",
-   "name": "C02_c2063",
+   "name": "G02_q1_2113",
    "model": "eleven_v4",
-   "seed": 2063,
+   "seed": 2113,
    "settings": {
     "stability": 0.8
    },
    "lines": [
     {
-     "text": "牛郎织女。我绑的。牢吧？",
+     "text": "……别动。别动。缠您法器上了。",
      "voice": {
       "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
       "voice_id": "WuLq5z7nEcrhppO0ZQJw",
@@ -46,15 +46,15 @@
   },
   {
    "type": "dialogue",
-   "name": "C02_c2077",
+   "name": "G02_q2_2101",
    "model": "eleven_v4",
-   "seed": 2077,
+   "seed": 2101,
    "settings": {
     "stability": 0.8
    },
    "lines": [
     {
-     "text": "牛郎织女。我绑的。牢吧？",
+     "text": "[calmly] 别动，别动。缠您法器上了。",
      "voice": {
       "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
       "voice_id": "WuLq5z7nEcrhppO0ZQJw",
@@ -65,15 +65,15 @@
   },
   {
    "type": "dialogue",
-   "name": "C09_c2051",
+   "name": "G02_q2_2113",
    "model": "eleven_v4",
-   "seed": 2051,
+   "seed": 2113,
    "settings": {
     "stability": 0.8
    },
    "lines": [
     {
-     "text": "董永七仙女，那是玉帝的亲闺女。",
+     "text": "[calmly] 别动，别动。缠您法器上了。",
      "voice": {
       "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
       "voice_id": "WuLq5z7nEcrhppO0ZQJw",
@@ -84,15 +84,15 @@
   },
   {
    "type": "dialogue",
-   "name": "C09_c2063",
+   "name": "G02_q3_2101",
    "model": "eleven_v4",
-   "seed": 2063,
+   "seed": 2101,
    "settings": {
     "stability": 0.8
    },
    "lines": [
     {
-     "text": "董永七仙女，那是玉帝的亲闺女。",
+     "text": "别动……别动……缠您法器上了。",
      "voice": {
       "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
       "voice_id": "WuLq5z7nEcrhppO0ZQJw",
@@ -103,243 +103,15 @@
   },
   {
    "type": "dialogue",
-   "name": "C09_c2077",
+   "name": "G02_q3_2113",
    "model": "eleven_v4",
-   "seed": 2077,
+   "seed": 2113,
    "settings": {
     "stability": 0.8
    },
    "lines": [
     {
-     "text": "董永七仙女，那是玉帝的亲闺女。",
-     "voice": {
-      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
-      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-      "name": "Martin Li"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "D01_c2051",
-   "model": "eleven_v4",
-   "seed": 2051,
-   "settings": {
-    "stability": 0.8
-   },
-   "lines": [
-    {
-     "text": "来单了。月老庙，加急。",
-     "voice": {
-      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
-      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-      "name": "Martin Li"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "D01_c2063",
-   "model": "eleven_v4",
-   "seed": 2063,
-   "settings": {
-    "stability": 0.8
-   },
-   "lines": [
-    {
-     "text": "来单了。月老庙，加急。",
-     "voice": {
-      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
-      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-      "name": "Martin Li"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "D01_c2077",
-   "model": "eleven_v4",
-   "seed": 2077,
-   "settings": {
-    "stability": 0.8
-   },
-   "lines": [
-    {
-     "text": "来单了。月老庙，加急。",
-     "voice": {
-      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
-      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-      "name": "Martin Li"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "F06_c2051",
-   "model": "eleven_v4",
-   "seed": 2051,
-   "settings": {
-    "stability": 0.8
-   },
-   "lines": [
-    {
-     "text": "这个也记，缘分未到。",
-     "voice": {
-      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
-      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-      "name": "Martin Li"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "F06_c2063",
-   "model": "eleven_v4",
-   "seed": 2063,
-   "settings": {
-    "stability": 0.8
-   },
-   "lines": [
-    {
-     "text": "这个也记，缘分未到。",
-     "voice": {
-      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
-      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-      "name": "Martin Li"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "F06_c2077",
-   "model": "eleven_v4",
-   "seed": 2077,
-   "settings": {
-    "stability": 0.8
-   },
-   "lines": [
-    {
-     "text": "这个也记，缘分未到。",
-     "voice": {
-      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
-      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-      "name": "Martin Li"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "G02_c2051",
-   "model": "eleven_v4",
-   "seed": 2051,
-   "settings": {
-    "stability": 0.8
-   },
-   "lines": [
-    {
-     "text": "别动，别动。缠您法器上了。",
-     "voice": {
-      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
-      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-      "name": "Martin Li"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "G02_c2063",
-   "model": "eleven_v4",
-   "seed": 2063,
-   "settings": {
-    "stability": 0.8
-   },
-   "lines": [
-    {
-     "text": "别动，别动。缠您法器上了。",
-     "voice": {
-      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
-      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-      "name": "Martin Li"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "G02_c2077",
-   "model": "eleven_v4",
-   "seed": 2077,
-   "settings": {
-    "stability": 0.8
-   },
-   "lines": [
-    {
-     "text": "别动，别动。缠您法器上了。",
-     "voice": {
-      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
-      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-      "name": "Martin Li"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "I06_c2051",
-   "model": "eleven_v4",
-   "seed": 2051,
-   "settings": {
-    "stability": 0.8
-   },
-   "lines": [
-    {
-     "text": "成了。快记，我绑的。全是我绑的。",
-     "voice": {
-      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
-      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-      "name": "Martin Li"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "I06_c2063",
-   "model": "eleven_v4",
-   "seed": 2063,
-   "settings": {
-    "stability": 0.8
-   },
-   "lines": [
-    {
-     "text": "成了。快记，我绑的。全是我绑的。",
-     "voice": {
-      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
-      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-      "name": "Martin Li"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "I06_c2077",
-   "model": "eleven_v4",
-   "seed": 2077,
-   "settings": {
-    "stability": 0.8
-   },
-   "lines": [
-    {
-     "text": "成了。快记，我绑的。全是我绑的。",
+     "text": "别动……别动……缠您法器上了。",
      "voice": {
       "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
       "voice_id": "WuLq5z7nEcrhppO0ZQJw",
