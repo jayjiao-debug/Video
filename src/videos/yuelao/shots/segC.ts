@@ -223,11 +223,11 @@ export const SEG: Segment = {
       [0, 1].forEach((i) => {
         const tt = (f - bf - i * 6) / 30; if (tt < 0) return;
         // out of the top of the folder by his left hand, and out to that side as they rise: past his cheek, never across his head
-        const start = rel(BASE, front, 0.1 + 0.2 * (1 - Math.exp(-6 * tt)), 0.86, 0.36);
+        const start = rel(BASE, front, 0.1 + 0.2 * (1 - Math.exp(-6 * tt)), 0.86, 0.43);   // (0.43 out in front: at 0.36 a wing brushed his cheek, v4 gate)
         const a = tt * (2.4 + i * 0.5) + [3.6, 2.4][i], rad = 0.05 + 0.08 * Math.min(1, tt), go = 0.06 * (1 - Math.exp(-8 * tt)) + 0.14 * tt * tt;   // (mostly UP: they stay inside the phone's frame)
         const p = start.clone().add(V(Math.sin(a) * rad + 0.5 * go, 0.5 * (1 - Math.exp(-3.2 * tt)) + 0.22 * tt + 0.035 * Math.sin(tt * 9 + i), Math.cos(a) * rad * 0.7 - 0.86 * go));
         const yaw = a + Math.PI / 2, flap = 0.2 + 1.0 * Math.abs(Math.sin(tt * 17 + i * 1.3));
-        const sc = 2.0 * (0.3 + 0.7 * smooth((f - bf - i * 6) / 5));   // they unfold out of the folder, then fly big enough to see
+        const sc = 2.0 * (0.3 + 0.7 * smooth((f - bf - i * 6) / 8));   // they unfold out of the folder, then fly big enough to see
         w.prop("wing", `b${i}a`).put(p, { yaw, roll: flap, scale: sc }); w.prop("wing", `b${i}b`).put(p, { yaw: yaw + Math.PI, roll: flap, scale: sc });
       });
     }
