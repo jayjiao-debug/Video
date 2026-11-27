@@ -194,17 +194,16 @@ const kpiTex = (done: boolean) => paint(1040, 800, (g, W, H) => {
   }
 });
 
-/** the wall scroll: one big 缘 */
-const scrollTex = () => paint(360, 1000, (g, W, H) => {
-  g.fillStyle = "#3e5a56"; g.fillRect(0, 0, W, H);
-  const r = rng(331); for (let i = 0; i < 30; i++) blotch(g, W * r(), H * r(), 30, "#2e4440", 0.25);
-  g.fillStyle = "#c9a85e"; g.fillRect(22, 120, W - 44, H - 260);
-  g.fillStyle = "#efe4c8"; g.fillRect(34, 132, W - 68, H - 284);
-  for (let i = 0; i < 10; i++) blotch(g, 34 + (W - 68) * r(), 132 + (H - 284) * r(), 60, "#dccca4", 0.2);
-  g.fillStyle = "#1c1410"; g.textAlign = "center"; g.textBaseline = "middle"; g.font = `900 250px ${FONT}`;
-  g.fillText("缘", W / 2, H * 0.45);
-  g.fillStyle = "#1c1410"; g.font = `700 34px ${FONT}`; for (let i = 0; i < 4; i++) g.fillText("月下老人"[i], W - 70, 560 + i * 40);
-  g.fillStyle = "#b8222a"; g.fillRect(W - 92, 740, 44, 44); g.fillRect(W - 92, 796, 44, 44);
+/** the 缘 on the wall: a red 斗方 (a square of red paper hung on its corner, as a 福 is), gold-edged, the character in gold.
+ *  Drawn turned an eighth, so that it stands upright once the square hangs on its corner. */
+const scrollTex = () => paint(512, 512, (g, W, H) => {
+  g.fillStyle = "#b4222a"; g.fillRect(0, 0, W, H);
+  const r = rng(331); for (let i = 0; i < 26; i++) blotch(g, W * r(), H * r(), 46, "#9a1a22", 0.22);
+  g.strokeStyle = "#e2b65a"; g.lineWidth = 12; g.strokeRect(24, 24, W - 48, H - 48); g.lineWidth = 3; g.strokeRect(46, 46, W - 92, H - 92);
+  for (const [x, y] of [[70, 70], [W - 70, 70], [70, H - 70], [W - 70, H - 70]]) { g.fillStyle = "#e2b65a"; g.beginPath(); g.arc(x, y, 7, 0, 7); g.fill(); }
+  g.save(); g.translate(W / 2, H / 2); g.rotate(Math.PI / 4);
+  g.fillStyle = "#f6dc92"; g.textAlign = "center"; g.textBaseline = "middle"; g.font = `900 268px ${FONT}`; g.fillText("缘", 0, 10);
+  g.restore();
 });
 
 /** the open 姻缘簿's spread: columns of tiny script, names joined by red lines */
@@ -431,15 +430,13 @@ const build = (K: Kit): PlaceBuild => {
     skeinHeap(P, mRed, X(2.75), D.z0 + 0.4, 0.3, 404);
   }
 
-  // ---------------------------------------------------------------- the scroll 缘 (back wall, left of the window)
+  // ---------------------------------------------------------------- the 缘 (back wall, left of the window): a red 斗方 hung
+  // HIGH, on its corner. (It was a tall scroll at head height: in most of scene A it sat right behind her camera's REC
+  // clock. Up here it is above the clock in every framing, and the wall behind the clock is plain plaster.)
   {
-    const sx = -2.0, top = 2.6, h = 1.42, w = 0.5;
-    Mk.mesh("office.scroll", new THREE.PlaneGeometry(w, h).translate(X(sx), top - h / 2 - 0.03, D.z0 + 0.012), Mk.tex(scrollTex(), 0.95), { cast: false, noink: false });
-    P.add(mDark, new THREE.CylinderGeometry(0.014, 0.014, w + 0.06, 8).rotateZ(Math.PI / 2).translate(X(sx), top - 0.02, D.z0 + 0.025), 0.003);
-    P.add(mDark, new THREE.CylinderGeometry(0.018, 0.018, w + 0.1, 8).rotateZ(Math.PI / 2).translate(X(sx), top - h - 0.04, D.z0 + 0.03), 0.003);
-    P.add(mCord, bar(V(X(sx - 0.2), top - 0.02, D.z0 + 0.02), V(X(sx), top + 0.18, D.z0 + 0.01), 0.003, 0.003, 4), 0);
-    P.add(mCord, bar(V(X(sx + 0.2), top - 0.02, D.z0 + 0.02), V(X(sx), top + 0.18, D.z0 + 0.01), 0.003, 0.003, 4), 0);
-    P.add(mBrass, new THREE.SphereGeometry(0.012, 8, 6).translate(X(sx), top + 0.18, D.z0 + 0.012), 0.002);
+    const sx = -2.0, cy = 2.77, side = 0.4, d = side * Math.SQRT1_2;
+    Mk.mesh("office.scroll", new THREE.PlaneGeometry(side, side).rotateZ(Math.PI / 4).translate(X(sx), cy, D.z0 + 0.012), Mk.tex(scrollTex(), 0.95), { cast: false, noink: false });
+    P.add(mBrass, new THREE.SphereGeometry(0.012, 8, 6).translate(X(sx), cy + d - 0.012, D.z0 + 0.02), 0.002);
     // a heap of skeins on the floor below it, by the desk's left
     skeinHeap(P, mRed, X(-1.75), D.z0 + 0.4, 0.34, 405);
     threadBasket(P, mRed, mCord, X(-0.95), 0, D.z0 + 0.3, 0.2, 0.26, 406);

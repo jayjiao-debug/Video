@@ -35,7 +35,7 @@ export const SEG: Segment = {
     w.set.param("tangle", ky(f, [[snap, 1], [snap + 6, 0.82], [wade0, 0.82], [wade0 + 34, 0.6], [go, 0.6], [S.to, 0.46]]));
     // ---------------------------------------------------------------------------------------------- the camera
     let camera = povCam(f, [
-      ck("office", S.from, [0.22, 1.52, 3.3], [-0.42, 0.98, 0.5], 60),
+      ck("office", S.from, [0.22, 1.52, 3.3], [-0.42, 0.78, 0.5], 60),   // (looking down at the heap: the red 缘 on the wall stays above the REC clock)
       ck("office", a01 - 3, [0.12, 1.5, 2.5], [-0.5, 1.0, 0.5], 58),
       ck("office", CARD.to, [0.12, 1.5, 2.5], [-0.5, 1.0, 0.5], 58),
       ck("office", CARD.to + 12, [0.14, 1.5, 2.6], [-0.16, 0.95, 0.5], 58),
