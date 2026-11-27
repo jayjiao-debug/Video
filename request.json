@@ -1,5 +1,5 @@
 {
- "id": "yuelao-recast-01",
+ "id": "yuelao-recast-02",
  "own_branch": true,
  "model_prefs": [
   "eleven_v4"
@@ -8,53 +8,53 @@
  "items": [
   {
    "type": "dialogue",
-   "name": "D03",
+   "name": "G03_s2027",
    "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[stubborn] 今年再不成，我就不起来了！",
-     "voice": {
-      "owner": "c9b7ff8665c902d2103c543abe2c677147ef4afa6e370a9353496e835719049c",
-      "voice_id": "0H4ruoQ81Ei2FCwjW5j1",
-      "name": "Susan"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "F04",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "不好意思，我回个消息。",
-     "voice": {
-      "owner": "c85885c5be715f04f6838e0c05034903e97f0ab76fa70af63fcbbfb89bba6d74",
-      "voice_id": "pTOe8BQRdydOEIgv0wFL",
-      "name": "LiuPing"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "G03",
-   "model": "eleven_v4",
-   "seed": 2026,
+   "seed": 2027,
    "settings": {
     "stability": 0.5
    },
    "lines": [
     {
      "text": "[calling out, cheerful] 林女士，您的外卖！",
+     "voice": {
+      "owner": "4ef2c624acf6cfe6a51105f9c15c1c64a1ca39bb07bfd7e411be69aabce152ff",
+      "voice_id": "BWN0mOtkGHghA3CYFzFK",
+      "name": "Danyu Zhao"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "G03_s2028",
+   "model": "eleven_v4",
+   "seed": 2028,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[calling out, cheerful] 林女士，您的外卖！",
+     "voice": {
+      "owner": "4ef2c624acf6cfe6a51105f9c15c1c64a1ca39bb07bfd7e411be69aabce152ff",
+      "voice_id": "BWN0mOtkGHghA3CYFzFK",
+      "name": "Danyu Zhao"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "G03_s2029",
+   "model": "eleven_v4",
+   "seed": 2029,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[cheerful] 林女士，您的外卖！",
      "voice": {
       "owner": "4ef2c624acf6cfe6a51105f9c15c1c64a1ca39bb07bfd7e411be69aabce152ff",
       "voice_id": "BWN0mOtkGHghA3CYFzFK",
