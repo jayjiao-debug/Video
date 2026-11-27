@@ -120,7 +120,7 @@
      "en": "Don't move! One tug and three couples divorce."
     }
    ],
-   "after": 3.0,
+   "after": 1.2,
    "emo": "hissed through a thread in his teeth, dead serious",
    "tts": "别动！一动，三对离婚。",
    "tts_v5": "[urgent, hissing] 别动！一动，三对离婚。"
@@ -351,7 +351,7 @@
     }
    ],
    "emo": "very proud",
-   "tts": "牛郎织女。我绑的！牢吧？",
+   "tts": "牛郎织女。我绑的。牢吧？",
    "tts_v5": "[proud] 牛郎织女。我绑的！牢吧？"
   },
   {
@@ -485,7 +485,7 @@
     }
    ],
    "emo": "whispering the second half",
-   "tts": "董永七仙女——那是玉帝的亲闺女。",
+   "tts": "董永七仙女，那是玉帝的亲闺女。",
    "tts_v5": "董永七仙女——[whispers] 那是玉帝的亲闺女。"
   },
   {
@@ -534,7 +534,7 @@
    ],
    "pre": 0.6,
    "emo": "jumping up",
-   "tts": "来单了！月老庙，加急！",
+   "tts": "来单了。月老庙，加急。",
    "tts_v5": "[excited] 来单了！月老庙，加急！"
   },
   {
@@ -827,7 +827,7 @@
    ],
    "after": 0.8,
    "emo": "desperate",
-   "tts": "……这个，也记，缘分未到。",
+   "tts": "这个也记，缘分未到。",
    "tts_v5": "[defeated] ……这个，也记，缘分未到。"
   },
   {
@@ -868,7 +868,7 @@
    "after": 0.5,
    "emo": "picking at the lens, close",
    "tts_v5": "别动别动——缠您法器上了。",
-   "tts": "别动别动——缠您法器上了。"
+   "tts": "[calmly] 别动，别动。缠您法器上了。"
   },
   {
    "n": 44,
@@ -1137,7 +1137,7 @@
     }
    ],
    "emo": "exploding with joy",
-   "tts": "成了！快记！我绑的！全是我绑的！",
+   "tts": "成了。快记，我绑的。全是我绑的。",
    "tts_v5": "[shouting, overjoyed] 成了！快记！我绑的！全是我绑的！"
   },
   {

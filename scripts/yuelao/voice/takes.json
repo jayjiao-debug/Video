@@ -15,15 +15,19 @@
 },
 {
 "id": "A02",
-"branch": "vo-yuelao-vo-01",
-"file": "A02.mp3",
+"branch": "vo-yuelao-v6-yl-01",
+"file": "A02_s2026.mp3",
 "keep": [
 [
-0.009999999999999995,
-2.35
+0.0,
+0.59
+],
+[
+0.68,
+2.75
 ]
 ],
-"run": "vo01"
+"run": "v6yl01"
 },
 {
 "id": "A03",
@@ -51,15 +55,19 @@
 },
 {
 "id": "A05",
-"branch": "vo-yuelao-vo-01",
-"file": "A05.mp3",
+"branch": "vo-yuelao-v6-yl-01",
+"file": "A05_s2042.mp3",
 "keep": [
 [
 0.0,
-2.8400000000000003
+1.44
+],
+[
+1.55,
+3.24
 ]
 ],
-"run": "vo01"
+"run": "v6yl01"
 },
 {
 "id": "B01",
@@ -159,19 +167,19 @@
 },
 {
 "id": "B08",
-"branch": "vo-yuelao-vo-01",
-"file": "B08.mp3",
+"branch": "vo-yuelao-v6-yl-01",
+"file": "B08_s2031.mp3",
 "keep": [
 [
 0.0,
 1.2
 ],
 [
-2.82,
-4.37
+1.24,
+2.75
 ]
 ],
-"run": "vo01"
+"run": "v6yl01"
 },
 {
 "id": "C01",
@@ -187,15 +195,19 @@
 },
 {
 "id": "C02",
-"branch": "vo-yuelao-vo-01",
-"file": "C02.mp3",
+"branch": "vo-yuelao-v6-yl-02",
+"file": "C02_c2051.mp3",
 "keep": [
 [
 0.0,
-2.96
+1.29
+],
+[
+1.4,
+3.35
 ]
 ],
-"run": "vo01"
+"run": "v6yl02"
 },
 {
 "id": "C03",
@@ -211,35 +223,31 @@
 },
 {
 "id": "C04",
-"branch": "vo-yuelao-vo-01",
-"file": "C04.mp3",
+"branch": "vo-yuelao-v6-yl-01",
+"file": "C04_s2042.mp3",
 "keep": [
 [
 0.0,
-2.42
+2.4
 ]
 ],
-"run": "vo01"
+"run": "v6yl01"
 },
 {
 "id": "C05",
-"branch": "vo-yuelao-vo-01",
-"file": "C05.mp3",
+"branch": "vo-yuelao-v6-yl-01",
+"file": "C05_s2031.mp3",
 "keep": [
 [
 0.0,
-1.7
+1.97
 ],
 [
-1.71,
-3.54
-],
-[
-3.56,
-4.64
+2.27,
+5.04
 ]
 ],
-"run": "vo01"
+"run": "v6yl01"
 },
 {
 "id": "C06",
@@ -287,19 +295,15 @@
 },
 {
 "id": "C09",
-"branch": "vo-yuelao-vo-01",
-"file": "C09.mp3",
+"branch": "vo-yuelao-v6-yl-02",
+"file": "C09_c2051.mp3",
 "keep": [
 [
 0.0,
-1.79
-],
-[
-1.9500000000000002,
-4.06
+3.44
 ]
 ],
-"run": "vo01"
+"run": "v6yl02"
 },
 {
 "id": "C10",
@@ -327,15 +331,15 @@
 },
 {
 "id": "D01",
-"branch": "vo-yuelao-vo-01",
-"file": "D01.mp3",
+"branch": "vo-yuelao-v6-yl-02",
+"file": "D01_c2063.mp3",
 "keep": [
 [
-0.020000000000000004,
-2.31
+0.0,
+2.48
 ]
 ],
-"run": "vo01"
+"run": "v6yl02"
 },
 {
 "id": "D02",
@@ -399,15 +403,19 @@
 },
 {
 "id": "E01",
-"branch": "vo-yuelao-vo-01",
-"file": "E01.mp3",
+"branch": "vo-yuelao-v6-yl-01",
+"file": "E01_s2031.mp3",
 "keep": [
 [
 0.0,
-2.8400000000000003
+0.78
+],
+[
+0.87,
+2.91
 ]
 ],
-"run": "vo01"
+"run": "v6yl01"
 },
 {
 "id": "E02",
@@ -455,15 +463,15 @@
 },
 {
 "id": "E05",
-"branch": "vo-yuelao-vo-01",
-"file": "E05.mp3",
+"branch": "vo-yuelao-v6-yl-01",
+"file": "E05_s2042.mp3",
 "keep": [
 [
 0.0,
-2.72
+3.28
 ]
 ],
-"run": "vo01"
+"run": "v6yl01"
 },
 {
 "id": "E06",
@@ -565,19 +573,15 @@
 },
 {
 "id": "F06",
-"branch": "vo-yuelao-vo-01",
-"file": "F06.mp3",
+"branch": "vo-yuelao-v6-yl-02",
+"file": "F06_c2063.mp3",
 "keep": [
 [
-0.009999999999999995,
-2.44
-],
-[
-2.46,
-3.76
+0.0,
+2.72
 ]
 ],
-"run": "vo01"
+"run": "v6yl02"
 },
 {
 "id": "F07",
@@ -593,27 +597,31 @@
 },
 {
 "id": "G01",
-"branch": "vo-yuelao-vo-01",
-"file": "G01.mp3",
+"branch": "vo-yuelao-v6-yl-01",
+"file": "G01_s2031.mp3",
 "keep": [
 [
 0.0,
-1.7599999999999998
+1.93
 ]
 ],
-"run": "vo01"
+"run": "v6yl01"
 },
 {
 "id": "G02",
-"branch": "vo-yuelao-vo-01",
-"file": "G02.mp3",
+"branch": "vo-yuelao-v6-yl-03",
+"file": "G02_q2_2113.mp3",
 "keep": [
 [
-0.0,
-2.3000000000000003
+0.03,
+1.2
+],
+[
+1.22,
+2.79
 ]
 ],
-"run": "vo01"
+"run": "v6yl03"
 },
 {
 "id": "G03",
@@ -675,55 +683,59 @@
 },
 {
 "id": "H02",
-"branch": "vo-yuelao-vo-01",
-"file": "H02.mp3",
+"branch": "vo-yuelao-v6-yl-01",
+"file": "H02_s2026.mp3",
 "keep": [
 [
-0.039999999999999994,
-1.1099999999999999
+0.0,
+0.9
 ]
 ],
-"run": "vo01"
+"run": "v6yl01"
 },
 {
 "id": "H03",
-"branch": "vo-yuelao-vo-01",
-"file": "H03.mp3",
+"branch": "vo-yuelao-v6-yl-01",
+"file": "H03_s2031.mp3",
 "keep": [
 [
-0.06,
-1.67
+0.0,
+1.36
 ],
 [
-1.94,
-5.36
+1.47,
+4.58
 ]
 ],
-"run": "vo01"
+"run": "v6yl01"
 },
 {
 "id": "H04",
-"branch": "vo-yuelao-vo-01",
-"file": "H04.mp3",
+"branch": "vo-yuelao-v6-yl-01",
+"file": "H04_s2026.mp3",
 "keep": [
 [
-0.009999999999999995,
-3.25
+0.0,
+2.94
 ]
 ],
-"run": "vo01"
+"run": "v6yl01"
 },
 {
 "id": "H05",
-"branch": "vo-yuelao-vo-01",
-"file": "H05.mp3",
+"branch": "vo-yuelao-v6-yl-04",
+"file": "H05_p_2131.mp3",
 "keep": [
 [
-0.020000000000000004,
-3.6
+0.0,
+2.59
+],
+[
+2.78,
+4.24
 ]
 ],
-"run": "vo01"
+"run": "v6yl04"
 },
 {
 "id": "I01",
@@ -802,15 +814,15 @@
 },
 {
 "id": "I06",
-"branch": "vo-yuelao-vo-01",
-"file": "I06.mp3",
+"branch": "vo-yuelao-v6-yl-02",
+"file": "I06_c2063.mp3",
 "keep": [
 [
-0.009999999999999995,
-3.5500000000000003
+0.0,
+3.79
 ]
 ],
-"run": "vo01"
+"run": "v6yl02"
 },
 {
 "id": "I07",
