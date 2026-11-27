@@ -1,14 +1,14 @@
 {
- "id": "yuelao-audition-01",
+ "id": "yuelao-recast-01",
  "own_branch": true,
  "model_prefs": [
   "eleven_v4"
  ],
+ "words": true,
  "items": [
   {
    "type": "dialogue",
-   "name": "yl_1_MartinLi",
-   "lang": "zh",
+   "name": "D03",
    "model": "eleven_v4",
    "seed": 2026,
    "settings": {
@@ -16,299 +16,7 @@
    },
    "lines": [
     {
-     "text": "[hissing] 别动！一动，三对离婚。",
-     "voice": {
-      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
-      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-      "name": "Martin Li"
-     }
-    },
-    {
-     "text": "[proud] 姻缘司，上下就我一个。别人九九六，我零零七。",
-     "voice": {
-      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
-      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-      "name": "Martin Li"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "yl_2_Jerry",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[hissing] 别动！一动，三对离婚。",
-     "voice": {
-      "owner": "962f4dcd19c53ab90ea828c1aa483e269fd55b68a3c4b7a26484a6d1afd437f3",
-      "voice_id": "pz7hOfW7kgI9kF818eDS",
-      "name": "Jerry"
-     }
-    },
-    {
-     "text": "[proud] 姻缘司，上下就我一个。别人九九六，我零零七。",
-     "voice": {
-      "owner": "962f4dcd19c53ab90ea828c1aa483e269fd55b68a3c4b7a26484a6d1afd437f3",
-      "voice_id": "pz7hOfW7kgI9kF818eDS",
-      "name": "Jerry"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "yl_3_DJAllen",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[hissing] 别动！一动，三对离婚。",
-     "voice": {
-      "owner": "ed03a3b4fe5cc749962096c746306193fddbeef286163ac3717bf3a8854f2311",
-      "voice_id": "lcRaSg5QsH61bfHjo8qM",
-      "name": "DJ Allen"
-     }
-    },
-    {
-     "text": "[proud] 姻缘司，上下就我一个。别人九九六，我零零七。",
-     "voice": {
-      "owner": "ed03a3b4fe5cc749962096c746306193fddbeef286163ac3717bf3a8854f2311",
-      "voice_id": "lcRaSg5QsH61bfHjo8qM",
-      "name": "DJ Allen"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "yl_4_Zicai",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[hissing] 别动！一动，三对离婚。",
-     "voice": {
-      "owner": "41777fade59ab222538cb6d5262079b406c2241b0130c6203826ec213fd98812",
-      "voice_id": "DVE92KG0Yd4X7RoMqy8J",
-      "name": "Zicai"
-     }
-    },
-    {
-     "text": "[proud] 姻缘司，上下就我一个。别人九九六，我零零七。",
-     "voice": {
-      "owner": "41777fade59ab222538cb6d5262079b406c2241b0130c6203826ec213fd98812",
-      "voice_id": "DVE92KG0Yd4X7RoMqy8J",
-      "name": "Zicai"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "yl_5_Zhile",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[hissing] 别动！一动，三对离婚。",
-     "voice": {
-      "owner": "56665ca6e2d50ec69bd1190689db14e332a2d9c15f437368d3cf13ab4ea015dd",
-      "voice_id": "bdt3B5N3GXM2nOc0SUW7",
-      "name": "Zhile"
-     }
-    },
-    {
-     "text": "[proud] 姻缘司，上下就我一个。别人九九六，我零零七。",
-     "voice": {
-      "owner": "56665ca6e2d50ec69bd1190689db14e332a2d9c15f437368d3cf13ab4ea015dd",
-      "voice_id": "bdt3B5N3GXM2nOc0SUW7",
-      "name": "Zhile"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "xm_1_YatingLin",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[flat] 不合适。不合适。下一个。",
-     "voice": {
-      "owner": "af2e2cefdb699d43191b113f7afe70f104fd32f875cee9a8a2eb2e7618a7739c",
-      "voice_id": "5eoK8NqMBsMdqUmImHNs",
-      "name": "Yating Lin"
-     }
-    },
-    {
-     "text": "[smiling] ……谢谢。你叫什么名字？",
-     "voice": {
-      "owner": "af2e2cefdb699d43191b113f7afe70f104fd32f875cee9a8a2eb2e7618a7739c",
-      "voice_id": "5eoK8NqMBsMdqUmImHNs",
-      "name": "Yating Lin"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "xm_2_StellaGu",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[flat] 不合适。不合适。下一个。",
-     "voice": {
-      "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
-      "voice_id": "BqljjWyTnrioXPCNkCd4",
-      "name": "Stella Gu"
-     }
-    },
-    {
-     "text": "[smiling] ……谢谢。你叫什么名字？",
-     "voice": {
-      "owner": "2e514ccc44c5906fa3fb4c0fc516255c8cc3eb3a6bebd2311c442b6ac5c98c74",
-      "voice_id": "BqljjWyTnrioXPCNkCd4",
-      "name": "Stella Gu"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "xm_3_Jackie",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[flat] 不合适。不合适。下一个。",
-     "voice": {
-      "owner": "e907cd3cc58a8522ae43b533dfb971f356bfdd257d43c5245c6e413f37c1dd84",
-      "voice_id": "ggacvEjbmpoSuEinfFWs",
-      "name": "Jackie"
-     }
-    },
-    {
-     "text": "[smiling] ……谢谢。你叫什么名字？",
-     "voice": {
-      "owner": "e907cd3cc58a8522ae43b533dfb971f356bfdd257d43c5245c6e413f37c1dd84",
-      "voice_id": "ggacvEjbmpoSuEinfFWs",
-      "name": "Jackie"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "xm_4_CocoLi",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[flat] 不合适。不合适。下一个。",
-     "voice": {
-      "owner": "2c572ce430114e243fe4f6bc3ad191c2e9dfe3d4986d87b86c65302f9a5f9922",
-      "voice_id": "Ca5bKgudqKJzq8YRFoAz",
-      "name": "Coco Li"
-     }
-    },
-    {
-     "text": "[smiling] ……谢谢。你叫什么名字？",
-     "voice": {
-      "owner": "2c572ce430114e243fe4f6bc3ad191c2e9dfe3d4986d87b86c65302f9a5f9922",
-      "voice_id": "Ca5bKgudqKJzq8YRFoAz",
-      "name": "Coco Li"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "ma_1_Mona",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[praying loudly] 月老保佑！我闺女三十了，天天加班，就是不找对象！",
-     "voice": {
-      "owner": "55d99057033dbfa209e1bf6399a22dfbc7f80488a87d5dc2f701f38d5aae5675",
-      "voice_id": "gxNo8imssaxOYWaG726C",
-      "name": "Mona"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "ma_2_HuaFeng",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[praying loudly] 月老保佑！我闺女三十了，天天加班，就是不找对象！",
-     "voice": {
-      "owner": "d745603fe3f394601476022c6ec3c23580f41b57e48a552329fff163c27ae3c6",
-      "voice_id": "rtRocV7drsrJFSQPxlD3",
-      "name": "Hua Feng"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "ma_3_Susan",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[praying loudly] 月老保佑！我闺女三十了，天天加班，就是不找对象！",
+     "text": "[stubborn] 今年再不成，我就不起来了！",
      "voice": {
       "owner": "c9b7ff8665c902d2103c543abe2c677147ef4afa6e370a9353496e835719049c",
       "voice_id": "0H4ruoQ81Ei2FCwjW5j1",
@@ -319,8 +27,7 @@
   },
   {
    "type": "dialogue",
-   "name": "ma_4_Wang",
-   "lang": "zh",
+   "name": "F04",
    "model": "eleven_v4",
    "seed": 2026,
    "settings": {
@@ -328,127 +35,7 @@
    },
    "lines": [
     {
-     "text": "[praying loudly] 月老保佑！我闺女三十了，天天加班，就是不找对象！",
-     "voice": {
-      "owner": "dfd1de6a0ae6e10250984e00995bde5de8831d42103961665ec783490adf2235",
-      "voice_id": "KbLWYtHsXy1TbF3HGwgA",
-      "name": "Wang"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "qs_1_KaroYang",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[shy] 又加班啊？今天给你多加了个蛋。",
-     "voice": {
-      "owner": "dd0f5bb9ac12aaca6570a8c8d9c32a6e97f7c05c673d9864fbccc662fb7b03d7",
-      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
-      "name": "Karo Yang"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "qs_2_DanyuZhao",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[shy] 又加班啊？今天给你多加了个蛋。",
-     "voice": {
-      "owner": "4ef2c624acf6cfe6a51105f9c15c1c64a1ca39bb07bfd7e411be69aabce152ff",
-      "voice_id": "BWN0mOtkGHghA3CYFzFK",
-      "name": "Danyu Zhao"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "qs_3_Anson",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[shy] 又加班啊？今天给你多加了个蛋。",
-     "voice": {
-      "owner": "deccc7c443081d6ae6bef2cdda3258f2937f5e769778fdc4256fb68be8783723",
-      "voice_id": "xh2OInDk4GEYuYRtHx4M",
-      "name": "Anson"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "qs_4_AaronShang",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[shy] 又加班啊？今天给你多加了个蛋。",
-     "voice": {
-      "owner": "13a1dbd56d087b60f2afc9a6076a061cf7b1445e94ef89139350c5b1dc9e0816",
-      "voice_id": "Qz42O0rKFmFBzAviAloi",
-      "name": "Aaron Shang"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "xq_1_EvanZhao",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[polite] 你好。有房吗？月薪多少？",
-     "voice": {
-      "owner": "6293b9dfc6ac413ab58d3844addcf7871b250281ecd7013106d13a2fbe6cfeef",
-      "voice_id": "MI36FIkp9wRP7cpWKPTl",
-      "name": "Evan Zhao"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "xq_2_LiuPing",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[polite] 你好。有房吗？月薪多少？",
+     "text": "不好意思，我回个消息。",
      "voice": {
       "owner": "c85885c5be715f04f6838e0c05034903e97f0ab76fa70af63fcbbfb89bba6d74",
       "voice_id": "pTOe8BQRdydOEIgv0wFL",
@@ -459,8 +46,7 @@
   },
   {
    "type": "dialogue",
-   "name": "xq_3_LanChen",
-   "lang": "zh",
+   "name": "G03",
    "model": "eleven_v4",
    "seed": 2026,
    "settings": {
@@ -468,57 +54,14 @@
    },
    "lines": [
     {
-     "text": "[polite] 你好。有房吗？月薪多少？",
+     "text": "[calling out, cheerful] 林女士，您的外卖！",
      "voice": {
-      "owner": "943ab2ecbad7fed2d27e7379a408180da0278ac546ae812114f13837dd7810cd",
-      "voice_id": "bZtjnyJAFD0Cp3lfNG5g",
-      "name": "Lan Chen"
+      "owner": "4ef2c624acf6cfe6a51105f9c15c1c64a1ca39bb07bfd7e411be69aabce152ff",
+      "voice_id": "BWN0mOtkGHghA3CYFzFK",
+      "name": "Danyu Zhao"
      }
     }
    ]
-  },
-  {
-   "type": "voices",
-   "name": "L_bj_male",
-   "lang": "zh",
-   "accent": "beijing mandarin",
-   "gender": "male",
-   "n": 40
-  },
-  {
-   "type": "voices",
-   "name": "L_std_male_mid",
-   "lang": "zh",
-   "accent": "standard",
-   "gender": "male",
-   "age": "middle_aged",
-   "n": 40
-  },
-  {
-   "type": "voices",
-   "name": "L_std_male_old",
-   "lang": "zh",
-   "accent": "standard",
-   "gender": "male",
-   "age": "old",
-   "n": 30
-  },
-  {
-   "type": "voices",
-   "name": "L_bj_female_mid",
-   "lang": "zh",
-   "accent": "beijing mandarin",
-   "gender": "female",
-   "age": "middle_aged",
-   "n": 30
-  },
-  {
-   "type": "voices",
-   "name": "L_char_male",
-   "lang": "zh",
-   "accent": "beijing mandarin",
-   "use_case": "characters_animation",
-   "n": 30
   }
  ]
 }
