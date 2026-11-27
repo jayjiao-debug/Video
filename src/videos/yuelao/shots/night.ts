@@ -9,16 +9,17 @@ export const BY_SCOOTER = P("street", 2.3, 0, -1.0);
 /** where she stands with her camera at night (street local) */
 export const CAMN: [number, number, number] = [-0.3, 1.5, 2.4];
 /** the lowest step, left of the door: his seat; where he stands in front of it before he sits */
-export const STEP = SEATS.step, STAND_AT = P("street", -0.85, 0, -1.84);
+export const STEP = SEATS.step, STAND_AT = P("street", -0.85, 0, -1.75);   // his hem (26 cm) clear of the step's face
 /** the seat with its top moved out over the pavement while he is on his feet (k 1 = standing in front of the step) */
-export const stepSeat = (k: number) => (k > 0 ? { ...STEP, top: STEP.top.clone().add(V(0, 0, 0.34 * k)) } : STEP);
+export const stepSeat = (k: number) => (k > 0 ? { ...STEP, top: STEP.top.clone().add(V(0, 0, 0.43 * k)) } : STEP);
 /** at the door: where she takes her order, where the rider stands, her way out of the lobby */
 export const DOOR_HER = P("street", -0.25, 0.51, -3.3), DOOR_RIDER = P("street", 0.42, 0.51, -3.15);
 export const WAY_OUT = [P("street", -1.15, 0.51, -4.5), P("street", -0.3, 0.51, -4.1), DOOR_HER];
-/** up the three steps from x0 to x1: a walker's path that lifts the foot before each riser (never through a tread) */
+/** up the three steps from x0 to x1: a walker's path. The body is as high as the HIGHER of its two feet stands (the
+ *  foot nearer the door, a stride of 0.2 m into the stairs), so a leg never passes through a tread: the other foot is in the air */
 export const stairs = (x0: number, x1: number): THREE.Vector3[] => {
   const out: THREE.Vector3[] = [];
-  for (let k = 0; k < 3; k++) { const z = -2.0 - 0.36 * k, x = x0 + ((x1 - x0) * k) / 2; out.push(P("street", x, 0.17 * k, z + 0.15), P("street", x, 0.17 * (k + 1), z - 0.01)); }
+  for (let k = 0; k < 3; k++) { const z = -2.0 - 0.36 * k, x = x0 + ((x1 - x0) * k) / 2; out.push(P("street", x, 0.17 * k, z + 0.36), P("street", x, 0.17 * (k + 1), z + 0.2)); }
   return out;
 };
 /** the rider's way from his scooter up to the door */

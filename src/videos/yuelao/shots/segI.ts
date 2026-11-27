@@ -97,7 +97,9 @@ export const SEG: Segment = {
     const hip = (s: number) => H(0.21 * s, 0.73, 0.05), cup = H(0.21, 1.04, 0.2), sky = H(-0.26, 1.3 + 0.06 * (hit(f, mineB, 7) + hit(f, mineB + 13, 7)), 0.1);
     const standL = through(f, [[leap0, seatL], [leap0 + 6, H(0.3, upY + shake, 0.1)], [arrive - 2, H(0.3, upY + shake, 0.1)], [mineA - 1, hip(1)], [caught + 12, hip(1)], [caught + 28, hang(at, facing, 1)], [thisLine - 9, hang(at, facing, 1)], [thisLine - 1, cup], [x08 + 4, cup], [x08 + 16, hang(at, facing, 1)]]);
     const standR = through(f, [[leap0, seatR], [leap0 + 6, H(-0.3, upY - shake, 0.1)], [arrive - 2, H(-0.3, upY - shake, 0.1)], [mineA - 1, hip(-1)], [mineB - 6, hip(-1)], [mineB, sky], [caught + 4, sky], [caught + 30, hang(at, facing, 0)]]);
-    const hands: [THREE.Vector3, THREE.Vector3] = f < leap0 ? [seatR, seatL] : [standR, standL];
+    // (as they fly up the hands swing OUT round his head, not up through it)
+    const flingOut = f >= leap0 && f <= leap0 + 6 ? 0.15 * Math.sin(Math.PI * smooth((f - leap0) / 6)) : 0;
+    const hands: [THREE.Vector3, THREE.Vector3] = f < leap0 ? [seatR, seatL] : [standR.add(V(-flingOut, 0, 0)), standL.add(V(flingOut, 0, 0))];
     const faces: MoodKey[] = [
       [S.from, "quiet"], [see + 4, "look", "take", 0.5], [notMine - 3, "intent"], [i02 - 2, "wonder"], [i03 - 6, "wry"], [x03 + 2, "warm"], [doorOpen + 14, "look"], [hug0 + 4, "hope"], [today + 20, "eager"],
       [gold0 + 5, "joy", "take", 0.8], [quick - 3, "thrill"], [mineA - 4, "proud"], [caught, "caught", "take", 0.8], [i08 - 5, "ahem"], [thisLine - 4, "coax"], [x08 + 6, "fawn"],
@@ -143,11 +145,12 @@ export const SEG: Segment = {
     // on the old thread; in his left hand; in his right, in his lap; held to his chest; flung over his shoulder as he leaps
     {
       const inL = r.handWorld(1).add(V(0, -0.085, 0)), inR = r.handWorld(0).add(V(0, -0.07, 0)), both = r.handWorld(0).add(r.handWorld(1)).multiplyScalar(0.5).add(V(0, -0.05, 0.02));
-      const k1 = smooth((f - (thisOne - 2)) / 5), k2 = smooth((f - (passed - 3)) / 6), fly = (f - leap0 - 2) / 26, HOLD = SH(0, 0.6, 0.3);
-      if (fly <= 0) w.prop("tangle", "his").put(COIL_AT.clone().lerp(inL, k1).lerp(inR, k2).lerp(both, hugK), { yaw: 1.5 + 0.8 * k2 });
+      // (it goes up in his LEFT hand as his arms fly up, leaves that hand beside his head and sails back past his ear: never through him)
+      const k1 = smooth((f - (thisOne - 2)) / 5), k2 = smooth((f - (passed - 3)) / 6), REL0 = leap0 + 5, fly = (f - REL0) / 23, REL = SH(0.3, 1.2, 0.11);
+      if (fly <= 0) w.prop("tangle", "his").put(COIL_AT.clone().lerp(inL, k1).lerp(inR, k2).lerp(both, hugK).lerp(r.handWorld(1).add(V(0.02, 0.07, 0)), smooth((f - leap0) / 3)), { yaw: 1.5 + 0.8 * k2 });
       else {
         const u = Math.min(1, fly), bounce = fly > 1 && fly < 1.3 ? 0.06 * Math.sin(((fly - 1) / 0.3) * Math.PI) : 0;
-        w.prop("tangle", "his").put(HOLD.clone().lerp(KNOT_END, u).add(V(0, 4 * 1.5 * u * (1 - u) + bounce, 0)), { yaw: 2.3 + 9 * u, roll: 6 * u });
+        w.prop("tangle", "his").put(REL.clone().lerp(KNOT_END, u).add(V(0.1 * Math.sin(Math.PI * Math.min(1, u / 0.45)), 4 * 1.0 * u * (1 - u) + bounce, 0)), { yaw: 2.3 + 9 * u, roll: 6 * u });
       }
     }
     if (phoneK > 0.5) w.prop("phone", "rider").put(rd.handWorld(1).add(V(0, 0.035, 0)), { yaw: rFace, pitch: -0.5 });

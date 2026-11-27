@@ -59,13 +59,13 @@ export const SEG: Segment = {
     const worryK = ky(f, [[d02 + 8, 0], [d02 + 18, 1], [notUp + 6, 1], [notUp + 12, 0]]), alarm = ky(f, [[notUp + 8, 0], [notUp + 14, 1], [fall - 2, 1], [fall + 4, 0]]);
     const lensPt = camP.clone().add(v3(camera.look).sub(camP).normalize().multiplyScalar(0.16)).add(V(0, -0.02, 0));
     const K0: [number, THREE.Vector3][] = [
-      [got - 8, hangR], [got, H(-0.08, 0.9, 0.27)], [d04 - 3, H(-0.08, 0.9, 0.27)], [d04 + 4, H(-0.17, 1.02, 0.3)], [her - 12, H(-0.17, 1.02, 0.3)], [her - 3, H(-0.07, 0.9, 0.28)],
-      [tonight - 4, H(-0.07, 0.9, 0.28)], [tonight + 4, H(-0.16, 0.8, 0.24)], [d05 - 10, H(-0.16, 0.8, 0.24)], [d05 - 3, H(-0.03, 0.8, 0.2)], [d05 + 2, H(-0.03, 0.8, 0.2)],
+      [got - 8, hangR], [got, H(-0.08, 0.88, 0.33)], [d04 - 3, H(-0.08, 0.88, 0.33)], [d04 + 4, H(-0.17, 1.02, 0.3)], [her - 12, H(-0.17, 1.02, 0.3)], [her - 3, H(-0.07, 0.88, 0.33)],
+      [tonight - 4, H(-0.07, 0.88, 0.33)], [tonight + 4, H(-0.2, 0.8, 0.26)], [d05 - 10, H(-0.2, 0.8, 0.26)], [d05 - 3, H(-0.03, 0.8, 0.2)], [d05 + 2, H(-0.03, 0.8, 0.2)],
       [d05 + 11, H(-0.12, 0.96, 0.3)], [follow, H(-0.12, 0.96, 0.3)], [follow + 9, H(-0.22, 0.7, 0.02)], [thrown - 4, H(-0.22, 0.7, 0.02)], [thrown, H(-0.13, 1.0, 0.36)], [thrown + 10, H(-0.1, 0.92, 0.32)],
     ];
     const K1: [number, THREE.Vector3][] = [
-      [got - 8, hangL], [got, H(0.08, 0.9, 0.27)], [d04 - 3, H(0.08, 0.9, 0.27)], [d04 + 4, hangL], [her - 12, hangL], [her - 3, H(0.07, 0.9, 0.28)],
-      [tonight - 4, H(0.07, 0.9, 0.28)], [tonight + 3, H(0.2, 0.9, 0.2)], [must - 2, H(0.2, 0.9, 0.2)], [must + 2, H(0.21, 1.0 , 0.22)], [must + 7, H(0.2, 0.9, 0.2)], [d05 - 6, H(0.2, 0.9, 0.2)], [d05 + 2, hangL], [follow, hangL], [follow + 8, H(0.24, 0.96, 0.2)], [thrown + 10, H(0.24, 0.96, 0.2)],
+      [got - 8, hangL], [got, H(0.08, 0.88, 0.33)], [d04 - 3, H(0.08, 0.88, 0.33)], [d04 + 4, hangL], [her - 12, hangL], [her - 3, H(0.07, 0.88, 0.33)],
+      [tonight - 4, H(0.07, 0.88, 0.33)], [tonight + 3, H(0.2, 0.9, 0.2)], [must - 2, H(0.2, 0.9, 0.2)], [must + 2, H(0.21, 1.0 , 0.22)], [must + 7, H(0.2, 0.9, 0.2)], [d05 - 6, H(0.2, 0.9, 0.2)], [d05 + 2, hangL], [follow, hangL], [follow + 8, H(0.24, 0.96, 0.2)], [thrown + 10, H(0.24, 0.96, 0.2)],
     ];
     const hands: [THREE.Vector3 | null, THREE.Vector3 | null] | undefined = moving ? undefined
       : f >= got - 8 ? [through(f, K0), through(f, K1)]

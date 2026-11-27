@@ -156,14 +156,17 @@ const skylineTex = () => paint(2048, 512, (g, W, H) => {
 });
 const shopTex = () => paint(768, 704, (g, W, H) => {
   // the back of the noodle shop, seen through the window (3.0 x 2.75 m)
-  const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, "#f6d9a2"); gr.addColorStop(0.6, "#eec58a"); gr.addColorStop(1, "#c89660");
+  // (the wall under the ceiling is in shade, and its LEFT half is bare: in scene F's three-shot the REC label and the
+  // clock sit over that part of the window, so nothing bright or lettered may be behind them)
+  const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, "#8a5f37"); gr.addColorStop(0.27, "#b58653"); gr.addColorStop(0.46, "#e6bd82"); gr.addColorStop(0.6, "#eec58a"); gr.addColorStop(1, "#c89660");
   g.fillStyle = gr; g.fillRect(0, 0, W, H);
-  // the menu strips along the top: red tags with white names
-  const items = ["牛肉面", "小面", "炸酱面", "酸辣粉", "排骨面", "馄饨", "加蛋"];
+  g.fillStyle = "#5c3b22"; g.fillRect(0, 0, W, 26); g.fillStyle = "#74502f"; g.fillRect(0, 26, W, 5);       // the beam the tags hang from
+  // the menu strips under the beam, right of the window's middle bar: red tags with white names
+  const items = ["牛肉面", "炸酱面", "酸辣粉", "排骨面", "馄饨"];
   items.forEach((s, i) => {
-    const x = 30 + i * 102, y = 40; g.fillStyle = "#b8322a"; g.fillRect(x, y, 86, 150);
-    g.fillStyle = "#fff4e0"; g.font = `bold 30px ${FONT}`; g.textAlign = "center"; g.textBaseline = "top";
-    [...s].forEach((ch, k) => g.fillText(ch, x + 43, y + 12 + k * 34));
+    const x = 366 + i * 76, y = 44; g.fillStyle = "#3a2616"; g.fillRect(x + 31, 28, 2, 16); g.fillStyle = "#b8322a"; g.fillRect(x, y, 64, 132);
+    g.fillStyle = "#fff4e0"; g.font = `bold 27px ${FONT}`; g.textAlign = "center"; g.textBaseline = "top";
+    [...s].forEach((ch, k) => g.fillText(ch, x + 32, y + 12 + k * 33));
   });
   // the pass-through and the kitchen: steel shelf, pots steaming, bowls stacked
   g.fillStyle = "#9a7a5a"; g.fillRect(0, 300, W, 10);

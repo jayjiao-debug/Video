@@ -382,7 +382,7 @@ export const CaseFile: React.FC<{ f: number; from: number; to: number; x: number
         <T x={W / 2} y={H - 42} px={36} fill={SK.inkSoft} anchor="middle" opacity={note}>{c.note}</T>
         <path d={`M0 ${H * 0.56} L${W} ${H * 0.56}`} stroke={SK.redHi} strokeWidth={5} opacity={0.0} />
         {st > 0 && (
-          <g transform={`translate(${W - 150} 196) rotate(-16) scale(${st})`} opacity={0.93}>
+          <g transform={`translate(${W - 150} 222) rotate(-12) scale(${st})`} opacity={0.93}>
             <rect x={-[...c.verdict].length * 37 - 22} y={-52} width={[...c.verdict].length * 74 + 44} height={104} rx={12} fill="rgba(248,239,216,0.85)" stroke={SK.red} strokeWidth={9} />
             <T x={0} y={3} px={70} fill={SK.red} anchor="middle" ls={4}>{c.verdict}</T>
           </g>
