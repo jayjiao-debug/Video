@@ -6,7 +6,7 @@ const end = (id: string) => line(id).to, start = (id: string) => line(id).from;
 /** the year's target meter: on from 「今年指标，就差一对」 through scene G (off in the quiet scene H), back for the fix */
 export const METER = {
   // (it makes way for what takes its place in the upper left: the case files of scene C, the order slip of scene D)
-  spans: [[start("B06") + 8, seg("C").from - 8], [seg("D").from + 16, start("D04") + 2], [start("D05") - 2, seg("G").to - 34], [start("I04") - 10, end("I08") + 20]] as [number, number][],
+  spans: [[start("B06") + 8, seg("C").from - 8], [seg("D").from + 16, start("D04") + 2], [start("D05") - 2, end("F06") + 8], [start("G03") - 2, seg("G").to - 34], [start("I04") - 10, end("I08") + 20]] as [number, number][],
   /** it shakes at each failure */
   bumps: [end("E05") - 6, end("F05") + 6, start("G05") + 4],
   /** it turns to 达标 when she asks his name */

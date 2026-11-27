@@ -32,6 +32,8 @@ const LAMP_HEAD = V(1.45, 2.95, S.lamp.z);
 /** the moon: its direction from the usual camera spot (0.3, 1.5, 1.6): 26 deg left of -z, 40 deg up; 150 m away */
 const MOON_DIR = (() => { const az = (-26 * Math.PI) / 180, el = (40 * Math.PI) / 180; return V(Math.sin(az) * Math.cos(el), Math.sin(el), -Math.cos(az) * Math.cos(el)); })();
 const MOON_AT = V(0.3, 1.5, 1.6).addScaledVector(MOON_DIR, 150);
+/** the moon's centre (street local), for a camera that tilts up to it */
+export const MOON_LOCAL: [number, number, number] = [MOON_AT.x, MOON_AT.y, MOON_AT.z];
 /** HER window: third floor up (the second office floor over the podium), the third column right of the tower's left edge */
 const HERS = { i: 2, j: 1 };
 export const STREET_HER_WINDOW = { x: TW.x0 + TW.cw * (HERS.i + 0.5), y: CORN + TW.fh * HERS.j + 2.25, z: WB } as const;

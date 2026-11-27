@@ -8,7 +8,7 @@ import { makeKit, Part, box, ball, V, paint, FONT, NOINK } from "../../kit/props
 
 export const RED = "#d8362a";
 
-export type PropName = "spool" | "book" | "bookShut" | "phone" | "laptop" | "bag" | "file" | "slip" | "bowl" | "moon" | "drawer" | "stack" | "wing" | "egg" | "cloud";
+export type PropName = "spool" | "book" | "bookShut" | "phone" | "laptop" | "bag" | "file" | "slip" | "bowl" | "moon" | "drawer" | "stack" | "wing" | "egg" | "cloud" | "tangle";
 export type PutO = { yaw?: number; pitch?: number; roll?: number; scale?: number };
 export type Prop = { group: THREE.Group; put(at: THREE.Vector3 | [number, number, number], o?: PutO): Prop };
 
@@ -177,6 +177,17 @@ export const buildProps = (M: Mats) => {
       for (const [x, y, z, r] of [[0, 0, 0, 0.1], [-0.11, -0.012, 0.01, 0.075], [0.11, -0.01, -0.01, 0.08], [-0.05, 0.02, 0.07, 0.07], [0.06, 0.015, 0.075, 0.066], [-0.17, -0.03, 0, 0.05], [0.18, -0.03, 0.01, 0.052], [0.0, 0.03, -0.06, 0.07]] as [number, number, number, number][])
         P.add(m, ball(V(x, y, z), r, [1, 0.72, 1]), 0.0035);
       return P.into(g, "cloud");
+    },
+    // HIS THREAD, IN A HOPELESS KNOT (what he picks off her lens): a fist-sized ball of red loops, two loose ends
+    tangle: () => {
+      const g = new THREE.Group(), P = new Part(K), m = flat(RED, 0.8);
+      for (const [p, q, r, rx, ry] of [[2, 3, 0.04, 0, 0], [3, 2, 0.036, 1.2, 0.5], [3, 4, 0.044, 0.4, 2.1], [2, 5, 0.03, 2.0, 1.1]] as [number, number, number, number, number][])
+        P.add(m, new THREE.TorusKnotGeometry(r, 0.0055, 72, 5, p, q).applyMatrix4(new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(rx, ry, 0))).translate(0, 0.055, 0), 0.0018);
+      for (const [a, b] of [[V(0.03, 0.05, 0.02), V(0.11, 0.004, 0.05)], [V(-0.03, 0.06, -0.01), V(-0.1, 0.004, -0.06)]] as [THREE.Vector3, THREE.Vector3][]) {
+        const c = new THREE.QuadraticBezierCurve3(a, a.clone().lerp(b, 0.5).add(V(0, 0.05, 0)), b);
+        P.add(m, new THREE.TubeGeometry(c, 10, 0.0055, 5), 0.0018);
+      }
+      return P.into(g, "tangle");
     },
     // a braised egg (the rider's extra): a small brown egg
     egg: () => {

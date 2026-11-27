@@ -266,6 +266,34 @@ export const SideCard: React.FC<{ f: number; from: number; to: number; x: number
     </Svg>
   );
 };
+/** RED THREAD WOUND ROUND HER LENS (scene G): soft, out-of-focus strands across the picture, as a thread on the glass
+ *  looks. on[i] 1 = strand i is on the lens .. 0 = pulled off: it slides away along its `out`. f = the frame (they
+ *  tremble a little with her hand). */
+export const LensThreads: React.FC<{ on: number[]; f: number }> = ({ on, f }) => {
+  const S: { d: number[]; w: number; out: [number, number] }[] = [
+    { d: [-90, 455, 520, 600, 1170, 500], w: 44, out: [1, 0.35] },      // across his hat and brow: drawn off to the right, down to his hand
+    { d: [-90, 1030, 500, 1230, 1170, 1150], w: 54, out: [-1, 0.4] },   // across the beard: drawn off to the left
+    { d: [730, -70, 770, 700, 1000, 1990], w: 58, out: [0.35, 1] },     // down the right side (left of the battery): off the bottom
+    { d: [470, -70, 360, 380, 300, 700], w: 36, out: [-0.45, 1] },      // a loose end hanging in from the top (right of the REC display): down and out to the left
+  ];
+  if (!on.some((k) => k > 0.001)) return null;
+  return (
+    <Svg>
+      <defs><filter id="lensThreadBlur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="13" /></filter></defs>
+      {S.map((q, i) => {
+        const k = on[i] ?? 0; if (k <= 0.001) return null;
+        const off = (1 - k) * (1 - k) * 1700, wob = 5 * Math.sin(f * 0.17 + i * 2.1), d = `M${q.d[0]} ${q.d[1]} Q${q.d[2]} ${q.d[3]} ${q.d[4]} ${q.d[5]}`;
+        return (
+          <g key={i} transform={`translate(${q.out[0] * off + wob * 0.4} ${q.out[1] * off + wob})`} opacity={0.9 * Math.min(1, k * 4)} filter="url(#lensThreadBlur)">
+            <path d={d} fill="none" stroke="#4a0c08" strokeWidth={q.w + 16} strokeLinecap="round" opacity={0.45} />
+            <path d={d} fill="none" stroke="#cf261c" strokeWidth={q.w} strokeLinecap="round" />
+            <path d={d} fill="none" stroke="#ff7654" strokeWidth={q.w * 0.3} strokeLinecap="round" opacity={0.75} />
+          </g>
+        );
+      })}
+    </Svg>
+  );
+};
 /** 记者OS: what she thinks and does not say: a small cream tag with a red tab, top-left at (x, y) */
 export const OS: React.FC<{ f: number; from: number; to: number; x: number; y: number; text: string }> = ({ f, from, to, x, y, text }) => {
   const A = tug(f, from, to, 6, 5); if (!A) return null;
