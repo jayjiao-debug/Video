@@ -1,0 +1,6420 @@
+plan: {'tier': 'creator', 'character_count': 117927, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "A02_s2026", "type": "dialogue", "lang": "", "lines": ["别动！一动，三对离婚。"], "status": 200, "model": "eleven_v4", "file": "A02_s2026.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 2.96, "character_start_index": 0, "character_end_index": 11, "dialogue_input_index": 0}]}
+{"name": "A05_s2026", "type": "dialogue", "lang": "", "lines": ["懂！暗访。您记，随便记。"], "status": 200, "model": "eleven_v4", "file": "A05_s2026.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 3.3600000000000003, "character_start_index": 0, "character_end_index": 12, "dialogue_input_index": 0}]}
+{"name": "B08_s2026", "type": "dialogue", "lang": "", "lines": ["扣仙丹。还得写检讨。"], "status": 200, "model": "eleven_v4", "file": "B08_s2026.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 2.96, "character_start_index": 0, "character_end_index": 10, "dialogue_input_index": 0}]}
+{"name": "C02_s2026", "type": "dialogue", "lang": "", "lines": ["牛郎织女。我绑的！牢吧？"], "status": 200, "model": "eleven_v4", "file": "C02_s2026.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 3.52, "character_start_index": 0, "character_end_index": 12, "dialogue_input_index": 0}]}
+{"name": "C04_s2026", "type": "dialogue", "lang": "", "lines": ["……异地恋，也算成。"], "status": 200, "model": "eleven_v4", "file": "C04_s2026.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 2.4, "character_start_index": 0, "character_end_index": 10, "dialogue_input_index": 0}]}
+{"name": "C05_s2026", "type": "dialogue", "lang": "", "lines": ["梁山伯祝英台。……变蝴蝶了。这单别记。"], "status": 200, "model": "eleven_v4", "file": "C05_s2026.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 5.44, "character_start_index": 0, "character_end_index": 19, "dialogue_input_index": 0}]}
+{"name": "C09_s2026", "type": "dialogue", "lang": "", "lines": ["董永七仙女——那是玉帝的亲闺女。"], "status": 200, "model": "eleven_v4", "file": "C09_s2026.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 3.84, "character_start_index": 0, "character_end_index": 16, "dialogue_input_index": 0}]}
+{"name": "D01_s2026", "type": "dialogue", "lang": "", "lines": ["来单了！月老庙，加急！"], "status": 200, "model": "eleven_v4", "file": "D01_s2026.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 2.4000000000000004, "character_start_index": 0, "character_end_index": 11, "dialogue_input_index": 0}]}
+{"name": "E01_s2026", "type": "dialogue", "lang": "", "lines": ["嘘。凡人看不见咱们。"], "status": 200, "model": "eleven_v4", "file": "E01_s2026.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 2.72, "character_start_index": 0, "character_end_index": 10, "dialogue_input_index": 0}]}
+{"name": "E05_s2026", "type": "dialogue", "lang": "", "lines": ["哎哎哎！她左滑一下，我断一根！"], "status": 200, "model": "eleven_v4", "file": "E05_s2026.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 3.3600000000000003, "character_start_index": 0, "character_end_index": 15, "dialogue_input_index": 0}]}
+{"name": "F06_s2026", "type": "dialogue", "lang": "", "lines": ["……这个，也记，缘分未到。"], "status": 200, "model": "eleven_v4", "file": "F06_s2026.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 3.6, "character_start_index": 0, "character_end_index": 13, "dialogue_input_index": 0}]}
+{"name": "G01_s2026", "type": "dialogue", "lang": "", "lines": ["线呢？我的线呢！"], "status": 200, "model": "eleven_v4", "file": "G01_s2026.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 2.08, "character_start_index": 0, "character_end_index": 8, "dialogue_input_index": 0}]}
+{"name": "G02_s2026", "type": "dialogue", "lang": "", "lines": ["别动别动——缠您法器上了。"], "status": 200, "model": "eleven_v4", "file": "G02_s2026.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 2.56, "character_start_index": 0, "character_end_index": 13, "dialogue_input_index": 0}]}
+{"name": "H02_s2026", "type": "dialogue", "lang": "", "lines": ["……我？"], "status": 200, "model": "eleven_v4", "file": "H02_s2026.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 1.04, "character_start_index": 0, "character_end_index": 4, "dialogue_input_index": 0}]}
+{"name": "H03_s2026", "type": "dialogue", "lang": "", "lines": ["当年太忙。想着忙完这阵，就给自己绑一根。"], "status": 200, "model": "eleven_v4", "file": "H03_s2026.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 4.720000000000001, "character_start_index": 0, "character_end_index": 20, "dialogue_input_index": 0}]}
+{"name": "H04_s2026", "type": "dialogue", "lang": "", "lines": ["这一阵，忙了一千二百年。"], "status": 200, "model": "eleven_v4", "file": "H04_s2026.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 3.04, "character_start_index": 0, "character_end_index": 12, "dialogue_input_index": 0}]}
+{"name": "H05_s2026", "type": "dialogue", "lang": "", "lines": ["我这个……也记，缘分未到吧。"], "status": 200, "model": "eleven_v4", "file": "H05_s2026.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 4.16, "character_start_index": 0, "character_end_index": 14, "dialogue_input_index": 0}]}
+{"name": "I06_s2026", "type": "dialogue", "lang": "", "lines": ["成了！快记！我绑的！全是我绑的！"], "status": 200, "model": "eleven_v4", "file": "I06_s2026.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 3.6799999999999997, "character_start_index": 0, "character_end_index": 16, "dialogue_input_index": 0}]}
+{"name": "A02_s2031", "type": "dialogue", "lang": "", "lines": ["别动！一动，三对离婚。"], "status": 200, "model": "eleven_v4", "file": "A02_s2031.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 2.96, "character_start_index": 0, "character_end_index": 11, "dialogue_input_index": 0}]}
+{"name": "A05_s2031", "type": "dialogue", "lang": "", "lines": ["懂！暗访。您记，随便记。"], "status": 200, "model": "eleven_v4", "file": "A05_s2031.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 3.36, "character_start_index": 0, "character_end_index": 12, "dialogue_input_index": 0}]}
+{"name": "B08_s2031", "type": "dialogue", "lang": "", "lines": ["扣仙丹。还得写检讨。"], "status": 200, "model": "eleven_v4", "file": "B08_s2031.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 2.96, "character_start_index": 0, "character_end_index": 10, "dialogue_input_index": 0}]}
+{"name": "C02_s2031", "type": "dialogue", "lang": "", "lines": ["牛郎织女。我绑的！牢吧？"], "status": 200, "model": "eleven_v4", "file": "C02_s2031.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 3.6, "character_start_index": 0, "character_end_index": 12, "dialogue_input_index": 0}]}
+{"name": "C04_s2031", "type": "dialogue", "lang": "", "lines": ["……异地恋，也算成。"], "status": 200, "model": "eleven_v4", "file": "C04_s2031.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 2.4, "character_start_index": 0, "character_end_index": 10, "dialogue_input_index": 0}]}
+{"name": "C05_s2031", "type": "dialogue", "lang": "", "lines": ["梁山伯祝英台。……变蝴蝶了。这单别记。"], "status": 200, "model": "eleven_v4", "file": "C05_s2031.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 5.12, "character_start_index": 0, "character_end_index": 19, "dialogue_input_index": 0}]}
+{"name": "C09_s2031", "type": "dialogue", "lang": "", "lines": ["董永七仙女——那是玉帝的亲闺女。"], "status": 200, "model": "eleven_v4", "file": "C09_s2031.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 3.7600000000000002, "character_start_index": 0, "character_end_index": 16, "dialogue_input_index": 0}]}
+{"name": "D01_s2031", "type": "dialogue", "lang": "", "lines": ["来单了！月老庙，加急！"], "status": 200, "model": "eleven_v4", "file": "D01_s2031.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 2.4800000000000004, "character_start_index": 0, "character_end_index": 11, "dialogue_input_index": 0}]}
+{"name": "E01_s2031", "type": "dialogue", "lang": "", "lines": ["嘘。凡人看不见咱们。"], "status": 200, "model": "eleven_v4", "file": "E01_s2031.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 3.04, "character_start_index": 0, "character_end_index": 10, "dialogue_input_index": 0}]}
+{"name": "E05_s2031", "type": "dialogue", "lang": "", "lines": ["哎哎哎！她左滑一下，我断一根！"], "status": 200, "model": "eleven_v4", "file": "E05_s2031.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 3.2800000000000002, "character_start_index": 0, "character_end_index": 15, "dialogue_input_index": 0}]}
+{"name": "F06_s2031", "type": "dialogue", "lang": "", "lines": ["……这个，也记，缘分未到。"], "status": 200, "model": "eleven_v4", "file": "F06_s2031.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 3.6, "character_start_index": 0, "character_end_index": 13, "dialogue_input_index": 0}]}
+{"name": "G01_s2031", "type": "dialogue", "lang": "", "lines": ["线呢？我的线呢！"], "status": 200, "model": "eleven_v4", "file": "G01_s2031.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 2.08, "character_start_index": 0, "character_end_index": 8, "dialogue_input_index": 0}]}
+{"name": "G02_s2031", "type": "dialogue", "lang": "", "lines": ["别动别动——缠您法器上了。"], "status": 200, "model": "eleven_v4", "file": "G02_s2031.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 2.64, "character_start_index": 0, "character_end_index": 13, "dialogue_input_index": 0}]}
+{"name": "H02_s2031", "type": "dialogue", "lang": "", "lines": ["……我？"], "status": 200, "model": "eleven_v4", "file": "H02_s2031.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 1.12, "character_start_index": 0, "character_end_index": 4, "dialogue_input_index": 0}]}
+{"name": "H03_s2031", "type": "dialogue", "lang": "", "lines": ["当年太忙。想着忙完这阵，就给自己绑一根。"], "status": 200, "model": "eleven_v4", "file": "H03_s2031.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 4.720000000000001, "character_start_index": 0, "character_end_index": 20, "dialogue_input_index": 0}]}
+{"name": "H04_s2031", "type": "dialogue", "lang": "", "lines": ["这一阵，忙了一千二百年。"], "status": 200, "model": "eleven_v4", "file": "H04_s2031.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 3.04, "character_start_index": 0, "character_end_index": 12, "dialogue_input_index": 0}]}
+{"name": "H05_s2031", "type": "dialogue", "lang": "", "lines": ["我这个……也记，缘分未到吧。"], "status": 200, "model": "eleven_v4", "file": "H05_s2031.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 4.4, "character_start_index": 0, "character_end_index": 14, "dialogue_input_index": 0}]}
+{"name": "I06_s2031", "type": "dialogue", "lang": "", "lines": ["成了！快记！我绑的！全是我绑的！"], "status": 200, "model": "eleven_v4", "file": "I06_s2031.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 3.8400000000000003, "character_start_index": 0, "character_end_index": 16, "dialogue_input_index": 0}]}
+{"name": "A02_s2042", "type": "dialogue", "lang": "", "lines": ["别动！一动，三对离婚。"], "status": 200, "model": "eleven_v4", "file": "A02_s2042.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 2.72, "character_start_index": 0, "character_end_index": 11, "dialogue_input_index": 0}]}
+{"name": "A05_s2042", "type": "dialogue", "lang": "", "lines": ["懂！暗访。您记，随便记。"], "status": 200, "model": "eleven_v4", "file": "A05_s2042.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 3.3600000000000003, "character_start_index": 0, "character_end_index": 12, "dialogue_input_index": 0}]}
+{"name": "B08_s2042", "type": "dialogue", "lang": "", "lines": ["扣仙丹。还得写检讨。"], "status": 200, "model": "eleven_v4", "file": "B08_s2042.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 2.88, "character_start_index": 0, "character_end_index": 10, "dialogue_input_index": 0}]}
+{"name": "C02_s2042", "type": "dialogue", "lang": "", "lines": ["牛郎织女。我绑的！牢吧？"], "status": 200, "model": "eleven_v4", "file": "C02_s2042.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 3.3600000000000003, "character_start_index": 0, "character_end_index": 12, "dialogue_input_index": 0}]}
+{"name": "C04_s2042", "type": "dialogue", "lang": "", "lines": ["……异地恋，也算成。"], "status": 200, "model": "eleven_v4", "file": "C04_s2042.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 2.48, "character_start_index": 0, "character_end_index": 10, "dialogue_input_index": 0}]}
+{"name": "C05_s2042", "type": "dialogue", "lang": "", "lines": ["梁山伯祝英台。……变蝴蝶了。这单别记。"], "status": 200, "model": "eleven_v4", "file": "C05_s2042.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 5.28, "character_start_index": 0, "character_end_index": 19, "dialogue_input_index": 0}]}
+{"name": "C09_s2042", "type": "dialogue", "lang": "", "lines": ["董永七仙女——那是玉帝的亲闺女。"], "status": 200, "model": "eleven_v4", "file": "C09_s2042.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 3.84, "character_start_index": 0, "character_end_index": 16, "dialogue_input_index": 0}]}
+{"name": "D01_s2042", "type": "dialogue", "lang": "", "lines": ["来单了！月老庙，加急！"], "status": 200, "model": "eleven_v4", "file": "D01_s2042.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 2.4, "character_start_index": 0, "character_end_index": 11, "dialogue_input_index": 0}]}
+{"name": "E01_s2042", "type": "dialogue", "lang": "", "lines": ["嘘。凡人看不见咱们。"], "status": 200, "model": "eleven_v4", "file": "E01_s2042.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 2.88, "character_start_index": 0, "character_end_index": 10, "dialogue_input_index": 0}]}
+{"name": "E05_s2042", "type": "dialogue", "lang": "", "lines": ["哎哎哎！她左滑一下，我断一根！"], "status": 200, "model": "eleven_v4", "file": "E05_s2042.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 3.3600000000000003, "character_start_index": 0, "character_end_index": 15, "dialogue_input_index": 0}]}
+{"name": "F06_s2042", "type": "dialogue", "lang": "", "lines": ["……这个，也记，缘分未到。"], "status": 200, "model": "eleven_v4", "file": "F06_s2042.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 3.6, "character_start_index": 0, "character_end_index": 13, "dialogue_input_index": 0}]}
+{"name": "G01_s2042", "type": "dialogue", "lang": "", "lines": ["线呢？我的线呢！"], "status": 200, "model": "eleven_v4", "file": "G01_s2042.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 2.08, "character_start_index": 0, "character_end_index": 8, "dialogue_input_index": 0}]}
+{"name": "G02_s2042", "type": "dialogue", "lang": "", "lines": ["别动别动——缠您法器上了。"], "status": 200, "model": "eleven_v4", "file": "G02_s2042.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 2.4, "character_start_index": 0, "character_end_index": 13, "dialogue_input_index": 0}]}
+{"name": "H02_s2042", "type": "dialogue", "lang": "", "lines": ["……我？"], "status": 200, "model": "eleven_v4", "file": "H02_s2042.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 1.12, "character_start_index": 0, "character_end_index": 4, "dialogue_input_index": 0}]}
+{"name": "H03_s2042", "type": "dialogue", "lang": "", "lines": ["当年太忙。想着忙完这阵，就给自己绑一根。"], "status": 200, "model": "eleven_v4", "file": "H03_s2042.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 4.48, "character_start_index": 0, "character_end_index": 20, "dialogue_input_index": 0}]}
+{"name": "H04_s2042", "type": "dialogue", "lang": "", "lines": ["这一阵，忙了一千二百年。"], "status": 200, "model": "eleven_v4", "file": "H04_s2042.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 3.04, "character_start_index": 0, "character_end_index": 12, "dialogue_input_index": 0}]}
+{"name": "H05_s2042", "type": "dialogue", "lang": "", "lines": ["我这个……也记，缘分未到吧。"], "status": 200, "model": "eleven_v4", "file": "H05_s2042.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 4.16, "character_start_index": 0, "character_end_index": 14, "dialogue_input_index": 0}]}
+{"name": "I06_s2042", "type": "dialogue", "lang": "", "lines": ["成了！快记！我绑的！全是我绑的！"], "status": 200, "model": "eleven_v4", "file": "I06_s2042.mp3", "voice_segments": [{"voice_id": "WuLq5z7nEcrhppO0ZQJw", "start_time_seconds": 0.0, "end_time_seconds": 3.6000000000000005, "character_start_index": 0, "character_end_index": 16, "dialogue_input_index": 0}]}
+removed kept voices: {'WuLq5z7nEcrhppO0ZQJw': 200}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "A02_s2026",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "别动！一动，三对离婚。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "A02_s2026.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 2.96,
+    "character_start_index": 0,
+    "character_end_index": 11,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "别",
+    "动",
+    "！",
+    "一",
+    "动",
+    "，",
+    "三",
+    "对",
+    "离",
+    "婚",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.24,
+    0.32,
+    0.96,
+    1.12,
+    1.28,
+    1.84,
+    2.08,
+    2.24,
+    2.4,
+    2.56
+   ],
+   "character_end_times_seconds": [
+    0.24,
+    0.32,
+    0.96,
+    1.12,
+    1.28,
+    1.84,
+    2.08,
+    2.24,
+    2.4,
+    2.56,
+    2.96
+   ]
+  },
+  "words": [
+   [
+    "別",
+    0.0,
+    0.14
+   ],
+   [
+    "動!",
+    0.14,
+    0.34
+   ],
+   [
+    "移",
+    0.68,
+    1.06
+   ],
+   [
+    "動!",
+    1.06,
+    1.2
+   ],
+   [
+    "三",
+    1.62,
+    1.94
+   ],
+   [
+    "對",
+    1.94,
+    2.14
+   ],
+   [
+    "離",
+    2.14,
+    2.32
+   ],
+   [
+    "婚",
+    2.32,
+    2.52
+   ]
+  ],
+  "heard": "別動!移動!三對離婚",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.88
+ },
+ {
+  "name": "A05_s2026",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "懂！暗访。您记，随便记。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "A05_s2026.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.3600000000000003,
+    "character_start_index": 0,
+    "character_end_index": 12,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "懂",
+    "！",
+    "暗",
+    "访",
+    "。",
+    "您",
+    "记",
+    "，",
+    "随",
+    "便",
+    "记",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.72,
+    0.8,
+    1.04,
+    1.76,
+    1.84,
+    2.08,
+    2.48,
+    2.64,
+    2.8,
+    2.96,
+    3.12
+   ],
+   "character_end_times_seconds": [
+    0.72,
+    0.8,
+    1.04,
+    1.76,
+    1.84,
+    2.08,
+    2.48,
+    2.64,
+    2.8,
+    2.96,
+    3.12,
+    3.36
+   ]
+  },
+  "words": [
+   [
+    "懂",
+    0.0,
+    0.24
+   ],
+   [
+    "暗",
+    0.7,
+    0.9
+   ],
+   [
+    "訪",
+    0.9,
+    1.54
+   ],
+   [
+    "寧",
+    1.66,
+    1.96
+   ],
+   [
+    "記",
+    1.96,
+    2.16
+   ],
+   [
+    "隨",
+    2.56,
+    2.66
+   ],
+   [
+    "便",
+    2.66,
+    2.84
+   ],
+   [
+    "記",
+    2.84,
+    3.02
+   ]
+  ],
+  "heard": "懂 暗訪 寧記 隨便記",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.994,
+  "seconds": 3.36
+ },
+ {
+  "name": "B08_s2026",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "扣仙丹。还得写检讨。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "B08_s2026.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 2.96,
+    "character_start_index": 0,
+    "character_end_index": 10,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "扣",
+    "仙",
+    "丹",
+    "。",
+    "还",
+    "得",
+    "写",
+    "检",
+    "讨",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.4,
+    0.64,
+    0.96,
+    1.52,
+    1.72,
+    1.92,
+    2.08,
+    2.32,
+    2.56
+   ],
+   "character_end_times_seconds": [
+    0.4,
+    0.64,
+    0.96,
+    1.52,
+    1.72,
+    1.92,
+    2.08,
+    2.32,
+    2.56,
+    2.96
+   ]
+  },
+  "words": [
+   [
+    "扣",
+    0.0,
+    0.26
+   ],
+   [
+    "先",
+    0.26,
+    0.52
+   ],
+   [
+    "单",
+    0.52,
+    0.82
+   ],
+   [
+    "还",
+    1.42,
+    1.68
+   ],
+   [
+    "得",
+    1.68,
+    1.82
+   ],
+   [
+    "写",
+    1.82,
+    2.02
+   ],
+   [
+    "检",
+    2.02,
+    2.22
+   ],
+   [
+    "讨",
+    2.22,
+    2.54
+   ]
+  ],
+  "heard": "扣先单还得写检讨",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 2.88
+ },
+ {
+  "name": "C02_s2026",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "牛郎织女。我绑的！牢吧？"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "C02_s2026.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.52,
+    "character_start_index": 0,
+    "character_end_index": 12,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "牛",
+    "郎",
+    "织",
+    "女",
+    "。",
+    "我",
+    "绑",
+    "的",
+    "！",
+    "牢",
+    "吧",
+    "？"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.4,
+    0.56,
+    0.8,
+    1.04,
+    1.68,
+    1.92,
+    2.16,
+    2.72,
+    2.8,
+    2.96,
+    3.2
+   ],
+   "character_end_times_seconds": [
+    0.4,
+    0.56,
+    0.8,
+    1.04,
+    1.68,
+    1.92,
+    2.16,
+    2.72,
+    2.8,
+    2.96,
+    3.2,
+    3.52
+   ]
+  },
+  "words": [
+   [
+    "牛",
+    0.0,
+    0.22
+   ],
+   [
+    "郎",
+    0.22,
+    0.46
+   ],
+   [
+    "之",
+    0.46,
+    0.64
+   ],
+   [
+    "女",
+    0.64,
+    0.88
+   ],
+   [
+    "我",
+    1.36,
+    1.84
+   ],
+   [
+    "绑",
+    1.84,
+    2.08
+   ],
+   [
+    "的",
+    2.08,
+    2.32
+   ],
+   [
+    "劳",
+    2.68,
+    2.9
+   ],
+   [
+    "吧",
+    2.9,
+    3.1
+   ]
+  ],
+  "heard": "牛郎之女我绑的 劳吧",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 3.44
+ },
+ {
+  "name": "C04_s2026",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "……异地恋，也算成。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "C04_s2026.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 2.4,
+    "character_start_index": 0,
+    "character_end_index": 10,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "…",
+    "…",
+    "异",
+    "地",
+    "恋",
+    "，",
+    "也",
+    "算",
+    "成",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.12,
+    0.16,
+    0.36,
+    0.56,
+    1.2,
+    1.36,
+    1.6,
+    1.84,
+    2.08
+   ],
+   "character_end_times_seconds": [
+    0.12,
+    0.16,
+    0.36,
+    0.56,
+    1.2,
+    1.36,
+    1.6,
+    1.84,
+    2.08,
+    2.4
+   ]
+  },
+  "words": [
+   [
+    "异",
+    0.0,
+    0.26
+   ],
+   [
+    "地",
+    0.26,
+    0.4
+   ],
+   [
+    "链",
+    0.4,
+    0.86
+   ],
+   [
+    "也",
+    0.86,
+    1.4
+   ],
+   [
+    "算",
+    1.4,
+    1.62
+   ],
+   [
+    "成",
+    1.62,
+    1.92
+   ]
+  ],
+  "heard": "异地链也算成",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.995,
+  "seconds": 2.32
+ },
+ {
+  "name": "C05_s2026",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "梁山伯祝英台。……变蝴蝶了。这单别记。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "C05_s2026.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 5.44,
+    "character_start_index": 0,
+    "character_end_index": 19,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "梁",
+    "山",
+    "伯",
+    "祝",
+    "英",
+    "台",
+    "。",
+    "…",
+    "…",
+    "变",
+    "蝴",
+    "蝶",
+    "了",
+    "。",
+    "这",
+    "单",
+    "别",
+    "记",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.32,
+    0.56,
+    0.96,
+    1.12,
+    1.36,
+    1.68,
+    2.16,
+    2.4,
+    2.64,
+    2.8,
+    3.08,
+    3.36,
+    3.44,
+    4.0,
+    4.24,
+    4.72,
+    4.96,
+    5.12
+   ],
+   "character_end_times_seconds": [
+    0.32,
+    0.56,
+    0.96,
+    1.12,
+    1.36,
+    1.68,
+    2.16,
+    2.4,
+    2.64,
+    2.8,
+    3.08,
+    3.36,
+    3.44,
+    4.0,
+    4.24,
+    4.72,
+    4.96,
+    5.12,
+    5.44
+   ]
+  },
+  "words": [
+   [
+    "梁",
+    0.0,
+    0.26
+   ],
+   [
+    "珊",
+    0.26,
+    0.5
+   ],
+   [
+    "博",
+    0.5,
+    0.82
+   ],
+   [
+    "駐",
+    0.82,
+    1.06
+   ],
+   [
+    "英",
+    1.06,
+    1.26
+   ],
+   [
+    "台,",
+    1.26,
+    1.6
+   ],
+   [
+    "便",
+    2.18,
+    2.64
+   ],
+   [
+    "蝴",
+    2.64,
+    2.94
+   ],
+   [
+    "蝶",
+    2.94,
+    3.18
+   ],
+   [
+    "了,",
+    3.18,
+    3.44
+   ],
+   [
+    "這",
+    3.94,
+    4.14
+   ],
+   [
+    "單",
+    4.14,
+    4.4
+   ],
+   [
+    "別",
+    4.4,
+    4.8
+   ],
+   [
+    "計。",
+    4.8,
+    5.08
+   ]
+  ],
+  "heard": "梁珊博駐英台,便蝴蝶了,這單別計。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.995,
+  "seconds": 5.36
+ },
+ {
+  "name": "C09_s2026",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "董永七仙女——那是玉帝的亲闺女。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "C09_s2026.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.84,
+    "character_start_index": 0,
+    "character_end_index": 16,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "董",
+    "永",
+    "七",
+    "仙",
+    "女",
+    "—",
+    "—",
+    "那",
+    "是",
+    "玉",
+    "帝",
+    "的",
+    "亲",
+    "闺",
+    "女",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.32,
+    0.64,
+    0.88,
+    1.12,
+    1.36,
+    1.64,
+    1.92,
+    2.12,
+    2.32,
+    2.48,
+    2.72,
+    3.04,
+    3.12,
+    3.36,
+    3.52
+   ],
+   "character_end_times_seconds": [
+    0.32,
+    0.64,
+    0.88,
+    1.12,
+    1.36,
+    1.64,
+    1.92,
+    2.12,
+    2.32,
+    2.48,
+    2.72,
+    3.04,
+    3.12,
+    3.36,
+    3.52,
+    3.84
+   ]
+  },
+  "words": [
+   [
+    "董",
+    0.0,
+    0.28
+   ],
+   [
+    "勇",
+    0.28,
+    0.48
+   ],
+   [
+    "妻",
+    0.48,
+    0.78
+   ],
+   [
+    "仙",
+    0.78,
+    1.0
+   ],
+   [
+    "女",
+    1.0,
+    1.26
+   ],
+   [
+    "那",
+    1.8,
+    2.02
+   ],
+   [
+    "是",
+    2.02,
+    2.2
+   ],
+   [
+    "玉",
+    2.2,
+    2.42
+   ],
+   [
+    "帝",
+    2.42,
+    2.6
+   ],
+   [
+    "的",
+    2.6,
+    2.7
+   ],
+   [
+    "亲",
+    2.7,
+    2.96
+   ],
+   [
+    "闺",
+    2.96,
+    3.22
+   ],
+   [
+    "女",
+    3.22,
+    3.44
+   ]
+  ],
+  "heard": "董勇妻仙女那是玉帝的亲闺女",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 3.76
+ },
+ {
+  "name": "D01_s2026",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "来单了！月老庙，加急！"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "D01_s2026.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 2.4000000000000004,
+    "character_start_index": 0,
+    "character_end_index": 11,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "来",
+    "单",
+    "了",
+    "！",
+    "月",
+    "老",
+    "庙",
+    "，",
+    "加",
+    "急",
+    "！"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.32,
+    0.48,
+    0.88,
+    0.96,
+    1.12,
+    1.2,
+    1.68,
+    1.76,
+    1.92,
+    2.16
+   ],
+   "character_end_times_seconds": [
+    0.32,
+    0.48,
+    0.88,
+    0.96,
+    1.12,
+    1.2,
+    1.68,
+    1.76,
+    1.92,
+    2.16,
+    2.4
+   ]
+  },
+  "words": [
+   [
+    "來",
+    0.0,
+    0.22
+   ],
+   [
+    "單",
+    0.22,
+    0.38
+   ],
+   [
+    "了",
+    0.38,
+    0.66
+   ],
+   [
+    "月",
+    0.9,
+    1.02
+   ],
+   [
+    "老",
+    1.02,
+    1.16
+   ],
+   [
+    "廟",
+    1.16,
+    1.38
+   ],
+   [
+    "加",
+    1.66,
+    1.82
+   ],
+   [
+    "級",
+    1.82,
+    2.02
+   ]
+  ],
+  "heard": "來單了 月老廟 加級",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.32
+ },
+ {
+  "name": "E01_s2026",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "嘘。凡人看不见咱们。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "E01_s2026.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 2.72,
+    "character_start_index": 0,
+    "character_end_index": 10,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "嘘",
+    "。",
+    "凡",
+    "人",
+    "看",
+    "不",
+    "见",
+    "咱",
+    "们",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.2,
+    0.4,
+    1.04,
+    1.52,
+    1.707,
+    1.893,
+    2.08,
+    2.24,
+    2.4
+   ],
+   "character_end_times_seconds": [
+    0.2,
+    0.4,
+    1.04,
+    1.52,
+    1.707,
+    1.893,
+    2.08,
+    2.24,
+    2.4,
+    2.72
+   ]
+  },
+  "words": [
+   [
+    "嘘",
+    0.0,
+    0.48
+   ],
+   [
+    "凡",
+    1.06,
+    1.22
+   ],
+   [
+    "人",
+    1.22,
+    1.42
+   ],
+   [
+    "看",
+    1.42,
+    1.68
+   ],
+   [
+    "不",
+    1.68,
+    1.84
+   ],
+   [
+    "见",
+    1.84,
+    2.0
+   ],
+   [
+    "咱",
+    2.0,
+    2.2
+   ],
+   [
+    "们",
+    2.2,
+    2.36
+   ]
+  ],
+  "heard": "嘘 凡人看不见咱们",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 2.64
+ },
+ {
+  "name": "E05_s2026",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "哎哎哎！她左滑一下，我断一根！"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "E05_s2026.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.3600000000000003,
+    "character_start_index": 0,
+    "character_end_index": 15,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "哎",
+    "哎",
+    "哎",
+    "！",
+    "她",
+    "左",
+    "滑",
+    "一",
+    "下",
+    "，",
+    "我",
+    "断",
+    "一",
+    "根",
+    "！"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.32,
+    0.48,
+    0.64,
+    1.2,
+    1.36,
+    1.6,
+    1.76,
+    2.04,
+    2.32,
+    2.4,
+    2.64,
+    2.8,
+    2.96,
+    3.12
+   ],
+   "character_end_times_seconds": [
+    0.32,
+    0.48,
+    0.64,
+    1.2,
+    1.36,
+    1.6,
+    1.76,
+    2.04,
+    2.32,
+    2.4,
+    2.64,
+    2.8,
+    2.96,
+    3.12,
+    3.36
+   ]
+  },
+  "words": [
+   [
+    "哎",
+    0.0,
+    0.28
+   ],
+   [
+    "哎",
+    0.28,
+    0.44
+   ],
+   [
+    "哎",
+    0.44,
+    1.0
+   ],
+   [
+    "它",
+    1.14,
+    1.26
+   ],
+   [
+    "左",
+    1.26,
+    1.5
+   ],
+   [
+    "滑",
+    1.5,
+    1.74
+   ],
+   [
+    "一下",
+    1.74,
+    2.0
+   ],
+   [
+    "我",
+    2.0,
+    2.54
+   ],
+   [
+    "断",
+    2.54,
+    2.76
+   ],
+   [
+    "一",
+    2.76,
+    2.94
+   ],
+   [
+    "根",
+    2.94,
+    3.06
+   ]
+  ],
+  "heard": "哎哎哎 它左滑一下 我断一根",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.36
+ },
+ {
+  "name": "F06_s2026",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "……这个，也记，缘分未到。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "F06_s2026.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.6,
+    "character_start_index": 0,
+    "character_end_index": 13,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "…",
+    "…",
+    "这",
+    "个",
+    "，",
+    "也",
+    "记",
+    "，",
+    "缘",
+    "分",
+    "未",
+    "到",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.12,
+    0.16,
+    0.48,
+    0.8,
+    1.28,
+    1.52,
+    1.68,
+    2.32,
+    2.6,
+    2.88,
+    3.12,
+    3.28
+   ],
+   "character_end_times_seconds": [
+    0.12,
+    0.16,
+    0.48,
+    0.8,
+    1.28,
+    1.52,
+    1.68,
+    2.32,
+    2.6,
+    2.88,
+    3.12,
+    3.28,
+    3.6
+   ]
+  },
+  "words": [
+   [
+    "这个",
+    0.0,
+    0.48
+   ],
+   [
+    "野",
+    0.48,
+    1.34
+   ],
+   [
+    "季,",
+    1.34,
+    2.1
+   ],
+   [
+    "缘",
+    2.16,
+    2.5
+   ],
+   [
+    "分",
+    2.5,
+    2.74
+   ],
+   [
+    "味",
+    2.74,
+    2.96
+   ],
+   [
+    "道。",
+    2.96,
+    3.2
+   ]
+  ],
+  "heard": "这个野季,缘分味道。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.52
+ },
+ {
+  "name": "G01_s2026",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "线呢？我的线呢！"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "G01_s2026.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 2.08,
+    "character_start_index": 0,
+    "character_end_index": 8,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "线",
+    "呢",
+    "？",
+    "我",
+    "的",
+    "线",
+    "呢",
+    "！"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.4,
+    0.56,
+    1.04,
+    1.2,
+    1.36,
+    1.6,
+    1.76
+   ],
+   "character_end_times_seconds": [
+    0.4,
+    0.56,
+    1.04,
+    1.2,
+    1.36,
+    1.6,
+    1.76,
+    2.08
+   ]
+  },
+  "words": [
+   [
+    "獻",
+    0.0,
+    0.42
+   ],
+   [
+    "啊",
+    0.42,
+    0.6
+   ],
+   [
+    "我",
+    0.6,
+    1.1
+   ],
+   [
+    "的",
+    1.1,
+    1.22
+   ],
+   [
+    "獻",
+    1.22,
+    1.56
+   ],
+   [
+    "啊",
+    1.56,
+    1.72
+   ]
+  ],
+  "heard": "獻啊 我的獻啊",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.959,
+  "seconds": 2.0
+ },
+ {
+  "name": "G02_s2026",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "别动别动——缠您法器上了。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "G02_s2026.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 2.56,
+    "character_start_index": 0,
+    "character_end_index": 13,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "别",
+    "动",
+    "别",
+    "动",
+    "—",
+    "—",
+    "缠",
+    "您",
+    "法",
+    "器",
+    "上",
+    "了",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.24,
+    0.32,
+    0.56,
+    0.64,
+    0.88,
+    1.12,
+    1.36,
+    1.52,
+    1.76,
+    2.0,
+    2.12,
+    2.24
+   ],
+   "character_end_times_seconds": [
+    0.24,
+    0.32,
+    0.56,
+    0.64,
+    0.88,
+    1.12,
+    1.36,
+    1.52,
+    1.76,
+    2.0,
+    2.12,
+    2.24,
+    2.56
+   ]
+  },
+  "words": [
+   [
+    "别",
+    0.0,
+    0.16
+   ],
+   [
+    "动",
+    0.16,
+    0.28
+   ],
+   [
+    "别",
+    0.28,
+    0.42
+   ],
+   [
+    "动",
+    0.42,
+    0.64
+   ],
+   [
+    "缠",
+    0.64,
+    1.24
+   ],
+   [
+    "您",
+    1.24,
+    1.38
+   ],
+   [
+    "法",
+    1.38,
+    1.62
+   ],
+   [
+    "器",
+    1.62,
+    1.86
+   ],
+   [
+    "上",
+    1.86,
+    2.06
+   ],
+   [
+    "了",
+    2.06,
+    2.2
+   ]
+  ],
+  "heard": "别动别动缠您法器上了",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 2.48
+ },
+ {
+  "name": "H02_s2026",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "……我？"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "H02_s2026.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 1.04,
+    "character_start_index": 0,
+    "character_end_index": 4,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "…",
+    "…",
+    "我",
+    "？"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.18,
+    0.24,
+    0.56
+   ],
+   "character_end_times_seconds": [
+    0.18,
+    0.24,
+    0.56,
+    1.04
+   ]
+  },
+  "words": [
+   [
+    "我",
+    0.0,
+    0.36
+   ]
+  ],
+  "heard": "我",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.481,
+  "seconds": 1.04
+ },
+ {
+  "name": "H03_s2026",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "当年太忙。想着忙完这阵，就给自己绑一根。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "H03_s2026.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 4.720000000000001,
+    "character_start_index": 0,
+    "character_end_index": 20,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "当",
+    "年",
+    "太",
+    "忙",
+    "。",
+    "想",
+    "着",
+    "忙",
+    "完",
+    "这",
+    "阵",
+    "，",
+    "就",
+    "给",
+    "自",
+    "己",
+    "绑",
+    "一",
+    "根",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.48,
+    0.64,
+    0.96,
+    1.12,
+    1.84,
+    2.0,
+    2.16,
+    2.32,
+    2.56,
+    2.72,
+    3.28,
+    3.36,
+    3.44,
+    3.6,
+    3.76,
+    3.92,
+    4.16,
+    4.32,
+    4.48
+   ],
+   "character_end_times_seconds": [
+    0.48,
+    0.64,
+    0.96,
+    1.12,
+    1.84,
+    2.0,
+    2.16,
+    2.32,
+    2.56,
+    2.72,
+    3.28,
+    3.36,
+    3.44,
+    3.6,
+    3.76,
+    3.92,
+    4.16,
+    4.32,
+    4.48,
+    4.72
+   ]
+  },
+  "words": [
+   [
+    "当",
+    0.0,
+    0.18
+   ],
+   [
+    "年",
+    0.18,
+    0.38
+   ],
+   [
+    "太",
+    0.38,
+    0.68
+   ],
+   [
+    "忙,",
+    0.68,
+    0.98
+   ],
+   [
+    "想",
+    1.42,
+    1.96
+   ],
+   [
+    "着",
+    1.96,
+    2.12
+   ],
+   [
+    "忙",
+    2.12,
+    2.26
+   ],
+   [
+    "完",
+    2.26,
+    2.48
+   ],
+   [
+    "这",
+    2.48,
+    2.64
+   ],
+   [
+    "阵",
+    2.64,
+    2.84
+   ],
+   [
+    "就",
+    2.84,
+    3.36
+   ],
+   [
+    "给",
+    3.36,
+    3.52
+   ],
+   [
+    "自己",
+    3.52,
+    3.76
+   ],
+   [
+    "绑",
+    3.76,
+    4.08
+   ],
+   [
+    "一个。",
+    4.08,
+    4.3
+   ]
+  ],
+  "heard": "当年太忙,想着忙完这阵就给自己绑一个。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.64
+ },
+ {
+  "name": "H04_s2026",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "这一阵，忙了一千二百年。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "H04_s2026.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.04,
+    "character_start_index": 0,
+    "character_end_index": 12,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "这",
+    "一",
+    "阵",
+    "，",
+    "忙",
+    "了",
+    "一",
+    "千",
+    "二",
+    "百",
+    "年",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.3,
+    0.4,
+    1.04,
+    1.12,
+    1.28,
+    1.52,
+    1.76,
+    2.08,
+    2.24,
+    2.48,
+    2.72
+   ],
+   "character_end_times_seconds": [
+    0.3,
+    0.4,
+    1.04,
+    1.12,
+    1.28,
+    1.52,
+    1.76,
+    2.08,
+    2.24,
+    2.48,
+    2.72,
+    3.04
+   ]
+  },
+  "words": [
+   [
+    "这",
+    0.0,
+    0.2
+   ],
+   [
+    "一",
+    0.2,
+    0.38
+   ],
+   [
+    "阵",
+    0.38,
+    0.68
+   ],
+   [
+    "忙",
+    0.68,
+    1.24
+   ],
+   [
+    "了",
+    1.24,
+    1.42
+   ],
+   [
+    "一",
+    1.42,
+    1.64
+   ],
+   [
+    "千",
+    1.64,
+    1.88
+   ],
+   [
+    "二",
+    1.88,
+    2.18
+   ],
+   [
+    "百",
+    2.18,
+    2.38
+   ],
+   [
+    "年",
+    2.38,
+    2.64
+   ]
+  ],
+  "heard": "这一阵忙了一千二百年",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.96
+ },
+ {
+  "name": "H05_s2026",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "我这个……也记，缘分未到吧。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "H05_s2026.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 4.16,
+    "character_start_index": 0,
+    "character_end_index": 14,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "我",
+    "这",
+    "个",
+    "…",
+    "…",
+    "也",
+    "记",
+    "，",
+    "缘",
+    "分",
+    "未",
+    "到",
+    "吧",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.32,
+    0.68,
+    1.04,
+    1.36,
+    1.68,
+    1.92,
+    2.16,
+    2.88,
+    3.08,
+    3.28,
+    3.44,
+    3.68,
+    3.84
+   ],
+   "character_end_times_seconds": [
+    0.32,
+    0.68,
+    1.04,
+    1.36,
+    1.68,
+    1.92,
+    2.16,
+    2.88,
+    3.08,
+    3.28,
+    3.44,
+    3.68,
+    3.84,
+    4.16
+   ]
+  },
+  "words": [
+   [
+    "我",
+    0.0,
+    0.22
+   ],
+   [
+    "這個",
+    0.22,
+    0.54
+   ],
+   [
+    "野",
+    1.46,
+    1.82
+   ],
+   [
+    "技",
+    1.82,
+    2.06
+   ],
+   [
+    "緣",
+    2.8,
+    3.04
+   ],
+   [
+    "分",
+    3.04,
+    3.2
+   ],
+   [
+    "味",
+    3.2,
+    3.36
+   ],
+   [
+    "道",
+    3.36,
+    3.54
+   ],
+   [
+    "吧",
+    3.54,
+    3.76
+   ]
+  ],
+  "heard": "我這個 野技 緣分味道吧",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 4.08
+ },
+ {
+  "name": "I06_s2026",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "成了！快记！我绑的！全是我绑的！"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "I06_s2026.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.6799999999999997,
+    "character_start_index": 0,
+    "character_end_index": 16,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "成",
+    "了",
+    "！",
+    "快",
+    "记",
+    "！",
+    "我",
+    "绑",
+    "的",
+    "！",
+    "全",
+    "是",
+    "我",
+    "绑",
+    "的",
+    "！"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.48,
+    0.64,
+    0.88,
+    0.96,
+    1.44,
+    1.6,
+    1.76,
+    1.92,
+    2.4,
+    2.56,
+    2.8,
+    2.96,
+    3.12,
+    3.28,
+    3.36
+   ],
+   "character_end_times_seconds": [
+    0.48,
+    0.64,
+    0.88,
+    0.96,
+    1.44,
+    1.6,
+    1.76,
+    1.92,
+    2.4,
+    2.56,
+    2.8,
+    2.96,
+    3.12,
+    3.28,
+    3.36,
+    3.68
+   ]
+  },
+  "words": [
+   [
+    "成",
+    0.0,
+    0.26
+   ],
+   [
+    "了",
+    0.26,
+    0.58
+   ],
+   [
+    "快",
+    0.58,
+    0.9
+   ],
+   [
+    "寄",
+    0.9,
+    1.2
+   ],
+   [
+    "我",
+    1.2,
+    1.66
+   ],
+   [
+    "绑",
+    1.66,
+    1.86
+   ],
+   [
+    "的",
+    1.86,
+    2.04
+   ],
+   [
+    "全",
+    2.04,
+    2.58
+   ],
+   [
+    "是我",
+    2.58,
+    2.92
+   ],
+   [
+    "绑",
+    2.92,
+    3.14
+   ],
+   [
+    "的",
+    3.14,
+    3.32
+   ]
+  ],
+  "heard": "成了快寄我绑的全是我绑的",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.6
+ },
+ {
+  "name": "A02_s2031",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "别动！一动，三对离婚。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "A02_s2031.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 2.96,
+    "character_start_index": 0,
+    "character_end_index": 11,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "别",
+    "动",
+    "！",
+    "一",
+    "动",
+    "，",
+    "三",
+    "对",
+    "离",
+    "婚",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.24,
+    0.32,
+    0.88,
+    1.04,
+    1.2,
+    1.76,
+    2.0,
+    2.16,
+    2.36,
+    2.56
+   ],
+   "character_end_times_seconds": [
+    0.24,
+    0.32,
+    0.88,
+    1.04,
+    1.2,
+    1.76,
+    2.0,
+    2.16,
+    2.36,
+    2.56,
+    2.96
+   ]
+  },
+  "words": [
+   [
+    "别",
+    0.0,
+    0.14
+   ],
+   [
+    "动",
+    0.14,
+    0.34
+   ],
+   [
+    "移",
+    0.8,
+    0.98
+   ],
+   [
+    "动",
+    0.98,
+    1.12
+   ],
+   [
+    "三",
+    1.62,
+    1.88
+   ],
+   [
+    "对",
+    1.88,
+    2.1
+   ],
+   [
+    "离",
+    2.1,
+    2.32
+   ],
+   [
+    "婚",
+    2.32,
+    2.52
+   ]
+  ],
+  "heard": "别动 移动 三对离婚",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.88
+ },
+ {
+  "name": "A05_s2031",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "懂！暗访。您记，随便记。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "A05_s2031.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.36,
+    "character_start_index": 0,
+    "character_end_index": 12,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "懂",
+    "！",
+    "暗",
+    "访",
+    "。",
+    "您",
+    "记",
+    "，",
+    "随",
+    "便",
+    "记",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.72,
+    0.8,
+    0.96,
+    1.2,
+    1.76,
+    1.92,
+    2.32,
+    2.48,
+    2.64,
+    2.8,
+    2.96
+   ],
+   "character_end_times_seconds": [
+    0.72,
+    0.8,
+    0.96,
+    1.2,
+    1.76,
+    1.92,
+    2.32,
+    2.48,
+    2.64,
+    2.8,
+    2.96,
+    3.36
+   ]
+  },
+  "words": [
+   [
+    "懂",
+    0.0,
+    0.26
+   ],
+   [
+    "按",
+    0.7,
+    0.9
+   ],
+   [
+    "仿",
+    0.9,
+    1.3
+   ],
+   [
+    "您",
+    1.68,
+    1.84
+   ],
+   [
+    "记",
+    1.84,
+    2.02
+   ],
+   [
+    "随",
+    2.42,
+    2.54
+   ],
+   [
+    "便",
+    2.54,
+    2.7
+   ],
+   [
+    "记",
+    2.7,
+    2.88
+   ]
+  ],
+  "heard": "懂 按仿 您记 随便记",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.994,
+  "seconds": 3.28
+ },
+ {
+  "name": "B08_s2031",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "扣仙丹。还得写检讨。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "B08_s2031.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 2.96,
+    "character_start_index": 0,
+    "character_end_index": 10,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "扣",
+    "仙",
+    "丹",
+    "。",
+    "还",
+    "得",
+    "写",
+    "检",
+    "讨",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.4,
+    0.64,
+    0.88,
+    1.52,
+    1.68,
+    1.84,
+    2.0,
+    2.24,
+    2.56
+   ],
+   "character_end_times_seconds": [
+    0.4,
+    0.64,
+    0.88,
+    1.52,
+    1.68,
+    1.84,
+    2.0,
+    2.24,
+    2.56,
+    2.96
+   ]
+  },
+  "words": [
+   [
+    "扣",
+    0.0,
+    0.26
+   ],
+   [
+    "先",
+    0.26,
+    0.5
+   ],
+   [
+    "单,",
+    0.5,
+    0.78
+   ],
+   [
+    "还",
+    1.16,
+    1.64
+   ],
+   [
+    "得",
+    1.64,
+    1.76
+   ],
+   [
+    "写",
+    1.76,
+    1.94
+   ],
+   [
+    "检",
+    1.94,
+    2.14
+   ],
+   [
+    "讨",
+    2.14,
+    2.48
+   ]
+  ],
+  "heard": "扣先单,还得写检讨",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.995,
+  "seconds": 2.88
+ },
+ {
+  "name": "C02_s2031",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "牛郎织女。我绑的！牢吧？"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "C02_s2031.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.6,
+    "character_start_index": 0,
+    "character_end_index": 12,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "牛",
+    "郎",
+    "织",
+    "女",
+    "。",
+    "我",
+    "绑",
+    "的",
+    "！",
+    "牢",
+    "吧",
+    "？"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.4,
+    0.56,
+    0.8,
+    1.04,
+    1.68,
+    1.92,
+    2.16,
+    2.72,
+    2.88,
+    3.04,
+    3.28
+   ],
+   "character_end_times_seconds": [
+    0.4,
+    0.56,
+    0.8,
+    1.04,
+    1.68,
+    1.92,
+    2.16,
+    2.72,
+    2.88,
+    3.04,
+    3.28,
+    3.6
+   ]
+  },
+  "words": [
+   [
+    "牛",
+    0.0,
+    0.24
+   ],
+   [
+    "郎",
+    0.24,
+    0.46
+   ],
+   [
+    "之",
+    0.46,
+    0.64
+   ],
+   [
+    "女",
+    0.64,
+    0.9
+   ],
+   [
+    "我",
+    0.9,
+    1.84
+   ],
+   [
+    "绑",
+    1.84,
+    2.08
+   ],
+   [
+    "的",
+    2.08,
+    2.36
+   ],
+   [
+    "劳",
+    2.68,
+    2.94
+   ],
+   [
+    "吧",
+    2.94,
+    3.16
+   ]
+  ],
+  "heard": "牛郎之女 我绑的 劳吧",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 3.52
+ },
+ {
+  "name": "C04_s2031",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "……异地恋，也算成。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "C04_s2031.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 2.4,
+    "character_start_index": 0,
+    "character_end_index": 10,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "…",
+    "…",
+    "异",
+    "地",
+    "恋",
+    "，",
+    "也",
+    "算",
+    "成",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.06,
+    0.08,
+    0.28,
+    0.48,
+    1.04,
+    1.36,
+    1.6,
+    1.84,
+    2.08
+   ],
+   "character_end_times_seconds": [
+    0.06,
+    0.08,
+    0.28,
+    0.48,
+    1.04,
+    1.36,
+    1.6,
+    1.84,
+    2.08,
+    2.4
+   ]
+  },
+  "words": [
+   [
+    "异",
+    0.0,
+    0.28
+   ],
+   [
+    "地",
+    0.28,
+    0.4
+   ],
+   [
+    "链",
+    0.4,
+    0.86
+   ],
+   [
+    "也",
+    0.86,
+    1.46
+   ],
+   [
+    "算",
+    1.46,
+    1.68
+   ],
+   [
+    "成",
+    1.68,
+    1.96
+   ]
+  ],
+  "heard": "异地链也算成",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.995,
+  "seconds": 2.32
+ },
+ {
+  "name": "C05_s2031",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "梁山伯祝英台。……变蝴蝶了。这单别记。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "C05_s2031.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 5.12,
+    "character_start_index": 0,
+    "character_end_index": 19,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "梁",
+    "山",
+    "伯",
+    "祝",
+    "英",
+    "台",
+    "。",
+    "…",
+    "…",
+    "变",
+    "蝴",
+    "蝶",
+    "了",
+    "。",
+    "这",
+    "单",
+    "别",
+    "记",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.32,
+    0.56,
+    0.96,
+    1.12,
+    1.36,
+    1.68,
+    1.76,
+    2.2,
+    2.64,
+    2.8,
+    3.04,
+    3.28,
+    3.36,
+    4.0,
+    4.16,
+    4.4,
+    4.64,
+    4.8
+   ],
+   "character_end_times_seconds": [
+    0.32,
+    0.56,
+    0.96,
+    1.12,
+    1.36,
+    1.68,
+    1.76,
+    2.2,
+    2.64,
+    2.8,
+    3.04,
+    3.28,
+    3.36,
+    4.0,
+    4.16,
+    4.4,
+    4.64,
+    4.8,
+    5.12
+   ]
+  },
+  "words": [
+   [
+    "梁",
+    0.0,
+    0.26
+   ],
+   [
+    "珊",
+    0.26,
+    0.5
+   ],
+   [
+    "博",
+    0.5,
+    0.82
+   ],
+   [
+    "駐",
+    0.82,
+    1.06
+   ],
+   [
+    "英",
+    1.06,
+    1.26
+   ],
+   [
+    "台,",
+    1.26,
+    1.6
+   ],
+   [
+    "便",
+    2.1,
+    2.64
+   ],
+   [
+    "蝴",
+    2.64,
+    2.92
+   ],
+   [
+    "蝶",
+    2.92,
+    3.14
+   ],
+   [
+    "了,",
+    3.14,
+    3.42
+   ],
+   [
+    "這",
+    3.92,
+    4.1
+   ],
+   [
+    "單",
+    4.1,
+    4.3
+   ],
+   [
+    "別",
+    4.3,
+    4.5
+   ],
+   [
+    "計。",
+    4.5,
+    4.76
+   ]
+  ],
+  "heard": "梁珊博駐英台,便蝴蝶了,這單別計。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 5.04
+ },
+ {
+  "name": "C09_s2031",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "董永七仙女——那是玉帝的亲闺女。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "C09_s2031.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.7600000000000002,
+    "character_start_index": 0,
+    "character_end_index": 16,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "董",
+    "永",
+    "七",
+    "仙",
+    "女",
+    "—",
+    "—",
+    "那",
+    "是",
+    "玉",
+    "帝",
+    "的",
+    "亲",
+    "闺",
+    "女",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.32,
+    0.56,
+    0.8,
+    1.04,
+    1.28,
+    1.56,
+    1.84,
+    2.04,
+    2.24,
+    2.4,
+    2.64,
+    2.96,
+    3.04,
+    3.28,
+    3.44
+   ],
+   "character_end_times_seconds": [
+    0.32,
+    0.56,
+    0.8,
+    1.04,
+    1.28,
+    1.56,
+    1.84,
+    2.04,
+    2.24,
+    2.4,
+    2.64,
+    2.96,
+    3.04,
+    3.28,
+    3.44,
+    3.76
+   ]
+  },
+  "words": [
+   [
+    "董",
+    0.0,
+    0.26
+   ],
+   [
+    "勇",
+    0.26,
+    0.48
+   ],
+   [
+    "妻",
+    0.48,
+    0.72
+   ],
+   [
+    "仙",
+    0.72,
+    0.94
+   ],
+   [
+    "女",
+    0.94,
+    1.18
+   ],
+   [
+    "那",
+    1.18,
+    1.94
+   ],
+   [
+    "是",
+    1.94,
+    2.14
+   ],
+   [
+    "玉",
+    2.14,
+    2.34
+   ],
+   [
+    "帝",
+    2.34,
+    2.52
+   ],
+   [
+    "的",
+    2.52,
+    2.62
+   ],
+   [
+    "亲",
+    2.62,
+    2.88
+   ],
+   [
+    "闺",
+    2.88,
+    3.14
+   ],
+   [
+    "女",
+    3.14,
+    3.34
+   ]
+  ],
+  "heard": "董勇妻仙女 那是玉帝的亲闺女",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.995,
+  "seconds": 3.68
+ },
+ {
+  "name": "D01_s2031",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "来单了！月老庙，加急！"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "D01_s2031.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 2.4800000000000004,
+    "character_start_index": 0,
+    "character_end_index": 11,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "来",
+    "单",
+    "了",
+    "！",
+    "月",
+    "老",
+    "庙",
+    "，",
+    "加",
+    "急",
+    "！"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.32,
+    0.4,
+    0.56,
+    0.96,
+    1.12,
+    1.28,
+    1.68,
+    1.76,
+    1.92,
+    2.16
+   ],
+   "character_end_times_seconds": [
+    0.32,
+    0.4,
+    0.56,
+    0.96,
+    1.12,
+    1.28,
+    1.68,
+    1.76,
+    1.92,
+    2.16,
+    2.48
+   ]
+  },
+  "words": [
+   [
+    "来",
+    0.0,
+    0.18
+   ],
+   [
+    "当",
+    0.18,
+    0.36
+   ],
+   [
+    "了",
+    0.36,
+    0.6
+   ],
+   [
+    "月",
+    0.92,
+    1.06
+   ],
+   [
+    "老",
+    1.06,
+    1.18
+   ],
+   [
+    "庙",
+    1.18,
+    1.42
+   ],
+   [
+    "加",
+    1.72,
+    1.84
+   ],
+   [
+    "急",
+    1.84,
+    2.04
+   ]
+  ],
+  "heard": "来当了 月老庙 加急",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.4
+ },
+ {
+  "name": "E01_s2031",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "嘘。凡人看不见咱们。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "E01_s2031.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.04,
+    "character_start_index": 0,
+    "character_end_index": 10,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "嘘",
+    "。",
+    "凡",
+    "人",
+    "看",
+    "不",
+    "见",
+    "咱",
+    "们",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.2,
+    0.4,
+    1.2,
+    1.44,
+    1.76,
+    2.133,
+    2.32,
+    2.52,
+    2.72
+   ],
+   "character_end_times_seconds": [
+    0.2,
+    0.4,
+    1.2,
+    1.44,
+    1.76,
+    2.133,
+    2.32,
+    2.52,
+    2.72,
+    3.04
+   ]
+  },
+  "words": [
+   [
+    "嘘",
+    0.0,
+    0.5
+   ],
+   [
+    "凡",
+    1.2,
+    1.36
+   ],
+   [
+    "人",
+    1.36,
+    1.58
+   ],
+   [
+    "看",
+    1.58,
+    1.88
+   ],
+   [
+    "不",
+    1.88,
+    2.06
+   ],
+   [
+    "见",
+    2.06,
+    2.24
+   ],
+   [
+    "咱",
+    2.24,
+    2.48
+   ],
+   [
+    "们",
+    2.48,
+    2.62
+   ]
+  ],
+  "heard": "嘘 凡人看不见咱们",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.995,
+  "seconds": 2.96
+ },
+ {
+  "name": "E05_s2031",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "哎哎哎！她左滑一下，我断一根！"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "E05_s2031.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.2800000000000002,
+    "character_start_index": 0,
+    "character_end_index": 15,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "哎",
+    "哎",
+    "哎",
+    "！",
+    "她",
+    "左",
+    "滑",
+    "一",
+    "下",
+    "，",
+    "我",
+    "断",
+    "一",
+    "根",
+    "！"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.32,
+    0.48,
+    0.72,
+    1.2,
+    1.36,
+    1.6,
+    1.76,
+    2.0,
+    2.24,
+    2.4,
+    2.56,
+    2.72,
+    2.88,
+    3.04
+   ],
+   "character_end_times_seconds": [
+    0.32,
+    0.48,
+    0.72,
+    1.2,
+    1.36,
+    1.6,
+    1.76,
+    2.0,
+    2.24,
+    2.4,
+    2.56,
+    2.72,
+    2.88,
+    3.04,
+    3.28
+   ]
+  },
+  "words": [
+   [
+    "哎",
+    0.0,
+    0.28
+   ],
+   [
+    "哎",
+    0.28,
+    0.52
+   ],
+   [
+    "哎",
+    0.52,
+    0.98
+   ],
+   [
+    "它",
+    1.16,
+    1.26
+   ],
+   [
+    "左",
+    1.26,
+    1.48
+   ],
+   [
+    "滑",
+    1.48,
+    1.74
+   ],
+   [
+    "一下",
+    1.74,
+    2.0
+   ],
+   [
+    "我",
+    2.0,
+    2.44
+   ],
+   [
+    "斷",
+    2.44,
+    2.68
+   ],
+   [
+    "一",
+    2.68,
+    2.84
+   ],
+   [
+    "根",
+    2.84,
+    2.94
+   ]
+  ],
+  "heard": "哎哎哎 它左滑一下 我斷一根",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.2
+ },
+ {
+  "name": "F06_s2031",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "……这个，也记，缘分未到。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "F06_s2031.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.6,
+    "character_start_index": 0,
+    "character_end_index": 13,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "…",
+    "…",
+    "这",
+    "个",
+    "，",
+    "也",
+    "记",
+    "，",
+    "缘",
+    "分",
+    "未",
+    "到",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.06,
+    0.08,
+    0.36,
+    0.64,
+    1.2,
+    1.36,
+    1.6,
+    2.24,
+    2.48,
+    2.72,
+    2.96,
+    3.2
+   ],
+   "character_end_times_seconds": [
+    0.06,
+    0.08,
+    0.36,
+    0.64,
+    1.2,
+    1.36,
+    1.6,
+    2.24,
+    2.48,
+    2.72,
+    2.96,
+    3.2,
+    3.6
+   ]
+  },
+  "words": [
+   [
+    "這個",
+    0.0,
+    0.4
+   ],
+   [
+    "野",
+    0.4,
+    1.24
+   ],
+   [
+    "季,",
+    1.24,
+    2.04
+   ],
+   [
+    "緣",
+    2.06,
+    2.44
+   ],
+   [
+    "分",
+    2.44,
+    2.64
+   ],
+   [
+    "味",
+    2.64,
+    2.84
+   ],
+   [
+    "道",
+    2.84,
+    3.12
+   ]
+  ],
+  "heard": "這個野季,緣分味道",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 3.52
+ },
+ {
+  "name": "G01_s2031",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "线呢？我的线呢！"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "G01_s2031.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 2.08,
+    "character_start_index": 0,
+    "character_end_index": 8,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "线",
+    "呢",
+    "？",
+    "我",
+    "的",
+    "线",
+    "呢",
+    "！"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.4,
+    0.56,
+    1.04,
+    1.2,
+    1.36,
+    1.6,
+    1.76
+   ],
+   "character_end_times_seconds": [
+    0.4,
+    0.56,
+    1.04,
+    1.2,
+    1.36,
+    1.6,
+    1.76,
+    2.08
+   ]
+  },
+  "words": [
+   [
+    "獻",
+    0.0,
+    0.4
+   ],
+   [
+    "呢",
+    0.4,
+    0.58
+   ],
+   [
+    "我",
+    0.58,
+    1.12
+   ],
+   [
+    "的",
+    1.12,
+    1.22
+   ],
+   [
+    "獻",
+    1.22,
+    1.56
+   ],
+   [
+    "呢",
+    1.56,
+    1.7
+   ]
+  ],
+  "heard": "獻呢 我的獻呢",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.986,
+  "seconds": 2.0
+ },
+ {
+  "name": "G02_s2031",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "别动别动——缠您法器上了。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "G02_s2031.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 2.64,
+    "character_start_index": 0,
+    "character_end_index": 13,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "别",
+    "动",
+    "别",
+    "动",
+    "—",
+    "—",
+    "缠",
+    "您",
+    "法",
+    "器",
+    "上",
+    "了",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.24,
+    0.32,
+    0.56,
+    0.64,
+    0.88,
+    1.12,
+    1.28,
+    1.52,
+    1.76,
+    2.0,
+    2.12,
+    2.24
+   ],
+   "character_end_times_seconds": [
+    0.24,
+    0.32,
+    0.56,
+    0.64,
+    0.88,
+    1.12,
+    1.28,
+    1.52,
+    1.76,
+    2.0,
+    2.12,
+    2.24,
+    2.64
+   ]
+  },
+  "words": [
+   [
+    "别",
+    0.0,
+    0.14
+   ],
+   [
+    "动",
+    0.14,
+    0.28
+   ],
+   [
+    "别",
+    0.28,
+    0.42
+   ],
+   [
+    "动",
+    0.42,
+    0.64
+   ],
+   [
+    "缠",
+    0.64,
+    1.26
+   ],
+   [
+    "您",
+    1.26,
+    1.38
+   ],
+   [
+    "法",
+    1.38,
+    1.62
+   ],
+   [
+    "器",
+    1.62,
+    1.86
+   ],
+   [
+    "上",
+    1.86,
+    2.08
+   ],
+   [
+    "了",
+    2.08,
+    2.22
+   ]
+  ],
+  "heard": "别动别动缠您法器上了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 2.56
+ },
+ {
+  "name": "H02_s2031",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "……我？"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "H02_s2031.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 1.12,
+    "character_start_index": 0,
+    "character_end_index": 4,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "…",
+    "…",
+    "我",
+    "？"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.18,
+    0.24,
+    0.64
+   ],
+   "character_end_times_seconds": [
+    0.18,
+    0.24,
+    0.64,
+    1.12
+   ]
+  },
+  "words": [
+   [
+    "哇",
+    0.0,
+    0.38
+   ]
+  ],
+  "heard": "哇",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.514,
+  "seconds": 1.12
+ },
+ {
+  "name": "H03_s2031",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "当年太忙。想着忙完这阵，就给自己绑一根。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "H03_s2031.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 4.720000000000001,
+    "character_start_index": 0,
+    "character_end_index": 20,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "当",
+    "年",
+    "太",
+    "忙",
+    "。",
+    "想",
+    "着",
+    "忙",
+    "完",
+    "这",
+    "阵",
+    "，",
+    "就",
+    "给",
+    "自",
+    "己",
+    "绑",
+    "一",
+    "根",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.48,
+    0.64,
+    0.8,
+    1.12,
+    1.76,
+    1.92,
+    2.08,
+    2.24,
+    2.48,
+    2.64,
+    3.2,
+    3.28,
+    3.36,
+    3.52,
+    3.68,
+    3.84,
+    4.08,
+    4.24,
+    4.4
+   ],
+   "character_end_times_seconds": [
+    0.48,
+    0.64,
+    0.8,
+    1.12,
+    1.76,
+    1.92,
+    2.08,
+    2.24,
+    2.48,
+    2.64,
+    3.2,
+    3.28,
+    3.36,
+    3.52,
+    3.68,
+    3.84,
+    4.08,
+    4.24,
+    4.4,
+    4.72
+   ]
+  },
+  "words": [
+   [
+    "当",
+    0.0,
+    0.16
+   ],
+   [
+    "年",
+    0.16,
+    0.32
+   ],
+   [
+    "太",
+    0.32,
+    0.62
+   ],
+   [
+    "忙,",
+    0.62,
+    0.92
+   ],
+   [
+    "想",
+    1.36,
+    1.9
+   ],
+   [
+    "着",
+    1.9,
+    2.06
+   ],
+   [
+    "忙",
+    2.06,
+    2.2
+   ],
+   [
+    "完",
+    2.2,
+    2.4
+   ],
+   [
+    "这",
+    2.4,
+    2.56
+   ],
+   [
+    "阵",
+    2.56,
+    2.76
+   ],
+   [
+    "就",
+    2.76,
+    3.3
+   ],
+   [
+    "给",
+    3.3,
+    3.46
+   ],
+   [
+    "自己",
+    3.46,
+    3.7
+   ],
+   [
+    "绑",
+    3.7,
+    4.0
+   ],
+   [
+    "一",
+    4.0,
+    4.2
+   ],
+   [
+    "根。",
+    4.2,
+    4.3
+   ]
+  ],
+  "heard": "当年太忙,想着忙完这阵就给自己绑一根。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.64
+ },
+ {
+  "name": "H04_s2031",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "这一阵，忙了一千二百年。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "H04_s2031.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.04,
+    "character_start_index": 0,
+    "character_end_index": 12,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "这",
+    "一",
+    "阵",
+    "，",
+    "忙",
+    "了",
+    "一",
+    "千",
+    "二",
+    "百",
+    "年",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.3,
+    0.4,
+    1.04,
+    1.12,
+    1.28,
+    1.52,
+    1.76,
+    2.08,
+    2.24,
+    2.48,
+    2.72
+   ],
+   "character_end_times_seconds": [
+    0.3,
+    0.4,
+    1.04,
+    1.12,
+    1.28,
+    1.52,
+    1.76,
+    2.08,
+    2.24,
+    2.48,
+    2.72,
+    3.04
+   ]
+  },
+  "words": [
+   [
+    "这",
+    0.0,
+    0.18
+   ],
+   [
+    "一",
+    0.18,
+    0.36
+   ],
+   [
+    "阵",
+    0.36,
+    0.62
+   ],
+   [
+    "忙",
+    0.62,
+    1.24
+   ],
+   [
+    "了",
+    1.24,
+    1.42
+   ],
+   [
+    "一",
+    1.42,
+    1.64
+   ],
+   [
+    "千",
+    1.64,
+    1.88
+   ],
+   [
+    "二",
+    1.88,
+    2.16
+   ],
+   [
+    "百",
+    2.16,
+    2.38
+   ],
+   [
+    "年",
+    2.38,
+    2.64
+   ]
+  ],
+  "heard": "这一阵忙了一千二百年",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 2.96
+ },
+ {
+  "name": "H05_s2031",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "我这个……也记，缘分未到吧。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "H05_s2031.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 4.4,
+    "character_start_index": 0,
+    "character_end_index": 14,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "我",
+    "这",
+    "个",
+    "…",
+    "…",
+    "也",
+    "记",
+    "，",
+    "缘",
+    "分",
+    "未",
+    "到",
+    "吧",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.32,
+    0.64,
+    0.96,
+    1.4,
+    1.84,
+    2.08,
+    2.32,
+    3.04,
+    3.24,
+    3.44,
+    3.68,
+    3.84,
+    4.08
+   ],
+   "character_end_times_seconds": [
+    0.32,
+    0.64,
+    0.96,
+    1.4,
+    1.84,
+    2.08,
+    2.32,
+    3.04,
+    3.24,
+    3.44,
+    3.68,
+    3.84,
+    4.08,
+    4.4
+   ]
+  },
+  "words": [
+   [
+    "我",
+    0.0,
+    0.2
+   ],
+   [
+    "這個",
+    0.2,
+    0.54
+   ],
+   [
+    "野",
+    1.54,
+    1.98
+   ],
+   [
+    "技",
+    1.98,
+    2.22
+   ],
+   [
+    "緣",
+    2.98,
+    3.2
+   ],
+   [
+    "分",
+    3.2,
+    3.38
+   ],
+   [
+    "味",
+    3.38,
+    3.56
+   ],
+   [
+    "道",
+    3.56,
+    3.78
+   ],
+   [
+    "吧",
+    3.78,
+    3.98
+   ]
+  ],
+  "heard": "我這個 野技 緣分味道吧",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 4.32
+ },
+ {
+  "name": "I06_s2031",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "成了！快记！我绑的！全是我绑的！"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "I06_s2031.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.8400000000000003,
+    "character_start_index": 0,
+    "character_end_index": 16,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "成",
+    "了",
+    "！",
+    "快",
+    "记",
+    "！",
+    "我",
+    "绑",
+    "的",
+    "！",
+    "全",
+    "是",
+    "我",
+    "绑",
+    "的",
+    "！"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.42,
+    0.56,
+    0.88,
+    1.04,
+    1.2,
+    1.6,
+    1.76,
+    2.0,
+    2.48,
+    2.64,
+    2.88,
+    3.04,
+    3.2,
+    3.36,
+    3.52
+   ],
+   "character_end_times_seconds": [
+    0.42,
+    0.56,
+    0.88,
+    1.04,
+    1.2,
+    1.6,
+    1.76,
+    2.0,
+    2.48,
+    2.64,
+    2.88,
+    3.04,
+    3.2,
+    3.36,
+    3.52,
+    3.84
+   ]
+  },
+  "words": [
+   [
+    "成",
+    0.0,
+    0.24
+   ],
+   [
+    "了",
+    0.24,
+    0.6
+   ],
+   [
+    "快",
+    0.6,
+    0.96
+   ],
+   [
+    "记",
+    0.96,
+    1.2
+   ],
+   [
+    "我",
+    1.2,
+    1.74
+   ],
+   [
+    "绑",
+    1.74,
+    1.92
+   ],
+   [
+    "的",
+    1.92,
+    2.1
+   ],
+   [
+    "全",
+    2.5,
+    2.7
+   ],
+   [
+    "是我",
+    2.7,
+    3.06
+   ],
+   [
+    "绑",
+    3.06,
+    3.28
+   ],
+   [
+    "的",
+    3.28,
+    3.44
+   ]
+  ],
+  "heard": "成了 快记 我绑的 全是我绑的",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.76
+ },
+ {
+  "name": "A02_s2042",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "别动！一动，三对离婚。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "A02_s2042.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 2.72,
+    "character_start_index": 0,
+    "character_end_index": 11,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "别",
+    "动",
+    "！",
+    "一",
+    "动",
+    "，",
+    "三",
+    "对",
+    "离",
+    "婚",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.24,
+    0.32,
+    0.88,
+    1.04,
+    1.52,
+    1.68,
+    1.92,
+    2.08,
+    2.24,
+    2.4
+   ],
+   "character_end_times_seconds": [
+    0.24,
+    0.32,
+    0.88,
+    1.04,
+    1.52,
+    1.68,
+    1.92,
+    2.08,
+    2.24,
+    2.4,
+    2.72
+   ]
+  },
+  "words": [
+   [
+    "別",
+    0.0,
+    0.14
+   ],
+   [
+    "動",
+    0.14,
+    0.32
+   ],
+   [
+    "移",
+    0.84,
+    0.98
+   ],
+   [
+    "動",
+    0.98,
+    1.12
+   ],
+   [
+    "三",
+    1.52,
+    1.78
+   ],
+   [
+    "對",
+    1.78,
+    1.96
+   ],
+   [
+    "離",
+    1.96,
+    2.14
+   ],
+   [
+    "婚",
+    2.14,
+    2.34
+   ]
+  ],
+  "heard": "別動 移動 三對離婚",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.64
+ },
+ {
+  "name": "A05_s2042",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "懂！暗访。您记，随便记。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "A05_s2042.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.3600000000000003,
+    "character_start_index": 0,
+    "character_end_index": 12,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "懂",
+    "！",
+    "暗",
+    "访",
+    "。",
+    "您",
+    "记",
+    "，",
+    "随",
+    "便",
+    "记",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.72,
+    0.88,
+    0.96,
+    1.2,
+    1.84,
+    2.08,
+    2.48,
+    2.64,
+    2.8,
+    2.96,
+    3.04
+   ],
+   "character_end_times_seconds": [
+    0.72,
+    0.88,
+    0.96,
+    1.2,
+    1.84,
+    2.08,
+    2.48,
+    2.64,
+    2.8,
+    2.96,
+    3.04,
+    3.36
+   ]
+  },
+  "words": [
+   [
+    "懂",
+    0.0,
+    0.24
+   ],
+   [
+    "按",
+    0.7,
+    0.88
+   ],
+   [
+    "訪",
+    0.88,
+    1.54
+   ],
+   [
+    "您",
+    1.66,
+    1.92
+   ],
+   [
+    "記",
+    1.92,
+    2.12
+   ],
+   [
+    "隨",
+    2.5,
+    2.66
+   ],
+   [
+    "便",
+    2.66,
+    2.84
+   ],
+   [
+    "記",
+    2.84,
+    3.0
+   ]
+  ],
+  "heard": "懂 按訪 您記 隨便記",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.993,
+  "seconds": 3.36
+ },
+ {
+  "name": "B08_s2042",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "扣仙丹。还得写检讨。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "B08_s2042.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 2.88,
+    "character_start_index": 0,
+    "character_end_index": 10,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "扣",
+    "仙",
+    "丹",
+    "。",
+    "还",
+    "得",
+    "写",
+    "检",
+    "讨",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.4,
+    0.64,
+    0.96,
+    1.52,
+    1.68,
+    1.84,
+    2.0,
+    2.24,
+    2.48
+   ],
+   "character_end_times_seconds": [
+    0.4,
+    0.64,
+    0.96,
+    1.52,
+    1.68,
+    1.84,
+    2.0,
+    2.24,
+    2.48,
+    2.88
+   ]
+  },
+  "words": [
+   [
+    "扣",
+    0.0,
+    0.26
+   ],
+   [
+    "先",
+    0.26,
+    0.52
+   ],
+   [
+    "单",
+    0.52,
+    0.82
+   ],
+   [
+    "还",
+    1.34,
+    1.64
+   ],
+   [
+    "得",
+    1.64,
+    1.76
+   ],
+   [
+    "写",
+    1.76,
+    1.94
+   ],
+   [
+    "检",
+    1.94,
+    2.14
+   ],
+   [
+    "讨",
+    2.14,
+    2.44
+   ]
+  ],
+  "heard": "扣先单 还得写检讨",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 2.8
+ },
+ {
+  "name": "C02_s2042",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "牛郎织女。我绑的！牢吧？"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "C02_s2042.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.3600000000000003,
+    "character_start_index": 0,
+    "character_end_index": 12,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "牛",
+    "郎",
+    "织",
+    "女",
+    "。",
+    "我",
+    "绑",
+    "的",
+    "！",
+    "牢",
+    "吧",
+    "？"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.32,
+    0.48,
+    0.72,
+    0.96,
+    1.6,
+    1.84,
+    2.08,
+    2.56,
+    2.64,
+    2.88,
+    3.12
+   ],
+   "character_end_times_seconds": [
+    0.32,
+    0.48,
+    0.72,
+    0.96,
+    1.6,
+    1.84,
+    2.08,
+    2.56,
+    2.64,
+    2.88,
+    3.12,
+    3.36
+   ]
+  },
+  "words": [
+   [
+    "牛",
+    0.0,
+    0.22
+   ],
+   [
+    "郎",
+    0.22,
+    0.42
+   ],
+   [
+    "之",
+    0.42,
+    0.58
+   ],
+   [
+    "女",
+    0.58,
+    0.8
+   ],
+   [
+    "我",
+    1.32,
+    1.76
+   ],
+   [
+    "绑",
+    1.76,
+    1.96
+   ],
+   [
+    "的",
+    1.96,
+    2.22
+   ],
+   [
+    "劳",
+    2.22,
+    2.76
+   ],
+   [
+    "吧",
+    2.76,
+    3.0
+   ]
+  ],
+  "heard": "牛郎之女我绑的劳吧",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.989,
+  "seconds": 3.36
+ },
+ {
+  "name": "C04_s2042",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "……异地恋，也算成。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "C04_s2042.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 2.48,
+    "character_start_index": 0,
+    "character_end_index": 10,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "…",
+    "…",
+    "异",
+    "地",
+    "恋",
+    "，",
+    "也",
+    "算",
+    "成",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.06,
+    0.08,
+    0.28,
+    0.48,
+    1.04,
+    1.36,
+    1.6,
+    1.84,
+    2.16
+   ],
+   "character_end_times_seconds": [
+    0.06,
+    0.08,
+    0.28,
+    0.48,
+    1.04,
+    1.36,
+    1.6,
+    1.84,
+    2.16,
+    2.48
+   ]
+  },
+  "words": [
+   [
+    "异",
+    0.0,
+    0.24
+   ],
+   [
+    "地",
+    0.24,
+    0.38
+   ],
+   [
+    "链",
+    0.38,
+    0.82
+   ],
+   [
+    "也",
+    0.82,
+    1.46
+   ],
+   [
+    "算",
+    1.46,
+    1.68
+   ],
+   [
+    "成",
+    1.68,
+    1.98
+   ]
+  ],
+  "heard": "异地链也算成",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.994,
+  "seconds": 2.4
+ },
+ {
+  "name": "C05_s2042",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "梁山伯祝英台。……变蝴蝶了。这单别记。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "C05_s2042.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 5.28,
+    "character_start_index": 0,
+    "character_end_index": 19,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "梁",
+    "山",
+    "伯",
+    "祝",
+    "英",
+    "台",
+    "。",
+    "…",
+    "…",
+    "变",
+    "蝴",
+    "蝶",
+    "了",
+    "。",
+    "这",
+    "单",
+    "别",
+    "记",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.32,
+    0.56,
+    0.96,
+    1.12,
+    1.36,
+    1.68,
+    1.76,
+    2.2,
+    2.64,
+    2.88,
+    3.12,
+    3.36,
+    3.44,
+    4.08,
+    4.24,
+    4.48,
+    4.72,
+    4.88
+   ],
+   "character_end_times_seconds": [
+    0.32,
+    0.56,
+    0.96,
+    1.12,
+    1.36,
+    1.68,
+    1.76,
+    2.2,
+    2.64,
+    2.88,
+    3.12,
+    3.36,
+    3.44,
+    4.08,
+    4.24,
+    4.48,
+    4.72,
+    4.88,
+    5.28
+   ]
+  },
+  "words": [
+   [
+    "梁",
+    0.0,
+    0.26
+   ],
+   [
+    "珊",
+    0.26,
+    0.5
+   ],
+   [
+    "博",
+    0.5,
+    0.8
+   ],
+   [
+    "駐",
+    0.8,
+    1.06
+   ],
+   [
+    "英",
+    1.06,
+    1.28
+   ],
+   [
+    "台,",
+    1.28,
+    1.62
+   ],
+   [
+    "便",
+    2.18,
+    2.7
+   ],
+   [
+    "蝴",
+    2.7,
+    3.0
+   ],
+   [
+    "蝶",
+    3.0,
+    3.22
+   ],
+   [
+    "了,",
+    3.22,
+    3.5
+   ],
+   [
+    "這",
+    4.02,
+    4.18
+   ],
+   [
+    "單",
+    4.18,
+    4.38
+   ],
+   [
+    "別",
+    4.38,
+    4.58
+   ],
+   [
+    "計。",
+    4.58,
+    4.84
+   ]
+  ],
+  "heard": "梁珊博駐英台,便蝴蝶了,這單別計。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 5.2
+ },
+ {
+  "name": "C09_s2042",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "董永七仙女——那是玉帝的亲闺女。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "C09_s2042.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.84,
+    "character_start_index": 0,
+    "character_end_index": 16,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "董",
+    "永",
+    "七",
+    "仙",
+    "女",
+    "—",
+    "—",
+    "那",
+    "是",
+    "玉",
+    "帝",
+    "的",
+    "亲",
+    "闺",
+    "女",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.32,
+    0.64,
+    0.88,
+    1.12,
+    1.36,
+    1.64,
+    1.92,
+    2.12,
+    2.32,
+    2.48,
+    2.72,
+    3.04,
+    3.12,
+    3.36,
+    3.52
+   ],
+   "character_end_times_seconds": [
+    0.32,
+    0.64,
+    0.88,
+    1.12,
+    1.36,
+    1.64,
+    1.92,
+    2.12,
+    2.32,
+    2.48,
+    2.72,
+    3.04,
+    3.12,
+    3.36,
+    3.52,
+    3.84
+   ]
+  },
+  "words": [
+   [
+    "董",
+    0.0,
+    0.26
+   ],
+   [
+    "勇",
+    0.26,
+    0.48
+   ],
+   [
+    "妻",
+    0.48,
+    0.78
+   ],
+   [
+    "仙",
+    0.78,
+    1.0
+   ],
+   [
+    "女",
+    1.0,
+    1.24
+   ],
+   [
+    "那",
+    1.78,
+    2.02
+   ],
+   [
+    "是",
+    2.02,
+    2.2
+   ],
+   [
+    "玉",
+    2.2,
+    2.42
+   ],
+   [
+    "帝",
+    2.42,
+    2.6
+   ],
+   [
+    "的",
+    2.6,
+    2.7
+   ],
+   [
+    "亲",
+    2.7,
+    2.96
+   ],
+   [
+    "闺",
+    2.96,
+    3.22
+   ],
+   [
+    "女",
+    3.22,
+    3.46
+   ]
+  ],
+  "heard": "董勇妻仙女那是玉帝的亲闺女",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.993,
+  "seconds": 3.76
+ },
+ {
+  "name": "D01_s2042",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "来单了！月老庙，加急！"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "D01_s2042.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 2.4,
+    "character_start_index": 0,
+    "character_end_index": 11,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "来",
+    "单",
+    "了",
+    "！",
+    "月",
+    "老",
+    "庙",
+    "，",
+    "加",
+    "急",
+    "！"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.32,
+    0.4,
+    0.8,
+    0.88,
+    1.04,
+    1.12,
+    1.6,
+    1.68,
+    1.92,
+    2.0
+   ],
+   "character_end_times_seconds": [
+    0.32,
+    0.4,
+    0.8,
+    0.88,
+    1.04,
+    1.12,
+    1.6,
+    1.68,
+    1.92,
+    2.0,
+    2.4
+   ]
+  },
+  "words": [
+   [
+    "來",
+    0.0,
+    0.18
+   ],
+   [
+    "當",
+    0.18,
+    0.36
+   ],
+   [
+    "了",
+    0.36,
+    0.6
+   ],
+   [
+    "月",
+    0.84,
+    0.94
+   ],
+   [
+    "老",
+    0.94,
+    1.1
+   ],
+   [
+    "廟",
+    1.1,
+    1.32
+   ],
+   [
+    "家",
+    1.62,
+    1.74
+   ],
+   [
+    "籍",
+    1.74,
+    1.96
+   ]
+  ],
+  "heard": "來當了 月老廟 家籍",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 2.32
+ },
+ {
+  "name": "E01_s2042",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "嘘。凡人看不见咱们。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "E01_s2042.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 2.88,
+    "character_start_index": 0,
+    "character_end_index": 10,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "嘘",
+    "。",
+    "凡",
+    "人",
+    "看",
+    "不",
+    "见",
+    "咱",
+    "们",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.2,
+    0.4,
+    1.12,
+    1.36,
+    1.68,
+    2.053,
+    2.24,
+    2.4,
+    2.56
+   ],
+   "character_end_times_seconds": [
+    0.2,
+    0.4,
+    1.12,
+    1.36,
+    1.68,
+    2.053,
+    2.24,
+    2.4,
+    2.56,
+    2.88
+   ]
+  },
+  "words": [
+   [
+    "嘘",
+    0.0,
+    0.52
+   ],
+   [
+    "凡",
+    1.14,
+    1.3
+   ],
+   [
+    "人",
+    1.3,
+    1.5
+   ],
+   [
+    "看",
+    1.5,
+    1.8
+   ],
+   [
+    "不",
+    1.8,
+    1.98
+   ],
+   [
+    "見",
+    1.98,
+    2.16
+   ],
+   [
+    "咱",
+    2.16,
+    2.36
+   ],
+   [
+    "們",
+    2.36,
+    2.52
+   ]
+  ],
+  "heard": "嘘 凡人看不見咱們",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 2.8
+ },
+ {
+  "name": "E05_s2042",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "哎哎哎！她左滑一下，我断一根！"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "E05_s2042.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.3600000000000003,
+    "character_start_index": 0,
+    "character_end_index": 15,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "哎",
+    "哎",
+    "哎",
+    "！",
+    "她",
+    "左",
+    "滑",
+    "一",
+    "下",
+    "，",
+    "我",
+    "断",
+    "一",
+    "根",
+    "！"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.32,
+    0.48,
+    0.64,
+    1.2,
+    1.36,
+    1.6,
+    1.76,
+    2.04,
+    2.32,
+    2.4,
+    2.64,
+    2.8,
+    2.96,
+    3.12
+   ],
+   "character_end_times_seconds": [
+    0.32,
+    0.48,
+    0.64,
+    1.2,
+    1.36,
+    1.6,
+    1.76,
+    2.04,
+    2.32,
+    2.4,
+    2.64,
+    2.8,
+    2.96,
+    3.12,
+    3.36
+   ]
+  },
+  "words": [
+   [
+    "哎",
+    0.0,
+    0.26
+   ],
+   [
+    "哎",
+    0.26,
+    0.4
+   ],
+   [
+    "哎",
+    0.4,
+    0.54
+   ],
+   [
+    "他",
+    0.54,
+    1.24
+   ],
+   [
+    "左",
+    1.24,
+    1.48
+   ],
+   [
+    "滑",
+    1.48,
+    1.74
+   ],
+   [
+    "一下",
+    1.74,
+    2.0
+   ],
+   [
+    "我",
+    2.0,
+    2.52
+   ],
+   [
+    "斷",
+    2.52,
+    2.76
+   ],
+   [
+    "一",
+    2.76,
+    2.94
+   ],
+   [
+    "根",
+    2.94,
+    3.02
+   ]
+  ],
+  "heard": "哎哎哎他左滑一下我斷一根",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.28
+ },
+ {
+  "name": "F06_s2042",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "……这个，也记，缘分未到。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "F06_s2042.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.6,
+    "character_start_index": 0,
+    "character_end_index": 13,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "…",
+    "…",
+    "这",
+    "个",
+    "，",
+    "也",
+    "记",
+    "，",
+    "缘",
+    "分",
+    "未",
+    "到",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.06,
+    0.08,
+    0.4,
+    0.72,
+    1.2,
+    1.44,
+    1.68,
+    2.32,
+    2.56,
+    2.8,
+    3.04,
+    3.28
+   ],
+   "character_end_times_seconds": [
+    0.06,
+    0.08,
+    0.4,
+    0.72,
+    1.2,
+    1.44,
+    1.68,
+    2.32,
+    2.56,
+    2.8,
+    3.04,
+    3.28,
+    3.6
+   ]
+  },
+  "words": [
+   [
+    "这个",
+    0.0,
+    0.4
+   ],
+   [
+    "野",
+    0.4,
+    1.3
+   ],
+   [
+    "季",
+    1.3,
+    1.98
+   ],
+   [
+    "缘",
+    2.34,
+    2.48
+   ],
+   [
+    "分",
+    2.48,
+    2.72
+   ],
+   [
+    "味",
+    2.72,
+    2.92
+   ],
+   [
+    "道",
+    2.92,
+    3.18
+   ]
+  ],
+  "heard": "这个野季 缘分味道",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.52
+ },
+ {
+  "name": "G01_s2042",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "线呢？我的线呢！"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "G01_s2042.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 2.08,
+    "character_start_index": 0,
+    "character_end_index": 8,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "线",
+    "呢",
+    "？",
+    "我",
+    "的",
+    "线",
+    "呢",
+    "！"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.4,
+    0.56,
+    1.04,
+    1.2,
+    1.36,
+    1.6,
+    1.76
+   ],
+   "character_end_times_seconds": [
+    0.4,
+    0.56,
+    1.04,
+    1.2,
+    1.36,
+    1.6,
+    1.76,
+    2.08
+   ]
+  },
+  "words": [
+   [
+    "獻",
+    0.0,
+    0.4
+   ],
+   [
+    "呢?",
+    0.4,
+    0.56
+   ],
+   [
+    "我的",
+    1.04,
+    1.18
+   ],
+   [
+    "獻",
+    1.18,
+    1.56
+   ],
+   [
+    "呢?",
+    1.56,
+    1.72
+   ]
+  ],
+  "heard": "獻呢?我的獻呢?",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.973,
+  "seconds": 2.08
+ },
+ {
+  "name": "G02_s2042",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "别动别动——缠您法器上了。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "G02_s2042.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 2.4,
+    "character_start_index": 0,
+    "character_end_index": 13,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "别",
+    "动",
+    "别",
+    "动",
+    "—",
+    "—",
+    "缠",
+    "您",
+    "法",
+    "器",
+    "上",
+    "了",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.24,
+    0.32,
+    0.48,
+    0.88,
+    0.96,
+    1.04,
+    1.2,
+    1.44,
+    1.6,
+    1.84,
+    1.96,
+    2.08
+   ],
+   "character_end_times_seconds": [
+    0.24,
+    0.32,
+    0.48,
+    0.88,
+    0.96,
+    1.04,
+    1.2,
+    1.44,
+    1.6,
+    1.84,
+    1.96,
+    2.08,
+    2.4
+   ]
+  },
+  "words": [
+   [
+    "别",
+    0.0,
+    0.16
+   ],
+   [
+    "动",
+    0.16,
+    0.28
+   ],
+   [
+    "别",
+    0.28,
+    0.4
+   ],
+   [
+    "动",
+    0.4,
+    0.58
+   ],
+   [
+    "缠",
+    0.58,
+    1.12
+   ],
+   [
+    "您",
+    1.12,
+    1.24
+   ],
+   [
+    "法",
+    1.24,
+    1.48
+   ],
+   [
+    "器",
+    1.48,
+    1.72
+   ],
+   [
+    "上",
+    1.72,
+    1.92
+   ],
+   [
+    "了",
+    1.92,
+    2.06
+   ]
+  ],
+  "heard": "别动别动缠您法器上了",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 2.32
+ },
+ {
+  "name": "H02_s2042",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "……我？"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "H02_s2042.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 1.12,
+    "character_start_index": 0,
+    "character_end_index": 4,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "…",
+    "…",
+    "我",
+    "？"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.18,
+    0.24,
+    0.64
+   ],
+   "character_end_times_seconds": [
+    0.18,
+    0.24,
+    0.64,
+    1.12
+   ]
+  },
+  "words": [
+   [
+    "我",
+    0.0,
+    0.36
+   ]
+  ],
+  "heard": "我",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.452,
+  "seconds": 1.12
+ },
+ {
+  "name": "H03_s2042",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "当年太忙。想着忙完这阵，就给自己绑一根。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "H03_s2042.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 4.48,
+    "character_start_index": 0,
+    "character_end_index": 20,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "当",
+    "年",
+    "太",
+    "忙",
+    "。",
+    "想",
+    "着",
+    "忙",
+    "完",
+    "这",
+    "阵",
+    "，",
+    "就",
+    "给",
+    "自",
+    "己",
+    "绑",
+    "一",
+    "根",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.48,
+    0.64,
+    0.88,
+    1.12,
+    1.68,
+    1.84,
+    2.0,
+    2.16,
+    2.4,
+    2.56,
+    3.04,
+    3.12,
+    3.2,
+    3.36,
+    3.52,
+    3.68,
+    3.84,
+    4.0,
+    4.16
+   ],
+   "character_end_times_seconds": [
+    0.48,
+    0.64,
+    0.88,
+    1.12,
+    1.68,
+    1.84,
+    2.0,
+    2.16,
+    2.4,
+    2.56,
+    3.04,
+    3.12,
+    3.2,
+    3.36,
+    3.52,
+    3.68,
+    3.84,
+    4.0,
+    4.16,
+    4.48
+   ]
+  },
+  "words": [
+   [
+    "当",
+    0.0,
+    0.16
+   ],
+   [
+    "年",
+    0.16,
+    0.36
+   ],
+   [
+    "太",
+    0.36,
+    0.68
+   ],
+   [
+    "忙",
+    0.68,
+    1.0
+   ],
+   [
+    "想",
+    1.5,
+    1.82
+   ],
+   [
+    "着",
+    1.82,
+    1.96
+   ],
+   [
+    "忙",
+    1.96,
+    2.1
+   ],
+   [
+    "完",
+    2.1,
+    2.3
+   ],
+   [
+    "这",
+    2.3,
+    2.48
+   ],
+   [
+    "阵",
+    2.48,
+    2.68
+   ],
+   [
+    "就",
+    2.68,
+    3.14
+   ],
+   [
+    "给",
+    3.14,
+    3.28
+   ],
+   [
+    "自己",
+    3.28,
+    3.52
+   ],
+   [
+    "绑",
+    3.52,
+    3.8
+   ],
+   [
+    "一",
+    3.8,
+    4.0
+   ],
+   [
+    "根",
+    4.0,
+    4.1
+   ]
+  ],
+  "heard": "当年太忙 想着忙完这阵就给自己绑一根",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.4
+ },
+ {
+  "name": "H04_s2042",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "这一阵，忙了一千二百年。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "H04_s2042.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.04,
+    "character_start_index": 0,
+    "character_end_index": 12,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "这",
+    "一",
+    "阵",
+    "，",
+    "忙",
+    "了",
+    "一",
+    "千",
+    "二",
+    "百",
+    "年",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.3,
+    0.4,
+    0.96,
+    1.12,
+    1.28,
+    1.52,
+    1.76,
+    2.0,
+    2.24,
+    2.48,
+    2.72
+   ],
+   "character_end_times_seconds": [
+    0.3,
+    0.4,
+    0.96,
+    1.12,
+    1.28,
+    1.52,
+    1.76,
+    2.0,
+    2.24,
+    2.48,
+    2.72,
+    3.04
+   ]
+  },
+  "words": [
+   [
+    "这",
+    0.0,
+    0.18
+   ],
+   [
+    "一",
+    0.18,
+    0.36
+   ],
+   [
+    "阵",
+    0.36,
+    0.64
+   ],
+   [
+    "忙",
+    0.64,
+    1.2
+   ],
+   [
+    "了",
+    1.2,
+    1.38
+   ],
+   [
+    "一",
+    1.38,
+    1.62
+   ],
+   [
+    "千",
+    1.62,
+    1.84
+   ],
+   [
+    "二",
+    1.84,
+    2.12
+   ],
+   [
+    "百",
+    2.12,
+    2.34
+   ],
+   [
+    "年",
+    2.34,
+    2.6
+   ]
+  ],
+  "heard": "这一阵忙了一千二百年",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.96
+ },
+ {
+  "name": "H05_s2042",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "我这个……也记，缘分未到吧。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "H05_s2042.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 4.16,
+    "character_start_index": 0,
+    "character_end_index": 14,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "我",
+    "这",
+    "个",
+    "…",
+    "…",
+    "也",
+    "记",
+    "，",
+    "缘",
+    "分",
+    "未",
+    "到",
+    "吧",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.32,
+    0.68,
+    1.04,
+    1.36,
+    1.68,
+    1.92,
+    2.16,
+    2.88,
+    3.08,
+    3.28,
+    3.44,
+    3.68,
+    3.84
+   ],
+   "character_end_times_seconds": [
+    0.32,
+    0.68,
+    1.04,
+    1.36,
+    1.68,
+    1.92,
+    2.16,
+    2.88,
+    3.08,
+    3.28,
+    3.44,
+    3.68,
+    3.84,
+    4.16
+   ]
+  },
+  "words": [
+   [
+    "我",
+    0.0,
+    0.2
+   ],
+   [
+    "这个",
+    0.2,
+    0.54
+   ],
+   [
+    "也",
+    0.54,
+    1.8
+   ],
+   [
+    "计",
+    1.8,
+    2.16
+   ],
+   [
+    "缘",
+    2.9,
+    3.04
+   ],
+   [
+    "分",
+    3.04,
+    3.22
+   ],
+   [
+    "味",
+    3.22,
+    3.38
+   ],
+   [
+    "道",
+    3.38,
+    3.56
+   ],
+   [
+    "吧",
+    3.56,
+    3.78
+   ]
+  ],
+  "heard": "我这个也计 缘分味道吧",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.994,
+  "seconds": 4.08
+ },
+ {
+  "name": "I06_s2042",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "成了！快记！我绑的！全是我绑的！"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "I06_s2042.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.6000000000000005,
+    "character_start_index": 0,
+    "character_end_index": 16,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "成",
+    "了",
+    "！",
+    "快",
+    "记",
+    "！",
+    "我",
+    "绑",
+    "的",
+    "！",
+    "全",
+    "是",
+    "我",
+    "绑",
+    "的",
+    "！"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.42,
+    0.56,
+    0.8,
+    0.96,
+    1.2,
+    1.6,
+    1.76,
+    2.0,
+    2.4,
+    2.48,
+    2.72,
+    2.84,
+    2.96,
+    3.2,
+    3.36
+   ],
+   "character_end_times_seconds": [
+    0.42,
+    0.56,
+    0.8,
+    0.96,
+    1.2,
+    1.6,
+    1.76,
+    2.0,
+    2.4,
+    2.48,
+    2.72,
+    2.84,
+    2.96,
+    3.2,
+    3.36,
+    3.6
+   ]
+  },
+  "words": [
+   [
+    "成",
+    0.0,
+    0.24
+   ],
+   [
+    "了",
+    0.24,
+    0.54
+   ],
+   [
+    "快",
+    0.54,
+    0.88
+   ],
+   [
+    "寄",
+    0.88,
+    1.42
+   ],
+   [
+    "我",
+    1.42,
+    1.7
+   ],
+   [
+    "绑",
+    1.7,
+    1.9
+   ],
+   [
+    "的",
+    1.9,
+    2.08
+   ],
+   [
+    "全",
+    2.08,
+    2.58
+   ],
+   [
+    "是我",
+    2.58,
+    2.88
+   ],
+   [
+    "绑",
+    2.88,
+    3.12
+   ],
+   [
+    "的",
+    3.12,
+    3.28
+   ]
+  ],
+  "heard": "成了快寄我绑的全是我绑的",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.52
+ }
+]
