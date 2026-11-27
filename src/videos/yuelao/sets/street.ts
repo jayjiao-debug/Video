@@ -25,6 +25,7 @@ import { maker, boxG, paint, rng, css, blotch, NOINK, glowCard, lightPool, level
 const X0 = ISLAND.street;
 const WZ: number = S.wallZ, WB = WZ - 0.3;             // the podium wall's front and back faces
 const POD = 4.4, CORN = 4.65;                  // the podium's top, its cornice's top
+const FAR_X = -96, RIGHT_X = 152;                             // how far the street goes on to the left (scene J looks down it)
 const BAY = { x0: -2.0, x1: 2.0, top: 3.4 };   // the glazed entrance bay
 const SHOP = { x0: -5.2, x1: -2.2, y0: 0.45, y1: 2.7, back: WZ - 2.2 };
 const TW = { x0: -0.6, cols: 10, cw: 1.5, fh: 3.6, floors: 25 };   // the tower shaft (front face at z = WB)
@@ -265,21 +266,33 @@ const build = (K: Kit): PlaceBuild => {
 
   // ------------------------------------------------------------------------------------------ the ground
   const mPave = Mk.tex(paverTex(), 0.92);
-  Mk.mesh("street.pavement", levelQuad(X(-14), X(14.4), WZ, 2.2, 0, (x, z) => [x / 2, -z / 2]), mPave, { cast: false });
+  Mk.mesh("street.pavement", levelQuad(X(FAR_X), X(RIGHT_X), WZ, 2.2, 0, (x, z) => [x / 2, -z / 2]), mPave, { cast: false });
   const mKerb = Mk.tex(graniteTex(), 0.9);
-  Mk.mesh("street.kerb", tileUV(boxG(X(-14), X(14.4), -0.14, 0.03, 2.2, 2.4), 1), mKerb);
-  Mk.mesh("street.road", levelQuad(X(-30), X(30), 2.4, 24, -0.12), Mk.flat("#34363c", 0.95), { cast: false });
+  Mk.mesh("street.kerb", tileUV(boxG(X(FAR_X), X(RIGHT_X), -0.14, 0.03, 2.2, 2.4), 1), mKerb);
+  Mk.mesh("street.road", levelQuad(X(FAR_X - 20), X(RIGHT_X + 20), 2.4, 24, -0.12), Mk.flat("#3d4049", 0.95), { cast: false });
+  {
+    // the road's paint: the cycle lane's line, the dashed middle line, the far lane's line
+    const quads = (list: [number, number, number, number][], y: number) => {
+      const pos: number[] = [], idx: number[] = []; let n = 0;
+      for (const [x0, x1, z0, z1] of list) { pos.push(x0, y, z0, x1, y, z0, x1, y, z1, x0, y, z1); idx.push(n, n + 2, n + 1, n, n + 3, n + 2); n += 4; }
+      const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3)); g.setIndex(idx); g.computeVertexNormals(); return g;
+    };
+    const lines: [number, number, number, number][] = [[X(FAR_X), X(RIGHT_X), 4.66, 4.78], [X(FAR_X), X(RIGHT_X), 12.3, 12.42]];
+    for (let x = FAR_X + 1; x < RIGHT_X; x += 6) if (x < -16.5 || x > -9.5) lines.push([X(x), X(x + 2.2), 8.44, 8.56]);
+    for (let z = 2.75; z < 23.5; z += 0.9) lines.push([X(-15.2), X(-10.8), z, z + 0.45]);                // a zebra crossing down the street
+    Mk.mesh("street.road.paint", quads(lines, -0.116), decal(Mk.flat("#a9adb8", 0.9)), { cast: false });
+  }
   Mk.mesh("street.grate", levelQuad(X(4.0), X(5.2), -2.2, -1.0, 0.004, (x, z) => [(x - X(4.0)) / 1.2, (-1.0 - z) / 1.2]), decal(Mk.tex(grateTex(), 0.8)), { cast: false });
   Mk.mesh("street.manhole", new THREE.CircleGeometry(0.33, 28).rotateX(-Math.PI / 2).translate(X(3.4), 0.004, 1.1), decal(K.flat("#ffffff", { map: manholeTex(), rough: 0.7 })), { cast: false });
 
   // ------------------------------------------------------------------------------------------ the podium wall
   const mStone = Mk.tex(stoneTex(403, "#6e7580"), 0.9), mDark = Mk.tex(stoneTex(404, "#535964"), 0.9);
   const wall = (x0: number, x1: number, y0: number, y1: number, m: THREE.Material = mStone, z0 = WB, z1 = WZ) => Mk.mesh("street.wall", tileUV(boxG(X(x0), X(x1), y0, y1, z0, z1), 2.4), m);
-  wall(-14, SHOP.x0, 0, POD); wall(SHOP.x0, SHOP.x1, 0, SHOP.y0); wall(SHOP.x0, SHOP.x1, SHOP.y1, POD);
-  wall(SHOP.x1, BAY.x0, 0, POD); wall(BAY.x0, BAY.x1, 0, S.steps.landingY); wall(BAY.x0, BAY.x1, BAY.top, POD); wall(BAY.x1, 14.4, 0, POD);
-  wall(-14, 14.4, POD, CORN, mDark, WB, WZ + 0.14);                                       // the cornice
-  wall(-14, 14.4, 0, 0.18, mDark, WZ - 0.02, WZ + 0.03);                                  // a dark plinth
-  Mk.mesh("street.podium.roof", boxG(X(-14), X(TW.x0), POD, CORN - 0.05, -40, WB), mDark, { cast: false });
+  wall(FAR_X, SHOP.x0, 0, POD); wall(SHOP.x0, SHOP.x1, 0, SHOP.y0); wall(SHOP.x0, SHOP.x1, SHOP.y1, POD);
+  wall(SHOP.x1, BAY.x0, 0, POD); wall(BAY.x0, BAY.x1, 0, S.steps.landingY); wall(BAY.x0, BAY.x1, BAY.top, POD); wall(BAY.x1, RIGHT_X, 0, POD);
+  wall(FAR_X, RIGHT_X, POD, CORN, mDark, WB, WZ + 0.14);                                       // the cornice
+  wall(FAR_X, RIGHT_X, 0, 0.18, mDark, WZ - 0.02, WZ + 0.03);                                  // a dark plinth
+  Mk.mesh("street.podium.roof", boxG(X(FAR_X), X(TW.x0), POD, CORN - 0.05, -40, WB), mDark, { cast: false });
   // a dark shopfront to the right of the steps (an office's closed glass front)
   {
     const p = paint(256, 256, (g, W, H) => { const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, "#3c465c"); gr.addColorStop(1, "#2c3446"); g.fillStyle = gr; g.fillRect(0, 0, W, H); g.fillStyle = css("#8aa0c8", 0.14); g.beginPath(); g.moveTo(40, 0); g.lineTo(120, 0); g.lineTo(60, H); g.lineTo(0, H); g.fill(); g.fillStyle = css("#ffd090", 0.5); g.fillRect(180, 120, 30, 10); });
@@ -398,6 +411,57 @@ const build = (K: Kit): PlaceBuild => {
   Mk.mesh("street.lamp.lens", new THREE.PlaneGeometry(0.4, 0.2).rotateX(Math.PI / 2).translate(X(LAMP_HEAD.x - 0.015), LAMP_HEAD.y + 0.035, Lp.z), mLens, UNLIT);
   const lampGlow = glowCard(0.75, "#ffc888", 0.55); lampGlow.position.set(X(LAMP_HEAD.x), LAMP_HEAD.y - 0.05, Lp.z); group.add(lampGlow);
   const lampPool = lightPool(V(X(1.0), 0.003, -1.2), V(0, 1, 0), 4.6, 4.0, "#ffb870", 0.22); group.add(lampPool);
+  // THE STREET GOING ON TO THE LEFT (scene J: her own thread runs away down it). The same lamp every 9 m, each with its
+  // pool on the pavement; a few closed fronts and one all-night shop in the podium wall; the far crossing's buildings.
+  const farGlows: THREE.Object3D[] = [], farPools: THREE.Mesh[] = [];
+  // (to the right the lamps between 20 and 40 m are left out: in scene J's last look they would stand right behind his head)
+  const LAMPS_X = [...Array.from({ length: 9 }, (_, i) => -9.5 - 9 * i), Lp.x + 9, ...Array.from({ length: 12 }, (_, i) => Lp.x + 40 + 9 * i)];
+  for (const lx of LAMPS_X) {
+    const hx = lx - 0.65;
+    P.add(mPole, new THREE.CylinderGeometry(0.12, 0.14, 0.3, 14).translate(X(lx), 0.15, Lp.z), 0.006);
+    P.add(mPole, new THREE.CylinderGeometry(0.045, 0.065, Lp.h, 12).translate(X(lx), Lp.h / 2, Lp.z), 0.006);
+    P.add(mPole, bar(V(X(lx), Lp.h - 0.1, Lp.z), V(X(hx + 0.15), LAMP_HEAD.y + 0.12, Lp.z), 0.03), 0.005);
+    P.add(mPole, boxG(X(hx - 0.25), X(hx + 0.22), LAMP_HEAD.y + 0.04, LAMP_HEAD.y + 0.14, Lp.z - 0.13, Lp.z + 0.13), 0.006);
+    Mk.mesh("street.lamp.lens", new THREE.PlaneGeometry(0.4, 0.2).rotateX(Math.PI / 2).translate(X(hx - 0.015), LAMP_HEAD.y + 0.035, Lp.z), mLens, UNLIT);
+    const g = glowCard(0.75, "#ffc888", 0.55); g.position.set(X(hx), LAMP_HEAD.y - 0.05, Lp.z); group.add(g); farGlows.push(g);
+    const pool = lightPool(V(X(lx - 1.1), 0.003, -0.9), V(0, 1, 0), 4.8, 4.8, "#ffb870", 0.22); group.add(pool); farPools.push(pool);
+  }
+  {
+    // closed fronts (dark glass, one small light left on) and THE ALL-NIGHT SHOP (便利店): a bright window, a teal sign, its light on the pavement
+    const dark = paint(256, 256, (g, W, H) => { const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, "#343e54"); gr.addColorStop(1, "#262e40"); g.fillStyle = gr; g.fillRect(0, 0, W, H); g.fillStyle = css("#8aa0c8", 0.12); g.beginPath(); g.moveTo(40, 0); g.lineTo(120, 0); g.lineTo(60, H); g.lineTo(0, H); g.fill(); g.fillStyle = css("#ffd090", 0.55); g.fillRect(170, 110, 34, 12); g.fillStyle = "#1c2230"; g.fillRect(W / 2 - 3, 0, 6, H); });
+    const mDarkFront = Mk.basic("#b4bccc", { map: dark });
+    for (const fx of [-9.6, -31.5, -40.5, -52, -63, 17.5, 26.5, 41, 52.5, 68, 83, 99, 117, 134]) Mk.mesh("street.closedfront", new THREE.PlaneGeometry(3.6, 2.5).translate(X(fx), 1.6, WZ + 0.006), mDarkFront, UNLIT);
+    const shop = paint(768, 448, (g, W, H) => {
+      const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, "#f4faff"); gr.addColorStop(1, "#dbe8f4"); g.fillStyle = gr; g.fillRect(0, 0, W, H);
+      const r = rng(77), cols = ["#e8584e", "#f2b840", "#58a8e0", "#6cc070", "#f08a4c", "#b07ad8", "#f4f4f4"];
+      for (let row = 0; row < 4; row++) { g.fillStyle = "#b8c4d2"; g.fillRect(20, 96 + row * 84, W * 0.62, 6); for (let x = 26; x < W * 0.62; x += 16 + 10 * r()) { g.fillStyle = cols[Math.floor(r() * cols.length)]; const h = 30 + 30 * r(); g.fillRect(x, 96 + row * 84 - h, 12, h); } }
+      g.fillStyle = "#c8d6e4"; g.fillRect(W * 0.66, 0, 6, H); g.fillRect(W * 0.83, 0, 6, H);                        // the door's frames
+      g.fillStyle = "#7c8ea4"; g.fillRect(W * 0.7, H * 0.5, 40, 8); g.fillRect(W * 0.87, H * 0.5, 40, 8);           // its handles
+      g.fillStyle = "#e6eef6"; g.fillRect(W * 0.68, H * 0.72, W * 0.3, H * 0.28);
+    });
+    const mShop = Mk.basic("#ffffff", { map: shop }); mShop.color.multiplyScalar(1.25);
+    Mk.mesh("street.allnight", new THREE.PlaneGeometry(4.6, 2.5).translate(X(-20.5), 1.55, WZ + 0.006), mShop, UNLIT);
+    const sign = paint(768, 96, (g, W, H) => { g.fillStyle = "#1e9a86"; g.fillRect(0, 0, W, H); g.fillStyle = "#ffffff"; g.fillRect(0, H * 0.78, W, H * 0.08); g.font = `bold 60px ${FONT}`; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText("24H 便利店", W / 2, H * 0.42); });
+    const mSign24 = Mk.basic("#ffffff", { map: sign }); mSign24.color.multiplyScalar(1.3);
+    P.add(Mk.flat("#16705f", 0.6), boxG(X(-22.9), X(-18.1), 2.9, 3.48, WZ, WZ + 0.2), 0.006);
+    Mk.mesh("street.allnight.sign", new THREE.PlaneGeometry(4.7, 0.5).translate(X(-20.5), 3.19, WZ + 0.205), mSign24, UNLIT);
+    const sg = glowCard(3.6, "#dff0ff", 0.26); sg.scale.set(1.3, 0.75, 1); sg.position.set(X(-20.5), 1.6, WZ + 0.12); group.add(sg); farGlows.push(sg);
+    const sp = lightPool(V(X(-20.5), 0.003, WZ + 1.7), V(0, 1, 0), 6.0, 3.6, "#d8ecff", 0.3); group.add(sp);
+    // the far crossing: a wall of city across the end of the street, its windows lit
+    const city = paint(1024, 512, (g, W, H) => {
+      g.clearRect(0, 0, W, H);
+      const r = rng(913); let x = 0; const tops: [number, number, number][] = [];
+      while (x < W) { const w = 46 + 90 * r(), h = H * (0.34 + 0.6 * r() * r()); g.fillStyle = "#1b2137"; g.fillRect(x, H - h, w, h); tops.push([x, w, h]); x += w + 3 * r(); }
+      for (const [bx, w, h] of tops) for (let y = H - h + 9; y < H - 5; y += 11) for (let q = bx + 5; q < bx + w - 6; q += 9) if (r() < 0.2) { g.fillStyle = r() < 0.65 ? "#ffd590" : "#dfeaff"; g.fillRect(q, y, 5, 6); }
+      for (const [bx, w, h] of tops) if (h > H * 0.66) { g.fillStyle = "#ff5040"; g.fillRect(bx + w / 2 - 3, H - h - 5, 6, 6); }
+    });
+    const mCity = new THREE.MeshBasicMaterial({ map: city, transparent: true, alphaTest: 0.4, fog: false });
+    Mk.mesh("street.farcity", new THREE.PlaneGeometry(120, 38).rotateY(Math.PI / 2).translate(X(FAR_X + 2), 18, -14), mCity, UNLIT);   // (its tall tower stands clear of her REC label)
+    const cg = glowCard(46, "#ffb878", 0.12); cg.scale.set(1.6, 0.36, 1); cg.position.set(X(FAR_X + 4), 3, 0); cg.rotation.y = Math.PI / 2; group.add(cg);
+    // the same the other way (scene J's last look: he goes off down the street to the right)
+    Mk.mesh("street.farcity.right", new THREE.PlaneGeometry(150, 19).rotateY(-Math.PI / 2).translate(X(RIGHT_X - 2), 9, 10), mCity, UNLIT);       // (low: under her REC row)
+    const cg2 = glowCard(60, "#ffb878", 0.12); cg2.scale.set(1.6, 0.36, 1); cg2.position.set(X(RIGHT_X - 4), 3, 0); cg2.rotation.y = -Math.PI / 2; group.add(cg2);
+  }
   const shopPool = lightPool(V(X(scx), 0.003, WZ + 1.4), V(0, 1, 0), 4.2, 3.0, "#ffb060", 0.3); group.add(shopPool);
   // the lobby light down the steps (one sheet over the treads and risers, a little proud of them)
   const spill = (() => {
@@ -540,6 +604,7 @@ const build = (K: Kit): PlaceBuild => {
     shopPool.material instanceof THREE.MeshBasicMaterial && (shopPool.material.opacity = L.shopPool);
     shopGlow.material.opacity = 0.22 * L.shop;
     lampPool.material instanceof THREE.MeshBasicMaterial && (lampPool.material.opacity = tm === "night" ? 0.3 : 0.18);
+    for (const fp of farPools) fp.material instanceof THREE.MeshBasicMaterial && (fp.material.opacity = tm === "night" ? 0.3 : 0.18);
     mPlate.color.setRGB(1, 1, 1).multiplyScalar(tm === "night" ? 1.15 : 1.0);
     moonG.visible = L.moon;
     applyLit(); applyLive();
@@ -549,7 +614,7 @@ const build = (K: Kit): PlaceBuild => {
   return {
     group,
     view(c: THREE.Vector3) {
-      lampGlow.lookAt(c); doorGlow.lookAt(c.x, doorGlow.position.y, Math.max(c.z, doorGlow.position.z + 0.5));
+      lampGlow.lookAt(c); for (const g of farGlows) g.lookAt(c); doorGlow.lookAt(c.x, doorGlow.position.y, Math.max(c.z, doorGlow.position.z + 0.5));
       moonG.lookAt(c);
       for (const s of steams) s.lookAt(c);
     },

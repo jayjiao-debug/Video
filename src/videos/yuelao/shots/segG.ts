@@ -153,9 +153,9 @@ export const SEG: Segment = {
       w.prop("tangle", "his").put(knot, { yaw: 0.6 + (f < drop0 ? 0.25 * Math.sin(f * 0.3) * (seated ? 1 : 0) : 0.9 * fall), scale: ky(f, [[back0 + 2, 0.5], [back0 + 7, 1]]) });
     }
     // ---------------------------------------------------------------------------------------------- the old thread
-    const herOut = xm && xm.group.position.z > -3.55 ? xm.footWorld(1) : undefined;
+    const herOut = xm && xm.group.position.z > -3.55 ? xm.footWorld(0) : undefined;
     const dNow = going ? Math.max(0, RIDER_LEN - STROLL * Math.max(0, (f - down0) / 30)) : Math.min(RIDER_LEN, TROT * Math.max(0, (f - rgo) / 30));
-    oldLine(w, 0, { her: herOut, his: dNow > 0.05 ? [...trail(dNow).slice(0, -1), rd.footWorld(0)] : undefined });
+    oldLine(w, 0, { her: herOut, his: dNow > 0.05 ? [...trail(dNow).slice(0, -1), rd.footWorld(1)] : undefined });
     // ---------------------------------------------------------------------------------------------- over the picture
     const on = pulls.map((p) => 1 - smooth((f - p) / 6)), cover = 1 - smooth((f - (S.from + 3)) / 9);
     return { camera, overlays: [f < back0 ? lensThreads(on, f) : null, palm(cover)], shown: [], post: { bloom: 0.45 } };

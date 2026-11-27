@@ -98,6 +98,8 @@ export const FACES: Record<string, Expr | RigFace> = {
   // a thread in his teeth: busy / caught / hissing / grave
   bite: face("focus", "wince", "stern", "neutral"), caught: face("shock", "wince", "sad", "neutral"), hiss: face("stern", "wince", "stern", "neutral"), grave: face("deadpan", "wince", "stern", "neutral"),
   eager: face("happy", "smile", "sad", "neutral"), hope: face("smile", "smile", "sad", "neutral"), dread: face("shock", "nervous", "sad", "nervous"), sheepish: face("smile_closed", "nervous", "sad", "nervous"),
+  // at her lens: wild with it / an awkward cough / coaxing her, eyes on the lens
+  thrill: face("smile", "laugh", "neutral"), oh: face("smile", "whistle", "neutral", "neutral"), ahem: face("wince", "nervous", "sad", "nervous"), coax: face("smile", "smile", "sad", "nervous"),
   intent: face("smile", "whistle", "focus", "neutral"), resolve: face("stern", "grin", "stern", "neutral"), peer: face("focus", "whistle", "focus", "neutral"), tender: face("smile_closed", "smile", "sad", "neutral"), lost: face("sad", "nervous", "sad", "neutral"),
   // the mortals
   flat: face("deadpan", "neutral", "neutral"), tired: face("deadpan", "sigh", "sad", "neutral"), look: face("smile", "neutral", "neutral"), smile: face("smile", "smile", "neutral"),
