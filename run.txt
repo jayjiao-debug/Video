@@ -1,0 +1,478 @@
+plan: {'tier': 'creator', 'character_count': 117888, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "G03_s2027", "type": "dialogue", "lang": "", "lines": ["[calling out, cheerful] 林女士，您的外卖！"], "status": 200, "model": "eleven_v4", "file": "G03_s2027.mp3", "voice_segments": [{"voice_id": "BWN0mOtkGHghA3CYFzFK", "start_time_seconds": 0.0, "end_time_seconds": 1.8399999999999999, "character_start_index": 0, "character_end_index": 33, "dialogue_input_index": 0}]}
+{"name": "G03_s2028", "type": "dialogue", "lang": "", "lines": ["[calling out, cheerful] 林女士，您的外卖！"], "status": 200, "model": "eleven_v4", "file": "G03_s2028.mp3", "voice_segments": [{"voice_id": "BWN0mOtkGHghA3CYFzFK", "start_time_seconds": 0.0, "end_time_seconds": 1.92, "character_start_index": 0, "character_end_index": 33, "dialogue_input_index": 0}]}
+{"name": "G03_s2029", "type": "dialogue", "lang": "", "lines": ["[cheerful] 林女士，您的外卖！"], "status": 200, "model": "eleven_v4", "file": "G03_s2029.mp3", "voice_segments": [{"voice_id": "BWN0mOtkGHghA3CYFzFK", "start_time_seconds": 0.0, "end_time_seconds": 1.92, "character_start_index": 0, "character_end_index": 20, "dialogue_input_index": 0}]}
+removed kept voices: {'BWN0mOtkGHghA3CYFzFK': 200}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "G03_s2027",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "[calling out, cheerful] 林女士，您的外卖！"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "G03_s2027.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "BWN0mOtkGHghA3CYFzFK",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 1.8399999999999999,
+    "character_start_index": 0,
+    "character_end_index": 33,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "[",
+    "c",
+    "a",
+    "l",
+    "l",
+    "i",
+    "n",
+    "g",
+    " ",
+    "o",
+    "u",
+    "t",
+    ",",
+    " ",
+    "c",
+    "h",
+    "e",
+    "e",
+    "r",
+    "f",
+    "u",
+    "l",
+    "]",
+    " ",
+    "林",
+    "女",
+    "士",
+    "，",
+    "您",
+    "的",
+    "外",
+    "卖",
+    "！"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.023,
+    0.024,
+    0.026,
+    0.028,
+    0.029,
+    0.031,
+    0.033,
+    0.034,
+    0.046,
+    0.05,
+    0.053,
+    0.057,
+    0.069,
+    0.08,
+    0.091,
+    0.101,
+    0.112,
+    0.128,
+    0.144,
+    0.155,
+    0.165,
+    0.176,
+    0.208,
+    0.24,
+    0.4,
+    0.6,
+    0.8,
+    0.96,
+    1.08,
+    1.2,
+    1.36,
+    1.52
+   ],
+   "character_end_times_seconds": [
+    0.023,
+    0.024,
+    0.026,
+    0.028,
+    0.029,
+    0.031,
+    0.033,
+    0.034,
+    0.046,
+    0.05,
+    0.053,
+    0.057,
+    0.069,
+    0.08,
+    0.091,
+    0.101,
+    0.112,
+    0.128,
+    0.144,
+    0.155,
+    0.165,
+    0.176,
+    0.208,
+    0.24,
+    0.4,
+    0.6,
+    0.8,
+    0.96,
+    1.08,
+    1.2,
+    1.36,
+    1.52,
+    1.84
+   ]
+  },
+  "words": [
+   [
+    "林",
+    0.0,
+    0.18
+   ],
+   [
+    "女",
+    0.18,
+    0.32
+   ],
+   [
+    "士",
+    0.32,
+    0.5
+   ],
+   [
+    "您",
+    0.82,
+    0.94
+   ],
+   [
+    "的",
+    0.94,
+    1.06
+   ],
+   [
+    "外",
+    1.06,
+    1.2
+   ],
+   [
+    "賣",
+    1.2,
+    1.42
+   ]
+  ],
+  "heard": "林女士 您的外賣",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 1.84
+ },
+ {
+  "name": "G03_s2028",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "[calling out, cheerful] 林女士，您的外卖！"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "G03_s2028.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "BWN0mOtkGHghA3CYFzFK",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 1.92,
+    "character_start_index": 0,
+    "character_end_index": 33,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "[",
+    "c",
+    "a",
+    "l",
+    "l",
+    "i",
+    "n",
+    "g",
+    " ",
+    "o",
+    "u",
+    "t",
+    ",",
+    " ",
+    "c",
+    "h",
+    "e",
+    "e",
+    "r",
+    "f",
+    "u",
+    "l",
+    "]",
+    " ",
+    "林",
+    "女",
+    "士",
+    "，",
+    "您",
+    "的",
+    "外",
+    "卖",
+    "！"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.023,
+    0.024,
+    0.026,
+    0.028,
+    0.029,
+    0.031,
+    0.033,
+    0.034,
+    0.046,
+    0.05,
+    0.053,
+    0.057,
+    0.069,
+    0.08,
+    0.091,
+    0.101,
+    0.112,
+    0.128,
+    0.144,
+    0.155,
+    0.165,
+    0.176,
+    0.208,
+    0.24,
+    0.4,
+    0.64,
+    0.88,
+    1.04,
+    1.16,
+    1.28,
+    1.44,
+    1.6
+   ],
+   "character_end_times_seconds": [
+    0.023,
+    0.024,
+    0.026,
+    0.028,
+    0.029,
+    0.031,
+    0.033,
+    0.034,
+    0.046,
+    0.05,
+    0.053,
+    0.057,
+    0.069,
+    0.08,
+    0.091,
+    0.101,
+    0.112,
+    0.128,
+    0.144,
+    0.155,
+    0.165,
+    0.176,
+    0.208,
+    0.24,
+    0.4,
+    0.64,
+    0.88,
+    1.04,
+    1.16,
+    1.28,
+    1.44,
+    1.6,
+    1.92
+   ]
+  },
+  "words": [
+   [
+    "林",
+    0.0,
+    0.22
+   ],
+   [
+    "女",
+    0.22,
+    0.38
+   ],
+   [
+    "士",
+    0.38,
+    0.58
+   ],
+   [
+    "您",
+    0.9,
+    1.06
+   ],
+   [
+    "的",
+    1.06,
+    1.16
+   ],
+   [
+    "外",
+    1.16,
+    1.3
+   ],
+   [
+    "卖",
+    1.3,
+    1.5
+   ]
+  ],
+  "heard": "林女士 您的外卖",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 1.84
+ },
+ {
+  "name": "G03_s2029",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "[cheerful] 林女士，您的外卖！"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "G03_s2029.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "BWN0mOtkGHghA3CYFzFK",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 1.92,
+    "character_start_index": 0,
+    "character_end_index": 20,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "[",
+    "c",
+    "h",
+    "e",
+    "e",
+    "r",
+    "f",
+    "u",
+    "l",
+    "]",
+    " ",
+    "林",
+    "女",
+    "士",
+    "，",
+    "您",
+    "的",
+    "外",
+    "卖",
+    "！"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.046,
+    0.053,
+    0.061,
+    0.069,
+    0.08,
+    0.091,
+    0.099,
+    0.107,
+    0.114,
+    0.137,
+    0.16,
+    0.32,
+    0.6,
+    0.88,
+    1.04,
+    1.16,
+    1.28,
+    1.44,
+    1.6
+   ],
+   "character_end_times_seconds": [
+    0.046,
+    0.053,
+    0.061,
+    0.069,
+    0.08,
+    0.091,
+    0.099,
+    0.107,
+    0.114,
+    0.137,
+    0.16,
+    0.32,
+    0.6,
+    0.88,
+    1.04,
+    1.16,
+    1.28,
+    1.44,
+    1.6,
+    1.92
+   ]
+  },
+  "words": [
+   [
+    "林",
+    0.0,
+    0.18
+   ],
+   [
+    "女",
+    0.18,
+    0.34
+   ],
+   [
+    "士",
+    0.34,
+    0.54
+   ],
+   [
+    "您",
+    0.8,
+    1.04
+   ],
+   [
+    "的",
+    1.04,
+    1.16
+   ],
+   [
+    "外",
+    1.16,
+    1.3
+   ],
+   [
+    "賣",
+    1.3,
+    1.52
+   ]
+  ],
+  "heard": "林女士 您的外賣",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 1.84
+ }
+]
