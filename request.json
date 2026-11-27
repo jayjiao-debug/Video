@@ -1,5 +1,5 @@
 {
- "id": "yuelao-v6-yl-03",
+ "id": "yuelao-v6-yl-04",
  "own_branch": true,
  "model_prefs": [
   "eleven_v4"
@@ -8,15 +8,15 @@
  "items": [
   {
    "type": "dialogue",
-   "name": "G02_q1_2101",
+   "name": "H05_p_2131",
    "model": "eleven_v4",
-   "seed": 2101,
+   "seed": 2131,
    "settings": {
     "stability": 0.8
    },
    "lines": [
     {
-     "text": "……别动。别动。缠您法器上了。",
+     "text": "我这个……也记，缘分未到吧。",
      "voice": {
       "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
       "voice_id": "WuLq5z7nEcrhppO0ZQJw",
@@ -27,15 +27,15 @@
   },
   {
    "type": "dialogue",
-   "name": "G02_q1_2113",
+   "name": "H05_p_2137",
    "model": "eleven_v4",
-   "seed": 2113,
+   "seed": 2137,
    "settings": {
     "stability": 0.8
    },
    "lines": [
     {
-     "text": "……别动。别动。缠您法器上了。",
+     "text": "我这个……也记，缘分未到吧。",
      "voice": {
       "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
       "voice_id": "WuLq5z7nEcrhppO0ZQJw",
@@ -46,15 +46,15 @@
   },
   {
    "type": "dialogue",
-   "name": "G02_q2_2101",
+   "name": "H05_s_2131",
    "model": "eleven_v4",
-   "seed": 2101,
+   "seed": 2131,
    "settings": {
     "stability": 0.8
    },
    "lines": [
     {
-     "text": "[calmly] 别动，别动。缠您法器上了。",
+     "text": "[softly] 我这个……也记，缘分未到吧。",
      "voice": {
       "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
       "voice_id": "WuLq5z7nEcrhppO0ZQJw",
@@ -65,53 +65,15 @@
   },
   {
    "type": "dialogue",
-   "name": "G02_q2_2113",
+   "name": "H05_s_2137",
    "model": "eleven_v4",
-   "seed": 2113,
+   "seed": 2137,
    "settings": {
     "stability": 0.8
    },
    "lines": [
     {
-     "text": "[calmly] 别动，别动。缠您法器上了。",
-     "voice": {
-      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
-      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-      "name": "Martin Li"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "G02_q3_2101",
-   "model": "eleven_v4",
-   "seed": 2101,
-   "settings": {
-    "stability": 0.8
-   },
-   "lines": [
-    {
-     "text": "别动……别动……缠您法器上了。",
-     "voice": {
-      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
-      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-      "name": "Martin Li"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "G02_q3_2113",
-   "model": "eleven_v4",
-   "seed": 2113,
-   "settings": {
-    "stability": 0.8
-   },
-   "lines": [
-    {
-     "text": "别动……别动……缠您法器上了。",
+     "text": "[softly] 我这个……也记，缘分未到吧。",
      "voice": {
       "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
       "voice_id": "WuLq5z7nEcrhppO0ZQJw",
