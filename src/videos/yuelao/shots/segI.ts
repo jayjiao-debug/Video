@@ -21,7 +21,7 @@ import { P, startOf, endOf, wordAt, ky, rel, V, smooth, walkAlong, hang, hit, wi
 import { act, YL, XM, QS, type MoodKey } from "./act";
 import { stamp, draw, type Fx } from "./fx";
 import { anklet, knotAt, bowKnot } from "./thread";
-import { STAND_AT, stepSeat, STEP, WAY_OUT, COIL_AT, BY_SCOOTER, stairs, oldLine, oldCol } from "./night";
+import { STAND_AT, stepSeat, STEP, WAY_OUT, LIFT_OUT, COIL_AT, BY_SCOOTER, stairs, oldLine, oldCol } from "./night";
 import { CAM_H, HEAD_H, END_H } from "./segH";
 
 const S = seg("I"), HALF = Math.PI / 2;
@@ -64,13 +64,13 @@ export const SEG: Segment = {
     const t = f / 30;
     // ---------------------------------------------------------------------------------------------- the camera
     const fu = smooth((f - fol0) / (fol1 - fol0)), posF = () => lerp3(CAM_H, CF, smooth((f - fol0) / (fol1 - fol0 - 16))), atF = () => along(TRACE, fu);
-    const FIND = { pos: CAM_H, at: [-0.42, 0.2, -2.2], sx: 540, sy: 1000, fov: 34 }, RIDER = { pos: CF, at: [2.3, 0.95, -1.0], sx: 560, sy: 860, fov: 46 }, EASY = { pos: CF, at: HEAD_H, sx: 400, sy: 840, fov: 44 };
+    const FIND = { pos: CAM_H, at: [-0.42, 0.2, -2.2], sx: 540, sy: 1000, fov: 34 }, RIDER = { pos: CF, at: [2.3, 0.95, -1.0], sx: 560, sy: 860, fov: 46 }, EASY = { pos: CF, at: HEAD_H, sx: 400, sy: 1060, fov: 52 };
     const TWO = { pos: C2, at: [0.96, 1.18, -1.6], sx: 540, sy: 760, fov: 46 }, SNAP = { pos: C2, at: [0.96, 1.2, -1.6], sx: 540, sy: 760, fov: 33 }, FEET = { pos: C2, at: [0.975, 0.1, -1.6], sx: 540, sy: 990, fov: 21 };
     const keys: ShotKey[] = [
       { f: S.from, ...END_H }, { f: i01 + 14, ...END_H }, { f: i01 + 24, ...FIND },
       { f: fol0, pos: posF, at: atF, sx: 540, sy: 1000, fov: 34 }, { f: fol1, pos: posF, at: atF, sx: 540, sy: 1060, fov: 46 },
       { f: fol1 + 14, ...RIDER }, { f: x02 + 6, ...RIDER }, { f: i03 - 8, ...EASY }, { f: x03 + 4, ...EASY },
-      { f: i04 + 8, ...TWO }, { f: ask - 5, ...TWO }, { f: ask, ...SNAP }, { f: x05 + 2, ...SNAP }, { f: x05 + 9, ...FEET }, { f: pull1 - 2, ...FEET }, { f: pull1 + 5, ...TAB }, { f: S.to, ...TAB },
+      { f: i04 + 8, ...TWO }, { f: ask - 5, ...TWO }, { f: ask, ...SNAP }, { f: x05 + 2, ...SNAP }, { f: x05 + 9, ...FEET }, { f: pull0 - 1, ...FEET }, { f: pull1 + 5, ...TAB }, { f: S.to, ...TAB },   // (back to the wide as the slack runs in: eighteen frames, landing just before he leaps)
     ];
     const camera = shotCam("street", f, keys, { mood: "calm", amp: ky(f, [[S.from, 0.22], [i01 + 14, 0.22], [fol0, 0.4]]), walk: [[fol0, 0], [fol0 + 10, 0.4], [fol1 - 20, 0.4], [fol1 - 8, 0], [x03 + 4, 0], [x03 + 12, 0.5], [i04 - 2, 0.5], [i04 + 8, 0]] });
     w.setCamera(camera);
@@ -131,11 +131,14 @@ export const SEG: Segment = {
     });
     // ---------------------------------------------------------------------------------------------- 林小满
     let xm = null as ReturnType<typeof act> | null;
-    if (f >= out0) {
-      const legX = walkAlong(HER_DOWN, HER_PACE, (f - out0) / 30), xAt = legX.at.clone().sub(f >= out1 ? nearer : V()), xFace = legX.moving ? legX.facing : turnTo(legX.facing, HALF, smooth((f - out1) / 7));
+    // she comes down for her order: out of the left lift while his eyes are on the old thread, across the lobby in a tired
+    // shuffle (LIFT_OUT, reaching the door at tDoor), then HER_DOWN as before
+    const tDoor = out0 + Math.round(VERBS.walkTime(WAY_OUT, HER_PACE) * 30), in0 = fol0 + 20;
+    if (f >= in0) {
+      const legX = f < tDoor ? walkAlong(LIFT_OUT, VERBS.walkTime(LIFT_OUT, 1) / ((tDoor - in0) / 30), (f - in0) / 30) : walkAlong(HER_DOWN, HER_PACE, (f - out0) / 30), xAt = legX.at.clone().sub(f >= out1 ? nearer : V()), xFace = legX.moving ? legX.facing : turnTo(legX.facing, HALF, smooth((f - out1) / 7));
       xm = act(w, f, XM, {
         at: xAt, facing: xFace, pose: legX.moving ? legX.pose : undefined,
-        faces: [[out0, "tired"], [i04 + 8, "look"], [egg + 6, "shy", "take", 0.4], [ask - 3, "smile"], [x05 + 26, "beam"]],
+        faces: [[in0, "tired"], [i04 + 8, "look"], [egg + 6, "shy", "take", 0.4], [ask - 3, "smile"], [x05 + 26, "beam"]],
         talkGaze: 0, gaze: f >= i04 + 8 ? 1 : undefined, lookDown: 9 * win(f, x04 + 4, ask - 6, 6, 6), turn: f >= out1 ? 0.4 * smooth((f - out1) / 7) : undefined,
         lean: { pitch: 3 * tugK }, head: { tilt: -2 * win(f, ask, x05 + 10, 5, 8), dy: f > x05 + 30 ? 0.012 * Math.sin(f * 0.17 + 1) : 0 },
       });
@@ -158,7 +161,7 @@ export const SEG: Segment = {
     const gold = ky(f, [[gold0, 0], [gold1, 1]]), tightK = smooth((f - pull0) / (pull1 - pull0)), clean = smooth((f - pinched) / 14);
     const ankHis = rd.footWorld(1).add(V(0, 0.07, 0)), ankHer = xm ? xm.footWorld(0).add(V(0, 0.07, 0)) : null, outside = !!xm && xm.group.position.z > -3.55;
     const inHis = V(-1, 0, 0.3), inHer = V(1, 0, 0.3), knotHis = knotAt(ankHis, inHis, 0.026), knotHer = ankHer && outside ? knotAt(ankHer, inHer, 0.026) : undefined;
-    oldLine(w, gold, { ends: { her: knotHer, his: knotHis }, lit: gold, clean, lift: pinchH > 0.001 ? { at: PINCH, h: pinchH } : undefined, tight: knotHer && tightK > 0 ? { a: knotHer, b: knotHis, k: tightK } : undefined });
+    oldLine(w, gold, { ends: { her: knotHer, his: knotHis }, lit: gold, clean, seen: smooth((f - (see - 2)) / 14), lift: pinchH > 0.001 ? { at: PINCH, h: pinchH } : undefined, tight: knotHer && tightK > 0 ? { a: knotHer, b: knotHis, k: tightK } : undefined });
     const tie = (key: string, ank: THREE.Vector3, inward: THREE.Vector3, g: number) => {
       const o = { r: 0.0055 + 0.001 * g, closed: true, col: oldCol(g, clean), glow: 0.02 + 0.1 * clean + 0.88 * g };
       w.props.thread(key + "a", anklet(ank, 0.026, 0.25, 0.4), o); w.props.thread(key + "b", bowKnot(knotAt(ank, inward, 0.026), inward, 0.026), o);

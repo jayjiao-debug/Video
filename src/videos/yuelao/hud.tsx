@@ -11,7 +11,7 @@ import { JOINS } from "./beats";
 /** each speaker's subtitle colour: her warm white; 月老 a pale foil gold; the mortals cool whites */
 export const SPEAKER_COL: Record<Speaker, string> = { ji: HC.warm, yl: "#ffe2a0", xm: "#e4ecf6", ma: "#f6dfe6", xq: "#e4ecf6", qs: "#fff0c8" };
 /** her camera switches off this many frames after 「是你已经见过的人。」 ends */
-export const OFF_AT = line("J03").to + Math.round(2.9 * FPS);
+export const OFF_AT = line("J03").to + Math.round(3.3 * FPS);   // (3.3 s: the turn back to him is a slow one, and he walks three steps off before the click)
 export const CAP = makeCaption({ captions: CAPTIONS, captionAt, captionRuns, trailingPunct: TRAILING_PUNCT, speakerCol: SPEAKER_COL });
 export const VLOG = makeVlog({
   fps: FPS, scenes: SCENES, stamp: SCENE_STAMP!, segments: SEGMENTS, segmentAt, en: EN, offAt: OFF_AT, joins: JOINS,

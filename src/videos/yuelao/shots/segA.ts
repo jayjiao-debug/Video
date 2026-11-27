@@ -12,12 +12,13 @@
 //   A03      his face coming to her lens                  medium close                              she gives way half a step as he wades up
 //   A05      the bow                                      medium close                              a small tilt down with him
 //   title    the whole bureau, him trotting to the desk   wide                                      she steps back and pans right: the place, then the title on it
+import type * as THREE from "three";
 import { seg, TITLE_BLOCK, type Segment } from "../story";
 import { povCam, punchIn } from "../cam";
 import { CARD } from "../freeze";
 import { P, ck, mouthOf, mouthAt, startOf, endOf, wordAt, ky, rel, V, walkAlong, kick, VERBS, hang, smooth } from "./kit";
 import { act, YL, wring, type MoodKey } from "./act";
-import { droop, taut, recoil, lay, FLAT } from "./thread";
+import { droop, taut, recoil, limp, lay, FLAT } from "./thread";
 import { hua, draw, type Fx } from "./fx";
 
 const S = seg("A");
@@ -38,8 +39,8 @@ export const SEG: Segment = {
       ck("office", S.from, [0.22, 1.52, 3.3], [-0.42, 0.78, 0.5], 60),   // (looking down at the heap: the red 缘 on the wall stays above the REC clock)
       ck("office", a01 - 3, [0.12, 1.5, 2.5], [-0.5, 1.0, 0.5], 58),
       ck("office", CARD.to, [0.12, 1.5, 2.5], [-0.5, 1.0, 0.5], 58),
-      ck("office", CARD.to + 12, [0.14, 1.5, 2.6], [-0.16, 0.95, 0.5], 58),
-      ck("office", wade0, [0.14, 1.5, 2.6], [-0.16, 0.95, 0.5], 58),
+      ck("office", CARD.to + 12, [0.14, 1.5, 2.6], [-0.3, 0.95, 0.5], 58),      // (he is a little left of centre: both fists of the snap stay inside the phone-safe frame)
+      ck("office", wade0, [0.14, 1.5, 2.6], [-0.3, 0.95, 0.5], 58),
       ck("office", wade0 + 36, [0.16, 1.5, 2.95], [-0.3, 1.0, 1.12], 58),
       ck("office", bowAt - 2, [0.16, 1.5, 2.95], [-0.3, 1.0, 1.12], 58),
       ck("office", bowAt + 12, [0.16, 1.48, 2.95], [-0.3, 0.84, 1.12], 58),
@@ -58,12 +59,20 @@ export const SEG: Segment = {
     const round = smooth((f - turn0) / 7);                      // he swings round to her
     const facing = leg ? leg.facing : ky(f, [[turn0, PROFILE], [turn0 + 7, 0.16]]);
     const busy = f < turn0, careful = f > CARD.to && f < snap;
-    const jig = busy ? Math.sin(f * 0.95) : 0, apart = ky(f, [[CARD.to + 4, 0], [snap - 1, 0.7], [snap, 0.75], [snap + 3, 2.4], [snap + 26, 2.0]]);
+    const jig = busy ? Math.sin(f * 0.95) : 0, apart = ky(f, [[CARD.to + 4, 0], [snap - 1, 0.7], [snap, 0.75]]);
     const bowK = ky(f, [[bowAt - 2, 0], [bowAt + 8, 1], [e05 + 2, 1], [e05 + 10, 0]]), hush = f >= hushAt - 4 && f < bowAt - 3;
     const fawnK = ky(f, [[you - 4, 0], [you + 6, 1], [a05 - 6, 1], [a05, 0]]);
-    // the knot between his hands in front of his chest; after the snap the hands fly apart, then sink
-    const hy = 0.74 + 0.02 * jig - 0.1 * ky(f, [[snap + 10, 0], [snap + 30, 1]]), hx = 0.085 + 0.065 * apart;
-    const knot: [ReturnType<typeof V>, ReturnType<typeof V>] = [rel(at, facing, -hx, hy + 0.012 * jig, 0.2), rel(at, facing, hx, hy - 0.012 * jig, 0.2)];
+    // the knot between his hands in front of his chest, drawn tight until the thread is wider than his beard; at the
+    // snap his arms are FLUNG WIDE (a fist out on each side, clear of his robe, an end dangling from each), then sink
+    const HALF_AT_SNAP = 0.085 + 0.15 * 0.75;
+    const handAt = (g: number, side: number) => {
+      const pull = ky(g, [[CARD.to + 4, 0], [snap - 1, 0.7], [snap, 0.75]]), jg = g < turn0 ? Math.sin(g * 0.95) : 0;
+      const tight = rel(at, facing, side * (0.085 + 0.15 * pull), 0.74 + 0.02 * jg - side * 0.012 * jg, 0.2);
+      if (g < snap) return tight;
+      const wide = rel(at, facing, side * (0.31 + 0.012 * Math.sin((g - snap) * 0.9) * Math.exp(-(g - snap) / 8)), 1.0, 0.12), low = rel(at, facing, side * 0.215, 0.64, 0.2);
+      return g < snap + 14 ? tight.lerp(wide, smooth((g - snap + 1) / 3)) : wide.lerp(low, smooth((g - snap - 14) / 16));
+    };
+    const knot: [ReturnType<typeof V>, ReturnType<typeof V>] = [handAt(f, -1), handAt(f, 1)];
     const hands = f < wade0 - 6 ? knot : fawnK > 0.02 ? wring(at, facing, f, fawnK, 0.7) : undefined;
     const faces: MoodKey[] = [
       [S.from, "bite"], [a01 + 15, "caught", "take"], [a02 - 1, "hiss", "take", 0.8], [wordAt("A02", "一动") - 2, "grave"],
@@ -89,11 +98,17 @@ export const SEG: Segment = {
       w.props.thread("knot", taut(h0, h1, f, [], { sag: 0.012 * (1 - apart) }), { r: 0.0075 });
       w.props.thread("teeth", droop(f < turn0 + 4 ? mouthAt(r, facing) : mouthOf(w, r), mid, 0.1, FLAT, { n: 8 }), TH);
     } else if (f < wade0 + 30) {
-      // snapped: each half springs back into its hand and hangs there; the one from his teeth falls with it
-      const d = f - snap;
-      w.props.thread("knot", recoil(h0, mid.clone().add(V(0, 0.01, 0)), d, FLAT, { n: 6, whip: 0.5 }), { r: 0.0075 });
-      w.props.thread("knot2", recoil(h1, mid.clone().add(V(0, 0.01, 0)), d, FLAT, { n: 6, whip: 0.5 }), { r: 0.0075 });
-      if (d < 16) w.props.thread("teeth", recoil(mid, mouthOf(w, r), d * 1.4, FLAT, { n: 6 }), TH);
+      // snapped: each half is a loose end in its fist (it swings in under the hand and hangs; the hand's own motion
+      // sends waves down it); the one from his teeth drops out of his open mouth, down his beard, into the heap
+      const d = f - snap, L = V(Math.cos(facing), 0, -Math.sin(facing));
+      const end = (key: string, hand: THREE.Vector3, side: number) =>
+        w.props.thread(key, limp(hand, hand.clone().addScaledVector(L, -side * HALF_AT_SNAP), d, FLAT, { n: 9, trail: (u) => handAt(f - 3 * u, side).sub(handAt(f, side)) }), { r: 0.0075 });
+      end("knot", h0, -1); end("knot2", h1, 1);
+      if (d < 12) {
+        const fall = 0.5 * 9.81 * (d / 30) ** 2, top = mouthOf(w, r).add(V(0, -fall, 0.02)), low = rel(at, facing, 0, 0.74 - 0.75 * fall, 0.22), pts: THREE.Vector3[] = [];
+        for (let i = 0; i <= 8; i++) { const u = i / 8; pts.push(top.clone().lerp(low, u).addScaledVector(L, 0.025 * Math.sin(u * 7 + d * 1.1) * Math.min(1, d / 3))); }
+        w.props.thread("teeth", pts, TH);
+      }
     }
     if (f < wade0 - 6) { w.props.thread("heapL", droop(heapL, h0, 0.16, FLAT), TH); w.props.thread("heapR", droop(heapR, h1, 0.2, FLAT), TH); }
     else if (f < wade0 + 22) { const d = f - (wade0 - 6); w.props.thread("heapL", recoil(heapL, hang(at, facing, 0), d, FLAT), TH); w.props.thread("heapR", recoil(heapR, hang(at, facing, 1), d, FLAT), TH); }

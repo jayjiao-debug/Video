@@ -15,6 +15,10 @@ export const stepSeat = (k: number) => (k > 0 ? { ...STEP, top: STEP.top.clone()
 /** at the door: where she takes her order, where the rider stands, her way out of the lobby */
 export const DOOR_HER = P("street", -0.25, 0.51, -3.3), DOOR_RIDER = P("street", 0.42, 0.51, -3.15);
 export const WAY_OUT = [P("street", -1.15, 0.51, -4.5), P("street", -0.3, 0.51, -4.1), DOOR_HER];
+/** HER WAY FROM THE LEFT LIFT across the lobby to the door (she works upstairs: she comes down for her order, and goes
+ *  back up the same way). Straight down the lobby's middle: from the pavement camera she is behind his head while he is at
+ *  the lens, and never behind the REC display. Its last leg is WAY_OUT's. */
+export const LIFT_OUT = [P("street", -0.7, 0.51, -8.3), P("street", -0.45, 0.51, -5.6), P("street", -0.3, 0.51, -4.1), DOOR_HER];
 /** up the three steps from x0 to x1: a walker's path. The body is as high as the HIGHER of its two feet stands (the
  *  foot nearer the door, a stride of 0.2 m into the stairs), so a leg never passes through a tread: the other foot is in the air */
 export const stairs = (x0: number, x1: number): THREE.Vector3[] => {
@@ -31,7 +35,9 @@ export const COIL_AT = P("street", -0.42, 0.17, -2.2);
  *  where he stands (the kerb first) when he has left his scooter. k 0 = faint, dusty .. 1 = gold and glowing. */
 const SILL = P("street", -0.25, 0, -3.56), KERB = P("street", 2.28, 0, -1.02);
 const ROUTE = [P("street", -0.3, 0, -3.1), P("street", -0.42, 0, -2.62), P("street", -0.42, 0, -2.2), P("street", -0.36, 0, -1.86), P("street", 0.0, 0, -1.5), P("street", 1.0, 0, -1.25), P("street", 1.8, 0, -1.08)];
-const DUST = new THREE.Color("#8a5f58"), FADED = new THREE.Color("#b9564a"), GOLD = new THREE.Color("#ffcf6a");
+// (dusty = a greyed rose. Unnoticed, in scenes G and H, it is close to the stone's own tone; once he looks at it, it is
+// pale, LIGHTER than the stone it lies on: it has to be there to be seen when the knot is lifted off it)
+const DUST0 = new THREE.Color("#8f645b"), DUST = new THREE.Color("#c9a59c"), FADED = new THREE.Color("#b9564a"), GOLD = new THREE.Color("#ffcf6a");
 /** n + 1 points evenly spaced along a run of points */
 const resample = (pts: THREE.Vector3[], n: number): THREE.Vector3[] => {
   const ds = [0];
@@ -58,7 +64,7 @@ const wayAt = (s: number): THREE.Vector3 => {
   return WAY[j - 1].clone().lerp(WAY[j], (d - WAY_S[j - 1]) / Math.max(1e-6, WAY_S[j] - WAY_S[j - 1]));
 };
 /** the old thread's colour: dusty (0) .. gold (1); clean = the dust shaken off it, its faded red showing */
-export const oldCol = (k: number, clean = 0) => `#${DUST.clone().lerp(FADED, 0.8 * Math.round(Math.max(0, Math.min(1, clean)) * 10) / 10).lerp(GOLD, Math.round(Math.max(0, Math.min(1, k)) * 20) / 20).getHexString()}`;
+export const oldCol = (k: number, clean = 0, seen = 1) => `#${DUST0.clone().lerp(DUST, Math.round(Math.max(0, Math.min(1, seen)) * 10) / 10).lerp(FADED, 0.8 * Math.round(Math.max(0, Math.min(1, clean)) * 10) / 10).lerp(GOLD, Math.round(Math.max(0, Math.min(1, k)) * 20) / 20).getHexString()}`;
 export type OldO = {
   /** scene G: her ankle at the door; the rider's walked way from the kerb to his ankle (the thread trails behind him) */
   her?: THREE.Vector3; his?: THREE.Vector3[];
@@ -73,9 +79,13 @@ export type OldO = {
   lit?: number;
   /** 0..1: the dust shaken off it */
   clean?: number;
+  /** 0..1: someone has looked at it (scene I): it is picked out of the stone it lies on. 0 in scenes G and H */
+  seen?: number;
 };
+/** its thickness while the dust is on it (a furred, dusty thread is thicker than a clean one) */
+const OLD_R = 0.0072;
 export const oldLine = (w: World, k: number, o: OldO = {}) => {
-  const q = Math.round(Math.max(0, Math.min(1, k)) * 20) / 20, clean = o.clean ?? 0;
+  const q = Math.round(Math.max(0, Math.min(1, k)) * 20) / 20, clean = o.clean ?? 0, seen = o.seen ?? 0, dusty = { r: OLD_R - 0.0016 * (1 - seen) - 0.0012 * clean, glow: 0.02 + 0.05 * seen + 0.05 * clean, col: oldCol(0, clean, seen) };
   let path: THREE.Vector3[];
   if (o.ends) {
     // from each knot the thread comes down to the ground a few centimetres on, toward where it is going
@@ -96,13 +106,13 @@ export const oldLine = (w: World, k: number, o: OldO = {}) => {
     pts = from.map((p, i) => p.lerp(to[i], e));
   }
   const lit = o.lit ?? (q > 0 ? 1 : 0);
-  if (lit <= 0.001) w.props.thread("old", pts, { r: 0.005 + 0.0012 * clean, glow: 0.02 + 0.1 * clean, col: oldCol(0, clean) });
+  if (lit <= 0.001) w.props.thread("old", pts, dusty);
   else if (lit >= 0.999) w.props.thread("oldLit", pts, { r: 0.0065, glow: 1, col: oldCol(Math.max(q, 0.85)) });
   else {
     // the gold runs along it from her end: the lit part and the rest are two pieces that meet (never one inside the other)
     const rs = resample(pts, 80);
     w.props.thread("oldLit", part(rs, lit), { r: 0.0065, glow: 1, col: oldCol(Math.max(q, 0.85)) });
-    w.props.thread("old", part([...rs].reverse(), 1 - lit), { r: 0.005 + 0.0012 * clean, glow: 0.02 + 0.1 * clean, col: oldCol(0, clean) });
+    w.props.thread("old", part([...rs].reverse(), 1 - lit), dusty);
   }
   return pts;
 };

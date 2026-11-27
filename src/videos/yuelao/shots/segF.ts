@@ -14,18 +14,18 @@
 //   the end   his palm                                          the lens covered                          the join to G
 import * as THREE from "three";
 import { seg, type Segment } from "../story";
-import { zoomBy, handCover, palm } from "../cam";
+import { zoomBy, handCover } from "../cam";
 import { P, startOf, endOf, wordAt, ky, rel, V, smooth, walkAlong, hang, hit, shotCam, through, VERBS, SEATS, type ShotKey } from "./kit";
 import { act, YL, XM, XQ, type MoodKey } from "./act";
-import { sideCard, stamp, draw, type Fx } from "./fx";
+import { sideCard, stamp, draw, mittenCover, type Fx } from "./fx";
 import { taut, recoil, anklet, knotAt, bowKnot, FLAT } from "./thread";
 import type { World } from "../world";
 
 const S = seg("F"), HALF = Math.PI / 2;
 /** he stands behind the table; his walk round its right end to the lens */
-const BACK = P("street", -3.3, 0, -2.42), FRONT = P("street", -3.25, 0, -0.15);
+const BACK = P("street", -3.3, 0, -2.42), FRONT = P("street", -3.0, 0, -0.15);   // (he pulls up a little right of her lens: the man's head is hidden behind his, 林小满's stands clear beside it)
 const ROUND = [BACK, P("street", -2.5, 0, -2.3), P("street", -2.05, 0, -1.5), P("street", -2.3, 0, -0.6), FRONT], SPEED = 1.7;
-const LOW_A = [-3.2, 0.22, -0.8], ANK_A = [-3.66, 0.09, -1.56], LOW_B = [-3.4, 0.22, -0.8], ANK_B = [-2.94, 0.09, -1.56], EYEP = [-3.3, 1.45, 2.1], MID = [-3.3, 1.0, -1.5], HER = [-3.82, 0.99, -1.5];
+const LOW_A = [-3.2, 0.22, -0.8], ANK_A = [-3.66, 0.09, -1.56], LOW_B = [-3.4, 0.22, -0.8], ANK_B = [-2.94, 0.09, -1.56], EYEP = [-3.3, 1.45, 2.1], NEARP = [-3.3, 1.45, 1.2], MID = [-3.3, 1.0, -1.5], HER = [-3.82, 0.99, -1.5];
 /** her laptop on the table in front of her (its user's edge at the table's edge), the two bowls */
 const LAPTOP = P("street", -3.57, 0.62, -1.5), LAP_YAW = HALF + 0.6, BOWL_HERS = P("street", -3.38, 0.62, -1.3), BOWL_HIS = P("street", -3.06, 0.62, -1.5);
 
@@ -73,7 +73,9 @@ export const SEG: Segment = {
     const at = (f < walk0 ? BACK : leg.at).clone().add(V(0, 0, 0.22 * lk)), facing = walking ? leg.facing : 0;
     const headAt = (g: number) => (g < walk0 ? BACK : walkAlong(ROUND, SPEED, (g - walk0) / 30, { endFacing: 0 }).at).clone().add(V(0, 1.19, 0));
     // ---------------------------------------------------------------------------------------------- the camera
-    const THREE_ = { pos: EYEP, at: MID, sx: 515, sy: 750, fov: 55 }, PUNCH = { pos: EYEP, at: HER, sx: 440, sy: 850, fov: zoomBy(55, 0.72) };
+    // the three-shot from a step and a half away: the three of them fill the width, the table sits in the lower half, and
+    // the shop front (not empty pavement) fills the rest; she backs off to EYEP as he comes round the table at her
+    const THREE_ = { pos: NEARP, at: MID, sx: 505, sy: 880, fov: 62 }, PUNCH = { pos: NEARP, at: HER, sx: 440, sy: 850, fov: zoomBy(62, 0.7) };
     const keys: ShotKey[] = [
       { f: S.from, pos: LOW_A, at: ANK_A, sx: 500, sy: 1050, fov: 50 },
       { f: pan0, pos: LOW_A, at: ANK_A, sx: 500, sy: 1050, fov: 50 },
@@ -86,8 +88,8 @@ export const SEG: Segment = {
       { f: f04 - 3, ...THREE_ },
       { f: walk0, ...THREE_ },
       { f: walk0 + 26, pos: EYEP, at: headAt, sx: 700, sy: 640, fov: 55 },
-      { f: arrive, pos: EYEP, at: headAt, sx: 540, sy: 890, fov: 55 },
-      { f: S.to, pos: EYEP, at: headAt, sx: 540, sy: 890, fov: 55 },
+      { f: arrive, pos: EYEP, at: headAt, sx: 690, sy: 890, fov: 55 },
+      { f: S.to, pos: EYEP, at: headAt, sx: 690, sy: 890, fov: 55 },
     ];
     const cam0 = shotCam("street", f, keys, { mood: "calm", amp: 0.6, walk: [[S.from, 0], [rise0, 0], [rise0 + 8, 0.5], [rise1, 0]] });
     const HC = handCover(cam0, f, cov, { len: 9 }), camera = HC.cam;
@@ -155,9 +157,9 @@ export const SEG: Segment = {
     // ---------------------------------------------------------------------------------------------- over the picture
     const FX: Fx[] = [
       sideCard(f, { from: rise1 + 8, to: f02 + 40, name: "相亲对象", note: "产品经理 · 妈也在催", face: VERBS.headPx(w, xq), at: { x: 594, y: 336, s: 0.85 } }),
-      stamp(f, { from: x06 - 8, to: lunge0 + 6, x: 735, y: 490, px: 80 }),
+      stamp(f, { from: x06 - 8, to: lunge0 + 6, x: 320, y: 640, px: 70 }),   // (on the shop window: left of his hat, above her head, under the menu strips)
     ];
-    return { camera, overlays: [draw(f, FX), palm(HC.cover)], shown: FX, post: { bloom: 0.4 } };
+    return { camera, overlays: [draw(f, FX), mittenCover(HC.cover)], shown: FX, post: { bloom: 0.4 } };
   },
 };
 /** 0..1 inside [on, off] with soft ends */

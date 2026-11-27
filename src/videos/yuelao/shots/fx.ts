@@ -6,7 +6,7 @@
 // never repeats the subtitle, at most one every 8 seconds; cards belong to the sources' voice (facts, files, seals).
 import React from "react";
 import { FRAME_9x16, rectOf, slots, fit, type Rect } from "../../../kit/overlay/frame";
-import { SpoolLens, LensThreads, Hua, FateStamp, OS, CaseFile, Disclaimer, OrderSlip, Snaps, SideCard, SIDE_W, SIDE_H, CASE_W, CASE_H, type CaseKind } from "../hud/skin";
+import { SpoolLens, MittenCover, LensThreads, Hua, FateStamp, OS, CaseFile, Disclaimer, OrderSlip, Snaps, SideCard, SIDE_W, SIDE_H, CASE_W, CASE_H, type CaseKind } from "../hud/skin";
 
 export type Fx = { what: string; kind: "card" | "effect"; from: number; to: number; rect: Rect; node: React.ReactNode };
 const h = React.createElement;
@@ -29,7 +29,7 @@ export const stamp = (f: number, o: { from: number; to: number; x: number; y: nu
 export const os = (f: number, o: { from: number; to: number; x: number; y: number; text: string }): Fx =>
   ({ what: `记者OS「${o.text}」`, kind: "effect", from: o.from, to: o.to, rect: { x0: o.x, y0: o.y, x1: o.x + [...o.text].length * 38 + 150 + 5, y1: o.y + 71 }, node: h(OS, { key: `os${o.from}`, f, ...o }) });
 /** a case file's card, centred on (x, y), scaled by s */
-export const caseFile = (f: number, o: { from: number; to: number; x: number; y: number; kind: CaseKind; stampAt: number; rot?: number; s?: number; seal?: boolean }): Fx => {
+export const caseFile = (f: number, o: { from: number; to: number; x: number; y: number; kind: CaseKind; stampAt: number; noteAt?: number; rot?: number; s?: number; seal?: boolean }): Fx => {
   const s = o.s ?? 1;
   return { what: `卷宗 ${o.kind}`, kind: "card", from: o.from, to: o.to, rect: turned(o.x, o.y + 4, (CASE_W + 8) * s, (CASE_H + 10) * s, o.rot ?? -3), node: h(CaseFile, { key: `cf${o.from}`, f, ...o }) };
 };
@@ -40,7 +40,9 @@ export const disclaimer = (f: number, o: { from: number; to: number; y: number; 
 export const orderSlip = (f: number, o: { from: number; to: number; x: number; y: number; s?: number }): Fx =>
   ({ what: "加急单", kind: "card", from: o.from, to: o.to, rect: turned(o.x + 3, o.y + 5, 528 * (o.s ?? 1), 480 * (o.s ?? 1), 3), node: h(OrderSlip, { key: `ord${o.from}`, f, ...o }) });
 /** the spool pushed into her lens (k 0..1): the join of D and E */
-export const spoolLens = (k: number) => h(SpoolLens, { key: "spoolLens", k });
+export const spoolLens = (k: number, drop = 0) => h(SpoolLens, { key: "spoolLens", k, drop });
+/** his own mitten over her lens (cover 0..1 from the camera's handCover) */
+export const mittenCover = (k: number) => h(MittenCover, { key: "mittenCover", k });
 /** his thread wound round her lens (scene G): on[i] 1 = strand i is there .. 0 = pulled off; pulls[i] = the frame his mitten pulls it */
 export const lensThreads = (on: number[], f: number, pulls?: number[]) => h(LensThreads, { key: "lensThreads", on, f, pulls });
 /** the snapped-thread counter, centred near (x + 35, y) */

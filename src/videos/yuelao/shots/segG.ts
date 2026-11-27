@@ -16,20 +16,20 @@
 //   the moon    the moon over the podium roof                     the sky                                 she looks at the night's clock: the join to H
 import * as THREE from "three";
 import { seg, type Segment } from "../story";
-import { zoomBy, palm } from "../cam";
-import { P, startOf, endOf, wordAt, ky, rel, V, smooth, walkAlong, hang, win, shotCam, through, turnTo, kick, VERBS, type ShotKey } from "./kit";
+import { zoomBy } from "../cam";
+import { P, startOf, endOf, wordAt, ky, rel, V, smooth, walkAlong, hang, win, shotCam, through, turnTo, kick, VERBS, type ShotKey, hit } from "./kit";
 import { act, YL, XM, QS, type MoodKey } from "./act";
-import { lensThreads } from "./fx";
-import { CAMN, STAND_AT, stepSeat, STEP, DOOR_HER, DOOR_RIDER, WAY_OUT, RIDER_UP, COIL_AT, oldLine } from "./night";
+import { lensThreads, mittenCover } from "./fx";
+import { CAMN, STAND_AT, stepSeat, STEP, DOOR_HER, DOOR_RIDER, WAY_OUT, LIFT_OUT, RIDER_UP, COIL_AT, oldLine } from "./night";
 import { MOON_LOCAL } from "../sets/street";
 
 const S = seg("G"), HALF = Math.PI / 2;
 /** where he searches (1.5 m from her lens), where his face fills it (0.85 m), where he backs to with the knot */
 const Z0 = P("street", -0.3, 0, 0.9), Z1 = P("street", -0.3, 0, 1.55), Z2 = P("street", -0.3, 0, 1.0);
-const CREEP = 0.75, BACKING = 0.9, TRUDGE = 1.7, TROT = 2.3, STROLL = 1.6, HER_PACE = 1.3;
+const CREEP = 0.75, BACKING = 0.9, TRUDGE = 1.4, TROT = 2.3, STROLL = 1.6, HER_PACE = 1.3, SIT = 20;
 const AWAY = [Z2, STAND_AT], AWAY_YAW = Math.atan2(STAND_AT.x - Z2.x, STAND_AT.z - Z2.z);
 /** her way back in: through the door and on across the lobby to the lifts (she is never switched off behind the glass) */
-const RIDER_LEN = VERBS.walkTime(RIDER_UP, 1), RIDER_DOWN = [...RIDER_UP].reverse(), WAY_IN = [...WAY_OUT].reverse().concat([P("street", -0.55, 0.51, -6.2), P("street", -0.7, 0.51, -8.35)]);   // past the plant (x -1.9..-1.1, z -7.5) to the left lift
+const RIDER_LEN = VERBS.walkTime(RIDER_UP, 1), RIDER_DOWN = [...RIDER_UP].reverse(), WAY_IN = [...LIFT_OUT].reverse();   // back the way she came, to the left lift (clear of the plant at x -1.9..-1.1 and the desk)
 const DOWN_YAW = Math.atan2(RIDER_DOWN[1].x - RIDER_DOWN[0].x, RIDER_DOWN[1].z - RIDER_DOWN[0].z);
 /** where the bag changes hands, between the two of them */
 const HAND_PT = P("street", 0.09, 0.51 + 0.84, -3.14);
@@ -43,7 +43,7 @@ export const SEG: Segment = {
     const g03 = startOf("G03"), x03 = endOf("G03"), g04 = startOf("G04"), again = wordAt("G04", "又"), x04 = endOf("G04"), g05 = startOf("G05"), over = wordAt("G05", "完"), x05 = endOf("G05");
     // the business: the creep; four strands; backing off with the knot; the trudge to the step; sitting down; the drop
     const creep0 = g02 + 2, creep1 = creep0 + Math.ceil(VERBS.walkTime([Z0, Z1], CREEP) * 30), pulls = [wound + 28, wound + 17, wound + 6, x02 + 1];
-    const back0 = x02 + 6, back1 = back0 + Math.ceil(VERBS.walkTime([Z1, Z2], BACKING) * 30), walk0 = back1 + 4, arrive = walk0 + Math.ceil(VERBS.walkTime(AWAY, TRUDGE) * 30), sit0 = arrive + 8, sat = sit0 + 15;
+    const back0 = x02 + 6, back1 = back0 + Math.ceil(VERBS.walkTime([Z1, Z2], BACKING) * 30), walk0 = back1 + 4, arrive = walk0 + Math.ceil(VERBS.walkTime(AWAY, TRUDGE) * 30), sit0 = arrive + 8, sat = sit0 + SIT;
     const tug = g05 + 62, drop0 = over + 4, fell = drop0 + 10, up0 = x05 + 5;
     // the delivery: the rider's trot up, the door, her way out, the bag, her way in, his way down
     const rgo = g03 - 37, rtop = rgo + Math.ceil((RIDER_LEN / TROT) * 30), out0 = g03 + 12, out1 = out0 + Math.ceil(VERBS.walkTime(WAY_OUT, HER_PACE) * 30), take = g04 + 6;
@@ -53,9 +53,9 @@ export const SEG: Segment = {
     w.setPlace("street"); w.set.param("time", "night"); w.set.param("door", doorK); w.set.param("lit", 0.5); w.set.param("moon", 0.3);
     const t = f / 30;
     // ---------------------------------------------------------------------------------------------- the camera
-    const CLOSE = { pos: CAMN, at: [-0.3, 1.19, 0.9], sx: 540, sy: 890, fov: 56 }, ECU = { pos: CAMN, at: [-0.3, 1.24, 1.55], sx: 540, sy: 900, fov: 56 }, KNOT = { pos: CAMN, at: [-0.3, 1.165, 1.0], sx: 540, sy: 820, fov: 56 };
+    const CLOSE = { pos: CAMN, at: [-0.3, 1.19, 0.9], sx: 540, sy: 890, fov: 56 }, ECU = { pos: CAMN, at: [-0.3, 1.24, 1.55], sx: 540, sy: 815, fov: 56 }, KNOT = { pos: CAMN, at: [-0.3, 1.165, 1.0], sx: 540, sy: 820, fov: 56 };
     const WIDE = { pos: CAMN, at: [0.08, 1.7, -3.2], sx: 690, sy: 561, fov: 46 }, PAIR = { pos: CAMN, at: [0.08, 1.62, -3.2], sx: 540, sy: 700, fov: zoomBy(46, 0.62) };
-    const HIM = { pos: CAMN, at: [-0.85, 0.8, -2.18], sx: 470, sy: 800, fov: 28 }, MOON = { pos: CAMN, at: MOON_LOCAL, sx: 540, sy: 760, fov: 34 };
+    const HIM = { pos: CAMN, at: [-0.85, 0.8, -2.18], sx: 340, sy: 800, fov: 28 }, MOON = { pos: CAMN, at: MOON_LOCAL, sx: 540, sy: 700, fov: 34 };   // (scene H opens with his head on this spot)
     const keys: ShotKey[] = [
       { f: S.from, ...CLOSE }, { f: creep0, ...CLOSE }, { f: creep1, ...ECU }, { f: back0, ...ECU }, { f: back1, ...KNOT },
       { f: g03 - 7, ...KNOT }, { f: g03 + 9, ...WIDE }, { f: again - 5, ...WIDE }, { f: again, ...PAIR }, { f: x04 + 2, ...PAIR }, { f: g05 + 6, ...WIDE },
@@ -70,13 +70,15 @@ export const SEG: Segment = {
     const backT = VERBS.walkTime([Z1, Z2], BACKING), backing = walkAlong([Z2, Z1], BACKING, backT - (f - back0) / 30, { startFacing: 0 });
     const away = walkAlong(AWAY, TRUDGE, (f - walk0) / 30);
     const tip = 0.05 * win(f, creep0 + 6, back0 + 8, 10, 8);
-    const sitK = 1 - smooth((f - sit0) / 15), seated = f >= sit0;
+    const sitK = 1 - smooth((f - sit0) / SIT), seated = f >= sit0;
     let at: THREE.Vector3, facing = 0, pose = undefined as ReturnType<typeof walkAlong>["pose"] | undefined;
     if (f < creep0) { at = Z0; facing = ky(f, [[S.from, -0.5], [g01 - 4, -0.5], [g01 + 6, 0.55], [mine - 7, 0.55], [mine + 1, 0]]); }
     else if (f < back0) { at = creep.at; if (creep.moving) pose = creep.pose; }
+    // He turns away slowly as he sets off (the first steps are still half turned to her), trudges to the step with a
+    // heavy sway, and comes round again over his last steps and a little after: two slow turns, never a spin.
     else if (f < walk0 - 4) { at = backing.at; if (f < back1) pose = backing.pose; }
-    else if (f < arrive) { at = f < walk0 ? Z2 : away.at; facing = turnTo(0, f < walk0 ? AWAY_YAW : away.facing, smooth((f - (walk0 - 4)) / 9)); if (away.moving) pose = away.pose; }
-    else { at = STAND_AT; facing = turnTo(AWAY_YAW, 0, smooth((f - arrive) / 8)); }
+    else if (f < arrive) { at = f < walk0 ? Z2 : away.at; facing = turnTo(turnTo(0, f < walk0 ? AWAY_YAW : away.facing, smooth((f - (walk0 - 4)) / 16)), 0, smooth((f - (arrive - 10)) / 20)); if (away.moving) pose = away.pose; }
+    else { at = STAND_AT; facing = turnTo(AWAY_YAW, 0, smooth((f - (arrive - 10)) / 20)); }
     at = at.clone().add(V(0, tip, 0));
     const H = (dx: number, y: number, z: number) => rel(at, facing, dx, y, z), SH = (dx: number, y: number, z: number) => rel(STEP.top.clone().setY(0), 0, dx, y, z);
     // his hands: patting himself down; empty (我的线呢！); at the lens, one at each lower corner of the picture: each pull is
@@ -106,14 +108,14 @@ export const SEG: Segment = {
     const pk = (i: number) => win(f, pulls[i] - 9, pulls[i] + 5, 4, 4), moonK = win(f, g05 - 2, g05 + 44, 8, 10), skyK = smooth((f - up0) / 8);
     const picking = f >= wound - 6 && f < back0;
     const gaze = f < x01 + 1 ? undefined : f < wound - 6 ? 0 : picking ? (pk(2) > 0.5 ? 1 : pk(3) > 0.5 ? -1 : 0) : seated ? (moonK > 0.4 ? -1 : 0) : 0;
-    const turned = f >= walk0 - 4 && f < arrive + 8;
+    const turned = f >= walk0 - 4 && f < arrive + 10, trudging = f >= walk0 && f < arrive, sway = trudging ? Math.sin((f - walk0) * 0.36) * Math.min(1, (f - walk0) / 8, (arrive - f) / 8) : 0;
     const lookDown = f < mine - 4 ? 12 : f < creep0 ? -4 : f < back0 ? -12 * smooth((f - creep0) / 20) + 16 * pk(1) - 7 * pk(0) - 4 * pk(3) : !seated ? (turned ? 5 : 15) : 16 * (1 - moonK) * (1 - skyK) - 16 * moonK - 12 * skyK;
     const slump = ky(f, [[back0 + 8, 0], [back0 + 18, 1], [over - 2, 1], [over + 8, 1.7]]);
     const r = act(w, f, YL, {
       at, facing, faces, pose, hands, gaze, talkGaze: 0, lookDown, turn: f < creep0 || turned ? 1 : undefined,
       seat: seated ? stepSeat(sitK) : undefined, rise: seated ? sitK : undefined,
       twist: seated ? -0.75 * moonK : undefined,
-      lean: { pitch: (turned ? 2 : 5) * slump }, head: { dy: -0.025 * slump, tilt: 7 * moonK },
+      lean: { pitch: (turned ? 2 : 5) * slump + 3 * Math.abs(sway) + 5 * hit(f, sat - 3, 14), roll: 3.2 * sway }, head: { dy: -0.025 * slump - 0.012 * Math.abs(sway) - 0.03 * hit(f, sat - 3, 12), tilt: 7 * moonK - 2.5 * sway },
     });
     // ---------------------------------------------------------------------------------------------- the rider
     const up = walkAlong(RIDER_UP, TROT, (f - rgo) / 30), dn = walkAlong(RIDER_DOWN, STROLL, (f - down0) / 30, { endFacing: -1.2 }), going = f >= down0;
@@ -132,17 +134,19 @@ export const SEG: Segment = {
     // ---------------------------------------------------------------------------------------------- 林小满
     // she is in the lobby the whole scene: waiting inside the glass on her phone (her delivery is on its way), out for
     // the bag, and back across the lobby to the lifts
-    const waiting = f < out0 - 5;
+    // she comes down from her floor for it: out of the left lift (inG: he is at her lens, his head hides the lift) and
+    // across the lobby to the door, there at out1 as the door has slid open
+    const inG = out1 - Math.ceil(VERBS.walkTime(LIFT_OUT, HER_PACE) * 30);
     let xm = null as ReturnType<typeof act> | null;
-    {
-      const legX = f < in0 ? walkAlong(WAY_OUT, HER_PACE, (f - out0) / 30, { startFacing: 0.5 }) : walkAlong(WAY_IN, HER_PACE, (f - in0) / 30);
+    if (f >= inG) {
+      const legX = f < in0 ? walkAlong(LIFT_OUT, HER_PACE, (f - inG) / 30) : walkAlong(WAY_IN, HER_PACE, (f - in0) / 30);
       const xAt = legX.at, xFace = legX.moving || f >= in0 ? legX.facing : turnTo(turnTo(legX.facing, HALF, smooth((f - out1) / 7)), Math.PI, smooth((f - (in0 - 7)) / 7));
       const reach = ky(f, [[take - 9, 0], [take, 1], [take + 4, 1], [take + 16, 0]]), XH = (dx: number, y: number, z: number) => rel(xAt, xFace, dx, y, z);
       const hold = XH(-0.2, 0.66, 0.06), hr = hang(xAt, xFace, 0).lerp(hold, smooth((f - take) / 12)).lerp(HAND_PT.clone().add(V(-0.035, 0, 0.02)), reach);
       xm = act(w, f, XM, {
-        at: xAt, facing: xFace, pose: legX.moving ? legX.pose : waiting ? { kind: "phone", t, amount: 0.34, arm: 1 } : undefined, show: waiting ? ["phone"] : undefined, hands: f >= take - 9 ? [hr, null] : undefined,
+        at: xAt, facing: xFace, pose: legX.moving ? legX.pose : undefined, hands: f >= take - 9 ? [hr, null] : undefined,
         faces: [[S.from, "tired"], [g03 + 4, "look", "take", 0.4], [out0 + 6, "tired"], [g04 - 2, "polite"], [again - 1, "look", "take", 0.4], [again + 14, "smile"], [in0 + 2, "smile"]],
-        talkGaze: 0, gaze: f >= out1 && f < in0 ? 1 : undefined, lookDown: 8 * win(f, take - 8, again - 4, 5, 5) + (waiting ? 7 : 0), turn: f >= in0 - 7 ? Math.min(1, 0.55 + 0.45 * smooth((f - (in0 - 7)) / 7)) : f >= out1 ? 0.55 * smooth((f - out1) / 7) : undefined,
+        talkGaze: 0, gaze: f >= out1 && f < in0 ? 1 : undefined, lookDown: 8 * win(f, take - 8, again - 4, 5, 5), turn: f >= in0 - 7 ? Math.min(1, 0.55 + 0.45 * smooth((f - (in0 - 7)) / 7)) : f >= out1 ? 0.55 * smooth((f - out1) / 7) : undefined,
         head: { tilt: -2 * win(f, again, x04 + 6, 5, 6) },
       });
     }
@@ -170,6 +174,6 @@ export const SEG: Segment = {
     oldLine(w, 0, { her: herOut, his: dNow > 0.05 ? [...trail(dNow).slice(0, -1), rd.footWorld(1)] : undefined });
     // ---------------------------------------------------------------------------------------------- over the picture
     const on = pulls.map((p) => 1 - smooth((f - p) / 6)), cover = 1 - smooth((f - (S.from + 3)) / 9);
-    return { camera, overlays: [f < back0 + 8 ? lensThreads(on, f, pulls) : null, palm(cover)], shown: [], post: { bloom: 0.45 } };
+    return { camera, overlays: [f < back0 + 8 ? lensThreads(on, f, pulls) : null, mittenCover(cover)], shown: [], post: { bloom: 0.45 } };
   },
 };

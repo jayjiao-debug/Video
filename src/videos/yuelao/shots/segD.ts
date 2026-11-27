@@ -30,7 +30,7 @@ export const SEG: Segment = {
     const d01 = startOf("D01"), d02 = startOf("D02"), d03 = startOf("D03"), e03 = endOf("D03"), d04 = startOf("D04"), d05 = startOf("D05"), e05 = endOf("D05");
     const urgent = wordAt("D01", "加急"), thirty = wordAt("D02", "三十"), overtime = wordAt("D02", "天天"), nobody = wordAt("D02", "就是"), notUp = wordAt("D03", "我就"), her = wordAt("D04", "林小满"), tonight = wordAt("D04", "今晚"), must = wordAt("D04", "必须"), follow = wordAt("D05", "跟我");
     const puff = S.from + 8, go = d01 - 9, speed = 3.4, arrive = go + Math.ceil((VERBS.walkTime(RUN, speed)) * 30), fall = e03 + 3, got = fall + 10, thrown = e05 + 2, land = thrown + 12;
-    w.set.param("smoke", ky(f, [[puff, 0], [puff + 12, 0.8], [d02 - 8, 1], [e03, 1], [got, 0.3], [S.to, 0.2]]));
+    w.set.param("smoke", ky(f, [[puff, 0], [puff + 12, 0.8], [d02 - 8, 1], [e03 - 6, 1], [fall - 2, 1.5], [fall + 4, 1.5], [got, 0.3], [S.to, 0.2]]));   // (it thickens as it takes her and gives the slip)
     // ---------------------------------------------------------------------------------------------- where he is
     const leg = walkAlong(RUN, speed, (f - go) / 30), moving = leg.moving && f >= go;
     const at = f < go ? BASE.clone() : leg.at.clone();
@@ -85,25 +85,38 @@ export const SEG: Segment = {
       head: { dy: -0.06 * sag + 0.05 * hit(f, d04, 8) + 0.06 * hit(f, must, 7), tilt: 6 * listen * (f < got - 6 ? 1 : 0) },
     });
     // ---------------------------------------------------------------------------------------------- the vision in the smoke
-    const seen = f >= d02 - 7 && f < fall + 2;
+    // She kneels in her cloud (it hides her shins), palms together before her chest, begging with them (拜拜) and rocking
+    // in small bows; on 不起来了 she bows right down, hands to the cloud. Then she is drawn up the smoke and gone: the
+    // slip falls out of the same wisp.
+    // (She is solved full size and scaled about her feet: the hands' offsets from her are full-size offsets.)
+    const seen = f >= d02 - 7 && f < fall + 2, gone = smooth((f - (fall - 7)) / 8);
+    let ma: ReturnType<typeof act> | null = null;
+    const MS = 0.42, bob = 0.012 * Math.sin(f * 0.11), mAt = SMOKE.clone().add(V(0, 0.98 + bob, 0));
     if (seen) {
-      const s = 0.42, bob = 0.012 * Math.sin(f * 0.11), mAt = SMOKE.clone().add(V(0, 0.98 + bob, 0)), mFace = faceTo(SMOKE, BURN) * 0.62 + faceTo(SMOKE, camP) * 0.38;
-      const down = ky(f, [[notUp + 6, 0], [notUp + 14, 1]]), pray = 0.5 + 0.5 * Math.sin(f * 0.21), bow = Math.max(down, 0.28 * pray * (f < d03 - 4 ? 1 : 0.3));
-      const mh = (dx: number, y: number, z: number) => rel(mAt, mFace, dx * s, y * s, z * s);
-      act(w, f, MAMA_MINI, {
+      const mFace = faceTo(SMOKE, BURN) * 0.62 + faceTo(SMOKE, camP) * 0.38;
+      const down = ky(f, [[notUp + 6, 0], [notUp + 14, 1]]), pray = 0.5 + 0.5 * Math.sin(f * 0.21), beg = Math.sin(f * 0.85), bow = Math.max(down, 0.3 * pray * (f < d03 - 4 ? 1 : 0.3));
+      const mh = (dx: number, y: number, z: number) => rel(mAt, mFace, dx, y, z);
+      // (the palms meet below her chin, clear of her head's outline: a hand inside that outline is not drawn)
+      const palm = (side: number) => mh(0.026 * side, 0.8 + 0.05 * beg * (1 - down) - 0.08 * bow - 0.26 * down, 0.21 + 0.03 * bow + 0.15 * down);
+      ma = act(w, f, MAMA_MINI, {
         at: mAt, facing: mFace,
-        faces: [[S.from, "plead"], [overtime - 2, "grumble"], [nobody - 2, "plead"], [d03 - 2, "shout"], [notUp + 10, "resolve"]],
-        hands: [mh(-0.03, 0.86 - 0.1 * bow, 0.27 + 0.05 * bow), mh(0.03, 0.86 - 0.1 * bow, 0.27 + 0.05 * bow)],
-        lean: { pitch: 30 * bow }, lookDown: 26 * bow, talkGaze: 0,
+        faces: [[S.from, "beg"], [overtime - 2, "grumble"], [nobody - 2, "wail"], [d03 - 2, "shout"], [notUp + 10, "resolve"]],
+        hands: [palm(-1), palm(1)], armFront: [true, true],
+        lean: { pitch: 6 + 30 * bow }, lookDown: 26 * bow, talkGaze: 0,
         head: f < d02 - 3 ? VERBS.accent("pop", f, d02 - 7) : undefined,
       });
-      w.prop("cloud").put(mAt.clone().add(V(0, 0.115, 0)), { yaw: 0.3 });
+      w.prop("cloud").put(mAt.clone().add(V(0, 0.115 + 0.3 * gone, 0)), { yaw: 0.3, scale: 1 - 0.92 * gone });
     }
     w.update();
+    if (ma && gone > 0.001) {
+      // drawn up into the smoke: she shrinks toward a point over her head (the wisp the slip falls from) and rises with it
+      const k = MS * (1 - 0.94 * gone), c = mAt.clone().add(V(0, 0.8 * MS + 0.42 * gone, 0)), cl = mAt.clone().add(V(0, 0.8, 0));
+      ma.group.scale.setScalar(k); ma.group.position.copy(c.sub(cl.multiplyScalar(k)));
+    }
     // ---------------------------------------------------------------------------------------------- the slip, the spool
     if (f >= fall && f < got) {
       const u = (f - fall) / (got - fall), from = SMOKE.clone().add(V(0, 1.5, 0)), to = r.handWorld(0).clone().lerp(r.handWorld(1), 0.5).add(V(0, -0.12, 0)), p = from.lerp(to, smooth(u));
-      w.prop("slip").put(p.add(V(0.06 * Math.sin(u * 9), 0, 0)), { yaw: facing, roll: 0.5 * Math.sin(u * 8) * (1 - u), pitch: -0.3 * Math.sin(u * 5) * (1 - u) });
+      w.prop("slip").put(p.add(V(0.06 * Math.sin(u * 9), 0, 0)), { yaw: facing, roll: 0.5 * Math.sin(u * 8) * (1 - u), pitch: -0.3 * Math.sin(u * 5) * (1 - u), scale: 0.25 + 0.75 * smooth((f - fall + 1) / 4) });
     } else if (f >= got && f < d05 - 3) {
       const one = f >= d04 - 3 && f < her - 12 || f >= tonight - 2, hp = one ? r.handWorld(0) : r.handWorld(0).clone().lerp(r.handWorld(1), 0.5);
       w.prop("slip").put(hp.add(V(0, one ? -0.05 : -0.12, 0)).add(V(Math.sin(facing), 0, Math.cos(facing)).multiplyScalar(0.015)), { yaw: facing, pitch: -0.15 });
