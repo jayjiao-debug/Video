@@ -538,8 +538,9 @@ export const Disclaimer: React.FC<{ f: number; from: number; to: number; y: numb
 /** THE MOTHER'S PRAYER (scene D) arrives as a WOODEN WISH PLAQUE (许愿牌) on a red ribbon: 求姻缘 in brush, her
  *  demands in Song ticking in row by row, the temple's 加急 seal slammed on. Centre (x, y), 520 x 470 at s 1. */
 export const OrderSlip: React.FC<{ f: number; from: number; to: number; x: number; y: number; s?: number }> = ({ f, from, to, x, y, s = 1 }) => {
-  const A = hang(f, from, to, { nin: 9, nout: 6, drop: 700, amp: 5, period: 26 }); if (!A) return null;
-  const t = A.t, W = 520, H = 500, id = `wish${from}`;
+  // (v6b: narrower, 2-degree swing, 40 px rows: it hangs left of his head without touching it, and reads at phone size)
+  const A = hang(f, from, to, { nin: 9, nout: 6, drop: 700, amp: 2, period: 26 }); if (!A) return null;
+  const t = A.t, W = 460, H = 500, id = `wish${from}`;
   const rows = ["林小满 · 女 · 三十", "天天加班 · 不找对象", "今年【必须成】！"];
   const shape = `M0 70 L${W / 2} 0 L${W} 70 L${W} ${H} L0 ${H} Z`;
   return (
@@ -557,8 +558,8 @@ export const OrderSlip: React.FC<{ f: number; from: number; to: number; x: numbe
         <path d={`M${W / 2 - 4} 50 L${W / 2 - 24 + 3 * Math.sin(t * 0.3)} 92`} stroke={SK.red} strokeWidth={10} strokeLinecap="round" />
         <path d={`M${W / 2 + 4} 50 L${W / 2 + 22 + 3 * Math.sin(t * 0.27)} 94`} stroke={SK.red} strokeWidth={10} strokeLinecap="round" />
         <circle cx={W / 2} cy={46} r={8} fill={SK.red} stroke={SK.ink} strokeWidth={2.5} />
-        <T x={W / 2} y={150} px={86} anchor="middle" ff={BRUSH} weight={400} fill={SK.carve} ls={8}>求姻缘</T>
-        {rows.map((r, i) => { const k = part(t, 12 + i * 9, 5); return <g key={i} opacity={k}><Rich x={W / 2} y={244 + i * 60} px={i === 2 ? 40 : 34} text={r} anchor="middle" fill={SK.woodDeep} /></g>; })}
+        <T x={W / 2} y={146} px={86} anchor="middle" ff={BRUSH} weight={400} fill={SK.carve} ls={8}>求姻缘</T>
+        {rows.map((r, i) => { const k = part(t, 12 + i * 9, 5); return <g key={i} opacity={k}><Rich x={W / 2} y={228 + i * 62} px={i === 2 ? 46 : 40} text={r} anchor="middle" fill={SK.woodDeep} /></g>; })}
         <g transform={`translate(${W - 92} ${H - 64}) rotate(12) scale(${(slap(t, 9, 1.9) || 0.001).toFixed(3)})`}><SealMark text="加急" size={86} seed={113} /></g>
         <g transform={`translate(84 ${H - 62}) rotate(-6)`}><SealMark text="月老庙" size={74} kind="red" seed={115} /></g>
       </g>

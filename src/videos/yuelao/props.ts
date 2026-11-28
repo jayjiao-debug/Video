@@ -9,7 +9,7 @@ import { buildPopBooks } from "./popbook";
 
 export const RED = "#d8362a";
 
-export type PropName = "spool" | "book" | "bookShut" | "phone" | "laptop" | "bag" | "file" | "slip" | "bowl" | "moon" | "drawer" | "stack" | "wing" | "egg" | "cloud" | "tangle";
+export type PropName = "spool" | "book" | "bookShut" | "phone" | "laptop" | "bag" | "file" | "slip" | "bowl" | "moon" | "drawer" | "caseDrawer" | "hole" | "stack" | "wing" | "egg" | "cloud" | "cloudBank" | "tangle";
 export type PutO = { yaw?: number; pitch?: number; roll?: number; scale?: number };
 export type Prop = { group: THREE.Group; put(at: THREE.Vector3 | [number, number, number], o?: PutO): Prop };
 
@@ -146,6 +146,29 @@ export const buildProps = (M: Mats) => {
       return P.into(g, "drawer");
     },
     // THE THICK FILE (许仙 × 白娘子: a thousand years of approvals): a bale of folders tied twice with red thread, lying flat
+    // a case drawer of scene C (v6): the same drawer with room at the front for its case book (popbook.ts, standing
+    // on its bottom edge, cover to the front, 4 to 6 cm behind the front) and two thin files at the back
+    caseDrawer: () => {
+      const g = new THREE.Group(), P = new Part(K), wood = flat("#5e3c26", 0.75), dark = flat("#3a2216", 0.8);
+      P.add(wood, box(0.018, 0.236, 0.232, -0.009, 0, 0), 0.004);
+      P.add(dark, box(0.34, 0.012, 0.22, -0.188, -0.106, 0), 0.003);
+      for (const sz of [-1, 1]) P.add(dark, box(0.34, 0.2, 0.012, -0.188, -0.012, sz * 0.108), 0.003);
+      P.add(dark, box(0.012, 0.2, 0.22, -0.352, -0.012, 0), 0.003);                                 // the back
+      P.add(flat("#eadcb8", 0.95), box(0.003, 0.058, 0.12, 0.0015, 0.066, 0), 0);
+      P.add(flat("#b08a44", 0.45), ball(V(0.014, -0.031, 0), 0.014), 0.003);
+      for (let k = 0; k < 2; k++) {
+        const x = -0.25 - k * 0.05, tilt = new THREE.Matrix4().makeRotationZ(0.06 - 0.05 * k).setPosition(x, 0.0, 0);
+        P.add(flat(k % 2 ? "#e9dcb8" : "#dccba0", 0.95), box(0.02, 0.21, 0.19, 0, 0.01, 0), 0.003, tilt);
+        P.add(flat(RED, 0.8), box(0.024, 0.012, 0.194, 0, 0.05, 0), 0, tilt);
+      }
+      return P.into(g, "caseDrawer");
+    },
+    // the dark opening a pulled-out case drawer leaves in the cabinet's painted face (put at the face, x = cabinetX)
+    hole: () => {
+      const g = new THREE.Group(), P = new Part(K);
+      P.add(flat("#1a0e08", 0.95), box(0.004, 0.226, 0.222, 0.002, 0, 0), 0);
+      return P.into(g, "hole");
+    },
     stack: () => {
       const g = new THREE.Group(), P = new Part(K);
       let y = 0;
@@ -178,6 +201,32 @@ export const buildProps = (M: Mats) => {
       for (const [x, y, z, r] of [[0, 0, 0, 0.1], [-0.11, -0.012, 0.01, 0.075], [0.11, -0.01, -0.01, 0.08], [-0.05, 0.02, 0.07, 0.07], [0.06, 0.015, 0.075, 0.066], [-0.17, -0.03, 0, 0.05], [0.18, -0.03, 0.01, 0.052], [0.0, 0.03, -0.06, 0.07]] as [number, number, number, number][])
         P.add(m, ball(V(x, y, z), r, [1, 0.72, 1]), 0.0035);
       return P.into(g, "cloud");
+    },
+    // THE MOTHER'S CLOUD BANK (scene D, v6b): the incense smoke gathers into a soft auspicious cloud and she kneels in it, seen
+    // from the waist up (v5's little cloud under her feet showed her legs: Jay's note at f2800). Made for her at 0.42 of her
+    // size; put it with scale k/0.42 for a vision of size k. A ring of puffs round an empty middle (her legs are in the middle
+    // and touch nothing), highest at the front (its top 0.25, just over the top of her legs at 0.23), a wider lower ring, a
+    // lilac underside. Flat unlit colours with the ink outline, like a drawn 祥云 (lit spheres read as a heap of grey balls).
+    // About 0.46 wide. Origin: her feet; it faces +z (turn it to the camera); a pale gold glow behind her.
+    cloudBank: () => {
+      const g = new THREE.Group(), P = new Part(K);
+      const top = new THREE.MeshBasicMaterial({ color: "#fdfcff" }), mid = new THREE.MeshBasicMaterial({ color: "#efebf8" }), low = new THREE.MeshBasicMaterial({ color: "#d9d2ef" });
+      const ring: [number, number, number, number, THREE.Material][] = [];   // angle (degrees, 0 = front), ring radius, y, puff radius, colour
+      for (const a of [-40, 0, 40]) ring.push([a, 0.17, 0.175, 0.095, top]);           // the front rim (inside edge 0.075 out: room for her to bow)
+      for (const a of [-80, 80]) ring.push([a, 0.14, 0.15, 0.085, top]);               // its ends
+      for (const a of [-130, 130, 180]) ring.push([a, 0.13, 0.15, 0.08, mid]);         // the back
+      for (const a of [-60, 0, 60]) ring.push([a, 0.17, 0.06, 0.085, mid]);            // the lower ring
+      for (const a of [-120, 120, 180]) ring.push([a, 0.15, 0.06, 0.08, mid]);
+      for (const a of [-30, 30, 150, -150]) ring.push([a, 0.1, -0.01, 0.065, low]);    // the lilac underside
+      for (const [a, rr, y, r, mat] of ring) { const t = (a * Math.PI) / 180; P.add(mat, ball(V(rr * Math.sin(t), y, rr * Math.cos(t)), r, [1, 0.8, 1]), 0.0035); }
+      // the middle, filled up to her (inside edge 0.075 from her axis; her body is 0.063 wide at this size, her legs 0.03 out)
+      for (let i = 0; i < 6; i++) { const t = (i / 6) * Math.PI * 2 + 0.3; P.add(mid, ball(V(0.115 * Math.sin(t), 0.1, 0.115 * Math.cos(t)), 0.04, [1, 0.9, 1]), 0.002); }
+      P.into(g, "cloudBank", { cast: false });
+      const glow = new THREE.Mesh(new THREE.PlaneGeometry(0.95, 0.95).translate(0, 0.4, -0.2), new THREE.MeshBasicMaterial({
+        map: paint(128, 128, (cg, w, h) => { const gr = cg.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 2); gr.addColorStop(0, "rgba(255,226,150,0.6)"); gr.addColorStop(0.5, "rgba(255,214,140,0.25)"); gr.addColorStop(1, "rgba(255,210,140,0)"); cg.fillStyle = gr; cg.fillRect(0, 0, w, h); }),
+        transparent: true, depthWrite: false }));
+      glow.layers.set(NOINK); glow.name = "cloudBank.glow"; glow.renderOrder = 4; glow.castShadow = false; glow.receiveShadow = false; g.add(glow);
+      return g;
     },
     // HIS THREAD, IN A HOPELESS KNOT (what he picks off her lens): a fist-sized ball of red loops, two loose ends
     tangle: () => {
@@ -263,7 +312,7 @@ export const buildProps = (M: Mats) => {
     return out;
   };
   // THE CASE BOOKS (popbook.ts): w.props.book(kind).put(at, o).set({ open, g, t })
-  const books = buildPopBooks(K); group.add(books.group);
+  const books = buildPopBooks(K, group);
   return { group, prop, thread, hang, book: books.book, begin() { for (const p of made.values()) p.group.visible = false; for (const t of threads.values()) { t.core.visible = false; t.hull.visible = false; } books.begin(); } };
 };
 export type Props = ReturnType<typeof buildProps>;

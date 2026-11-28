@@ -1,252 +1,332 @@
-// SCENE C · 09:30, the case-file cabinet. HIS OLD RESULTS. He bustles to the wall of drawers and pulls five famous
-// files, each a brag that goes wrong in his own hands:
-//   牛郎织女   out of its drawer with a flourish; "once a year" and the file goes quietly back, the drawer pushed shut
-//   梁祝       two paper butterflies flutter out of the folder and away; the file goes behind his back (这单别记)
-//   许仙白娘子  a bale of approvals from the bottom drawer, hauled up with both arms, dropped on the floor (a thousand years)
-//   宝玉黛玉   his hands shake as they did then; the file slips and falls (绑成了宝钗)
-//   董永七仙女  a top drawer opened a crack, shut again at once; the whisper with a finger on his lips (玉帝的亲闺女)
-// Each file's CARD (the film's 喜帖 skin) sits in the upper left, clear of him, its verdict stamped on the word.
-// CAMERA PLAN (her eyes, one take; 37 s, six moves; he stays right of centre, the cards own the upper left):
-//   arrive    LOOK AT him reaching the wall of drawers      medium wide (the whip pan lands here)       still: the drawers, the files and the floor all play in this frame
-//   变蝴蝶了   the butterflies                               tilt up after them, and back to him          along his own look
-//   跨物种     the bale on the floor                         tilt down (5 frames), one kick on the thud   then back up to him
-//   宝钗       his face                                      close (snap zoom)                           lands on the word, held a second
-//   那是       the whisper                                   close, the lens leans in and tips            she leans in to hear
-//   三百年     him small before the open drawers             wide                                         she steps back; the clock races on it
+// SCENE C · 09:30, the case-file cabinet. HIS OLD RESULTS (v6, owner's notes 4, 6, 7, 13 and 15 on v5). He pulls up at
+// the wall of drawers and shows her his famous cases, one POP-UP BOOK each (popbook.ts: a thread-bound book with the
+// story's name on its cover; opened toward her lens, a paper pop-up stands up off the pages and plays the case). He is
+// a god with a filing system: he beckons, a drawer shoots open and the case book flies out into his hands, growing to
+// its size as it comes (in its drawer it stands 3/4 size, like a file). Each case is a brag that goes wrong in his hands:
+//   《牛郎织女》 opened on 我绑的: the magpie bridge. On "once a year" the magpies fly off one by one; the two lean toward
+//              each other over the river (异地恋); he shuts it and flicks it back to its drawer
+//   《梁祝》     by the grave mound: on 变蝴蝶了 the two fold away and two butterflies flutter up out of the frame;
+//              这单别记: snapped shut and put behind his back (her OS: 记下了), and let drop behind him
+//   《白蛇传》   from the bottom drawer: 审批走了一千年: a concertina of approval slips climbs out of the book far over his
+//              head and folds back; he lets the book drop at his feet
+//   《红楼梦》   宝玉's thread to 黛玉; 手一抖: it shakes, swings over and lands on 宝钗; the readers' letters burst out at
+//              her; he hurls it back into its drawer
+//   《天仙配》   from the top drawer, slowly, bound in imperial yellow under the Jade Emperor's seal strip; opened a crack,
+//              the jade seal springs up; 扣了: it slams down and shuts the book, which pulls out of his hands and flies back
+//              up into its drawer by itself; he droops
+// No HUD case cards (v5's were "boring illustrated"): the books carry the names and the gags. One 演绎 seal on his first
+// claim, one OS. One face per thought (16 in 37 s, v5 had 30), each on the beat that causes it. No finger (note 7).
+// CAMERA PLAN (her eyes, one take; 37 s, seven moves; the books face her, his face above them, both clear of the REC
+// row and the subtitles):
+//   arrive    LOOK AT him pulling up at the wall of drawers   medium wide (the whip pan lands here)    still
+//   老业绩     the first book flying to him                   medium                                   the lens turns with the book into the medium
+//   变蝴蝶了   the butterflies                                 tilt up after them                       along his look; back down as he hides the book
+//   一千年     the concertina of slips                        tilt up along it                         back down as it folds away
+//   骂了我     the letters bursting at her                     one kick                                 the hit
+//   七仙女     his face over the yellow book                  slow push in (a thought landing)          the seal springs up in the closer frame
+//   扣了       the seal slamming down                         one kick; she steps back wide            he is small before his drawers (scene D goes on from here)
 import * as THREE from "three";
 import { seg, type Segment } from "../story";
-import { povCam, whip, whipSmear, aimCam } from "../cam";
-import { P, ck, startOf, endOf, wordAt, ky, rel, V, VERBS, smooth, kick, hang, faceTo, v3, through, turnTo, hit } from "./kit";
+import { whip, whipSmear } from "../cam";
+import { P, startOf, wordAt, ky, rel, V, smooth, kick, hang, faceTo, through, turnTo, hit, shotCam, type ShotKey } from "./kit";
 import { act, YL, type MoodKey } from "./act";
-import { caseFile, disclaimer, draw, type Fx } from "./fx";
-import { CAM_C0, toCab, CAB_AT } from "./segB";
+import { os, truth, draw, type Fx } from "./fx";
+import { toCab, CAB_AT } from "./segB";
 import { OFFICE } from "../places";
+import { PB, type BookKind } from "../popbook";
 import type { World } from "../world";
 
 const S = seg("C");
-const CABX = OFFICE.cabinetX, OUT = 0.22, CRACK = 0.045;   // (the secret drawer only ever opens a crack)
-type Cell = { z: number; y: number; knob: number };
-const cell = (c: number, r: number): Cell => { const top = 2.2 - r * 0.26; return { z: OFFICE.cabinet.z1 - (c + 0.5) * 0.25, y: top - 0.13, knob: top - 0.161 }; };
-/** the five drawers: 牛郎织女, 梁祝 and 宝黛 at his waist (under his head and beard, so an open one stands clear of him),
- *  白蛇 at his knees (the bottom but one), 七仙女 at his chin (top secret: he tips his head to peek) */
-const CELLS = [cell(4, 5), cell(5, 5), cell(4, 6), cell(6, 5), cell(5, 4)];
-const BASE = P("office", -2.1, 0, -0.3);
+const CABX = OFFICE.cabinetX, OUT = 0.2;
+type Cell = { z: number; y: number };
+const cell = (c: number, r: number): Cell => { const top = 2.2 - r * 0.26; return { z: OFFICE.cabinet.z1 - (c + 0.5) * 0.25, y: top - 0.13 }; };
+/** the five case drawers, spread over the wall so each flight reads beside him: 牛郎织女 at his right (her left), 梁祝
+ *  high at his left, 白蛇传 in the bottom row, 红楼梦 at his left, 天仙配 in the top row over his head (top secret) */
+const CELLS = [cell(5, 5), cell(11, 4), cell(4, 7), cell(12, 5), cell(7, 1)];
+const KINDS: BookKind[] = ["niulang", "liangzhu", "baishe", "baodai", "qixian"];
+/** which hand beckons each drawer (-1 his right, +1 his left) */
+const SIDE = [-1, 1, -1, 1, -1];
+/** where he stands (scene D starts him here) */
+export const BASE = P("office", -2.1, 0, -0.3);
+/** her lens at the end of the scene (scene D starts from it) */
 export const CAM_C1 = { pos: [-0.35, 1.52, 1.45], look: [-2.72, 1.0, -0.5], fov: 58 };
-const knob = (c: Cell, out: number) => P("office", CABX + out + 0.024, c.knob, c.z);
-const inD = (c: Cell, out: number) => P("office", CABX + out - 0.075, c.y + 0.16, c.z);
+/** where she stands while he shows the books (he turns his front toward it) */
+const HER = P("office", -0.44, 0, 1.43);
+const FRONT = faceTo(BASE, HER);
+/** the two books he lets fall: 梁祝 behind him, 白蛇传 at his feet (clear of his hem, and of his run in scene D) */
+const FLOOR2 = P("office", -2.32, 0, -0.62), FLOOR3 = P("office", -1.74, 0, 0.08);   // (v6b: FLOOR3 8 cm further out: his robe brushed it)
 
-/** the frames of the scene's business (also read by scene D, which goes on in the same room without a cut) */
-const T = () => {
-  const c02 = startOf("C02"), c05 = startOf("C05"), c06 = startOf("C06"), c07 = startOf("C07"), c09 = startOf("C09");
-  return {
-    c02, c05, c06, c07, c09, mine: wordAt("C01", "我的"), g1: c02 - 26, b1: wordAt("C04", "也算") + 2, g2: c05 - 12, bf: wordAt("C05", "变") - 8, hide: wordAt("C05", "这单"),
-    g3: c06 - 14, kua: wordAt("C06", "跨"), wipe: wordAt("C06", "审批"), g4: c07 - 6, shake: wordAt("C07", "手"), slip: wordAt("C07", "绑成") - 6, chai: wordAt("C07", "宝钗"),
-    g5: c09 - 12, slam: wordAt("C09", "仙女") + 10, that: wordAt("C09", "那是"),   // (the slam right after 七仙女, then a beat before the whisper)
-  };
+// ------------------------------------------------------------------------------------------------- the books' frame
+type BP = { at: THREE.Vector3; q: THREE.Quaternion; open: number; s: number };
+const PW = PB.pw, PH = PB.ph, S_IN = 0.75;
+const Q = (yaw: number, pitch = 0, roll = 0) => new THREE.Quaternion().setFromEuler(new THREE.Euler(pitch, yaw, roll, "YXZ"));
+/** a point given in the book's own units (popbook.ts frame) in the world */
+const bpt = (b: BP, x: number, y: number, z: number) => V(x, y, z).multiplyScalar(b.s).applyQuaternion(b.q).add(b.at);
+const lerpBP = (a: BP, b: BP, k: number): BP => ({ at: a.at.clone().lerp(b.at, k), q: a.q.clone().slerp(b.q, k), open: a.open + (b.open - a.open) * k, s: a.s + (b.s - a.s) * k });
+/** standing in its drawer on its bottom edge, the cover to the drawer's front (+x), 4 cm behind it, at 3/4 size */
+const inDrawer = (c: Cell, out: number): BP => ({ at: P("office", CABX + out - 0.04, c.y - 0.1 + (PH * S_IN) / 2 + 0.001, c.z - (PW * S_IN) / 2), q: Q(Math.PI / 2), open: 0, s: S_IN });
+/** lying shut on the floor, the cover up */
+const onFloor = (p: THREE.Vector3, yaw: number): BP => ({ at: p.clone().setY(0.022), q: Q(yaw, -Math.PI / 2), open: 0, s: 1 });
+/** THE HOLD: up in front of his chest, clear of his beard (26 cm deep), its top under his mouth as she sees it, tilted
+ *  back a little to face her lens. Shut it sits centred on him; as it opens the spine slides to his middle. */
+const SHOW_Y = 0.76, SHOW_Z = 0.44, TILT = -0.22;   // (v6b: 0.4 left the beard touching the book's back when he looked up)
+// grips (book units): the right hand under the bottom edge near the fore-edge; the left under the spine side when shut,
+// under the right-hand page's outer corner when open
+const RH = [-0.21, -PH / 2 - 0.05, -0.014] as const;
+const LH = (open: number) => [-0.04 + 0.25 * smooth(open), -PH / 2 - 0.05, -0.014] as const;
+
+// ------------------------------------------------------------------------------------------------------ the timing
+const W_ = {
+  mine: wordAt("C01", "老业"), bound: wordAt("C02", "我绑"), solid: wordAt("C02", "牢"), year: wordAt("C03", "一年"), c04: startOf("C04"), counts: wordAt("C04", "也算"),
+  c05: startOf("C05"), bf: wordAt("C05", "变"), hide: wordAt("C05", "这单"), noted: wordAt("C05", "别记"), c06: startOf("C06"), kua: wordAt("C06", "跨"), appr: wordAt("C06", "审批"), kyr: wordAt("C06", "千年"),
+  c07: startOf("C07"), shake: wordAt("C07", "手"), tie: wordAt("C07", "绑成"), chai: wordAt("C07", "宝钗"), c08: startOf("C08"), curse: wordAt("C08", "骂"), late: wordAt("C08", "多年"),
+  c09: startOf("C09"), that: wordAt("C09", "那是"), jade: wordAt("C09", "玉帝"), c10: startOf("C10"), c11: startOf("C11"), three: wordAt("C11", "三百"),
 };
-/** how far each of the five drawers is out on frame f */
-const outs = (f: number) => {
-  const t = T();
+/** each case: s = he beckons (its drawer shoots open 4 frames later, the book leaves it at s + 8 and is in his hands at
+ *  catch); open = [from, to, how far]; shut = [from, to]; exit = the frame it leaves his hands */
+type Case = { s: number; leave: number; catch: number; open: [number, number, number]; shut: [number, number]; exit: number; cell: Cell };
+const CASES: Case[] = (() => {
+  const w = W_, mk = (s: number, fly: number, open: [number, number, number], shut: [number, number], exit: number, i: number): Case => ({ s, leave: s + 8, catch: s + 8 + fly, open, shut, exit, cell: CELLS[i] });
   return [
-    f < t.b1 ? ky(f, [[t.g1 + 5, 0], [t.g1 + 11, OUT]]) : ky(f, [[t.b1 + 18, OUT], [t.b1 + 23, 0]]),
-    ky(f, [[t.g2 + 5, 0], [t.g2 + 11, OUT]]),
-    ky(f, [[t.g3 + 6, 0], [t.g3 + 13, 0.3]]),
-    ky(f, [[t.g4 + 5, 0], [t.g4 + 11, OUT]]),
-    f < t.slam ? ky(f, [[t.g5 + 6, 0], [t.g5 + 11, CRACK]]) : ky(f, [[t.slam, CRACK], [t.slam + 3, 0]]),   // a crack only, and slammed shut
+    mk(w.mine - 4, 14, [w.bound - 12, w.bound - 2, 1], [w.counts + 2, w.counts + 10], w.counts + 12, 0),
+    mk(w.c05 - 26, 16, [w.c05 + 20, w.c05 + 30, 1], [w.hide - 6, w.hide], w.hide + 22, 1),
+    mk(w.hide + 34, 15, [w.c06 + 26, w.c06 + 36, 1], [w.kyr + 20, w.kyr + 26], w.kyr + 26, 2),
+    mk(w.kyr + 22, 16, [w.c07 + 38, w.c07 + 48, 1], [w.late + 13, w.late + 19], w.late + 19, 3),
+    // (v6b: it stays shut in his hands through 三百年仙丹, so his face is clear on the punch, then pulls free on its own)
+    mk(w.late + 21, 19, [w.that + 2, w.that + 7, 0.12], [w.c11, w.c11 + 3], w.c11 + 40, 4),
   ];
+})();
+/** the gag of each book over the frames (popbook.ts reads g its own way) */
+const GAG: [number, number][][] = [
+  [[CASES[0].open[0], 0], [W_.solid - 7, 0.2], [W_.year, 0.3], [W_.c04 - 5, 0.64], [W_.c04 + 2, 0.7], [W_.counts - 5, 0.92]],
+  [[CASES[1].open[1], 0.1], [W_.bf - 3, 0.27], [W_.bf - 1, 0.3], [W_.bf + 10, 0.42], [W_.hide - 3, 0.91]],
+  [[CASES[2].open[1], 0.1], [W_.appr - 5, 0.2], [W_.kyr + 8, 0.7], [W_.kyr + 15, 0.86], [W_.kyr + 21, 0.98]],
+  [[CASES[3].open[1], 0.08], [W_.shake - 2, 0.15], [W_.tie - 5, 0.3], [W_.tie + 6, 0.42], [W_.chai + 6, 0.47], [W_.curse - 4, 0.6], [W_.curse + 12, 0.85], [W_.late + 12, 0.98]],
+  [[CASES[4].open[1], 0.12], [W_.jade + 5, 0.27], [W_.c11 - 3, 0.45], [W_.c11, 0.6], [W_.c11 + 3, 0.68]],
+];
+/** the flights back (case 0: flicked; 3: hurled; 4: on its own): [leaves his hands, in its drawer] */
+const BACK: Record<number, [number, number]> = { 0: [CASES[0].exit, CASES[0].exit + 12], 3: [CASES[3].exit, CASES[3].exit + 10], 4: [CASES[4].exit, CASES[4].exit + 14] };
+/** how far each drawer is out on frame f: open for its book to leave, shut after it; open again to take it back */
+const outs = (f: number) => CASES.map((c, i) => {
+  const away = ky(f, [[c.s + 4, 0], [c.s + 8, OUT], [c.leave + 6, OUT], [c.leave + 12, 0]]), b = BACK[i];
+  return b ? Math.max(away, ky(f, [[b[0] - 2, 0], [b[0] + 3, OUT], [b[1], OUT], [b[1] + (i === 0 ? 5 : 3), 0]])) : away;
+});
+
+// ------------------------------------------------------------------------------------------------- where he stands
+const body = (f: number) => {
+  const leg = toCab(f), walking = f < CAB_AT, turnK = smooth((f - (CAB_AT - 5)) / 11);
+  // he turns a little toward each drawer as he beckons it, and toward where each book goes back
+  let facing = FRONT;
+  CASES.forEach((c, i) => { const k = ky(f, [[c.s - 4, 0], [c.s + 2, 1], [c.leave + 4, 1], [c.catch - 2, 0]]); facing += SIDE[i] * 0.38 * k; });
+  for (const [i, b] of Object.entries(BACK)) { const k = ky(f, [[b[0] - 3, 0], [b[0] + 2, 1], [b[1] + 2, 1], [b[1] + 10, 0]]); facing += SIDE[+i] * 0.3 * k; }
+  const at = BASE.clone();
+  if (walking) at.copy(leg.at);
+  if (turnK < 1) facing = turnTo(leg.facing, facing, turnK);
+  return { at, facing, walking, leg };
 };
-/** where the bale and the dropped file lie on the floor */
-const FLOOR3 = P("office", -1.64, 0, -0.06), FLOOR4 = P("office", -1.95, 0.014, 0.14);   // both clear of his hem (26 cm) where he stands, and of each other
-/** THE STATE OF THE CABINET from scene C on: the drawers left open, the bale and the dropped file on the floor.
- *  Scene C draws the moving parts itself; scene D calls this for what stays behind. */
-export const cabinetMess = (w: World, f: number, o: { stack?: boolean; file4?: boolean } = {}) => {
-  const out = outs(f);
-  out.forEach((x, i) => { if (x > 0.004) w.prop("drawer", `d${i}`).put(P("office", CABX + x, CELLS[i].y, CELLS[i].z)); });
-  if (o.stack !== false) w.prop("stack").put(FLOOR3, { yaw: 0.5 });
-  if (o.file4 !== false) w.prop("file", "f4").put(FLOOR4, { yaw: 0.9, pitch: -Math.PI / 2 });
+/** the book held up in front of him on frame f (open 0..1); dy: a lift (the catch, the pride bob, the shield) */
+const showAt = (f: number, open: number, dy = 0): BP => {
+  const b = body(f), o = smooth(open), base = rel(BASE, FRONT, 0, 0, 0);
+  void base;
+  const at = rel(b.at, FRONT, 0.1 * (1 - o), SHOW_Y + dy, SHOW_Z);
+  return { at, q: Q(faceTo(at, HER), TILT), open, s: 1 };
+};
+
+// ------------------------------------------------------------------------------------------------- each book's state
+type Book = { bp: BP; g: number; held?: boolean; R?: THREE.Vector3; L?: THREE.Vector3 } | null;
+const openOf = (c: Case, f: number) => (f < c.shut[0] ? ky(f, [[c.open[0], 0], [c.open[1], c.open[2]]]) : ky(f, [[c.shut[0], c.open[2]], [c.shut[1], 0]]));
+/** while held up: the catch, the pride bob on 牢吧, the shield against the letters, the tremble of 手一抖 */
+const lift = (i: number, f: number) => {
+  const c = CASES[i]; let d = -0.03 * hit(f, c.catch, 9);
+  if (i === 0) d += 0.025 * hit(f, W_.solid - 2, 12);
+  if (i === 3) d += 0.05 * ky(f, [[W_.curse - 6, 0], [W_.curse, 1], [c.exit - 8, 1], [c.exit, 0]]) + (f >= W_.shake - 2 && f < W_.tie + 2 ? 0.007 * Math.sin(f * 2.7) : 0);
+  if (i === 4) d += f >= c.catch && f < W_.that ? 0.004 * Math.sin(f * 3.1) : 0;   // (it is hot in his hands)
+  return d;
+};
+const held = (i: number, f: number): Book => {
+  const c = CASES[i], op = openOf(c, f), bp = showAt(f, op, lift(i, f));
+  return { bp, g: ky(f, GAG[i]), held: true, R: bpt(bp, RH[0], RH[1], RH[2]), L: bpt(bp, ...LH(op)) };
+};
+/** where each flight bends (a point beside or over him, his place-relative: dx (+ his left), y, forward), so a book from a
+ *  drawer behind him comes round his side or over his head, never through him */
+const VIA: [number, number, number][] = [[-0.62, 1.0, 0.22], [0.8, 1.2, 0.05], [-0.62, 0.85, 0.3], [0.85, 1.05, 0.1], [0.05, 2.0, 0.25]];
+const via = (i: number) => rel(BASE, FRONT, VIA[i][0], VIA[i][1], VIA[i][2]);
+/** the way back, where it differs: 天仙配 goes up round his right shoulder (out of her frame and in again as she pulls
+ *  back), never up across his face */
+const VIA_BACK: Record<number, [number, number, number]> = { 4: [-0.95, 1.4, 0.15] };
+const viaBack = (i: number) => (VIA_BACK[i] ? rel(BASE, FRONT, VIA_BACK[i][0], VIA_BACK[i][1], VIA_BACK[i][2]) : via(i));
+/** a quadratic flight from a to b, k 0..1, bending through `mid`; with a flutter (roll) that dies */
+const flight = (a: BP, b: BP, k: number, mid0: THREE.Vector3): BP => {
+  const e = k < 0.5 ? 2 * k * k : 1 - 2 * (1 - k) * (1 - k), mid = mid0.clone(), u = 1 - e;
+  const at = a.at.clone().multiplyScalar(u * u).add(mid.multiplyScalar(2 * e * u)).add(b.at.clone().multiplyScalar(e * e));
+  const r = lerpBP(a, b, smooth(k)); r.at = at;
+  r.q.multiply(Q(0, 0, 0.35 * Math.sin(k * Math.PI * 3) * (1 - k)));
+  return r;
+};
+const BOOK = (i: number, f: number, behind?: (f: number) => BP | null): Book => {
+  const c = CASES[i], out = outs(f)[i], inside: Book = out > 0.004 ? { bp: inDrawer(c.cell, out), g: 0 } : null;
+  if (f < c.leave) return inside;
+  if (f < c.catch) return { bp: flight(inDrawer(c.cell, OUT), showAt(c.catch, 0), (f - c.leave) / (c.catch - c.leave), via(i)), g: 0 };
+  if (i === 1 && f >= W_.hide) { const hb = behind?.(f); return hb ? { bp: hb, g: 0 } : { bp: onFloor(FLOOR2, 0.6), g: 0 }; }
+  if (f < c.exit) return held(i, f);
+  const b = BACK[i];
+  if (b) {
+    if (f < b[1]) return { bp: flight(showAt(b[0], 0), inDrawer(c.cell, OUT), (f - b[0]) / (b[1] - b[0]), viaBack(i)), g: 0 };
+    return inside;
+  }
+  // 白蛇传: let fall at his feet, a short fall turning flat, one small bounce
+  const a = showAt(c.exit, 0), fl = onFloor(FLOOR3, 0.35), u = Math.min(1, (f - c.exit) / 8), bp = lerpBP(a, fl, smooth(u));
+  bp.at.y = a.at.y + (fl.at.y - a.at.y) * u * u + 0.03 * Math.sin(Math.PI * Math.min(1, Math.max(0, (f - c.exit - 8) / 5)));
+  return { bp, g: 0 };
+};
+/** what stays behind from scene C on: 梁祝 on the floor behind where he stood, 白蛇传 at his feet. Scene D calls this. */
+export const cabinetMess = (w: World, f: number) => {
+  void f;
+  const put = (kind: BookKind, b: BP) => { const e = new THREE.Euler().setFromQuaternion(b.q, "YXZ"); w.props.book(kind).put(b.at, { yaw: e.y, pitch: e.x, roll: e.z, scale: b.s }).set({ open: 0 }); };
+  put("liangzhu", onFloor(FLOOR2, 0.6)); put("baishe", onFloor(FLOOR3, 0.35));
 };
 
 export const SEG: Segment = {
   id: "C", from: S.from, to: S.to, enter() {}, exit() {},
   pose(w, f) {
     w.setPlace("office"); w.set.param("tangle", 0.46); w.set.param("kpi", 0); w.set.param("smoke", 0);
-    const t = T(), c03 = startOf("C03"), c04 = startOf("C04"), c08 = startOf("C08"), c10 = startOf("C10"), c11 = startOf("C11"), e11 = endOf("C11");
-    const { c02, c05, c06, c07, c09, mine, g1, b1, g2, bf, hide, g3, kua, wipe, g4, shake, slip, chai, g5, slam, that } = t;
-    const out = outs(f), [C1, C2, C3, C4, C5] = CELLS;
+    const t = W_;
     // ---------------------------------------------------------------------------------------------- the camera
-    const CP: [number, number, number] = [-0.55, 1.5, 1.2], C0 = { pos: CP, look: [-2.72, 0.87, -0.4], fov: 55 }, UP = { pos: CP, look: [-2.35, 1.32, -0.76], fov: 55 };   // after the butterflies: up and along to the right with them (cabinets, not bare ceiling); his mouth stays above the subtitles
-    const HEAD: [number, number, number] = [-2.1, 1.17, -0.3];
-    // the snap down to the bale: the bale itself in the middle of the frame (well above the subtitles) and his head gone off
-    // the top (it no longer rises into the corner under the battery)
-    const DOWN = aimCam(CP, [-1.64, 0.15, -0.06], 620, 900, 55) as { pos: number[]; look: number[]; fov: number };
-    // the snap zoom and the lean-in aim by where his head lands on the frame (clear of the card, the face above the subtitles)
-    const FACE = aimCam(CP, HEAD, 690, 1030, 41) as { pos: number[]; look: number[]; fov: number }, LEAN = aimCam([-1.0, 1.43, 0.66] as [number, number, number], HEAD, 560, 890, 52) as { pos: number[]; look: number[]; fov: number };
-    const K = (at: number, c: { pos: number[]; look: number[]; fov: number }, roll = 0) => ck("office", at, c.pos, c.look, c.fov, { roll });
-    let camera = povCam(f, [
-      K(S.from, C0), K(bf + 6, C0), K(bf + 18, UP), K(hide - 16, UP), K(hide - 8, C0),   // (his eyes and head go first, the lens follows)   // (back down on him before the file starts round his side)
-      K(kua + 1, C0), K(kua + 6, DOWN), K(kua + 22, DOWN), K(kua + 34, C0),
-      K(chai - 6, C0), K(chai - 1, FACE), K(c08 + 14, FACE), K(c08 + 26, C0),
-      K(that - 6, C0), K(that + 6, LEAN, -6), K(c10 - 2, LEAN, -6), K(c10 + 10, C0),   // (this aim and tip keep the drawer tags out from under the REC clock and the battery)
-      K(c11 + 14, C0), K(e11 + 4, CAM_C1), K(S.to, CAM_C1),
-    ], { mood: "calm", amp: 0.6, walk: [[S.from, 0], [c11 + 14, 0], [c11 + 20, 0.3], [e11 + 4, 0]] });
-    camera = kick(kick(camera, f, kua + 4, 0.035), f, slam + 3, 0.02);   // the bale's thud; the secret drawer slammed shut
+    const C0: Omit<ShotKey, "f"> = { pos: [-0.55, 1.5, 1.2], at: [-2.72, 1.0, -0.4], sx: 540, sy: 960, fov: 56 };
+    const MP: [number, number, number] = [-0.44, 1.45, 1.43];
+    // (the medium keeps his dome under the REC row and the book's bottom over the subtitles; for what flies up out of a
+    // book she widens instead of tilting, so nothing he holds slides down into the subtitles)
+    const MED: Omit<ShotKey, "f"> = { pos: MP, at: [-2.02, 0.88, -0.22], sx: 548, sy: 860, fov: 46 };
+    const BFLY: Omit<ShotKey, "f"> = { ...MED, sy: 900, fov: 54 };
+    const SLIPS: Omit<ShotKey, "f"> = { ...MED, sy: 920, fov: 57 };
+    const CLOSE: Omit<ShotKey, "f"> = { pos: [-0.72, 1.43, 1.12], at: [-2.04, 0.92, -0.24], sx: 548, sy: 850, fov: 47 };   // (v6b: 43 left the jade seal at the frame edge)
+    const WIDE: Omit<ShotKey, "f"> = { pos: CAM_C1.pos, at: CAM_C1.look, sx: 540, sy: 960, fov: CAM_C1.fov };
+    const K = (k: number, c: Omit<ShotKey, "f">): ShotKey => ({ f: k, ...c });
+    const [c1, c2, c3, c4, c5] = CASES;
+    let camera = shotCam("office", f, [
+      K(S.from, C0), K(c1.s, C0), K(c1.catch + 4, MED),
+      K(t.bf + 3, MED), K(t.bf + 18, BFLY), K(t.hide - 8, BFLY), K(t.hide + 7, MED),
+      K(t.appr + 4, MED), K(t.appr + 26, SLIPS), K(t.kyr + 12, SLIPS), K(c3.exit + 4, MED),
+      K(c5.catch - 6, MED), K(t.jade + 30, CLOSE), K(BACK[4][0], CLOSE), K(BACK[4][0] + 34, WIDE), K(S.to, WIDE),
+    ], { mood: "calm", amp: 0.5, walk: [[S.from, 0], [c1.s, 0], [c1.s + 8, 0.25], [c1.catch + 4, 0], [BACK[4][0], 0], [BACK[4][0] + 10, 0.3], [BACK[4][0] + 34, 0]] });
+    camera = kick(kick(camera, f, t.curse - 4, 0.03), f, t.c11 + 2, 0.025);   // the letters burst at her; the seal slams down
     const W = whip(camera, f, S.from - 4, { dir: -1, to: camera });
     camera = W.cam;
     w.setCamera(camera);
-    const camP = v3(camera.pos);
     // ---------------------------------------------------------------------------------------------- where he stands
-    // he comes in from the right as the whip pan lands: the last steps of his run, slowing, turning to her as he pulls up
-    const leg = toCab(f), walking = f < CAB_AT, turnK = smooth((f - (CAB_AT - 5)) / 11);
-    const win = (a: number, up: number, hold: number, down: number) => ky(f, [[a, 0], [a + up, 1], [hold, 1], [hold + down, 0]]);
-    // side-on at a drawer: he stands a step short of it, facing along the wall, and LEANS IN to take the knob with his right
-    // hand; he straightens as it comes out, so the open drawer stands clear of his head and beard. Back-on at the bottom drawer
-    const wk = [win(g1, 5, g1 + 17, 9), win(b1, 7, b1 + 23, 6), win(g2, 5, g2 + 17, 9), win(g4, 5, g4 + 17, 9), win(g5, 5, slam + 3, 6)];
-    const wkCell = [C1, C1, C2, C4, C5];
-    const low = win(g3, 6, g3 + 21, 10), bend = ky(f, [[g3 + 3, 0], [g3 + 12, 1], [g3 + 20, 1], [g3 + 31, 0]]);
-    const at = BASE.clone();
-    wk.forEach((k, i) => at.lerp(P("office", -2.26, 0, wkCell[i].z - 0.3), smooth(k)));
-    at.lerp(P("office", -2.08, 0, C3.z - 0.1), smooth(low));
-    at.y -= 0.1 * bend;
-    const front = faceTo(BASE, camP), side = Math.max(...wk);
-    let facing = turnTo(front, -0.15, smooth(side));
-    facing = turnTo(facing, -1.05, smooth(low));
-    if (walking) at.copy(leg.at);
-    if (turnK < 1) facing = turnTo(leg.facing, facing, turnK);
-    // into the run, back on his heels as he stops, settled
-    const pullUp = f < CAB_AT + 10 ? ky(f, [[CAB_AT - 9, 8], [CAB_AT - 2, -5], [CAB_AT + 3, -2.5], [CAB_AT + 10, 0]]) : 0;
+    const B = body(f), { at, facing, walking, leg } = B;
     const H = (dx: number, y: number, z: number) => rel(at, facing, dx, y, z);
-    // the lean to the knob: in as the hand lands on it, back as the drawer comes out (and in again to push one shut);
-    // at the secret drawer he stays half in, peeking
-    const reach = (g: number) => ky(f, [[g, 0], [g + 5, 1], [g + 11, 0.1], [g + 19, 0.1], [g + 25, 0]]);
-    const leanIn = Math.max(reach(g1), reach(g2), reach(g4), ky(f, [[b1 + 14, 0], [b1 + 22, 1], [b1 + 24, 1], [b1 + 31, 0]]),
-      ky(f, [[g5, 0], [g5 + 6, 1], [g5 + 12, 0.6], [slam - 2, 0.6], [slam + 3, 1], [slam + 10, 0]]));
-    // ---------------------------------------------------------------------------------------------- his hands
-    const tremble = hit(f, shake - 2, 30) > 0 && f < slip ? 0.012 * Math.sin(f * 2.9) : 0, lowerK = ky(f, [[c03 + 46, 0], [c03 + 66, 1]]) * (f < b1 + 8 ? 1 : 0);
-    // a file shown: held out at arm's length in front of the beard (the beard is 26 cm deep at the chest), sinking a little with his pride
-    const upK = ky(f, [[bf + 1, 0], [bf + 9, 1], [hide - 18, 1], [hide - 10, 0]]);   // watching the butterflies go: the file drifts a little out from under his lifted beard
-    const holdR = H(-0.105, 0.77 - 0.05 * lowerK + tremble + 0.01 * upK, 0.32 - 0.01 * lowerK + 0.018 * upK), holdL = H(0.105, 0.77 - 0.05 * lowerK - tremble + 0.01 * upK, 0.32 - 0.01 * lowerK + 0.018 * upK), hangR = hang(at, facing, 0), hangL = hang(at, facing, 1);
-    const lowR = H(-0.13, 0.57, 0.25), lowL = H(0.13, 0.57, 0.25);
-    // 这单别记: the file goes BEHIND HIS BACK, each hand round its own side of him (never through him); k 0 = held out in front, 1 = behind
+    // (his hands at rest hang a little wider and further forward than the kit's: his robe is a wide bell)
+    const hangR = rel(at, facing, -0.228, 0.59, 0.05), hangL = rel(at, facing, 0.228, 0.59, 0.05);   // (where the rig's own idle puts them, so handing over to it never jumps)
+    void hang;
+    const pullUp = f < CAB_AT + 10 ? ky(f, [[CAB_AT - 9, 8], [CAB_AT - 2, -5], [CAB_AT + 3, -2.5], [CAB_AT + 10, 0]]) : 0;
+    // ---------------------------------------------------------------------------------------------- 这单别记: behind his back
+    // each hand round its own side of him (never through him), the book in his right; k 0 = in front, 1 = behind
     const swing = (arm: 0 | 1, k: number) => { const phi = ((18 + 137 * k) * Math.PI) / 180, r = 0.337 - 0.117 * k + 0.04 * Math.sin(Math.PI * k); return H((arm ? 1 : -1) * r * Math.sin(phi), 0.77 - 0.15 * k, r * Math.cos(phi)); };
-    const hide0 = hide - 10, HIDE_N = 14;   // (fourteen frames round his side: she sees it go)
-    const hideR = f < g3 - 12 ? smooth((f - hide0) / HIDE_N) : 1 - 0.5 * smooth((f - (g3 - 12)) / 4), hideL = f < g3 - 10 ? smooth((f - hide0) / HIDE_N) : 1 - 0.45 * smooth((f - (g3 - 10)) / 4);
-    // 审批跑了我一千年: his head hangs and the back of his hand goes across his brow, twice (his arm is short: the brow comes
-    // down to the hand; the head leans 3 degrees from the hip, so its front is 3 cm ahead of the body's)
-    const headF = 0.64 * Math.sin((3 * Math.PI) / 180), browA = H(-0.135, 1.24, headF + 0.19), browB = H(-0.055, 1.25, headF + 0.222), restR = H(-0.2, 0.62, 0.13);
-    const wipeK = ky(f, [[wipe - 4, 0], [wipe + 2, 1], [wipe + 27, 1], [wipe + 35, 0]]);
-    const take = (g: number, c: Cell, o: number, to: THREE.Vector3): [number, THREE.Vector3][] => [[g, hangR], [g + 5, knob(c, 0)], [g + 11, knob(c, o)], [g + 17, inD(c, o)], [g + 27, to]];
-    const K0: [number, THREE.Vector3][] = [
-      [S.from, hangR], [mine - 5, hangR], [mine + 3, H(-0.33, 0.92, 0.02)], [g1 - 1, H(-0.33, 0.92, 0.02)],
-      ...take(g1, C1, OUT, holdR), [b1, holdR], [b1 + 8, inD(C1, OUT).add(V(0, 0.2, 0))], [b1 + 13, inD(C1, OUT)], [b1 + 18, knob(C1, OUT)], [b1 + 23, knob(C1, 0)], [b1 + 30, hangR],
-      ...take(g2, C2, OUT, holdR), [hide0, holdR], [g3 - 8, swing(0, 0.5)], [g3 - 4, inD(C2, OUT).add(V(0, 0.1, 0))],
-      [g3, hangR], [g3 + 6, knob(C3, 0).add(V(0, 0, -0.045))], [g3 + 13, knob(C3, 0.3).add(V(0, 0, -0.045))], [g3 + 19, P("office", CABX + 0.14, C3.y + 0.1, C3.z - 0.12)], [g3 + 31, lowR],
-      [kua - 2, lowR], [kua + 5, H(-0.24, 0.66, 0.16)], [wipe - 6, restR], [wipe + 2, browA], [wipe + 10, browB], [wipe + 18, browA], [wipe + 26, browB], [wipe + 35, restR], [g4 - 8, restR], [g4 - 1, hangR],
-      ...take(g4, C4, OUT, holdR), [slip + 2, holdR], [slip + 5, H(-0.15, 0.86, 0.26)], [c08 - 6, H(-0.15, 0.86, 0.26)], [c08 + 6, H(-0.05, 0.64, 0.2)], [g5 - 1, H(-0.05, 0.64, 0.2)],
-      [g5, hangR], [g5 + 6, knob(C5, 0)], [g5 + 11, knob(C5, CRACK)], [slam, knob(C5, CRACK)], [slam + 3, knob(C5, 0)], [slam + 10, hangR],
-    ];
-    const K1: [number, THREE.Vector3][] = [
-      [S.from, hangL], [mine - 5, hangL], [mine + 3, H(0.3, 0.84, 0.12)], [g1 + 2, H(0.3, 0.84, 0.12)], [g1 + 9, hangL],
-      [g1 + 19, hangL], [g1 + 27, holdL], [b1, holdL], [b1 + 7, hangL],
-      [g2 + 19, hangL], [g2 + 27, holdL], [hide0, holdL], [g3 - 6, swing(1, 0.55)], [g3 - 2, hangL],
-      [g3, hangL], [g3 + 6, knob(C3, 0).add(V(0, 0, 0.045))], [g3 + 13, knob(C3, 0.3).add(V(0, 0, 0.045))], [g3 + 19, P("office", CABX + 0.14, C3.y + 0.1, C3.z + 0.12)], [g3 + 31, lowL],
-      [kua - 2, lowL], [kua + 5, H(0.24, 0.66, 0.16)], [wipe - 6, H(0.2, 0.6, 0.12)], [wipe + 3, H(0.16, 0.52, 0.1)], [g4 - 1, hangL],
-      [g4 + 19, hangL], [g4 + 27, holdL], [slip + 2, holdL], [slip + 5, H(0.15, 0.86, 0.26)], [c08 - 6, H(0.15, 0.86, 0.26)], [c08 + 6, H(0.05, 0.64, 0.2)], [g5 - 1, H(0.05, 0.64, 0.2)], [g5 + 6, hangL],
-    ];
-    const hush = f >= that - 5 && f < c10 - 2;
-    const hands: [THREE.Vector3, THREE.Vector3] | undefined = walking || hush || f < mine - 5 || f > slam + 10 ? undefined
-      : [f >= hide0 && f <= g3 - 8 ? swing(0, hideR) : through(f, K0), f >= hide0 && f <= g3 - 6 ? swing(1, hideL) : through(f, K1)];
-    const wiping = f >= wipe - 2 && f < wipe + 33;
+    const h0 = t.hide, HIDE_N = 14, let2 = c2.exit;
+    const hideK = smooth((f - h0) / HIDE_N);
+    const hiding = f >= h0 && f < let2 + 10;
+    /** the book from the hold into his right hand at his side, round behind him with it; let go behind him, it drops */
+    const behind = (g: number): BP | null => {
+      if (g < h0) return null;
+      const k = smooth((g - h0) / HIDE_N), phi = ((18 + 137 * k) * Math.PI) / 180, hand = swing(0, k), yaw = facing - phi;
+      const side: BP = { at: hand.clone().add(V(Math.sin(yaw), 0, Math.cos(yaw)).multiplyScalar(0.03)).add(V(0, -0.02, 0)), q: Q(yaw), open: 0, s: 1 };
+      side.at.add(V((PW / 2) * side.s, 0, 0).applyQuaternion(side.q));   // (his hand at the middle of the book's face)
+      if (g < let2) return lerpBP(showAt(h0, 0), side, smooth((g - h0) / 4));
+      const u = Math.min(1, (g - let2) / 9);
+      if (u >= 1) return null;
+      const fl = onFloor(FLOOR2, 0.6), bp = lerpBP(side, fl, smooth(u)); bp.at.y = side.at.y + (fl.at.y - side.at.y) * u * u;
+      return bp;
+    };
+    // ---------------------------------------------------------------------------------------------- the books
+    const books = KINDS.map((_, i) => BOOK(i, f, i === 1 ? behind : undefined));
+    // ---------------------------------------------------------------------------------------------- his hands
+    // the beckon: the near hand comes up open toward the drawer, then draws back (come here); both hands come to meet
+    // the book as it lands; after a book goes, they rest low
+    const beckon = (i: number) => { const sd = SIDE[i]; return i === 4 ? [H(-0.32, 0.86, 0.3), H(-0.24, 0.8, 0.32)] as const : [H(sd * 0.3, 0.98, 0.16), H(sd * 0.22, 0.9, 0.26)] as const; };   // (the top drawer: a timid beckon, low, out in front of him)
+    const rest = (sd: number) => H(sd * 0.2, 0.6, 0.14);
+    const KR: [number, THREE.Vector3][] = [[CAB_AT + 3, hangR], [t.mine - 9, hangR]], KL: [number, THREE.Vector3][] = [[CAB_AT + 3, hangL], [t.mine - 9, hangL]];
+    CASES.forEach((c, i) => {
+      const [up, draw0] = beckon(i), mine = SIDE[i] < 0 ? KR : KL, other = SIDE[i] < 0 ? KL : KR, sd = SIDE[i];
+      mine.push([c.s - 3, mine === KR ? rest(-1) : rest(1)], [c.s + 3, up], [c.leave + 1, up], [c.leave + 5, draw0]);
+      other.push([c.s + 2, other === KR ? rest(-1) : rest(1)]);
+      void sd;
+    });
+    for (const [i, b] of Object.entries(BACK)) {
+      // the toss back: both hands follow it toward its drawer, then come down to rest
+      const sd = SIDE[+i], toss = [H(sd * 0.24 - 0.06, 0.78, 0.38), H(sd * 0.24 + 0.06, 0.78, 0.38)];
+      if (+i !== 4) { KR.push([b[0] + 4, toss[0]], [b[0] + 12, rest(-1)]); KL.push([b[0] + 4, toss[1]], [b[0] + 12, rest(1)]); }
+      else { KR.push([b[0] + 3, H(-0.06, 0.7, 0.34)], [b[0] + 14, H(-0.16, 0.56, 0.18)]); KL.push([b[0] + 3, H(0.14, 0.78, 0.36)], [b[0] + 14, H(0.16, 0.56, 0.18)]); }   // (it pulls out of them up past his right shoulder: the right hand drops out of its way; they stay up, empty, then sink)
+    }
+    KR.push([CASES[2].exit + 3, H(-0.22, 0.62, 0.3)]); KL.push([CASES[2].exit + 3, H(0.22, 0.62, 0.3)]);   // (白蛇传 let fall: the hands open)
+    KR.push([let2 + 8, rest(-1)]); KL.push([let2 + 8, rest(1)]);
+    KR.sort((a, b) => a[0] - b[0]); KL.sort((a, b) => a[0] - b[0]);
+    let R = through(f, KR), L = through(f, KL);
+    // a held book: the hands are where its grips are. Coming in, they meet it over its last 8 frames.
+    books.forEach((b, i) => { if (b?.held && b.R && b.L) { R = b.R; L = b.L; } void i; });
+    CASES.forEach((c, i) => {
+      if (f >= c.catch - 8 && f < c.catch) {
+        const k = smooth((f - (c.catch - 8)) / 8), at0 = showAt(c.catch, 0);
+        R = R.clone().lerp(bpt(at0, RH[0], RH[1], RH[2]), k); L = L.clone().lerp(bpt(at0, ...LH(0)), k);
+      }
+      void i;
+    });
+    if (hiding) {
+      const k0 = smooth((f - h0) / 4), b0 = showAt(h0, 0), out = smooth((f - let2) / 6);
+      const sR = swing(0, hideK), sL = swing(1, hideK);
+      R = bpt(b0, RH[0], RH[1], RH[2]).lerp(sR, k0); L = bpt(b0, ...LH(0)).lerp(sL, k0);
+      // let go behind him, the hands come back round his sides the way they went (never through him)
+      if (f >= let2) { const kb = 1 - smooth((f - let2) / 10); R = swing(0, kb); L = swing(1, kb); void out; }
+    }
+    const hands: [THREE.Vector3, THREE.Vector3] | undefined = walking || f < CAB_AT + 3 || f > BACK[4][0] + 30 ? undefined : [R, L];
     // ---------------------------------------------------------------------------------------------- his face
+    // one face per thought, each on the beat that causes it
     const faces: MoodKey[] = [
-      [S.from, "eager"], [mine - 2, "proud"], [wordAt("C02", "我绑") - 1, "joy"], [wordAt("C02", "牢") - 1, "sly"],
-      [c03 + 22, "look"], [c03 + 50, "small", "sink"], [c04 - 2, "sheepish"], [b1 + 4, "grumble"],
-      [g2 + 2, "proud"], [bf + 1, "wonder", "take", 0.7], [bf + 30, "sheepish"], [hide - 2, "hush"],
-      [g3 + 2, "resolve"], [g3 + 18, "strain"], [kua + 7, "tired", "sink"], [wipe - 2, "sag"],
-      [g4 + 2, "proud"], [c07 - 1, "tender"], [shake - 2, "worry"], [slip + 1, "panic", "take"], [chai - 1, "aghast", "take", 0.6], [c08 - 2, "grumble"], [wordAt("C08", "两百") - 2, "small"],
-      [g5 + 2, "peer"], [wordAt("C09", "七仙女") - 2, "dread", "take", 0.6], [that - 6, "hush"], [wordAt("C09", "亲闺女") - 2, "grave"], [c10 + 8, "worry"], [c11 - 2, "sag", "sink"], [wordAt("C11", "三百") - 2, "lost"],
+      [S.from, "eager"], [t.mine - 3, "proud"],                                   // 我的老业绩
+      [t.year + 10, "small", "sink"], [t.c04 - 3, "sheepish"],                       // 一年见一次 · 异地恋，也算成
+      [t.c05 - 4, "proud"], [t.bf - 1, "wonder", "take", 0.7], [t.hide - 4, "sly"],  // 梁祝 · 变蝴蝶了 · 这单别记
+      [c3.s + 2, "proud"], [t.appr + 22, "tired", "sink"],                          // 许仙白娘子 · 一千年
+      [t.c07 - 2, "tender"], [t.shake - 3, "worry"], [t.tie, "aghast", "take", 0.6], [t.curse - 2, "small"],   // 宝黛 · 手一抖 · 宝钗 · 骂了我
+      [c5.s - 2, "dread"], [t.jade + 1, "grave", "take", 0.5], [t.c11 + 2, "lost", "sink"],                     // 七仙女 · 玉帝的亲闺女 · 扣了
     ];
-    const sagK = ky(f, [[c03 + 50, 0], [c03 + 62, 1], [b1 + 20, 1], [g2, 0]]) + ky(f, [[c08 - 2, 0], [c08 + 10, 0.8], [g5 - 4, 0.8], [g5 + 2, 0]]) + ky(f, [[c11 - 2, 0], [c11 + 12, 1]]);
-    const haulK = ky(f, [[g3 + 19, 0], [g3 + 31, 1], [kua - 2, 1], [kua + 6, 0]]), pant = ky(f, [[kua + 6, 0], [kua + 8, 1], [wipe - 8, 1], [wipe, 0.2], [wipe + 34, 0.2], [wipe + 40, 0.7], [g4 - 12, 0.7], [g4 - 6, 0]]), up = upK;
-    const peek = ky(f, [[g5 + 8, 0], [g5 + 14, 1], [slam - 2, 1], [slam + 4, 0]]), working = side > 0.5 || low > 0.5;
-    // his eyes go with the butterflies (up and off to the picture's right), smoothly, before the lens does
-    const bflyGaze = smooth((f - bf) / 6) * (1 - smooth((f - (hide - 16)) / 8)) * (0.5 + 0.5 * smooth((f - bf - 8) / 10));
+    const win = (a: number, up: number, hold: number, down: number) => ky(f, [[a, 0], [a + up, 1], [hold, 1], [hold + down, 0]]);
+    // where his eyes and head go: to each drawer he calls, down at a book as its gag goes wrong, up after what flies out
+    // of it, to her on the punch
+    const downMag = win(t.year + 2, 8, t.c04 - 6, 6), downFlip = win(t.tie - 8, 6, t.chai + 4, 6);
+    const upBf = win(t.bf + 4, 8, t.hide - 10, 6), upSlips = win(t.appr + 6, 14, t.kyr + 12, 10), upSeal = win(t.jade - 2, 6, t.c11 - 2, 6);
+    const upTop = win(c5.s - 2, 6, c5.leave + 8, 8), downLow = win(c3.s - 2, 5, c3.leave + 6, 8);
+    const cower = win(t.curse - 5, 5, c4.exit - 8, 8), droop = ky(f, [[t.c11 + 2, 0], [t.c11 + 12, 0.6], [BACK[4][1], 0.6], [BACK[4][1] + 10, 1]]);
+    const calling = CASES.reduce((a, c, i) => a + SIDE[i] * win(c.s - 4, 5, c.leave + 5, 6), 0);
     const r = act(w, f, YL, {
       at, facing, faces,
-      pose: walking ? leg.pose : hush ? { kind: "shh", t: f / 30, arm: 1, amount: ky(f, [[that - 5, 0], [that + 2, 1], [c10 - 8, 1], [c10 - 2, 0]]) } : undefined,
-      hands, show: hush ? ["finger"] : undefined, armFront: wiping ? [true, undefined] : undefined,
-      turn: low > 0.5 ? 1 : side > 0.5 ? 0.6 : undefined,
-      lookDown: 10 * Math.min(1, sagK) + 14 * bend + (working && low < 0.5 ? 6 : 0) - 8 * up,   // (more than this and the beard's tip swings through the file he holds)
-      gaze: working ? 0 : f >= bf && f < hide - 8 ? bflyGaze : f >= kua + 2 && f < kua + 30 ? 0 : undefined,
-      lean: { pitch: pullUp + 22 * bend - 9 * haulK + 6 * Math.min(1, sagK) + 4 * pant * Math.sin(f * 0.42) + 7 * leanIn, roll: leanIn > 0.01 ? -6 * leanIn : 3.5 * haulK * Math.sin(f * 0.5) },
-      head: { dy: -0.06 * Math.min(1, sagK) - 0.06 * wipeK + 0.05 * up + 0.05 * hit(f, wordAt("C02", "我绑"), 8) - 0.03 * hit(f, CAB_AT - 1, 9), tilt: peek * -9 + (up > 0.3 ? 5 * Math.sin(f * 0.16) : 0) + 6 * bflyGaze },   // (his head goes over toward the butterflies)
+      pose: walking ? leg.pose : undefined,
+      hands,
+      lookDown: 12 * downMag + 12 * downFlip - 6 * upBf - 8 * upSlips - 8 * upSeal - 14 * upTop + 12 * downLow + 9 * cower + 12 * droop,
+      gaze: Math.abs(calling) > 0.2 ? 0.6 * calling : upBf > 0.2 ? 0.45 * upBf : downMag + downFlip > 0.2 ? 0 : undefined,
+      lean: { pitch: pullUp + 6 * cower + 7 * droop - 5 * upSeal - 3 * upSlips - 4 * upTop + 6 * downLow, roll: 0 },
+      head: { dy: -0.04 * cower - 0.05 * droop + 0.03 * upSeal + 0.04 * hit(f, t.bound + 2, 8) - 0.03 * hit(f, CAB_AT - 1, 9), tilt: 6 * upBf + 4 * Math.sin(f * 0.15) * upSlips },
     });
     w.update();
-    // ---------------------------------------------------------------------------------------------- the drawers and the files
-    out.forEach((x, i) => { if (x > 0.004) w.prop("drawer", `d${i}`).put(P("office", CABX + x, CELLS[i].y, CELLS[i].z)); });
-    const h0 = r.handWorld(0), h1 = r.handWorld(1), mid = h0.clone().lerp(h1, 0.5);
-    // a file carried: hanging from the right hand's pinch as it leaves the drawer, then between both hands in front of the chest
-    const carry = (key: string, two: number, yaw0: number) => {
-      const p = h0.clone().add(V(0, -0.235, 0)).lerp(mid.clone().add(V(0, -0.125, 0)).add(V(Math.sin(facing), 0, Math.cos(facing)).multiplyScalar(0.012)), smooth(two));
-      w.prop("file", key).put(p, { yaw: turnTo(yaw0, facing, smooth(two)), pitch: -0.2 * smooth(two) });
-    };
-    if (f >= g1 + 17 && f < b1 + 13) carry("f1", f < b1 ? (f - g1 - 19) / 8 : 1 - (f - b1) / 7, Math.PI / 2);
-    if (f >= g2 + 17 && f < g3 - 4) {
-      const back = ky(f, [[hide0, 0], [hide0 + 8, 1]]);
-      if (back < 0.02) carry("f2", (f - g2 - 19) / 8, Math.PI / 2);
-      else {
-        // in his right hand round his right side, flat against him all the way, then between both hands behind his back;
-        // back the same way, and dropped into its drawer
-        const k = f <= g3 - 8 ? hideR : 0.5, phi = ((18 + 137 * k) * Math.PI) / 180, drop = ky(f, [[g3 - 8, 0], [g3 - 5, 1]]), two = smooth((k - 0.8) / 0.2);
-        const out = V(Math.sin(facing - phi), 0, Math.cos(facing - phi)).multiplyScalar(0.02);
-        const one = h0.clone().add(V(0, -0.13 - 0.1 * drop, 0)).add(out), both = mid.clone().add(V(0, -0.13, 0)).add(out);
-        w.prop("file", "f2").put(one.lerp(both, two), { yaw: turnTo(facing - phi, Math.PI / 2, drop), pitch: -0.2 * (1 - smooth(k / 0.3)) });
-      }
-    }
-    if (f >= g4 + 17 && f < slip + 2) carry("f4", (f - g4 - 19) / 8, Math.PI / 2);
-    else if (f >= slip + 2) {
-      // it slips: a short fall, turning flat, to the floor by his feet
-      const u = Math.min(1, (f - slip - 2) / 8), from = mid.clone().add(V(0, -0.125, 0)), p = from.clone().lerp(FLOOR4, u).add(V(Math.sin(facing), 0, Math.cos(facing)).multiplyScalar(0.12 * Math.sin(Math.PI * u))); p.y = from.y + (FLOOR4.y - from.y) * u * u;
-      if (u < 1) w.prop("file", "f4").put(p, { yaw: turnTo(facing, 0.9, u), pitch: -0.2 - (Math.PI / 2 - 0.2) * u, roll: 0.5 * Math.sin(u * 7) * (1 - u) });
-      else w.prop("file", "f4").put(FLOOR4, { yaw: 0.9, pitch: -Math.PI / 2 });
-    }
-    // the bale: in the bottom drawer, hauled up against his belly, dropped
-    if (f >= g3 + 13 && f < g3 + 19) w.prop("stack").put(P("office", CABX + 0.13, C3.y - 0.1, C3.z), { yaw: Math.PI / 2 });
-    else if (f >= g3 + 19 && f < kua - 2) w.prop("stack").put(mid.clone().add(V(0, -0.14, 0)), { yaw: facing });
-    else if (f >= kua - 2) {
-      const u = Math.min(1, (f - kua + 2) / 6), from = mid.clone().add(V(0, -0.14, 0));
-      if (f < kua + 4) { const p = from.lerp(FLOOR3, u); p.y = Math.max(0, 0.43 * (1 - u * u)); w.prop("stack").put(p, { yaw: turnTo(facing, 0.5, u), roll: 0.12 * Math.sin(u * 5) }); }
-      else w.prop("stack").put(FLOOR3.clone().add(V(0, 0.035 * hit(f, kua + 4, 5), 0)), { yaw: 0.5 });
-    }
-    // the two paper butterflies of 梁祝: out of the folder's top, up in a wavering spiral, and away along the cabinets: to the
-    // picture's right, so they never pass behind the case card or the REC display, and are gone before the camera is back on him
-    if (f >= bf && f < bf + 50) {
-      [0, 1].forEach((i) => {
-        const tt = (f - bf - i * 6) / 30; if (tt < 0) return;
-        // out of the top of the folder by his left hand, and out to that side as they rise: past his cheek, never across his head
-        const start = rel(BASE, front, 0.1 + 0.2 * (1 - Math.exp(-6 * tt)), 0.86, 0.43);   // (0.43 out in front: at 0.36 a wing brushed his cheek, v4 gate)
-        const a = tt * (2.4 + i * 0.5) + [3.6, 2.4][i], rad = 0.05 + 0.08 * Math.min(1, tt), go = 0.06 * (1 - Math.exp(-8 * tt)) + 0.14 * tt * tt;   // (mostly UP: they stay inside the phone's frame)
-        const p = start.clone().add(V(Math.sin(a) * rad + 0.5 * go, 0.5 * (1 - Math.exp(-3.2 * tt)) + 0.22 * tt + 0.035 * Math.sin(tt * 9 + i), Math.cos(a) * rad * 0.7 - 0.86 * go));
-        const yaw = a + Math.PI / 2, flap = 0.2 + 1.0 * Math.abs(Math.sin(tt * 17 + i * 1.3));
-        const sc = 2.0 * (0.3 + 0.7 * smooth((f - bf - i * 6) / 8));   // they unfold out of the folder, then fly big enough to see
-        w.prop("wing", `b${i}a`).put(p, { yaw, roll: flap, scale: sc }); w.prop("wing", `b${i}b`).put(p, { yaw: yaw + Math.PI, roll: flap, scale: sc });
-      });
-    }
+    // ---------------------------------------------------------------------------------------------- the drawers and the books
+    const out = outs(f);
+    out.forEach((x, i) => { if (x > 0.004) { w.prop("caseDrawer", `d${i}`).put(P("office", CABX + x, CELLS[i].y, CELLS[i].z)); w.prop("hole", `h${i}`).put(P("office", CABX, CELLS[i].y, CELLS[i].z)); } });
+    // a held book goes with his real hands (they may fall a little short of where they were asked to be)
+    const r0 = r.handWorld(0), r1 = r.handWorld(1);
+    books.forEach((b, i) => {
+      if (!b) return;
+      const bp = { ...b.bp, at: b.bp.at.clone() };
+      if (b.held && b.R && b.L) bp.at.add(r0.clone().sub(b.R).add(r1.clone().sub(b.L)).multiplyScalar(0.5));
+      else if (i === 1 && hiding && f < let2) bp.at.add(r0.clone().sub(R));
+      const e = new THREE.Euler().setFromQuaternion(bp.q, "YXZ");
+      w.props.book(KINDS[i]).put(bp.at, { yaw: e.y, pitch: e.x, roll: e.z, scale: bp.s }).set({ open: bp.open, g: b.g, t: f / 30 });
+    });
     // ---------------------------------------------------------------------------------------------- over the picture
-    // (each card is up only while he stands and shows that file: when he goes to a drawer his head passes under the spot)
-    // A card never tells the joke first: it comes up with the names and the picture, its note is typed on as the
-    // line is SAID (noteOn), and the verdict is stamped on its own word (stampOn).
-    const Y = 540, card = (from: number, to: number, kind: Parameters<typeof caseFile>[1]["kind"], stampOn: number, noteOn: number, rot: number, s = 0.76): Fx[] => {
-      const X = 114 + 290 * s;   // its left edge stays on the phone-safe line
-      return [caseFile(f, { from, to, x: X, y: Y, s, kind, stampAt: stampOn - from, noteAt: noteOn - from, rot, seal: true }), disclaimer(f, { from: from + 10, to, x: X, y: Y + 245 * s, text: "以上卷宗，纯属演绎" })];
-    };
+    // one 演绎 seal on his first claim (the cases are legends; his part in them is ours); her OS on 这单别记
     const FX: Fx[] = [
-      ...card(g1 + 27, b1 - 2, "niulang", wordAt("C04", "异地"), wordAt("C03", "一年") - 2, -3),          // she says it: 可他们一年见一次
-      ...card(g2 + 27, g3 - 14, "liangzhu", wordAt("C05", "变") + 10, wordAt("C05", "变") - 2, 2),         // 变蝴蝶了: typed as he says it, then the stamp
-      ...card(g3 + 33, g4 - 2, "baishe", kua + 4, wipe - 2, -2, 0.72),   // smaller: he stands close beside it over the bale; 审批走了一千年
-      ...card(g4 + 28, g5 - 2, "baodai", wordAt("C07", "绑成"), chai - 2, 3),                              // 绑成了 / 宝钗
-      ...card(c10 + 10, e11 + 12, "qixian", c10 + 24, wordAt("C11", "三百") - 11, -3),   // (in once her lens has pulled back off him: it never lands on his hat)                      // 扣了我三百年仙丹: 三百年 is typed as he says it
+      truth(f, { from: t.bound + 6, to: t.bound + 80, x: 214, y: 476, kind: "演绎" }),
+      os(f, { from: t.noted + 6, to: t.noted + 46, x: 112, y: 860, text: "记下了" }),
     ];
+    void c4;
     return { camera, overlays: [draw(f, FX), whipSmear(W.smear, -1)], shown: FX, post: W.post };
   },
 };
-void CAM_C0; void VERBS;

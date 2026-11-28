@@ -238,10 +238,11 @@ const coverTex = (kind: BookKind, cloth: string) => paint(256, 338, (g, W, H) =>
     g.strokeStyle = "rgba(150,100,24,0.45)"; g.lineWidth = 3; g.lineCap = "round";
     for (let y = 40; y < H; y += 70) for (let x = (y / 70) % 2 ? 40 : 75; x < W - 20; x += 70) { g.beginPath(); g.arc(x - 9, y, 8, Math.PI * 0.9, Math.PI * 2.6); g.stroke(); g.beginPath(); g.arc(x + 9, y, 8, Math.PI * 0.4, Math.PI * -1.1, true); g.stroke(); g.beginPath(); g.moveTo(x - 18, y + 9); g.quadraticCurveTo(x, y + 15, x + 18, y + 9); g.stroke(); }
   }
-  // the label
-  const lx = 22, ly = 22, lw = 62, lh = 210;
+  // the label (题签): big enough to read on a phone when he holds the book up two metres from her lens (v6: the title
+  // is the first thing the viewer reads of each case, so it is about the size of a subtitle character on screen)
+  const lx = 18, ly = 18, lw = 92, lh = kind === "qixian" ? 250 : 296;   // (天仙配's stops above the seal strip)
   g.fillStyle = "#f4ead0"; g.fillRect(lx, ly, lw, lh); g.strokeStyle = "#8a6a3a"; g.lineWidth = 3; g.strokeRect(lx + 5, ly + 5, lw - 10, lh - 10);
-  const t = BOOK_TITLE[kind], n = [...t].length, step = (lh - 30) / Math.max(3, n), px = Math.min(50, step * 0.9);
+  const t = BOOK_TITLE[kind], n = [...t].length, step = (lh - 26) / Math.max(3, n), px = Math.min(74, step * 0.92);
   g.fillStyle = "#2a211c"; g.font = `900 ${px}px ${BRUSH}`; g.textAlign = "center"; g.textBaseline = "middle";
   [...t].forEach((c, i) => g.fillText(c, lx + lw / 2, ly + 15 + step * (i + 0.5) + (lh - 30 - step * n) / 2));
   // the binding's stitches along the right edge
@@ -261,8 +262,9 @@ const coverTex = (kind: BookKind, cloth: string) => paint(256, 338, (g, W, H) =>
 const CLOTH: Record<BookKind, string> = { niulang: "#2e3c62", liangzhu: "#2e5a4a", baishe: "#7a9a90", baodai: "#7a2a3a", qixian: "#c8962e" };
 
 // ----------------------------------------------------------------------------------------------------- the book
-export const buildPopBooks = (K: Kit) => {
-  const group = new THREE.Group(); group.name = "popbooks";
+/** into: the props group (v6b: each book is a direct child named prop.book.<kind>, so the clearance checker sees it) */
+export const buildPopBooks = (K: Kit, into?: THREE.Group) => {
+  const group = into ?? new THREE.Group(); if (!into) group.name = "popbooks";
   const made = new Map<BookKind, PopBook>();
   const flatMat = (t: THREE.Texture) => { const m = K.flat("#ffffff", { map: t, rough: 0.95, side: THREE.DoubleSide }) as THREE.MeshStandardMaterial; m.alphaTest = 0.5; m.transparent = false; return m; };
   const quad = (w: number, h: number, u0: number, u1: number, v0 = 0, v1 = 1, ox = 0, oy = 0) => {
@@ -273,7 +275,7 @@ export const buildPopBooks = (K: Kit) => {
   const noink = (m: THREE.Object3D) => { m.traverse((o) => { o.layers.set(NOINK); (o as THREE.Mesh).castShadow = false; o.receiveShadow = false; o.frustumCulled = false; }); return m; };
 
   const make = (kind: BookKind): PopBook => {
-    const root = new THREE.Group(); root.name = `popbook.${kind}`; root.visible = false; group.add(root);
+    const root = new THREE.Group(); root.name = `prop.book.${kind}`; root.visible = false; group.add(root);
     const A = new THREE.Group(), B = new THREE.Group(); root.add(A, B);
     const { pw, ph, board, block } = PB;
     // the two halves: board, page block, the page's paper face
@@ -327,15 +329,15 @@ export const buildPopBooks = (K: Kit) => {
       gag = (s, rise) => {
         for (const b of birds) {
           const inK = smooth((s.g - 0.02 - 0.025 * Math.abs(b.i - 3)) / 0.08) * rise;   // the bridge forms from both ends to the middle
-          const go = clamp01((s.g - (0.36 + 0.06 * [3, 2, 4, 1, 5, 0, 6].indexOf(b.i))) / 0.22);   // and leaves from the middle out
+          const go = clamp01((s.g - (0.3 + 0.035 * [3, 2, 4, 1, 5, 0, 6].indexOf(b.i))) / 0.12);   // and leaves from the middle out (g 0.3 .. 0.63)
           const sd = b.x > 0 || (b.i === 3 && b.i % 2) ? 1 : -1, flap = go > 0 ? 0.45 + 0.55 * Math.abs(Math.sin(s.t * 22 + b.i)) : 1;
           b.m.visible = inK > 0.01 && go < 1 && rise > 0.05;
           b.m.position.set(b.x + sd * 0.16 * go, b.y + 0.55 * go * go + 0.05 * go, 0.072 * rise + 0.25 * go);
           b.m.scale.set((b.x > 0 ? -1 : 1) * Math.max(0.01, inK) * flap, Math.max(0.01, inK), 1);
           b.m.rotation.z = b.base * (b.x > 0 ? -1 : 1) * (1 - go) + sd * 0.5 * go;
         }
-        // once the bridge has gone they lean toward each other over the river
-        const lean = smooth((s.g - 0.62) / 0.2);
+        // once the bridge has gone they lean toward each other over the river (g 0.7 .. 0.9)
+        const lean = smooth((s.g - 0.7) / 0.2);
         nl.rotation.z = -0.1 * lean; zn.rotation.z = 0.1 * lean;
         for (const p of th.parts) p.m.visible = rise > 0.6;
       };
@@ -344,7 +346,7 @@ export const buildPopBooks = (K: Kit) => {
       flat(ART.dusk(), -0.235, 0.235, -0.125, 0.155, 0.012);
       flat(ART.mound(), -0.24, 0.24, -0.165, -0.06, 0.034);
       const lg = bit(ART.liang(), 0.11, 0.17, -0.09, -0.14, 0.052, -0.5), zh = bit(ART.zhu(), 0.11, 0.17, 0.09, -0.14, 0.052, -0.5);
-      const bf = [bit(ART.butterfly("#5a8ab8", "#8ab0d8"), 0.07, 0.052, -0.09, -0.05, 0.06), bit(ART.butterfly("#e888a8", "#f4b8c8"), 0.07, 0.052, 0.09, -0.05, 0.06)];
+      const bf = [bit(ART.butterfly("#5a8ab8", "#8ab0d8"), 0.09, 0.067, -0.09, -0.05, 0.06), bit(ART.butterfly("#e888a8", "#f4b8c8"), 0.09, 0.067, 0.09, -0.05, 0.06)];
       gag = (s, rise) => {
         // on 变蝴蝶了 the two of them fold down flat into the page, and two butterflies unfold where they stood and flutter up and off
         const fold = smooth((s.g - 0.3) / 0.12);
@@ -353,7 +355,9 @@ export const buildPopBooks = (K: Kit) => {
           const k = clamp01((s.g - 0.36 - 0.05 * i) / 0.5), sd = i ? 1 : -1;
           m.visible = k > 0 && k < 1 && rise > 0.5;
           const flap = 0.35 + 0.65 * Math.abs(Math.sin(s.t * 18 + i * 1.7));
-          m.position.set(sd * 0.09 + 0.12 * k + 0.05 * Math.sin(k * 9 + i), -0.05 + 0.75 * k * k + 0.1 * k, 0.06 + 0.3 * k);
+          // (v6: up and away fast enough to leave the top of her frame before he snaps the book shut; round each other as they go;
+          //  v6b: they drift out past the book's fore-edge as they climb, so they go up beside his cheek, never across his mouth)
+          m.position.set(sd * 0.09 * (1 - k) + 0.5 * Math.sqrt(k) + 0.05 * Math.sin(k * 10 + i * Math.PI), -0.05 + 1.5 * k * k + 0.25 * k, 0.06 + 0.35 * k);
           m.scale.set(flap * smooth(k * 6), smooth(k * 6), 1); m.rotation.z = 0.3 * Math.sin(k * 7 + i);
         });
       };
@@ -361,15 +365,17 @@ export const buildPopBooks = (K: Kit) => {
       flat(ART.lake(), -0.235, 0.235, -0.125, 0.155, 0.012);
       bit(ART.pagoda(), 0.07, 0.15, -0.19, -0.04, 0.026);
       const xx = bit(ART.xuxian(), 0.14, 0.187, -0.07, -0.155, 0.05, -0.5), sn = bit(ART.snake(), 0.12, 0.12, 0.1, -0.155, 0.05, -0.5);
-      // THE CONCERTINA of approval slips: folded flat in the gutter, it climbs out of the book's top, up and up, swaying
-      const N = 16, slips = Array.from({ length: N }, (_, i) => bit(ART.slip(i), 0.16, 0.06, 0, 0, 0.07));
+      // THE CONCERTINA of approval slips: folded flat on the left-hand page (as she sees it, the right), it climbs out of
+      // the book's top, up and up, swaying, and leans away to that side as it goes, so the face of whoever holds the book
+      // stays clear of it (v6: it had climbed straight up in front of his face)
+      const N = 16, slips = Array.from({ length: N }, (_, i) => bit(ART.slip(i), 0.16, 0.06, 0.17, 0, 0.07));
       gag = (s, rise) => {
         const ext = smooth((s.g - 0.2) / 0.5) * (1 - smooth((s.g - 0.88) / 0.1)), sway = 0.06 * ext * Math.sin(s.t * 2.2);
         slips.forEach((m, i) => {
           const k = i / (N - 1), y = 0.02 + (0.003 + 0.09 * ext) * i, ang = (i % 2 ? 1 : -1) * (1.2 - 1.05 * ext);
           m.visible = rise > 0.3 && ext > 0.02;
-          m.position.set(sway * k * k * 3, Math.min(0.12, -0.03 + 0.01 * i) + (y - 0.02) * (ext > 0 ? 1 : 0) + (ext > 0 ? 0.0 : 0), 0.07 * rise + 0.02 * Math.sin(ang));
-          m.rotation.set(ang * 0.5, 0, sway * k * 2);
+          m.position.set(0.17 + 0.32 * Math.sqrt(k * ext) + sway * k * k * 3, Math.min(0.12, -0.03 + 0.01 * i) + (y - 0.02) * (ext > 0 ? 1 : 0), 0.07 * rise + 0.02 * Math.sin(ang));
+          m.rotation.set(ang * 0.5, 0, -0.22 * ext * (1 - 0.5 * k) + sway * k * 2);
         });
         void xx; void sn;
       };
@@ -397,7 +403,8 @@ export const buildPopBooks = (K: Kit) => {
         void dy; void bc;
       };
     } else if (kind === "qixian") {
-      // THE JADE SEAL on a paper spring: it shoots up out of the crack at the book's top edge and drops back as it is slammed
+      // THE JADE SEAL on a paper spring: it shoots up out of the crack at the book's top edge, leaning out over the
+      // fore-edge side (v6: straight up, it stood in front of his face), and drops back as it is slammed
       const seal = new THREE.Group(), P = new Part(K);
       P.add(K.flat("#e8efe0", { rough: 0.5 }), new THREE.BoxGeometry(0.09, 0.06, 0.09).translate(0, 0.03, 0), 0.004);
       P.add(K.flat("#d0dcc8", { rough: 0.5 }), new THREE.SphereGeometry(0.03, 12, 8).scale(1, 0.8, 1).translate(0, 0.075, 0), 0.004);
@@ -408,10 +415,12 @@ export const buildPopBooks = (K: Kit) => {
       root.add(noink(seal)); root.add(noink(spring));
       gag = (s) => {
         const up = smooth((s.g - 0.15) / 0.12) * (1 - smooth((s.g - 0.6) / 0.06)), bob = up * 0.02 * Math.sin(s.t * 14) * Math.exp(-Math.max(0, s.g - 0.27) * 8);
-        const h = 0.01 + 0.24 * up + bob;
+        const h = 0.01 + 0.16 * up + bob;
         seal.visible = spring.visible = up > 0.02;
-        seal.position.set(-PB.pw / 2, PB.ph / 2 + h, 0.012); seal.rotation.set(0, 0.3 * Math.sin(s.t * 3) * up, 0.08 * Math.sin(s.t * 9) * up);
-        spring.position.set(-PB.pw / 2, PB.ph / 2, 0.012); spring.scale.set(1, Math.max(0.01, h), 1);
+        // (v6b: from the fore-edge corner and leaning further out, so the spring and the seal stay clear of his cheek)
+        const lean = 1.0, bx = -PB.pw + 0.01, by = PB.ph / 2;
+        seal.position.set(bx - h * Math.sin(lean), by + h * Math.cos(lean), 0.012); seal.rotation.set(0, 0.3 * Math.sin(s.t * 3) * up, lean * 0.55 + 0.08 * Math.sin(s.t * 9) * up);
+        spring.position.set(bx, by, 0.012); spring.rotation.set(0, 0, lean); spring.scale.set(1, Math.max(0.01, h), 1);
       };
     }
 
