@@ -13,8 +13,16 @@ clone from, and not the narration made with the clone (minutes of clean speech =
   python vault.py post   (after speak.py, before publish)
     * "seal_to": "<hex public key>" seals every out/*.mp3 to that key (held only by whoever asked)
       and deletes the plain files, so only .sealed files reach the public voice-output branch.
+    * "seal_rsa": ["<PEM public key>", ...] (music and sound effects for a film): every out/*.mp3 is
+      encrypted once with a fresh AES-256-CBC key (PKCS#7, as `openssl enc -aes-256-cbc -K -iv`) into
+      <file>.aes, and that key + iv (48 bytes) is wrapped with RSA-OAEP (SHA-1, as `openssl pkeyutl
+      -pkeyopt rsa_padding_mode:oaep`) for each listed key into <file>.k0, <file>.k1, ... The plain
+      files are deleted. Needs nothing but the openssl command line to open, so any machine that holds
+      one of the private keys (a Mac's LibreSSL included) can, and nobody else.
 
 Open locally:  SealedBox(PrivateKey(sk)).decrypt(data)   (PyNaCl)
+               openssl pkeyutl -decrypt -inkey key.pem -pkeyopt rsa_padding_mode:oaep -in f.mp3.k0  -> key (32) + iv (16)
+               openssl enc -d -aes-256-cbc -K <key hex> -iv <iv hex> -in f.mp3.aes -out f.mp3
 """
 import hashlib, json, os, sys, glob, requests
 from nacl.public import PrivateKey, PublicKey, SealedBox
@@ -79,7 +87,25 @@ def pre():
             if it.get("voice_id") == "@clone": it["voice_id"] = vid
         json.dump(req, open("request.json", "w"), ensure_ascii=False, indent=1)   # runner copy only, never committed
 
+def seal_rsa(pems):
+    from cryptography.hazmat.primitives import serialization, hashes, padding as sympad
+    from cryptography.hazmat.primitives.asymmetric import padding
+    from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+    keys = [serialization.load_pem_public_key(p.encode()) for p in pems]
+    oaep = padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA1()), algorithm=hashes.SHA1(), label=None)
+    n = 0
+    for p in glob.glob("out/*.mp3"):
+        k, iv = os.urandom(32), os.urandom(16)
+        pd = sympad.PKCS7(128).padder(); data = pd.update(open(p, "rb").read()) + pd.finalize()
+        enc = Cipher(algorithms.AES(k), modes.CBC(iv)).encryptor()
+        open(p + ".aes", "wb").write(enc.update(data) + enc.finalize())
+        for i, pk in enumerate(keys): open(f"{p}.k{i}", "wb").write(pk.encrypt(k + iv, oaep))
+        os.remove(p); n += 1
+    rep["sealed_rsa"] = {"files": n, "keys": len(keys)}; print("vault sealed (rsa)", n, "files for", len(keys), "keys")
+
 def post():
+    if req.get("seal_rsa"):
+        seal_rsa(req["seal_rsa"])
     to = req.get("seal_to")
     if not to: return
     box = SealedBox(PublicKey(bytes.fromhex(to)))

@@ -1,86 +1,74 @@
 {
- "id": "yuelao-v6-yl-04",
+ "id": "yuelao-sound-01",
  "own_branch": true,
- "model_prefs": [
-  "eleven_v4"
+ "seal_rsa": [
+  "-----BEGIN PUBLIC KEY-----\nMIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEA7ipGvGr+/aVGw4GnMFmf\niAmdTASNCEssxvAJ2UfgXzspQxVbt86U00WY1nd6Muttme/vlC3N7tTSqAwsU9Nw\nFliccK2bpA3uvIlOiCLL9g2VX2jJTZamYSd5xY0xh3l9zM+AkMRlWvjjOWv4kFIf\noBwBx7ugTO60F5nh96niAaflogGBCVDaLTgD8lzmJw7eukR3uIH+D+fNoiI6sfo5\nBMeh0L7OINd2udi1r4Hm7S318MP/2fc9z7wXYnxEVARUHiE27JuLEld/XSLq8s7k\nqSOu/DUCd5m276BpUyvcjXZ4D70wvImPyoeTs+EJBc3vkeoR+itnyG3BQR+kSNTW\nTsOUxuimB8OOzUnOjsl7pVRqYx1bXUMwAB//BhQE2sSOB/7oWynR2HNHRfzl0iL/\nLScSFG90+RtA9xrYDOnd085tLWwzUhOfpG5pN5UV1EB5fVSOVSSV5AyR+qOlu+mq\nybrh7nKhSLksk66toaYkZICZTgDu6XJpPXm37UoXEUH9AgMBAAE=\n-----END PUBLIC KEY-----\n"
  ],
- "words": true,
+ "sfx_model": "eleven_text_to_sound_v3",
+ "tag": true,
  "items": [
   {
-   "type": "dialogue",
-   "name": "H05_p_2131",
-   "model": "eleven_v4",
-   "seed": 2131,
-   "settings": {
-    "stability": 0.8
-   },
-   "lines": [
-    {
-     "text": "我这个……也记，缘分未到吧。",
-     "voice": {
-      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
-      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-      "name": "Martin Li"
-     }
-    }
-   ]
+   "type": "sfx",
+   "name": "sfx_stamps",
+   "duration": 6,
+   "influence": 0.6,
+   "text": "Three separate hits of a heavy wooden official seal stamp slammed down onto paper on a wooden desk, a firm satisfying thump each time, with a full second of silence between the hits. Close, dry, no music, no voice."
   },
   {
-   "type": "dialogue",
-   "name": "H05_p_2137",
-   "model": "eleven_v4",
-   "seed": 2137,
-   "settings": {
-    "stability": 0.8
-   },
-   "lines": [
-    {
-     "text": "我这个……也记，缘分未到吧。",
-     "voice": {
-      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
-      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-      "name": "Martin Li"
-     }
-    }
-   ]
+   "type": "sfx",
+   "name": "sfx_whoosh",
+   "duration": 6,
+   "influence": 0.6,
+   "text": "Four separate quick whooshes of a sheet of paper flicked fast past the microphone, each one short and airy, with a second of silence between them. Clean, no music, no voice."
   },
   {
-   "type": "dialogue",
-   "name": "H05_s_2131",
-   "model": "eleven_v4",
-   "seed": 2131,
-   "settings": {
-    "stability": 0.8
-   },
-   "lines": [
-    {
-     "text": "[softly] 我这个……也记，缘分未到吧。",
-     "voice": {
-      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
-      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-      "name": "Martin Li"
-     }
-    }
-   ]
+   "type": "sfx",
+   "name": "sfx_pops",
+   "duration": 9,
+   "influence": 0.6,
+   "text": "Playful cartoon sound effects, one after another with a second of silence between each: a short cartoon pop, a soft magical sparkle shimmer, a small bright temple bell ding, a springy cartoon boing. No music, no voice."
   },
   {
-   "type": "dialogue",
-   "name": "H05_s_2137",
-   "model": "eleven_v4",
-   "seed": 2137,
-   "settings": {
-    "stability": 0.8
-   },
-   "lines": [
-    {
-     "text": "[softly] 我这个……也记，缘分未到吧。",
-     "voice": {
-      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
-      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-      "name": "Martin Li"
+   "type": "sfx",
+   "name": "sfx_thread",
+   "duration": 6,
+   "influence": 0.6,
+   "text": "A taut silk thread plucked once like a low string with a twang, then a thin thread snapping, then a pair of scissors snipping once, each separated by a second of silence. Close and clean, no music, no voice."
+  },
+  {
+   "type": "music",
+   "name": "mus_night",
+   "model": "music_v2_5",
+   "format": "mp3_48000_192",
+   "plan": {
+    "chunks": [
+     {
+      "text": "[Night]",
+      "duration_ms": 16000,
+      "positive_styles": [
+       "instrumental",
+       "quiet Chinese night music",
+       "soft guzheng harmonics",
+       "warm low string pad",
+       "gentle and slow",
+       "sparse",
+       "a little lonely",
+       "60 BPM",
+       "D major pentatonic"
+      ],
+      "negative_styles": [
+       "vocals",
+       "lyrics",
+       "drums",
+       "percussion",
+       "loud",
+       "fast",
+       "electronic beat"
+      ],
+      "context_adherence": "high"
      }
-    }
-   ]
+    ]
+   }
   }
  ]
 }

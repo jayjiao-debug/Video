@@ -30,6 +30,7 @@ jobs:
           mkdir -p out
           echo "key present: $([ -n "$ELEVENLABS_API_KEY" ] && echo yes || echo no)" >> out/log.txt
           pip install -q requests faster-whisper soundfile pynacl >/dev/null 2>&1 || true
+          if grep -q '"seal_rsa"' request.json; then pip install -q cryptography >/dev/null 2>&1 || true; fi
           if grep -q '"tag"' request.json; then
             pip install -q torch --index-url https://download.pytorch.org/whl/cpu >/dev/null 2>&1 || true
             pip install -q transformers scipy numpy >/dev/null 2>&1 || true
@@ -43,8 +44,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           ID=$(python -c "import json;print(json.load(open('request.json'))['id'])")
-          # a request with seal_to must never publish a plain clip, even if sealing failed
-          if grep -q '"seal_to"' request.json; then find out -name '*.mp3' -delete; fi
+          # a request with seal_to or seal_rsa must never publish a plain clip, even if sealing failed
+          if grep -qE '"seal_(to|rsa)"' request.json; then find out -name '*.mp3' -delete; fi
           grep -rlI "sk_" out && sed -i 's/sk_[A-Za-z0-9]*/sk_REDACTED/g' $(grep -rlI "sk_" out) || true
           if grep -q '"own_branch"' request.json; then   # light publish: a fresh branch per request, no clone of voice-output
             mkdir -p /tmp/ob && cp -r out/. /tmp/ob/ && cd /tmp/ob && git init -q && git checkout -q -b "vo-$ID"

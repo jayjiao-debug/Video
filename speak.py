@@ -7,12 +7,15 @@ req = json.load(open("request.json"))
 report = {"id": req["id"], "clips": []}
 SONGS = {}
 def log(*a): print(*a, flush=True)
+def used():   # the account's credits used so far this period (free to read): an item's cost is the change across it
+    try: return requests.get(f"{API}/v1/user/subscription", headers=H, timeout=30).json().get("character_count")
+    except Exception: return None
 if not KEY: log("NO KEY: add the ELEVENLABS_API_KEY repository secret"); sys.exit(1)
 
 # account + models
 try:
     u = requests.get(f"{API}/v1/user/subscription", headers=H, timeout=30).json()
-    report["plan"] = {k: u.get(k) for k in ("tier", "character_count", "character_limit", "status")}
+    report["plan"] = {k: u.get(k) for k in ("tier", "character_count", "character_limit", "status", "next_character_count_reset_unix")}
 except Exception as e: report["plan"] = str(e)
 log("plan:", report["plan"])
 models = requests.get(f"{API}/v1/models", headers=H, timeout=30).json()
@@ -130,11 +133,13 @@ for it in req["items"]:
         body = {"text": it["text"], "model_id": it.get("model", req.get("sfx_model", "eleven_text_to_sound_v2")), "prompt_influence": it.get("influence", 0.3)}
         if it.get("duration"): body["duration_seconds"] = it["duration"]
         if it.get("loop"): body["loop"] = True
-        r = requests.post(f"{API}/v1/sound-generation?output_format=mp3_44100_128", headers=H, json=body, timeout=180)
+        fmt = it.get("format", "mp3_44100_128"); c0 = used()
+        r = requests.post(f"{API}/v1/sound-generation?output_format={fmt}", headers=H, json=body, timeout=180)
         if not r.ok and body["model_id"] != "eleven_text_to_sound_v2" and r.status_code in (400, 403, 404, 422):
             log("sfx retry with eleven_text_to_sound_v2:", r.status_code, r.text[:200]); body["model_id"] = "eleven_text_to_sound_v2"
-            r = requests.post(f"{API}/v1/sound-generation?output_format=mp3_44100_128", headers=H, json=body, timeout=180)
-        rec = {"name": it["name"], "type": "sfx", "text": it["text"], "model": body["model_id"], "status": r.status_code, "sfx": True}
+            r = requests.post(f"{API}/v1/sound-generation?output_format={fmt}", headers=H, json=body, timeout=180)
+        c1 = used()
+        rec = {"name": it["name"], "type": "sfx", "text": it["text"], "model": body["model_id"], "status": r.status_code, "sfx": True, "credits": (c1 - c0) if c0 is not None and c1 is not None else None}
         if r.ok: fn = f"{it['name']}.mp3"; open(f"out/{fn}", "wb").write(r.content); rec["file"] = fn; rec["bytes"] = len(r.content)
         else: rec["error"] = r.text[:400]
         log(json.dumps(rec, ensure_ascii=False)); report["clips"].append(rec); continue
@@ -154,15 +159,23 @@ for it in req["items"]:
         else:
             body["prompt"] = it["text"]; body["music_length_ms"] = int(it.get("ms", 30000))
             if it.get("instrumental", True): body["force_instrumental"] = True
-        mm = it.get("model") or next((m for m in ids if m and "music" in m), None)
-        if mm: body["model_id"] = mm
-        url = f"{API}/v1/music?output_format=mp3_44100_192"
-        r = requests.post(url, headers=H, json=body, timeout=900)
-        if not r.ok and "model_id" in body:
-            log("music retry without model_id:", r.status_code, r.text[:300]); body.pop("model_id"); r = requests.post(url, headers=H, json=body, timeout=900)
-        if not r.ok and "force_instrumental" in body:
-            log("music retry without force_instrumental:", r.status_code, r.text[:300]); body.pop("force_instrumental"); r = requests.post(url, headers=H, json=body, timeout=900)
-        rec = {"name": it["name"], "type": "music", "text": it.get("text", ""), "model": body.get("model_id"), "status": r.status_code, "sfx": True}
+        url = f"{API}/v1/music?output_format={it.get('format', 'mp3_44100_192')}"; c0 = used()
+        if it.get("plan") and "chunks" in it["plan"]:   # a chunk plan (music_v2 / music_v2_5: every chunk's duration is kept exactly)
+            if it.get("seed") is not None: body["seed"] = it["seed"]
+            for mm in dict.fromkeys([it.get("model", "music_v2_5"), "music_v2"]):
+                body["model_id"] = mm; r = requests.post(url, headers=H, json=body, timeout=900)
+                if r.ok: break
+                log("music failed with", mm, r.status_code, r.text[:300])
+        else:
+            mm = it.get("model") or next((m for m in ids if m and "music" in m), None)
+            if mm: body["model_id"] = mm
+            r = requests.post(url, headers=H, json=body, timeout=900)
+            if not r.ok and "model_id" in body:
+                log("music retry without model_id:", r.status_code, r.text[:300]); body.pop("model_id"); r = requests.post(url, headers=H, json=body, timeout=900)
+            if not r.ok and "force_instrumental" in body:
+                log("music retry without force_instrumental:", r.status_code, r.text[:300]); body.pop("force_instrumental"); r = requests.post(url, headers=H, json=body, timeout=900)
+        c1 = used()
+        rec = {"name": it["name"], "type": "music", "text": it.get("text", ""), "model": body.get("model_id"), "status": r.status_code, "sfx": True, "credits": (c1 - c0) if c0 is not None and c1 is not None else None}
         if r.ok: fn = f"{it['name']}.mp3"; open(f"out/{fn}", "wb").write(r.content); rec["file"] = fn; rec["bytes"] = len(r.content)
         else: rec["error"] = r.text[:600]
         log(json.dumps(rec, ensure_ascii=False)); report["clips"].append(rec); continue
@@ -281,5 +294,9 @@ if req.get("tag"):
                 log(rec["name"], rec["tags"])
             except Exception as e: rec["tag_error"] = repr(e)[:300]
     except Exception as e: report["tag_error"] = repr(e)[:500]; log("tag error", report["tag_error"])
+try:
+    u = requests.get(f"{API}/v1/user/subscription", headers=H, timeout=30).json()
+    report["plan_after"] = {k: u.get(k) for k in ("character_count", "character_limit", "next_character_count_reset_unix")}
+except Exception as e: report["plan_after"] = str(e)
 json.dump(report, open("out/report.json", "w"), ensure_ascii=False, indent=2)
 log(json.dumps(report["clips"], ensure_ascii=False, indent=1))
