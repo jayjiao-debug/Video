@@ -1,0 +1,3932 @@
+plan: {'tier': 'creator', 'character_count': 121402, 'character_limit': 178898, 'status': 'active', 'next_character_count_reset_unix': 1797012816, 'voice_slots_used': 18, 'voice_limit': 30}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "au_A1_B01", "type": "dialogue", "lang": "", "lines": ["[sighs] 姻缘司，上下就我一个。别人九九六，[dry] 我零零七。"], "status": 200, "model": "eleven_v4", "file": "au_A1_B01.mp3", "voice_segments": [{"voice_id": "bctWDlOBHyWjIDa9TrhW", "start_time_seconds": 0.0, "end_time_seconds": 6.720000000000001, "character_start_index": 0, "character_end_index": 36, "dialogue_input_index": 0}]}
+{"name": "au_A1_C02", "type": "dialogue", "lang": "", "lines": ["牛郎织女。我绑的。牢吧？"], "status": 200, "model": "eleven_v4", "file": "au_A1_C02.mp3", "voice_segments": [{"voice_id": "bctWDlOBHyWjIDa9TrhW", "start_time_seconds": 0.0, "end_time_seconds": 3.3600000000000003, "character_start_index": 0, "character_end_index": 12, "dialogue_input_index": 0}]}
+{"name": "au_A1_H03", "type": "dialogue", "lang": "", "lines": ["当年太忙。想着忙完这阵，就给自己绑一根。"], "status": 200, "model": "eleven_v4", "file": "au_A1_H03.mp3", "voice_segments": [{"voice_id": "bctWDlOBHyWjIDa9TrhW", "start_time_seconds": 0.0, "end_time_seconds": 4.16, "character_start_index": 0, "character_end_index": 20, "dialogue_input_index": 0}]}
+{"name": "au_A1_I06", "type": "dialogue", "lang": "", "lines": ["成了。快记，我绑的。全是我绑的。"], "status": 200, "model": "eleven_v4", "file": "au_A1_I06.mp3", "voice_segments": [{"voice_id": "bctWDlOBHyWjIDa9TrhW", "start_time_seconds": 0.0, "end_time_seconds": 3.5999999999999996, "character_start_index": 0, "character_end_index": 16, "dialogue_input_index": 0}]}
+{"name": "au_B2_B01", "type": "dialogue", "lang": "", "lines": ["[sighs] 姻缘司，上下就我一个。别人九九六，[dry] 我零零七。"], "status": 200, "model": "eleven_v4", "file": "au_B2_B01.mp3", "voice_segments": [{"voice_id": "5NOAtUtfU5vGpoknnAXC", "start_time_seconds": 0.0, "end_time_seconds": 7.28, "character_start_index": 0, "character_end_index": 36, "dialogue_input_index": 0}]}
+{"name": "au_B2_C02", "type": "dialogue", "lang": "", "lines": ["牛郎织女。我绑的。牢吧？"], "status": 200, "model": "eleven_v4", "file": "au_B2_C02.mp3", "voice_segments": [{"voice_id": "5NOAtUtfU5vGpoknnAXC", "start_time_seconds": 0.0, "end_time_seconds": 3.7600000000000002, "character_start_index": 0, "character_end_index": 12, "dialogue_input_index": 0}]}
+{"name": "au_B2_H03", "type": "dialogue", "lang": "", "lines": ["当年太忙。想着忙完这阵，就给自己绑一根。"], "status": 200, "model": "eleven_v4", "file": "au_B2_H03.mp3", "voice_segments": [{"voice_id": "5NOAtUtfU5vGpoknnAXC", "start_time_seconds": 0.0, "end_time_seconds": 4.640000000000001, "character_start_index": 0, "character_end_index": 20, "dialogue_input_index": 0}]}
+{"name": "au_B2_I06", "type": "dialogue", "lang": "", "lines": ["成了。快记，我绑的。全是我绑的。"], "status": 200, "model": "eleven_v4", "file": "au_B2_I06.mp3", "voice_segments": [{"voice_id": "5NOAtUtfU5vGpoknnAXC", "start_time_seconds": 0.0, "end_time_seconds": 4.16, "character_start_index": 0, "character_end_index": 16, "dialogue_input_index": 0}]}
+{"name": "au_C2_B01", "type": "dialogue", "lang": "", "lines": ["[sighs] 姻缘司，上下就我一个。别人九九六，[dry] 我零零七。"], "status": 200, "model": "eleven_v4", "file": "au_C2_B01.mp3", "voice_segments": [{"voice_id": "IJA5ZcnYtwIUVxfM3m4O", "start_time_seconds": 0.0, "end_time_seconds": 7.04, "character_start_index": 0, "character_end_index": 36, "dialogue_input_index": 0}]}
+{"name": "au_C2_C02", "type": "dialogue", "lang": "", "lines": ["牛郎织女。我绑的。牢吧？"], "status": 200, "model": "eleven_v4", "file": "au_C2_C02.mp3", "voice_segments": [{"voice_id": "IJA5ZcnYtwIUVxfM3m4O", "start_time_seconds": 0.0, "end_time_seconds": 3.7600000000000002, "character_start_index": 0, "character_end_index": 12, "dialogue_input_index": 0}]}
+{"name": "au_C2_H03", "type": "dialogue", "lang": "", "lines": ["当年太忙。想着忙完这阵，就给自己绑一根。"], "status": 200, "model": "eleven_v4", "file": "au_C2_H03.mp3", "voice_segments": [{"voice_id": "IJA5ZcnYtwIUVxfM3m4O", "start_time_seconds": 0.0, "end_time_seconds": 4.48, "character_start_index": 0, "character_end_index": 20, "dialogue_input_index": 0}]}
+{"name": "au_C2_I06", "type": "dialogue", "lang": "", "lines": ["成了。快记，我绑的。全是我绑的。"], "status": 200, "model": "eleven_v4", "file": "au_C2_I06.mp3", "voice_segments": [{"voice_id": "IJA5ZcnYtwIUVxfM3m4O", "start_time_seconds": 0.0, "end_time_seconds": 3.92, "character_start_index": 0, "character_end_index": 16, "dialogue_input_index": 0}]}
+{"name": "au_C3_B01", "type": "dialogue", "lang": "", "lines": ["[sighs] 姻缘司，上下就我一个。别人九九六，[dry] 我零零七。"], "status": 200, "model": "eleven_v4", "file": "au_C3_B01.mp3", "voice_segments": [{"voice_id": "AnbfF9pFyGfb566Yo1Vq", "start_time_seconds": 0.0, "end_time_seconds": 6.96, "character_start_index": 0, "character_end_index": 36, "dialogue_input_index": 0}]}
+{"name": "au_C3_C02", "type": "dialogue", "lang": "", "lines": ["牛郎织女。我绑的。牢吧？"], "status": 200, "model": "eleven_v4", "file": "au_C3_C02.mp3", "voice_segments": [{"voice_id": "AnbfF9pFyGfb566Yo1Vq", "start_time_seconds": 0.0, "end_time_seconds": 3.8400000000000003, "character_start_index": 0, "character_end_index": 12, "dialogue_input_index": 0}]}
+{"name": "au_C3_H03", "type": "dialogue", "lang": "", "lines": ["当年太忙。想着忙完这阵，就给自己绑一根。"], "status": 200, "model": "eleven_v4", "file": "au_C3_H03.mp3", "voice_segments": [{"voice_id": "AnbfF9pFyGfb566Yo1Vq", "start_time_seconds": 0.0, "end_time_seconds": 4.48, "character_start_index": 0, "character_end_index": 20, "dialogue_input_index": 0}]}
+{"name": "au_C3_I06", "type": "dialogue", "lang": "", "lines": ["成了。快记，我绑的。全是我绑的。"], "status": 200, "model": "eleven_v4", "file": "au_C3_I06.mp3", "voice_segments": [{"voice_id": "AnbfF9pFyGfb566Yo1Vq", "start_time_seconds": 0.0, "end_time_seconds": 3.92, "character_start_index": 0, "character_end_index": 16, "dialogue_input_index": 0}]}
+{"name": "au_D1_B01", "type": "dialogue", "lang": "", "lines": ["[sighs] 姻缘司，上下就我一个。别人九九六，[dry] 我零零七。"], "status": 200, "model": "eleven_v4", "file": "au_D1_B01.mp3", "voice_segments": [{"voice_id": "DfQAByKdbkW91PYjvgAC", "start_time_seconds": 0.0, "end_time_seconds": 6.96, "character_start_index": 0, "character_end_index": 36, "dialogue_input_index": 0}]}
+{"name": "au_D1_C02", "type": "dialogue", "lang": "", "lines": ["牛郎织女。我绑的。牢吧？"], "status": 200, "model": "eleven_v4", "file": "au_D1_C02.mp3", "voice_segments": [{"voice_id": "DfQAByKdbkW91PYjvgAC", "start_time_seconds": 0.0, "end_time_seconds": 3.7600000000000002, "character_start_index": 0, "character_end_index": 12, "dialogue_input_index": 0}]}
+{"name": "au_D1_H03", "type": "dialogue", "lang": "", "lines": ["当年太忙。想着忙完这阵，就给自己绑一根。"], "status": 200, "model": "eleven_v4", "file": "au_D1_H03.mp3", "voice_segments": [{"voice_id": "DfQAByKdbkW91PYjvgAC", "start_time_seconds": 0.0, "end_time_seconds": 4.48, "character_start_index": 0, "character_end_index": 20, "dialogue_input_index": 0}]}
+{"name": "au_D1_I06", "type": "dialogue", "lang": "", "lines": ["成了。快记，我绑的。全是我绑的。"], "status": 200, "model": "eleven_v4", "file": "au_D1_I06.mp3", "voice_segments": [{"voice_id": "DfQAByKdbkW91PYjvgAC", "start_time_seconds": 0.0, "end_time_seconds": 4.08, "character_start_index": 0, "character_end_index": 16, "dialogue_input_index": 0}]}
+{"name": "au_E3_B01", "type": "dialogue", "lang": "", "lines": ["[sighs] 姻缘司，上下就我一个。别人九九六，[dry] 我零零七。"], "status": 200, "model": "eleven_v4", "file": "au_E3_B01.mp3", "voice_segments": [{"voice_id": "StbyZLQATUVCJeVeOLtt", "start_time_seconds": 0.0, "end_time_seconds": 6.800000000000001, "character_start_index": 0, "character_end_index": 36, "dialogue_input_index": 0}]}
+{"name": "au_E3_C02", "type": "dialogue", "lang": "", "lines": ["牛郎织女。我绑的。牢吧？"], "status": 200, "model": "eleven_v4", "file": "au_E3_C02.mp3", "voice_segments": [{"voice_id": "StbyZLQATUVCJeVeOLtt", "start_time_seconds": 0.0, "end_time_seconds": 3.7600000000000002, "character_start_index": 0, "character_end_index": 12, "dialogue_input_index": 0}]}
+{"name": "au_E3_H03", "type": "dialogue", "lang": "", "lines": ["当年太忙。想着忙完这阵，就给自己绑一根。"], "status": 200, "model": "eleven_v4", "file": "au_E3_H03.mp3", "voice_segments": [{"voice_id": "StbyZLQATUVCJeVeOLtt", "start_time_seconds": 0.0, "end_time_seconds": 4.800000000000001, "character_start_index": 0, "character_end_index": 20, "dialogue_input_index": 0}]}
+{"name": "au_E3_I06", "type": "dialogue", "lang": "", "lines": ["成了。快记，我绑的。全是我绑的。"], "status": 200, "model": "eleven_v4", "file": "au_E3_I06.mp3", "voice_segments": [{"voice_id": "StbyZLQATUVCJeVeOLtt", "start_time_seconds": 0.0, "end_time_seconds": 4.0, "character_start_index": 0, "character_end_index": 16, "dialogue_input_index": 0}]}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "au_A1_B01",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "[sighs] 姻缘司，上下就我一个。别人九九六，[dry] 我零零七。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "au_A1_B01.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "bctWDlOBHyWjIDa9TrhW",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 6.720000000000001,
+    "character_start_index": 0,
+    "character_end_index": 36,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "[",
+    "s",
+    "i",
+    "g",
+    "h",
+    "s",
+    "]",
+    " ",
+    "姻",
+    "缘",
+    "司",
+    "，",
+    "上",
+    "下",
+    "就",
+    "我",
+    "一",
+    "个",
+    "。",
+    "别",
+    "人",
+    "九",
+    "九",
+    "六",
+    "，",
+    "[",
+    "d",
+    "r",
+    "y",
+    "]",
+    " ",
+    "我",
+    "零",
+    "零",
+    "七",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.06,
+    0.08,
+    0.16,
+    0.24,
+    0.32,
+    0.48,
+    0.64,
+    1.04,
+    1.2,
+    1.52,
+    1.76,
+    2.32,
+    2.52,
+    2.72,
+    2.88,
+    3.04,
+    3.2,
+    3.36,
+    4.0,
+    4.16,
+    4.32,
+    4.48,
+    4.64,
+    4.96,
+    5.0,
+    5.04,
+    5.067,
+    5.093,
+    5.12,
+    5.44,
+    5.6,
+    5.76,
+    5.84,
+    6.16,
+    6.32
+   ],
+   "character_end_times_seconds": [
+    0.06,
+    0.08,
+    0.16,
+    0.24,
+    0.32,
+    0.48,
+    0.64,
+    1.04,
+    1.2,
+    1.52,
+    1.76,
+    2.32,
+    2.52,
+    2.72,
+    2.88,
+    3.04,
+    3.2,
+    3.36,
+    4.0,
+    4.16,
+    4.32,
+    4.48,
+    4.64,
+    4.96,
+    5.0,
+    5.04,
+    5.067,
+    5.093,
+    5.12,
+    5.44,
+    5.6,
+    5.76,
+    5.84,
+    6.16,
+    6.32,
+    6.72
+   ]
+  },
+  "words": [
+   [
+    "唉",
+    0.0,
+    0.4
+   ],
+   [
+    "因",
+    1.0,
+    1.12
+   ],
+   [
+    "緣",
+    1.12,
+    1.34
+   ],
+   [
+    "私",
+    1.34,
+    1.6
+   ],
+   [
+    "上",
+    2.16,
+    2.42
+   ],
+   [
+    "下",
+    2.42,
+    2.64
+   ],
+   [
+    "就",
+    2.64,
+    2.8
+   ],
+   [
+    "我",
+    2.8,
+    2.98
+   ],
+   [
+    "一個",
+    2.98,
+    3.28
+   ],
+   [
+    "別",
+    3.8,
+    4.08
+   ],
+   [
+    "人",
+    4.08,
+    4.26
+   ],
+   [
+    "99",
+    4.26,
+    4.5
+   ],
+   [
+    "6",
+    4.5,
+    4.84
+   ],
+   [
+    "我",
+    4.84,
+    5.64
+   ],
+   [
+    "00",
+    5.64,
+    5.94
+   ],
+   [
+    "7",
+    5.94,
+    6.28
+   ]
+  ],
+  "heard": "唉 因緣私 上下就我一個別人996 我007",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 6.64
+ },
+ {
+  "name": "au_A1_C02",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "牛郎织女。我绑的。牢吧？"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "au_A1_C02.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "bctWDlOBHyWjIDa9TrhW",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.3600000000000003,
+    "character_start_index": 0,
+    "character_end_index": 12,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "牛",
+    "郎",
+    "织",
+    "女",
+    "。",
+    "我",
+    "绑",
+    "的",
+    "。",
+    "牢",
+    "吧",
+    "？"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.4,
+    0.56,
+    0.88,
+    1.04,
+    1.68,
+    1.84,
+    2.08,
+    2.64,
+    2.72,
+    2.88,
+    3.04
+   ],
+   "character_end_times_seconds": [
+    0.4,
+    0.56,
+    0.88,
+    1.04,
+    1.68,
+    1.84,
+    2.08,
+    2.64,
+    2.72,
+    2.88,
+    3.04,
+    3.36
+   ]
+  },
+  "words": [
+   [
+    "牛",
+    0.0,
+    0.22
+   ],
+   [
+    "郎",
+    0.22,
+    0.46
+   ],
+   [
+    "之",
+    0.46,
+    0.64
+   ],
+   [
+    "女",
+    0.64,
+    0.9
+   ],
+   [
+    "我",
+    1.5,
+    1.74
+   ],
+   [
+    "绑",
+    1.74,
+    1.96
+   ],
+   [
+    "的",
+    1.96,
+    2.26
+   ],
+   [
+    "老",
+    2.26,
+    2.76
+   ],
+   [
+    "吧",
+    2.76,
+    2.98
+   ]
+  ],
+  "heard": "牛郎之女我绑的老吧",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 3.28
+ },
+ {
+  "name": "au_A1_H03",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "当年太忙。想着忙完这阵，就给自己绑一根。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "au_A1_H03.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "bctWDlOBHyWjIDa9TrhW",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 4.16,
+    "character_start_index": 0,
+    "character_end_index": 20,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "当",
+    "年",
+    "太",
+    "忙",
+    "。",
+    "想",
+    "着",
+    "忙",
+    "完",
+    "这",
+    "阵",
+    "，",
+    "就",
+    "给",
+    "自",
+    "己",
+    "绑",
+    "一",
+    "根",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.48,
+    0.64,
+    0.88,
+    1.04,
+    1.6,
+    1.76,
+    1.92,
+    2.08,
+    2.24,
+    2.4,
+    2.8,
+    2.88,
+    2.96,
+    3.12,
+    3.28,
+    3.44,
+    3.6,
+    3.76,
+    3.92
+   ],
+   "character_end_times_seconds": [
+    0.48,
+    0.64,
+    0.88,
+    1.04,
+    1.6,
+    1.76,
+    1.92,
+    2.08,
+    2.24,
+    2.4,
+    2.8,
+    2.88,
+    2.96,
+    3.12,
+    3.28,
+    3.44,
+    3.6,
+    3.76,
+    3.92,
+    4.16
+   ]
+  },
+  "words": [
+   [
+    "当",
+    0.0,
+    0.18
+   ],
+   [
+    "年",
+    0.18,
+    0.36
+   ],
+   [
+    "太",
+    0.36,
+    0.62
+   ],
+   [
+    "忙",
+    0.62,
+    0.88
+   ],
+   [
+    "想",
+    0.88,
+    1.7
+   ],
+   [
+    "着",
+    1.7,
+    1.84
+   ],
+   [
+    "忙",
+    1.84,
+    1.96
+   ],
+   [
+    "完",
+    1.96,
+    2.14
+   ],
+   [
+    "这",
+    2.14,
+    2.28
+   ],
+   [
+    "这",
+    2.28,
+    2.46
+   ],
+   [
+    "就",
+    2.46,
+    2.88
+   ],
+   [
+    "给",
+    2.88,
+    3.02
+   ],
+   [
+    "自己",
+    3.02,
+    3.26
+   ],
+   [
+    "绑",
+    3.26,
+    3.54
+   ],
+   [
+    "一",
+    3.54,
+    3.74
+   ],
+   [
+    "根",
+    3.74,
+    3.82
+   ]
+  ],
+  "heard": "当年太忙想着忙完这这就给自己绑一根",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 4.08
+ },
+ {
+  "name": "au_A1_I06",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "成了。快记，我绑的。全是我绑的。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "au_A1_I06.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "bctWDlOBHyWjIDa9TrhW",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.5999999999999996,
+    "character_start_index": 0,
+    "character_end_index": 16,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "成",
+    "了",
+    "。",
+    "快",
+    "记",
+    "，",
+    "我",
+    "绑",
+    "的",
+    "。",
+    "全",
+    "是",
+    "我",
+    "绑",
+    "的",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.54,
+    0.72,
+    0.8,
+    0.96,
+    1.44,
+    1.52,
+    1.68,
+    1.84,
+    2.32,
+    2.56,
+    2.8,
+    2.96,
+    3.12,
+    3.28,
+    3.36
+   ],
+   "character_end_times_seconds": [
+    0.54,
+    0.72,
+    0.8,
+    0.96,
+    1.44,
+    1.52,
+    1.68,
+    1.84,
+    2.32,
+    2.56,
+    2.8,
+    2.96,
+    3.12,
+    3.28,
+    3.36,
+    3.6
+   ]
+  },
+  "words": [
+   [
+    "成",
+    0.0,
+    0.24
+   ],
+   [
+    "了",
+    0.24,
+    0.6
+   ],
+   [
+    "快",
+    0.6,
+    0.88
+   ],
+   [
+    "寄",
+    0.88,
+    1.1
+   ],
+   [
+    "我",
+    1.1,
+    1.58
+   ],
+   [
+    "绑",
+    1.58,
+    1.78
+   ],
+   [
+    "的",
+    1.78,
+    1.96
+   ],
+   [
+    "全",
+    1.96,
+    2.56
+   ],
+   [
+    "是我",
+    2.56,
+    2.92
+   ],
+   [
+    "绑",
+    2.92,
+    3.16
+   ],
+   [
+    "的",
+    3.16,
+    3.32
+   ]
+  ],
+  "heard": "成了快寄我绑的全是我绑的",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.52
+ },
+ {
+  "name": "au_B2_B01",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "[sighs] 姻缘司，上下就我一个。别人九九六，[dry] 我零零七。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "au_B2_B01.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "5NOAtUtfU5vGpoknnAXC",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 7.28,
+    "character_start_index": 0,
+    "character_end_index": 36,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "[",
+    "s",
+    "i",
+    "g",
+    "h",
+    "s",
+    "]",
+    " ",
+    "姻",
+    "缘",
+    "司",
+    "，",
+    "上",
+    "下",
+    "就",
+    "我",
+    "一",
+    "个",
+    "。",
+    "别",
+    "人",
+    "九",
+    "九",
+    "六",
+    "，",
+    "[",
+    "d",
+    "r",
+    "y",
+    "]",
+    " ",
+    "我",
+    "零",
+    "零",
+    "七",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.06,
+    0.08,
+    0.16,
+    0.24,
+    0.32,
+    0.6,
+    0.88,
+    1.04,
+    1.36,
+    1.6,
+    1.84,
+    2.48,
+    2.68,
+    2.88,
+    3.04,
+    3.2,
+    3.4,
+    3.6,
+    4.4,
+    4.6,
+    4.8,
+    4.96,
+    5.12,
+    5.52,
+    5.54,
+    5.56,
+    5.567,
+    5.573,
+    5.58,
+    5.6,
+    6.08,
+    6.24,
+    6.48,
+    6.72,
+    6.88
+   ],
+   "character_end_times_seconds": [
+    0.06,
+    0.08,
+    0.16,
+    0.24,
+    0.32,
+    0.6,
+    0.88,
+    1.04,
+    1.36,
+    1.6,
+    1.84,
+    2.48,
+    2.68,
+    2.88,
+    3.04,
+    3.2,
+    3.4,
+    3.6,
+    4.4,
+    4.6,
+    4.8,
+    4.96,
+    5.12,
+    5.52,
+    5.54,
+    5.56,
+    5.567,
+    5.573,
+    5.58,
+    5.6,
+    6.08,
+    6.24,
+    6.48,
+    6.72,
+    6.88,
+    7.28
+   ]
+  },
+  "words": [
+   [
+    "唉",
+    0.0,
+    0.4
+   ],
+   [
+    "因",
+    1.0,
+    1.14
+   ],
+   [
+    "緣",
+    1.14,
+    1.38
+   ],
+   [
+    "私",
+    1.38,
+    1.68
+   ],
+   [
+    "上",
+    2.4,
+    2.54
+   ],
+   [
+    "下",
+    2.54,
+    2.76
+   ],
+   [
+    "就",
+    2.76,
+    2.94
+   ],
+   [
+    "我",
+    2.94,
+    3.12
+   ],
+   [
+    "一個",
+    3.12,
+    3.5
+   ],
+   [
+    "別",
+    4.1,
+    4.52
+   ],
+   [
+    "人",
+    4.52,
+    4.7
+   ],
+   [
+    "99",
+    4.7,
+    4.96
+   ],
+   [
+    "6",
+    4.96,
+    5.36
+   ],
+   [
+    "我",
+    5.36,
+    6.14
+   ],
+   [
+    "00",
+    6.14,
+    6.44
+   ],
+   [
+    "7",
+    6.44,
+    6.8
+   ]
+  ],
+  "heard": "唉 因緣私 上下就我一個 別人996我007",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 7.2
+ },
+ {
+  "name": "au_B2_C02",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "牛郎织女。我绑的。牢吧？"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "au_B2_C02.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "5NOAtUtfU5vGpoknnAXC",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.7600000000000002,
+    "character_start_index": 0,
+    "character_end_index": 12,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "牛",
+    "郎",
+    "织",
+    "女",
+    "。",
+    "我",
+    "绑",
+    "的",
+    "。",
+    "牢",
+    "吧",
+    "？"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.48,
+    0.64,
+    0.88,
+    1.2,
+    1.76,
+    2.0,
+    2.32,
+    2.96,
+    3.12,
+    3.28,
+    3.52
+   ],
+   "character_end_times_seconds": [
+    0.48,
+    0.64,
+    0.88,
+    1.2,
+    1.76,
+    2.0,
+    2.32,
+    2.96,
+    3.12,
+    3.28,
+    3.52,
+    3.76
+   ]
+  },
+  "words": [
+   [
+    "牛",
+    0.0,
+    0.22
+   ],
+   [
+    "郎",
+    0.22,
+    0.52
+   ],
+   [
+    "之",
+    0.52,
+    0.72
+   ],
+   [
+    "女",
+    0.72,
+    1.0
+   ],
+   [
+    "我",
+    1.0,
+    1.9
+   ],
+   [
+    "绑",
+    1.9,
+    2.2
+   ],
+   [
+    "的",
+    2.2,
+    2.44
+   ],
+   [
+    "牢",
+    2.88,
+    3.16
+   ],
+   [
+    "吧",
+    3.16,
+    3.34
+   ]
+  ],
+  "heard": "牛郎之女 我绑的 牢吧",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 3.68
+ },
+ {
+  "name": "au_B2_H03",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "当年太忙。想着忙完这阵，就给自己绑一根。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "au_B2_H03.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "5NOAtUtfU5vGpoknnAXC",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 4.640000000000001,
+    "character_start_index": 0,
+    "character_end_index": 20,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "当",
+    "年",
+    "太",
+    "忙",
+    "。",
+    "想",
+    "着",
+    "忙",
+    "完",
+    "这",
+    "阵",
+    "，",
+    "就",
+    "给",
+    "自",
+    "己",
+    "绑",
+    "一",
+    "根",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.48,
+    0.64,
+    0.88,
+    1.12,
+    1.76,
+    1.92,
+    2.08,
+    2.24,
+    2.48,
+    2.64,
+    3.12,
+    3.2,
+    3.28,
+    3.467,
+    3.653,
+    3.84,
+    4.08,
+    4.24,
+    4.4
+   ],
+   "character_end_times_seconds": [
+    0.48,
+    0.64,
+    0.88,
+    1.12,
+    1.76,
+    1.92,
+    2.08,
+    2.24,
+    2.48,
+    2.64,
+    3.12,
+    3.2,
+    3.28,
+    3.467,
+    3.653,
+    3.84,
+    4.08,
+    4.24,
+    4.4,
+    4.64
+   ]
+  },
+  "words": [
+   [
+    "当",
+    0.0,
+    0.18
+   ],
+   [
+    "年",
+    0.18,
+    0.38
+   ],
+   [
+    "太",
+    0.38,
+    0.66
+   ],
+   [
+    "忙",
+    0.66,
+    1.0
+   ],
+   [
+    "想",
+    1.36,
+    1.92
+   ],
+   [
+    "着",
+    1.92,
+    2.04
+   ],
+   [
+    "忙",
+    2.04,
+    2.2
+   ],
+   [
+    "完",
+    2.2,
+    2.4
+   ],
+   [
+    "这",
+    2.4,
+    2.58
+   ],
+   [
+    "阵",
+    2.58,
+    2.78
+   ],
+   [
+    "就",
+    2.78,
+    3.24
+   ],
+   [
+    "给",
+    3.24,
+    3.42
+   ],
+   [
+    "自己",
+    3.42,
+    3.64
+   ],
+   [
+    "绑",
+    3.64,
+    3.98
+   ],
+   [
+    "一",
+    3.98,
+    4.18
+   ],
+   [
+    "根",
+    4.18,
+    4.28
+   ]
+  ],
+  "heard": "当年太忙 想着忙完这阵就给自己绑一根",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.56
+ },
+ {
+  "name": "au_B2_I06",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "成了。快记，我绑的。全是我绑的。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "au_B2_I06.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "5NOAtUtfU5vGpoknnAXC",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 4.16,
+    "character_start_index": 0,
+    "character_end_index": 16,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "成",
+    "了",
+    "。",
+    "快",
+    "记",
+    "，",
+    "我",
+    "绑",
+    "的",
+    "。",
+    "全",
+    "是",
+    "我",
+    "绑",
+    "的",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.66,
+    0.88,
+    0.96,
+    1.12,
+    1.68,
+    1.84,
+    1.92,
+    2.24,
+    2.8,
+    3.0,
+    3.2,
+    3.36,
+    3.52,
+    3.68,
+    3.84
+   ],
+   "character_end_times_seconds": [
+    0.66,
+    0.88,
+    0.96,
+    1.12,
+    1.68,
+    1.84,
+    1.92,
+    2.24,
+    2.8,
+    3.0,
+    3.2,
+    3.36,
+    3.52,
+    3.68,
+    3.84,
+    4.16
+   ]
+  },
+  "words": [
+   [
+    "成",
+    0.0,
+    0.26
+   ],
+   [
+    "了,",
+    0.26,
+    0.58
+   ],
+   [
+    "快",
+    0.88,
+    1.04
+   ],
+   [
+    "记,",
+    1.04,
+    1.22
+   ],
+   [
+    "我",
+    1.74,
+    1.88
+   ],
+   [
+    "绑",
+    1.88,
+    2.12
+   ],
+   [
+    "的,",
+    2.12,
+    2.3
+   ],
+   [
+    "全",
+    2.84,
+    3.0
+   ],
+   [
+    "是我",
+    3.0,
+    3.34
+   ],
+   [
+    "绑",
+    3.34,
+    3.6
+   ],
+   [
+    "的",
+    3.6,
+    3.8
+   ]
+  ],
+  "heard": "成了,快记,我绑的,全是我绑的",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.08
+ },
+ {
+  "name": "au_C2_B01",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "[sighs] 姻缘司，上下就我一个。别人九九六，[dry] 我零零七。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "au_C2_B01.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "IJA5ZcnYtwIUVxfM3m4O",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 7.04,
+    "character_start_index": 0,
+    "character_end_index": 36,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "[",
+    "s",
+    "i",
+    "g",
+    "h",
+    "s",
+    "]",
+    " ",
+    "姻",
+    "缘",
+    "司",
+    "，",
+    "上",
+    "下",
+    "就",
+    "我",
+    "一",
+    "个",
+    "。",
+    "别",
+    "人",
+    "九",
+    "九",
+    "六",
+    "，",
+    "[",
+    "d",
+    "r",
+    "y",
+    "]",
+    " ",
+    "我",
+    "零",
+    "零",
+    "七",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.06,
+    0.08,
+    0.16,
+    0.24,
+    0.32,
+    0.6,
+    0.88,
+    1.04,
+    1.28,
+    1.52,
+    1.68,
+    2.32,
+    2.52,
+    2.72,
+    2.88,
+    3.04,
+    3.24,
+    3.44,
+    4.08,
+    4.28,
+    4.48,
+    4.64,
+    4.8,
+    5.12,
+    5.16,
+    5.2,
+    5.28,
+    5.36,
+    5.44,
+    5.68,
+    5.92,
+    6.0,
+    6.16,
+    6.48,
+    6.64
+   ],
+   "character_end_times_seconds": [
+    0.06,
+    0.08,
+    0.16,
+    0.24,
+    0.32,
+    0.6,
+    0.88,
+    1.04,
+    1.28,
+    1.52,
+    1.68,
+    2.32,
+    2.52,
+    2.72,
+    2.88,
+    3.04,
+    3.24,
+    3.44,
+    4.08,
+    4.28,
+    4.48,
+    4.64,
+    4.8,
+    5.12,
+    5.16,
+    5.2,
+    5.28,
+    5.36,
+    5.44,
+    5.68,
+    5.92,
+    6.0,
+    6.16,
+    6.48,
+    6.64,
+    7.04
+   ]
+  },
+  "words": [
+   [
+    "唉",
+    0.0,
+    0.4
+   ],
+   [
+    "因",
+    0.92,
+    1.06
+   ],
+   [
+    "緣",
+    1.06,
+    1.28
+   ],
+   [
+    "私",
+    1.28,
+    1.6
+   ],
+   [
+    "上",
+    1.6,
+    2.38
+   ],
+   [
+    "下",
+    2.38,
+    2.62
+   ],
+   [
+    "就",
+    2.62,
+    2.8
+   ],
+   [
+    "我",
+    2.8,
+    2.96
+   ],
+   [
+    "一個",
+    2.96,
+    3.32
+   ],
+   [
+    "別",
+    3.88,
+    4.2
+   ],
+   [
+    "人",
+    4.2,
+    4.38
+   ],
+   [
+    "99",
+    4.38,
+    4.64
+   ],
+   [
+    "6",
+    4.64,
+    4.98
+   ],
+   [
+    "我",
+    4.98,
+    5.92
+   ],
+   [
+    "00",
+    5.92,
+    6.22
+   ],
+   [
+    "7",
+    6.22,
+    6.58
+   ]
+  ],
+  "heard": "唉 因緣私上下就我一個別人996 我007",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 6.96
+ },
+ {
+  "name": "au_C2_C02",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "牛郎织女。我绑的。牢吧？"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "au_C2_C02.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "IJA5ZcnYtwIUVxfM3m4O",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.7600000000000002,
+    "character_start_index": 0,
+    "character_end_index": 12,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "牛",
+    "郎",
+    "织",
+    "女",
+    "。",
+    "我",
+    "绑",
+    "的",
+    "。",
+    "牢",
+    "吧",
+    "？"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.4,
+    0.64,
+    0.88,
+    1.12,
+    1.76,
+    2.0,
+    2.24,
+    2.88,
+    3.04,
+    3.2,
+    3.44
+   ],
+   "character_end_times_seconds": [
+    0.4,
+    0.64,
+    0.88,
+    1.12,
+    1.76,
+    2.0,
+    2.24,
+    2.88,
+    3.04,
+    3.2,
+    3.44,
+    3.76
+   ]
+  },
+  "words": [
+   [
+    "牛",
+    0.0,
+    0.24
+   ],
+   [
+    "郎",
+    0.24,
+    0.52
+   ],
+   [
+    "之",
+    0.52,
+    0.72
+   ],
+   [
+    "女",
+    0.72,
+    0.98
+   ],
+   [
+    "我",
+    1.68,
+    1.92
+   ],
+   [
+    "绑",
+    1.92,
+    2.16
+   ],
+   [
+    "的",
+    2.16,
+    2.4
+   ],
+   [
+    "老",
+    2.4,
+    3.1
+   ],
+   [
+    "吧",
+    3.1,
+    3.32
+   ]
+  ],
+  "heard": "牛郎之女我绑的老吧",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.68
+ },
+ {
+  "name": "au_C2_H03",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "当年太忙。想着忙完这阵，就给自己绑一根。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "au_C2_H03.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "IJA5ZcnYtwIUVxfM3m4O",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 4.48,
+    "character_start_index": 0,
+    "character_end_index": 20,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "当",
+    "年",
+    "太",
+    "忙",
+    "。",
+    "想",
+    "着",
+    "忙",
+    "完",
+    "这",
+    "阵",
+    "，",
+    "就",
+    "给",
+    "自",
+    "己",
+    "绑",
+    "一",
+    "根",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.48,
+    0.64,
+    0.96,
+    1.12,
+    1.68,
+    1.84,
+    2.0,
+    2.16,
+    2.32,
+    2.56,
+    2.96,
+    3.04,
+    3.12,
+    3.28,
+    3.44,
+    3.6,
+    3.84,
+    4.0,
+    4.16
+   ],
+   "character_end_times_seconds": [
+    0.48,
+    0.64,
+    0.96,
+    1.12,
+    1.68,
+    1.84,
+    2.0,
+    2.16,
+    2.32,
+    2.56,
+    2.96,
+    3.04,
+    3.12,
+    3.28,
+    3.44,
+    3.6,
+    3.84,
+    4.0,
+    4.16,
+    4.48
+   ]
+  },
+  "words": [
+   [
+    "当",
+    0.0,
+    0.16
+   ],
+   [
+    "年",
+    0.16,
+    0.36
+   ],
+   [
+    "太",
+    0.36,
+    0.66
+   ],
+   [
+    "忙",
+    0.66,
+    0.98
+   ],
+   [
+    "想",
+    1.62,
+    1.8
+   ],
+   [
+    "着",
+    1.8,
+    1.92
+   ],
+   [
+    "忙",
+    1.92,
+    2.06
+   ],
+   [
+    "完",
+    2.06,
+    2.26
+   ],
+   [
+    "这",
+    2.26,
+    2.44
+   ],
+   [
+    "阵",
+    2.44,
+    2.62
+   ],
+   [
+    "就",
+    2.62,
+    3.04
+   ],
+   [
+    "给",
+    3.04,
+    3.2
+   ],
+   [
+    "自己",
+    3.2,
+    3.46
+   ],
+   [
+    "绑",
+    3.46,
+    3.76
+   ],
+   [
+    "一",
+    3.76,
+    3.98
+   ],
+   [
+    "根",
+    3.98,
+    4.06
+   ]
+  ],
+  "heard": "当年太忙 想着忙完这阵就给自己绑一根",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 4.4
+ },
+ {
+  "name": "au_C2_I06",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "成了。快记，我绑的。全是我绑的。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "au_C2_I06.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "IJA5ZcnYtwIUVxfM3m4O",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.92,
+    "character_start_index": 0,
+    "character_end_index": 16,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "成",
+    "了",
+    "。",
+    "快",
+    "记",
+    "，",
+    "我",
+    "绑",
+    "的",
+    "。",
+    "全",
+    "是",
+    "我",
+    "绑",
+    "的",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.6,
+    0.8,
+    0.96,
+    1.12,
+    1.6,
+    1.76,
+    1.84,
+    2.08,
+    2.48,
+    2.72,
+    2.88,
+    3.04,
+    3.2,
+    3.44,
+    3.6
+   ],
+   "character_end_times_seconds": [
+    0.6,
+    0.8,
+    0.96,
+    1.12,
+    1.6,
+    1.76,
+    1.84,
+    2.08,
+    2.48,
+    2.72,
+    2.88,
+    3.04,
+    3.2,
+    3.44,
+    3.6,
+    3.92
+   ]
+  },
+  "words": [
+   [
+    "成",
+    0.0,
+    0.28
+   ],
+   [
+    "了",
+    0.28,
+    0.58
+   ],
+   [
+    "快",
+    0.58,
+    1.04
+   ],
+   [
+    "寄",
+    1.04,
+    1.44
+   ],
+   [
+    "我",
+    1.44,
+    1.78
+   ],
+   [
+    "绑",
+    1.78,
+    1.98
+   ],
+   [
+    "的",
+    1.98,
+    2.16
+   ],
+   [
+    "全",
+    2.16,
+    2.72
+   ],
+   [
+    "是我",
+    2.72,
+    3.04
+   ],
+   [
+    "绑",
+    3.04,
+    3.32
+   ],
+   [
+    "的",
+    3.32,
+    3.5
+   ]
+  ],
+  "heard": "成了快寄我绑的全是我绑的",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.84
+ },
+ {
+  "name": "au_C3_B01",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "[sighs] 姻缘司，上下就我一个。别人九九六，[dry] 我零零七。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "au_C3_B01.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "AnbfF9pFyGfb566Yo1Vq",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 6.96,
+    "character_start_index": 0,
+    "character_end_index": 36,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "[",
+    "s",
+    "i",
+    "g",
+    "h",
+    "s",
+    "]",
+    " ",
+    "姻",
+    "缘",
+    "司",
+    "，",
+    "上",
+    "下",
+    "就",
+    "我",
+    "一",
+    "个",
+    "。",
+    "别",
+    "人",
+    "九",
+    "九",
+    "六",
+    "，",
+    "[",
+    "d",
+    "r",
+    "y",
+    "]",
+    " ",
+    "我",
+    "零",
+    "零",
+    "七",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.06,
+    0.08,
+    0.16,
+    0.24,
+    0.32,
+    0.6,
+    0.88,
+    1.04,
+    1.36,
+    1.6,
+    1.76,
+    2.4,
+    2.6,
+    2.8,
+    2.96,
+    3.12,
+    3.32,
+    3.52,
+    4.16,
+    4.36,
+    4.56,
+    4.64,
+    4.88,
+    5.2,
+    5.28,
+    5.413,
+    5.458,
+    5.502,
+    5.547,
+    5.68,
+    5.92,
+    6.0,
+    6.24,
+    6.48,
+    6.64
+   ],
+   "character_end_times_seconds": [
+    0.06,
+    0.08,
+    0.16,
+    0.24,
+    0.32,
+    0.6,
+    0.88,
+    1.04,
+    1.36,
+    1.6,
+    1.76,
+    2.4,
+    2.6,
+    2.8,
+    2.96,
+    3.12,
+    3.32,
+    3.52,
+    4.16,
+    4.36,
+    4.56,
+    4.64,
+    4.88,
+    5.2,
+    5.28,
+    5.413,
+    5.458,
+    5.502,
+    5.547,
+    5.68,
+    5.92,
+    6.0,
+    6.24,
+    6.48,
+    6.64,
+    6.96
+   ]
+  },
+  "words": [
+   [
+    "啊",
+    0.0,
+    0.34
+   ],
+   [
+    "殷",
+    0.98,
+    1.18
+   ],
+   [
+    "元",
+    1.18,
+    1.36
+   ],
+   [
+    "思",
+    1.36,
+    1.68
+   ],
+   [
+    "上",
+    1.68,
+    2.44
+   ],
+   [
+    "下",
+    2.44,
+    2.68
+   ],
+   [
+    "就",
+    2.68,
+    2.86
+   ],
+   [
+    "我",
+    2.86,
+    3.04
+   ],
+   [
+    "一个",
+    3.04,
+    3.4
+   ],
+   [
+    "别",
+    3.96,
+    4.28
+   ],
+   [
+    "人",
+    4.28,
+    4.46
+   ],
+   [
+    "99",
+    4.46,
+    4.72
+   ],
+   [
+    "6",
+    4.72,
+    5.06
+   ],
+   [
+    "我",
+    5.06,
+    5.88
+   ],
+   [
+    "00",
+    5.88,
+    6.2
+   ],
+   [
+    "7",
+    6.2,
+    6.54
+   ]
+  ],
+  "heard": "啊 殷元思上下就我一个别人996我007",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 6.88
+ },
+ {
+  "name": "au_C3_C02",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "牛郎织女。我绑的。牢吧？"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "au_C3_C02.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "AnbfF9pFyGfb566Yo1Vq",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.8400000000000003,
+    "character_start_index": 0,
+    "character_end_index": 12,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "牛",
+    "郎",
+    "织",
+    "女",
+    "。",
+    "我",
+    "绑",
+    "的",
+    "。",
+    "牢",
+    "吧",
+    "？"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.48,
+    0.72,
+    0.96,
+    1.28,
+    1.92,
+    2.16,
+    2.4,
+    3.04,
+    3.12,
+    3.28,
+    3.52
+   ],
+   "character_end_times_seconds": [
+    0.48,
+    0.72,
+    0.96,
+    1.28,
+    1.92,
+    2.16,
+    2.4,
+    3.04,
+    3.12,
+    3.28,
+    3.52,
+    3.84
+   ]
+  },
+  "words": [
+   [
+    "牛",
+    0.0,
+    0.24
+   ],
+   [
+    "郎",
+    0.24,
+    0.56
+   ],
+   [
+    "之",
+    0.56,
+    0.76
+   ],
+   [
+    "女",
+    0.76,
+    1.06
+   ],
+   [
+    "我",
+    1.76,
+    2.04
+   ],
+   [
+    "绑",
+    2.04,
+    2.32
+   ],
+   [
+    "的",
+    2.32,
+    2.56
+   ],
+   [
+    "劳",
+    2.56,
+    3.22
+   ],
+   [
+    "吧",
+    3.22,
+    3.4
+   ]
+  ],
+  "heard": "牛郎之女我绑的劳吧",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.76
+ },
+ {
+  "name": "au_C3_H03",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "当年太忙。想着忙完这阵，就给自己绑一根。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "au_C3_H03.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "AnbfF9pFyGfb566Yo1Vq",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 4.48,
+    "character_start_index": 0,
+    "character_end_index": 20,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "当",
+    "年",
+    "太",
+    "忙",
+    "。",
+    "想",
+    "着",
+    "忙",
+    "完",
+    "这",
+    "阵",
+    "，",
+    "就",
+    "给",
+    "自",
+    "己",
+    "绑",
+    "一",
+    "根",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.48,
+    0.64,
+    0.96,
+    1.12,
+    1.68,
+    1.84,
+    2.0,
+    2.16,
+    2.4,
+    2.56,
+    3.04,
+    3.12,
+    3.2,
+    3.36,
+    3.52,
+    3.68,
+    3.92,
+    4.08,
+    4.24
+   ],
+   "character_end_times_seconds": [
+    0.48,
+    0.64,
+    0.96,
+    1.12,
+    1.68,
+    1.84,
+    2.0,
+    2.16,
+    2.4,
+    2.56,
+    3.04,
+    3.12,
+    3.2,
+    3.36,
+    3.52,
+    3.68,
+    3.92,
+    4.08,
+    4.24,
+    4.48
+   ]
+  },
+  "words": [
+   [
+    "当",
+    0.0,
+    0.16
+   ],
+   [
+    "年",
+    0.16,
+    0.36
+   ],
+   [
+    "太",
+    0.36,
+    0.66
+   ],
+   [
+    "忙",
+    0.66,
+    0.96
+   ],
+   [
+    "想",
+    1.52,
+    1.8
+   ],
+   [
+    "着",
+    1.8,
+    1.92
+   ],
+   [
+    "忙",
+    1.92,
+    2.08
+   ],
+   [
+    "完",
+    2.08,
+    2.3
+   ],
+   [
+    "这",
+    2.3,
+    2.46
+   ],
+   [
+    "事",
+    2.46,
+    2.66
+   ],
+   [
+    "儿",
+    2.66,
+    2.9
+   ],
+   [
+    "就",
+    2.9,
+    3.14
+   ],
+   [
+    "给",
+    3.14,
+    3.28
+   ],
+   [
+    "自己",
+    3.28,
+    3.5
+   ],
+   [
+    "绑",
+    3.5,
+    3.84
+   ],
+   [
+    "一个",
+    3.84,
+    4.06
+   ]
+  ],
+  "heard": "当年太忙 想着忙完这事儿就给自己绑一个",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.4
+ },
+ {
+  "name": "au_C3_I06",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "成了。快记，我绑的。全是我绑的。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "au_C3_I06.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "AnbfF9pFyGfb566Yo1Vq",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.92,
+    "character_start_index": 0,
+    "character_end_index": 16,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "成",
+    "了",
+    "。",
+    "快",
+    "记",
+    "，",
+    "我",
+    "绑",
+    "的",
+    "。",
+    "全",
+    "是",
+    "我",
+    "绑",
+    "的",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.6,
+    0.8,
+    0.88,
+    1.04,
+    1.52,
+    1.68,
+    1.76,
+    2.0,
+    2.48,
+    2.56,
+    2.88,
+    3.04,
+    3.2,
+    3.44,
+    3.52
+   ],
+   "character_end_times_seconds": [
+    0.6,
+    0.8,
+    0.88,
+    1.04,
+    1.52,
+    1.68,
+    1.76,
+    2.0,
+    2.48,
+    2.56,
+    2.88,
+    3.04,
+    3.2,
+    3.44,
+    3.52,
+    3.92
+   ]
+  },
+  "words": [
+   [
+    "成",
+    0.0,
+    0.28
+   ],
+   [
+    "了",
+    0.28,
+    0.56
+   ],
+   [
+    "快",
+    0.56,
+    0.96
+   ],
+   [
+    "记",
+    0.96,
+    1.18
+   ],
+   [
+    "我",
+    1.18,
+    1.7
+   ],
+   [
+    "绑",
+    1.7,
+    1.9
+   ],
+   [
+    "的",
+    1.9,
+    2.08
+   ],
+   [
+    "全",
+    2.08,
+    2.66
+   ],
+   [
+    "是我",
+    2.66,
+    3.06
+   ],
+   [
+    "绑",
+    3.06,
+    3.32
+   ],
+   [
+    "的",
+    3.32,
+    3.5
+   ]
+  ],
+  "heard": "成了快记我绑的全是我绑的",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.84
+ },
+ {
+  "name": "au_D1_B01",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "[sighs] 姻缘司，上下就我一个。别人九九六，[dry] 我零零七。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "au_D1_B01.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "DfQAByKdbkW91PYjvgAC",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 6.96,
+    "character_start_index": 0,
+    "character_end_index": 36,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "[",
+    "s",
+    "i",
+    "g",
+    "h",
+    "s",
+    "]",
+    " ",
+    "姻",
+    "缘",
+    "司",
+    "，",
+    "上",
+    "下",
+    "就",
+    "我",
+    "一",
+    "个",
+    "。",
+    "别",
+    "人",
+    "九",
+    "九",
+    "六",
+    "，",
+    "[",
+    "d",
+    "r",
+    "y",
+    "]",
+    " ",
+    "我",
+    "零",
+    "零",
+    "七",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.06,
+    0.08,
+    0.16,
+    0.24,
+    0.32,
+    0.48,
+    0.64,
+    1.04,
+    1.2,
+    1.52,
+    1.76,
+    2.32,
+    2.56,
+    2.8,
+    2.96,
+    3.12,
+    3.32,
+    3.52,
+    4.16,
+    4.36,
+    4.56,
+    4.72,
+    4.88,
+    5.2,
+    5.32,
+    5.44,
+    5.48,
+    5.52,
+    5.56,
+    5.68,
+    5.84,
+    5.92,
+    6.08,
+    6.4,
+    6.56
+   ],
+   "character_end_times_seconds": [
+    0.06,
+    0.08,
+    0.16,
+    0.24,
+    0.32,
+    0.48,
+    0.64,
+    1.04,
+    1.2,
+    1.52,
+    1.76,
+    2.32,
+    2.56,
+    2.8,
+    2.96,
+    3.12,
+    3.32,
+    3.52,
+    4.16,
+    4.36,
+    4.56,
+    4.72,
+    4.88,
+    5.2,
+    5.32,
+    5.44,
+    5.48,
+    5.52,
+    5.56,
+    5.68,
+    5.84,
+    5.92,
+    6.08,
+    6.4,
+    6.56,
+    6.96
+   ]
+  },
+  "words": [
+   [
+    "唉",
+    0.0,
+    0.4
+   ],
+   [
+    "因",
+    0.98,
+    1.1
+   ],
+   [
+    "緣",
+    1.1,
+    1.34
+   ],
+   [
+    "私",
+    1.34,
+    1.66
+   ],
+   [
+    "上",
+    2.16,
+    2.44
+   ],
+   [
+    "下",
+    2.44,
+    2.68
+   ],
+   [
+    "就",
+    2.68,
+    2.86
+   ],
+   [
+    "我",
+    2.86,
+    3.04
+   ],
+   [
+    "一個",
+    3.04,
+    3.38
+   ],
+   [
+    "別",
+    3.98,
+    4.28
+   ],
+   [
+    "人",
+    4.28,
+    4.46
+   ],
+   [
+    "99",
+    4.46,
+    4.74
+   ],
+   [
+    "6",
+    4.74,
+    5.06
+   ],
+   [
+    "我",
+    5.06,
+    5.86
+   ],
+   [
+    "00",
+    5.86,
+    6.14
+   ],
+   [
+    "7",
+    6.14,
+    6.52
+   ]
+  ],
+  "heard": "唉 因緣私 上下就我一個別人996 我007",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 6.88
+ },
+ {
+  "name": "au_D1_C02",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "牛郎织女。我绑的。牢吧？"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "au_D1_C02.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "DfQAByKdbkW91PYjvgAC",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.7600000000000002,
+    "character_start_index": 0,
+    "character_end_index": 12,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "牛",
+    "郎",
+    "织",
+    "女",
+    "。",
+    "我",
+    "绑",
+    "的",
+    "。",
+    "牢",
+    "吧",
+    "？"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.4,
+    0.56,
+    0.8,
+    1.12,
+    1.76,
+    1.92,
+    2.24,
+    2.88,
+    2.96,
+    3.2,
+    3.44
+   ],
+   "character_end_times_seconds": [
+    0.4,
+    0.56,
+    0.8,
+    1.12,
+    1.76,
+    1.92,
+    2.24,
+    2.88,
+    2.96,
+    3.2,
+    3.44,
+    3.76
+   ]
+  },
+  "words": [
+   [
+    "牛",
+    0.0,
+    0.2
+   ],
+   [
+    "郎",
+    0.2,
+    0.48
+   ],
+   [
+    "之",
+    0.48,
+    0.66
+   ],
+   [
+    "女,",
+    0.66,
+    0.94
+   ],
+   [
+    "我",
+    1.66,
+    1.88
+   ],
+   [
+    "绑",
+    1.88,
+    2.12
+   ],
+   [
+    "的,",
+    2.12,
+    2.34
+   ],
+   [
+    "老",
+    2.78,
+    3.08
+   ],
+   [
+    "吧",
+    3.08,
+    3.3
+   ]
+  ],
+  "heard": "牛郎之女,我绑的,老吧",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.995,
+  "seconds": 3.68
+ },
+ {
+  "name": "au_D1_H03",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "当年太忙。想着忙完这阵，就给自己绑一根。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "au_D1_H03.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "DfQAByKdbkW91PYjvgAC",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 4.48,
+    "character_start_index": 0,
+    "character_end_index": 20,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "当",
+    "年",
+    "太",
+    "忙",
+    "。",
+    "想",
+    "着",
+    "忙",
+    "完",
+    "这",
+    "阵",
+    "，",
+    "就",
+    "给",
+    "自",
+    "己",
+    "绑",
+    "一",
+    "根",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.48,
+    0.64,
+    0.88,
+    1.12,
+    1.76,
+    1.92,
+    2.08,
+    2.24,
+    2.48,
+    2.64,
+    3.12,
+    3.2,
+    3.28,
+    3.44,
+    3.6,
+    3.76,
+    3.92,
+    4.08,
+    4.24
+   ],
+   "character_end_times_seconds": [
+    0.48,
+    0.64,
+    0.88,
+    1.12,
+    1.76,
+    1.92,
+    2.08,
+    2.24,
+    2.48,
+    2.64,
+    3.12,
+    3.2,
+    3.28,
+    3.44,
+    3.6,
+    3.76,
+    3.92,
+    4.08,
+    4.24,
+    4.48
+   ]
+  },
+  "words": [
+   [
+    "当",
+    0.0,
+    0.16
+   ],
+   [
+    "年",
+    0.16,
+    0.36
+   ],
+   [
+    "太",
+    0.36,
+    0.66
+   ],
+   [
+    "忙",
+    0.66,
+    0.96
+   ],
+   [
+    "想",
+    1.36,
+    1.9
+   ],
+   [
+    "着",
+    1.9,
+    2.04
+   ],
+   [
+    "忙",
+    2.04,
+    2.18
+   ],
+   [
+    "完",
+    2.18,
+    2.4
+   ],
+   [
+    "这",
+    2.4,
+    2.58
+   ],
+   [
+    "阵",
+    2.58,
+    2.76
+   ],
+   [
+    "就",
+    2.76,
+    3.2
+   ],
+   [
+    "给",
+    3.2,
+    3.36
+   ],
+   [
+    "自己",
+    3.36,
+    3.6
+   ],
+   [
+    "绑",
+    3.6,
+    3.88
+   ],
+   [
+    "一个",
+    3.88,
+    4.1
+   ]
+  ],
+  "heard": "当年太忙 想着忙完这阵就给自己绑一个",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.4
+ },
+ {
+  "name": "au_D1_I06",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "成了。快记，我绑的。全是我绑的。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "au_D1_I06.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "DfQAByKdbkW91PYjvgAC",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 4.08,
+    "character_start_index": 0,
+    "character_end_index": 16,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "成",
+    "了",
+    "。",
+    "快",
+    "记",
+    "，",
+    "我",
+    "绑",
+    "的",
+    "。",
+    "全",
+    "是",
+    "我",
+    "绑",
+    "的",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.66,
+    0.88,
+    1.04,
+    1.12,
+    1.68,
+    1.76,
+    1.92,
+    2.16,
+    2.72,
+    2.88,
+    3.12,
+    3.28,
+    3.44,
+    3.68,
+    3.76
+   ],
+   "character_end_times_seconds": [
+    0.66,
+    0.88,
+    1.04,
+    1.12,
+    1.68,
+    1.76,
+    1.92,
+    2.16,
+    2.72,
+    2.88,
+    3.12,
+    3.28,
+    3.44,
+    3.68,
+    3.76,
+    4.08
+   ]
+  },
+  "words": [
+   [
+    "成",
+    0.0,
+    0.24
+   ],
+   [
+    "了!",
+    0.24,
+    0.6
+   ],
+   [
+    "快",
+    0.68,
+    1.06
+   ],
+   [
+    "记!",
+    1.06,
+    1.26
+   ],
+   [
+    "我",
+    1.7,
+    1.84
+   ],
+   [
+    "绑",
+    1.84,
+    2.06
+   ],
+   [
+    "的!",
+    2.06,
+    2.24
+   ],
+   [
+    "全",
+    2.74,
+    2.94
+   ],
+   [
+    "是我",
+    2.94,
+    3.3
+   ],
+   [
+    "绑",
+    3.3,
+    3.56
+   ],
+   [
+    "的!",
+    3.56,
+    3.74
+   ]
+  ],
+  "heard": "成了!快记!我绑的!全是我绑的!",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.979,
+  "seconds": 4.0
+ },
+ {
+  "name": "au_E3_B01",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "[sighs] 姻缘司，上下就我一个。别人九九六，[dry] 我零零七。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "au_E3_B01.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "StbyZLQATUVCJeVeOLtt",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 6.800000000000001,
+    "character_start_index": 0,
+    "character_end_index": 36,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "[",
+    "s",
+    "i",
+    "g",
+    "h",
+    "s",
+    "]",
+    " ",
+    "姻",
+    "缘",
+    "司",
+    "，",
+    "上",
+    "下",
+    "就",
+    "我",
+    "一",
+    "个",
+    "。",
+    "别",
+    "人",
+    "九",
+    "九",
+    "六",
+    "，",
+    "[",
+    "d",
+    "r",
+    "y",
+    "]",
+    " ",
+    "我",
+    "零",
+    "零",
+    "七",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.06,
+    0.08,
+    0.16,
+    0.24,
+    0.32,
+    0.6,
+    0.88,
+    1.04,
+    1.36,
+    1.6,
+    1.76,
+    2.32,
+    2.52,
+    2.72,
+    2.88,
+    3.04,
+    3.24,
+    3.44,
+    4.0,
+    4.2,
+    4.4,
+    4.48,
+    4.72,
+    5.04,
+    5.12,
+    5.2,
+    5.28,
+    5.36,
+    5.44,
+    5.6,
+    5.72,
+    5.84,
+    5.92,
+    6.24,
+    6.4
+   ],
+   "character_end_times_seconds": [
+    0.06,
+    0.08,
+    0.16,
+    0.24,
+    0.32,
+    0.6,
+    0.88,
+    1.04,
+    1.36,
+    1.6,
+    1.76,
+    2.32,
+    2.52,
+    2.72,
+    2.88,
+    3.04,
+    3.24,
+    3.44,
+    4.0,
+    4.2,
+    4.4,
+    4.48,
+    4.72,
+    5.04,
+    5.12,
+    5.2,
+    5.28,
+    5.36,
+    5.44,
+    5.6,
+    5.72,
+    5.84,
+    5.92,
+    6.24,
+    6.4,
+    6.8
+   ]
+  },
+  "words": [
+   [
+    "唉",
+    0.0,
+    0.4
+   ],
+   [
+    "因",
+    0.96,
+    1.12
+   ],
+   [
+    "緣",
+    1.12,
+    1.34
+   ],
+   [
+    "私",
+    1.34,
+    1.64
+   ],
+   [
+    "上",
+    2.12,
+    2.4
+   ],
+   [
+    "下",
+    2.4,
+    2.62
+   ],
+   [
+    "就",
+    2.62,
+    2.82
+   ],
+   [
+    "我",
+    2.82,
+    2.98
+   ],
+   [
+    "一個",
+    2.98,
+    3.32
+   ],
+   [
+    "別",
+    3.82,
+    4.12
+   ],
+   [
+    "人",
+    4.12,
+    4.3
+   ],
+   [
+    "99",
+    4.3,
+    4.54
+   ],
+   [
+    "6",
+    4.54,
+    4.9
+   ],
+   [
+    "我",
+    4.9,
+    5.68
+   ],
+   [
+    "00",
+    5.68,
+    5.98
+   ],
+   [
+    "7",
+    5.98,
+    6.34
+   ]
+  ],
+  "heard": "唉 因緣私 上下就我一個別人996 我007",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 6.72
+ },
+ {
+  "name": "au_E3_C02",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "牛郎织女。我绑的。牢吧？"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "au_E3_C02.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "StbyZLQATUVCJeVeOLtt",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 3.7600000000000002,
+    "character_start_index": 0,
+    "character_end_index": 12,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "牛",
+    "郎",
+    "织",
+    "女",
+    "。",
+    "我",
+    "绑",
+    "的",
+    "。",
+    "牢",
+    "吧",
+    "？"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.4,
+    0.64,
+    0.88,
+    1.28,
+    1.84,
+    2.08,
+    2.32,
+    2.96,
+    3.08,
+    3.2,
+    3.44
+   ],
+   "character_end_times_seconds": [
+    0.4,
+    0.64,
+    0.88,
+    1.28,
+    1.84,
+    2.08,
+    2.32,
+    2.96,
+    3.08,
+    3.2,
+    3.44,
+    3.76
+   ]
+  },
+  "words": [
+   [
+    "牛",
+    0.0,
+    0.22
+   ],
+   [
+    "郎",
+    0.22,
+    0.52
+   ],
+   [
+    "之",
+    0.52,
+    0.74
+   ],
+   [
+    "女",
+    0.74,
+    1.02
+   ],
+   [
+    "我",
+    1.72,
+    1.98
+   ],
+   [
+    "绑",
+    1.98,
+    2.24
+   ],
+   [
+    "的",
+    2.24,
+    2.48
+   ],
+   [
+    "劳",
+    2.48,
+    3.14
+   ],
+   [
+    "吧",
+    3.14,
+    3.32
+   ]
+  ],
+  "heard": "牛郎之女我绑的劳吧",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.995,
+  "seconds": 3.68
+ },
+ {
+  "name": "au_E3_H03",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "当年太忙。想着忙完这阵，就给自己绑一根。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "au_E3_H03.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "StbyZLQATUVCJeVeOLtt",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 4.800000000000001,
+    "character_start_index": 0,
+    "character_end_index": 20,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "当",
+    "年",
+    "太",
+    "忙",
+    "。",
+    "想",
+    "着",
+    "忙",
+    "完",
+    "这",
+    "阵",
+    "，",
+    "就",
+    "给",
+    "自",
+    "己",
+    "绑",
+    "一",
+    "根",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.48,
+    0.64,
+    0.96,
+    1.2,
+    1.76,
+    1.92,
+    2.08,
+    2.24,
+    2.48,
+    2.72,
+    3.12,
+    3.2,
+    3.36,
+    3.547,
+    3.733,
+    3.92,
+    4.16,
+    4.32,
+    4.48
+   ],
+   "character_end_times_seconds": [
+    0.48,
+    0.64,
+    0.96,
+    1.2,
+    1.76,
+    1.92,
+    2.08,
+    2.24,
+    2.48,
+    2.72,
+    3.12,
+    3.2,
+    3.36,
+    3.547,
+    3.733,
+    3.92,
+    4.16,
+    4.32,
+    4.48,
+    4.8
+   ]
+  },
+  "words": [
+   [
+    "当",
+    0.0,
+    0.18
+   ],
+   [
+    "年",
+    0.18,
+    0.4
+   ],
+   [
+    "太",
+    0.4,
+    0.74
+   ],
+   [
+    "忙",
+    0.74,
+    1.06
+   ],
+   [
+    "想",
+    1.64,
+    1.88
+   ],
+   [
+    "着",
+    1.88,
+    2.06
+   ],
+   [
+    "忙",
+    2.06,
+    2.2
+   ],
+   [
+    "完",
+    2.2,
+    2.42
+   ],
+   [
+    "这",
+    2.42,
+    2.62
+   ],
+   [
+    "这",
+    2.62,
+    2.8
+   ],
+   [
+    "就",
+    2.8,
+    3.28
+   ],
+   [
+    "给",
+    3.28,
+    3.44
+   ],
+   [
+    "自己",
+    3.44,
+    3.7
+   ],
+   [
+    "绑",
+    3.7,
+    4.06
+   ],
+   [
+    "一个",
+    4.06,
+    4.32
+   ]
+  ],
+  "heard": "当年太忙想着忙完这这就给自己绑一个",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 4.72
+ },
+ {
+  "name": "au_E3_I06",
+  "type": "dialogue",
+  "lang": "",
+  "lines": [
+   "成了。快记，我绑的。全是我绑的。"
+  ],
+  "status": 200,
+  "model": "eleven_v4",
+  "file": "au_E3_I06.mp3",
+  "voice_segments": [
+   {
+    "voice_id": "StbyZLQATUVCJeVeOLtt",
+    "start_time_seconds": 0.0,
+    "end_time_seconds": 4.0,
+    "character_start_index": 0,
+    "character_end_index": 16,
+    "dialogue_input_index": 0
+   }
+  ],
+  "alignment": {
+   "characters": [
+    "成",
+    "了",
+    "。",
+    "快",
+    "记",
+    "，",
+    "我",
+    "绑",
+    "的",
+    "。",
+    "全",
+    "是",
+    "我",
+    "绑",
+    "的",
+    "。"
+   ],
+   "character_start_times_seconds": [
+    0.0,
+    0.6,
+    0.8,
+    0.96,
+    1.04,
+    1.52,
+    1.68,
+    1.76,
+    2.0,
+    2.48,
+    2.56,
+    2.88,
+    3.08,
+    3.28,
+    3.52,
+    3.68
+   ],
+   "character_end_times_seconds": [
+    0.6,
+    0.8,
+    0.96,
+    1.04,
+    1.52,
+    1.68,
+    1.76,
+    2.0,
+    2.48,
+    2.56,
+    2.88,
+    3.08,
+    3.28,
+    3.52,
+    3.68,
+    4.0
+   ]
+  },
+  "words": [
+   [
+    "成",
+    0.0,
+    0.3
+   ],
+   [
+    "了",
+    0.3,
+    0.54
+   ],
+   [
+    "快",
+    0.54,
+    0.96
+   ],
+   [
+    "寄",
+    0.96,
+    1.24
+   ],
+   [
+    "我",
+    1.24,
+    1.7
+   ],
+   [
+    "绑",
+    1.7,
+    1.92
+   ],
+   [
+    "的",
+    1.92,
+    2.12
+   ],
+   [
+    "全",
+    2.12,
+    2.66
+   ],
+   [
+    "是我",
+    2.66,
+    3.12
+   ],
+   [
+    "绑",
+    3.12,
+    3.44
+   ],
+   [
+    "的",
+    3.44,
+    3.62
+   ]
+  ],
+  "heard": "成了快寄我绑的全是我绑的",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 3.92
+ }
+]
