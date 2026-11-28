@@ -16,6 +16,8 @@ if not KEY: log("NO KEY: add the ELEVENLABS_API_KEY repository secret"); sys.exi
 try:
     u = requests.get(f"{API}/v1/user/subscription", headers=H, timeout=30).json()
     report["plan"] = {k: u.get(k) for k in ("tier", "character_count", "character_limit", "status", "next_character_count_reset_unix")}
+    # any other usage counters the account reports (music, sound effects...): counts and limits only, never billing details
+    report["usage_other"] = {k: v for k, v in u.items() if isinstance(v, (int, float)) and any(w in k for w in ("count", "limit", "usage", "minute", "credit", "second")) and not any(w in k for w in ("invoice", "price", "amount", "cost", "currency"))}
 except Exception as e: report["plan"] = str(e)
 log("plan:", report["plan"])
 models = requests.get(f"{API}/v1/models", headers=H, timeout=30).json()
@@ -297,6 +299,7 @@ if req.get("tag"):
 try:
     u = requests.get(f"{API}/v1/user/subscription", headers=H, timeout=30).json()
     report["plan_after"] = {k: u.get(k) for k in ("character_count", "character_limit", "next_character_count_reset_unix")}
+    report["usage_other_after"] = {k: v for k, v in u.items() if isinstance(v, (int, float)) and any(w in k for w in ("count", "limit", "usage", "minute", "credit", "second")) and not any(w in k for w in ("invoice", "price", "amount", "cost", "currency"))}
 except Exception as e: report["plan_after"] = str(e)
 json.dump(report, open("out/report.json", "w"), ensure_ascii=False, indent=2)
 log(json.dumps(report["clips"], ensure_ascii=False, indent=1))
