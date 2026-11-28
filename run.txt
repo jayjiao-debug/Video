@@ -1,0 +1,106 @@
+plan: {'tier': 'creator', 'character_count': 118923, 'character_limit': 123898, 'status': 'active', 'next_character_count_reset_unix': 1797012816}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "sfx_whoosh_a", "type": "sfx", "text": "A single quick airy whoosh of a sheet of paper flicked fast past the microphone. Clean, no music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "credits": 0, "file": "sfx_whoosh_a.mp3", "bytes": 13835}
+{"name": "sfx_ding", "type": "sfx", "text": "A single small bright temple bell ding with a short clean ring. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "credits": 0, "file": "sfx_ding.mp3", "bytes": 24702}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/transformers/audio_utils.py:860: UserWarning: At least one mel filter has all zero values. The value for `num_mel_filters` (128) may be set too high. Or, the value for `num_frequency_bins` (257) may be set too low.
+  warnings.warn(
+Loading weights:   0%|          | 0/203 [00:00<?, ?it/s]Loading weights: 100%|██████████| 203/203 [00:00<00:00, 4601.78it/s]
+sfx_whoosh_a [['Whip', 0.339], ['Whoosh, swoosh, swish', 0.115], ['Sound effect', 0.041], ['Slap, smack', 0.028], ['Whack, thwack', 0.025], ['Creak', 0.018], ['Bang', 0.017], ['Scrape', 0.011]]
+sfx_ding [['Ding', 0.235], ['Sound effect', 0.09], ['Clang', 0.086], ['Bell', 0.045], ['Ping', 0.021], ['Bicycle bell', 0.016], ['Speech', 0.01], ['Chink, clink', 0.009]]
+[
+ {
+  "name": "sfx_whoosh_a",
+  "type": "sfx",
+  "text": "A single quick airy whoosh of a sheet of paper flicked fast past the microphone. Clean, no music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "credits": 0,
+  "file": "sfx_whoosh_a.mp3",
+  "bytes": 13835,
+  "seconds": 0.8,
+  "tags": [
+   [
+    "Whip",
+    0.339
+   ],
+   [
+    "Whoosh, swoosh, swish",
+    0.115
+   ],
+   [
+    "Sound effect",
+    0.041
+   ],
+   [
+    "Slap, smack",
+    0.028
+   ],
+   [
+    "Whack, thwack",
+    0.025
+   ],
+   [
+    "Creak",
+    0.018
+   ],
+   [
+    "Bang",
+    0.017
+   ],
+   [
+    "Scrape",
+    0.011
+   ]
+  ]
+ },
+ {
+  "name": "sfx_ding",
+  "type": "sfx",
+  "text": "A single small bright temple bell ding with a short clean ring. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "credits": 0,
+  "file": "sfx_ding.mp3",
+  "bytes": 24702,
+  "seconds": 1.48,
+  "tags": [
+   [
+    "Ding",
+    0.235
+   ],
+   [
+    "Sound effect",
+    0.09
+   ],
+   [
+    "Clang",
+    0.086
+   ],
+   [
+    "Bell",
+    0.045
+   ],
+   [
+    "Ping",
+    0.021
+   ],
+   [
+    "Bicycle bell",
+    0.016
+   ],
+   [
+    "Speech",
+    0.01
+   ],
+   [
+    "Chink, clink",
+    0.009
+   ]
+  ]
+ }
+]
+vault sealed (rsa) 2 files for 1 keys
