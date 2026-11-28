@@ -31,6 +31,9 @@ const AWAY = [Z2, STAND_AT], AWAY_YAW = Math.atan2(STAND_AT.x - Z2.x, STAND_AT.z
 /** her way back in: through the door and on across the lobby to the lifts (she is never switched off behind the glass) */
 const RIDER_LEN = VERBS.walkTime(RIDER_UP, 1), RIDER_DOWN = [...RIDER_UP].reverse(), WAY_IN = [...LIFT_OUT].reverse();   // back the way she came, to the left lift (clear of the plant at x -1.9..-1.1 and the desk)
 const DOWN_YAW = Math.atan2(RIDER_DOWN[1].x - RIDER_DOWN[0].x, RIDER_DOWN[1].z - RIDER_DOWN[0].z);
+/** the knot on the step beside his hip while he sits (13 cm short of where he drops it, on the old thread). Its ball
+ *  (centre 5.5 cm over its origin) is 7 cm round: laid at its origin it sank 1.4 cm into the tread, so it lies LIFT higher */
+const KNOT_LIFT = 0.018, KNOT_REST = COIL_AT.clone().add(V(-0.13, KNOT_LIFT, 0.04)), KNOT_DROP = COIL_AT.clone().add(V(0, KNOT_LIFT, 0)), KNOT_BALL = 0.07;
 /** where the bag changes hands, between the two of them */
 const HAND_PT = P("street", 0.09, 0.51 + 0.84, -3.14);
 /** the rider's walked way from the kerb to where he is (d m along RIDER_UP): the old thread trails behind his ankle */
@@ -44,7 +47,7 @@ export const SEG: Segment = {
     // the business: the creep; four strands; backing off with the knot; the trudge to the step; sitting down; the drop
     const creep0 = g02 + 2, creep1 = creep0 + Math.ceil(VERBS.walkTime([Z0, Z1], CREEP) * 30), pulls = [wound + 28, wound + 17, wound + 6, x02 + 1];
     const back0 = x02 + 6, back1 = back0 + Math.ceil(VERBS.walkTime([Z1, Z2], BACKING) * 30), walk0 = back1 + 4, arrive = walk0 + Math.ceil(VERBS.walkTime(AWAY, TRUDGE) * 30), sit0 = arrive + 8, sat = sit0 + SIT;
-    const tug = g05 + 62, drop0 = over + 4, fell = drop0 + 10, up0 = x05 + 5;
+    const tug = g05 + 62, drop0 = over + 4, up0 = x05 + 5;
     // the delivery: the rider's trot up, the door, her way out, the bag, her way in, his way down
     const rgo = g03 - 37, rtop = rgo + Math.ceil((RIDER_LEN / TROT) * 30), out0 = g03 + 12, out1 = out0 + Math.ceil(VERBS.walkTime(WAY_OUT, HER_PACE) * 30), take = g04 + 6;
     const in0 = x04 + 10, down0 = x04 + 62;
@@ -53,7 +56,7 @@ export const SEG: Segment = {
     w.setPlace("street"); w.set.param("time", "night"); w.set.param("door", doorK); w.set.param("lit", 0.5); w.set.param("moon", 0.3);
     const t = f / 30;
     // ---------------------------------------------------------------------------------------------- the camera
-    const CLOSE = { pos: CAMN, at: [-0.3, 1.19, 0.9], sx: 540, sy: 890, fov: 56 }, ECU = { pos: CAMN, at: [-0.3, 1.24, 1.55], sx: 540, sy: 815, fov: 56 }, KNOT = { pos: CAMN, at: [-0.3, 1.165, 1.0], sx: 540, sy: 820, fov: 56 };
+    const CLOSE = { pos: CAMN, at: [-0.3, 1.19, 0.9], sx: 540, sy: 890, fov: 56 }, ECU = { pos: CAMN, at: [-0.3, 1.24, 1.55], sx: 540, sy: 815, fov: 56 }, KNOT = { pos: CAMN, at: [-0.3, 1.165, 1.0], sx: 430, sy: 720, fov: 56 };
     const WIDE = { pos: CAMN, at: [0.08, 1.7, -3.2], sx: 690, sy: 561, fov: 46 }, PAIR = { pos: CAMN, at: [0.08, 1.62, -3.2], sx: 540, sy: 700, fov: zoomBy(46, 0.62) };
     const HIM = { pos: CAMN, at: [-0.85, 0.8, -2.18], sx: 340, sy: 800, fov: 28 }, MOON = { pos: CAMN, at: MOON_LOCAL, sx: 540, sy: 700, fov: 34 };   // (scene H opens with his head on this spot)
     const keys: ShotKey[] = [
@@ -81,6 +84,7 @@ export const SEG: Segment = {
     else { at = STAND_AT; facing = turnTo(AWAY_YAW, 0, smooth((f - (arrive - 10)) / 20)); }
     at = at.clone().add(V(0, tip, 0));
     const H = (dx: number, y: number, z: number) => rel(at, facing, dx, y, z), SH = (dx: number, y: number, z: number) => rel(STEP.top.clone().setY(0), 0, dx, y, z);
+    const turned = f >= walk0 - 4 && f < arrive + 10, trudging = f >= walk0 && f < arrive, sway = trudging ? Math.sin((f - walk0) * 0.36) * Math.min(1, (f - walk0) / 8, (arrive - f) / 8) : 0;
     // his hands: patting himself down; empty (我的线呢！); at the lens, one at each lower corner of the picture: each pull is
     // a reach in and up, then a jerk down and out; then together round the knot; on his knees
     const pat = Math.sin(f * 0.85), patR = H(-0.12, 0.8 + 0.07 * pat, 0.2), patL = H(0.12, 0.74 - 0.07 * pat, 0.205), sh = 0.012 * Math.sin(f * 1.5) * (f < x01 + 2 ? 1 : 0);
@@ -88,28 +92,41 @@ export const SEG: Segment = {
     // of the lens overlay, which pinches the strand and takes it off), and comes back with what it pulled
     const awayOf = (i: number) => win(f, pulls[i] - 10, pulls[i] + 9, 5, 5), aR = Math.max(awayOf(1), awayOf(3)), aL = Math.max(awayOf(2), awayOf(0));
     const lensR = H(-0.13, 1.1, 0.3).lerp(H(-0.44, 1.2, 0.3), aR), lensL = H(0.13, 1.1, 0.3).lerp(H(0.44, 1.2, 0.3), aL);
-    const fid = 0.012 * Math.sin(f * 0.55), lapR = SH(-0.07 - fid, 0.44 + 0.006 * Math.sin(f * 0.8), 0.27), lapL = SH(0.07 + fid * 0.6, 0.44 - 0.006 * Math.sin(f * 0.8), 0.27);
-    const strainK = win(f, tug, tug + 22, 4, 5), dropK = smooth((f - drop0) / 7);
+    // THE KNOT lives in his LEFT hand once he backs away. His beard hangs so far out over his belly that his two hands
+    // cannot meet in front of him (nothing may pass through it), so the knot is held up at his left side, clear of the
+    // beard, and looked at; carried at his side on the trudge; set down on the step beside his hip as he sits, his hand
+    // left on it; lifted out once more for a last look (一个时辰 … ) and dropped onto the old thread (COIL_AT) on 完了.
+    // It always hangs just under his fist (knotAt). His right hand hangs, then rests on his right knee.
+    const fid = 0.01 * Math.sin(f * 0.55), lapR = SH(-0.13 - fid, 0.42 + 0.005 * Math.sin(f * 0.8), 0.26), lapL = SH(0.13 + fid * 0.6, 0.42 - 0.005 * Math.sin(f * 0.8), 0.26);
+    const hangR = H(-0.228, 0.59, 0.05), hold = H(0.21, 0.86 + 0.006 * Math.sin(f * 0.4), 0.26), carry = H(0.27, 0.68, 0.1 + 0.03 * sway);
+    const onKnot = KNOT_REST.clone().add(V(-0.02, 0.145, 0)), out = COIL_AT.clone().add(V(-0.07, 0.42, 0)), shakeK = win(f, tug + 8, drop0 - 2, 4, 4);
     let hands: [THREE.Vector3 | null, THREE.Vector3 | null] | undefined;
     if (f < mine - 5) hands = [patR, patL];
     else if (f < creep0) hands = [through(f, [[mine - 5, patR], [mine + 1, H(-0.3, 0.7 + sh, 0.16)]]), through(f, [[mine - 5, patL], [mine + 1, H(0.3, 0.7 - sh, 0.16)]])];
     else if (f < back0 - 2) hands = [through(f, [[creep0, H(-0.3, 0.7, 0.16)], [creep0 + 9, H(-0.17, 0.95, 0.27)], [wound - 6, lensR]]), through(f, [[creep0, H(0.3, 0.7, 0.16)], [creep0 + 9, H(0.17, 0.95, 0.27)], [wound - 6, lensL]])];
-    else if (!seated) { const y = ky(f, [[back0 + 5, 0.93], [walk0 - 4, 0.93], [walk0 + 6, 0.8]]), z = ky(f, [[walk0 - 4, 0.34], [walk0 + 6, 0.3]]); hands = [through(f, [[back0 - 2, lensR], [back0 + 4, H(-0.075, y, z)]]), through(f, [[back0 - 2, lensL], [back0 + 4, H(0.075, y, z)]])]; }
-    else {
-      const R0 = H(-0.075, 0.8, 0.3).lerp(lapR, 1 - sitK), L0 = H(0.075, 0.8, 0.3).lerp(lapL, 1 - sitK);
-      hands = [R0.add(V(-0.03 * strainK, 0, 0)).lerp(SH(-0.13, 0.4, 0.25), dropK), L0.add(V(0.03 * strainK, 0, 0)).lerp(f < fell ? SH(0.4, 0.35, 0.0) : SH(0.13, 0.4, 0.25), f < fell ? dropK : 1)];
-      if (f >= fell) hands[1] = SH(0.4, 0.35, 0.0).lerp(SH(0.13, 0.4, 0.25), smooth((f - fell) / 10));
+    else if (!seated) {
+      // down from her lens: the right hand out round the beard and down to hang; the left out to the side and up to hold
+      // the knot where he can see it; on the trudge it comes down to his side
+      hands = [through(f, [[back0 - 2, lensR], [back0 + 3, H(-0.3, 0.98, 0.26)], [back0 + 10, hangR]]),
+        f < walk0 - 4 ? through(f, [[back0 - 2, lensL], [back0 + 2, H(0.3, 1.02, 0.3)], [back0 + 7, hold]]) : through(f, [[walk0 - 4, hold], [walk0 + 8, carry]])];
+    } else if (f < tug) {
+      // sitting down: the knot comes down with him onto the step beside his hip; his hand stays on it
+      hands = [through(f, [[sit0, hangR], [sat - 2, lapR]]), through(f, [[sit0, carry], [sat - 2, onKnot]])];
+    } else {
+      // one last look: he lifts it out at his side, gives it a shake, lets go on 完了, holds the empty hand there while it
+      // falls, and it sinks to his knee
+      const shake = V(0.012 * Math.sin(f * 1.6) * shakeK, 0.008 * Math.sin(f * 2.3) * shakeK, 0);
+      hands = [lapR, f < drop0 + 12 ? through(f, [[tug, onKnot], [tug + 10, out]]).add(shake) : through(f, [[drop0 + 12, out], [drop0 + 30, lapL]])];
     }
     const faces: MoodKey[] = [
       [S.from, "panic"], [mine - 1, "dread", "take", 0.7], [x01 + 3, "suspicious", "take", 0.8], [g02 + 7, "intent"], [x02 + 3, "look"], [back0 + 11, "small", "sink"],
-      [sat + 4, "sag"], [g05 - 3, "worry"], [g05 + 50, "sag"], [tug + 2, "strain"], [over - 3, "gloom", "sink"], [up0 + 2, "lost"],
+      [sat + 4, "sag"], [g05 - 3, "worry"], [tug + 4, "strain"], [over - 3, "gloom", "sink"], [up0 + 2, "lost"],
     ];
     // his eyes: on each strand as he pulls it; up over his shoulder at the moon for the hour; at the sky at the end
-    const pk = (i: number) => win(f, pulls[i] - 9, pulls[i] + 5, 4, 4), moonK = win(f, g05 - 2, g05 + 44, 8, 10), skyK = smooth((f - up0) / 8);
+    const pk = (i: number) => win(f, pulls[i] - 9, pulls[i] + 5, 4, 4), moonK = win(f, g05 - 2, g05 + 44, 8, 10), skyK = smooth((f - up0) / 8), knotK = win(f, tug + 2, up0 + 2, 5, 4), heldK = win(f, back0 + 4, walk0 - 2, 5, 5);
     const picking = f >= wound - 6 && f < back0;
-    const gaze = f < x01 + 1 ? undefined : f < wound - 6 ? 0 : picking ? (pk(2) > 0.5 ? 1 : pk(3) > 0.5 ? -1 : 0) : seated ? (moonK > 0.4 ? -1 : 0) : 0;
-    const turned = f >= walk0 - 4 && f < arrive + 10, trudging = f >= walk0 && f < arrive, sway = trudging ? Math.sin((f - walk0) * 0.36) * Math.min(1, (f - walk0) / 8, (arrive - f) / 8) : 0;
-    const lookDown = f < mine - 4 ? 12 : f < creep0 ? -4 : f < back0 ? -12 * smooth((f - creep0) / 20) + 16 * pk(1) - 7 * pk(0) - 4 * pk(3) : !seated ? (turned ? 5 : 15) : 16 * (1 - moonK) * (1 - skyK) - 16 * moonK - 12 * skyK;
+    const gaze = f < x01 + 1 ? undefined : f < wound - 6 ? 0 : picking ? (pk(2) > 0.5 ? 1 : pk(3) > 0.5 ? -1 : 0) : seated ? (moonK > 0.4 ? -1 : knotK > 0.5 ? 1 : 0) : heldK > 0.5 ? 1 : 0;
+    const lookDown = f < mine - 4 ? 12 : f < creep0 ? -4 : f < back0 ? -12 * smooth((f - creep0) / 20) + 16 * pk(1) - 7 * pk(0) - 4 * pk(3) : !seated ? (turned ? 5 : 15 - 5 * heldK) : (16 + 8 * smooth((f - drop0) / 6) * knotK) * (1 - moonK) * (1 - skyK) - 16 * moonK - 12 * skyK;
     const slump = ky(f, [[back0 + 8, 0], [back0 + 18, 1], [over - 2, 1], [over + 8, 1.7]]);
     const r = act(w, f, YL, {
       at, facing, faces, pose, hands, gaze, talkGaze: 0, lookDown, turn: f < creep0 || turned ? 1 : undefined,
@@ -123,7 +140,7 @@ export const SEG: Segment = {
     const rFace = legR.moving ? legR.facing : going ? dn.facing : turnTo(turnTo(turnTo(up.facing, 2.75, smooth((f - rtop) / 6)), -HALF, toHer), DOWN_YAW, smooth((f - (down0 - 7)) / 7));
     const RH = (dx: number, y: number, z: number) => rel(rAt, rFace, dx, y, z);
     const giveK = ky(f, [[out1 - 8, 0], [out1 + 4, 1], [take + 2, 1], [take + 12, 0]]), shyK = ky(f, [[again + 8, 0], [again + 16, 1], [x04 + 34, 1], [x04 + 44, 0]]), callK = ky(f, [[rtop - 2, 0], [rtop + 6, 1]]) * (1 - giveK);
-    const carry = RH(0.2, 0.66, 0.06), rHandL = f < take + 2 ? carry.clone().lerp(RH(0.17, 0.86, 0.26), callK).lerp(HAND_PT.clone().add(V(0.035, 0, 0.02)), giveK)
+    const rCarry = RH(0.22, 0.66, 0.06), rHandL = f < take + 2 ? rCarry.clone().lerp(RH(0.17, 0.86, 0.26), callK).lerp(HAND_PT.clone().add(V(0.035, 0, 0.02)), giveK)
       : HAND_PT.clone().add(V(0.035, 0, 0.02)).lerp(hang(rAt, rFace, 1), smooth((f - take - 2) / 10)).lerp(RH(0.1, 1.1 + 0.012 * Math.sin(f * 0.9), -0.3), shyK);
     const rd = act(w, f, QS, {
       at: rAt, facing: rFace, pose: legR.moving ? legR.pose : undefined, hands: going && !legR.moving ? undefined : [null, f >= take + 14 && shyK < 0.01 ? null : rHandL],
@@ -137,12 +154,13 @@ export const SEG: Segment = {
     // she comes down from her floor for it: out of the left lift (inG: he is at her lens, his head hides the lift) and
     // across the lobby to the door, there at out1 as the door has slid open
     const inG = out1 - Math.ceil(VERBS.walkTime(LIFT_OUT, HER_PACE) * 30);
-    let xm = null as ReturnType<typeof act> | null;
+    let xm = null as ReturnType<typeof act> | null, xmFace = 0;
     if (f >= inG) {
       const legX = f < in0 ? walkAlong(LIFT_OUT, HER_PACE, (f - inG) / 30) : walkAlong(WAY_IN, HER_PACE, (f - in0) / 30);
       const xAt = legX.at, xFace = legX.moving || f >= in0 ? legX.facing : turnTo(turnTo(legX.facing, HALF, smooth((f - out1) / 7)), Math.PI, smooth((f - (in0 - 7)) / 7));
+      xmFace = xFace;
       const reach = ky(f, [[take - 9, 0], [take, 1], [take + 4, 1], [take + 16, 0]]), XH = (dx: number, y: number, z: number) => rel(xAt, xFace, dx, y, z);
-      const hold = XH(-0.2, 0.66, 0.06), hr = hang(xAt, xFace, 0).lerp(hold, smooth((f - take) / 12)).lerp(HAND_PT.clone().add(V(-0.035, 0, 0.02)), reach);
+      const hold = XH(-0.22, 0.66, 0.06), hr = hang(xAt, xFace, 0).lerp(hold, smooth((f - take) / 12)).lerp(HAND_PT.clone().add(V(-0.035, 0, 0.02)), reach);
       xm = act(w, f, XM, {
         at: xAt, facing: xFace, pose: legX.moving ? legX.pose : undefined, hands: f >= take - 9 ? [hr, null] : undefined,
         faces: [[S.from, "tired"], [g03 + 4, "look", "take", 0.4], [out0 + 6, "tired"], [g04 - 2, "polite"], [again - 1, "look", "take", 0.4], [again + 14, "smile"], [in0 + 2, "smile"]],
@@ -152,21 +170,32 @@ export const SEG: Segment = {
     }
     w.update();
     // ---------------------------------------------------------------------------------------------- the bag
-    if (f < take + 2) w.prop("bag", "order").put(rd.handWorld(1).add(V(0, -0.27, 0)), { yaw: rFace });
-    else if (xm) w.prop("bag", "order").put(xm.handWorld(0).add(V(0, -0.27, 0)), { yaw: HALF });
+    if (f < take + 2) w.prop("bag", "order").put(rd.handWorld(1).add(V(0, -0.27, 0)), { yaw: rFace + HALF * (1 - giveK) });
+    else if (xm) w.prop("bag", "order").put(xm.handWorld(0).add(V(0, -0.27, 0)), { yaw: xmFace + HALF });
     // ---------------------------------------------------------------------------------------------- the knot
     // what each hand has pulled off so far: a wad of thread in it (it grows with the second strand); as he backs away
     // the two hands come together and it is one knot
-    if (f < back0 + 3) {
-      const wadL = f >= pulls[2] + 7 ? (f >= pulls[0] + 7 ? 0.46 : 0.32) : 0, wadR = f >= pulls[1] + 7 ? (f >= pulls[3] + 7 ? 0.46 : 0.32) : 0;
-      if (wadL) w.prop("tangle", "wadL").put(r.handWorld(1).add(V(0.01, -0.04, 0.02)), { yaw: 0.6, scale: wadL });
-      if (wadR) w.prop("tangle", "wadR").put(r.handWorld(0).add(V(-0.01, -0.04, 0.02)), { yaw: 2.1, scale: wadR });
-    }
-    if (f >= back0 + 3) {
-      const mid = r.handWorld(0).add(r.handWorld(1)).multiplyScalar(0.5).add(V(0, -0.05, 0)), left = r.handWorld(1).add(V(0, -0.075, 0));
-      const fall = smooth((f - (drop0 + 6)) / 4), bounce = 0.02 * Math.max(0, Math.sin(((f - fell) / 7) * Math.PI)) * (f >= fell && f < fell + 7 ? 1 : 0);
-      const knot = f < drop0 ? mid : mid.lerp(left, dropK).lerp(COIL_AT, fall).add(V(0, bounce, 0));
-      w.prop("tangle", "his").put(knot, { yaw: 0.6 + (f < drop0 ? 0.25 * Math.sin(f * 0.3) * (seated ? 1 : 0) : 0.9 * fall), scale: ky(f, [[back0 + 3, 0.72], [back0 + 8, 1]]) });
+    // what he has pulled off so far: one wad in his left fist, growing with every strand (it is all one tangle); as he
+    // backs away it is the knot, hanging under that fist (knotAt) from then on
+    const wad = f >= pulls[3] + 7 ? 0.75 : f >= pulls[0] + 7 ? 0.6 : f >= pulls[1] + 7 ? 0.46 : f >= pulls[2] + 7 ? 0.32 : 0;
+    const fist = r.handWorld(1), fore = fist.clone().sub(r.elbowWorld(1)).normalize(), wadAt = fist.clone().add(V(0.01, -0.04, 0.02));
+    if (f < back0 + 3) { if (wad) w.prop("tangle", "wadL").put(wadAt, { yaw: 0.6, scale: wad }); }
+    else {
+      // held at the end of the fist, along the forearm (in front of it held up, under it carried at his side, beside it
+      // held out): never under the forearm, where his wide sleeve hangs
+      const sc = ky(f, [[back0 + 3, 0.75], [back0 + 12, 1]]), hung = smooth((f - (back0 + 3)) / 6);
+      const heldAt = wadAt.clone().lerp(fist.clone().addScaledVector(fore, 0.015 + KNOT_BALL * sc).sub(V(0, 0.055 * sc, 0)), hung);
+      let knot = heldAt, yaw = facing + 0.6 + 0.9 * hung;
+      if (seated && f < drop0) knot = f < tug ? heldAt.clone().lerp(KNOT_REST, smooth((f - (sat - 9)) / 7)) : KNOT_REST.clone().lerp(heldAt, smooth((f - tug) / 6));
+      else if (f >= drop0) {
+        // let go: it falls (gravity) from where it was held, drifting the last few cm onto the old thread, bounces once
+        // and lies there (as scene H finds it)
+        const y0 = heldAt.y, fallT = Math.sqrt((2 * (y0 - KNOT_DROP.y)) / 9.8) * 30, u = Math.min(1, (f - drop0) / fallT), land = drop0 + fallT;
+        knot = heldAt.clone().lerp(KNOT_DROP, u * u).setY(Math.max(KNOT_DROP.y, y0 - 4.9 * ((f - drop0) / 30) ** 2));
+        if (f >= land) knot = KNOT_DROP.clone().add(V(0, 0.016 * Math.max(0, Math.sin(((f - land) / 6) * Math.PI)) * (f < land + 6 ? 1 : 0), 0));
+        yaw = 1.5 + 0.25 * Math.max(0, 1 - (f - land) / 8) * (f >= land ? 1 : 0);
+      }
+      w.prop("tangle", "his").put(knot, { yaw: yaw + (shakeK ? 0.12 * Math.sin(f * 1.6) * shakeK : 0), scale: sc });
     }
     // ---------------------------------------------------------------------------------------------- the old thread
     const herOut = xm && xm.group.position.z > -3.55 ? xm.footWorld(0) : undefined;
