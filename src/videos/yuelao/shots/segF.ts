@@ -124,16 +124,17 @@ export const SEG: Segment = {
     const fist = (g: number, s: number, warn: number, tug: number, free: number) => through(g, [
       [S.from, REST(s)], [stable - 5, REST(s)], [stable - 1, HB(0.23 * s, 1.0, 0.17)], [stable + 3, HB(0.2 * s, 0.85, 0.22)], [stable + 10, REST(s)],
       [warn - 4, REST(s)], [warn, HB(0.25 * s, 0.99, 0.15)], [warn + 8, REST(s)],
-      [tug - 3, REST(s)], [tug + 3, HB(0.28 * s, 1.1, 0.1)], [free + 10, HB(0.24 * s, 0.98, 0.16)], [gloom + 2, HB(0.22 * s, 0.95, 0.18)], [gloom + 14, hang(BACK, 0, s < 0 ? 0 : 1)],
+      [tug - 3, REST(s)], [tug + 3, HB(0.28 * s, 1.1, 0.1)], [free + 10, HB(0.24 * s, 0.98, 0.16)], [gloom + 2, HB(0.22 * s, 0.95, 0.18)], [gloom + 14, HB(0.228 * s, 0.59, 0.05)],
     ]);
     const fistR = (g: number) => fist(g, -1, n996 + 10, tugL, freeL), fistL = (g: number) => fist(g, 1, pay + 10, tugR, freeR);
     const showK = ky(f, [[arrive - 2, 0], [arrive + 10, 1]]), shake = 0.006 * Math.sin(f * 1.1);
     const H = (dx: number, y: number, z: number) => rel(at, facing, dx, y, z);
     const hands: [THREE.Vector3 | null, THREE.Vector3 | null] | undefined = f < walk0 ? [fistR(f), fistL(f)] : walking ? undefined
-      : [hang(at, facing, 0).lerp(H(-0.25, 1.0 + shake, 0.3), smooth(showK)).lerp(H(-0.24, 0.82, 0.2), lk), hang(at, facing, 1).lerp(H(0.25, 1.0 - shake, 0.3), smooth(showK)).lerp(H(0.34, 1.0, 0.42), lk)];
+      : [H(-0.228, 0.59, 0.05).lerp(H(-0.25, 1.0 + shake, 0.3), smooth(showK)).lerp(H(-0.24, 0.82, 0.2), lk), H(0.228, 0.59, 0.05).lerp(H(0.25, 1.0 - shake, 0.3), smooth(showK)).lerp(H(0.34, 1.0, 0.42), lk)];
     const faces: MoodKey[] = [
-      [S.from, "eager"], [stable - 2, "sly"], [f02 - 2, "hope"], [pay + 6, "worry"], [n996 + 4, "dread", "take", 0.8], [x03 + 14, "worry"],
-      [freeR + 2, "panic", "take", 0.7], [f05 - 4, "lost"], [freeL + 4, "gloom", "sink"], [f06 - 4, "sag"], [fate - 2, "small"], [lunge0 + 1, "strain", "take", 0.6],
+      // v6: one face per thought (his hands hang where the rig hangs them: the kit's hang() clipped his robe)
+      [S.from, "eager"], [stable - 2, "sly"], [f02 - 2, "hope"], [pay + 6, "worry"], [n996 + 4, "dread", "take", 0.8],
+      [freeR + 2, "panic", "take", 0.7], [f05 - 4, "lost"], [freeL + 4, "gloom", "sink"], [f06 - 4, "sag"], [lunge0 + 1, "strain", "take", 0.6],
     ];
     const watchR = win2(f, slackR + 4, freeR + 18), watchL = win2(f, slackL + 2, freeL + 12);
     const r = act(w, f, YL, {
@@ -156,7 +157,7 @@ export const SEG: Segment = {
     rein(w, f, { key: "his", hand: r.handWorld(1), ank: ankHis, inward: V(-1, 0, 0), slack: slackR, tug: tugR, free: freeR, plucks: [stable + 3, pay + 10], len: lenOf(fistL(freeR), ankHis, V(-1, 0, 0)) }, reel, lag);
     // ---------------------------------------------------------------------------------------------- over the picture
     const FX: Fx[] = [
-      sideCard(f, { from: rise1 + 8, to: f02 + 40, name: "相亲对象", note: "产品经理 · 妈也在催", face: VERBS.headPx(w, xq), at: { x: 594, y: 336, s: 0.85 } }),
+      sideCard(f, { from: rise1 + 8, to: f02 + 40, name: "相亲对象", note: "产品经理\n妈也在催", face: VERBS.headPx(w, xq), at: { x: 566, y: 340 } }),
       stamp(f, { from: x06 - 8, to: lunge0 + 6, x: 320, y: 640, px: 70 }),   // (on the shop window: left of his hat, above her head, under the menu strips)
     ];
     return { camera, overlays: [draw(f, FX), mittenCover(HC.cover)], shown: FX, post: { bloom: 0.4 } };

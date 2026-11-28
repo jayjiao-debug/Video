@@ -1,0 +1,30 @@
+{
+ "note": "采访月老的一天 v6 (28 Nov): VOICES ONLY until real recordings are picked (the owner heard the music and effects made in code as mechanical, review notes 2 and 11). Only the camera's own two sounds stay, the series' REC beep and power-off. The fact-card ding is silenced (gain -99).",
+ "cards": {
+  "clip": "sfx_ding",
+  "gain": -99.0
+ },
+ "beds": [],
+ "hits": [
+  {
+   "label": "REC beep",
+   "clip": "sfx_rec_beep",
+   "at": [
+    "A",
+    "from",
+    0.033
+   ],
+   "gain": -24.0
+  },
+  {
+   "label": "power off",
+   "clip": "sfx_poweroff",
+   "at": [
+    "J",
+    "from",
+    10.8
+   ],
+   "gain": -16.0
+  }
+ ]
+}

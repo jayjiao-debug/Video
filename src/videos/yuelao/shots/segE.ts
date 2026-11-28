@@ -11,10 +11,14 @@
 //   唐朝起    his face, lecturing down at her lens           medium close from below                      she rises where she is; still through the fact card
 //   不合适    the two of them, the three threads over her    medium wide two-shot                         a step back as the threads come in; still for the three snaps
 //   断一根    his face and the limp ends                     close (snap zoom, a third tighter)           lands on the word; eases back for 缘分未到
+// v6 (Jay's notes on v5): she really picks up her phone and looks at it, and swipes it with her other hand on each 不合适
+// (f3847); the desk things stand on an oak top with contact shadows (f3421, sets/work.ts); the lamp moved off his line;
+// no hush finger anywhere (his hush face says 嘘); his hands hang where the rig hangs them (no robe clipping); about one
+// face per thought; the close shot stands to the right of the desk so the plant and the cups no longer cover him.
 import * as THREE from "three";
 import { seg, type Segment } from "../story";
 import { zoomBy } from "../cam";
-import { P, startOf, endOf, wordAt, ky, rel, V, smooth, walkAlong, hang, faceTo, v3, hit, win, shotCam, seatedShin, VERBS, SEATS, type ShotKey } from "./kit";
+import { P, startOf, endOf, wordAt, ky, rel, V, smooth, walkAlong, faceTo, v3, hit, win, shotCam, seatedShin, VERBS, SEATS, type ShotKey } from "./kit";
 import { act, YL, XM, stroke, type MoodKey } from "./act";
 import { sideCard, snaps, stamp, spoolLens, draw, type Fx } from "./fx";
 import { lay, droop, taut, limp, retract, bowKnot, part, join, blend, FLAT } from "./thread";
@@ -22,7 +26,22 @@ import { lay, droop, taut, limp, retract, bowKnot, part, join, blend, FLAT } fro
 const S = seg("E");
 const STAND = P("work", 0.62, 0, -1.5), IN = [P("work", 1.75, 0, -1.36), P("work", 1.2, 0, -1.52), STAND];   // round the back of the desk's corner leg
 const FRONTP = [0.34, 1.45, 1.45], MID = [0.31, 1.05, -1.48], HEADY = [0.62, 1.195, -1.5];
-const LOW = [0.5, 0.35, 0.3], ANKP = [0.075, 0.075, -1.19], CLOSE = [0.74, 1.0, 0.25];
+const LOW = [0.5, 0.35, 0.3], ANKP = [0.075, 0.075, -1.19], CLOSE = [1.02, 1.0, 0.2];
+/** HER PHONE (v6, Jay's note on v5 f3847): it lies screen up and dark on the desk beside the laptop, by her left hand.
+ *  She taps it awake, her head goes down to it, and her left hand swipes across its screen on each 不合适 (from her
+ *  right to her left: 左滑). (Held up in front of her face, her short arm went through her chin: the clearance check
+ *  caught it, so the phone stays on the desk where the lens sees it whole, beside the laptop's lid.) */
+const TOP = 0.62, PHONE_AT = P("work", 0.225, TOP + 0.00475, -1.13);
+/** the quaternion of a phone whose screen faces n with its top toward u (local +x = its right as read, +y = the screen,
+ *  -z = its top) */
+const phoneQ = (n: THREE.Vector3, u0: THREE.Vector3) => {
+  const nn = n.clone().normalize(), u = u0.clone().addScaledVector(nn, -u0.dot(nn)).normalize(), x = u.clone().cross(nn).normalize();
+  return new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(x, nn, u.clone().negate()));
+};
+const Q_PHONE = phoneQ(V(0, 1, 0), V(0.2, 0, 1));
+const PX = V(1, 0, 0).applyQuaternion(Q_PHONE), PU = V(0, 0, -1).applyQuaternion(Q_PHONE);
+/** a point over her phone's screen: s along its right (as she reads it: her right), up toward its top, h above the glass */
+const onScreen = (s: number, up: number, h: number) => PHONE_AT.clone().addScaledVector(PX, s).addScaledVector(PU, up).add(V(0, 0.00475 + h, 0));
 /** the three candidates' threads come in through the glass from these points of the window wall: two from far off to
  *  the left, over her head, one from straight above. None crosses him, her, or the REC display's cards. */
 const FAR = [P("work", -2.7, 2.05, -2.96), P("work", -2.2, 2.45, -2.96), P("work", 0.36, 2.75, -2.96)];
@@ -36,7 +55,7 @@ export const SEG: Segment = {
     const e01 = startOf("E01"), e02 = startOf("E02"), e03 = startOf("E03"), wrist = wordAt("E03", "绑手"), x03 = endOf("E03"), e04 = startOf("E04"), x04 = endOf("E04"), e05 = startOf("E05"), x05 = endOf("E05"), e06 = startOf("E06");
     // the cast: the thread leaves his hand at `flick`, reaches her ankle 8 frames on, winds round it, and the bow is tied by flick + 19
     const flick = e02 - 26, wound = flick + 8, bowAt = flick + 12, letGo = flick + 18;
-    const cardEnd = x03 + 78, reins = cardEnd - 10, phone = e04 - 18, one = wordAt("E05", "断一根"), fate = wordAt("E06", "缘分");
+    const cardEnd = x03 + 78, reins = cardEnd - 10, one = wordAt("E05", "断一根");
     const ons = [reins + 2, reins + 7, reins + 12], hits = [e04 + 6, wordAt("E04", "不合适下") + 6, wordAt("E04", "下一个") + 6];
     const t = f / 30;
     // ---------------------------------------------------------------------------------------------- the camera
@@ -45,8 +64,8 @@ export const SEG: Segment = {
       { f: flick + 1, pos: FRONTP, at: MID, sx: 540, sy: 880, fov: 56 },
       { f: flick + 15, pos: LOW, at: ANKP, sx: 540, sy: 1000, fov: 26 },
       { f: e03 - 15, pos: LOW, at: ANKP, sx: 540, sy: 1000, fov: 26 },
-      { f: e03 - 1, pos: CLOSE, at: HEADY, sx: 560, sy: 850, fov: 55 },
-      { f: cardEnd - 4, pos: CLOSE, at: HEADY, sx: 560, sy: 850, fov: 55 },
+      { f: e03 - 1, pos: CLOSE, at: HEADY, sx: 455, sy: 850, fov: 55 },
+      { f: cardEnd - 4, pos: CLOSE, at: HEADY, sx: 455, sy: 850, fov: 55 },
       { f: e04 - 6, pos: FRONTP, at: MID, sx: 540, sy: 880, fov: 56 },
       { f: one - 5, pos: FRONTP, at: MID, sx: 540, sy: 880, fov: 56 },
       { f: one, pos: FRONTP, at: HEADY, sx: 610, sy: 880, fov: zoomBy(56, 0.64) },
@@ -58,36 +77,66 @@ export const SEG: Segment = {
     w.setCamera(camera);
     const camP = v3(camera.pos);
     // ---------------------------------------------------------------------------------------------- 林小满
-    // she types: each hand hops from key to key, the two out of step; her eyes run along the lines; she sees nothing
-    const onPhone = f >= phone, swipe = Math.max(...hits.map((x) => hit(f, x - 4, 9)));
+    // she types: each hand hops from key to key, the two out of step; her eyes run along the lines; she sees nothing.
+    // Then she stops, her left hand goes to the phone and taps it awake, her head goes down to it, and on each 不合适 the
+    // left hand swipes across its screen (from her right to her left), landing on the snap. After 下一个 she scrolls on,
+    // a short stroke now and then, and never looks up. Her right hand rests on the laptop.
+    const R0 = e04 - 22, tap = R0 + 7, lit = f >= tap, down = smooth((f - (tap - 2)) / 7), onPhone = f >= R0;
     const key = (i: number) => {
       const q = f / 4.2 + i * 0.5, k = Math.floor(q), u = smooth(q - k), x0 = (hsh(k + i * 57) - 0.5) * 0.07, x1 = (hsh(k + 1 + i * 57) - 0.5) * 0.07;
       return P("work", (i ? 0.075 : -0.075) + x0 + (x1 - x0) * u, 0.655 + 0.016 * Math.sin(Math.PI * (q - k)), -1.14 + 0.012 * (hsh(k + 5 + i * 57) - 0.5));
     };
+    const MR = 0.025;   // her mitten's radius (measured): its centre this far above the glass is a touch
+    const REST = onScreen(0.01, -0.05, MR + 0.006);
+    const leftOnPhone = (g: number) => {
+      if (g < tap + 4) {
+        // the tap: down onto the glass and up
+        const T = onScreen(0, -0.01, MR + 0.03), k = hit(g, tap, 6);
+        return T.clone().add(V(0, -0.028 * k, 0));
+      }
+      for (const h of hits) if (g >= h - 9 && g <= h + 8) {
+        // a flick: onto the glass at its right edge, across and off past its left edge, lifting as it goes
+        const S0 = onScreen(0.04, 0.01, MR - 0.002), S1 = onScreen(-0.105, 0.02, MR + 0.03), sw = smooth((g - (h - 4)) / 4);
+        return REST.clone().lerp(S0, smooth((g - (h - 9)) / 5)).lerp(S1, sw).add(V(0, -0.006 * Math.sin(Math.PI * sw), 0)).lerp(REST, smooth((g - (h + 1)) / 7));
+      }
+      if (g > hits[2] + 12) {
+        // scrolling: up the glass, lift off, back, a pause
+        const k = (g - (hits[2] + 12)) % 30, L0 = onScreen(0.005, -0.045, MR - 0.001), L1 = onScreen(0.005, 0.035, MR - 0.001);
+        return k < 4 ? REST.clone().lerp(L0, smooth(k / 4)) : k < 10 ? L0.clone().lerp(L1, smooth((k - 4) / 6)) : k < 17 ? L1.clone().lerp(REST, smooth((k - 10) / 7)) : REST.clone();
+      }
+      return REST.clone();
+    };
+    const reachK = smooth((f - R0) / 6);
+    const leftHand = key(1).lerp(leftOnPhone(f), reachK).add(V(0, 0.03 * Math.sin(Math.PI * reachK), 0));
+    const rightHand = key(0).lerp(P("work", -0.05, 0.652, -1.17), smooth((f - (R0 + 3)) / 7));
+    const nod = Math.max(...hits.map((x) => hit(f, x, 8)));
     const xm = act(w, f, XM, {
       at: SEATS.chair.top.clone().setY(0), facing: 0, seat: SEATS.chair,
-      faces: [[S.from, "flat"], [e01 + 30, "flat", "blink"], [phone - 6, "tired"], [e04 - 2, "flat"], [x04 + 8, "tired"]],
-      pose: onPhone ? { kind: "phone", t, amount: 0.34, arm: 1 } : undefined, show: onPhone ? ["phone"] : undefined,
-      hands: onPhone ? undefined : [key(0), key(1)],
-      lookDown: onPhone ? 6 : 9, gaze: 0, talkGaze: 0,
-      head: { dx: -0.07 * swipe + (onPhone ? 0 : 0.012 * Math.sin(f * 0.085)), dy: onPhone ? 0 : 0.004 * Math.sin(f * 0.21), tilt: onPhone ? 3 : 1.5 * Math.sin(f * 0.05) },
+      faces: [[S.from, "flat"], [e01 + 30, "flat", "blink"], [R0 - 2, "tired"], [e04 - 2, "flat"], [x04 + 8, "tired"]],
+      hands: [rightHand, leftHand],
+      lookDown: 9 + 19 * down, gaze: 0.5 * down, talkGaze: 0.5 * down,
+      head: { dx: onPhone ? 0.025 * down : 0.012 * Math.sin(f * 0.085), dy: (onPhone ? 0 : 0.004 * Math.sin(f * 0.21)) - 0.006 * nod, tilt: onPhone ? -4 * down + 1.5 * nod : 1.5 * Math.sin(f * 0.05) },
     });
     // ---------------------------------------------------------------------------------------------- 月老
     const leg = walkAlong(IN, 0.7, (f - S.from) / 30), moving = leg.moving;   // he creeps in: slow, from just outside the frame
+    let arrive = S.from + 1; while (arrive < S.from + 150 && walkAlong(IN, 0.7, (arrive - S.from) / 30).moving) arrive++;
     const at = leg.at.clone(), front = faceTo(STAND, camP);
     // he turns to her for the wave and the cast, and again while he holds the reins over her
-    const turnK = ky(f, [[e01 + 12, 0], [e01 + 20, 1], [flick + 14, 1], [e02 + 4, 0], [e04 - 12, 0], [e04 - 2, 0.75], [e05 - 6, 0.75], [e05 + 2, 0]]);
+    const turnK = ky(f, [[arrive, 0], [arrive + 8, 1], [flick + 14, 1], [e02 + 4, 0], [e04 - 12, 0], [e04 - 2, 0.75], [e05 - 6, 0.75], [e05 + 2, 0]]);
     const facing = moving ? leg.facing : front - 0.45 * turnK;
-    const H = (dx: number, y: number, z: number) => rel(at, facing, dx, y, z), hangR = hang(at, facing, 0), hangL = hang(at, facing, 1);
-    const hush = !moving && f >= e01 - 8 && f < e01 + 14;
+    // his hands hang where the rig's own idle hangs them (v6: the kit's hang() is too narrow for his robe and clipped it)
+    const H = (dx: number, y: number, z: number) => rel(at, facing, dx, y, z), hangR = H(-0.228, 0.59, 0.05), hangL = H(0.228, 0.59, 0.05);
+    // 嘘 comes while he is still creeping in: the hush face says it (v6: no finger to his lips, no finger pose anywhere in
+    // the film). The wave starts from the frame he stops (v5 had it already up when he arrived: the arm jumped)
     // the wave: he leans over and waves at the edge of her glasses (as far as his arm goes)
-    const waveK = ky(f, [[e01 + 14, 0], [e01 + 22, 1], [flick - 16, 1], [flick - 10, 0]]);
-    const waveAt = P("work", 0.215 + 0.035 * Math.sin(f * 0.62), 1.0 + 0.035 * Math.cos(f * 1.24), -1.14);   // in front of her face, a hand's width clear of it
+    const waveK = ky(f, [[arrive, 0], [arrive + 8, 1], [flick - 16, 1], [flick - 10, 0]]);
+    const waveAt = P("work", 0.27 + 0.03 * Math.sin(f * 0.62), 1.0 + 0.03 * Math.cos(f * 1.24), -1.1);   // in front of her glasses, his wide sleeve clear of her head
     // the cast: the right hand into the left sleeve, up beside his head with a thread, and down toward her feet
     const sleeveK = ky(f, [[flick - 10, 0], [flick - 6, 1], [flick - 2, 1], [flick + 3, 0]]);
     const windK = ky(f, [[flick - 6, 0], [flick - 1, 1], [flick + 3, -1]]), castOn = Math.min(smooth((f - (flick - 11)) / 5), 1 - smooth((f - (flick + 13)) / 8));
-    const SL = H(0.0, 0.78, 0.2), castAt = windK >= 0 ? SL.clone().lerp(H(-0.34, 1.1, 0.02), smooth(windK)) : SL.clone().lerp(H(-0.2, 0.72, 0.32), smooth(-windK));
-    const lectK = ky(f, [[e03 - 6, 0], [e03 + 2, 1], [x03 + 4, 1], [x03 + 12, 0]]), strokeK = ky(f, [[x03 + 12, 0], [x03 + 20, 1]]);
+    const SL = H(0.0, 0.72, 0.24), castAt = windK >= 0 ? SL.clone().lerp(H(-0.34, 1.1, 0.02), smooth(windK)) : SL.clone().lerp(H(-0.2, 0.72, 0.32), smooth(-windK));
+    // the lecture hand goes straight on into the beard stroke (v6: it dropped to his side between them and caught the robe)
+    const lectK = ky(f, [[e03 - 6, 0], [e03 + 2, 1], [x03 + 4, 1], [x03 + 14, 0]]), strokeK = ky(f, [[x03 + 4, 0], [x03 + 14, 1]]);
     const reinK = ky(f, [[reins, 0], [reins + 8, 1]]);
     const SHAKE: [number, number][] = [[e05 - 3, 0], [e05 + 3, 1], [x05 + 2, 1], [x05 + 10, 0]], HIDE: [number, number][] = [[x05 + 6, 0], [x05 + 16, 1]];
     const shakeK = ky(f, SHAKE), hideK = ky(f, HIDE);
@@ -101,28 +150,35 @@ export const SEG: Segment = {
     const strokeAt = stroke(at, facing, f, strokeK)?.[0] ?? hangR;
     const right = waveK > 0.02 ? hangR.clone().lerp(waveAt, smooth(waveK))
       : castOn > 0.02 ? hangR.clone().lerp(castAt, castOn)
-      : lectK > 0.02 ? hangR.clone().lerp(H(-0.25, 1.06 + beat + flap - (f >= wrist - 2 ? 0.12 : 0), 0.14), smooth(lectK))
+      : lectK > 0.02 ? strokeAt.clone().lerp(H(-0.25, 1.06 + beat + flap - (f >= wrist - 2 ? 0.12 : 0), 0.14), smooth(lectK))
       : reinK > 0.02 ? strokeAt.clone().lerp(fistAt(f), smooth(reinK))
       : strokeK > 0.02 ? strokeAt
       : hangR;
-    const left = sleeveK > 0.02 ? hangL.clone().lerp(H(0.07, 0.76, 0.2), smooth(sleeveK))
+    const left = sleeveK > 0.02 ? hangL.clone().lerp(H(0.07, 0.7, 0.24), smooth(sleeveK))
       : shakeK > 0.02 || hideK > 0.02 ? hangL.clone().lerp(H(0.22, 0.9 + 0.04 * Math.sin(f * 1.4 + 1), 0.2), smooth(shakeK)).lerp(H(0.07, 0.6, -0.19), smooth(hideK))
       : hangL;
-    const hands: [THREE.Vector3 | null, THREE.Vector3 | null] | undefined = moving || hush ? undefined : [right, left];
+    const hands: [THREE.Vector3 | null, THREE.Vector3 | null] | undefined = moving ? undefined : [right, left];
+    // one face per thought (v6: was 17 changes in 25 s)
     const faces: MoodKey[] = [
-      [S.from, "sly"], [e01 - 6, "hush"], [e01 + 18, "sly"], [flick - 6, "resolve"], [flick + 14, "proud"], [e02 + 14, "look"], [e03 - 2, "proud"], [wrist - 2, "grumble"], [x03 + 10, "sly"],
-      [reins + 4, "hope"], [hits[0] + 1, "worry", "take", 0.6], [hits[1] + 1, "panic", "take"], [hits[2] + 1, "aghast", "take", 0.7], [e05 - 1, "shout"], [x05 + 8, "sag", "sink"], [e06 - 2, "sheepish"], [fate - 2, "small"],
+      [S.from, "sly"], [e01 - 6, "hush"], [arrive + 2, "sly"], [flick - 6, "resolve"], [flick + 14, "proud"], [wrist - 2, "grumble"], [x03 + 10, "proud"],
+      [reins + 4, "hope"], [hits[0] + 1, "worry", "take", 0.6], [hits[1] + 1, "panic", "take"], [e05 - 1, "shout"], [x05 + 8, "sag", "sink"], [e06 - 2, "sheepish"],
     ];
     const r = act(w, f, YL, {
       at, facing, faces,
-      pose: moving ? leg.pose : hush ? { kind: "shh", t, arm: 1, amount: ky(f, [[e01 - 8, 0], [e01 - 2, 1], [e01 + 8, 1], [e01 + 14, 0]]) } : undefined,
-      hands, show: hush ? ["finger"] : undefined, armFront: sleeveK > 0.3 ? [true, true] : undefined,
+      pose: moving ? leg.pose : undefined,
+      hands, armFront: sleeveK > 0.3 ? [true, true] : undefined,
       lean: { roll: -3 * waveK, pitch: 5 * waveK + 5 * win(f, flick - 2, e03 - 10, 6) + 4 * lectK },
       gaze: waveK > 0.5 ? -1 : f >= reins + 6 && f < e05 - 4 ? -1 : undefined,
       lookDown: 12 * win(f, flick - 6, e02 + 10, 6) + 8 * hideK,
       head: { dy: 0.05 * hit(f, e05, 8) - 0.04 * hideK, tilt: -5 * waveK },
     });
     w.update();
+    // ---------------------------------------------------------------------------------------------- her phone
+    // on the desk from the start, its screen dark until she taps it
+    const phone = w.prop("xmPhone").put(PHONE_AT);
+    phone.group.quaternion.copy(Q_PHONE);
+    const glass = phone.group.getObjectByName("xmPhone.screen") as THREE.Mesh | undefined;
+    if (glass) (glass.material as THREE.MeshBasicMaterial).color.setScalar(lit ? 1 : 0.1);
     // ---------------------------------------------------------------------------------------------- her thread
     const TH = { r: 0.0065 }, h0 = r.handWorld(0);
     // where it is tied: round her left shin, just above the shoe, the knot at the front on his side
@@ -176,8 +232,8 @@ export const SEG: Segment = {
     });
     // ---------------------------------------------------------------------------------------------- over the picture
     const FX: Fx[] = [
-      sideCard(f, { from: S.from + 24, to: e01 + 30, name: "林小满", note: "30 岁 · 程序员 · 今天也加班", face: VERBS.headPx(w, xm), at: { x: 116, y: 486 } }),
-      snaps(f, { from: hits[0] - 2, to: one - 6, x: 755, y: 440, hits }),
+      sideCard(f, { from: S.from + 24, to: e01 + 30, name: "林小满", note: "30 岁 · 程序员\n今天也加班", face: VERBS.headPx(w, xm), at: { x: 116, y: 486 } }),
+      snaps(f, { from: hits[0], to: one - 6, x: 755, y: 440, hits }),
       stamp(f, { from: wordAt("E06", "未到") + 8, to: S.to - 2, x: 366, y: 560 }),
     ];
     // the spool comes away from her lens: smaller, solid, falling out of the bottom of the frame (gone by S.from + 13)

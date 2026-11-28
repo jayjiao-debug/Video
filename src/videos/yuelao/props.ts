@@ -5,10 +5,11 @@
 import * as THREE from "three";
 import type { Mats } from "../bt/pbr";
 import { makeKit, Part, box, ball, V, paint, FONT, NOINK } from "../../kit/props/kit";
+import { buildPopBooks } from "./popbook";
 
 export const RED = "#d8362a";
 
-export type PropName = "spool" | "book" | "bookShut" | "phone" | "laptop" | "bag" | "file" | "slip" | "bowl" | "moon" | "drawer" | "stack" | "wing" | "egg" | "cloud" | "tangle";
+export type PropName = "spool" | "book" | "bookShut" | "phone" | "xmPhone" | "laptop" | "bag" | "file" | "slip" | "bowl" | "moon" | "drawer" | "caseDrawer" | "hole" | "stack" | "wing" | "egg" | "cloud" | "cloudBank" | "tangle" | "cushion";
 export type PutO = { yaw?: number; pitch?: number; roll?: number; scale?: number };
 export type Prop = { group: THREE.Group; put(at: THREE.Vector3 | [number, number, number], o?: PutO): Prop };
 
@@ -18,6 +19,12 @@ export const buildProps = (M: Mats) => {
   const made = new Map<string, Prop>();
   const flat = (c: string, rough = 0.85) => K.flat(c, { rough });
   const tex = (w: number, h: number, fn: (g: CanvasRenderingContext2D, w: number, h: number) => void) => K.flat("#ffffff", { map: paint(w, h, fn), rough: 0.95 });
+  // v6: a soft contact shadow under a prop that always stands on something (named "*.contact": the checkers skip it)
+  const contactMat = new THREE.MeshBasicMaterial({ map: paint(64, 64, (cg, w, h) => { cg.clearRect(0, 0, w, h); const gr = cg.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 2); gr.addColorStop(0, "rgba(30,24,22,0.62)"); gr.addColorStop(0.5, "rgba(30,24,22,0.4)"); gr.addColorStop(1, "rgba(30,24,22,0)"); cg.fillStyle = gr; cg.fillRect(0, 0, w, h); }), transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 });
+  const contact = (g: THREE.Group, name: string, rx: number, rz: number, x = 0, z = 0) => {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(2 * rx, 2 * rz).rotateX(-Math.PI / 2).translate(x, 0.0008, z), contactMat);
+    m.name = `${name}.contact`; m.layers.set(NOINK); m.renderOrder = 2; m.castShadow = false; m.receiveShadow = false; g.add(m);
+  };
   const BUILD: Record<PropName, () => THREE.Group> = {
     spool: () => {
       const g = new THREE.Group(), P = new Part(K);
@@ -64,6 +71,50 @@ export const buildProps = (M: Mats) => {
       const m = new THREE.Mesh(new THREE.PlaneGeometry(0.066, 0.138).rotateX(-Math.PI / 2).translate(0, 0.0096, 0), scr); m.layers.set(NOINK); m.name = "phone.screen";
       P.into(g, "phone"); g.add(m); return g;
     },
+    // 林小满's phone (scene E): a rose-pink case with a white heart sticker and a camera bump on the back (what the lens
+    // sees while she holds it), a black bezel and a dating app's profile card on the screen. Local frame: lying screen
+    // up (+y), the screen's top toward -z, its right (as she reads it) toward +x; 0.072 x 0.0095 x 0.148.
+    xmPhone: () => {
+      const g = new THREE.Group(), P = new Part(K), PW = 0.072, PT = 0.0095, PL = 0.148;
+      P.add(flat("#e9789a", 0.55), box(PW, PT, PL, 0, 0, 0), 0.004);
+      P.add(flat("#2a2730", 0.4), box(0.026, 0.003, 0.026, 0.017, -PT / 2 - 0.0015, -PL / 2 + 0.02), 0.002);
+      P.into(g, "xmPhone");
+      const back = new THREE.MeshBasicMaterial({ map: paint(128, 256, (cg, w, h) => {
+        cg.fillStyle = "#e9789a"; cg.fillRect(0, 0, w, h);
+        cg.fillStyle = "rgba(255,255,255,0.16)"; cg.fillRect(w * 0.06, 0, w * 0.08, h);
+        // the sticker: a white heart with a red outline, a little tilted
+        cg.save(); cg.translate(w * 0.52, h * 0.58); cg.rotate(-0.25); cg.scale(w * 0.0062, w * 0.0062);
+        cg.beginPath(); cg.moveTo(0, 12); cg.bezierCurveTo(-26, -6, -14, -26, 0, -12); cg.bezierCurveTo(14, -26, 26, -6, 0, 12); cg.closePath();
+        cg.fillStyle = "#ffffff"; cg.fill(); cg.lineWidth = 3; cg.strokeStyle = "#c8332b"; cg.stroke(); cg.restore();
+      }) });
+      const bm = new THREE.Mesh(new THREE.PlaneGeometry(PW - 0.004, PL - 0.004).rotateX(Math.PI / 2).rotateY(Math.PI).translate(0, -PT / 2 - 0.0004, 0), back);
+      bm.layers.set(NOINK); bm.name = "xmPhone.back"; g.add(bm);
+      const bez = new THREE.Mesh(new THREE.PlaneGeometry(PW - 0.004, PL - 0.004).rotateX(-Math.PI / 2).translate(0, PT / 2 + 0.0003, 0), new THREE.MeshBasicMaterial({ color: "#1d1c22" }));
+      bez.layers.set(NOINK); bez.name = "xmPhone.bezel"; g.add(bez);
+      const scr = new THREE.MeshBasicMaterial({ map: paint(128, 256, (cg, w, h) => {
+        cg.fillStyle = "#fff6f8"; cg.fillRect(0, 0, w, h);
+        cg.fillStyle = "#ff6f91"; cg.fillRect(0, 0, w, h * 0.09);
+        cg.fillStyle = "#ffffff"; cg.font = `900 ${Math.round(h * 0.05)}px ${FONT}`; cg.textAlign = "center"; cg.textBaseline = "middle"; cg.fillText("缘来", w / 2, h * 0.047);
+        // the card: a photo (sky, a round head with glasses, shoulders), the name, two tags
+        cg.fillStyle = "#ffffff"; cg.fillRect(w * 0.07, h * 0.13, w * 0.86, h * 0.66);
+        cg.fillStyle = "#bcd3ec"; cg.fillRect(w * 0.1, h * 0.145, w * 0.8, h * 0.42);
+        cg.fillStyle = "#4a5a78"; cg.beginPath(); cg.ellipse(w * 0.5, h * 0.6, w * 0.3, h * 0.1, 0, Math.PI, 0); cg.fill();
+        cg.fillStyle = "#f6efe6"; cg.beginPath(); cg.arc(w * 0.5, h * 0.38, w * 0.16, 0, Math.PI * 2); cg.fill();
+        cg.strokeStyle = "#2a2730"; cg.lineWidth = 2.5; cg.stroke();
+        cg.fillStyle = "#2a2730"; cg.beginPath(); cg.arc(w * 0.5, h * 0.36, w * 0.165, Math.PI * 1.05, Math.PI * 1.95); cg.fill();
+        cg.lineWidth = 2; for (const s of [-1, 1]) { cg.beginPath(); cg.arc(w * (0.5 + s * 0.065), h * 0.39, w * 0.045, 0, Math.PI * 2); cg.stroke(); }
+        cg.fillStyle = "#2a2730"; cg.font = `900 ${Math.round(h * 0.052)}px ${FONT}`; cg.textAlign = "left"; cg.fillText("阿哲 · 31", w * 0.12, h * 0.63);
+        cg.fillStyle = "#ffd5df"; cg.fillRect(w * 0.12, h * 0.67, w * 0.3, h * 0.045); cg.fillRect(w * 0.46, h * 0.67, w * 0.36, h * 0.045);
+        cg.fillStyle = "#c2455f"; cg.font = `700 ${Math.round(h * 0.03)}px ${FONT}`; cg.fillText("健身", w * 0.15, h * 0.693); cg.fillText("爱旅行", w * 0.49, h * 0.693);
+        // the two buttons: a grey cross, a pink heart
+        cg.fillStyle = "#e6e2e6"; cg.beginPath(); cg.arc(w * 0.3, h * 0.88, w * 0.1, 0, Math.PI * 2); cg.fill();
+        cg.strokeStyle = "#8a8590"; cg.lineWidth = 4; cg.beginPath(); cg.moveTo(w * 0.26, h * 0.86); cg.lineTo(w * 0.34, h * 0.9); cg.moveTo(w * 0.34, h * 0.86); cg.lineTo(w * 0.26, h * 0.9); cg.stroke();
+        cg.fillStyle = "#ff5a7e"; cg.beginPath(); cg.arc(w * 0.7, h * 0.88, w * 0.1, 0, Math.PI * 2); cg.fill();
+      }) });
+      const sm = new THREE.Mesh(new THREE.PlaneGeometry(PW - 0.009, PL - 0.012).rotateX(-Math.PI / 2).translate(0, PT / 2 + 0.0006, 0), scr);
+      sm.layers.set(NOINK); sm.name = "xmPhone.screen"; g.add(sm);
+      return g;
+    },
     // a laptop, open (lid toward +z leaning back): put with yaw so the lid's back faces the camera or the screen faces its user
     laptop: () => {
       // the lid is its own group ("laptop.lid", hinged along the base's far edge): rotation.x -PI/2 = shut, -0.3 = the
@@ -82,7 +133,7 @@ export const buildProps = (M: Mats) => {
         cg.fillStyle = "#ff4a4a"; cg.fillRect(w * 0.19, h * 0.565, w * 0.42, h * 0.02);
       });
       const scr = new THREE.Mesh(new THREE.PlaneGeometry(0.27, 0.17).rotateY(Math.PI).translate(0, 0.1, -0.001), new THREE.MeshBasicMaterial({ map: code })); scr.layers.set(NOINK); scr.name = "laptop.screen";
-      lid.add(scr); g.add(lid); return g;
+      lid.add(scr); g.add(lid); contact(g, "laptop", 0.18, 0.125); return g;
     },
     // a takeaway bag: brown paper, twisted handles, a receipt stapled on
     bag: () => {
@@ -145,6 +196,29 @@ export const buildProps = (M: Mats) => {
       return P.into(g, "drawer");
     },
     // THE THICK FILE (许仙 × 白娘子: a thousand years of approvals): a bale of folders tied twice with red thread, lying flat
+    // a case drawer of scene C (v6): the same drawer with room at the front for its case book (popbook.ts, standing
+    // on its bottom edge, cover to the front, 4 to 6 cm behind the front) and two thin files at the back
+    caseDrawer: () => {
+      const g = new THREE.Group(), P = new Part(K), wood = flat("#5e3c26", 0.75), dark = flat("#3a2216", 0.8);
+      P.add(wood, box(0.018, 0.236, 0.232, -0.009, 0, 0), 0.004);
+      P.add(dark, box(0.34, 0.012, 0.22, -0.188, -0.106, 0), 0.003);
+      for (const sz of [-1, 1]) P.add(dark, box(0.34, 0.2, 0.012, -0.188, -0.012, sz * 0.108), 0.003);
+      P.add(dark, box(0.012, 0.2, 0.22, -0.352, -0.012, 0), 0.003);                                 // the back
+      P.add(flat("#eadcb8", 0.95), box(0.003, 0.058, 0.12, 0.0015, 0.066, 0), 0);
+      P.add(flat("#b08a44", 0.45), ball(V(0.014, -0.031, 0), 0.014), 0.003);
+      for (let k = 0; k < 2; k++) {
+        const x = -0.25 - k * 0.05, tilt = new THREE.Matrix4().makeRotationZ(0.06 - 0.05 * k).setPosition(x, 0.0, 0);
+        P.add(flat(k % 2 ? "#e9dcb8" : "#dccba0", 0.95), box(0.02, 0.21, 0.19, 0, 0.01, 0), 0.003, tilt);
+        P.add(flat(RED, 0.8), box(0.024, 0.012, 0.194, 0, 0.05, 0), 0, tilt);
+      }
+      return P.into(g, "caseDrawer");
+    },
+    // the dark opening a pulled-out case drawer leaves in the cabinet's painted face (put at the face, x = cabinetX)
+    hole: () => {
+      const g = new THREE.Group(), P = new Part(K);
+      P.add(flat("#1a0e08", 0.95), box(0.004, 0.226, 0.222, 0.002, 0, 0), 0);
+      return P.into(g, "hole");
+    },
     stack: () => {
       const g = new THREE.Group(), P = new Part(K);
       let y = 0;
@@ -178,6 +252,44 @@ export const buildProps = (M: Mats) => {
         P.add(m, ball(V(x, y, z), r, [1, 0.72, 1]), 0.0035);
       return P.into(g, "cloud");
     },
+    // HIS CLOUD CUSHION (scenes G to I, v6): a flat pad of cloud puffs he sits on on the step, drawn like the cloud bank
+    // (flat unlit white over a lilac underside, the ink outline). 0.48 wide, 0.36 deep, 0.06 high (the step plus the pad is
+    // the height at which his thighs lie level: shots/kit.ts SEATS.step). Origin: the middle of its underside. Its meshes
+    // are named ".contact": a sitter sinks a little into a cushion, which is not clipping.
+    cushion: () => {
+      const g = new THREE.Group(), P = new Part(K);
+      const top = new THREE.MeshBasicMaterial({ color: "#fdfcff" }), low = new THREE.MeshBasicMaterial({ color: "#ddd6f0" });
+      for (let i = 0; i < 9; i++) { const t = (i / 9) * Math.PI * 2 + 0.2; P.add(low, ball(V(0.165 * Math.cos(t), 0.022, 0.105 * Math.sin(t)), 0.066, [1, 0.34, 1]), 0.003); }
+      for (let i = 0; i < 8; i++) { const t = (i / 8) * Math.PI * 2; P.add(top, ball(V(0.15 * Math.cos(t), 0.034, 0.095 * Math.sin(t)), 0.07, [1, 0.37, 1]), 0.003); }
+      for (const [x, z, r] of [[-0.075, 0.01, 0.08], [0.075, -0.01, 0.08], [0, 0.04, 0.07]] as [number, number, number][]) P.add(top, ball(V(x, 0.036, z), r, [1, 0.33, 1]), 0.003);
+      return P.into(g, "cushion.contact", { cast: false });
+    },
+    // THE MOTHER'S CLOUD BANK (scene D, v6b): the incense smoke gathers into a soft auspicious cloud and she kneels in it, seen
+    // from the waist up (v5's little cloud under her feet showed her legs: Jay's note at f2800). Made for her at 0.42 of her
+    // size; put it with scale k/0.42 for a vision of size k. A ring of puffs round an empty middle (her legs are in the middle
+    // and touch nothing), highest at the front (its top 0.25, just over the top of her legs at 0.23), a wider lower ring, a
+    // lilac underside. Flat unlit colours with the ink outline, like a drawn 祥云 (lit spheres read as a heap of grey balls).
+    // About 0.46 wide. Origin: her feet; it faces +z (turn it to the camera); a pale gold glow behind her.
+    cloudBank: () => {
+      const g = new THREE.Group(), P = new Part(K);
+      const top = new THREE.MeshBasicMaterial({ color: "#fdfcff" }), mid = new THREE.MeshBasicMaterial({ color: "#efebf8" }), low = new THREE.MeshBasicMaterial({ color: "#d9d2ef" });
+      const ring: [number, number, number, number, THREE.Material][] = [];   // angle (degrees, 0 = front), ring radius, y, puff radius, colour
+      for (const a of [-40, 0, 40]) ring.push([a, 0.17, 0.175, 0.095, top]);           // the front rim (inside edge 0.075 out: room for her to bow)
+      for (const a of [-80, 80]) ring.push([a, 0.14, 0.15, 0.085, top]);               // its ends
+      for (const a of [-130, 130, 180]) ring.push([a, 0.13, 0.15, 0.08, mid]);         // the back
+      for (const a of [-60, 0, 60]) ring.push([a, 0.17, 0.06, 0.085, mid]);            // the lower ring
+      for (const a of [-120, 120, 180]) ring.push([a, 0.15, 0.06, 0.08, mid]);
+      for (const a of [-30, 30, 150, -150]) ring.push([a, 0.1, -0.01, 0.065, low]);    // the lilac underside
+      for (const [a, rr, y, r, mat] of ring) { const t = (a * Math.PI) / 180; P.add(mat, ball(V(rr * Math.sin(t), y, rr * Math.cos(t)), r, [1, 0.8, 1]), 0.0035); }
+      // the middle, filled up to her (inside edge 0.075 from her axis; her body is 0.063 wide at this size, her legs 0.03 out)
+      for (let i = 0; i < 6; i++) { const t = (i / 6) * Math.PI * 2 + 0.3; P.add(mid, ball(V(0.115 * Math.sin(t), 0.1, 0.115 * Math.cos(t)), 0.04, [1, 0.9, 1]), 0.002); }
+      P.into(g, "cloudBank", { cast: false });
+      const glow = new THREE.Mesh(new THREE.PlaneGeometry(0.95, 0.95).translate(0, 0.4, -0.2), new THREE.MeshBasicMaterial({
+        map: paint(128, 128, (cg, w, h) => { const gr = cg.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 2); gr.addColorStop(0, "rgba(255,226,150,0.6)"); gr.addColorStop(0.5, "rgba(255,214,140,0.25)"); gr.addColorStop(1, "rgba(255,210,140,0)"); cg.fillStyle = gr; cg.fillRect(0, 0, w, h); }),
+        transparent: true, depthWrite: false }));
+      glow.layers.set(NOINK); glow.name = "cloudBank.glow"; glow.renderOrder = 4; glow.castShadow = false; glow.receiveShadow = false; g.add(glow);
+      return g;
+    },
     // HIS THREAD, IN A HOPELESS KNOT (what he picks off her lens): a fist-sized ball of red loops, two loose ends
     tangle: () => {
       const g = new THREE.Group(), P = new Part(K), m = flat(RED, 0.8);
@@ -196,12 +308,40 @@ export const buildProps = (M: Mats) => {
       return P.into(g, "egg");
     },
     // a bowl of noodles with an egg on top
+    // a noodle bowl (scene F, v6: Jay's note "props untextured"): white porcelain with a blue 回纹 band under the rim
+    // and a blue foot line; beef noodles in a golden broth (noodles, beef, scallions, half an egg); bamboo chopsticks
+    // resting across the rim; a contact shadow
     bowl: () => {
       const g = new THREE.Group(), P = new Part(K);
-      P.add(flat("#f2efe8", 0.5), new THREE.CylinderGeometry(0.075, 0.045, 0.06, 18).translate(0, 0.03, 0), 0.005);
-      P.add(flat("#e0b062", 0.8), new THREE.CylinderGeometry(0.068, 0.068, 0.006, 18).translate(0, 0.058, 0), 0);
-      P.add(flat("#fff8e8", 0.6), ball(V(0.02, 0.064, 0.01), 0.028, [1, 0.35, 1]), 0); P.add(flat("#f2a93b", 0.6), ball(V(0.02, 0.072, 0.01), 0.013, [1, 0.6, 1]), 0);
-      return P.into(g, "bowl");
+      const side = K.flat("#ffffff", { map: paint(512, 64, (cg, w, h) => {
+        cg.fillStyle = "#f6f4ee"; cg.fillRect(0, 0, w, h);
+        cg.fillStyle = "#2f5aa8"; cg.fillRect(0, 4, w, 3); cg.fillRect(0, 26, w, 2); cg.fillRect(0, h - 9, w, 3); cg.fillRect(0, h - 4, w, 2);
+        // the meander (回纹): a square spiral every 32 px between the two lines
+        cg.strokeStyle = "#2f5aa8"; cg.lineWidth = 2.4; cg.lineJoin = "miter";
+        for (let x = 0; x < w; x += 32) { cg.beginPath(); cg.moveTo(x + 2, 23); cg.lineTo(x + 2, 10); cg.lineTo(x + 26, 10); cg.lineTo(x + 26, 21); cg.lineTo(x + 9, 21); cg.lineTo(x + 9, 15); cg.lineTo(x + 19, 15); cg.stroke(); }
+      }), rough: 0.35 });
+      P.add(side, new THREE.CylinderGeometry(0.075, 0.045, 0.06, 32).translate(0, 0.03, 0), 0.005);
+      const broth = K.flat("#ffffff", { map: paint(128, 128, (cg, w, h) => {
+        cg.fillStyle = "#d9a24e"; cg.fillRect(0, 0, w, h);
+        const r = (n: number) => { const x = Math.sin(n * 91.7 + 12.3) * 43758.5; return x - Math.floor(x); };
+        // the noodles: pale wavy strands
+        cg.strokeStyle = "#f4e2a8"; cg.lineWidth = 3.2; cg.lineCap = "round";
+        for (let i = 0; i < 26; i++) { const y0 = 14 + r(i) * 100, ph = r(i + 40) * 6; cg.beginPath(); for (let x = 6; x <= 122; x += 6) { const y = y0 + 5 * Math.sin(x * 0.12 + ph); if (x === 6) cg.moveTo(x, y); else cg.lineTo(x, y); } cg.stroke(); }
+        // two slices of beef
+        cg.fillStyle = "#7a4a32"; for (const [x, y, a] of [[44, 50, 0.4], [70, 40, -0.3]]) { cg.save(); cg.translate(x, y); cg.rotate(a); cg.beginPath(); cg.ellipse(0, 0, 17, 10, 0, 0, Math.PI * 2); cg.fill(); cg.strokeStyle = "#5a3424"; cg.lineWidth = 1.5; cg.stroke(); cg.restore(); }
+        // scallions: small green rings
+        cg.strokeStyle = "#5aa04a"; cg.lineWidth = 2.4; for (let i = 0; i < 16; i++) { cg.beginPath(); cg.arc(20 + r(i + 80) * 88, 20 + r(i + 120) * 88, 2.6, 0, Math.PI * 2); cg.stroke(); }
+        // a ring of oil on the broth's edge
+        cg.strokeStyle = "rgba(160,96,30,0.6)"; cg.lineWidth = 6; cg.beginPath(); cg.arc(w / 2, h / 2, w / 2 - 3, 0, Math.PI * 2); cg.stroke();
+      }), rough: 0.4 });
+      P.add(broth, new THREE.CircleGeometry(0.069, 32).rotateX(-Math.PI / 2).translate(0, 0.0605, 0), 0);
+      P.add(flat("#fff8e8", 0.6), ball(V(0.024, 0.0625, 0.018), 0.022, [1, 0.32, 1]), 0); P.add(flat("#f2a93b", 0.6), ball(V(0.024, 0.0685, 0.018), 0.011, [1, 0.45, 1]), 0);
+      // the chopsticks: across the rim, toward the eater's right
+      const mBam = flat("#d8b57a", 0.6);
+      for (const [dz, a] of [[-0.03, 0.04], [-0.018, 0.0]] as const) P.add(mBam, box(0.235, 0.0055, 0.0055, 0.035, 0.0635, dz).rotateY(a), 0.0015);
+      P.into(g, "bowl");
+      contact(g, "bowl", 0.085, 0.085);
+      return g;
     },
   };
   const prop = (name: PropName, key = ""): Prop => {
@@ -217,29 +357,43 @@ export const buildProps = (M: Mats) => {
     }
     return p;
   };
-  // ---- THE RED THREADS: tubes through a few points, rebuilt each frame they are shown. Only her lens sees them, so
-  // they glow a little: an unlit red core and a soft additive sleeve.
-  type Th = { core: THREE.Mesh; glow: THREE.Mesh };
+  // ---- THE RED THREADS (v6, owner's notes 1 and 21 on v5: "too 3D", "give them a more fitting style like our other
+  // props"): drawn exactly like every other prop: a braided cord in the film's red with a lighter twist painted along it
+  // (a canvas texture, mip-mapped, its stripes a fixed 2.2 cm apart whatever the thread's length), lit by the place like
+  // the props, and the kit's black back-face hull round it, so it reads as a drawn cord with an ink outline from any side.
+  // No glow sleeve: a thread is a thing, not a light. Rebuilt each frame it is shown.
+  type Th = { core: THREE.Mesh; hull: THREE.Mesh };
   const threads = new Map<string, Th>();
-  const coreMat = (col: string) => new THREE.MeshBasicMaterial({ color: col });
-  const glowMat = new THREE.MeshBasicMaterial({ color: "#ff5a3c", transparent: true, opacity: 0.22, depthWrite: false, blending: THREE.AdditiveBlending });
-  const CORE: Record<string, THREE.MeshBasicMaterial> = {};
-  /** a thread through `pts` (world): r = radius (default 0.007), glow 0..1, col (default the film's red), tension 0..1 (0.5), cut 0..1 = draw only that share from the start */
+  const twist = (col: string) => paint(64, 16, (g, w, h) => {
+    g.fillStyle = col; g.fillRect(0, 0, w, h);
+    // two lighter strands winding round the cord: diagonal bands across the texture (u along the cord, v round it)
+    g.fillStyle = "rgba(255,190,170,0.42)";
+    for (const o of [0, 32]) { g.beginPath(); g.moveTo(o, 0); g.lineTo(o + 14, 0); g.lineTo(o + 14 - 16, h); g.lineTo(o - 16, h); g.closePath(); g.fill(); g.beginPath(); g.moveTo(o + 64, 0); g.lineTo(o + 78, 0); g.lineTo(o + 62, h); g.lineTo(o + 48, h); g.closePath(); g.fill(); }
+    g.fillStyle = "rgba(60,8,6,0.35)";
+    for (const o of [18, 50]) { g.beginPath(); g.moveTo(o, 0); g.lineTo(o + 4, 0); g.lineTo(o - 12, h); g.lineTo(o - 16, h); g.closePath(); g.fill(); }
+  });
+  const CORE: Record<string, THREE.Material> = {};
+  const coreMat = (col: string) => { const t = twist(col); t.wrapS = t.wrapT = THREE.RepeatWrapping; return K.flat("#ffffff", { map: t, rough: 0.8 }); };
+  const PERIOD = 0.022, INK = 0.0034;
+  /** a thread through `pts` (world): r = radius (default 0.0065), col (default the film's red), cut 0..1 = draw only
+   *  that share from the start, closed = a loop. (glow is accepted and ignored: v6 threads do not glow.) */
   const thread = (key: string, pts: THREE.Vector3[], o: { r?: number; glow?: number; col?: string; cut?: number; closed?: boolean } = {}) => {
     let t = threads.get(key);
     if (!t) {
-      const core = new THREE.Mesh(new THREE.BufferGeometry(), coreMat(RED)), glow = new THREE.Mesh(new THREE.BufferGeometry(), glowMat.clone());
-      for (const m of [core, glow]) { m.layers.set(NOINK); m.frustumCulled = false; m.castShadow = m.receiveShadow = false; group.add(m); }
-      core.name = `thread.${key}`; glow.name = `thread.${key}.glow`; glow.renderOrder = 4;
-      t = { core, glow }; threads.set(key, t);
+      const core = new THREE.Mesh(new THREE.BufferGeometry(), coreMat(RED)), hull = new THREE.Mesh(new THREE.BufferGeometry(), K.ink);
+      for (const m of [core, hull]) { m.layers.set(NOINK); m.frustumCulled = false; m.castShadow = m.receiveShadow = false; group.add(m); }
+      core.name = `thread.${key}`; hull.name = `thread.${key}.ink`;
+      t = { core, hull }; threads.set(key, t);
     }
     if (pts.length < 2) return;
     const col = o.col ?? RED; t.core.material = (CORE[col] ??= coreMat(col));
-    const curve = new THREE.CatmullRomCurve3(pts, !!o.closed, "catmullrom", 0.5), n = Math.max(12, Math.min(160, pts.length * 10)), r = o.r ?? 0.007;
-    t.core.geometry.dispose(); t.glow.geometry.dispose();
-    t.core.geometry = new THREE.TubeGeometry(curve, n, r, 6, !!o.closed); t.glow.geometry = new THREE.TubeGeometry(curve, n, r * 3.2, 6, !!o.closed);
-    if (o.cut !== undefined && o.cut < 1) { const c = Math.max(0, Math.floor(n * o.cut)) * 6 * 6; t.core.geometry.setDrawRange(0, c); t.glow.geometry.setDrawRange(0, c); }
-    t.core.visible = true; t.glow.visible = (o.glow ?? 0) > 0.01; (t.glow.material as THREE.MeshBasicMaterial).opacity = 0.34 * (o.glow ?? 0);
+    const curve = new THREE.CatmullRomCurve3(pts, !!o.closed, "catmullrom", 0.5), L = curve.getLength(), n = Math.max(12, Math.min(220, Math.ceil(L / 0.012))), r = Math.max(0.006, o.r ?? 0.0065);
+    t.core.geometry.dispose(); t.hull.geometry.dispose();
+    const cg = new THREE.TubeGeometry(curve, n, r, 8, !!o.closed), uv = cg.attributes.uv as THREE.BufferAttribute;
+    for (let i = 0; i < uv.count; i++) uv.setX(i, (uv.getX(i) * L) / PERIOD);
+    t.core.geometry = cg; t.hull.geometry = new THREE.TubeGeometry(curve, n, r + INK, 8, !!o.closed);
+    if (o.cut !== undefined && o.cut < 1) { const c = Math.max(0, Math.floor(n * o.cut)) * 8 * 6; t.core.geometry.setDrawRange(0, c); t.hull.geometry.setDrawRange(0, c); }
+    t.core.visible = true; t.hull.visible = true;
   };
   /** points of a thread hanging from a to b with `sag` metres of droop in the middle, n inner points; wob = a small sway */
   const hang = (a: THREE.Vector3, b: THREE.Vector3, sag = 0.15, n = 5, wob = 0) => {
@@ -247,6 +401,8 @@ export const buildProps = (M: Mats) => {
     for (let i = 0; i <= n + 1; i++) { const u = i / (n + 1), p = a.clone().lerp(b, u); p.y -= sag * 4 * u * (1 - u); if (wob) p.x += wob * Math.sin(u * Math.PI) ; out.push(p); }
     return out;
   };
-  return { group, prop, thread, hang, begin() { for (const p of made.values()) p.group.visible = false; for (const t of threads.values()) { t.core.visible = false; t.glow.visible = false; } } };
+  // THE CASE BOOKS (popbook.ts): w.props.book(kind).put(at, o).set({ open, g, t })
+  const books = buildPopBooks(K, group);
+  return { group, prop, thread, hang, book: books.book, begin() { for (const p of made.values()) p.group.visible = false; for (const t of threads.values()) { t.core.visible = false; t.hull.visible = false; } books.begin(); } };
 };
 export type Props = ReturnType<typeof buildProps>;

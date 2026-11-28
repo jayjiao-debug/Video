@@ -9,9 +9,18 @@ export const BY_SCOOTER = P("street", 2.3, 0, -1.0);
 /** where she stands with her camera at night (street local) */
 export const CAMN: [number, number, number] = [-0.3, 1.5, 2.4];
 /** the lowest step, left of the door: his seat; where he stands in front of it before he sits */
-export const STEP = SEATS.step, STAND_AT = P("street", -0.85, 0, -1.75);   // his hem (26 cm) clear of the step's face
-/** the seat with its top moved out over the pavement while he is on his feet (k 1 = standing in front of the step) */
-export const stepSeat = (k: number) => (k > 0 ? { ...STEP, top: STEP.top.clone().add(V(0, 0, 0.43 * k)) } : STEP);
+export const STEP = SEATS.step, STAND_AT = P("street", -0.85, 0, -1.73);   // his hem (v6 cloud hem, 26 cm and more) clear of the step's face
+/** the seat with its top moved out over the pavement while he is on his feet (k 1 = standing in front of the step, at
+ *  STAND_AT exactly: v6 moved the seat 5 cm out, and the old 0.43 m left him 5 cm past STAND_AT, a jump as he stood) */
+export const stepSeat = (k: number) => (k > 0 ? { ...STEP, top: STEP.top.clone().lerp(V(STAND_AT.x, STEP.top.y, STAND_AT.z), k) } : STEP);
+/** HIS CLOUD CUSHION on the step under the seat (props.ts cushion; SEATS.step sits on it): k 0..1 = it puffs up (a
+ *  little over-full, then settles) or goes away (k back to 0) */
+export const CUSHION_AT = V(STEP.top.x, STREET_FLOOR(STEP.top.x, STEP.top.z), STEP.top.z - 0.03);
+export const cushion = (w: World, k: number) => {
+  if (k <= 0.001) return;
+  const s = k < 1 ? Math.min(1.08, k * 1.08 + 0.3 * Math.sin(Math.PI * k) * (1 - k)) : 1;
+  w.prop("cushion", "his").put(CUSHION_AT, { scale: Math.max(0.01, s) });
+};
 /** at the door: where she takes her order, where the rider stands, her way out of the lobby */
 export const DOOR_HER = P("street", -0.25, 0.51, -3.3), DOOR_RIDER = P("street", 0.42, 0.51, -3.15);
 export const WAY_OUT = [P("street", -1.15, 0.51, -4.5), P("street", -0.3, 0.51, -4.1), DOOR_HER];
@@ -29,12 +38,12 @@ export const stairs = (x0: number, x1: number): THREE.Vector3[] => {
 /** the rider's way from his scooter up to the door */
 export const RIDER_UP = [BY_SCOOTER, P("street", 1.4, 0, -1.6), ...stairs(1.05, 0.92), P("street", 0.86, 0.51, -2.98), DOOR_RIDER];
 /** where his tangle lies once he has dropped it: on the tread beside him, ON the old thread */
-export const COIL_AT = P("street", -0.42, 0.17, -2.2);
+export const COIL_AT = P("street", -0.53, 0.17, -2.2);   // (v6: 0.32 m from his middle, 1 cm clear of his cushion: within his reach from the seat)
 /** THE OLD THREAD on the ground: from under her door, down the steps beside his seat, across the pavement to the kerb
  *  where the rider waits by his scooter. her = her ankle when she is outside; his = the rider's way from the kerb to
  *  where he stands (the kerb first) when he has left his scooter. k 0 = faint, dusty .. 1 = gold and glowing. */
 const SILL = P("street", -0.25, 0, -3.56), KERB = P("street", 2.28, 0, -1.02);
-const ROUTE = [P("street", -0.3, 0, -3.1), P("street", -0.42, 0, -2.62), P("street", -0.42, 0, -2.2), P("street", -0.36, 0, -1.86), P("street", 0.0, 0, -1.5), P("street", 1.0, 0, -1.25), P("street", 1.8, 0, -1.08)];
+const ROUTE = [P("street", -0.3, 0, -3.1), P("street", -0.5, 0, -2.62), P("street", -0.53, 0, -2.2), P("street", -0.45, 0, -1.86), P("street", 0.0, 0, -1.5), P("street", 1.0, 0, -1.25), P("street", 1.8, 0, -1.08)];
 // (dusty = a greyed rose. Unnoticed, in scenes G and H, it is close to the stone's own tone; once he looks at it, it is
 // pale, LIGHTER than the stone it lies on: it has to be there to be seen when the knot is lifted off it)
 const DUST0 = new THREE.Color("#8f645b"), DUST = new THREE.Color("#c9a59c"), FADED = new THREE.Color("#b9564a"), GOLD = new THREE.Color("#ffcf6a");

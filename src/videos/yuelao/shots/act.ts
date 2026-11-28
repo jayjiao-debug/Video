@@ -16,6 +16,7 @@ import { rigHeadAccent, rigHeadAdd, type Rig, type RigFace, type RigHead, type R
 import type { Expr } from "../../group/kit/toon";
 import { hash } from "../../group/story";
 import { setSeat } from "../../../kit/acc/garb";
+import { setRests, type Rest } from "../acc/yl";
 import type { Seat } from "../../../kit/day/verbs";
 import { FPS, line, type Speaker } from "../story";
 import { FACES, YUELAO, XIAOMAN, MA, MA_MINI, XIANGQIN, RIDER, type Person } from "../people";
@@ -151,6 +152,8 @@ export type ActO = {
   armFront?: RigState["armFront"]; headFront?: number;
   /** the quiet scene: the head keeps almost still under the words */
   still?: boolean;
+  /** the tops his wide sleeves lie on (acc/yl.ts Rest: the desk, the open book), world boxes */
+  rests?: Rest[];
   /** which syllables of the line being said hit hardest (0-based) */
   stress?: number[];
   /** lip sync from another speaker's lines (a figure that voices someone else: never used) or none (false) */
@@ -168,6 +171,7 @@ export function act(w: World, f: number, p: Profile, a: ActO): Rig {
     if (a.pose) st.pose = a.pose;
     setSeat(r, a.seat, a.seat.facing);
   } else setSeat(r, null);
+  setRests(r.group, a.rests);
   // the face and its changes
   const m = a.faces === undefined ? { expr: same(F(p.rest)) } as ReturnType<typeof mood> : typeof a.faces === "string" ? { expr: same(F(a.faces)) } as ReturnType<typeof mood> : mood(f, a.faces, p.amp);
   st.expr = m.expr as RigState["expr"];

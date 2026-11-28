@@ -6,7 +6,7 @@
 // never repeats the subtitle, at most one every 8 seconds; cards belong to the sources' voice (facts, files, seals).
 import React from "react";
 import { FRAME_9x16, rectOf, slots, fit, type Rect } from "../../../kit/overlay/frame";
-import { SpoolLens, MittenCover, LensThreads, Hua, FateStamp, OS, CaseFile, Disclaimer, OrderSlip, Snaps, SideCard, SIDE_W, SIDE_H, CASE_W, CASE_H, type CaseKind } from "../hud/skin";
+import { SpoolLens, MittenCover, LensThreads, Hua, FateStamp, OS, Truth, CaseFile, Disclaimer, OrderSlip, Snaps, SideCard, TornXi, XI_W, XI_H, sideSize, CASE_W, CASE_H, type CaseKind } from "../hud/skin";
 
 export type Fx = { what: string; kind: "card" | "effect"; from: number; to: number; rect: Rect; node: React.ReactNode };
 const h = React.createElement;
@@ -20,11 +20,22 @@ export const hua = (f: number, o: { from: number; to: number; text: string; x: n
   const px = o.px ?? 96;
   return { what: `花字「${o.text}」`, kind: "effect", from: o.from, to: o.to, rect: turned(o.x, o.y, em(o.text) * (px + 4) + px * 0.3, px * 1.36, o.rot ?? -5), node: h(Hua, { key: `hua${o.from}`, f, ...o }) };
 };
+/** 囍 torn in two, one sign after another (三对离婚 without words): the box round the signs where they land; the halves
+ *  fall on below it for about 150 px while they fade */
+export const tornXi = (f: number, o: { from: number; to: number; at: [number, number][]; px?: number; gap?: number; tear?: number }): Fx => {
+  const px = o.px ?? 120, w = px * XI_W * 1.15, hh = px * XI_H * 1.15;
+  const xs = o.at.map((a) => a[0]), ys = o.at.map((a) => a[1]);
+  const rect = { x0: Math.min(...xs) - w / 2, y0: Math.min(...ys) - hh / 2, x1: Math.max(...xs) + w / 2, y1: Math.max(...ys) + hh / 2 + 150 };
+  return { what: `囍撕成两半 x${o.at.length}`, kind: "effect", from: o.from, to: o.to, rect, node: h(TornXi, { key: `xi${o.from}`, f, ...o }) };
+};
 /** the running gag's stamp: 缘分未到 (ok: 缘分已到), centred on (x, y) */
 export const stamp = (f: number, o: { from: number; to: number; x: number; y: number; ok?: boolean; rot?: number; px?: number }): Fx => {
   const px = o.px ?? 104;
   return { what: o.ok ? "印「缘分已到」" : "印「缘分未到」", kind: "effect", from: o.from, to: o.to, rect: turned(o.x, o.y, px * 4 + 90 + px * 0.1, px * 1.5 + px * 0.1, o.rot ?? -9), node: h(FateStamp, { key: `st${o.from}`, f, ...o }) };
 };
+/** a truth seal (真事 / 传说 / 演绎), round, red, slapped on and turned 12 degrees, centred on (x, y) */
+export const truth = (f: number, o: { from: number; to: number; x: number; y: number; kind: "真事" | "传说" | "演绎" }): Fx =>
+  ({ what: `印「${o.kind}」`, kind: "effect", from: o.from, to: o.to, rect: turned(o.x, o.y, 140, 140, -12), node: h(Truth, { key: `tr${o.from}`, f, ...o }) });
 /** 记者OS: her unspoken aside, a small tag whose top-left is (x, y) */
 export const os = (f: number, o: { from: number; to: number; x: number; y: number; text: string }): Fx =>
   ({ what: `记者OS「${o.text}」`, kind: "effect", from: o.from, to: o.to, rect: { x0: o.x, y0: o.y, x1: o.x + [...o.text].length * 38 + 150 + 5, y1: o.y + 71 }, node: h(OS, { key: `os${o.from}`, f, ...o }) });
@@ -38,7 +49,7 @@ export const disclaimer = (f: number, o: { from: number; to: number; y: number; 
   ({ what: "注「纯属演绎」", kind: "card", from: o.from, to: o.to, rect: rectOf(o.x ?? 540, o.y, em(o.text) * 30 + 16, 44), node: h(Disclaimer, { key: `dc${o.from}`, f, ...o }) });
 /** the temple's order slip, centred on (x, y) */
 export const orderSlip = (f: number, o: { from: number; to: number; x: number; y: number; s?: number }): Fx =>
-  ({ what: "加急单", kind: "card", from: o.from, to: o.to, rect: turned(o.x + 3, o.y + 5, 528 * (o.s ?? 1), 480 * (o.s ?? 1), 3), node: h(OrderSlip, { key: `ord${o.from}`, f, ...o }) });
+  ({ what: "加急单", kind: "card", from: o.from, to: o.to, rect: turned(o.x + 3, o.y + 5, 468 * (o.s ?? 1), 500 * (o.s ?? 1), 2), node: h(OrderSlip, { key: `ord${o.from}`, f, ...o }) });
 /** the spool pushed into her lens (k 0..1): the join of D and E */
 export const spoolLens = (k: number, drop = 0) => h(SpoolLens, { key: "spoolLens", k, drop });
 /** his own mitten over her lens (cover 0..1 from the camera's handCover) */
@@ -52,15 +63,15 @@ export const snaps = (f: number, o: { from: number; to: number; x: number; y: nu
  *  names the slot the shot wants; the next free one is taken when that one is too small). face = the person's head
  *  on screen { x, y, r } (verbs headPx); keep = boxes that must stay visible (another face). */
 export const sideCard = (f: number, o: { from: number; to: number; name: string; note: string; face: { x: number; y: number; r: number }; side?: "left" | "right" | "above" | "below"; keep?: Rect[]; at?: { x: number; y: number; s?: number } }): Fx => {
-  const F = o.face, box = rectOf(F.x, F.y, F.r * 2.3, F.r * 2.3);
+  const F = o.face, box = rectOf(F.x, F.y, F.r * 2.3, F.r * 2.3), { w: SW, h: SH } = sideSize(o.name, o.note);
   let r: Rect, s: number;
   if (o.at) {
     // the shot says where the card sits (its top-left corner and its scale)
-    s = o.at.s ?? 1; r = { x0: o.at.x, y0: o.at.y, x1: o.at.x + (SIDE_W + 10) * s, y1: o.at.y + (SIDE_H + 12) * s };
+    s = o.at.s ?? 1; r = { x0: o.at.x, y0: o.at.y, x1: o.at.x + (SW + 10) * s, y1: o.at.y + (SH + 12) * s };
   } else {
     const all = slots(FRAME_9x16, box, { gap: 28, reach: 260, keep: o.keep, min: 150 });
-    const S = all.find((q) => q.name === (o.side ?? "right") && q.clear && q.w >= SIDE_W * 0.7 && q.h >= SIDE_H * 0.7) ?? all.find((q) => q.clear) ?? all[0];
-    const B = S ? fit({ w: SIDE_W + 10, h: SIDE_H + 12 }, S.r, { ax: S.name === "left" ? 1 : S.name === "right" ? 0 : 0.5, ay: S.name === "above" ? 1 : S.name === "below" ? 0 : 0.35 }) : { r: rectOf(540, 500, SIDE_W, SIDE_H), s: 1 };
+    const S = all.find((q) => q.name === (o.side ?? "right") && q.clear && q.w >= SW * 0.7 && q.h >= SH * 0.7) ?? all.find((q) => q.clear) ?? all[0];
+    const B = S ? fit({ w: SW + 10, h: SH + 12 }, S.r, { ax: S.name === "left" ? 1 : S.name === "right" ? 0 : 0.5, ay: S.name === "above" ? 1 : S.name === "below" ? 0 : 0.35 }) : { r: rectOf(540, 500, SW, SH), s: 1 };
     r = B.r; s = Math.min(1, B.s);
   }
   // the card's thread ends on the rim of the head, on the side the card is on: never across the face

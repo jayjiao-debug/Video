@@ -2,7 +2,8 @@
 //   bash scripts/kit/queue/still.sh src/videos/yuelao/preview/people_lineup.ts <abs out> --size 540x960 [--opts '<json>']
 // Options: slots [{ who, expr?, facing?, turn?, pose?, hands?, gaze?, lookDown?, hide? }] (who = a PEOPLE key, or
 // "hair:<kind>[:seed]"); gap (m); view "front" | "34" | "high" | "back"; fov; far; cy; tall; margin; camX; camUp;
-// black: true (the silhouette test, with raw: true); bg, ground; noGround; pages (one option object per frame).
+// black: true (the silhouette test, with raw: true); bg, ground; noGround; pages (one option object per frame); bleach;
+// cast (CastLight fields over the lab light's).
 import * as THREE from "three";
 import { preview, type Cam } from "../../wanbi/preview/common";
 import { makeSun } from "../../bt/pbr";
@@ -25,7 +26,8 @@ preview({ w: 540, h: 960 }, (c) => {
   const ground = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), M.paint({ color: o.ground ?? "#cdbfa6" }));
   ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; ground.visible = !black && !o.noGround; c.scene.add(ground);
   const sun = makeSun(); c.scene.add(sun, sun.target); sun.position.set(-7, 7.7, 9.4);
-  const rc = new RigCast(c.scene, { light: { ...LAB_CAST_LIGHT, bleach: o.bleach ?? 0.7, bodyShadeK: 0.4, contact: "#8a93c2" } as CastLight as never });
+  // (o.cast: any CastLight fields over the lab's, e.g. a flat face { shadeK: 0.15, broad: 0 } as the film's sets now use)
+  const rc = new RigCast(c.scene, { light: { ...LAB_CAST_LIGHT, bleach: o.bleach ?? 0.7, bodyShadeK: 0.4, contact: "#8a93c2", ...(o.cast ?? {}) } as CastLight as never });
   const personOf = (w: string): Person => {
 
     const p = (PEOPLE as Record<string, Person>)[w];

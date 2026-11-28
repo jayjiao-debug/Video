@@ -120,9 +120,10 @@
      "en": "Don't move! One tug and three couples divorce."
     }
    ],
-   "after": 3.0,
+   "after": 1.2,
    "emo": "hissed through a thread in his teeth, dead serious",
-   "tts": "[urgent, hissing] 别动！一动，三对离婚。"
+   "tts": "别动！一动，三对离婚。",
+   "tts_v5": "[urgent, hissing] 别动！一动，三对离婚。"
   },
   {
    "n": 3,
@@ -175,7 +176,8 @@
    ],
    "after": 2.1,
    "emo": "cuts her off, bowing",
-   "tts": "[cutting in, eager] 懂！暗访。[fawning] 您记，随便记。"
+   "tts": "懂！暗访。您记，随便记。",
+   "tts_v5": "[cutting in, eager] 懂！暗访。[fawning] 您记，随便记。"
   },
   {
    "n": 6,
@@ -316,7 +318,8 @@
    ],
    "after": 0.5,
    "emo": "miserable",
-   "tts": "[miserable] 扣仙丹。还得写检讨。"
+   "tts": "扣仙丹。还得写检讨。",
+   "tts_v5": "[miserable] 扣仙丹。还得写检讨。"
   },
   {
    "n": 14,
@@ -348,7 +351,8 @@
     }
    ],
    "emo": "very proud",
-   "tts": "[proud] 牛郎织女。我绑的！牢吧？"
+   "tts": "牛郎织女。我绑的。牢吧？",
+   "tts_v5": "[proud] 牛郎织女。我绑的！牢吧？"
   },
   {
    "n": 16,
@@ -379,7 +383,8 @@
    ],
    "after": 0.4,
    "emo": "small",
-   "tts": "[awkward, quiet] ……异地恋，也算成。"
+   "tts": "……异地恋，也算成。",
+   "tts_v5": "[awkward, quiet] ……异地恋，也算成。"
   },
   {
    "n": 18,
@@ -404,7 +409,8 @@
    ],
    "after": 0.3,
    "emo": "proud, then sees the file, shuts it fast",
-   "tts": "梁山伯祝英台。[hesitates] ……变蝴蝶了。[quickly] 这单别记。"
+   "tts": "梁山伯祝英台。……变蝴蝶了。这单别记。",
+   "tts_v5": "梁山伯祝英台。[hesitates] ……变蝴蝶了。[quickly] 这单别记。"
   },
   {
    "n": 19,
@@ -479,7 +485,8 @@
     }
    ],
    "emo": "whispering the second half",
-   "tts": "董永七仙女——[whispers] 那是玉帝的亲闺女。"
+   "tts": "董永七仙女，那是玉帝的亲闺女。",
+   "tts_v5": "董永七仙女——[whispers] 那是玉帝的亲闺女。"
   },
   {
    "n": 23,
@@ -527,7 +534,8 @@
    ],
    "pre": 0.6,
    "emo": "jumping up",
-   "tts": "[excited] 来单了！月老庙，加急！"
+   "tts": "来单了。月老庙，加急。",
+   "tts_v5": "[excited] 来单了！月老庙，加急！"
   },
   {
    "n": 26,
@@ -616,7 +624,8 @@
    ],
    "pre": 0.7,
    "emo": "whisper",
-   "tts": "[whispers] 嘘。凡人看不见咱们。"
+   "tts": "嘘。凡人看不见咱们。",
+   "tts_v5": "[whispers] 嘘。凡人看不见咱们。"
   },
   {
    "n": 31,
@@ -694,7 +703,8 @@
     }
    ],
    "emo": "panicking",
-   "tts": "[panicking] 哎哎哎！她左滑一下，我断一根！"
+   "tts": "哎哎哎！她左滑一下，我断一根！",
+   "tts_v5": "[panicking] 哎哎哎！她左滑一下，我断一根！"
   },
   {
    "n": 35,
@@ -817,7 +827,8 @@
    ],
    "after": 0.8,
    "emo": "desperate",
-   "tts": "[defeated] ……这个，也记，缘分未到。"
+   "tts": "这个也记，缘分未到。",
+   "tts_v5": "[defeated] ……这个，也记，缘分未到。"
   },
   {
    "n": 42,
@@ -834,7 +845,8 @@
    ],
    "pre": 0.5,
    "emo": "frantic",
-   "tts": "[frantic] 线呢？我的线呢！"
+   "tts": "线呢？我的线呢！",
+   "tts_v5": "[frantic] 线呢？我的线呢！"
   },
   {
    "n": 43,
@@ -854,7 +866,9 @@
     }
    ],
    "after": 0.5,
-   "emo": "picking at the lens, close"
+   "emo": "picking at the lens, close",
+   "tts_v5": "别动别动——缠您法器上了。",
+   "tts": "[calmly] 别动，别动。缠您法器上了。"
   },
   {
    "n": 44,
@@ -941,7 +955,8 @@
    ],
    "after": 1.0,
    "emo": "caught, very quiet",
-   "tts": "[quietly] ……我？"
+   "tts": "……我？",
+   "tts_v5": "[quietly] ……我？"
   },
   {
    "n": 49,
@@ -966,7 +981,8 @@
    ],
    "after": 0.7,
    "emo": "quiet, looking at the cut thread",
-   "tts": "[softly, slowly] 当年太忙。想着忙完这阵，就给自己绑一根。"
+   "tts": "当年太忙。想着忙完这阵，就给自己绑一根。",
+   "tts_v5": "[softly, slowly] 当年太忙。想着忙完这阵，就给自己绑一根。"
   },
   {
    "n": 50,
@@ -983,7 +999,8 @@
    ],
    "after": 1.2,
    "emo": "a small dry laugh",
-   "tts": "[soft, wry] 这一阵，忙了一千二百年。"
+   "tts": "这一阵，忙了一千二百年。",
+   "tts_v5": "[soft, wry] 这一阵，忙了一千二百年。"
   },
   {
    "n": 51,
@@ -1004,7 +1021,8 @@
    ],
    "after": 1.8,
    "emo": "the gag, soft",
-   "tts": "[very softly] 我这个……也记，缘分未到吧。"
+   "tts": "我这个……也记，缘分未到吧。",
+   "tts_v5": "[very softly] 我这个……也记，缘分未到吧。"
   },
   {
    "n": 52,
@@ -1119,7 +1137,8 @@
     }
    ],
    "emo": "exploding with joy",
-   "tts": "[shouting, overjoyed] 成了！快记！我绑的！全是我绑的！"
+   "tts": "成了。快记，我绑的。全是我绑的。",
+   "tts_v5": "[shouting, overjoyed] 成了！快记！我绑的！全是我绑的！"
   },
   {
    "n": 58,

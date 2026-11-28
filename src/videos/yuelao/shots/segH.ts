@@ -11,12 +11,12 @@ import * as THREE from "three";
 import { seg, type Segment } from "../story";
 import { startOf, endOf, wordAt, ky, rel, V, smooth, win, shotCam, type ShotKey } from "./kit";
 import { act, YL, type MoodKey } from "./act";
-import { STEP, COIL_AT, oldLine } from "./night";
+import { STEP, COIL_AT, oldLine, cushion } from "./night";
 
 const S = seg("H");
 /** she sits on the same step, a little way off: the camera at his head's height */
-export const CAM_H: [number, number, number] = [0.45, 0.78, -1.15];
-export const HEAD_H: [number, number, number] = [-0.85, 0.8, -2.16];
+export const CAM_H: [number, number, number] = [0.45, 0.85, -1.15];   // (v6: his seat is 6 cm higher, on his cushion)
+export const HEAD_H: [number, number, number] = [-0.85, 0.87, -2.09];
 /** the framing the scene ends on (scene I starts from it) */
 export const END_H = { pos: CAM_H, at: HEAD_H, sx: 560, sy: 735, fov: 62 };   // (a little higher in the frame than at first: the shop's neon sign stays clear above the REC display)
 
@@ -73,7 +73,8 @@ export const SEG: Segment = {
     });
     w.update();
     // the knot where he dropped it, on the old thread nobody has noticed
-    w.prop("tangle", "his").put(COIL_AT, { yaw: 1.5 });
+    w.prop("tangle", "his").put(COIL_AT.clone().add(V(0, 0.018, 0)), { yaw: 1.5 });   // (its ball is 7 cm round: it lies on the tread, not in it)
+    cushion(w, 1);
     oldLine(w, 0);
     void THREE; void V; void fate;
     return { camera, shown: [], post: { bloom: 0.35 } };

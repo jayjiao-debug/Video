@@ -20,7 +20,7 @@ import type { PlaceBuild, PlaceLook, ParamValue } from "../../../kit/day/types";
 import { ceilQuad, wallQuad, plasterTex } from "../../romeo/sets/parts/b_common";
 import { farCard } from "../../../kit/sets/okit";
 import { ISLAND, WORK as D } from "../places";
-import { maker, boxG, paint, rng, css, mix, blotch, NOINK, glowCard, lightPool, levelQuad, bar, FONT, lightRig, V } from "./common";
+import { maker, boxG, paint, rng, css, mix, blotch, NOINK, glowCard, lightPool, levelQuad, bar, FONT, lightRig, V, flatFace } from "./common";
 
 const X0 = ISLAND.work;
 const FILL: EnvSpec = { frame: "world", stops: [[-90, [0.3, 0.31, 0.35]], [0, [0.58, 0.6, 0.66]], [90, [0.68, 0.72, 0.8]]], boxes: [{ az: 180, el: 20, rot: 0, w: 40, h: 24, soft: 18, col: [1.0, 1.04, 1.12] }] };
@@ -29,7 +29,7 @@ const LATE_CAST = { key: [0.05, 0.85, 0.52], tint: [0.88, 0.92, 1.0], tintK: 0.6
 const LOOK: PlaceLook = {
   bg: "#7d8aa0",
   ao: { aoRadius: 0.5, distanceFalloff: 1.0, intensity: 1.6, color: "#2a2c3a" },
-  cast: { grad: 0.22, bodyGrad: 0.16, sideTint: [0.9, 0.92, 1.0], wrap: [30, 60], edge: 0.14, bodySat: 0.13, lift: 0.03, contactLen: 0.3, ...DAY_CAST, ...BAKED_LIGHT } as unknown as CastLight,
+  cast: flatFace({ grad: 0.22, bodyGrad: 0.16, sideTint: [0.9, 0.92, 1.0], wrap: [30, 60], edge: 0.14, bodySat: 0.13, lift: 0.03, contactLen: 0.3, ...DAY_CAST, ...BAKED_LIGHT }) as unknown as CastLight,
   fill: FILL, bloom: 0.35,
 };
 const PARAMS: Record<string, ParamValue> = { glow: 1, late: 0 };
@@ -140,6 +140,80 @@ const streakTex = () => paint(512, 256, (g, W, H) => {
   g.clearRect(0, 0, W, H); const r = rng(209);
   for (let i = 0; i < 5; i++) { const x = W * r(); const gr = g.createLinearGradient(x, 0, x + 80, H); gr.addColorStop(0, "rgba(255,255,255,0)"); gr.addColorStop(0.5, "rgba(255,255,255,0.7)"); gr.addColorStop(1, "rgba(255,255,255,0)"); g.fillStyle = gr; g.beginPath(); g.moveTo(x, 0); g.lineTo(x + 40 + 60 * r(), 0); g.lineTo(x + 140, H); g.lineTo(x + 80, H); g.fill(); }
 });
+// v6 (Jay's note on v5 f3421, "props merging into table"): the desks get a pale oak top so the white things on them
+// stand off it, every prop gets a soft contact shadow, and the cups and the pot get printed sides.
+/** the desks' tops: pale oak veneer, the grain running along the desk, a darker edge band */
+const oakTex = () => paint(1024, 512, (g, W, H) => {
+  const r = rng(241);
+  g.fillStyle = "#d9bb8f"; g.fillRect(0, 0, W, H);
+  for (let i = 0; i < 10; i++) { const y = r() * H, h = 24 + 70 * r(); g.fillStyle = css(r() < 0.5 ? "#c9a675" : "#e6cba3", 0.4); g.fillRect(0, y, W, h); }
+  for (let i = 0; i < 4; i++) {
+    // flat-sawn figure: nested arches
+    const cx = W * (0.12 + 0.25 * i + 0.06 * r()), cy = H * (0.2 + 0.6 * r());
+    g.strokeStyle = css("#a98051", 0.2); g.lineWidth = 1.6;
+    for (let j = 0; j < 6; j++) { g.beginPath(); g.ellipse(cx, cy, 120 + j * 24, 16 + j * 8, 0, Math.PI, Math.PI * 2); g.stroke(); }
+  }
+  for (let i = 0; i < 80; i++) {
+    // the grain: long gentle waves along the desk
+    const y0 = r() * H, a = 2 + 6 * r(), k = 0.004 + 0.01 * r(), ph = r() * 7;
+    g.strokeStyle = css(r() < 0.7 ? "#b38b5b" : "#9b7545", 0.16 + 0.22 * r()); g.lineWidth = 0.8 + 1.5 * r();
+    g.beginPath();
+    for (let x = 0; x <= W; x += 16) { const y = y0 + a * Math.sin(x * k + ph) + 2.5 * Math.sin(x * k * 3.1 + ph * 2); if (x === 0) g.moveTo(x, y); else g.lineTo(x, y); }
+    g.stroke();
+  }
+  g.fillStyle = css("#9c7546", 0.55); g.fillRect(0, 0, W, 7); g.fillRect(0, H - 7, W, 7); g.fillRect(0, 0, 7, H); g.fillRect(W - 7, 0, 7, H);
+});
+/** a soft contact shadow: dark in the middle, gone at the rim */
+const contactTex = () => paint(128, 128, (g, W, H) => {
+  g.clearRect(0, 0, W, H);
+  const gr = g.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, W / 2);
+  gr.addColorStop(0, "rgba(34,26,24,0.7)"); gr.addColorStop(0.5, "rgba(34,26,24,0.45)"); gr.addColorStop(1, "rgba(34,26,24,0)");
+  g.fillStyle = gr; g.fillRect(0, 0, W, H);
+});
+/** her mug's print: a sleeping cat's face on the side toward the room (u 0.5), a pink rim stripe */
+const mugTex = () => paint(256, 128, (g, W, H) => {
+  g.fillStyle = "#f4f0e7"; g.fillRect(0, 0, W, H);
+  g.fillStyle = "#e58a98"; g.fillRect(0, 9, W, 7);
+  const cx = W * 0.5, cy = H * 0.56, ink = "#3b3431";
+  g.fillStyle = ink;
+  for (const s of [-1, 1]) { g.beginPath(); g.moveTo(cx + s * 27, cy - 12); g.lineTo(cx + s * 22, cy - 38); g.lineTo(cx + s * 6, cy - 23); g.closePath(); g.fill(); }
+  g.fillStyle = "#f4f0e7"; g.strokeStyle = ink; g.lineWidth = 5; g.beginPath(); g.ellipse(cx, cy, 31, 25, 0, 0, Math.PI * 2); g.fill(); g.stroke();
+  g.lineWidth = 4; g.lineCap = "round";
+  for (const s of [-1, 1]) { g.beginPath(); g.arc(cx + s * 12, cy - 3, 6, Math.PI * 0.15, Math.PI * 0.85); g.stroke(); }
+  g.fillStyle = "#e58a98"; g.beginPath(); g.arc(cx, cy + 7, 3.6, 0, Math.PI * 2); g.fill();
+  g.lineWidth = 2.4;
+  for (const s of [-1, 1]) for (const k of [-1, 1]) { g.beginPath(); g.moveTo(cx + s * 17, cy + 9 + k * 3); g.lineTo(cx + s * 42, cy + 6 + k * 8); g.stroke(); }
+  g.fillStyle = "rgba(229,138,152,0.55)"; for (const s of [-1, 1]) { g.beginPath(); g.ellipse(cx + s * 19, cy + 6, 6, 3.5, 0, 0, Math.PI * 2); g.fill(); }
+});
+/** the instant-noodle cup's print: cream, a red band with a white bowl and steam, a gold starburst */
+const noodleTex = () => paint(256, 128, (g, W, H) => {
+  g.fillStyle = "#f5f0e4"; g.fillRect(0, 0, W, H);
+  g.fillStyle = "#d8442e"; g.fillRect(0, H * 0.3, W, H * 0.42);
+  g.fillStyle = "#f2c14e"; g.fillRect(0, H * 0.27, W, H * 0.04); g.fillRect(0, H * 0.71, W, H * 0.04);
+  const cx = W * 0.5, cy = H * 0.52;
+  g.fillStyle = "#ffffff"; g.beginPath(); g.ellipse(cx, cy + 2, 20, 11, 0, 0, Math.PI); g.fill(); g.fillRect(cx - 21, cy - 1, 42, 4);
+  g.strokeStyle = "#ffffff"; g.lineWidth = 3; g.lineCap = "round";
+  for (const s of [-8, 0, 8]) { g.beginPath(); g.moveTo(cx + s, cy - 6); g.bezierCurveTo(cx + s - 5, cy - 12, cx + s + 5, cy - 16, cx + s, cy - 22); g.stroke(); }
+  g.fillStyle = "#f2c14e"; g.beginPath();
+  for (let i = 0; i < 20; i++) { const a = (i / 20) * Math.PI * 2, rr = i % 2 ? 9 : 16; g.lineTo(cx + 46 + Math.cos(a) * rr, cy - 6 + Math.sin(a) * rr); }
+  g.closePath(); g.fill();
+});
+/** the plant pot's glaze: off-white, dark speckles, a blue line under the rim */
+const potTex = () => paint(256, 128, (g, W, H) => {
+  const r = rng(251);
+  g.fillStyle = "#ece7dc"; g.fillRect(0, 0, W, H);
+  g.fillStyle = "#4f6f9a"; g.fillRect(0, H * 0.14, W, 4); g.fillRect(0, H * 0.2, W, 2);
+  for (let i = 0; i < 160; i++) { g.fillStyle = css(r() < 0.7 ? "#6b5a4a" : "#9a8a76", 0.35 + 0.4 * r()); g.beginPath(); g.arc(W * r(), H * r(), 0.6 + 1.4 * r(), 0, Math.PI * 2); g.fill(); }
+});
+/** a tent calendar's page: 十一月 on a red band, the dates, one ringed in red */
+const calTex = () => paint(160, 120, (g, W, H) => {
+  g.fillStyle = "#f7f4ec"; g.fillRect(0, 0, W, H);
+  g.fillStyle = "#d8442e"; g.fillRect(0, 0, W, H * 0.26);
+  g.fillStyle = "#ffffff"; g.font = `900 ${Math.round(H * 0.18)}px ${FONT}`; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText("十一月", W / 2, H * 0.135);
+  g.fillStyle = "#6a6f7a";
+  for (let r = 0; r < 4; r++) for (let c = 0; c < 7; c++) g.fillRect(W * (0.08 + c * 0.125), H * (0.36 + r * 0.155), W * 0.07, H * 0.08);
+  g.strokeStyle = "#d8442e"; g.lineWidth = 4; g.beginPath(); g.ellipse(W * (0.115 + 5 * 0.125), H * (0.4 + 3 * 0.155), W * 0.075, H * 0.085, 0, 0, Math.PI * 2); g.stroke();
+});
 
 // ===================================================================================================== the skyline
 type Tower = { layer: number; x: number; w: number; top: number; base: number; col: number; style: number; crown: number; seed: number };
@@ -192,7 +266,15 @@ const build = (K: Kit): PlaceBuild => {
     return m;
   };
   const mFloor = M("#ffffff", 0.95, carpetTex()), mCeil = M("#ffffff", 0.95, ceilTex()), mWall = M("#ffffff", 0.95, plasterTex(215, "#d2d5da", "#b7bcc5", "#e4e6ea"));
-  const mMull = M("#5d6470", 0.5), mMetal = M("#8a909a", 0.45), mDeskTop = M("#e3e1db", 0.7), mDark = M("#2b2f38", 0.5), mScreenOff = M("#161a22", 0.3);
+  const mMull = M("#5d6470", 0.5), mMetal = M("#8a909a", 0.45), mDeskTop = M("#ffffff", 0.62, oakTex()), mDark = M("#2b2f38", 0.5), mScreenOff = M("#161a22", 0.3);
+  // contact shadows (one material per strength); names end in "contact" so the checkers pass over them
+  const contactMap = contactTex(), mContact = new Map<number, THREE.MeshBasicMaterial>();
+  const contact = (x: number, z: number, rx: number, rz: number, y: number, a = 1, yaw = 0) => {
+    let m = mContact.get(a);
+    if (!m) { m = Mk.basic("#ffffff", { map: contactMap, transparent: true, opacity: a }); m.polygonOffset = true; m.polygonOffsetFactor = -2; m.polygonOffsetUnits = -2; mContact.set(a, m); }
+    const s = Mk.mesh("work.contact", new THREE.PlaneGeometry(2 * rx, 2 * rz).rotateX(-Math.PI / 2).rotateY(yaw).translate(X(x), y + 0.0012, z), m, { cast: false, receive: false, noink: true });
+    s.renderOrder = 2;
+  };
   const mSeat = M("#3c4558", 0.9), mChrome = M("#a6acb5", 0.35), mPaper = M("#f1efe8", 0.9), mPed = M("#c6c9cf", 0.6);
 
   // ============================================================================================ the shell
@@ -237,6 +319,7 @@ const build = (K: Kit): PlaceBuild => {
     P.add(mDeskTop, boxG(X(x - w / 2), X(x + w / 2), top - 0.028, top, z - d / 2, z + d / 2), 0.005);
     for (const sx of [-1, 1]) for (const sz of [-1, 1]) { const lx = x + sx * (w / 2 - 0.05), lz = z + sz * (d / 2 - 0.05); P.add(mMetal, boxG(X(lx - 0.018), X(lx + 0.018), 0, top - 0.028, lz - 0.018, lz + 0.018), 0.004); }
     P.add(mMetal, boxG(X(x - w / 2 + 0.05), X(x + w / 2 - 0.05), top - 0.09, top - 0.028, z - d / 2 + 0.04, z - d / 2 + 0.065), 0.004);
+    contact(x, z, w * 0.56, d * 0.62, 0, 0.42);
   };
   /** a low swivel chair: seat (top at `top`), its back on the -z side, a column, a five-star base on casters */
   const chair = (x: number, z: number, top: number, yaw = 0) => {
@@ -279,9 +362,11 @@ const build = (K: Kit): PlaceBuild => {
   P.add(mPed, boxG(X(DK.x0 + 0.04), X(DK.x0 + 0.42), 0.02, DK.top - 0.06, DK.z0 + 0.06, DK.z1 - 0.06), 0.005);   // drawer pedestal, -x end only
   for (const y of [0.18, 0.36, 0.5]) P.add(mDark, boxG(X(DK.x0 + 0.15), X(DK.x0 + 0.31), y, y + 0.012, DK.z0 + 0.045, DK.z0 + 0.06), 0.002);
   chair(D.chair.x, D.chair.z, D.chair.top, 0);
+  contact(D.chair.x, D.chair.z, 0.3, 0.3, 0, 0.6);
   // THE LAPTOP: base, lid hinged on the +z side and tilted back, its back toward the lens
   {
     const L = LAPTOP, mAlu = M("#a9b0bb", 0.4), hinge = L.z + L.d / 2;
+    contact(L.x, L.z, L.w * 0.6, L.d * 0.62, DK.top, 0.75);
     P.add(mAlu, new THREE.BoxGeometry(L.w, 0.012, L.d).translate(X(L.x), DK.top + 0.006, L.z), 0.004);
     P.add(mDark, new THREE.PlaneGeometry(L.w - 0.04, L.d * 0.5).rotateX(-Math.PI / 2).translate(X(L.x), DK.top + 0.0125, L.z + 0.01), 0);   // keys
     const lm = new THREE.Matrix4().makeRotationX(L.tilt).setPosition(X(L.x), DK.top + 0.012, hinge);
@@ -291,6 +376,7 @@ const build = (K: Kit): PlaceBuild => {
   }
   // the second monitor to her right (-x), turned toward her; its screen lit
   monitor(-0.47, DK.z + 0.17, DK.top, -0.5, 0.4, 0.24, Mk.basic("#5a7fb0"));
+  contact(-0.47, DK.z + 0.18, 0.1, 0.075, DK.top, 0.8, -0.5);
   // sticky notes: on the monitor's top edge hanging down its back, a fan on the desk
   {
     const r = rng(231), cols = ["#ffe066", "#ffb3c1", "#9be3f0", "#b8f2a0"];
@@ -300,50 +386,59 @@ const build = (K: Kit): PlaceBuild => {
     }
     for (let i = 0; i < 4; i++) P.add(M(cols[(i + 1) % 4], 0.9), new THREE.BoxGeometry(0.065, 0.002, 0.065).rotateY((r() - 0.5) * 0.8).translate(X(0.3 + 0.07 * i), DK.top + 0.001 + 0.0021 * i, DK.z1 - 0.07 - 0.02 * r()), 0.002);
   }
-  // the mug (a cat face, half drunk), the instant-noodle cup with its lid peeled and a fork, the phone on its stand
+  // the mug (a sleeping cat, coffee to the brim), the instant-noodle cup with its lid peeled and a fork, a tent calendar
+  // (her phone is not part of the set: it is the prop "xmPhone", lying face down by her left hand in scene E)
   {
-    const mMug = M("#f1ede4", 0.5), mx = 0.3, mz = DK.z - 0.18;
-    P.add(mMug, new THREE.CylinderGeometry(0.035, 0.032, 0.085, 16).translate(X(mx), DK.top + 0.0425, mz), 0.004);
-    P.add(mMug, new THREE.TorusGeometry(0.022, 0.007, 6, 12).rotateY(Math.PI / 2).translate(X(mx + 0.038), DK.top + 0.045, mz), 0.003);
-    P.add(M("#4a2f22", 0.3), new THREE.CircleGeometry(0.031, 16).rotateX(-Math.PI / 2).translate(X(mx), DK.top + 0.06, mz), 0);
-    const nx = 0.47, nz = DK.z + 0.02, cup = new THREE.CylinderGeometry(0.048, 0.034, 0.1, 18, 1, true).translate(X(nx), DK.top + 0.05, nz);
-    P.add(M("#f3efe6", 0.7), cup, 0.004); P.add(M("#d8442e", 0.7), new THREE.CylinderGeometry(0.0475, 0.043, 0.035, 18, 1, true).translate(X(nx), DK.top + 0.065, nz), 0);
+    const mMug = M("#ffffff", 0.5, mugTex()), mx = 0.41, mz = DK.z - 0.24;
+    P.add(mMug, new THREE.CylinderGeometry(0.035, 0.032, 0.085, 20).rotateY(Math.PI).translate(X(mx), DK.top + 0.0425, mz), 0.004);
+    P.add(M("#f4f0e7", 0.5), new THREE.TorusGeometry(0.022, 0.007, 6, 12).rotateY(Math.PI / 2).translate(X(mx + 0.038), DK.top + 0.045, mz), 0.003);
+    P.add(M("#4a2f22", 0.3), new THREE.CircleGeometry(0.03, 18).rotateX(-Math.PI / 2).translate(X(mx), DK.top + 0.0857, mz), 0);
+    contact(mx, mz, 0.05, 0.05, DK.top, 0.9);
+    const nx = 0.47, nz = DK.z + 0.02, cup = new THREE.CylinderGeometry(0.048, 0.034, 0.1, 20, 1, true).rotateY(Math.PI).translate(X(nx), DK.top + 0.05, nz);
+    P.add(M("#ffffff", 0.7, noodleTex()), cup, 0.004);
     P.add(M("#e8e2d2", 0.7), new THREE.CircleGeometry(0.034, 14).rotateX(-Math.PI / 2).translate(X(nx), DK.top + 0.002, nz), 0);
     P.add(M("#4c3a2a", 0.9), new THREE.CircleGeometry(0.046, 18).rotateX(-Math.PI / 2).translate(X(nx), DK.top + 0.09, nz), 0);
     P.add(M("#c9ccd2", 0.4), new THREE.CircleGeometry(0.05, 18, 0, Math.PI).rotateX(-Math.PI / 2 + 1.1).translate(X(nx), DK.top + 0.1 + 0.02, nz - 0.02), 0.003);
     P.add(M("#f3efe6", 0.6), bar(V(X(nx + 0.01), DK.top + 0.07, nz), V(X(nx + 0.04), DK.top + 0.17, nz + 0.02), 0.004, 0.004, 5), 0.002);
-    const pm = R(Math.PI * 0, -0.27, DK.top, DK.z - 0.2);
-    P.add(mDark, new THREE.BoxGeometry(0.07, 0.01, 0.06).translate(0, 0.005, 0), 0.003, pm);
-    P.add(mDark, new THREE.BoxGeometry(0.06, 0.09, 0.006).rotateX(-0.35).translate(0, 0.05, 0.012), 0.003, pm);
-    P.add(M("#e1d2c8", 0.4), new THREE.BoxGeometry(0.055, 0.11, 0.008).rotateX(-0.35).translate(0, 0.065, 0.0), 0.003, pm);
-    P.add(mDark, new THREE.CylinderGeometry(0.006, 0.006, 0.003, 8).rotateX(Math.PI / 2 - 0.35).translate(-0.015, 0.1, 0.017), 0, pm);
+    contact(nx, nz, 0.058, 0.058, DK.top, 0.9);
+    // the tent calendar: two leaves leaning on each other, the page toward the room
+    const cm = R(0.25, -0.29, DK.top, DK.z - 0.2), mCal = M("#ffffff", 0.8, calTex());
+    P.add(mCal, new THREE.PlaneGeometry(0.11, 0.085).rotateX(-0.3).translate(0, 0.04, 0.013), 0.002, cm);
+    P.add(M("#f7f4ec", 0.8), new THREE.PlaneGeometry(0.11, 0.085).rotateY(Math.PI).rotateX(0.3).translate(0, 0.04, -0.013), 0.002, cm);
+    P.add(M("#3a3f4a", 0.5), new THREE.CylinderGeometry(0.004, 0.004, 0.112, 8).rotateZ(Math.PI / 2).translate(0, 0.081, 0), 0.002, cm);
+    contact(-0.29, DK.z - 0.2, 0.07, 0.045, DK.top, 0.7, 0.25);
   }
   // the half-dead plant: a white pot, a few upright green leaves, brown ones hanging over the rim
   {
-    const px = 0.6, pz = DK.z1 - 0.1, mPot = M("#e9e5dc", 0.6), mGreen = M("#5f8a4e", 0.8), mBrown = M("#9a7a4a", 0.9), mSoil = M("#3d2f25", 0.95);
-    P.add(mPot, new THREE.CylinderGeometry(0.055, 0.042, 0.1, 16).translate(X(px), DK.top + 0.05, pz), 0.004);
-    P.add(mSoil, new THREE.CircleGeometry(0.05, 16).rotateX(-Math.PI / 2).translate(X(px), DK.top + 0.092, pz), 0);
-    const leaf = (m: THREE.Material, len: number, pitch: number, yaw: number) => {
-      const g = new THREE.SphereGeometry(1, 10, 6).scale(0.018, len / 2, 0.006).translate(0, len / 2, 0).rotateX(pitch).rotateY(yaw).translate(X(px), DK.top + 0.09, pz);
+    const px = 0.6, pz = DK.z1 - 0.1, mPot = M("#ffffff", 0.6, potTex()), mGreen = M("#5f8a4e", 0.8), mBrown = M("#9a7a4a", 0.9), mSoil = M("#3d2f25", 0.95);
+    P.add(mPot, new THREE.CylinderGeometry(0.055, 0.042, 0.1, 18).translate(X(px), DK.top + 0.05, pz), 0.004);
+    P.add(mSoil, new THREE.CircleGeometry(0.048, 18).rotateX(-Math.PI / 2).translate(X(px), DK.top + 0.1006, pz), 0);
+    contact(px, pz, 0.072, 0.072, DK.top, 0.9);
+    // green leaves stand up out of the soil; the brown ones bend over the rim from its edge (never through the pot)
+    const leaf = (m: THREE.Material, len: number, pitch: number, yaw: number, rim = 0) => {
+      const g = new THREE.SphereGeometry(1, 10, 6).scale(0.018, len / 2, 0.006).translate(0, len / 2, 0).rotateX(pitch).rotateY(yaw)
+        .translate(X(px) + rim * Math.sin(yaw), DK.top + 0.1, pz + rim * Math.cos(yaw));
       P.add(m, g, 0.002);
     };
     leaf(mGreen, 0.15, 0.15, 0.4); leaf(mGreen, 0.13, 0.3, 2.2); leaf(mGreen, 0.12, 0.25, -1.4);
-    leaf(mBrown, 0.13, 1.9, 1.0); leaf(mBrown, 0.12, 2.1, -2.4); leaf(mBrown, 0.11, 1.4, 3.0); leaf(mBrown, 0.1, 2.3, -0.4);
-    for (const [dx, dz] of [[0.07, 0.03], [0.09, -0.02]]) P.add(mBrown, new THREE.SphereGeometry(1, 8, 4).scale(0.02, 0.003, 0.009).rotateY(dx * 10).translate(X(px + dx), DK.top + 0.003, pz + dz), 0.002);
+    leaf(mBrown, 0.075, 1.75, 1.0, 0.05); leaf(mBrown, 0.07, 1.9, -2.4, 0.05);
+    for (const [dx, dz] of [[0.08, 0.035], [0.1, -0.02]]) P.add(mBrown, new THREE.SphereGeometry(1, 8, 4).scale(0.02, 0.003, 0.009).rotateY(dx * 10).translate(X(px + dx), DK.top + 0.003, pz + dz), 0.002);
   }
-  // the desk lamp, back right, its head over the desk
-  const lampAt = V(X(0.62), DK.top, DK.z0 + 0.13), lampHead = V(X(0.5), DK.top + 0.3, DK.z0 + 0.25);
+  // the desk lamp, back LEFT (v6: it stood in front of 月老 and crossed him in the close shot), its head over her side
+  const lampAt = V(X(-0.66), DK.top, DK.z0 + 0.12), lampHead = V(X(-0.54), DK.top + 0.31, DK.z0 + 0.23);
   {
     const mL = M("#e7e3da", 0.5);
     P.add(mL, new THREE.CylinderGeometry(0.05, 0.055, 0.015, 16).translate(lampAt.x, lampAt.y + 0.0075, lampAt.z), 0.004);
-    const elbow = V(X(0.66), DK.top + 0.22, DK.z0 + 0.12);
+    const elbow = V(X(-0.7), DK.top + 0.23, DK.z0 + 0.1);
     P.add(mL, bar(V(lampAt.x, lampAt.y + 0.01, lampAt.z), elbow, 0.007, 0.007, 6), 0.003);
     P.add(mL, bar(elbow, lampHead, 0.007, 0.007, 6), 0.003);
-    P.add(mL, new THREE.ConeGeometry(0.045, 0.07, 14, 1, true).rotateZ(-0.5).translate(lampHead.x, lampHead.y - 0.02, lampHead.z), 0.004);
+    P.add(mL, new THREE.ConeGeometry(0.045, 0.07, 14, 1, true).rotateZ(0.5).translate(lampHead.x, lampHead.y - 0.02, lampHead.z), 0.004);
+    contact(-0.66, DK.z0 + 0.12, 0.07, 0.07, DK.top, 0.85);
   }
   // a waste bin by her desk's -x end
   P.add(M("#596274", 0.7), new THREE.CylinderGeometry(0.1, 0.085, 0.26, 14, 1, true).translate(X(DK.x0 - 0.18), 0.13, DK.z - 0.05), 0.004);
   P.add(mPaper, new THREE.IcosahedronGeometry(0.05, 0).translate(X(DK.x0 - 0.16), 0.24, DK.z - 0.06), 0.003);
+  contact(DK.x0 - 0.18, DK.z - 0.05, 0.14, 0.14, 0, 0.7);
 
   // ---- the water dispenser (-x wall, toward the lens)
   {
@@ -379,8 +474,8 @@ const build = (K: Kit): PlaceBuild => {
   const lapGlow = glowCard(0.26, "#9cc2ff", 0.16); lapGlow.position.set(X(LAPTOP.x), DK.top + 0.2, LAPTOP.z - 0.25); lapGlow.name = "work.laptop.glow"; group.add(lapGlow);
   const lapPool = lightPool(V(X(LAPTOP.x), DK.top + 0.0015, LAPTOP.z - 0.22), V(0, 1, 0), 0.6, 0.38, "#8fb6ff", 0.45); group.add(lapPool);
   // the desk lamp: bulb glow, a warm pool on the desk
-  const bulb = glowCard(0.07, "#ffd8a0", 0.8); bulb.position.copy(lampHead).add(V(-0.01, -0.05, 0.005)); bulb.name = "work.lamp.glow"; group.add(bulb);
-  const lampPool = lightPool(V(X(0.38), DK.top + 0.0016, DK.z0 + 0.3), V(0, 1, 0), 0.5, 0.36, "#ffcf98", 0.28); group.add(lampPool);
+  const bulb = glowCard(0.07, "#ffd8a0", 0.8); bulb.position.copy(lampHead).add(V(0.01, -0.05, 0.005)); bulb.name = "work.lamp.glow"; group.add(bulb);
+  const lampPool = lightPool(V(X(-0.42), DK.top + 0.0016, DK.z0 + 0.3), V(0, 1, 0), 0.5, 0.36, "#ffcf98", 0.28); group.add(lampPool);
   // at night: the strip over her desk lays a pool on the floor round her desk
   const nightPool = lightPool(V(X(0), 0.0015, DK.z - 0.2), V(0, 1, 0), 3.2, 2.6, "#dfe6f4", 0); group.add(nightPool);
   const Lr = lightRig(group, { dir: [0.25, 0.55, -0.8], k: 1.2, col: "#e9eef7", at: [X(0), 0, 0], half: 8, hemi: ["#dfe4ee", "#6d7280", 1.3], point: { col: "#9cc2ff", k: 1.5, at: [X(LAPTOP.x), DK.top + 0.2, LAPTOP.z - 0.2], dist: 1.8 } });
@@ -426,7 +521,7 @@ const build = (K: Kit): PlaceBuild => {
         const a = DAY_CAST[k], b = LATE_CAST[k];
         o[k] = Array.isArray(a) ? (a as number[]).map((x, i) => lerp(x, (b as number[])[i], late)) : lerp(a as number, b as number, late);
       }
-      return o as Partial<CastLight>;
+      return flatFace(o, 0.1 * late) as Partial<CastLight>;
     },
   };
 };
