@@ -1,0 +1,250 @@
+plan: {'tier': 'creator', 'character_count': 118406, 'character_limit': 123898, 'status': 'active', 'next_character_count_reset_unix': 1797012816}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "sfx_stamps", "type": "sfx", "text": "Three separate hits of a heavy wooden official seal stamp slammed down onto paper on a wooden desk, a firm satisfying thump each time, with a full second of silence between the hits. Close, dry, no music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "credits": 0, "file": "sfx_stamps.mp3", "bytes": 97009}
+{"name": "sfx_whoosh", "type": "sfx", "text": "Four separate quick whooshes of a sheet of paper flicked fast past the microphone, each one short and airy, with a second of silence between them. Clean, no music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "credits": 0, "file": "sfx_whoosh.mp3", "bytes": 97009}
+{"name": "sfx_pops", "type": "sfx", "text": "Playful cartoon sound effects, one after another with a second of silence between each: a short cartoon pop, a soft magical sparkle shimmer, a small bright temple bell ding, a springy cartoon boing. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "credits": 0, "file": "sfx_pops.mp3", "bytes": 145074}
+{"name": "sfx_thread", "type": "sfx", "text": "A taut silk thread plucked once like a low string with a twang, then a thin thread snapping, then a pair of scissors snipping once, each separated by a second of silence. Close and clean, no music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "credits": 0, "file": "sfx_thread.mp3", "bytes": 97009}
+{"name": "mus_night", "type": "music", "text": "", "model": "music_v2_5", "status": 200, "sfx": true, "credits": 0, "file": "mus_night.mp3", "bytes": 384812}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/transformers/audio_utils.py:860: UserWarning: At least one mel filter has all zero values. The value for `num_mel_filters` (128) may be set too high. Or, the value for `num_frequency_bins` (257) may be set too low.
+  warnings.warn(
+Loading weights:   0%|          | 0/203 [00:00<?, ?it/s]Loading weights: 100%|██████████| 203/203 [00:00<00:00, 11917.14it/s]
+sfx_stamps [['Sound effect', 0.137], ['Chop', 0.082], ['Wood block', 0.03], ['Hammer', 0.029], ['Drum', 0.024], ['Whack, thwack', 0.023], ['Chopping (food)', 0.017], ['Knock', 0.017]]
+sfx_whoosh [['Heart sounds, heartbeat', 0.526], ['Heart murmur', 0.179], ['Throbbing', 0.114], ['Hum', 0.09], ['Scissors', 0.042], ['Sound effect', 0.016], ['Whoosh, swoosh, swish', 0.015], ['Inside, small room', 0.013]]
+sfx_pops [['Plop', 0.925], ['Music', 0.286], ['Silence', 0.022], ['Speech', 0.021], ['Sound effect', 0.017], ['Boing', 0.009], ['Ding', 0.007], ['Music for children', 0.006]]
+sfx_thread [['Music', 0.073], ['Gong', 0.049], ['Tuning fork', 0.041], ['Ding-dong', 0.027], ['Musical instrument', 0.027], ['Mantra', 0.024], ['Silence', 0.021], ['Humming', 0.019]]
+mus_night [['Music', 0.799], ['New-age music', 0.668], ['Ambient music', 0.64], ['Singing bowl', 0.137], ['Sad music', 0.037], ['Musical instrument', 0.019], ['Electronic music', 0.016], ['Background music', 0.011]]
+[
+ {
+  "name": "sfx_stamps",
+  "type": "sfx",
+  "text": "Three separate hits of a heavy wooden official seal stamp slammed down onto paper on a wooden desk, a firm satisfying thump each time, with a full second of silence between the hits. Close, dry, no music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "credits": 0,
+  "file": "sfx_stamps.mp3",
+  "bytes": 97009,
+  "seconds": 6.0,
+  "tags": [
+   [
+    "Sound effect",
+    0.137
+   ],
+   [
+    "Chop",
+    0.082
+   ],
+   [
+    "Wood block",
+    0.03
+   ],
+   [
+    "Hammer",
+    0.029
+   ],
+   [
+    "Drum",
+    0.024
+   ],
+   [
+    "Whack, thwack",
+    0.023
+   ],
+   [
+    "Chopping (food)",
+    0.017
+   ],
+   [
+    "Knock",
+    0.017
+   ]
+  ]
+ },
+ {
+  "name": "sfx_whoosh",
+  "type": "sfx",
+  "text": "Four separate quick whooshes of a sheet of paper flicked fast past the microphone, each one short and airy, with a second of silence between them. Clean, no music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "credits": 0,
+  "file": "sfx_whoosh.mp3",
+  "bytes": 97009,
+  "seconds": 6.0,
+  "tags": [
+   [
+    "Heart sounds, heartbeat",
+    0.526
+   ],
+   [
+    "Heart murmur",
+    0.179
+   ],
+   [
+    "Throbbing",
+    0.114
+   ],
+   [
+    "Hum",
+    0.09
+   ],
+   [
+    "Scissors",
+    0.042
+   ],
+   [
+    "Sound effect",
+    0.016
+   ],
+   [
+    "Whoosh, swoosh, swish",
+    0.015
+   ],
+   [
+    "Inside, small room",
+    0.013
+   ]
+  ]
+ },
+ {
+  "name": "sfx_pops",
+  "type": "sfx",
+  "text": "Playful cartoon sound effects, one after another with a second of silence between each: a short cartoon pop, a soft magical sparkle shimmer, a small bright temple bell ding, a springy cartoon boing. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "credits": 0,
+  "file": "sfx_pops.mp3",
+  "bytes": 145074,
+  "seconds": 9.0,
+  "tags": [
+   [
+    "Plop",
+    0.925
+   ],
+   [
+    "Music",
+    0.286
+   ],
+   [
+    "Silence",
+    0.022
+   ],
+   [
+    "Speech",
+    0.021
+   ],
+   [
+    "Sound effect",
+    0.017
+   ],
+   [
+    "Boing",
+    0.009
+   ],
+   [
+    "Ding",
+    0.007
+   ],
+   [
+    "Music for children",
+    0.006
+   ]
+  ]
+ },
+ {
+  "name": "sfx_thread",
+  "type": "sfx",
+  "text": "A taut silk thread plucked once like a low string with a twang, then a thin thread snapping, then a pair of scissors snipping once, each separated by a second of silence. Close and clean, no music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "credits": 0,
+  "file": "sfx_thread.mp3",
+  "bytes": 97009,
+  "seconds": 6.0,
+  "tags": [
+   [
+    "Music",
+    0.073
+   ],
+   [
+    "Gong",
+    0.049
+   ],
+   [
+    "Tuning fork",
+    0.041
+   ],
+   [
+    "Ding-dong",
+    0.027
+   ],
+   [
+    "Musical instrument",
+    0.027
+   ],
+   [
+    "Mantra",
+    0.024
+   ],
+   [
+    "Silence",
+    0.021
+   ],
+   [
+    "Humming",
+    0.019
+   ]
+  ]
+ },
+ {
+  "name": "mus_night",
+  "type": "music",
+  "text": "",
+  "model": "music_v2_5",
+  "status": 200,
+  "sfx": true,
+  "credits": 0,
+  "file": "mus_night.mp3",
+  "bytes": 384812,
+  "seconds": 16.03,
+  "tags": [
+   [
+    "Music",
+    0.799
+   ],
+   [
+    "New-age music",
+    0.668
+   ],
+   [
+    "Ambient music",
+    0.64
+   ],
+   [
+    "Singing bowl",
+    0.137
+   ],
+   [
+    "Sad music",
+    0.037
+   ],
+   [
+    "Musical instrument",
+    0.019
+   ],
+   [
+    "Electronic music",
+    0.016
+   ],
+   [
+    "Background music",
+    0.011
+   ]
+  ]
+ }
+]
+vault sealed (rsa) 5 files for 1 keys
