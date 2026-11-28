@@ -5,8 +5,11 @@
 #    takes.json): every line exactly the length the picture was timed to
 # 2. laid by the kit's assemble.py with the committed character times (line_cuts.json); STOPS if the result is out of step
 #    with timing_ref.json (the timing voice.ts / captions.ts were made from)
-# 3. the music, room tones and effects made in code (make_sound.py), the cues in cues.json (make_cues.py: hits on the
-#    picture's own frames, events.ts). v6: NOT HEARD by default (voices only, see below); YL_SOUND=code for the v5 bed
+# 3. v7 (default, YL_SOUND=el): the music, room tones and effects recorded with ElevenLabs (the owner, 28 Nov: "sound
+#    generate using Eleven labs"): make_el.py fetches the voice farm's SEALED runs that el.json names, opens them with the
+#    private key $YL_SOUND_KEY (default ~/Claude/keys/yuelao_sound.pem) and cuts the clips; the cues are cues_v7.json
+#    (make_cues.py: hits on the picture's own frames, events.ts). Of the clips made in code (make_sound.py) only the
+#    camera's own REC beep and power-off are heard. YL_SOUND=voice: voices only (v6); YL_SOUND=code: v5's bed made in code
 # 4. the voice ridden under the bed (voice_ride.py), then the kit's build.py: mono 48 kHz, about -19 LUFS, true peak under -1.8 dBTP
 # Needs python3 with numpy, ffmpeg, git. Writes only under <work dir> and <out mix.wav>.
 set -euo pipefail
@@ -26,14 +29,21 @@ print("build_sound: voice timing matches the picture (%d lines, %d frames)" % (l
 PY
 python3 scripts/yuelao/sound/make_sound.py "$W/clips"
 B="python3 scripts/kit/day/sound/build.py --film yuelao --work $W --timing $W/voice/voice_timing.json --clips $W/clips --cues scripts/yuelao/sound/cues.json"
-# v6 (28 Nov): the owner heard the music and effects made in code as mechanical (review notes 2 and 11), so the v6 cut
-# carries the VOICES ONLY until real recordings are picked (the music card). make_sound.py still runs: the cue table needs
-# its clip files to exist, but nothing it makes is heard. YL_SOUND=code brings the v5 bed back.
-if [ "${YL_SOUND:-voice}" = "voice" ]; then
+# v6 (28 Nov): the owner heard the music and effects made in code as mechanical (review notes 2 and 11), so v6 carried
+# the VOICES ONLY (YL_SOUND=voice). v7: the ElevenLabs recordings (the default, below); make_sound.py still runs first for
+# the REC beep and the power-off, and make_el.py writes its clips over the rest. YL_SOUND=code brings the v5 bed back.
+MODE=${YL_SOUND:-el}
+if [ "$MODE" = "voice" ]; then
   # (the camera's own REC beep and power-off stay: cues_v6.json)
   python3 scripts/kit/day/sound/build.py --film yuelao --work "$W" --timing "$W/voice/voice_timing.json" --clips "$W/clips" --cues scripts/yuelao/sound/cues_v6.json \
     --voice "$W/voice/voice_48k.wav" --only voice,sfx --out "$OUT"
   exit 0
+fi
+if [ "$MODE" = "el" ]; then
+  python3 scripts/yuelao/sound/make_el.py fetch scripts/yuelao/sound/el.json "$W/el/sealed"
+  python3 scripts/yuelao/sound/make_el.py open scripts/yuelao/sound/el.json "$W/el/sealed" "$W/el/opened"
+  python3 scripts/yuelao/sound/make_el.py clips scripts/yuelao/sound/el.json "$W/el/opened" "$W/clips"
+  B="python3 scripts/kit/day/sound/build.py --film yuelao --work $W --timing $W/voice/voice_timing.json --clips $W/clips --cues scripts/yuelao/sound/cues_v7.json"
 fi
 $B --voice "$W/voice/voice_48k.wav" --only music,amb,sfx --nolimit --out "$W/bed.wav"
 python3 scripts/yuelao/sound/voice_ride.py "$W/voice/voice_48k.wav" "$W/bed.wav" "$W/voice/voice_48k_ride.wav"

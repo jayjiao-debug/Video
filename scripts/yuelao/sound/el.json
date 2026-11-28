@@ -1,0 +1,201 @@
+{
+ "_note": "采访月老的一天 v7: the ElevenLabs recordings the film uses (make_el.py): the branch yl-sound-v7 holds the voice farm's outputs (runs yuelao-sound-01 to 04) sealed for each machine that builds the film, and below is how each clip is cut from them. Beds: one static gain each (music normalised to about -16 LUFS; room tones to a -1.3 dBFS peak, their creaks and clicks stand 25 dB over their loudness); hits: peak-normalised to -1.3 dBFS. mus_theme is one composition in four sections at about 99.4 BPM (bar 2.415 s): the bureau theme 0-48 s, its city version 48-76.5, tender 76.5-96, the warm ending 96-108.5 (final chord at 108.0). Loop points are whole bars apart, found by matching the music on both sides. Room tones loop only their steady stretch: amb_office 0.2-4.75 s (its one creak at 4.9 s, looped, came back 14 times), amb_work 4.9-7.9 s (two clicks before).",
+ "runs": {
+  "yl-sound-v7": [
+   "sfx_stamps",
+   "sfx_thread",
+   "sfx_pops",
+   "mus_night",
+   "sfx_whoosh_a",
+   "sfx_ding",
+   "sfx_boing",
+   "sfx_snip",
+   "sfx_snap",
+   "sfx_pop",
+   "sfx_sparkle",
+   "sfx_bookshut",
+   "sfx_paper",
+   "sfx_thump",
+   "mus_theme",
+   "amb_office",
+   "amb_work",
+   "amb_street"
+  ]
+ },
+ "clips": {
+  "mus_bureau": {
+   "src": "mus_theme",
+   "head": [
+    0.0,
+    41.659
+   ],
+   "loop": [
+    22.34,
+    41.659
+   ],
+   "len": 108.0,
+   "xf": 0.3,
+   "gain": -1.0,
+   "xf_curve": "gain"
+  },
+  "mus_city": {
+   "src": "mus_theme",
+   "head": [
+    48.91,
+    72.819
+   ],
+   "loop": [
+    53.5,
+    72.819
+   ],
+   "len": 44.0,
+   "xf": 0.3,
+   "gain": -1.1,
+   "xf_curve": "gain"
+  },
+  "mus_end": {
+   "src": "mus_theme",
+   "head": [
+    77.31,
+    104.205
+   ],
+   "loop": [
+    96.96,
+    104.205
+   ],
+   "tail": 109.8,
+   "len": 39.73,
+   "xf": 0.3,
+   "gain": 0.4,
+   "xf_curve": "gain"
+  },
+  "mus_night": {
+   "src": "mus_night",
+   "in": 0.0,
+   "len": 16.03,
+   "fo": 1.0,
+   "gain": 25.6
+  },
+  "amb_office": {
+   "src": "amb_office",
+   "loop": [
+    0.2,
+    4.75
+   ],
+   "len": 108.0,
+   "xf": 0.3,
+   "gain": 15.6
+  },
+  "amb_work": {
+   "src": "amb_work",
+   "loop": [
+    4.9,
+    7.9
+   ],
+   "len": 27.0,
+   "xf": 0.3,
+   "gain": 15.6
+  },
+  "amb_street": {
+   "src": "amb_street",
+   "loop": [
+    0.3,
+    7.7
+   ],
+   "len": 100.0,
+   "xf": 0.3,
+   "gain": 22.8
+  },
+  "sfx_stamp_a": {
+   "src": "sfx_stamps",
+   "in": 0.155,
+   "len": 0.45,
+   "gain": -3.0
+  },
+  "sfx_stamp_b": {
+   "src": "sfx_stamps",
+   "in": 1.93,
+   "len": 0.42,
+   "gain": -2.9
+  },
+  "sfx_stamp_c": {
+   "src": "sfx_stamps",
+   "in": 4.685,
+   "len": 0.4,
+   "gain": -3.0
+  },
+  "sfx_whoosh": {
+   "src": "sfx_whoosh_a",
+   "in": 0.15,
+   "len": 0.55,
+   "gain": 1.5
+  },
+  "sfx_ding": {
+   "src": "sfx_ding",
+   "in": 0.0,
+   "len": 1.45,
+   "gain": -0.9
+  },
+  "sfx_boing": {
+   "src": "sfx_boing",
+   "in": 0.0,
+   "len": 0.85,
+   "gain": 6.9
+  },
+  "sfx_snip": {
+   "src": "sfx_snip",
+   "in": 0.27,
+   "len": 0.2,
+   "gain": 4.3
+  },
+  "sfx_snap": {
+   "src": "sfx_snap",
+   "in": 0.03,
+   "len": 0.4,
+   "gain": -0.4
+  },
+  "sfx_pop": {
+   "src": "sfx_pop",
+   "in": 0.03,
+   "len": 0.3,
+   "gain": -2.7
+  },
+  "sfx_pops": {
+   "src": "sfx_pops",
+   "in": 0.02,
+   "len": 0.36,
+   "gain": -3.2
+  },
+  "sfx_sparkle": {
+   "src": "sfx_sparkle",
+   "in": 0.0,
+   "len": 1.45,
+   "gain": 2.7
+  },
+  "sfx_bookshut": {
+   "src": "sfx_bookshut",
+   "in": 0.0,
+   "len": 0.6,
+   "gain": 6.7
+  },
+  "sfx_paper": {
+   "src": "sfx_paper",
+   "in": 0.0,
+   "len": 0.6,
+   "gain": -1.0
+  },
+  "sfx_thump": {
+   "src": "sfx_thump",
+   "in": 0.0,
+   "len": 0.4,
+   "gain": -0.0
+  },
+  "sfx_twang": {
+   "src": "sfx_thread",
+   "in": 0.0,
+   "len": 0.9,
+   "fo": 0.5,
+   "gain": 9.6
+  }
+ }
+}

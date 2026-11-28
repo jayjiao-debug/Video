@@ -24,7 +24,7 @@ export const TOKEN = (() => { const from = line("A02").to + 4; return { from, to
 /** the boxes of the timeline's graphics on frame f (for the overlay check) */
 export const fxRects = (f: number) => {
   const out: { what: string; kind: "title" | "card" | "effect"; r: { x0: number; y0: number; x1: number; y1: number } }[] = [];
-  if (f >= TITLE_ON.from + TITLE_ON.paperAt && f <= TITLE_ON.to) out.push({ what: "片名", kind: "title", r: { x0: 122, y0: 440, x1: 958, y1: 830 } });
+  if (f >= TITLE_ON.from + TITLE_ON.paperAt && f <= TITLE_ON.to) out.push({ what: "片名", kind: "title", r: { x0: 122, y0: 362, x1: 958, y1: 752 } });   // (v7: the plaque hangs 78 px higher, hud/skin.tsx ThreadTitle)
   if (f >= TOKEN.from && f <= TOKEN.to) out.push({ what: "月老的腰牌", kind: "card", r: TOKEN_BOX(TOKEN.x, TOKEN.y, TOKEN.side) });
   if (METER.spans.some(([a, b]) => f >= a && f <= b)) out.push({ what: "年度指标", kind: "card", r: { x0: 112, y0: 366, x1: 516, y1: 438 } });
   for (const c of CARDS) { const F = FACTS[c.id]; if (F && f >= c.from && f <= c.to) { const { w, h } = factSize(F.rows, F.src); out.push({ what: `事实卡 ${c.id}`, kind: "card", r: { x0: 540 - w / 2, y0: F.y - 24, x1: 540 + w / 2 + 6, y1: F.y + h + 8 } }); } }

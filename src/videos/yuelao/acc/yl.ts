@@ -28,8 +28,10 @@
 //   officialBadge(o)  option B: a square badge (补子) on the chest with the crescent and a knot of red thread
 //   cloudCollar(o)    option C: a cloud collar (云肩) over the shoulders
 //   staff(o)          option C: a tall staff in the hand with a gourd and a skein of red thread
+//   combedBack(r, o)  look C (the lead from v7): the painted hair drawn back into the topknot, clear of every part of
+//                     the face drawing, with no parting line
 import * as THREE from "three";
-import type { Acc, FaceKit, OutfitKit, P2, PartKit } from "../../group/kit/rig3d";
+import type { Acc, FaceKit, OutfitKit, P2, PartKit, Rig } from "../../group/kit/rig3d";
 import { inkEye, type EyeSet, type InkEyeO } from "../../romeo/acc/eyes";
 import { shade, turned } from "../../group/kit/rigacc/shapes";
 import { leafGeo } from "../../wanbi/acc/envoy";
@@ -55,10 +57,15 @@ const weld = <T extends THREE.BufferGeometry>(g: T) => {
   return g;
 };
 
-/** HIS COLOURS. White never brighter than WHITE (the ink and the lights need room above it) */
+/** HIS COLOURS. White never brighter than WHITE (the ink and the lights need room above it).
+ *  skin (v7): a warm peach just under the rig's bleach threshold (rig3d.ts: a skin of luma 0.76 or more is bleached 70 %
+ *  toward white by the film's day light, kit/day/sets.ts BAKED_LIGHT). The v6 skin #f0b993 sat at 0.7606 and went near
+ *  white, and white hair on a near-white head shows only as its ink line (the owner's v5 note 16, "line in hair"). At
+ *  0.7567 his face stays peach in every set, so his white hair, brows and beard read against it, as on the look sheet the
+ *  owner chose look C from. */
 export const YL = {
   red: "#c8332b", redDeep: "#8e2320", redLight: "#d9503f", gold: "#d9a640", goldDeep: "#9c7024", cream: "#f1e6cc",
-  white: "#ece7de", whiteLo: "#cfc7ba", jade: "#9ad4b0", jadeDeep: "#4f9a76", skin: "#f0b993", line: "#c48466", ink: "#2a211c",
+  white: "#ece7de", whiteLo: "#cfc7ba", jade: "#9ad4b0", jadeDeep: "#4f9a76", skin: "#efb892", line: "#c48466", ink: "#2a211c",
 } as const;
 
 // =============================================================================================================== EYES
@@ -398,6 +405,50 @@ export const backHair = (o: { col?: string; y?: number; from?: number; puff?: nu
       tuft(180, 0.9, true);
     },
   };
+};
+
+// ========================================================================================================= LOOK C HAIR
+/** LOOK C'S HAIR, DRAWN BACK (v7, 28 Nov 2026; the owner chose look C: "月老look C without staff， give him the 玉佩
+ *  also"). The rig paints hair on the head ball from a lookup of how far down it reaches at each azimuth (rig3d.ts
+ *  uHair, hairLine). Its "long" hair has the fringe at 52 deg from the crown and comes down beside the face from the
+ *  temples, while his 寿眉 reach up to about 47 deg from the crown when the face slides up toward a high lens, and the
+ *  locks that hang from them (64 to 82 deg) reach about 70 deg round the head when it slides toward a lens at the
+ *  side: brow and hair met, the owner's v5 note 16 ("line in hair, eyebrow clipping with hair"). This swaps in his
+ *  own lookup, the hair DRAWN BACK into the topknot the way a real topknot pulls it: `front` deg from the crown across
+ *  the forehead (a high old forehead), `temple` deg at 70 deg round (above where any brow or lock can slide), then
+ *  sweeping down behind the temple to `ear` deg at 110 deg round and to `nape` deg at the back, where the long fall
+ *  down his back hangs from it. One smooth curve, so its ink line never turns a corner (a corner read as a box drawn
+ *  on the side of his head). It also turns off the ink parting and the comb streaks: hair drawn back has no parting
+ *  (the black line down the middle of his white hair was the "line in hair"), and the streaks are a lighter colour
+ *  than his white can take. The face's own upward slide still stops at the rig's "long" line (52 deg), so the brows
+ *  keep bare forehead under the hair at every camera height. Call once after the rig built the figure (people.ts
+ *  addPerson); guarded like romeo/acc/figure.ts baldHead. */
+type RigHairU = { faceU?: { uHair?: { value: THREE.Texture }; uHairPart?: { value: THREE.Vector4 } } };
+export type Combed = { front?: number; temple?: number; ear?: number; nape?: number };
+const combedTex = new Map<string, THREE.DataTexture>();
+export const combedLine = (o: Combed, a: number): number => {
+  const front = o.front ?? 42, temple = o.temple ?? 50, ear = o.ear ?? 105, nape = o.nape ?? 130;
+  return front + (temple - front) * smooth((a - 40) / 30) + (ear - temple) * smooth((a - 70) / 40) + (nape - ear) * smooth((a - 110) / 50);
+};
+export const combedBack = (r: Rig, o: Combed = {}): boolean => {
+  const u = (r as unknown as RigHairU).faceU;
+  if (!u?.uHair || !(u.uHair.value instanceof THREE.DataTexture) || !u.uHairPart) { console.log("QA: combedBack: the rig's head has no uHair lookup (rig3d.ts changed?): the hair stays as the rig draws it"); return false; }
+  const key = [o.front, o.temple, o.ear, o.nape].join("|");
+  let t = combedTex.get(key);
+  if (!t) {
+    // (the rig's own format: 256 samples round the head from -180 deg, 16 bits of deg / 180 in R and G)
+    const N = 256, data = new Uint8Array(N * 4);
+    for (let k = 0; k < N; k++) {
+      const az = -Math.PI + ((k + 0.5) / N) * 2 * Math.PI, v = Math.round((clamp(combedLine(o, (Math.abs(az) * 180) / Math.PI), 8, 150) / 180) * 65535);
+      data[k * 4] = v >> 8; data[k * 4 + 1] = v & 255; data[k * 4 + 3] = 255;
+    }
+    t = new THREE.DataTexture(data, N, 1, THREE.RGBAFormat, THREE.UnsignedByteType);
+    t.wrapS = THREE.RepeatWrapping; t.magFilter = THREE.NearestFilter; t.minFilter = THREE.NearestFilter; t.generateMipmaps = false; t.needsUpdate = true;
+    combedTex.set(key, t);
+  }
+  u.uHair.value = t;
+  u.uHairPart.value = new THREE.Vector4(0, 0, 0, 0);
+  return true;
 };
 
 // ============================================================================================================ SLEEVES

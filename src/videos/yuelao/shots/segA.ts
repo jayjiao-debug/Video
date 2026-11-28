@@ -119,8 +119,10 @@ export const SEG: Segment = {
       { f: a03 + 22, pos: [0.3, 1.5, 2.5], at: HEAD, sx: 500, sy: 860, fov: 48 },               // the slow push: someone saw that
       { f: wade0 + 42, ...UP }, { f: bow0, ...UP },                                               // she gives way half a step as he comes up
       { f: bow0 + 12, ...UP, at: BOWED, sy: 860 }, { f: e05 + 2, ...UP, at: BOWED, sy: 860 },     // a little tilt down with the bow
-      { f: T0 + 16, pos: [0.66, 1.6, 3.32], at: HEAD, sx: 300, sy: 1190, fov: 68 },             // she steps aside and back: his bureau, the title over it
-      { f: S.to, pos: [0.66, 1.6, 3.32], at: HEAD, sx: 300, sy: 1190, fov: 68 },
+      // she steps aside and back: his bureau, the title over it (v7: his head at y 1320, not 1190, so the title's 采访 tag hangs
+      // clear above his tall topknot)
+      { f: T0 + 16, pos: [0.66, 1.6, 3.32], at: HEAD, sx: 300, sy: 1320, fov: 68 },
+      { f: S.to, pos: [0.66, 1.6, 3.32], at: HEAD, sx: 300, sy: 1320, fov: 68 },
     ];
     let camera = shotCam("office", f, keys, { mood: "calm", amp: 0.55, walk: [[S.from, 0.75], [a01 - 12, 0.75], [a01 - 4, 0], [wade0 + 4, 0], [wade0 + 12, 0.3], [wade0 + 30, 0], [e05, 0], [e05 + 6, 0.4], [T0 + 16, 0]] });
     camera = punchIn(camera, f, three - 5, { k: 0.7, len: 5, off: e02 + 6 });

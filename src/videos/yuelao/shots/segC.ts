@@ -28,7 +28,7 @@
 import * as THREE from "three";
 import { seg, type Segment } from "../story";
 import { whip, whipSmear } from "../cam";
-import { P, startOf, wordAt, ky, rel, V, smooth, kick, hang, faceTo, through, turnTo, hit, shotCam, type ShotKey } from "./kit";
+import { P, ky, rel, V, smooth, kick, hang, faceTo, through, turnTo, hit, shotCam, type ShotKey } from "./kit";
 import { act, YL, type MoodKey } from "./act";
 import { os, truth, draw, type Fx } from "./fx";
 import { toCab, CAB_AT } from "./segB";
@@ -36,6 +36,7 @@ import { OFFICE } from "../places";
 import { CASE_CELLS } from "../sets/office";
 import { PB, type BookKind } from "../popbook";
 import type { World } from "../world";
+import { W_, CASE_T, BACK, type CaseTime } from "./segC_time";
 
 const S = seg("C");
 const CABX = OFFICE.cabinetX, OUT = 0.2;
@@ -77,26 +78,9 @@ const RH = [-0.21, -PH / 2 - 0.05, -0.014] as const;
 const LH = (open: number) => [-0.04 + 0.25 * smooth(open), -PH / 2 - 0.05, -0.014] as const;
 
 // ------------------------------------------------------------------------------------------------------ the timing
-const W_ = {
-  mine: wordAt("C01", "老业"), bound: wordAt("C02", "我绑"), solid: wordAt("C02", "牢"), year: wordAt("C03", "一年"), c04: startOf("C04"), counts: wordAt("C04", "也算"),
-  c05: startOf("C05"), bf: wordAt("C05", "变"), hide: wordAt("C05", "这单"), noted: wordAt("C05", "别记"), c06: startOf("C06"), kua: wordAt("C06", "跨"), appr: wordAt("C06", "审批"), kyr: wordAt("C06", "千年"),
-  c07: startOf("C07"), shake: wordAt("C07", "手"), tie: wordAt("C07", "绑成"), chai: wordAt("C07", "宝钗"), c08: startOf("C08"), curse: wordAt("C08", "骂"), late: wordAt("C08", "多年"),
-  c09: startOf("C09"), that: wordAt("C09", "那是"), jade: wordAt("C09", "玉帝"), c10: startOf("C10"), c11: startOf("C11"), three: wordAt("C11", "三百"),
-};
-/** each case: s = he beckons (its drawer shoots open 4 frames later, the book leaves it at s + 8 and is in his hands at
- *  catch); open = [from, to, how far]; shut = [from, to]; exit = the frame it leaves his hands */
-type Case = { s: number; leave: number; catch: number; open: [number, number, number]; shut: [number, number]; exit: number; cell: Cell };
-const CASES: Case[] = (() => {
-  const w = W_, mk = (s: number, fly: number, open: [number, number, number], shut: [number, number], exit: number, i: number): Case => ({ s, leave: s + 8, catch: s + 8 + fly, open, shut, exit, cell: CELLS[i] });
-  return [
-    mk(w.mine - 4, 14, [w.bound - 12, w.bound - 2, 1], [w.counts + 2, w.counts + 10], w.counts + 12, 0),
-    mk(w.c05 - 26, 16, [w.c05 + 20, w.c05 + 30, 1], [w.hide - 6, w.hide], w.hide + 22, 1),
-    mk(w.hide + 34, 15, [w.c06 + 26, w.c06 + 36, 1], [w.kyr + 20, w.kyr + 26], w.kyr + 26, 2),
-    mk(w.kyr + 22, 16, [w.c07 + 38, w.c07 + 48, 1], [w.late + 13, w.late + 19], w.late + 19, 3),
-    // (v6b: it stays shut in his hands through 三百年仙丹, so his face is clear on the punch, then pulls free on its own)
-    mk(w.late + 21, 19, [w.that + 2, w.that + 7, 0.12], [w.c11, w.c11 + 3], w.c11 + 40, 4),
-  ];
-})();
+// (v7: the numbers live in segC_time.ts, which the sound's event list reads too; each case gets its drawer cell here)
+type Case = CaseTime & { cell: Cell };
+const CASES: Case[] = CASE_T.map((t, i) => ({ ...t, cell: CELLS[i] }));
 /** the gag of each book over the frames (popbook.ts reads g its own way) */
 const GAG: [number, number][][] = [
   [[CASES[0].open[0], 0], [W_.solid - 7, 0.2], [W_.year, 0.3], [W_.c04 - 5, 0.64], [W_.c04 + 2, 0.7], [W_.counts - 5, 0.92]],
@@ -105,8 +89,6 @@ const GAG: [number, number][][] = [
   [[CASES[3].open[1], 0.08], [W_.shake - 2, 0.15], [W_.tie - 5, 0.3], [W_.tie + 6, 0.42], [W_.chai + 6, 0.47], [W_.curse - 4, 0.6], [W_.curse + 12, 0.85], [W_.late + 12, 0.98]],
   [[CASES[4].open[1], 0.12], [W_.jade + 5, 0.27], [W_.c11 - 3, 0.45], [W_.c11, 0.6], [W_.c11 + 3, 0.68]],
 ];
-/** the flights back (case 0: flicked; 3: hurled; 4: on its own): [leaves his hands, in its drawer] */
-const BACK: Record<number, [number, number]> = { 0: [CASES[0].exit, CASES[0].exit + 12], 3: [CASES[3].exit, CASES[3].exit + 10], 4: [CASES[4].exit, CASES[4].exit + 14] };
 /** how far each drawer is out on frame f: open for its book to leave, shut after it; open again to take it back */
 const outs = (f: number) => CASES.map((c, i) => {
   const away = ky(f, [[c.s + 4, 0], [c.s + 8, OUT], [c.leave + 6, OUT], [c.leave + 12, 0]]), b = BACK[i];

@@ -155,13 +155,15 @@ const unroll = (f: number, from: number, to: number, nin = 8, nout = 6) => {
 // ------------------------------------------------------------------------------------------------- the title
 /** THE TITLE: the plaque of his temple (匾额) comes down on two red cords and swings to rest: 月老 carved in gold on black-
  *  green lacquer in a gold frame with cloud corners; 采访 and 的一天 on two red paper tags hanging from its lower corners
- *  (read left to right: 采访 · 月老 · 的一天); his crescent seal pressed on its corner. It hangs at y 470..900. */
+ *  (read left to right: 采访 · 月老 · 的一天); his crescent seal pressed on its corner. It hangs at y 400..1000 (v7: 78 px
+ *  higher than in v6, and scene A's last camera holds him 130 px lower, so the 采访 tag and its tassel end above his tall
+ *  topknot instead of hanging in front of it). */
 export const ThreadTitle: React.FC<{ f: number; from: number; to: number; threadAt?: number; paperAt?: number; cut?: boolean }> = ({ f, from, to, threadAt = 0, cut = false }) => {
   const H0 = hang(f, from + threadAt, to, { nin: 10, nout: cut ? 0 : 8, drop: 640, amp: 3.2, period: 30 }); if (!H0) return null;
   const tagL = hang(f, from + threadAt, to, { nin: 10, nout: cut ? 0 : 8, drop: 640, amp: 9, period: 24, lag: 3 });
   const tagR = hang(f, from + threadAt, to, { nin: 10, nout: cut ? 0 : 8, drop: 640, amp: -8, period: 26, lag: 5 });
   const seal = slap(H0.t, 15, 1.9);
-  const W = 760, H = 246, X = 540, Y = 478, id = `title${from}`;
+  const W = 760, H = 246, X = 540, Y = 400, id = `title${from}`;
   const corner = (sx: number, sy: number) => (
     <g transform={`translate(${(sx * (W / 2 - 34)).toFixed(1)} ${(H / 2 + sy * (H / 2 - 34)).toFixed(1)}) scale(${sx} ${sy})`}>
       <path d="M-14 -14 C-14 -2 -2 6 8 0 C14 -4 12 -14 4 -14 C-2 -14 -4 -8 0 -6" fill="none" stroke={SK.gold} strokeWidth={4} strokeLinecap="round" />

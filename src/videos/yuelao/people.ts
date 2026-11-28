@@ -1,14 +1,15 @@
 // THE CAST of 采访月老的一天. Figures on the kit's rig3d cast (group/kit, never edited).
-//   月老     the lead (v6, 28 Nov 2026: redesigned after the owner's notes on the v5 cut; his parts are acc/yl.ts, which
-//            says why each is drawn as it is and in what order): a small, round, kindly old god. BALD (a clean peach
-//            dome) with a small white topknot tied in red; long drooping white 寿眉; a
-//            white moustache with a cloud curl at each end and a white beard that hangs over his chest in three cloud
-//            tiers; the series' ink eyes (no white ring eyes); a vermilion robe with WIDE SLEEVES, gold cloud borders,
-//            a deep red sash and a crescent moon of pale jade with a red tassel at his hip. Round skin hands. 朱红 is
-//            the strongest colour in every frame. Resting face: a kind smile, half-shut eyes.
+//   月老     the lead (v7, 28 Nov 2026: look C, the owner's pick of the three v6 options: "月老look C without staff，
+//            give him the 玉佩also"; his parts are acc/yl.ts, which says why each is drawn as it is and in what order):
+//            a small, kindly old god with long white hair DRAWN BACK (acc/yl.ts combedBack: a high forehead, no
+//            parting, no hair anywhere near his brows) into a tall topknot tied in red with a gold pin, the long fall
+//            of it down his back; long drooping white 寿眉; a white moustache with a cloud curl at each end and a long
+//            white beard that hangs over his chest in three cloud tiers; the series' ink eyes; a vermilion robe with
+//            WIDE SLEEVES, gold cloud borders, a cream cloud collar (云肩) over the shoulders, a deep red sash and the
+//            crescent moon of pale jade (玉佩) with a red tassel at his hip. Round skin hands. No staff. 朱红 is the
+//            strongest colour in every frame. Resting face: a kind smile, half-shut eyes.
+//            YUELAO_A (v6's look, 月下仙翁): bald, a small white topknot tied in red, the shorter beard.
 //            YUELAO_B (option B, 天庭书吏): the same face under a red official's cap, a short beard, a badge on the chest.
-//            YUELAO_C (option C, 云游仙人): long white hair down his back, a tall topknot with a gold pin, a cloud collar,
-//            a staff with a gourd and a skein of red thread.
 //   林小满   30, programmer: grey-blue hoodie, bob, square glasses, a lanyard; resting face deadpan.
 //   小满妈   plum cardigan, a bun, kneeling in the temple (seen only through the burner's smoke).
 //   相亲男   navy jacket, side parting, round glasses, a checklist.
@@ -25,14 +26,16 @@ import { robe, pendant } from "../../kit/acc/garb";
 import { topknot } from "../../kit/acc/headwear";
 import { glasses, phone, pen } from "../group/kit/rigacc";
 import { hardHat } from "../group/kit/rigacc/hardhat";
-import { YL, hemmed, ylEyes, longBrows, cloudMoustache, cloudBeard, forehead, wideSleeves, robeTrim, moonToken, officialBadge, cloudCollar, staff } from "./acc/yl";
+import { YL, hemmed, ylEyes, longBrows, cloudMoustache, cloudBeard, forehead, wideSleeves, robeTrim, moonToken, officialBadge, cloudCollar, combedBack, type Combed } from "./acc/yl";
 
-/** a Person (su's) + the legs' colours + bald (acc/yl.ts: no hair painted on the head ball at all; his hair is 3D) */
-export type Person = SuPerson & { legs?: { leg?: string; foot?: string }; bald?: boolean };
+/** a Person (su's) + the legs' colours + bald (acc/yl.ts: no hair painted on the head ball at all; his hair is 3D) +
+ *  combed (acc/yl.ts combedBack: the painted hair drawn back, clear of the face drawing; deg from the crown) */
+export type Person = SuPerson & { legs?: { leg?: string; foot?: string }; bald?: boolean; combed?: Combed };
 export function addPerson(rc: RigCast, p: Person): Rig {
   const r = addSuPerson(rc, p);
   if (p.legs) legColours(r, p.legs);
   if (p.bald) baldHead(r);
+  if (p.combed) combedBack(r, p.combed);
   // (parts marked for their true depth, acc/yl.ts cloudBeard: a hand in front of the beard is drawn in front of it)
   freeDepth(r);
   return r;
@@ -59,10 +62,10 @@ const ylFace = (o: { beard?: Acc; moustache?: Acc | false; forehead?: Acc | fals
 ];
 /** his robe: the kit robe in vermilion with a gold band, the deep red sash, the cream under-robe; the trim, the sleeves,
  *  the crescent token */
-const ylRobe = (o: { sleeves?: boolean; token?: boolean } = {}): Acc[] => [
+const ylRobe = (o: { sleeves?: boolean; token?: boolean; tokenAz?: number } = {}): Acc[] => [
   hemmed(robe({ col: COL.red, band: COL.gold, sash: COL.redDeep, inner: YL.cream })), robeTrim(),
   ...(o.sleeves === false ? [] : [wideSleeves()]),
-  ...(o.token === false ? [] : [pendant({ col: YL.jade, cord: COL.red, side: 1, az: 30 }), moonToken()]),
+  ...(o.token === false ? [] : [pendant({ col: YL.jade, cord: COL.red, side: 1, az: o.tokenAz ?? 30 }), moonToken()]),
 ];
 const ylAcc = (extra: Acc[] = []): Acc[] => [
   ...ylRobe(), ...ylFace(),
@@ -71,18 +74,26 @@ const ylAcc = (extra: Acc[] = []): Acc[] => [
   pen({ hand: 0, col: "#b8935a" }),
   ...extra,
 ];
-/** 月老 (option A, 月下仙翁): see the head of this file */
-export const YUELAO: Person = { name: "yuelao", scale: 0.98, expr: face("smile", "smile", "neutral") as unknown as Expr, look: YL_LOOK, acc: () => ylAcc(), limbs: { hand: SKIN.old, arm: COL.red }, nape: false, bald: true };
+/** 月老, look C (the lead from v7): see the head of this file. combed = his painted hairline (acc/yl.ts combedBack) */
+export const YL_HAIR: Combed = { front: 42, temple: 50, ear: 105, nape: 130 };
+export const YUELAO: Person = {
+  name: "yuelao", scale: 0.98, expr: face("smile", "smile", "neutral") as unknown as Expr, look: { ...YL_LOOK, hair: "long", width: 1.1 }, combed: YL_HAIR,
+  acc: () => [
+    ...ylRobe(), cloudCollar(), ...ylFace({ beard: cloudBeard({ len: 2.9, wide: 0.95 }), forehead: false }),
+    // (v7: the pin stands 0.24 head radii out of each side of the knot, not 0.4: in his close-ups the longer pin reached the
+    // REC label on one side and the battery on the other)
+    topknot({ band: COL.red, pin: COL.gold, size: 1.45, pinLen: 0.25, back: 8 }),
+    pen({ hand: 0, col: "#b8935a" }),
+  ],
+  limbs: { hand: SKIN.old, arm: COL.red }, nape: false,
+};
+/** v6's look (option A, 月下仙翁): bald, a small white topknot tied in red, the shorter beard, forehead lines */
+export const YUELAO_A: Person = { ...YUELAO, name: "yuelaoA", look: YL_LOOK, combed: undefined, bald: true, acc: () => ylAcc() };
 /** option B (天庭书吏): white hair under a red official's cap (幞头) with short wings, a short beard and moustache, a
  *  navy badge on his chest with the crescent and a red thread */
 export const YUELAO_B: Person = {
-  ...YUELAO, name: "yuelaoB", bald: false, look: { ...YL_LOOK, hair: "short" },
+  ...YUELAO_A, name: "yuelaoB", bald: false, look: { ...YL_LOOK, hair: "short" },
   acc: () => [...ylRobe({ token: false }), officialBadge(), ...ylFace({ beard: cloudBeard({ len: 1.25, wide: 0.9 }), forehead: forehead({ shine: false, lines: 1 }) }), futou({ col: COL.redDeep, wingLen: 1.2 }), pen({ hand: 0, col: "#b8935a" })],
-};
-/** option C (云游仙人): long white hair down his back, a tall topknot with a gold pin, a cloud collar, a staff */
-export const YUELAO_C: Person = {
-  ...YUELAO, name: "yuelaoC", bald: false, look: { ...YL_LOOK, hair: "long", width: 1.1 },
-  acc: () => [...ylRobe({ token: false }), cloudCollar(), ...ylFace({ beard: cloudBeard({ len: 2.9, wide: 0.95 }), forehead: false }), topknot({ band: COL.red, pin: COL.gold, size: 1.45, pinLen: 0.42, back: 8 }), staff({ hand: 1 })],
 };
 
 // ------------------------------------------------------------------------------------------------------- the mortals
@@ -118,7 +129,7 @@ export const RIDER: Person = {
   limbs: { hand: SKIN.tan, arm: COL.rider }, legs: { leg: COL.riderLo, foot: "#2e3038" },
 };
 
-export const PEOPLE = { yuelao: YUELAO, yuelaoB: YUELAO_B, yuelaoC: YUELAO_C, xiaoman: XIAOMAN, ma: MA, xiangqin: XIANGQIN, rider: RIDER } as Record<string, Person>;
+export const PEOPLE = { yuelao: YUELAO, yuelaoA: YUELAO_A, yuelaoB: YUELAO_B, xiaoman: XIAOMAN, ma: MA, xiangqin: XIANGQIN, rider: RIDER } as Record<string, Person>;
 /** FACES by name */
 export const FACES: Record<string, Expr | RigFace> = {
   // 月老
