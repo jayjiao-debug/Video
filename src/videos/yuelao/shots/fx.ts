@@ -6,7 +6,7 @@
 // never repeats the subtitle, at most one every 8 seconds; cards belong to the sources' voice (facts, files, seals).
 import React from "react";
 import { FRAME_9x16, rectOf, slots, fit, type Rect } from "../../../kit/overlay/frame";
-import { SpoolLens, MittenCover, LensThreads, Hua, FateStamp, OS, Truth, CaseFile, Disclaimer, OrderSlip, Snaps, SideCard, TornXi, XI_W, XI_H, SIDE_W, SIDE_H, CASE_W, CASE_H, type CaseKind } from "../hud/skin";
+import { SpoolLens, MittenCover, LensThreads, Hua, FateStamp, OS, Truth, CaseFile, Disclaimer, OrderSlip, Snaps, SideCard, TornXi, XI_W, XI_H, sideSize, CASE_W, CASE_H, type CaseKind } from "../hud/skin";
 
 export type Fx = { what: string; kind: "card" | "effect"; from: number; to: number; rect: Rect; node: React.ReactNode };
 const h = React.createElement;
@@ -63,15 +63,15 @@ export const snaps = (f: number, o: { from: number; to: number; x: number; y: nu
  *  names the slot the shot wants; the next free one is taken when that one is too small). face = the person's head
  *  on screen { x, y, r } (verbs headPx); keep = boxes that must stay visible (another face). */
 export const sideCard = (f: number, o: { from: number; to: number; name: string; note: string; face: { x: number; y: number; r: number }; side?: "left" | "right" | "above" | "below"; keep?: Rect[]; at?: { x: number; y: number; s?: number } }): Fx => {
-  const F = o.face, box = rectOf(F.x, F.y, F.r * 2.3, F.r * 2.3);
+  const F = o.face, box = rectOf(F.x, F.y, F.r * 2.3, F.r * 2.3), { w: SW, h: SH } = sideSize(o.name, o.note);
   let r: Rect, s: number;
   if (o.at) {
     // the shot says where the card sits (its top-left corner and its scale)
-    s = o.at.s ?? 1; r = { x0: o.at.x, y0: o.at.y, x1: o.at.x + (SIDE_W + 10) * s, y1: o.at.y + (SIDE_H + 12) * s };
+    s = o.at.s ?? 1; r = { x0: o.at.x, y0: o.at.y, x1: o.at.x + (SW + 10) * s, y1: o.at.y + (SH + 12) * s };
   } else {
     const all = slots(FRAME_9x16, box, { gap: 28, reach: 260, keep: o.keep, min: 150 });
-    const S = all.find((q) => q.name === (o.side ?? "right") && q.clear && q.w >= SIDE_W * 0.7 && q.h >= SIDE_H * 0.7) ?? all.find((q) => q.clear) ?? all[0];
-    const B = S ? fit({ w: SIDE_W + 10, h: SIDE_H + 12 }, S.r, { ax: S.name === "left" ? 1 : S.name === "right" ? 0 : 0.5, ay: S.name === "above" ? 1 : S.name === "below" ? 0 : 0.35 }) : { r: rectOf(540, 500, SIDE_W, SIDE_H), s: 1 };
+    const S = all.find((q) => q.name === (o.side ?? "right") && q.clear && q.w >= SW * 0.7 && q.h >= SH * 0.7) ?? all.find((q) => q.clear) ?? all[0];
+    const B = S ? fit({ w: SW + 10, h: SH + 12 }, S.r, { ax: S.name === "left" ? 1 : S.name === "right" ? 0 : 0.5, ay: S.name === "above" ? 1 : S.name === "below" ? 0 : 0.35 }) : { r: rectOf(540, 500, SW, SH), s: 1 };
     r = B.r; s = Math.min(1, B.s);
   }
   // the card's thread ends on the rim of the head, on the side the card is on: never across the face

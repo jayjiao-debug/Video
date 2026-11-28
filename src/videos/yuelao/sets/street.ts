@@ -121,6 +121,32 @@ const skyTex = (night: boolean) => paint(1024, 512, (g, W, H) => {
   const r = rng(night ? 411 : 412);
   if (!night) for (let i = 0; i < 14; i++) blotch(g, W * r(), H * (0.24 + 0.12 * r()), W * (0.04 + 0.05 * r()), "#c47a7c", 0.18);   // pink cloud wisps
 });
+/** v6 (Jay's note on v5 f4092, "props untextured"): the noodle shop's outdoor table and stools in pale wood, the
+ *  grain across the top, a darker ring at the rim */
+const tableTex = (seed: number, base: string, grain: string) => paint(256, 256, (g, W, H) => {
+  const r = rng(seed);
+  g.fillStyle = base; g.fillRect(0, 0, W, H);
+  for (let i = 0; i < 46; i++) {
+    const y0 = r() * H, a = 1.5 + 4 * r(), k = 0.01 + 0.025 * r(), ph = r() * 7;
+    g.strokeStyle = css(grain, 0.16 + 0.22 * r()); g.lineWidth = 0.8 + 1.4 * r();
+    g.beginPath(); for (let x = 0; x <= W; x += 8) { const y = y0 + a * Math.sin(x * k + ph); if (x === 0) g.moveTo(x, y); else g.lineTo(x, y); } g.stroke();
+  }
+  g.strokeStyle = css(grain, 0.55); g.lineWidth = 7; g.beginPath(); g.arc(W / 2, H / 2, W / 2 - 4, 0, Math.PI * 2); g.stroke();
+});
+/** the napkin box's print: cream with a red band and 面 in a circle */
+const napkinTex = () => paint(128, 96, (g, W, H) => {
+  g.fillStyle = "#f4efe4"; g.fillRect(0, 0, W, H);
+  g.fillStyle = "#c8332b"; g.fillRect(0, H * 0.62, W, H * 0.16);
+  g.strokeStyle = "#c8332b"; g.lineWidth = 4; g.beginPath(); g.arc(W / 2, H * 0.34, H * 0.2, 0, Math.PI * 2); g.stroke();
+  g.fillStyle = "#c8332b"; g.font = `900 ${Math.round(H * 0.26)}px ${FONT}`; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText("面", W / 2, H * 0.35);
+});
+/** a soft contact shadow */
+const shadowTex = () => paint(64, 64, (g, W, H) => {
+  g.clearRect(0, 0, W, H);
+  const gr = g.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, W / 2);
+  gr.addColorStop(0, "rgba(22,18,26,0.6)"); gr.addColorStop(0.5, "rgba(22,18,26,0.38)"); gr.addColorStop(1, "rgba(22,18,26,0)");
+  g.fillStyle = gr; g.fillRect(0, 0, W, H);
+});
 const moonTex = () => paint(256, 256, (g, W) => {
   const c = W / 2, R = W * 0.48;
   g.clearRect(0, 0, W, W);
@@ -398,19 +424,28 @@ const build = (K: Kit): PlaceBuild => {
     void face;
   }
   {
-    const T = S.table, mTop = Mk.flat("#d8c8a8", 0.6), mLeg = Mk.flat("#4a4e56", 0.4), mSeat = Mk.flat("#a8744a", 0.7);
-    P.add(mTop, new THREE.CylinderGeometry(T.r, T.r, 0.035, 28).translate(X(T.x), T.top - 0.0175, T.z), 0.006);
+    const T = S.table, mTop = Mk.tex(tableTex(401, "#dcc39a", "#a07a4c"), 0.6), mLeg = Mk.flat("#4a4e56", 0.4), mSeat = Mk.tex(tableTex(403, "#b07a4c", "#6e4626"), 0.7);
+    P.add(mTop, new THREE.CylinderGeometry(T.r, T.r, 0.035, 40).translate(X(T.x), T.top - 0.0175, T.z), 0.006);
+    // contact shadows: under the table's foot, under each stool (names end in "contact": the checkers skip them)
+    const mShadow = Mk.basic("#ffffff", { map: shadowTex(), transparent: true }); mShadow.polygonOffset = true; mShadow.polygonOffsetFactor = -2; mShadow.polygonOffsetUnits = -2;
+    const shadow = (x: number, z: number, r: number, y = 0) => { const m = Mk.mesh("street.table.contact", new THREE.PlaneGeometry(2 * r, 2 * r).rotateX(-Math.PI / 2).translate(X(x), y + 0.0015, z), mShadow, { cast: false, receive: false, noink: true }); m.renderOrder = 2; };
+    shadow(T.x, T.z, 0.42);
+    for (const st of S.stools) shadow(st.x, st.z, 0.24);
+    shadow(T.x - 0.08, T.z - 0.24, 0.045, T.top); shadow(T.x + 0.06, T.z - 0.25, 0.04, T.top); shadow(T.x + 0.15, T.z - 0.245, 0.075, T.top);
     P.add(mLeg, new THREE.CylinderGeometry(0.035, 0.035, T.top - 0.05, 10).translate(X(T.x), (T.top - 0.05) / 2 + 0.02, T.z), 0.005);
     P.add(mLeg, new THREE.CylinderGeometry(0.22, 0.24, 0.025, 44).translate(X(T.x), 0.0125, T.z), 0.005);
     for (const s of S.stools) {
       P.add(mSeat, new THREE.CylinderGeometry(0.16, 0.15, 0.04, 20).translate(X(s.x), s.top - 0.02, s.z), 0.006);
       for (let k = 0; k < 4; k++) { const a = k * Math.PI / 2 + 0.785; P.add(mLeg, bar(V(X(s.x) + 0.1 * Math.cos(a), s.top - 0.04, s.z + 0.1 * Math.sin(a)), V(X(s.x) + 0.14 * Math.cos(a), 0, s.z + 0.14 * Math.sin(a)), 0.012), 0.004); }
     }
-    // a chopstick tube, a vinegar bottle, a napkin box (at the table's back edge)
-    P.add(Mk.flat("#3a6e5a", 0.6), new THREE.CylinderGeometry(0.03, 0.03, 0.12, 10).translate(X(T.x - 0.08), T.top + 0.06, T.z - 0.24), 0.004);
-    P.add(Mk.flat("#e8c070", 0.5), boxG(X(T.x - 0.085), X(T.x - 0.075), T.top + 0.12, T.top + 0.2, T.z - 0.25, T.z - 0.23), 0.002);
+    // a chopstick tube full of chopsticks, a vinegar bottle with its red label, a printed napkin box (at the table's back edge)
+    P.add(Mk.flat("#3a6e5a", 0.6), new THREE.CylinderGeometry(0.03, 0.03, 0.12, 14).translate(X(T.x - 0.08), T.top + 0.06, T.z - 0.24), 0.004);
+    for (let k = 0; k < 7; k++) { const a = k * 0.9, rr = 0.012 + 0.006 * (k % 2); P.add(Mk.flat(k % 3 ? "#d8b57a" : "#c9a265", 0.6), boxG(X(T.x - 0.08 + rr * Math.cos(a)) - 0.003, X(T.x - 0.08 + rr * Math.cos(a)) + 0.003, T.top + 0.1, T.top + 0.19 + 0.012 * (k % 3), T.z - 0.24 + rr * Math.sin(a) - 0.003, T.z - 0.24 + rr * Math.sin(a) + 0.003), 0.0015); }
     P.add(Mk.flat("#5a2e22", 0.3), lathe_([[0.025, 0], [0.025, 0.1], [0.01, 0.14], [0.01, 0.16]]).translate(X(T.x + 0.06), T.top, T.z - 0.25), 0.004);
-    P.add(Mk.flat("#f2efe8", 0.8), boxG(X(T.x + 0.1), X(T.x + 0.2), T.top, T.top + 0.07, T.z - 0.29, T.z - 0.2), 0.004);
+    P.add(Mk.flat("#c8332b", 0.6), new THREE.CylinderGeometry(0.0258, 0.0258, 0.045, 16, 1, true).translate(X(T.x + 0.06), T.top + 0.055, T.z - 0.25), 0.001);
+    P.add(Mk.flat("#f2c14e", 0.4), new THREE.CylinderGeometry(0.0108, 0.0108, 0.012, 12).translate(X(T.x + 0.06), T.top + 0.166, T.z - 0.25), 0.001);
+    P.add(Mk.tex(napkinTex(), 0.8), boxG(X(T.x + 0.1), X(T.x + 0.2), T.top, T.top + 0.07, T.z - 0.29, T.z - 0.2), 0.004);
+    P.add(Mk.flat("#ffffff", 0.9), boxG(X(T.x + 0.135), X(T.x + 0.165), T.top + 0.07, T.top + 0.09, T.z - 0.255, T.z - 0.235), 0.0015);
   }
 
   // ------------------------------------------------------------------------------------------ the street lamp

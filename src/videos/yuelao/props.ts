@@ -9,7 +9,7 @@ import { buildPopBooks } from "./popbook";
 
 export const RED = "#d8362a";
 
-export type PropName = "spool" | "book" | "bookShut" | "phone" | "laptop" | "bag" | "file" | "slip" | "bowl" | "moon" | "drawer" | "caseDrawer" | "hole" | "stack" | "wing" | "egg" | "cloud" | "cloudBank" | "tangle";
+export type PropName = "spool" | "book" | "bookShut" | "phone" | "xmPhone" | "laptop" | "bag" | "file" | "slip" | "bowl" | "moon" | "drawer" | "caseDrawer" | "hole" | "stack" | "wing" | "egg" | "cloud" | "cloudBank" | "tangle";
 export type PutO = { yaw?: number; pitch?: number; roll?: number; scale?: number };
 export type Prop = { group: THREE.Group; put(at: THREE.Vector3 | [number, number, number], o?: PutO): Prop };
 
@@ -19,6 +19,12 @@ export const buildProps = (M: Mats) => {
   const made = new Map<string, Prop>();
   const flat = (c: string, rough = 0.85) => K.flat(c, { rough });
   const tex = (w: number, h: number, fn: (g: CanvasRenderingContext2D, w: number, h: number) => void) => K.flat("#ffffff", { map: paint(w, h, fn), rough: 0.95 });
+  // v6: a soft contact shadow under a prop that always stands on something (named "*.contact": the checkers skip it)
+  const contactMat = new THREE.MeshBasicMaterial({ map: paint(64, 64, (cg, w, h) => { cg.clearRect(0, 0, w, h); const gr = cg.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 2); gr.addColorStop(0, "rgba(30,24,22,0.62)"); gr.addColorStop(0.5, "rgba(30,24,22,0.4)"); gr.addColorStop(1, "rgba(30,24,22,0)"); cg.fillStyle = gr; cg.fillRect(0, 0, w, h); }), transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 });
+  const contact = (g: THREE.Group, name: string, rx: number, rz: number, x = 0, z = 0) => {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(2 * rx, 2 * rz).rotateX(-Math.PI / 2).translate(x, 0.0008, z), contactMat);
+    m.name = `${name}.contact`; m.layers.set(NOINK); m.renderOrder = 2; m.castShadow = false; m.receiveShadow = false; g.add(m);
+  };
   const BUILD: Record<PropName, () => THREE.Group> = {
     spool: () => {
       const g = new THREE.Group(), P = new Part(K);
@@ -65,6 +71,50 @@ export const buildProps = (M: Mats) => {
       const m = new THREE.Mesh(new THREE.PlaneGeometry(0.066, 0.138).rotateX(-Math.PI / 2).translate(0, 0.0096, 0), scr); m.layers.set(NOINK); m.name = "phone.screen";
       P.into(g, "phone"); g.add(m); return g;
     },
+    // 林小满's phone (scene E): a rose-pink case with a white heart sticker and a camera bump on the back (what the lens
+    // sees while she holds it), a black bezel and a dating app's profile card on the screen. Local frame: lying screen
+    // up (+y), the screen's top toward -z, its right (as she reads it) toward +x; 0.072 x 0.0095 x 0.148.
+    xmPhone: () => {
+      const g = new THREE.Group(), P = new Part(K), PW = 0.072, PT = 0.0095, PL = 0.148;
+      P.add(flat("#e9789a", 0.55), box(PW, PT, PL, 0, 0, 0), 0.004);
+      P.add(flat("#2a2730", 0.4), box(0.026, 0.003, 0.026, 0.017, -PT / 2 - 0.0015, -PL / 2 + 0.02), 0.002);
+      P.into(g, "xmPhone");
+      const back = new THREE.MeshBasicMaterial({ map: paint(128, 256, (cg, w, h) => {
+        cg.fillStyle = "#e9789a"; cg.fillRect(0, 0, w, h);
+        cg.fillStyle = "rgba(255,255,255,0.16)"; cg.fillRect(w * 0.06, 0, w * 0.08, h);
+        // the sticker: a white heart with a red outline, a little tilted
+        cg.save(); cg.translate(w * 0.52, h * 0.58); cg.rotate(-0.25); cg.scale(w * 0.0062, w * 0.0062);
+        cg.beginPath(); cg.moveTo(0, 12); cg.bezierCurveTo(-26, -6, -14, -26, 0, -12); cg.bezierCurveTo(14, -26, 26, -6, 0, 12); cg.closePath();
+        cg.fillStyle = "#ffffff"; cg.fill(); cg.lineWidth = 3; cg.strokeStyle = "#c8332b"; cg.stroke(); cg.restore();
+      }) });
+      const bm = new THREE.Mesh(new THREE.PlaneGeometry(PW - 0.004, PL - 0.004).rotateX(Math.PI / 2).rotateY(Math.PI).translate(0, -PT / 2 - 0.0004, 0), back);
+      bm.layers.set(NOINK); bm.name = "xmPhone.back"; g.add(bm);
+      const bez = new THREE.Mesh(new THREE.PlaneGeometry(PW - 0.004, PL - 0.004).rotateX(-Math.PI / 2).translate(0, PT / 2 + 0.0003, 0), new THREE.MeshBasicMaterial({ color: "#1d1c22" }));
+      bez.layers.set(NOINK); bez.name = "xmPhone.bezel"; g.add(bez);
+      const scr = new THREE.MeshBasicMaterial({ map: paint(128, 256, (cg, w, h) => {
+        cg.fillStyle = "#fff6f8"; cg.fillRect(0, 0, w, h);
+        cg.fillStyle = "#ff6f91"; cg.fillRect(0, 0, w, h * 0.09);
+        cg.fillStyle = "#ffffff"; cg.font = `900 ${Math.round(h * 0.05)}px ${FONT}`; cg.textAlign = "center"; cg.textBaseline = "middle"; cg.fillText("缘来", w / 2, h * 0.047);
+        // the card: a photo (sky, a round head with glasses, shoulders), the name, two tags
+        cg.fillStyle = "#ffffff"; cg.fillRect(w * 0.07, h * 0.13, w * 0.86, h * 0.66);
+        cg.fillStyle = "#bcd3ec"; cg.fillRect(w * 0.1, h * 0.145, w * 0.8, h * 0.42);
+        cg.fillStyle = "#4a5a78"; cg.beginPath(); cg.ellipse(w * 0.5, h * 0.6, w * 0.3, h * 0.1, 0, Math.PI, 0); cg.fill();
+        cg.fillStyle = "#f6efe6"; cg.beginPath(); cg.arc(w * 0.5, h * 0.38, w * 0.16, 0, Math.PI * 2); cg.fill();
+        cg.strokeStyle = "#2a2730"; cg.lineWidth = 2.5; cg.stroke();
+        cg.fillStyle = "#2a2730"; cg.beginPath(); cg.arc(w * 0.5, h * 0.36, w * 0.165, Math.PI * 1.05, Math.PI * 1.95); cg.fill();
+        cg.lineWidth = 2; for (const s of [-1, 1]) { cg.beginPath(); cg.arc(w * (0.5 + s * 0.065), h * 0.39, w * 0.045, 0, Math.PI * 2); cg.stroke(); }
+        cg.fillStyle = "#2a2730"; cg.font = `900 ${Math.round(h * 0.052)}px ${FONT}`; cg.textAlign = "left"; cg.fillText("阿哲 · 31", w * 0.12, h * 0.63);
+        cg.fillStyle = "#ffd5df"; cg.fillRect(w * 0.12, h * 0.67, w * 0.3, h * 0.045); cg.fillRect(w * 0.46, h * 0.67, w * 0.36, h * 0.045);
+        cg.fillStyle = "#c2455f"; cg.font = `700 ${Math.round(h * 0.03)}px ${FONT}`; cg.fillText("健身", w * 0.15, h * 0.693); cg.fillText("爱旅行", w * 0.49, h * 0.693);
+        // the two buttons: a grey cross, a pink heart
+        cg.fillStyle = "#e6e2e6"; cg.beginPath(); cg.arc(w * 0.3, h * 0.88, w * 0.1, 0, Math.PI * 2); cg.fill();
+        cg.strokeStyle = "#8a8590"; cg.lineWidth = 4; cg.beginPath(); cg.moveTo(w * 0.26, h * 0.86); cg.lineTo(w * 0.34, h * 0.9); cg.moveTo(w * 0.34, h * 0.86); cg.lineTo(w * 0.26, h * 0.9); cg.stroke();
+        cg.fillStyle = "#ff5a7e"; cg.beginPath(); cg.arc(w * 0.7, h * 0.88, w * 0.1, 0, Math.PI * 2); cg.fill();
+      }) });
+      const sm = new THREE.Mesh(new THREE.PlaneGeometry(PW - 0.009, PL - 0.012).rotateX(-Math.PI / 2).translate(0, PT / 2 + 0.0006, 0), scr);
+      sm.layers.set(NOINK); sm.name = "xmPhone.screen"; g.add(sm);
+      return g;
+    },
     // a laptop, open (lid toward +z leaning back): put with yaw so the lid's back faces the camera or the screen faces its user
     laptop: () => {
       // the lid is its own group ("laptop.lid", hinged along the base's far edge): rotation.x -PI/2 = shut, -0.3 = the
@@ -83,7 +133,7 @@ export const buildProps = (M: Mats) => {
         cg.fillStyle = "#ff4a4a"; cg.fillRect(w * 0.19, h * 0.565, w * 0.42, h * 0.02);
       });
       const scr = new THREE.Mesh(new THREE.PlaneGeometry(0.27, 0.17).rotateY(Math.PI).translate(0, 0.1, -0.001), new THREE.MeshBasicMaterial({ map: code })); scr.layers.set(NOINK); scr.name = "laptop.screen";
-      lid.add(scr); g.add(lid); return g;
+      lid.add(scr); g.add(lid); contact(g, "laptop", 0.18, 0.125); return g;
     },
     // a takeaway bag: brown paper, twisted handles, a receipt stapled on
     bag: () => {
@@ -246,12 +296,40 @@ export const buildProps = (M: Mats) => {
       return P.into(g, "egg");
     },
     // a bowl of noodles with an egg on top
+    // a noodle bowl (scene F, v6: Jay's note "props untextured"): white porcelain with a blue 回纹 band under the rim
+    // and a blue foot line; beef noodles in a golden broth (noodles, beef, scallions, half an egg); bamboo chopsticks
+    // resting across the rim; a contact shadow
     bowl: () => {
       const g = new THREE.Group(), P = new Part(K);
-      P.add(flat("#f2efe8", 0.5), new THREE.CylinderGeometry(0.075, 0.045, 0.06, 18).translate(0, 0.03, 0), 0.005);
-      P.add(flat("#e0b062", 0.8), new THREE.CylinderGeometry(0.068, 0.068, 0.006, 18).translate(0, 0.058, 0), 0);
-      P.add(flat("#fff8e8", 0.6), ball(V(0.02, 0.064, 0.01), 0.028, [1, 0.35, 1]), 0); P.add(flat("#f2a93b", 0.6), ball(V(0.02, 0.072, 0.01), 0.013, [1, 0.6, 1]), 0);
-      return P.into(g, "bowl");
+      const side = K.flat("#ffffff", { map: paint(512, 64, (cg, w, h) => {
+        cg.fillStyle = "#f6f4ee"; cg.fillRect(0, 0, w, h);
+        cg.fillStyle = "#2f5aa8"; cg.fillRect(0, 4, w, 3); cg.fillRect(0, 26, w, 2); cg.fillRect(0, h - 9, w, 3); cg.fillRect(0, h - 4, w, 2);
+        // the meander (回纹): a square spiral every 32 px between the two lines
+        cg.strokeStyle = "#2f5aa8"; cg.lineWidth = 2.4; cg.lineJoin = "miter";
+        for (let x = 0; x < w; x += 32) { cg.beginPath(); cg.moveTo(x + 2, 23); cg.lineTo(x + 2, 10); cg.lineTo(x + 26, 10); cg.lineTo(x + 26, 21); cg.lineTo(x + 9, 21); cg.lineTo(x + 9, 15); cg.lineTo(x + 19, 15); cg.stroke(); }
+      }), rough: 0.35 });
+      P.add(side, new THREE.CylinderGeometry(0.075, 0.045, 0.06, 32).translate(0, 0.03, 0), 0.005);
+      const broth = K.flat("#ffffff", { map: paint(128, 128, (cg, w, h) => {
+        cg.fillStyle = "#d9a24e"; cg.fillRect(0, 0, w, h);
+        const r = (n: number) => { const x = Math.sin(n * 91.7 + 12.3) * 43758.5; return x - Math.floor(x); };
+        // the noodles: pale wavy strands
+        cg.strokeStyle = "#f4e2a8"; cg.lineWidth = 3.2; cg.lineCap = "round";
+        for (let i = 0; i < 26; i++) { const y0 = 14 + r(i) * 100, ph = r(i + 40) * 6; cg.beginPath(); for (let x = 6; x <= 122; x += 6) { const y = y0 + 5 * Math.sin(x * 0.12 + ph); if (x === 6) cg.moveTo(x, y); else cg.lineTo(x, y); } cg.stroke(); }
+        // two slices of beef
+        cg.fillStyle = "#7a4a32"; for (const [x, y, a] of [[44, 50, 0.4], [70, 40, -0.3]]) { cg.save(); cg.translate(x, y); cg.rotate(a); cg.beginPath(); cg.ellipse(0, 0, 17, 10, 0, 0, Math.PI * 2); cg.fill(); cg.strokeStyle = "#5a3424"; cg.lineWidth = 1.5; cg.stroke(); cg.restore(); }
+        // scallions: small green rings
+        cg.strokeStyle = "#5aa04a"; cg.lineWidth = 2.4; for (let i = 0; i < 16; i++) { cg.beginPath(); cg.arc(20 + r(i + 80) * 88, 20 + r(i + 120) * 88, 2.6, 0, Math.PI * 2); cg.stroke(); }
+        // a ring of oil on the broth's edge
+        cg.strokeStyle = "rgba(160,96,30,0.6)"; cg.lineWidth = 6; cg.beginPath(); cg.arc(w / 2, h / 2, w / 2 - 3, 0, Math.PI * 2); cg.stroke();
+      }), rough: 0.4 });
+      P.add(broth, new THREE.CircleGeometry(0.069, 32).rotateX(-Math.PI / 2).translate(0, 0.0605, 0), 0);
+      P.add(flat("#fff8e8", 0.6), ball(V(0.024, 0.0625, 0.018), 0.022, [1, 0.32, 1]), 0); P.add(flat("#f2a93b", 0.6), ball(V(0.024, 0.0685, 0.018), 0.011, [1, 0.45, 1]), 0);
+      // the chopsticks: across the rim, toward the eater's right
+      const mBam = flat("#d8b57a", 0.6);
+      for (const [dz, a] of [[-0.03, 0.04], [-0.018, 0.0]] as const) P.add(mBam, box(0.235, 0.0055, 0.0055, 0.035, 0.0635, dz).rotateY(a), 0.0015);
+      P.into(g, "bowl");
+      contact(g, "bowl", 0.085, 0.085);
+      return g;
     },
   };
   const prop = (name: PropName, key = ""): Prop => {

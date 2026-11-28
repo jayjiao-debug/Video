@@ -261,27 +261,32 @@ export const NameToken: React.FC<{ f: number; from: number; to: number; x: numbe
   );
 };
 /** A SIDE CHARACTER'S CARD: a paper case slip from his files tied to the person with a red cord (tx, ty = the point on
- *  the rim of their head the cord runs to): the name in brush, one line in Song, a small 凡人 seal. Top-left (x, y);
- *  SIDE_W x SIDE_H; s = its scale. */
+ *  the rim of their head the cord runs to): the name in brush, the note in Song (rows split on "\n", 36 px: v6, Jay's
+ *  note that the v5 card was too small to read), a small 凡人 seal. Top-left (x, y); sideSize(name, note); s = its scale. */
 export const SIDE_W = 430, SIDE_H = 150;
+export const SIDE_NOTE_PX = 36;
+export const sideSize = (name: string, note: string) => {
+  const rows = note.split("\n"), nameW = 46 + emOf(name) * 62 + 24 + 76, rowW = 46 + Math.max(...rows.map(emOf)) * SIDE_NOTE_PX + 36;
+  return { w: Math.max(300, Math.ceil(Math.max(nameW, rowW))), h: 106 + rows.length * 46 };
+};
 export const SideCard: React.FC<{ f: number; from: number; to: number; x: number; y: number; s?: number; name: string; note: string; tx: number; ty: number }> = ({ f, from, to, x, y, s = 1, name, note, tx, ty }) => {
   const L = life(f, from, to, 7, 6); if (!L) return null;
+  const { w: W, h: H } = sideSize(name, note), rows = note.split("\n");
   const t = L.t, k = easeOut(part(t, 0, 8), 2.4), drop = easeOutBack(clamp01(t / 8), 1.4), up = easeIn(L.leave, 2), id = `side${from}`;
-  const cx = x + (SIDE_W * s) / 2, ax = Math.max(x + 24, Math.min(x + SIDE_W * s - 24, tx)), ay = Math.max(y, Math.min(y + SIDE_H * s, ty));
+  const cx = x + (W * s) / 2, ax = Math.max(x + 24, Math.min(x + W * s - 24, tx)), ay = Math.max(y, Math.min(y + H * s, ty));
   const ex = ax + (tx - ax) * k, ey = ay + (ty - ay) * k, sag = 26 + 0.06 * Math.hypot(tx - ax, ty - ay);
-  const noteEm = emOf(note), notePx = Math.max(26, Math.min(32, Math.floor((SIDE_W - 96) / noteEm)));
   const sw = 2.2 * Math.exp(-t / 14) * Math.sin(t * 0.3);
   return (
     <Svg>
       <Defs id={id} seed={51} />
       <g opacity={(1 - up).toFixed(3)} transform={`translate(0 ${(-(1 - drop) * 60 - up * 40).toFixed(1)})`}>
         <Cord d={`M${ax.toFixed(1)} ${ay.toFixed(1)} Q${((ax + ex) / 2).toFixed(1)} ${((ay + ey) / 2 + sag).toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}`} w={6} />
-        <g transform={`translate(${cx} ${y}) rotate(${sw.toFixed(2)}) scale(${s}) translate(${-SIDE_W / 2} 0)`}>
-          <Paper id={id} w={SIDE_W} h={SIDE_H} seed={57} />
-          <rect x={14} y={14} width={10} height={SIDE_H - 28} fill={SK.red} />
-          <T x={46} y={54} px={58} ff={BRUSH} weight={400} ls={4}>{name}</T>
-          <g transform={`translate(${SIDE_W - 56} 50) rotate(8)`}><SealMark text="凡人" size={60} seed={58} /></g>
-          <T x={46} y={112} px={notePx} fill={SK.inkSoft} opacity={part(t, 7, 6)}>{note}</T>
+        <g transform={`translate(${cx} ${y}) rotate(${sw.toFixed(2)}) scale(${s}) translate(${-W / 2} 0)`}>
+          <Paper id={id} w={W} h={H} seed={57} />
+          <rect x={14} y={14} width={10} height={H - 28} fill={SK.red} />
+          <T x={46} y={56} px={58} ff={BRUSH} weight={400} ls={4}>{name}</T>
+          <g transform={`translate(${W - 56} 52) rotate(8)`}><SealMark text="凡人" size={60} seed={58} /></g>
+          {rows.map((r, i) => <T key={i} x={46} y={112 + i * 46} px={SIDE_NOTE_PX} fill={SK.inkSoft} opacity={part(t, 7 + 3 * i, 6)}>{r}</T>)}
         </g>
       </g>
     </Svg>

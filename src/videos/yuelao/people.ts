@@ -89,10 +89,12 @@ export const YUELAO_C: Person = {
 const modern = (seed: number, o: Partial<Look> & Pick<Look, "top" | "topCol" | "hair">): Look => ({
   seed, skin: SKIN.fair, bottom: "jeans", botCol: COL.jeans, shoes: "#e8e4dc", shoeSole: "#b9b4aa", hairCol: "#2a2428", part: 1, width: 0.92, ...o,
 });
+// v6 (Jay's note on v5 f4092, "her hair glow-up"): the helmet bob becomes long hair with curtain bangs parted in the
+// middle, a warm dark brown instead of flat black, and a touch of blush. Same glasses, same hoodie: still herself.
 export const XIAOMAN: Person = {
   name: "xiaoman", scale: 0.97, expr: face("deadpan", "neutral", "neutral") as unknown as Expr,
-  look: modern(3107, { top: "hoodie", topCol: COL.hoodie, trim: "#e9edf2", hair: "bob", width: 0.86, lanyard: "#2f6fd0" }),
-  acc: () => [glasses({ kind: "square", col: "#2a2c34" }), softBrows({ weight: 3.0, col: "#2a2428" }), lashes({}), phone({ col: "#e0567a", hand: 1 })],
+  look: modern(3107, { top: "hoodie", topCol: COL.hoodie, trim: "#e9edf2", hair: "long", hairCol: "#3a2a27", width: 0.86, lanyard: "#2f6fd0" }),
+  acc: () => [glasses({ kind: "square", col: "#2a2c34" }), softBrows({ weight: 3.0, col: "#3a2a27" }), lashes({}), cheeks({ k: 0.26 }), phone({ col: "#e0567a", hand: 1 })],
   limbs: { hand: SKIN.fair, arm: COL.hoodie }, legs: { leg: COL.jeans, foot: "#e8e4dc" },
 };
 export const MA: Person = {
