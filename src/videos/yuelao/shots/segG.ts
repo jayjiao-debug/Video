@@ -31,9 +31,9 @@ const AWAY = [Z2, STAND_AT], AWAY_YAW = Math.atan2(STAND_AT.x - Z2.x, STAND_AT.z
 /** her way back in: through the door and on across the lobby to the lifts (she is never switched off behind the glass) */
 const RIDER_LEN = VERBS.walkTime(RIDER_UP, 1), RIDER_DOWN = [...RIDER_UP].reverse(), WAY_IN = [...LIFT_OUT].reverse();   // back the way she came, to the left lift (clear of the plant at x -1.9..-1.1 and the desk)
 const DOWN_YAW = Math.atan2(RIDER_DOWN[1].x - RIDER_DOWN[0].x, RIDER_DOWN[1].z - RIDER_DOWN[0].z);
-/** the knot on the step beside his hip while he sits (13 cm short of where he drops it, on the old thread). Its ball
+/** the knot on the step beside his hip while he sits (on the old thread, where he drops it again on 完了). Its ball
  *  (centre 5.5 cm over its origin) is 7 cm round: laid at its origin it sank 1.4 cm into the tread, so it lies LIFT higher */
-const KNOT_LIFT = 0.018, KNOT_REST = COIL_AT.clone().add(V(-0.11, KNOT_LIFT, 0.04)), KNOT_DROP = COIL_AT.clone().add(V(0, KNOT_LIFT, 0)), KNOT_BALL = 0.07;
+const KNOT_LIFT = 0.018, KNOT_REST = COIL_AT.clone().add(V(0, KNOT_LIFT, 0.03)), KNOT_DROP = COIL_AT.clone().add(V(0, KNOT_LIFT, 0)), KNOT_BALL = 0.07;
 /** where the bag changes hands, between the two of them */
 const HAND_PT = P("street", 0.09, 0.51 + 0.84, -3.14);
 /** the rider's walked way from the kerb to where he is (d m along RIDER_UP): the old thread trails behind his ankle */
@@ -99,7 +99,7 @@ export const SEG: Segment = {
     // It always hangs just under his fist (knotAt). His right hand hangs, then rests on his right knee.
     const fid = 0.01 * Math.sin(f * 0.55), lapR = SH(-0.13 - fid, 0.45 + 0.005 * Math.sin(f * 0.8), 0.29), lapL = SH(0.13 + fid * 0.6, 0.45 - 0.005 * Math.sin(f * 0.8), 0.29);
     const hangR = H(-0.228, 0.59, 0.05), hold = H(0.21, 0.86 + 0.006 * Math.sin(f * 0.4), 0.26), carry = H(0.27, 0.68, 0.1 + 0.03 * sway);
-    const onKnot = KNOT_REST.clone().add(V(-0.02, 0.145, 0)), out = COIL_AT.clone().add(V(-0.07, 0.42, 0)), shakeK = win(f, tug + 8, drop0 - 2, 4, 4);
+    const onKnot = KNOT_REST.clone().add(V(-0.02, 0.145, 0)), out = COIL_AT.clone().add(V(0.04, 0.42, 0)), shakeK = win(f, tug + 8, drop0 - 2, 4, 4);
     let hands: [THREE.Vector3 | null, THREE.Vector3 | null] | undefined;
     if (f < mine - 5) hands = [patR, patL];
     else if (f < creep0) hands = [through(f, [[mine - 5, patR], [mine + 1, H(-0.3, 0.7 + sh, 0.16)]]), through(f, [[mine - 5, patL], [mine + 1, H(0.3, 0.7 - sh, 0.16)]])];
