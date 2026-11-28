@@ -312,7 +312,9 @@ export const cloudBeard = (o: { col?: string; len?: number; wide?: number; face?
       // the corner of the mouth and under the moustache; the mouth is drawn on the beard
       const side = (s: number): P2[] => [[s * 51, 4], ...q([s * 48.5, 8], [s * 42, 18.5], [s * 31, 19.6], 8), ...q([s * 31, 19.6], [s * 21.5, 20.6], [s * 15.6, my - 6.6], 6).slice(1)];
       const top = [...side(-1), ...side(1).reverse()];
-      f.fill([...top, [64, 6], [64, 30], [52, 72], [-52, 72], [-64, 30], [-64, 6]], col, 1.6);
+      // (no ink outline: white beard on cream skin drew as nothing but its black edge, a strap from the moustache
+      // across each cheek to the side of the head, in every close or turned shot; the beard shows by its white and curls)
+      f.fill([...top, [64, 6], [64, 30], [52, 72], [-52, 72], [-64, 30], [-64, 6]], col, 0);
       for (const [x, y, s] of [[-31, my + 8.5, -1], [-13, my + 15, -1], [13, my + 15, 1], [31, my + 8.5, 1]] as [number, number, number][]) {
         const pts: P2[] = [];
         for (let i = 0; i <= 12; i++) { const a = rad(200 - s * i * 24), r = 3.2 - i * 0.16; pts.push([x + Math.cos(a) * r * s, y + Math.sin(a) * r]); }
