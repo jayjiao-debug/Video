@@ -1,5 +1,5 @@
 {
- "id": "yuelao-v8-yl-01",
+ "id": "yuelao-v8-yl-02",
  "own_branch": true,
  "model_prefs": [
   "eleven_v4"
@@ -8,81 +8,9 @@
  "items": [
   {
    "type": "dialogue",
-   "name": "A02_s2026",
+   "name": "B03_s2042",
    "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "别动！一动，三对离婚。",
-     "voice": {
-      "voice_id": "ZUViBVrNG979RVVePz3R",
-      "name": "Yuelao 10 (designed: gentle old uncle)"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "A03_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[suspicious] 等等……[nervous, fawning] 您是天庭派来考核的吧？",
-     "voice": {
-      "voice_id": "ZUViBVrNG979RVVePz3R",
-      "name": "Yuelao 10 (designed: gentle old uncle)"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "A05_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "懂！暗访。您记，随便记。",
-     "voice": {
-      "voice_id": "ZUViBVrNG979RVVePz3R",
-      "name": "Yuelao 10 (designed: gentle old uncle)"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "B01_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[sighs] 姻缘司，上下就我一个。别人九九六，[dry] 我零零七。",
-     "voice": {
-      "voice_id": "ZUViBVrNG979RVVePz3R",
-      "name": "Yuelao 10 (designed: gentle old uncle)"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "B03_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
+   "seed": 2042,
    "settings": {
     "stability": 0.5
    },
@@ -98,9 +26,9 @@
   },
   {
    "type": "dialogue",
-   "name": "B04_s2026",
+   "name": "B04_s2042",
    "model": "eleven_v4",
-   "seed": 2026,
+   "seed": 2042,
    "settings": {
     "stability": 0.5
    },
@@ -116,27 +44,9 @@
   },
   {
    "type": "dialogue",
-   "name": "B05_s2026",
+   "name": "B06_s2042",
    "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "现在的年轻人，线刚绑上，自己就剪了。",
-     "voice": {
-      "voice_id": "ZUViBVrNG979RVVePz3R",
-      "name": "Yuelao 10 (designed: gentle old uncle)"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "B06_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
+   "seed": 2042,
    "settings": {
     "stability": 0.5
    },
@@ -152,369 +62,9 @@
   },
   {
    "type": "dialogue",
-   "name": "B08_s2026",
+   "name": "G02_s2042",
    "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "扣仙丹。还得写检讨。",
-     "voice": {
-      "voice_id": "ZUViBVrNG979RVVePz3R",
-      "name": "Yuelao 10 (designed: gentle old uncle)"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "C01_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "不过您先看看，我的老业绩！",
-     "voice": {
-      "voice_id": "ZUViBVrNG979RVVePz3R",
-      "name": "Yuelao 10 (designed: gentle old uncle)"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "C02_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "牛郎织女。我绑的。牢吧？",
-     "voice": {
-      "voice_id": "ZUViBVrNG979RVVePz3R",
-      "name": "Yuelao 10 (designed: gentle old uncle)"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "C04_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "……异地恋，也算成。",
-     "voice": {
-      "voice_id": "ZUViBVrNG979RVVePz3R",
-      "name": "Yuelao 10 (designed: gentle old uncle)"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "C05_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "梁山伯祝英台。……变蝴蝶了。这单别记。",
-     "voice": {
-      "voice_id": "ZUViBVrNG979RVVePz3R",
-      "name": "Yuelao 10 (designed: gentle old uncle)"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "C06_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "许仙白娘子。跨物种，审批走了一千年。",
-     "voice": {
-      "voice_id": "ZUViBVrNG979RVVePz3R",
-      "name": "Yuelao 10 (designed: gentle old uncle)"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "C07_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "宝玉黛玉。[guilty, small] 手一抖，绑成了宝钗。",
-     "voice": {
-      "voice_id": "ZUViBVrNG979RVVePz3R",
-      "name": "Yuelao 10 (designed: gentle old uncle)"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "C08_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "读者骂了我两百多年。",
-     "voice": {
-      "voice_id": "ZUViBVrNG979RVVePz3R",
-      "name": "Yuelao 10 (designed: gentle old uncle)"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "C09_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "董永七仙女，那是玉帝的亲闺女。",
-     "voice": {
-      "voice_id": "ZUViBVrNG979RVVePz3R",
-      "name": "Yuelao 10 (designed: gentle old uncle)"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "C11_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[flat] 扣了我三百年仙丹。",
-     "voice": {
-      "voice_id": "ZUViBVrNG979RVVePz3R",
-      "name": "Yuelao 10 (designed: gentle old uncle)"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "D01_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "来单了。月老庙，加急。",
-     "voice": {
-      "voice_id": "ZUViBVrNG979RVVePz3R",
-      "name": "Yuelao 10 (designed: gentle old uncle)"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "D04_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "就她了！林小满。今晚必须绑上。",
-     "voice": {
-      "voice_id": "ZUViBVrNG979RVVePz3R",
-      "name": "Yuelao 10 (designed: gentle old uncle)"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "D05_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "您拿着线，跟我来！",
-     "voice": {
-      "voice_id": "ZUViBVrNG979RVVePz3R",
-      "name": "Yuelao 10 (designed: gentle old uncle)"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "E01_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "嘘。凡人看不见咱们。",
-     "voice": {
-      "voice_id": "ZUViBVrNG979RVVePz3R",
-      "name": "Yuelao 10 (designed: gentle old uncle)"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "E03_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "唐朝起就绑脚。绑手，是电视剧瞎改的。",
-     "voice": {
-      "voice_id": "ZUViBVrNG979RVVePz3R",
-      "name": "Yuelao 10 (designed: gentle old uncle)"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "E05_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "哎哎哎！她左滑一下，我断一根！",
-     "voice": {
-      "voice_id": "ZUViBVrNG979RVVePz3R",
-      "name": "Yuelao 10 (designed: gentle old uncle)"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "E06_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[embarrassed] 这个……您记成，缘分未到。",
-     "voice": {
-      "voice_id": "ZUViBVrNG979RVVePz3R",
-      "name": "Yuelao 10 (designed: gentle old uncle)"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "F01_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "没事！她妈安排了相亲。这回稳了。",
-     "voice": {
-      "voice_id": "ZUViBVrNG979RVVePz3R",
-      "name": "Yuelao 10 (designed: gentle old uncle)"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "F06_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "这个也记成，缘分未到。",
-     "voice": {
-      "voice_id": "ZUViBVrNG979RVVePz3R",
-      "name": "Yuelao 10 (designed: gentle old uncle)"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "G01_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "线呢？我的线呢！",
-     "voice": {
-      "voice_id": "ZUViBVrNG979RVVePz3R",
-      "name": "Yuelao 10 (designed: gentle old uncle)"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "G02_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
+   "seed": 2042,
    "settings": {
     "stability": 0.5
    },
@@ -530,45 +80,9 @@
   },
   {
    "type": "dialogue",
-   "name": "G05_s2026",
+   "name": "H03_s2042",
    "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "还剩一个时辰。[sighs, hopeless] ……完了。",
-     "voice": {
-      "voice_id": "ZUViBVrNG979RVVePz3R",
-      "name": "Yuelao 10 (designed: gentle old uncle)"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "H02_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "……我？",
-     "voice": {
-      "voice_id": "ZUViBVrNG979RVVePz3R",
-      "name": "Yuelao 10 (designed: gentle old uncle)"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "H03_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
+   "seed": 2042,
    "settings": {
     "stability": 0.5
    },
@@ -584,27 +98,9 @@
   },
   {
    "type": "dialogue",
-   "name": "H04_s2026",
+   "name": "H05_s2042",
    "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "这一阵，忙了一千二百年。",
-     "voice": {
-      "voice_id": "ZUViBVrNG979RVVePz3R",
-      "name": "Yuelao 10 (designed: gentle old uncle)"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "H05_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
+   "seed": 2042,
    "settings": {
     "stability": 0.5
    },
@@ -620,15 +116,15 @@
   },
   {
    "type": "dialogue",
-   "name": "I01_s2026",
+   "name": "B03_s2051",
    "model": "eleven_v4",
-   "seed": 2026,
+   "seed": 2051,
    "settings": {
     "stability": 0.5
    },
    "lines": [
     {
-     "text": "[noticing] 等等。[puzzled] 这根线……不是我绑的。",
+     "text": "一万八千对。",
      "voice": {
       "voice_id": "ZUViBVrNG979RVVePz3R",
       "name": "Yuelao 10 (designed: gentle old uncle)"
@@ -638,15 +134,15 @@
   },
   {
    "type": "dialogue",
-   "name": "I02_s2026",
+   "name": "B04_s2051",
    "model": "eleven_v4",
-   "seed": 2026,
+   "seed": 2051,
    "settings": {
     "stability": 0.5
    },
    "lines": [
     {
-     "text": "早就在这儿了。让我的线，盖住了。",
+     "text": "[deflated] 可一天，也散七千五。",
      "voice": {
       "voice_id": "ZUViBVrNG979RVVePz3R",
       "name": "Yuelao 10 (designed: gentle old uncle)"
@@ -656,15 +152,15 @@
   },
   {
    "type": "dialogue",
-   "name": "I03_s2026",
+   "name": "B06_s2051",
    "model": "eleven_v4",
-   "seed": 2026,
+   "seed": 2051,
    "settings": {
     "stability": 0.5
    },
    "lines": [
     {
-     "text": "[soft laugh] 我急什么呢。",
+     "text": "今年指标，就差一对。今晚子时截止。",
      "voice": {
       "voice_id": "ZUViBVrNG979RVVePz3R",
       "name": "Yuelao 10 (designed: gentle old uncle)"
@@ -674,15 +170,15 @@
   },
   {
    "type": "dialogue",
-   "name": "I06_s2026",
+   "name": "G02_s2051",
    "model": "eleven_v4",
-   "seed": 2026,
+   "seed": 2051,
    "settings": {
     "stability": 0.5
    },
    "lines": [
     {
-     "text": "成了。快记，我绑的。全是我绑的。",
+     "text": "[calmly] 别动，别动。缠您法器上了。",
      "voice": {
       "voice_id": "ZUViBVrNG979RVVePz3R",
       "name": "Yuelao 10 (designed: gentle old uncle)"
@@ -692,15 +188,15 @@
   },
   {
    "type": "dialogue",
-   "name": "I08_s2026",
+   "name": "H03_s2051",
    "model": "eleven_v4",
-   "seed": 2026,
+   "seed": 2051,
    "settings": {
     "stability": 0.5
    },
    "lines": [
     {
-     "text": "[coughs] 咳……这句，记成，缘分已到。",
+     "text": "当年太忙。想着忙完这阵，就给自己绑一根。",
      "voice": {
       "voice_id": "ZUViBVrNG979RVVePz3R",
       "name": "Yuelao 10 (designed: gentle old uncle)"
@@ -710,33 +206,15 @@
   },
   {
    "type": "dialogue",
-   "name": "J02_s2026",
+   "name": "H05_s2051",
    "model": "eleven_v4",
-   "seed": 2026,
+   "seed": 2051,
    "settings": {
     "stability": 0.5
    },
    "lines": [
     {
-     "text": "[warm] 你的？早绑好了。",
-     "voice": {
-      "voice_id": "ZUViBVrNG979RVVePz3R",
-      "name": "Yuelao 10 (designed: gentle old uncle)"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "J03_s2026",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[warm, slowly] 是你已经见过的人。",
+     "text": "我这个……也记成，缘分未到吧。",
      "voice": {
       "voice_id": "ZUViBVrNG979RVVePz3R",
       "name": "Yuelao 10 (designed: gentle old uncle)"
