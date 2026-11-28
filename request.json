@@ -1,82 +1,156 @@
 {
- "id": "yuelao-sound-03",
+ "id": "yuelao-sound-04",
  "own_branch": true,
  "seal_rsa": [
   "-----BEGIN PUBLIC KEY-----\nMIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEA7ipGvGr+/aVGw4GnMFmf\niAmdTASNCEssxvAJ2UfgXzspQxVbt86U00WY1nd6Muttme/vlC3N7tTSqAwsU9Nw\nFliccK2bpA3uvIlOiCLL9g2VX2jJTZamYSd5xY0xh3l9zM+AkMRlWvjjOWv4kFIf\noBwBx7ugTO60F5nh96niAaflogGBCVDaLTgD8lzmJw7eukR3uIH+D+fNoiI6sfo5\nBMeh0L7OINd2udi1r4Hm7S318MP/2fc9z7wXYnxEVARUHiE27JuLEld/XSLq8s7k\nqSOu/DUCd5m276BpUyvcjXZ4D70wvImPyoeTs+EJBc3vkeoR+itnyG3BQR+kSNTW\nTsOUxuimB8OOzUnOjsl7pVRqYx1bXUMwAB//BhQE2sSOB/7oWynR2HNHRfzl0iL/\nLScSFG90+RtA9xrYDOnd085tLWwzUhOfpG5pN5UV1EB5fVSOVSSV5AyR+qOlu+mq\nybrh7nKhSLksk66toaYkZICZTgDu6XJpPXm37UoXEUH9AgMBAAE=\n-----END PUBLIC KEY-----\n"
  ],
  "sfx_model": "eleven_text_to_sound_v3",
  "tag": true,
- "settle": 420,
+ "settle": 300,
  "items": [
   {
-   "type": "sfx",
-   "name": "sfx_boing",
-   "duration": 0.9,
-   "influence": 0.6,
-   "text": "A single cartoon spring boing, a springy comic wobble that bounces and fades quickly. No music, no voice."
+   "type": "music",
+   "name": "mus_theme",
+   "model": "music_v2_5",
+   "format": "mp3_48000_192",
+   "plan": {
+    "chunks": [
+     {
+      "text": "[Bureau theme]",
+      "duration_ms": 48000,
+      "positive_styles": [
+       "instrumental",
+       "playful Chinese variety show comedy music",
+       "guzheng plucks",
+       "pizzicato strings",
+       "woodblock and small temple bells",
+       "light hand percussion",
+       "bouncy and mischievous",
+       "bright and quirky",
+       "catchy simple melody",
+       "D major pentatonic",
+       "100 BPM",
+       "steady groove"
+      ],
+      "negative_styles": [
+       "vocals",
+       "lyrics",
+       "singing",
+       "choir",
+       "humming",
+       "spoken words",
+       "heavy drums",
+       "rock guitar",
+       "EDM drop",
+       "dark",
+       "sad",
+       "epic orchestra"
+      ],
+      "context_adherence": "high"
+     },
+     {
+      "text": "[City version]",
+      "duration_ms": 24000,
+      "positive_styles": [
+       "instrumental",
+       "the same melody in a modern city version",
+       "light electronic beat",
+       "plucky synth with guzheng",
+       "busy urban office feel",
+       "playful",
+       "D major pentatonic",
+       "100 BPM"
+      ],
+      "negative_styles": [
+       "vocals",
+       "lyrics",
+       "singing",
+       "choir",
+       "humming",
+       "spoken words",
+       "heavy bass drop",
+       "aggressive",
+       "dark"
+      ],
+      "context_adherence": "high"
+     },
+     {
+      "text": "[Tender]",
+      "duration_ms": 18700,
+      "positive_styles": [
+       "instrumental",
+       "the same melody, slow and tender",
+       "solo guzheng with a soft warm string pad",
+       "gentle and wistful",
+       "sparse",
+       "half-time feel",
+       "D major pentatonic"
+      ],
+      "negative_styles": [
+       "vocals",
+       "lyrics",
+       "singing",
+       "choir",
+       "humming",
+       "spoken words",
+       "drums",
+       "percussion",
+       "fast",
+       "electronic beat"
+      ],
+      "context_adherence": "high"
+     },
+     {
+      "text": "[Warm ending]",
+      "duration_ms": 21600,
+      "positive_styles": [
+       "instrumental",
+       "the same melody returns warm and hopeful",
+       "guzheng, erhu and strings",
+       "gentle swell",
+       "heartwarming resolution",
+       "ends on a soft final chord",
+       "D major pentatonic"
+      ],
+      "negative_styles": [
+       "vocals",
+       "lyrics",
+       "singing",
+       "choir",
+       "humming",
+       "spoken words",
+       "heavy drums",
+       "abrupt ending",
+       "electronic beat"
+      ],
+      "context_adherence": "high"
+     }
+    ]
+   }
   },
   {
    "type": "sfx",
-   "name": "sfx_snip",
-   "duration": 0.5,
-   "influence": 0.7,
-   "text": "A single crisp snip of small scissors cutting one silk thread. Close and clean, no music, no voice."
+   "name": "amb_office",
+   "duration": 8,
+   "influence": 0.5,
+   "loop": true,
+   "text": "Quiet room tone of an old Chinese temple office in the day: faint wind outside, wooden beams creaking softly now and then, very calm and still. No music, no voices."
   },
   {
    "type": "sfx",
-   "name": "sfx_snap",
-   "duration": 0.6,
-   "influence": 0.7,
-   "text": "A single sharp snap of a taut silk cord breaking, a quick thin crack with a tiny whip of the loose ends. No music, no voice."
+   "name": "amb_work",
+   "duration": 8,
+   "influence": 0.5,
+   "loop": true,
+   "text": "Quiet modern open-plan office room tone: soft air conditioning hum, faint distant keyboard typing, an occasional mouse click. No music, no voices."
   },
   {
    "type": "sfx",
-   "name": "sfx_pop",
-   "duration": 0.5,
-   "influence": 0.6,
-   "text": "A single soft cartoon pop, like a cork or a bubble popping, short and bright. No music, no voice."
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_sparkle",
-   "duration": 1.5,
-   "influence": 0.6,
-   "text": "A short magical sparkle shimmer, tiny glassy chimes twinkling upward and fading. No music, no voice."
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_bookshut",
-   "duration": 0.8,
-   "influence": 0.7,
-   "text": "A single heavy old hardcover ledger slammed shut, a deep papery thump with a puff of pages. No music, no voice."
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_paper",
-   "duration": 1.0,
-   "influence": 0.6,
-   "text": "A crisp paper pop-up card springing open, a quick flutter of folded paper unfolding. No music, no voice."
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_wood",
-   "duration": 0.6,
-   "influence": 0.7,
-   "text": "A single small wooden plaque knocking once against a wooden beam, a soft hollow clack. No music, no voice."
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_swish",
-   "duration": 0.9,
-   "influence": 0.6,
-   "text": "A soft quick swish of a book flying past, airy and smooth, rising then falling. No music, no voice."
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_thump",
-   "duration": 0.6,
-   "influence": 0.6,
-   "text": "A soft muffled thump of a woolly mitten pressed against a microphone, close, with a faint fabric rub. No music, no voice."
+   "name": "amb_street",
+   "duration": 8,
+   "influence": 0.5,
+   "loop": true,
+   "text": "Calm night city street ambience outside an office tower: distant traffic hum, a light breeze, a far-off scooter passing once. No music, no voices, no horns."
   }
  ]
 }
