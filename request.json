@@ -1,442 +1,48 @@
 {
- "id": "yuelao-voice-03",
+ "id": "yuelao-voice-04",
  "own_branch": true,
- "model_prefs": [
-  "eleven_v4"
- ],
  "words": true,
+ "settle": 30,
  "items": [
   {
-   "type": "dialogue",
-   "name": "au_A1_B01",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[sighs] 姻缘司，上下就我一个。别人九九六，[dry] 我零零七。",
-     "voice": {
-      "voice_id": "bctWDlOBHyWjIDa9TrhW",
-      "name": "ylA1"
-     }
-    }
-   ]
+   "type": "design",
+   "name": "ylF",
+   "lang": "zh",
+   "model": "eleven_ttv_v3",
+   "seed": 4101,
+   "description": "Native Mandarin Chinese speaker with a standard mainland Putonghua accent. A gentle, kindly old uncle in his mid sixties: a soft, warm, smiling voice, relaxed and friendly like a favourite neighbour chatting over tea, soft-spoken but lively, with a playful twinkle and light humour in every line. Medium pitch, smooth and clear, never harsh or shouting. Natural, conversational delivery. Perfect studio audio quality.",
+   "text": "姻缘司，上下就我一个。别人九九六，我零零七。牛郎织女，我绑的！牢吧？现在的年轻人，线刚绑上，自己就剪了。当年太忙。想着忙完这阵，就给自己绑一根。这一阵，忙了一千二百年。你的？早绑好了。是你已经见过的人。成了！快记！",
+   "save": true
   },
   {
-   "type": "dialogue",
-   "name": "au_A1_C02",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "牛郎织女。我绑的。牢吧？",
-     "voice": {
-      "voice_id": "bctWDlOBHyWjIDa9TrhW",
-      "name": "ylA1"
-     }
-    }
-   ]
+   "type": "design",
+   "name": "ylG",
+   "lang": "zh",
+   "model": "eleven_ttv_v3",
+   "seed": 4202,
+   "description": "Native Mandarin Chinese speaker with a standard mainland Putonghua accent. A cheerful, good-natured old uncle of about sixty: gentle and easy-going, bright and animated, he laughs easily and talks with lively ups and downs, yet his tone stays soft, warm and kind, never loud. A light, pleasant medium-high male voice with a little age in it. Clear diction, natural and charming. Perfect studio audio quality.",
+   "text": "姻缘司，上下就我一个。别人九九六，我零零七。牛郎织女，我绑的！牢吧？现在的年轻人，线刚绑上，自己就剪了。当年太忙。想着忙完这阵，就给自己绑一根。这一阵，忙了一千二百年。你的？早绑好了。是你已经见过的人。成了！快记！",
+   "save": true
   },
   {
-   "type": "dialogue",
-   "name": "au_A1_H03",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "当年太忙。想着忙完这阵，就给自己绑一根。",
-     "voice": {
-      "voice_id": "bctWDlOBHyWjIDa9TrhW",
-      "name": "ylA1"
-     }
-    }
-   ]
+   "type": "design",
+   "name": "ylH",
+   "lang": "zh",
+   "model": "eleven_ttv_v3",
+   "seed": 4303,
+   "description": "Native Mandarin Chinese speaker with a standard mainland Putonghua accent. A gentle elderly man of about seventy, a soft-spoken, tender-hearted uncle with a slightly husky, breathy warmth: kind and patient, amused by everything, with small chuckles; when he gets excited his voice lifts and brightens but stays gentle. Medium pitch, unhurried, very clear. Intimate, natural delivery. Perfect studio audio quality.",
+   "text": "姻缘司，上下就我一个。别人九九六，我零零七。牛郎织女，我绑的！牢吧？现在的年轻人，线刚绑上，自己就剪了。当年太忙。想着忙完这阵，就给自己绑一根。这一阵，忙了一千二百年。你的？早绑好了。是你已经见过的人。成了！快记！",
+   "save": true
   },
   {
-   "type": "dialogue",
-   "name": "au_A1_I06",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "成了。快记，我绑的。全是我绑的。",
-     "voice": {
-      "voice_id": "bctWDlOBHyWjIDa9TrhW",
-      "name": "ylA1"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "au_B2_B01",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[sighs] 姻缘司，上下就我一个。别人九九六，[dry] 我零零七。",
-     "voice": {
-      "voice_id": "5NOAtUtfU5vGpoknnAXC",
-      "name": "ylB2"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "au_B2_C02",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "牛郎织女。我绑的。牢吧？",
-     "voice": {
-      "voice_id": "5NOAtUtfU5vGpoknnAXC",
-      "name": "ylB2"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "au_B2_H03",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "当年太忙。想着忙完这阵，就给自己绑一根。",
-     "voice": {
-      "voice_id": "5NOAtUtfU5vGpoknnAXC",
-      "name": "ylB2"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "au_B2_I06",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "成了。快记，我绑的。全是我绑的。",
-     "voice": {
-      "voice_id": "5NOAtUtfU5vGpoknnAXC",
-      "name": "ylB2"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "au_C2_B01",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[sighs] 姻缘司，上下就我一个。别人九九六，[dry] 我零零七。",
-     "voice": {
-      "voice_id": "IJA5ZcnYtwIUVxfM3m4O",
-      "name": "ylC2"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "au_C2_C02",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "牛郎织女。我绑的。牢吧？",
-     "voice": {
-      "voice_id": "IJA5ZcnYtwIUVxfM3m4O",
-      "name": "ylC2"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "au_C2_H03",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "当年太忙。想着忙完这阵，就给自己绑一根。",
-     "voice": {
-      "voice_id": "IJA5ZcnYtwIUVxfM3m4O",
-      "name": "ylC2"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "au_C2_I06",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "成了。快记，我绑的。全是我绑的。",
-     "voice": {
-      "voice_id": "IJA5ZcnYtwIUVxfM3m4O",
-      "name": "ylC2"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "au_C3_B01",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[sighs] 姻缘司，上下就我一个。别人九九六，[dry] 我零零七。",
-     "voice": {
-      "voice_id": "AnbfF9pFyGfb566Yo1Vq",
-      "name": "ylC3"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "au_C3_C02",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "牛郎织女。我绑的。牢吧？",
-     "voice": {
-      "voice_id": "AnbfF9pFyGfb566Yo1Vq",
-      "name": "ylC3"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "au_C3_H03",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "当年太忙。想着忙完这阵，就给自己绑一根。",
-     "voice": {
-      "voice_id": "AnbfF9pFyGfb566Yo1Vq",
-      "name": "ylC3"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "au_C3_I06",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "成了。快记，我绑的。全是我绑的。",
-     "voice": {
-      "voice_id": "AnbfF9pFyGfb566Yo1Vq",
-      "name": "ylC3"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "au_D1_B01",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[sighs] 姻缘司，上下就我一个。别人九九六，[dry] 我零零七。",
-     "voice": {
-      "voice_id": "DfQAByKdbkW91PYjvgAC",
-      "name": "ylD1"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "au_D1_C02",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "牛郎织女。我绑的。牢吧？",
-     "voice": {
-      "voice_id": "DfQAByKdbkW91PYjvgAC",
-      "name": "ylD1"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "au_D1_H03",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "当年太忙。想着忙完这阵，就给自己绑一根。",
-     "voice": {
-      "voice_id": "DfQAByKdbkW91PYjvgAC",
-      "name": "ylD1"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "au_D1_I06",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "成了。快记，我绑的。全是我绑的。",
-     "voice": {
-      "voice_id": "DfQAByKdbkW91PYjvgAC",
-      "name": "ylD1"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "au_E3_B01",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[sighs] 姻缘司，上下就我一个。别人九九六，[dry] 我零零七。",
-     "voice": {
-      "voice_id": "StbyZLQATUVCJeVeOLtt",
-      "name": "ylE3"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "au_E3_C02",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "牛郎织女。我绑的。牢吧？",
-     "voice": {
-      "voice_id": "StbyZLQATUVCJeVeOLtt",
-      "name": "ylE3"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "au_E3_H03",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "当年太忙。想着忙完这阵，就给自己绑一根。",
-     "voice": {
-      "voice_id": "StbyZLQATUVCJeVeOLtt",
-      "name": "ylE3"
-     }
-    }
-   ]
-  },
-  {
-   "type": "dialogue",
-   "name": "au_E3_I06",
-   "model": "eleven_v4",
-   "seed": 2026,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "成了。快记，我绑的。全是我绑的。",
-     "voice": {
-      "voice_id": "StbyZLQATUVCJeVeOLtt",
-      "name": "ylE3"
-     }
-    }
-   ]
+   "type": "design",
+   "name": "ylI",
+   "lang": "zh",
+   "model": "eleven_ttv_v3",
+   "seed": 4404,
+   "description": "Native Mandarin Chinese speaker with a standard mainland Putonghua accent. A mild, good-humoured old gentleman in his sixties, like a beloved retired teacher: a gentle, refined, soft voice, friendly and a little mischievous, expressive and spirited when he tells a story, tender when he is moved. Medium pitch, smooth tone, clear and natural diction. Perfect studio audio quality.",
+   "text": "姻缘司，上下就我一个。别人九九六，我零零七。牛郎织女，我绑的！牢吧？现在的年轻人，线刚绑上，自己就剪了。当年太忙。想着忙完这阵，就给自己绑一根。这一阵，忙了一千二百年。你的？早绑好了。是你已经见过的人。成了！快记！",
+   "save": true
   }
  ]
 }
