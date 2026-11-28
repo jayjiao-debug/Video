@@ -301,5 +301,14 @@ try:
     report["plan_after"] = {k: u.get(k) for k in ("character_count", "character_limit", "next_character_count_reset_unix")}
     report["usage_other_after"] = {k: v for k, v in u.items() if isinstance(v, (int, float)) and any(w in k for w in ("count", "limit", "usage", "minute", "credit", "second")) and not any(w in k for w in ("invoice", "price", "amount", "cost", "currency"))}
 except Exception as e: report["plan_after"] = str(e)
+# "settle": seconds. ElevenLabs books music and sound-effect credits some minutes after the call, so plan_after can show
+# no change. Poll the counter every 30 s for up to that long and keep each new value with its time (free to read).
+if req.get("settle"):
+    import time
+    t0 = time.time(); last = (report.get("plan_after") or {}).get("character_count") if isinstance(report.get("plan_after"), dict) else None
+    report["plan_late"] = []
+    while time.time() - t0 < float(req["settle"]):
+        time.sleep(30); c = used()
+        if c is not None and c != last: report["plan_late"].append([round(time.time() - t0), c]); last = c; log("counter now", c)
 json.dump(report, open("out/report.json", "w"), ensure_ascii=False, indent=2)
 log(json.dumps(report["clips"], ensure_ascii=False, indent=1))

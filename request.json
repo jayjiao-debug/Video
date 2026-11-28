@@ -1,25 +1,82 @@
 {
- "id": "yuelao-sound-02",
+ "id": "yuelao-sound-03",
  "own_branch": true,
  "seal_rsa": [
   "-----BEGIN PUBLIC KEY-----\nMIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEA7ipGvGr+/aVGw4GnMFmf\niAmdTASNCEssxvAJ2UfgXzspQxVbt86U00WY1nd6Muttme/vlC3N7tTSqAwsU9Nw\nFliccK2bpA3uvIlOiCLL9g2VX2jJTZamYSd5xY0xh3l9zM+AkMRlWvjjOWv4kFIf\noBwBx7ugTO60F5nh96niAaflogGBCVDaLTgD8lzmJw7eukR3uIH+D+fNoiI6sfo5\nBMeh0L7OINd2udi1r4Hm7S318MP/2fc9z7wXYnxEVARUHiE27JuLEld/XSLq8s7k\nqSOu/DUCd5m276BpUyvcjXZ4D70wvImPyoeTs+EJBc3vkeoR+itnyG3BQR+kSNTW\nTsOUxuimB8OOzUnOjsl7pVRqYx1bXUMwAB//BhQE2sSOB/7oWynR2HNHRfzl0iL/\nLScSFG90+RtA9xrYDOnd085tLWwzUhOfpG5pN5UV1EB5fVSOVSSV5AyR+qOlu+mq\nybrh7nKhSLksk66toaYkZICZTgDu6XJpPXm37UoXEUH9AgMBAAE=\n-----END PUBLIC KEY-----\n"
  ],
  "sfx_model": "eleven_text_to_sound_v3",
  "tag": true,
+ "settle": 420,
  "items": [
   {
    "type": "sfx",
-   "name": "sfx_whoosh_a",
-   "duration": 0.8,
-   "influence": 0.7,
-   "text": "A single quick airy whoosh of a sheet of paper flicked fast past the microphone. Clean, no music, no voice."
+   "name": "sfx_boing",
+   "duration": 0.9,
+   "influence": 0.6,
+   "text": "A single cartoon spring boing, a springy comic wobble that bounces and fades quickly. No music, no voice."
   },
   {
    "type": "sfx",
-   "name": "sfx_ding",
-   "duration": 1.5,
+   "name": "sfx_snip",
+   "duration": 0.5,
    "influence": 0.7,
-   "text": "A single small bright temple bell ding with a short clean ring. No music, no voice."
+   "text": "A single crisp snip of small scissors cutting one silk thread. Close and clean, no music, no voice."
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_snap",
+   "duration": 0.6,
+   "influence": 0.7,
+   "text": "A single sharp snap of a taut silk cord breaking, a quick thin crack with a tiny whip of the loose ends. No music, no voice."
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_pop",
+   "duration": 0.5,
+   "influence": 0.6,
+   "text": "A single soft cartoon pop, like a cork or a bubble popping, short and bright. No music, no voice."
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_sparkle",
+   "duration": 1.5,
+   "influence": 0.6,
+   "text": "A short magical sparkle shimmer, tiny glassy chimes twinkling upward and fading. No music, no voice."
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_bookshut",
+   "duration": 0.8,
+   "influence": 0.7,
+   "text": "A single heavy old hardcover ledger slammed shut, a deep papery thump with a puff of pages. No music, no voice."
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_paper",
+   "duration": 1.0,
+   "influence": 0.6,
+   "text": "A crisp paper pop-up card springing open, a quick flutter of folded paper unfolding. No music, no voice."
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_wood",
+   "duration": 0.6,
+   "influence": 0.7,
+   "text": "A single small wooden plaque knocking once against a wooden beam, a soft hollow clack. No music, no voice."
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_swish",
+   "duration": 0.9,
+   "influence": 0.6,
+   "text": "A soft quick swish of a book flying past, airy and smooth, rising then falling. No music, no voice."
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_thump",
+   "duration": 0.6,
+   "influence": 0.6,
+   "text": "A soft muffled thump of a woolly mitten pressed against a microphone, close, with a faint fabric rub. No music, no voice."
   }
  ]
 }
