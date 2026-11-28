@@ -15,13 +15,15 @@ import * as THREE from "three";
 import React from "react";
 import { seg, type Segment } from "../story";
 import { OFF_AT } from "../hud";
-import { P, startOf, endOf, wordAt, ky, rel, V, smooth, walkAlong, hang, hit, win, shotCam, turnTo, faceTo, type ShotKey } from "./kit";
+import { P, startOf, endOf, wordAt, ky, rel, V, smooth, walkAlong, hang, hit, win, shotCam, turnTo, faceTo, through, type ShotKey } from "./kit";
 import { act, YL, XM, QS, type MoodKey } from "./act";
 import { anklet, knotAt, bowKnot, lay, type Floor } from "./thread";
 import { oldLine, oldCol } from "./night";
 import { C2, FRONT, TAB, KNOT_END, MEET_R, HER_FOOT } from "./segI";
 
 const S = seg("J"), HALF = Math.PI / 2, ISL = P("street", 0, 0, 0).x, STROLL = 1.0;
+/** his hands at the small of his back (x: each hand's half-spread, y, z behind his feet) and on the way there, at his hips */
+const BACK = { x: 0.09, y: 0.68, z: -0.25, side: 0.25 };
 /** where she stands on the pavement at the end of the follow (over her thread, looking down the street) */
 const P2: [number, number, number] = [-0.9, 1.5, 1.95];
 /** where he turns to wave (a few steps back from her, toward the tower: from where she ends up, the two he has just
@@ -145,18 +147,21 @@ export const SEG: Segment = {
     const at = leaving ? away.at : f >= go0 ? go.at : FRONT;
     const facing = leaving ? turnTo(byeYaw, away.facing, smooth((f - leave) / 12)) : going ? turnTo(lensYaw, go.facing, smooth((f - go0) / 7)) : f >= go0 ? go.facing : lensYaw + 1.35 * roundK;
     const H = (dx: number, y: number, z: number) => rel(at, facing, dx, y, z);
-    // his hands: clasped behind his back (the old man who knows) until he goes; at the end one big wave over his head
-    const behind = smooth((f - round0) / 12) * (1 - smooth((f - (go0 - 2)) / 8));
-    const handR = hang(at, facing, 0).lerp(H(-0.07, 0.7, -0.14), behind), handL = hang(at, facing, 1).lerp(H(0.07, 0.7, -0.14), behind);
+    // his hands: clasped behind his back (the old man who knows) until he goes; at the end one big wave over his head.
+    // (v6) They hang where his wide sleeves fall clear (never the kit's hang: it is 4 cm inside his robe), and they go
+    // round his hips to the small of his back and back again, out past the robe, never straight through it.
+    const down = (s: number) => H(0.228 * s, 0.59, 0.05), side = (s: number) => H(BACK.side * s, 0.63, -0.1), back = (s: number) => H(BACK.x * s, BACK.y, BACK.z);
+    const roundTo = (s: number) => through(f, [[round0, down(s)], [round0 + 6, side(s)], [round0 + 12, back(s)], [go0 - 2, back(s)], [go0 + 2, side(s)], [go0 + 6, down(s)]]);
+    const handR = roundTo(-1), handL = roundTo(1);
     const waveK = smooth((f - wave0) / 6) * (1 - smooth((f - leave) / 8)), wv = (f - wave0) * 0.42;
-    const waveHand = hang(at, facing, 1).lerp(H(0.36 + 0.06 * Math.sin(wv), 1.25 + 0.02 * Math.cos(2 * wv), 0.05), waveK);
+    const waveHand = down(1).lerp(H(0.36 + 0.06 * Math.sin(wv), 1.25 + 0.02 * Math.cos(2 * wv), 0.05), waveK);
     // 那我的那根呢？ oh? | 你的？ warm, his head on one side | 早绑好了 eyes shut in a grin, a slow nod down at her feet
     // (eyes OPEN through 早绑好了: a look down at her feet cannot be read on a face with its eyes shut in a grin)
     const faces: MoodKey[] = [[S.from, "fawn"], [round0 + 3, "warm"], [back0 + 6, "oh", "take", 0.6], [j02 - 10, "warm"], [go0 + 3, "warm"], [wave0 - 6, "joy"], [leave + 2, "warm"]];
     act(w, f, YL, {
       at, facing, faces, turn: leaving ? 0.5 + 0.5 * smooth((f - leave - 4) / 10) : 0.5,
       pose: walksOff ? away.pose : going ? go.pose : undefined,
-      hands: f < go0 ? [handR, handL] : waveK > 0.01 ? [null, waveHand] : undefined,
+      hands: f < go0 + 6 ? [handR, handL] : waveK > 0.01 ? [null, waveHand] : undefined,
       lookDown: f < go0 ? ky(f, [[S.from, -8], [round0, -8], [round0 + 10, -2], [back0, -2], [back0 + 10, -8], [early + 2, -8], [early + 8, 21], [early + 15, 15], [early + 21, 23], [go0, 23]]) : waveK > 0.01 ? -4 : 0,
       gaze: f < go0 ? ky(f, [[round0, 0], [round0 + 8, 1], [back0, 1], [back0 + 8, 0]]) : 0,
       lean: { pitch: f < go0 ? ky(f, [[S.from, 2], [round0 + 10, -3], [back0, -3], [back0 + 12, 2], [early + 2, 2], [early + 9, 10], [early + 15, 7], [early + 21, 11]]) : 0, roll: 2.5 * waveK * Math.sin(wv) },
