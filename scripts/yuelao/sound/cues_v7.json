@@ -1,0 +1,907 @@
+{
+ "note": "采访月老的一天 sound plan v7 (28 Nov): ElevenLabs music and effects (el.json, make_el.py); the REC beep and power-off are the series' own (make_sound.py). Hits on things seen sit on the picture's own frames (events.ts). H has no music.",
+ "cards": {
+  "clip": "sfx_ding",
+  "gain": -29.0
+ },
+ "beds": [
+  {
+   "label": "A-D the bureau theme",
+   "clip": "mus_bureau",
+   "at": [
+    "A01",
+    "start",
+    -0.6
+   ],
+   "until": [
+    "D",
+    "to",
+    0.0
+   ],
+   "fade": 0.3,
+   "fade_out": 1.2,
+   "gain": -26.0,
+   "hp": [
+    120,
+    2
+   ]
+  },
+  {
+   "label": "E-F the city version",
+   "clip": "mus_city",
+   "at": [
+    "E",
+    "from",
+    0.3
+   ],
+   "until": [
+    "F06",
+    "start",
+    -0.2
+   ],
+   "fade": 0.4,
+   "fade_out": 1.5,
+   "gain": -27.0,
+   "hp": [
+    120,
+    2
+   ]
+  },
+  {
+   "label": "G the night piece",
+   "clip": "mus_night",
+   "at": [
+    "G",
+    "from",
+    0.2
+   ],
+   "until": [
+    "H",
+    "from",
+    0.0
+   ],
+   "fade": 0.8,
+   "fade_out": 1.5,
+   "gain": -28.0
+  },
+  {
+   "label": "I-J tender into the warm ending",
+   "clip": "mus_end",
+   "at": [
+    "I",
+    "from",
+    0.0
+   ],
+   "until": [
+    "J",
+    "to",
+    0.0
+   ],
+   "fade": 1.5,
+   "fade_out": 0.3,
+   "gain": -26.5,
+   "hp": [
+    120,
+    2
+   ]
+  },
+  {
+   "label": "office room",
+   "clip": "amb_office",
+   "at": [
+    "A",
+    "from",
+    0.0
+   ],
+   "until": [
+    "E",
+    "from",
+    0.0
+   ],
+   "fade": 0.05,
+   "fade_out": 0.3,
+   "gain": -27.6
+  },
+  {
+   "label": "her office",
+   "clip": "amb_work",
+   "at": [
+    "E",
+    "from",
+    0.0
+   ],
+   "until": [
+    "F",
+    "from",
+    0.0
+   ],
+   "fade": 0.2,
+   "fade_out": 0.3,
+   "gain": -26.5
+  },
+  {
+   "label": "the street",
+   "clip": "amb_street",
+   "at": [
+    "F",
+    "from",
+    0.0
+   ],
+   "until": [
+    "J",
+    "to",
+    0.0
+   ],
+   "fade": 0.2,
+   "fade_out": 0.1,
+   "gain": -36.1
+  }
+ ],
+ "hits": [
+  {
+   "label": "REC beep",
+   "clip": "sfx_rec_beep",
+   "at": [
+    "A",
+    "from",
+    0.033
+   ],
+   "gain": -24.0
+  },
+  {
+   "label": "A token comes down",
+   "clip": "sfx_whoosh",
+   "at": [
+    "A",
+    "from",
+    7.1
+   ],
+   "gain": -27.0
+  },
+  {
+   "label": "A token slip",
+   "clip": "sfx_paper",
+   "at": [
+    "A",
+    "from",
+    7.467
+   ],
+   "gain": -31.0
+  },
+  {
+   "label": "A the cord snaps",
+   "clip": "sfx_snap",
+   "at": [
+    "A",
+    "from",
+    8.433
+   ],
+   "gain": -19.0
+  },
+  {
+   "label": "A the cord rings",
+   "clip": "sfx_twang",
+   "at": [
+    "A",
+    "from",
+    8.433
+   ],
+   "gain": -28.0
+  },
+  {
+   "label": "A the plaque drops",
+   "clip": "sfx_whoosh",
+   "at": [
+    "A",
+    "from",
+    19.367
+   ],
+   "gain": -24.0,
+   "rate": 0.94
+  },
+  {
+   "label": "A the plaque's seal",
+   "clip": "sfx_stamp_a",
+   "at": [
+    "A",
+    "from",
+    19.933
+   ],
+   "gain": -20.0
+  },
+  {
+   "label": "B 007",
+   "clip": "sfx_pop",
+   "at": [
+    "B01",
+    "start",
+    5.62
+   ],
+   "gain": -20.0
+  },
+  {
+   "label": "B 18000",
+   "clip": "sfx_pop",
+   "at": [
+    "B03",
+    "end",
+    0.0
+   ],
+   "gain": -22.0,
+   "rate": 0.94
+  },
+  {
+   "label": "B 7500",
+   "clip": "sfx_boing",
+   "at": [
+    "B04",
+    "start",
+    1.97
+   ],
+   "gain": -24.0
+  },
+  {
+   "label": "B snip",
+   "clip": "sfx_snip",
+   "at": [
+    "B05",
+    "start",
+    3.36
+   ],
+   "gain": -19.0
+  },
+  {
+   "label": "B one short",
+   "clip": "sfx_stamp_b",
+   "at": [
+    "B06",
+    "start",
+    1.44
+   ],
+   "gain": -24.0
+  },
+  {
+   "label": "B-C whip",
+   "clip": "sfx_whoosh",
+   "at": [
+    "B",
+    "from",
+    29.3
+   ],
+   "gain": -22.0,
+   "rate": 1.06
+  },
+  {
+   "label": "C book 1 flies out",
+   "clip": "sfx_whoosh",
+   "at": [
+    "C",
+    "from",
+    2.6
+   ],
+   "gain": -27.0,
+   "rate": 0.97
+  },
+  {
+   "label": "C book 2 flies out",
+   "clip": "sfx_whoosh",
+   "at": [
+    "C",
+    "from",
+    11.333
+   ],
+   "gain": -27.0,
+   "rate": 1.09
+  },
+  {
+   "label": "C book 3 flies out",
+   "clip": "sfx_whoosh",
+   "at": [
+    "C",
+    "from",
+    17.033
+   ],
+   "gain": -27.0,
+   "rate": 0.91
+  },
+  {
+   "label": "C book 4 flies out",
+   "clip": "sfx_whoosh",
+   "at": [
+    "C",
+    "from",
+    22.533
+   ],
+   "gain": -27.0,
+   "rate": 1.03
+  },
+  {
+   "label": "C book 5 flies out",
+   "clip": "sfx_whoosh",
+   "at": [
+    "C",
+    "from",
+    29.533
+   ],
+   "gain": -27.0,
+   "rate": 0.96
+  },
+  {
+   "label": "C book 1 pops up",
+   "clip": "sfx_paper",
+   "at": [
+    "C",
+    "from",
+    4.533
+   ],
+   "gain": -30.0,
+   "rate": 0.94
+  },
+  {
+   "label": "C book 2 pops up",
+   "clip": "sfx_paper",
+   "at": [
+    "C",
+    "from",
+    12.633
+   ],
+   "gain": -30.0,
+   "rate": 1.06
+  },
+  {
+   "label": "C book 3 pops up",
+   "clip": "sfx_paper",
+   "at": [
+    "C",
+    "from",
+    18.033
+   ],
+   "gain": -30.0,
+   "rate": 0.97
+  },
+  {
+   "label": "C book 4 pops up",
+   "clip": "sfx_paper",
+   "at": [
+    "C",
+    "from",
+    23.733
+   ],
+   "gain": -30.0,
+   "rate": 1.09
+  },
+  {
+   "label": "C 1 flicked home",
+   "clip": "sfx_whoosh",
+   "at": [
+    "C",
+    "from",
+    10.733
+   ],
+   "gain": -27.0,
+   "rate": 1.05
+  },
+  {
+   "label": "C 1 in its drawer",
+   "clip": "sfx_thump",
+   "at": [
+    "C",
+    "from",
+    11.133
+   ],
+   "gain": -31.0
+  },
+  {
+   "label": "C 2 butterflies",
+   "clip": "sfx_sparkle",
+   "at": [
+    "C",
+    "from",
+    14.433
+   ],
+   "gain": -27.0
+  },
+  {
+   "label": "C 2 shut on 这单",
+   "clip": "sfx_bookshut",
+   "at": [
+    "C",
+    "from",
+    15.667
+   ],
+   "gain": -22.0
+  },
+  {
+   "label": "C 2 dropped behind him",
+   "clip": "sfx_thump",
+   "at": [
+    "C",
+    "from",
+    16.7
+   ],
+   "gain": -29.0,
+   "rate": 0.94
+  },
+  {
+   "label": "C 3 the slips climb",
+   "clip": "sfx_paper",
+   "at": [
+    "C",
+    "from",
+    20.733
+   ],
+   "gain": -26.0,
+   "rate": 0.91
+  },
+  {
+   "label": "C 3 the slips flutter",
+   "clip": "sfx_paper",
+   "at": [
+    "C",
+    "from",
+    20.967
+   ],
+   "gain": -30.0,
+   "rate": 1.03
+  },
+  {
+   "label": "C 3 dropped at his feet",
+   "clip": "sfx_thump",
+   "at": [
+    "C",
+    "from",
+    22.7
+   ],
+   "gain": -25.0,
+   "rate": 1.06
+  },
+  {
+   "label": "C 4 手一抖",
+   "clip": "sfx_boing",
+   "at": [
+    "C07",
+    "start",
+    2.65
+   ],
+   "gain": -24.0,
+   "rate": 0.94
+  },
+  {
+   "label": "C 4 lands on 宝钗",
+   "clip": "sfx_pop",
+   "at": [
+    "C",
+    "from",
+    26.5
+   ],
+   "gain": -27.0,
+   "rate": 1.06
+  },
+  {
+   "label": "C 4 the letters burst",
+   "clip": "sfx_pops",
+   "at": [
+    "C",
+    "from",
+    27.4
+   ],
+   "gain": -22.0
+  },
+  {
+   "label": "C 4 the letters' paper",
+   "clip": "sfx_paper",
+   "at": [
+    "C",
+    "from",
+    27.433
+   ],
+   "gain": -26.0,
+   "rate": 0.96
+  },
+  {
+   "label": "C 4 hurled home",
+   "clip": "sfx_whoosh",
+   "at": [
+    "C",
+    "from",
+    29.233
+   ],
+   "gain": -23.0,
+   "rate": 1.0
+  },
+  {
+   "label": "C 4 in its drawer",
+   "clip": "sfx_thump",
+   "at": [
+    "C",
+    "from",
+    29.567
+   ],
+   "gain": -27.0,
+   "rate": 0.97
+  },
+  {
+   "label": "C 5 the jade seal rises",
+   "clip": "sfx_ding",
+   "at": [
+    "C",
+    "from",
+    31.6
+   ],
+   "gain": -28.0
+  },
+  {
+   "label": "C 5 the seal slams",
+   "clip": "sfx_stamp_c",
+   "at": [
+    "C",
+    "from",
+    35.133
+   ],
+   "gain": -18.0,
+   "rate": 0.82
+  },
+  {
+   "label": "C 5 the book shuts",
+   "clip": "sfx_bookshut",
+   "at": [
+    "C",
+    "from",
+    35.133
+   ],
+   "gain": -23.0,
+   "rate": 0.94
+  },
+  {
+   "label": "C 5 flies home",
+   "clip": "sfx_whoosh",
+   "at": [
+    "C",
+    "from",
+    36.4
+   ],
+   "gain": -25.0,
+   "rate": 0.94
+  },
+  {
+   "label": "C 5 in its drawer",
+   "clip": "sfx_thump",
+   "at": [
+    "C",
+    "from",
+    36.867
+   ],
+   "gain": -29.0,
+   "rate": 1.09
+  },
+  {
+   "label": "D the burner pings",
+   "clip": "sfx_ding",
+   "at": [
+    "D",
+    "from",
+    0.4
+   ],
+   "gain": -20.0,
+   "rate": 0.94
+  },
+  {
+   "label": "D off he runs",
+   "clip": "sfx_whoosh",
+   "at": [
+    "D01",
+    "start",
+    -0.17
+   ],
+   "gain": -24.0,
+   "rate": 1.06
+  },
+  {
+   "label": "D catches the slip",
+   "clip": "sfx_pop",
+   "at": [
+    "D",
+    "from",
+    11.433
+   ],
+   "gain": -24.0,
+   "rate": 0.97
+  },
+  {
+   "label": "D slip seal",
+   "clip": "sfx_stamp_a",
+   "at": [
+    "D",
+    "from",
+    12.033
+   ],
+   "gain": -22.0,
+   "rate": 0.94
+  },
+  {
+   "label": "D spool thrown",
+   "clip": "sfx_whoosh",
+   "at": [
+    "D",
+    "from",
+    16.933
+   ],
+   "gain": -23.0,
+   "rate": 0.97
+  },
+  {
+   "label": "D spool on the lens",
+   "clip": "sfx_thump",
+   "at": [
+    "D",
+    "from",
+    17.367
+   ],
+   "gain": -22.0,
+   "rate": 0.91
+  },
+  {
+   "label": "E the thread ties",
+   "clip": "sfx_twang",
+   "at": [
+    "E02",
+    "start",
+    -0.4
+   ],
+   "gain": -24.0,
+   "rate": 0.94
+  },
+  {
+   "label": "E snap 1",
+   "clip": "sfx_snap",
+   "at": [
+    "E",
+    "from",
+    14.5
+   ],
+   "gain": -20.0,
+   "rate": 0.94
+  },
+  {
+   "label": "E snap 2",
+   "clip": "sfx_snap",
+   "at": [
+    "E",
+    "from",
+    15.267
+   ],
+   "gain": -20.0,
+   "rate": 1.06
+  },
+  {
+   "label": "E snap 3",
+   "clip": "sfx_snap",
+   "at": [
+    "E",
+    "from",
+    16.4
+   ],
+   "gain": -20.0,
+   "rate": 0.97
+  },
+  {
+   "label": "E stamp",
+   "clip": "sfx_stamp_b",
+   "at": [
+    "E",
+    "from",
+    24.033
+   ],
+   "gain": -20.0,
+   "rate": 0.94
+  },
+  {
+   "label": "F 稳",
+   "clip": "sfx_pop",
+   "at": [
+    "F01",
+    "start",
+    3.04
+   ],
+   "gain": -20.0,
+   "rate": 1.09
+  },
+  {
+   "label": "F his thread slips off",
+   "clip": "sfx_twang",
+   "at": [
+    "F",
+    "from",
+    11.8
+   ],
+   "gain": -27.0,
+   "rate": 1.219
+  },
+  {
+   "label": "F her thread slips off",
+   "clip": "sfx_twang",
+   "at": [
+    "F",
+    "from",
+    13.533
+   ],
+   "gain": -26.0,
+   "rate": 1.115
+  },
+  {
+   "label": "F stamp",
+   "clip": "sfx_stamp_c",
+   "at": [
+    "F",
+    "from",
+    17.533
+   ],
+   "gain": -20.0,
+   "rate": 0.94
+  },
+  {
+   "label": "F mitten on the lens",
+   "clip": "sfx_thump",
+   "at": [
+    "F",
+    "from",
+    18.433
+   ],
+   "gain": -25.0,
+   "rate": 1.03
+  },
+  {
+   "label": "G strand 1",
+   "clip": "sfx_snap",
+   "at": [
+    "G",
+    "from",
+    4.4
+   ],
+   "gain": -33.0,
+   "rate": 1.308
+  },
+  {
+   "label": "G strand 2",
+   "clip": "sfx_snap",
+   "at": [
+    "G",
+    "from",
+    4.767
+   ],
+   "gain": -33.0,
+   "rate": 1.092
+  },
+  {
+   "label": "G strand 3",
+   "clip": "sfx_snap",
+   "at": [
+    "G",
+    "from",
+    5.133
+   ],
+   "gain": -33.0,
+   "rate": 1.236
+  },
+  {
+   "label": "G strand 4",
+   "clip": "sfx_snap",
+   "at": [
+    "G",
+    "from",
+    5.433
+   ],
+   "gain": -33.0,
+   "rate": 1.152
+  },
+  {
+   "label": "G the rider calls",
+   "clip": "sfx_whoosh",
+   "at": [
+    "G03",
+    "start",
+    -0.4
+   ],
+   "gain": -28.0,
+   "rate": 1.09
+  },
+  {
+   "label": "G 完了",
+   "clip": "sfx_boing",
+   "at": [
+    "G05",
+    "start",
+    3.18
+   ],
+   "gain": -27.0,
+   "rate": 0.848
+  },
+  {
+   "label": "I the old thread",
+   "clip": "sfx_sparkle",
+   "at": [
+    "I01",
+    "start",
+    1.52
+   ],
+   "gain": -26.0,
+   "rate": 0.94
+  },
+  {
+   "label": "I name",
+   "clip": "sfx_sparkle",
+   "at": [
+    "I05",
+    "start",
+    1.92
+   ],
+   "gain": -23.0,
+   "rate": 1.06
+  },
+  {
+   "label": "I target met",
+   "clip": "sfx_ding",
+   "at": [
+    "I05",
+    "end",
+    0.27
+   ],
+   "gain": -21.0,
+   "rate": 1.06
+  },
+  {
+   "label": "I 成了",
+   "clip": "sfx_pop",
+   "at": [
+    "I06",
+    "start",
+    0.05
+   ],
+   "gain": -20.0,
+   "rate": 0.91
+  },
+  {
+   "label": "I stamp ok",
+   "clip": "sfx_stamp_a",
+   "at": [
+    "I",
+    "from",
+    29.267
+   ],
+   "gain": -20.0,
+   "rate": 1.06
+  },
+  {
+   "label": "I stamp ok shine",
+   "clip": "sfx_sparkle",
+   "at": [
+    "I",
+    "from",
+    29.333
+   ],
+   "gain": -25.0,
+   "rate": 0.97
+  },
+  {
+   "label": "J her thread",
+   "clip": "sfx_sparkle",
+   "at": [
+    "J02",
+    "end",
+    0.1
+   ],
+   "gain": -23.0,
+   "rate": 1.09
+  },
+  {
+   "label": "power off",
+   "clip": "sfx_poweroff",
+   "at": [
+    "J",
+    "from",
+    10.8
+   ],
+   "gain": -16.0
+  }
+ ]
+}

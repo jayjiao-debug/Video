@@ -87,11 +87,15 @@
  },
  "sound": {
   "build": "bash scripts/yuelao/sound/build_sound.sh {WORK}/sound {MIX}",
-  "stems": "python3 scripts/kit/day/sound/build.py --film yuelao --work {WORK}/sound --timing {WORK}/sound/voice/voice_timing.json --voice {WORK}/sound/voice/voice_48k.wav --clips {WORK}/sound/clips --cues scripts/yuelao/sound/cues_v6.json --only {GROUP} --nosafety --out {STEM}",
+  "stems": "python3 scripts/kit/day/sound/build.py --film yuelao --work {WORK}/sound --timing {WORK}/sound/voice/voice_timing.json --voice {WORK}/sound/voice/voice_48k_ride.wav --clips {WORK}/sound/clips --cues scripts/yuelao/sound/cues_v7.json --only {GROUP} --nosafety --out {STEM}",
   "groups": [
-   "voice"
+   "voice",
+   "music",
+   "amb",
+   "sfx"
   ]
  },
  "_note": "Sound (27 Nov 2026, after the owner's audition): scripts/yuelao/sound/build_sound.sh rebuilds the whole mix from the repo and the voice farm's public takes: the 63 lines cut by the committed cut list (voice/takes.json: each line exactly the length the picture was timed to; it stops if the rebuilt timing is out of step with voice/timing_ref.json), the music and effects made in code (make_sound.py), the cues on the picture's own frames (cues.json from make_cues.py + events.ts), the voice ridden under the bed (voice_ride.py), then the kit's build.py. Mono mix about -18.9 LUFS, true peak about -2.3 dBTP. The stems command needs the build's {WORK}/sound from the same run. The gate.accept rules turn the clipping classes accepted in the film's own clipping notes into INFO, each with its reason.",
- "_note_v6": "v6 (28 Nov 2026): the cut carries the VOICES ONLY until the owner picks real music (build_sound.sh, cues_v6.json), so the gate's stems are built the same way: the voice stem from voice_48k.wav (no ride: nothing is under it) and no music, room or effects stems, so 'voice over the rest' is not measured (there is no rest by design). When the music card is answered, put back the cues.json + voice_48k_ride.wav stems command and the four groups."
+ "_note_v6": "v6 (28 Nov 2026): the cut carries the VOICES ONLY until the owner picks real music (build_sound.sh, cues_v6.json), so the gate's stems are built the same way: the voice stem from voice_48k.wav (no ride: nothing is under it) and no music, room or effects stems, so 'voice over the rest' is not measured (there is no rest by design). When the music card is answered, put back the cues.json + voice_48k_ride.wav stems command and the four groups.",
+ "_note_v7": "v7 (28 Nov 2026): the owner asked for the sound to be generated with ElevenLabs. build_sound.sh's default (YL_SOUND=el) fetches the voice farm's SEALED runs named in scripts/yuelao/sound/el.json, opens them with the Mac's own private key (~/Claude/keys/yuelao_sound.pem, or $YL_SOUND_KEY), cuts the clips (make_el.py) and mixes them with cues_v7.json (one composition in four sections for the music, the night piece in G, no music in H; ElevenLabs room tones and effects; the series' own REC beep and power-off). The stems are the four groups again, from voice_48k_ride.wav (the voice ridden under the bed by clip gain only; the music is never touched)."
 }
