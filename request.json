@@ -1,156 +1,17 @@
 {
- "id": "yuelao-sound-04",
+ "id": "yuelao-voice-01",
  "own_branch": true,
- "seal_rsa": [
-  "-----BEGIN PUBLIC KEY-----\nMIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEA7ipGvGr+/aVGw4GnMFmf\niAmdTASNCEssxvAJ2UfgXzspQxVbt86U00WY1nd6Muttme/vlC3N7tTSqAwsU9Nw\nFliccK2bpA3uvIlOiCLL9g2VX2jJTZamYSd5xY0xh3l9zM+AkMRlWvjjOWv4kFIf\noBwBx7ugTO60F5nh96niAaflogGBCVDaLTgD8lzmJw7eukR3uIH+D+fNoiI6sfo5\nBMeh0L7OINd2udi1r4Hm7S318MP/2fc9z7wXYnxEVARUHiE27JuLEld/XSLq8s7k\nqSOu/DUCd5m276BpUyvcjXZ4D70wvImPyoeTs+EJBc3vkeoR+itnyG3BQR+kSNTW\nTsOUxuimB8OOzUnOjsl7pVRqYx1bXUMwAB//BhQE2sSOB/7oWynR2HNHRfzl0iL/\nLScSFG90+RtA9xrYDOnd085tLWwzUhOfpG5pN5UV1EB5fVSOVSSV5AyR+qOlu+mq\nybrh7nKhSLksk66toaYkZICZTgDu6XJpPXm37UoXEUH9AgMBAAE=\n-----END PUBLIC KEY-----\n"
- ],
- "sfx_model": "eleven_text_to_sound_v3",
- "tag": true,
- "settle": 300,
+ "words": true,
+ "settle": 150,
  "items": [
   {
-   "type": "music",
-   "name": "mus_theme",
-   "model": "music_v2_5",
-   "format": "mp3_48000_192",
-   "plan": {
-    "chunks": [
-     {
-      "text": "[Bureau theme]",
-      "duration_ms": 48000,
-      "positive_styles": [
-       "instrumental",
-       "playful Chinese variety show comedy music",
-       "guzheng plucks",
-       "pizzicato strings",
-       "woodblock and small temple bells",
-       "light hand percussion",
-       "bouncy and mischievous",
-       "bright and quirky",
-       "catchy simple melody",
-       "D major pentatonic",
-       "100 BPM",
-       "steady groove"
-      ],
-      "negative_styles": [
-       "vocals",
-       "lyrics",
-       "singing",
-       "choir",
-       "humming",
-       "spoken words",
-       "heavy drums",
-       "rock guitar",
-       "EDM drop",
-       "dark",
-       "sad",
-       "epic orchestra"
-      ],
-      "context_adherence": "high"
-     },
-     {
-      "text": "[City version]",
-      "duration_ms": 24000,
-      "positive_styles": [
-       "instrumental",
-       "the same melody in a modern city version",
-       "light electronic beat",
-       "plucky synth with guzheng",
-       "busy urban office feel",
-       "playful",
-       "D major pentatonic",
-       "100 BPM"
-      ],
-      "negative_styles": [
-       "vocals",
-       "lyrics",
-       "singing",
-       "choir",
-       "humming",
-       "spoken words",
-       "heavy bass drop",
-       "aggressive",
-       "dark"
-      ],
-      "context_adherence": "high"
-     },
-     {
-      "text": "[Tender]",
-      "duration_ms": 18700,
-      "positive_styles": [
-       "instrumental",
-       "the same melody, slow and tender",
-       "solo guzheng with a soft warm string pad",
-       "gentle and wistful",
-       "sparse",
-       "half-time feel",
-       "D major pentatonic"
-      ],
-      "negative_styles": [
-       "vocals",
-       "lyrics",
-       "singing",
-       "choir",
-       "humming",
-       "spoken words",
-       "drums",
-       "percussion",
-       "fast",
-       "electronic beat"
-      ],
-      "context_adherence": "high"
-     },
-     {
-      "text": "[Warm ending]",
-      "duration_ms": 21600,
-      "positive_styles": [
-       "instrumental",
-       "the same melody returns warm and hopeful",
-       "guzheng, erhu and strings",
-       "gentle swell",
-       "heartwarming resolution",
-       "ends on a soft final chord",
-       "D major pentatonic"
-      ],
-      "negative_styles": [
-       "vocals",
-       "lyrics",
-       "singing",
-       "choir",
-       "humming",
-       "spoken words",
-       "heavy drums",
-       "abrupt ending",
-       "electronic beat"
-      ],
-      "context_adherence": "high"
-     }
-    ]
-   }
-  },
-  {
-   "type": "sfx",
-   "name": "amb_office",
-   "duration": 8,
-   "influence": 0.5,
-   "loop": true,
-   "text": "Quiet room tone of an old Chinese temple office in the day: faint wind outside, wooden beams creaking softly now and then, very calm and still. No music, no voices."
-  },
-  {
-   "type": "sfx",
-   "name": "amb_work",
-   "duration": 8,
-   "influence": 0.5,
-   "loop": true,
-   "text": "Quiet modern open-plan office room tone: soft air conditioning hum, faint distant keyboard typing, an occasional mouse click. No music, no voices."
-  },
-  {
-   "type": "sfx",
-   "name": "amb_street",
-   "duration": 8,
-   "influence": 0.5,
-   "loop": true,
-   "text": "Calm night city street ambience outside an office tower: distant traffic hum, a light breeze, a far-off scooter passing once. No music, no voices, no horns."
+   "type": "design",
+   "name": "ylA",
+   "lang": "zh",
+   "model": "eleven_ttv_v3",
+   "seed": 3101,
+   "description": "Native Mandarin Chinese speaker with a standard mainland Putonghua accent. A lively old man in his seventies, a cheeky old immortal: bright, slightly husky and reedy voice with a chuckle behind the words, warm and mischievous, quick-witted like a veteran crosstalk comedian, animated and expressive, yet gentle and tender when he slows down. Medium pitch, brisk pace, very clear diction. Perfect studio audio quality.",
+   "text": "别动！一动，三对离婚。姻缘司，上下就我一个。别人九九六，我零零七。牛郎织女，我绑的！牢吧？现在的年轻人，线刚绑上，自己就剪了。当年太忙。想着忙完这阵，就给自己绑一根。这一阵，忙了一千二百年。成了！快记！我绑的！全是我绑的！"
   }
  ]
 }

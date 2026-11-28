@@ -15,7 +15,7 @@ if not KEY: log("NO KEY: add the ELEVENLABS_API_KEY repository secret"); sys.exi
 # account + models
 try:
     u = requests.get(f"{API}/v1/user/subscription", headers=H, timeout=30).json()
-    report["plan"] = {k: u.get(k) for k in ("tier", "character_count", "character_limit", "status", "next_character_count_reset_unix")}
+    report["plan"] = {k: u.get(k) for k in ("tier", "character_count", "character_limit", "status", "next_character_count_reset_unix", "voice_slots_used", "voice_limit")}
     # any other usage counters the account reports (music, sound effects...): counts and limits only, never billing details
     report["usage_other"] = {k: v for k, v in u.items() if isinstance(v, (int, float)) and any(w in k for w in ("count", "limit", "usage", "minute", "credit", "second")) and not any(w in k for w in ("invoice", "price", "amount", "cost", "currency"))}
 except Exception as e: report["plan"] = str(e)
@@ -64,6 +64,7 @@ def find_own(accent, gender):
     return own[0]["voice_id"], f"own:{own[0]['name']}"
 
 KEPT = {}   # library voice id -> the id it has in the account, for items with "keep": true
+SAVED = {}  # designed voices kept in this run: name -> voice id (items refer to one as "@name")
 TR = []     # "transcribe" items, checked with Whisper after generation
 for it in req["items"]:
     if it.get("type") == "transcribe":   # no ElevenLabs call: Whisper on a slice of an earlier output {"type":"transcribe","name","src":"out/<id>/<file>","start"?,"end"?,"lang"?}
@@ -82,6 +83,56 @@ for it in req["items"]:
         if r.ok: rec["catalog"] = r.json()
         else: rec["error"] = r.text[:400]
         log(json.dumps(rec, ensure_ascii=False)[:3000]); report["clips"].append(rec); continue
+    if it.get("type") == "design":   # ElevenLabs Voice Design: new voices from a written description
+        # {"type":"design","name","description" (20-1000 chars),"text" (what each preview says, 100-1000 chars),"model"? (eleven_ttv_v3 |
+        #  eleven_multilingual_ttv_v2),"seed"?,"guidance"?,"loudness"?,"save"? (true, or the preview numbers to keep as voices of the
+        #  account named "<name>_<n>"; later items of the run use one as "@<name>_<n>")}
+        import base64
+        body = {"voice_description": it["description"], "text": it["text"], "model_id": it.get("model", "eleven_ttv_v3")}
+        for a_, b_ in (("seed", "seed"), ("guidance", "guidance_scale"), ("loudness", "loudness"), ("quality", "quality")):
+            if it.get(a_) is not None: body[b_] = it[a_]
+        c0 = used(); tried = []
+        for path, mdl in (("design", body["model_id"]), ("design", "eleven_multilingual_ttv_v2"), ("create-previews", None)):
+            if (path, mdl) in tried: continue
+            tried.append((path, mdl)); b2 = dict(body)
+            if mdl: b2["model_id"] = mdl
+            else: b2.pop("model_id", None)
+            r = requests.post(f"{API}/v1/text-to-voice/{path}?output_format=mp3_44100_192", headers=H, json=b2, timeout=600)
+            if r.ok: break
+            log("design failed with", path, mdl, r.status_code, r.text[:400])
+            if r.status_code in (401, 403): break   # a permission problem: another model will not help
+        c1 = used()
+        head = {"name": it["name"], "type": "design", "status": r.status_code, "model": b2.get("model_id"), "endpoint": path, "credits": (c1 - c0) if c0 is not None and c1 is not None else None, "description": it["description"], "seed": it.get("seed")}
+        if not r.ok:
+            head["error"] = r.text[:600]; log(json.dumps(head, ensure_ascii=False)); report["clips"].append(head); continue
+        j = r.json(); head["previews"] = len(j.get("previews", [])); log(json.dumps(head, ensure_ascii=False)); report["clips"].append(head)
+        keep = it.get("save")
+        for n, pv in enumerate(j.get("previews", []), 1):
+            nm = f"{it['name']}_{n}"; fn = f"{nm}.mp3"
+            open(f"out/{fn}", "wb").write(base64.b64decode(pv["audio_base_64"]))
+            rec = {"name": nm, "type": "design_preview", "lang": it.get("lang", "zh"), "text": j.get("text") or it["text"], "generated_voice_id": pv.get("generated_voice_id"), "duration": pv.get("duration_secs"), "language": pv.get("language"), "file": fn}
+            if keep is True or (isinstance(keep, list) and n in keep):
+                vb = {"voice_name": (it.get("voice_name") or nm)[:60], "voice_description": it["description"], "generated_voice_id": pv["generated_voice_id"]}
+                v = requests.post(f"{API}/v1/text-to-voice", headers=H, json=vb, timeout=120)
+                if not v.ok and v.status_code in (404, 405): v = requests.post(f"{API}/v1/text-to-voice/create-voice-from-preview", headers=H, json=vb, timeout=120)
+                rec["save_status"] = v.status_code
+                if v.ok: SAVED[nm] = rec["voice_id"] = v.json().get("voice_id")
+                else: rec["save_error"] = v.text[:400]
+            log(json.dumps(rec, ensure_ascii=False)); report["clips"].append(rec)
+        continue
+    if it.get("type") == "save_voice":   # keep a preview of an EARLIER design run as a voice of the account: {"type":"save_voice","name","generated_voice_id","description","voice_name"?}
+        vb = {"voice_name": (it.get("voice_name") or it["name"])[:60], "voice_description": it["description"], "generated_voice_id": it["generated_voice_id"]}
+        v = requests.post(f"{API}/v1/text-to-voice", headers=H, json=vb, timeout=120)
+        if not v.ok and v.status_code in (404, 405): v = requests.post(f"{API}/v1/text-to-voice/create-voice-from-preview", headers=H, json=vb, timeout=120)
+        rec = {"name": it["name"], "type": "save_voice", "status": v.status_code}
+        if v.ok: SAVED[it["name"]] = rec["voice_id"] = v.json().get("voice_id")
+        else: rec["error"] = v.text[:400]
+        log(json.dumps(rec, ensure_ascii=False)); report["clips"].append(rec); continue
+    if it.get("type") == "delete_voice":   # remove a voice of the account (a designed one that was not picked): {"type":"delete_voice","name","voice_id"}
+        v = requests.delete(f"{API}/v1/voices/{SAVED.get(str(it['voice_id'])[1:], it['voice_id']) if str(it['voice_id']).startswith('@') else it['voice_id']}", headers=H, timeout=60)
+        rec = {"name": it["name"], "type": "delete_voice", "status": v.status_code}
+        if not v.ok: rec["error"] = v.text[:300]
+        log(json.dumps(rec, ensure_ascii=False)); report["clips"].append(rec); continue
     if it.get("type") == "dialogue":   # several speakers in ONE generation (consistent voices, natural turn-taking):
         # {"type":"dialogue","name","lang"?,"model"?,"seed"?,"settings"?,"lines":[{"text","voice":{"owner","voice_id","name"}}]}
         ids_for = {}
@@ -90,6 +141,8 @@ for it in req["items"]:
             for l in it["lines"]:
                 ad = l["voice"]
                 if ad["voice_id"] in KEPT: ids_for[ad["voice_id"]] = KEPT[ad["voice_id"]]; continue
+                if not ad.get("owner"):   # the account's own voice (e.g. a designed one): its id, or "@name" for one saved earlier in this run
+                    ids_for[ad["voice_id"]] = SAVED.get(str(ad["voice_id"])[1:], ad["voice_id"]) if str(ad["voice_id"]).startswith("@") else ad["voice_id"]; continue
                 a = requests.post(f"{API}/v1/voices/add/{ad['owner']}/{ad['voice_id']}", headers=H, json={"new_name": ("s-" + ad.get("name", ""))[:40]}, timeout=30)
                 if not a.ok: raise RuntimeError(f"add {ad.get('name')} failed {a.status_code} {a.text[:200]}")
                 KEPT[ad["voice_id"]] = ids_for[ad["voice_id"]] = a.json().get("voice_id", ad["voice_id"])
@@ -182,6 +235,7 @@ for it in req["items"]:
         else: rec["error"] = r.text[:600]
         log(json.dumps(rec, ensure_ascii=False)); report["clips"].append(rec); continue
     vid, vname = (it.get("voice_id"), it.get("voice_id"))
+    if str(vid or "").startswith("@"): vid = SAVED.get(vid[1:], vid)
     added = None
     if it.get("add"):   # a shared-library voice by its ids {"owner","voice_id","name"}: add it to the account, speak, remove it again
         ad = it["add"]
