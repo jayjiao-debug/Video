@@ -20,7 +20,7 @@ import { zoomBy } from "../cam";
 import { P, startOf, endOf, wordAt, ky, rel, V, smooth, walkAlong, hang, win, shotCam, through, turnTo, kick, VERBS, type ShotKey, hit } from "./kit";
 import { act, YL, XM, QS, type MoodKey } from "./act";
 import { lensThreads, mittenCover } from "./fx";
-import { CAMN, STAND_AT, stepSeat, STEP, DOOR_HER, DOOR_RIDER, WAY_OUT, LIFT_OUT, RIDER_UP, COIL_AT, oldLine } from "./night";
+import { CAMN, STAND_AT, stepSeat, STEP, DOOR_HER, DOOR_RIDER, WAY_OUT, LIFT_OUT, RIDER_UP, COIL_AT, oldLine, cushion } from "./night";
 import { MOON_LOCAL } from "../sets/street";
 
 const S = seg("G"), HALF = Math.PI / 2;
@@ -33,7 +33,7 @@ const RIDER_LEN = VERBS.walkTime(RIDER_UP, 1), RIDER_DOWN = [...RIDER_UP].revers
 const DOWN_YAW = Math.atan2(RIDER_DOWN[1].x - RIDER_DOWN[0].x, RIDER_DOWN[1].z - RIDER_DOWN[0].z);
 /** the knot on the step beside his hip while he sits (13 cm short of where he drops it, on the old thread). Its ball
  *  (centre 5.5 cm over its origin) is 7 cm round: laid at its origin it sank 1.4 cm into the tread, so it lies LIFT higher */
-const KNOT_LIFT = 0.018, KNOT_REST = COIL_AT.clone().add(V(-0.13, KNOT_LIFT, 0.04)), KNOT_DROP = COIL_AT.clone().add(V(0, KNOT_LIFT, 0)), KNOT_BALL = 0.07;
+const KNOT_LIFT = 0.018, KNOT_REST = COIL_AT.clone().add(V(-0.11, KNOT_LIFT, 0.04)), KNOT_DROP = COIL_AT.clone().add(V(0, KNOT_LIFT, 0)), KNOT_BALL = 0.07;
 /** where the bag changes hands, between the two of them */
 const HAND_PT = P("street", 0.09, 0.51 + 0.84, -3.14);
 /** the rider's walked way from the kerb to where he is (d m along RIDER_UP): the old thread trails behind his ankle */
@@ -97,7 +97,7 @@ export const SEG: Segment = {
     // beard, and looked at; carried at his side on the trudge; set down on the step beside his hip as he sits, his hand
     // left on it; lifted out once more for a last look (一个时辰 … ) and dropped onto the old thread (COIL_AT) on 完了.
     // It always hangs just under his fist (knotAt). His right hand hangs, then rests on his right knee.
-    const fid = 0.01 * Math.sin(f * 0.55), lapR = SH(-0.13 - fid, 0.42 + 0.005 * Math.sin(f * 0.8), 0.26), lapL = SH(0.13 + fid * 0.6, 0.42 - 0.005 * Math.sin(f * 0.8), 0.26);
+    const fid = 0.01 * Math.sin(f * 0.55), lapR = SH(-0.13 - fid, 0.45 + 0.005 * Math.sin(f * 0.8), 0.29), lapL = SH(0.13 + fid * 0.6, 0.45 - 0.005 * Math.sin(f * 0.8), 0.29);
     const hangR = H(-0.228, 0.59, 0.05), hold = H(0.21, 0.86 + 0.006 * Math.sin(f * 0.4), 0.26), carry = H(0.27, 0.68, 0.1 + 0.03 * sway);
     const onKnot = KNOT_REST.clone().add(V(-0.02, 0.145, 0)), out = COIL_AT.clone().add(V(-0.07, 0.42, 0)), shakeK = win(f, tug + 8, drop0 - 2, 4, 4);
     let hands: [THREE.Vector3 | null, THREE.Vector3 | null] | undefined;
@@ -197,6 +197,8 @@ export const SEG: Segment = {
       }
       w.prop("tangle", "his").put(knot, { yaw: yaw + (shakeK ? 0.12 * Math.sin(f * 1.6) * shakeK : 0), scale: sc });
     }
+    // his cloud cushion puffs up on the step as he comes round to sit on it
+    cushion(w, smooth((f - (sit0 - 12)) / 10));
     // ---------------------------------------------------------------------------------------------- the old thread
     const herOut = xm && xm.group.position.z > -3.55 ? xm.footWorld(0) : undefined;
     const dNow = going ? Math.max(0, RIDER_LEN - STROLL * Math.max(0, (f - down0) / 30)) : Math.min(RIDER_LEN, TROT * Math.max(0, (f - rgo) / 30));

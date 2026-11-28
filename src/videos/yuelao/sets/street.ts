@@ -209,6 +209,68 @@ const shopTex = () => paint(768, 704, (g, W, H) => {
   g.fillStyle = "#f6f2e8"; g.beginPath(); g.arc(680, 400, 22, 0, 7); g.fill(); g.fillStyle = "#d84030"; g.fillRect(668, 410, 24, 6);
   g.fillStyle = "#d8402e"; g.beginPath(); g.ellipse(640, 230, 34, 42, 0, 0, 7); g.fill(); g.fillStyle = "#e8b04a"; g.fillRect(630, 184, 20, 8); g.fillRect(630, 268, 20, 8);
 });
+/** THE SHOP'S LEFT WALL (v6, owner's note 21 on v5: "set too linear, cheap"): what the step scenes see through the
+ *  window, behind his head. 2.2 m (u: from the window, 0, to the back, 1) by 2.75 m. Cream tiles to 1 m, a lit drinks
+ *  fridge by the window, the price board over a shelf with a lucky cat and jars, a wall clock, a 福 diamond, a calendar.
+ *  Its top 0.8 m stays plain and in shade (in scene F that part of the glass is behind the REC label). */
+const shopSideTex = () => paint(704, 880, (g, W, H) => {
+  const m = W / 2.2, yOf = (y: number) => H - y * (H / 2.75);
+  const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, "#8a5f37"); gr.addColorStop(0.3, "#c08c56"); gr.addColorStop(0.6, "#e2b67c"); gr.addColorStop(1, "#d6a66c");
+  g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  // the tiles (to 1 m), their grout, a red skirting strip
+  g.fillStyle = "#efe6d2"; g.fillRect(0, yOf(1.0), W, yOf(0) - yOf(1.0));
+  g.strokeStyle = "rgba(150,128,100,0.55)"; g.lineWidth = 2;
+  for (let y = 0; y <= 1.0; y += 0.15) { g.beginPath(); g.moveTo(0, yOf(y)); g.lineTo(W, yOf(y)); g.stroke(); }
+  for (let x = 0; x <= 2.2; x += 0.15) { g.beginPath(); g.moveTo(x * m, yOf(1.0)); g.lineTo(x * m, yOf(0)); g.stroke(); }
+  g.fillStyle = "#b8322a"; g.fillRect(0, yOf(1.04), W, 10);
+  // the drinks fridge by the window: a steel box, its glass door lit, rows of bottles and cans
+  const fx0 = 0.12 * m, fx1 = 0.78 * m, fy0 = yOf(1.85), fy1 = yOf(0.02);
+  g.fillStyle = "#b9bcc2"; g.fillRect(fx0, fy0, fx1 - fx0, fy1 - fy0);
+  g.fillStyle = "#e8f2f8"; g.fillRect(fx0 + 12, fy0 + 40, fx1 - fx0 - 24, fy1 - fy0 - 70);
+  g.fillStyle = "#c8322a"; g.fillRect(fx0, fy0, fx1 - fx0, 34); g.fillStyle = "#fff4e0"; g.font = `bold 24px ${FONT}`; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText("冰 镇 饮 料", (fx0 + fx1) / 2, fy0 + 18);
+  const cols = ["#e0402e", "#2f8a4a", "#f2b630", "#3a6ec0", "#f4f0e6", "#e06a2a"];
+  for (let row = 0; row < 5; row++) {
+    const y = fy0 + 70 + row * ((fy1 - fy0 - 110) / 5);
+    g.fillStyle = "rgba(120,130,140,0.55)"; g.fillRect(fx0 + 14, y + 52, fx1 - fx0 - 28, 4);
+    for (let i = 0; i < 7; i++) { g.fillStyle = cols[(row * 3 + i) % cols.length]; const bx = fx0 + 22 + i * ((fx1 - fx0 - 44) / 7); g.fillRect(bx, y + 8 + (i % 2) * 8, 18, 44 - (i % 2) * 8); g.fillRect(bx + 5, y + (i % 2) * 8, 8, 10); }
+  }
+  g.fillStyle = "rgba(255,255,255,0.35)"; g.beginPath(); g.moveTo(fx0 + 20, fy0 + 44); g.lineTo(fx0 + 60, fy0 + 44); g.lineTo(fx0 + 30, fy1 - 30); g.lineTo(fx0 + 20, fy1 - 30); g.fill();
+  // the price board (red, gold edge) with five dishes and their prices
+  const px0 = 0.95 * m, px1 = 2.02 * m, py0 = yOf(1.95), py1 = yOf(1.32);
+  g.fillStyle = "#9a2a22"; g.fillRect(px0 - 6, py0 - 6, px1 - px0 + 12, py1 - py0 + 12); g.fillStyle = "#c8362c"; g.fillRect(px0, py0, px1 - px0, py1 - py0);
+  g.strokeStyle = "#f2c24a"; g.lineWidth = 4; g.strokeRect(px0 + 8, py0 + 8, px1 - px0 - 16, py1 - py0 - 16);
+  g.textAlign = "left"; g.fillStyle = "#fff4e0"; g.font = `bold 30px ${FONT}`;
+  [["牛肉面", "18"], ["炸酱面", "15"], ["酸辣粉", "14"], ["馄  饨", "12"]].forEach(([a, b], i) => { const y = py0 + 40 + i * 40; g.fillStyle = "#fff4e0"; g.fillText(a, px0 + 26, y); g.fillStyle = "#f2c24a"; g.fillText(b, px1 - 66, y); });
+  // the shelf under it: a lucky cat (its paw up), jars of chilli oil, a stack of bowls
+  const sy = yOf(1.16); g.fillStyle = "#7a4a2a"; g.fillRect(0.95 * m, sy, 1.1 * m, 10);
+  g.fillStyle = "#f8f4ea"; g.beginPath(); g.arc(1.12 * m, sy - 30, 26, 0, 7); g.fill(); g.beginPath(); g.arc(1.12 * m, sy - 64, 20, 0, 7); g.fill();
+  g.fillStyle = "#d84030"; g.fillRect(1.12 * m - 22, sy - 46, 44, 7); g.fillStyle = "#f2c24a"; g.beginPath(); g.arc(1.12 * m, sy - 30, 8, 0, 7); g.fill();
+  g.fillStyle = "#f8f4ea"; g.fillRect(1.12 * m + 14, sy - 98, 12, 30);
+  for (let i = 0; i < 3; i++) { const x = 1.35 * m + i * 44; g.fillStyle = "#a8281e"; g.fillRect(x, sy - 46, 32, 46); g.fillStyle = "#f2e6c8"; g.fillRect(x - 2, sy - 52, 36, 8); }
+  for (let i = 0; i < 4; i++) { g.fillStyle = i % 2 ? "#f4f0e6" : "#e6e0d2"; g.beginPath(); g.ellipse(1.86 * m, sy - 6 - i * 12, 34, 9, 0, 0, 7); g.fill(); g.fillStyle = "#3a6ea8"; g.fillRect(1.86 * m - 30, sy - 8 - i * 12, 60, 3); }
+  // a wall clock, a 福 diamond, a calendar (all under the shaded top band)
+  g.fillStyle = "#f6f2e8"; g.beginPath(); g.arc(1.72 * m, yOf(2.18), 34, 0, 7); g.fill(); g.strokeStyle = "#4a3a2a"; g.lineWidth = 5; g.stroke();
+  g.lineWidth = 4; g.beginPath(); g.moveTo(1.72 * m, yOf(2.18)); g.lineTo(1.72 * m, yOf(2.18) - 22); g.moveTo(1.72 * m, yOf(2.18)); g.lineTo(1.72 * m + 16, yOf(2.18) + 6); g.stroke();
+  g.save(); g.translate(1.18 * m, yOf(2.2)); g.rotate(Math.PI / 4); g.fillStyle = "#c8322a"; g.fillRect(-36, -36, 72, 72); g.restore();
+  g.fillStyle = "#f2c24a"; g.font = `bold 50px ${FONT}`; g.textAlign = "center"; g.fillText("福", 1.18 * m, yOf(2.2) + 2);
+  g.fillStyle = "#f4ead8"; g.fillRect(0.88 * m, yOf(0.98) + 0, 0, 0);
+  g.fillStyle = "#efe4cf"; g.fillRect(2.06 * m, yOf(1.9), 0.11 * m, 0.42 * m); g.fillStyle = "#c8322a"; g.fillRect(2.06 * m, yOf(1.9), 0.11 * m, 22);
+  // a soft fall-off of the lamp light toward the back and the floor
+  const sh = g.createLinearGradient(0, 0, W, 0); sh.addColorStop(0, "rgba(0,0,0,0)"); sh.addColorStop(1, "rgba(60,30,10,0.25)"); g.fillStyle = sh; g.fillRect(0, 0, W, H);
+});
+/** a ginkgo leaf, four colours side by side (fan with the notch, veins, the stalk), on clear ground */
+const ginkgoTex = () => paint(256, 64, (g, W, H) => {
+  g.clearRect(0, 0, W, H);
+  ["#f0c23a", "#e2a826", "#f4d466", "#c98a2a"].forEach((col, i) => {
+    const cx = i * 64 + 32, cy = 50;
+    g.fillStyle = col; g.beginPath(); g.moveTo(cx, cy);
+    for (let a = -62; a <= 62; a += 4) { const t = (a * Math.PI) / 180, notch = Math.abs(a) < 6 ? 0.8 : 1, r = 30 * notch * (1 - 0.06 * Math.cos(a * 0.25)); g.lineTo(cx + Math.sin(t) * r, cy - Math.cos(t) * r * 1.05); }
+    g.closePath(); g.fill();
+    g.strokeStyle = "rgba(120,80,20,0.45)"; g.lineWidth = 1;
+    for (let a = -54; a <= 54; a += 12) { const t = (a * Math.PI) / 180; g.beginPath(); g.moveTo(cx, cy); g.lineTo(cx + Math.sin(t) * 27, cy - Math.cos(t) * 28); g.stroke(); }
+    g.strokeStyle = "rgba(110,70,20,0.8)"; g.lineWidth = 2; g.beginPath(); g.moveTo(cx, cy); g.lineTo(cx + 3, cy + 12); g.stroke();
+  });
+});
 const shopSignTex = () => paint(512, 128, (g, W, H) => {
   g.fillStyle = "#c22a22"; g.fillRect(0, 0, W, H);
   const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, "rgba(255,255,255,0.18)"); gr.addColorStop(1, "rgba(0,0,0,0.12)"); g.fillStyle = gr; g.fillRect(0, 0, W, H);
@@ -246,6 +308,42 @@ const lobbyBackTex = () => paint(512, 448, (g, W, H) => {
   for (const x of [120, 300]) { g.fillStyle = "#b4b2ae"; g.fillRect(x, 150, 92, H - 150); g.fillStyle = "#8e8c88"; g.fillRect(x + 45, 150, 2, H - 150); g.fillStyle = "#6a4a2a"; g.fillRect(x - 8, 142, 108, 8); g.fillStyle = "#ffb050"; g.fillRect(x + 36, 118, 20, 14); }
   // (no lettering on this wall: the tower's name is on the sign over the door outside; across the top of this wall it sat
   // right behind her camera's REC display in every level shot of the door)
+});
+/** THE LOBBY'S SIDE WALLS (v6, owner's note 21 on v5): what the step scenes see through the glass to the right of his
+ *  head. 5.0 m (u: from the glass, 0, to the back, 1) by 3.09 m. A warm wood wainscot to 0.9 m with a brass line; over
+ *  it the tower's mural, a sea of clouds (云海, the tower's name) with blue-grey peaks and a red sun, in a dark frame, no
+ *  lettering (in the level shots of the door this wall's top band is behind the REC display: it stays plain); two
+ *  sconces. */
+const lobbySideTex = () => paint(1024, 632, (g, W, H) => {
+  const m = W / 5.0, yOf = (y: number) => H - y * (H / 3.09);
+  const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, "#e9cfa4"); gr.addColorStop(1, "#d9b68a"); g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  // the wainscot and its brass line
+  g.fillStyle = "#8a5a36"; g.fillRect(0, yOf(0.9), W, yOf(0) - yOf(0.9));
+  g.fillStyle = "#74482a"; for (let x = 0; x < W; x += 0.62 * m) g.fillRect(x, yOf(0.9), 4, yOf(0) - yOf(0.9));
+  g.fillStyle = "#e0b45a"; g.fillRect(0, yOf(0.93), W, 5);
+  // the mural: frame, sky, the red sun, three bands of peaks, the cloud sea between them
+  const x0 = 0.25 * m, x1 = 3.15 * m, y0 = yOf(2.35), y1 = yOf(1.1);
+  g.fillStyle = "#3a2a20"; g.fillRect(x0 - 12, y0 - 12, x1 - x0 + 24, y1 - y0 + 24);
+  const sky = g.createLinearGradient(0, y0, 0, y1); sky.addColorStop(0, "#d8e2e6"); sky.addColorStop(1, "#f4efe4"); g.fillStyle = sky; g.fillRect(x0, y0, x1 - x0, y1 - y0);
+  g.fillStyle = "#d8503a"; g.beginPath(); g.arc(x0 + (x1 - x0) * 0.74, y0 + (y1 - y0) * 0.3, 26, 0, 7); g.fill();
+  const r = rng(471);
+  const peaks = (base: number, hgt: number, col: string, n: number) => {
+    g.fillStyle = col; g.beginPath(); g.moveTo(x0, y1);
+    for (let i = 0; i <= n; i++) { const x = x0 + ((x1 - x0) * i) / n, up = (i % 2 ? 1 : 0.35 + 0.3 * r()) * hgt; g.lineTo(x, base - up); }
+    g.lineTo(x1, y1); g.closePath(); g.fill();
+  };
+  const cloud = (base: number, col: string) => { g.fillStyle = col; for (let i = 0; i < 14; i++) { const x = x0 + (x1 - x0) * (i / 13), rr = 22 + 16 * r(); g.beginPath(); g.arc(x, base - rr * 0.35, rr, Math.PI, 0); g.fill(); } g.fillRect(x0, base - 4, x1 - x0, y1 - base + 4); };
+  peaks(y0 + (y1 - y0) * 0.55, 70, "#9fb0ba", 9); cloud(y0 + (y1 - y0) * 0.62, "#fbf8f2");
+  peaks(y0 + (y1 - y0) * 0.78, 60, "#7d909c", 7); cloud(y0 + (y1 - y0) * 0.84, "#ffffff");
+  g.strokeStyle = "rgba(90,110,125,0.5)"; g.lineWidth = 2;
+  for (let i = 0; i < 6; i++) { const x = x0 + (x1 - x0) * (0.1 + 0.15 * i), y = y0 + (y1 - y0) * (0.62 + 0.04 * (i % 2)); g.beginPath(); g.arc(x, y, 14, Math.PI * 1.1, Math.PI * 1.9); g.stroke(); }
+  g.fillStyle = "#c8322a"; g.fillRect(x1 - 52, y1 - 64, 26, 30);   // its small red seal
+  // the sconces: a brass back plate, a warm shade, its glow on the wall
+  for (const u of [0.1, 3.6]) {
+    const x = u * m, y = yOf(2.05);
+    const glow = g.createRadialGradient(x, y, 4, x, y, 90); glow.addColorStop(0, "rgba(255,236,190,0.75)"); glow.addColorStop(1, "rgba(255,236,190,0)"); g.fillStyle = glow; g.fillRect(x - 90, y - 90, 180, 180);
+    g.fillStyle = "#b08440"; g.fillRect(x - 6, y - 10, 12, 30); g.fillStyle = "#fff0cc"; g.beginPath(); g.moveTo(x - 22, y - 20); g.lineTo(x + 22, y - 20); g.lineTo(x + 14, y + 8); g.lineTo(x - 14, y + 8); g.fill();
+  }
 });
 const lobbyFloorTex = () => paint(256, 256, (g, W, H) => {
   g.fillStyle = "#d2b48a"; g.fillRect(0, 0, W, H);
@@ -345,8 +443,9 @@ const build = (K: Kit): PlaceBuild => {
   Mk.mesh("street.lobby.floor", levelQuad(X(BAY.x0), X(BAY.x1), LZ, WB, LY, (x, z) => [x / 1.6, -z / 1.6]), lb("#ffe6c4", lobbyFloorTex()), UNLIT);
   Mk.mesh("street.lobby.ceil", ceilQuad(X(BAY.x0), X(BAY.x1), LZ, WB, 3.6, (x, z) => [x / 2, z / 2]), lb("#fff0d8", ceilTex()), UNLIT);
   Mk.mesh("street.lobby.back", new THREE.PlaneGeometry(BAY.x1 - BAY.x0, 3.6 - LY).translate(X(0), (3.6 + LY) / 2, LZ), lb("#ffeedd", lobbyBackTex()), UNLIT);
-  Mk.mesh("street.lobby.side", new THREE.PlaneGeometry(5.0, 3.6 - LY).rotateY(Math.PI / 2).translate(X(BAY.x0), (3.6 + LY) / 2, (LZ + WB) / 2), lb("#d8b88c"), UNLIT);
-  Mk.mesh("street.lobby.side", new THREE.PlaneGeometry(5.0, 3.6 - LY).rotateY(-Math.PI / 2).translate(X(BAY.x1), (3.6 + LY) / 2, (LZ + WB) / 2), lb("#d8b88c"), UNLIT);
+  const sideT = lobbySideTex();
+  Mk.mesh("street.lobby.side", new THREE.PlaneGeometry(5.0, 3.6 - LY).rotateY(Math.PI / 2).translate(X(BAY.x0), (3.6 + LY) / 2, (LZ + WB) / 2), lb("#ffffff", sideT), UNLIT);
+  Mk.mesh("street.lobby.side", new THREE.PlaneGeometry(5.0, 3.6 - LY).rotateY(-Math.PI / 2).translate(X(BAY.x1), (3.6 + LY) / 2, (LZ + WB) / 2), lb("#ffffff", sideT), UNLIT);
   Mk.mesh("street.lobby.desk", boxG(X(0.35), X(1.75), LY, LY + 1.05, WB - 3.1, WB - 2.5), lb("#a8703e"), UNLIT);
   Mk.mesh("street.lobby.desktop", boxG(X(0.3), X(1.8), LY + 1.05, LY + 1.1, WB - 3.15, WB - 2.45), lb("#e8dcc8"), UNLIT);
   Mk.mesh("street.lobby.pot", new THREE.CylinderGeometry(0.22, 0.18, 0.5, 14).translate(X(-1.5), LY + 0.25, WB - 3.6), lb("#7a6656"), UNLIT);
@@ -387,6 +486,46 @@ const build = (K: Kit): PlaceBuild => {
   // bright room (in front of the glass it washed her out like a ghost)
   const doorGlow = glowCard(1.7, "#ffcf8a", 0.3); doorGlow.position.set(X(0), 1.6, WB - 1.0); group.add(doorGlow);
 
+  // v6 (owner's note 21 on v5, "set too linear, cheap and uninteresting"): a dark anti-slip strip behind each nose; a
+  // planter of clipped box on each cheek wall; fallen ginkgo leaves blown against the risers, the cheeks and the wall
+  // (the bare tree's) and a few across the pavement
+  {
+    const noseT = paint(256, 16, (g, W, H) => { g.fillStyle = "#3c3a37"; g.fillRect(0, 0, W, H); g.fillStyle = "#5a5651"; for (let x = 0; x < W; x += 8) g.fillRect(x, 3, 4, H - 6); });
+    noseT.wrapS = THREE.RepeatWrapping;
+    const mNose = decal(Mk.tex(noseT, 0.7));
+    for (let k = 1; k <= st.n; k++) {
+      const front = st.front - st.run * (k - 1), y = st.rise * k + 0.0012;
+      Mk.mesh("street.nose.dark", levelQuad(X(st.x0 + 0.03), X(st.x1 - 0.03), front - 0.075, front - 0.035, y, (x) => [(x - X(st.x0)) / 0.25, 0]), mNose, { cast: false });
+    }
+    const mTrough = Mk.tex(stoneTex(406, "#5d636d"), 0.9), mSoil = Mk.flat("#3a2a20", 0.95), mBox = Mk.flat("#4f7d3c", 0.85), mBox2 = Mk.flat("#5f8f46", 0.85);
+    const rb = rng(463);
+    for (const [c0, c1] of [[st.x0 - 0.235, st.x0 - 0.005], [st.x1 + 0.005, st.x1 + 0.235]]) {
+      const top = st.landingY + 0.1, z0 = st.front - 1.5, z1 = st.front - 0.06;
+      P.add(mTrough, boxG(X(c0), X(c1), top, top + 0.1, z0, z1), 0.006);
+      P.add(mSoil, boxG(X(c0 + 0.02), X(c1 - 0.02), top + 0.1, top + 0.102, z0 + 0.02, z1 - 0.02), 0);
+      for (let i = 0; i < 6; i++) {
+        const z = z0 + 0.14 + i * ((z1 - z0 - 0.28) / 5), r = 0.1 + 0.02 * rb();
+        P.add(i % 2 ? mBox : mBox2, new THREE.SphereGeometry(r, 14, 10).scale(1, 0.82, 1).translate(X((c0 + c1) / 2 + 0.01 * (rb() - 0.5)), top + 0.1 + r * 0.7, z), 0.005);
+      }
+    }
+    // the leaves: one sheet of small quads, each laid flat with its own turn and colour (the bark and box above are lit,
+    // so these are too); never outlined (too small), never checked (dust)
+    const rl = rng(461), pos: number[] = [], uv: number[] = [], idx: number[] = [];
+    const leaf = (x: number, z: number, y: number) => {
+      const s = 0.026 + 0.012 * rl(), a = rl() * Math.PI * 2, c = Math.cos(a), sn = Math.sin(a), v = Math.floor(rl() * 4), n = pos.length / 3, yy = y + 0.0015 + 0.0004 * (n % 5);
+      for (const [u, w] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) { pos.push(X(x) + s * (u * c - w * sn), yy, z + s * (u * sn + w * c)); uv.push((v + (u + 1) / 2) / 4, (w + 1) / 2); }
+      idx.push(n, n + 2, n + 1, n, n + 3, n + 2);
+    };
+    for (let i = 0; i < 40; i++) { const x = rl() < 0.75 ? -6 + 4.0 * rl() : 1.9 + 1.6 * rl(); leaf(x, WZ + 0.05 + 0.3 * rl() * rl(), 0); }                              // along the wall
+    for (let k = 1; k <= st.n; k++) for (let i = 0; i < 9; i++) leaf(st.x0 + 0.1 + (st.x1 - st.x0 - 0.2) * rl(), st.front - st.run * k + 0.025 + 0.05 * rl() * rl(), st.rise * k);   // against each riser
+    for (let i = 0; i < 12; i++) leaf(st.x0 + 0.1 + (st.x1 - st.x0 - 0.2) * rl(), st.front + 0.025 + 0.06 * rl() * rl(), 0);                                      // against the first riser
+    for (let i = 0; i < 14; i++) { const sd2 = rl() < 0.5 ? -1 : 1; leaf((sd2 < 0 ? st.x0 - 0.3 : st.x1 + 0.3) - sd2 * 0.06 * rl() + sd2 * 0.1 * rl(), st.front - 1.4 * rl(), 0); }   // by the cheeks
+    for (let i = 0; i < 46; i++) { const u = rl(); leaf(-4.6 + 7.4 * rl(), st.front + 0.15 + 2.6 * u * u, 0); }                                                    // across the pavement
+    const lg = new THREE.BufferGeometry(); lg.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3)); lg.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2)); lg.setIndex(idx); lg.computeVertexNormals();
+    const mLeaf = K.flat("#ffffff", { map: ginkgoTex(), rough: 0.8 }); mLeaf.alphaTest = 0.5; mLeaf.transparent = false; decal(mLeaf);
+    Mk.mesh("street.leaves.dust", lg, mLeaf, { cast: false, noink: true });
+  }
+
   // ------------------------------------------------------------------------------------------ the noodle shop
   const shopMats: [THREE.MeshBasicMaterial, THREE.Color][] = [];
   const sb = (c: string, map?: THREE.Texture) => { const m = Mk.basic(c, { map: map ?? null }); shopMats.push([m, m.color.clone()]); return m; };
@@ -394,7 +533,7 @@ const build = (K: Kit): PlaceBuild => {
   Mk.mesh("street.shop.back", new THREE.PlaneGeometry(sw, 2.75).translate(X(scx), 1.375, SHOP.back), sb("#ffffff", shopTex()), UNLIT);
   Mk.mesh("street.shop.floor", levelQuad(X(SHOP.x0), X(SHOP.x1), SHOP.back, WB, 0.05), sb("#9a7656"), UNLIT);
   Mk.mesh("street.shop.ceil", ceilQuad(X(SHOP.x0), X(SHOP.x1), SHOP.back, WB, 2.75, (x, z) => [x / 1.5, z / 1.5]), sb("#ffe6b8", ceilTex()), UNLIT);
-  Mk.mesh("street.shop.side", new THREE.PlaneGeometry(sd, 2.75).rotateY(Math.PI / 2).translate(X(SHOP.x0), 1.375, (WB + SHOP.back) / 2), sb("#d8a46c"), UNLIT);
+  Mk.mesh("street.shop.side", new THREE.PlaneGeometry(sd, 2.75).rotateY(Math.PI / 2).translate(X(SHOP.x0), 1.375, (WB + SHOP.back) / 2), sb("#ffffff", shopSideTex()), UNLIT);
   Mk.mesh("street.shop.side", new THREE.PlaneGeometry(sd, 2.75).rotateY(-Math.PI / 2).translate(X(SHOP.x1), 1.375, (WB + SHOP.back) / 2), sb("#d8a46c"), UNLIT);
   Mk.mesh("street.shop.counter", boxG(X(SHOP.x0 + 0.1), X(SHOP.x0 + 1.4), 0.05, 1.0, SHOP.back + 0.5, SHOP.back + 1.0), sb("#9a6038"), UNLIT);
   const sgZ = WZ - 0.06;

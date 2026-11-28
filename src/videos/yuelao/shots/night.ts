@@ -12,6 +12,14 @@ export const CAMN: [number, number, number] = [-0.3, 1.5, 2.4];
 export const STEP = SEATS.step, STAND_AT = P("street", -0.85, 0, -1.75);   // his hem (26 cm) clear of the step's face
 /** the seat with its top moved out over the pavement while he is on his feet (k 1 = standing in front of the step) */
 export const stepSeat = (k: number) => (k > 0 ? { ...STEP, top: STEP.top.clone().add(V(0, 0, 0.43 * k)) } : STEP);
+/** HIS CLOUD CUSHION on the step under the seat (props.ts cushion; SEATS.step sits on it): k 0..1 = it puffs up (a
+ *  little over-full, then settles) or goes away (k back to 0) */
+export const CUSHION_AT = V(STEP.top.x, STREET_FLOOR(STEP.top.x, STEP.top.z), STEP.top.z - 0.03);
+export const cushion = (w: World, k: number) => {
+  if (k <= 0.001) return;
+  const s = k < 1 ? Math.min(1.08, k * 1.08 + 0.3 * Math.sin(Math.PI * k) * (1 - k)) : 1;
+  w.prop("cushion", "his").put(CUSHION_AT, { scale: Math.max(0.01, s) });
+};
 /** at the door: where she takes her order, where the rider stands, her way out of the lobby */
 export const DOOR_HER = P("street", -0.25, 0.51, -3.3), DOOR_RIDER = P("street", 0.42, 0.51, -3.15);
 export const WAY_OUT = [P("street", -1.15, 0.51, -4.5), P("street", -0.3, 0.51, -4.1), DOOR_HER];

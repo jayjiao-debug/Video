@@ -9,7 +9,7 @@ import { buildPopBooks } from "./popbook";
 
 export const RED = "#d8362a";
 
-export type PropName = "spool" | "book" | "bookShut" | "phone" | "xmPhone" | "laptop" | "bag" | "file" | "slip" | "bowl" | "moon" | "drawer" | "caseDrawer" | "hole" | "stack" | "wing" | "egg" | "cloud" | "cloudBank" | "tangle";
+export type PropName = "spool" | "book" | "bookShut" | "phone" | "xmPhone" | "laptop" | "bag" | "file" | "slip" | "bowl" | "moon" | "drawer" | "caseDrawer" | "hole" | "stack" | "wing" | "egg" | "cloud" | "cloudBank" | "tangle" | "cushion";
 export type PutO = { yaw?: number; pitch?: number; roll?: number; scale?: number };
 export type Prop = { group: THREE.Group; put(at: THREE.Vector3 | [number, number, number], o?: PutO): Prop };
 
@@ -251,6 +251,18 @@ export const buildProps = (M: Mats) => {
       for (const [x, y, z, r] of [[0, 0, 0, 0.1], [-0.11, -0.012, 0.01, 0.075], [0.11, -0.01, -0.01, 0.08], [-0.05, 0.02, 0.07, 0.07], [0.06, 0.015, 0.075, 0.066], [-0.17, -0.03, 0, 0.05], [0.18, -0.03, 0.01, 0.052], [0.0, 0.03, -0.06, 0.07]] as [number, number, number, number][])
         P.add(m, ball(V(x, y, z), r, [1, 0.72, 1]), 0.0035);
       return P.into(g, "cloud");
+    },
+    // HIS CLOUD CUSHION (scenes G to I, v6): a flat pad of cloud puffs he sits on on the step, drawn like the cloud bank
+    // (flat unlit white over a lilac underside, the ink outline). 0.48 wide, 0.36 deep, 0.06 high (the step plus the pad is
+    // the height at which his thighs lie level: shots/kit.ts SEATS.step). Origin: the middle of its underside. Its meshes
+    // are named ".contact": a sitter sinks a little into a cushion, which is not clipping.
+    cushion: () => {
+      const g = new THREE.Group(), P = new Part(K);
+      const top = new THREE.MeshBasicMaterial({ color: "#fdfcff" }), low = new THREE.MeshBasicMaterial({ color: "#ddd6f0" });
+      for (let i = 0; i < 9; i++) { const t = (i / 9) * Math.PI * 2 + 0.2; P.add(low, ball(V(0.165 * Math.cos(t), 0.022, 0.105 * Math.sin(t)), 0.066, [1, 0.34, 1]), 0.003); }
+      for (let i = 0; i < 8; i++) { const t = (i / 8) * Math.PI * 2; P.add(top, ball(V(0.15 * Math.cos(t), 0.034, 0.095 * Math.sin(t)), 0.07, [1, 0.37, 1]), 0.003); }
+      for (const [x, z, r] of [[-0.075, 0.01, 0.08], [0.075, -0.01, 0.08], [0, 0.04, 0.07]] as [number, number, number][]) P.add(top, ball(V(x, 0.036, z), r, [1, 0.33, 1]), 0.003);
+      return P.into(g, "cushion.contact", { cast: false });
     },
     // THE MOTHER'S CLOUD BANK (scene D, v6b): the incense smoke gathers into a soft auspicious cloud and she kneels in it, seen
     // from the waist up (v5's little cloud under her feet showed her legs: Jay's note at f2800). Made for her at 0.42 of her

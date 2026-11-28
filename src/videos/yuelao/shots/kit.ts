@@ -113,6 +113,8 @@ export const holdUp = (at: THREE.Vector3, facing: number, k: number, y = 0.92, d
 // Each is the Seat act({ seat }) takes; the robe is told about it there (garb.setSeat).
 import { chairSeat, stoolSeat, seatOn } from "../../../kit/day/rig/seats";
 import { OFFICE, WORK, STREET } from "../places";
+/** the thickness of his cloud cushion on the step (the step seat) */
+export const STEP_CUSHION = 0.06;
 const STOOL_SPEC = stoolSeat({ seat: OFFICE.stool.top, d: 0.34 }), NOODLE_SPEC = stoolSeat({ seat: 0.34, d: 0.31 });
 const CHAIR_SPEC = chairSeat({ seat: WORK.chair.top, d: 0.34, backZ: -0.175, backTop: WORK.chair.top + 0.41 });
 export const SEATS = {
@@ -123,8 +125,12 @@ export const SEATS = {
   /** the noodle table's two stools, each facing the table */
   noodleL: seatOn(NOODLE_SPEC, P("street", STREET.stools[0].x, 0, STREET.stools[0].z), Math.PI / 2, { floor: 0, desk: { edge: STREET.table.x - STREET.table.r - STREET.stools[0].x, top: STREET.table.top } }),
   noodleR: seatOn(NOODLE_SPEC, P("street", STREET.stools[1].x, 0, STREET.stools[1].z), -Math.PI / 2, { floor: 0, desk: { edge: STREET.stools[1].x - STREET.table.x - STREET.table.r, top: STREET.table.top } }),
-  /** the lowest step in front of the tower's door, left part: he sits on its tread, feet on the pavement */
-  step: seatOn(stoolSeat({ seat: STREET.steps.rise, d: STREET.steps.run }), P("street", STREET.sit.x, 0, STREET.steps.front - STREET.steps.run / 2), 0, { floor: 0 }),
+  /** the lowest step in front of the tower's door, left part: he sits on a flat cloud cushion on its tread (night.ts
+   *  CUSHION), feet on the pavement. v6 (owner's notes 21-22 on v5, "black streaks", "bum stacking"): on the bare tread
+   *  (0.17) his knees came up above his hips and through the robe's lap, and the robe's back went into the riser of the
+   *  step behind. The cushion brings the seat to the height at which his thighs lie level (hongmen privy.ts SEAT_TOP:
+   *  shin + 1.8 cm - 7.3 cm = 0.23), and the seat is 5 cm further out, clear of that riser. */
+  step: seatOn(stoolSeat({ seat: STREET.steps.rise + STEP_CUSHION, d: 0.34 }), P("street", STREET.sit.x, 0, STREET.steps.front - 0.13), 0, { floor: 0 }),
 } as const;
 
 /** a point eased through keys [frame, point] (a smooth ease inside each interval; holds before the first and after the last) */
