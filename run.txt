@@ -1,0 +1,202 @@
+plan: {'tier': 'creator', 'character_count': 119039, 'character_limit': 123898, 'status': 'active', 'next_character_count_reset_unix': 1797012816}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "mus_theme", "type": "music", "text": "", "model": "music_v2_5", "status": 200, "sfx": true, "credits": 0, "file": "mus_theme.mp3", "bytes": 2696300}
+{"name": "amb_office", "type": "sfx", "text": "Quiet room tone of an old Chinese temple office in the day: faint wind outside, wooden beams creaking softly now and then, very calm and still. No music, no voices.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "credits": 0, "file": "amb_office.mp3", "bytes": 129192}
+{"name": "amb_work", "type": "sfx", "text": "Quiet modern open-plan office room tone: soft air conditioning hum, faint distant keyboard typing, an occasional mouse click. No music, no voices.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "credits": 0, "file": "amb_work.mp3", "bytes": 129192}
+{"name": "amb_street", "type": "sfx", "text": "Calm night city street ambience outside an office tower: distant traffic hum, a light breeze, a far-off scooter passing once. No music, no voices, no horns.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "credits": 0, "file": "amb_street.mp3", "bytes": 129192}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/transformers/audio_utils.py:860: UserWarning: At least one mel filter has all zero values. The value for `num_mel_filters` (128) may be set too high. Or, the value for `num_frequency_bins` (257) may be set too low.
+  warnings.warn(
+Loading weights:   0%|          | 0/203 [00:00<?, ?it/s]Loading weights: 100%|██████████| 203/203 [00:00<00:00, 9841.23it/s]
+mus_theme [['Jingle, tinkle', 0.572], ['Music', 0.454], ['Jingle bell', 0.171], ['Ding', 0.17], ['Ding-dong', 0.093], ['Music for children', 0.076], ['Jingle (music)', 0.034], ['Christmas music', 0.03]]
+amb_office [['Door', 0.139], ['Cupboard open or close', 0.136], ['Arrow', 0.036], ['Sliding door', 0.029], ['Knock', 0.025], ['Tap', 0.021], ['Slam', 0.015], ['Microwave oven', 0.015]]
+amb_work [['Single-lens reflex camera', 0.274], ['Camera', 0.153], ['Tick', 0.038], ['Tick-tock', 0.026], ['Mechanical fan', 0.025], ['Inside, small room', 0.018], ['Computer keyboard', 0.018], ['Squish', 0.017]]
+amb_street [['Vehicle', 0.233], ['Car', 0.165], ['Car passing by', 0.125], ['Rustle', 0.06], ['Motor vehicle (road)', 0.048], ['White noise', 0.045], ['Field recording', 0.034], ['Whir', 0.031]]
+[
+ {
+  "name": "mus_theme",
+  "type": "music",
+  "text": "",
+  "model": "music_v2_5",
+  "status": 200,
+  "sfx": true,
+  "credits": 0,
+  "file": "mus_theme.mp3",
+  "bytes": 2696300,
+  "seconds": 112.34,
+  "tags": [
+   [
+    "Jingle, tinkle",
+    0.572
+   ],
+   [
+    "Music",
+    0.454
+   ],
+   [
+    "Jingle bell",
+    0.171
+   ],
+   [
+    "Ding",
+    0.17
+   ],
+   [
+    "Ding-dong",
+    0.093
+   ],
+   [
+    "Music for children",
+    0.076
+   ],
+   [
+    "Jingle (music)",
+    0.034
+   ],
+   [
+    "Christmas music",
+    0.03
+   ]
+  ]
+ },
+ {
+  "name": "amb_office",
+  "type": "sfx",
+  "text": "Quiet room tone of an old Chinese temple office in the day: faint wind outside, wooden beams creaking softly now and then, very calm and still. No music, no voices.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "credits": 0,
+  "file": "amb_office.mp3",
+  "bytes": 129192,
+  "seconds": 8.0,
+  "tags": [
+   [
+    "Door",
+    0.139
+   ],
+   [
+    "Cupboard open or close",
+    0.136
+   ],
+   [
+    "Arrow",
+    0.036
+   ],
+   [
+    "Sliding door",
+    0.029
+   ],
+   [
+    "Knock",
+    0.025
+   ],
+   [
+    "Tap",
+    0.021
+   ],
+   [
+    "Slam",
+    0.015
+   ],
+   [
+    "Microwave oven",
+    0.015
+   ]
+  ]
+ },
+ {
+  "name": "amb_work",
+  "type": "sfx",
+  "text": "Quiet modern open-plan office room tone: soft air conditioning hum, faint distant keyboard typing, an occasional mouse click. No music, no voices.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "credits": 0,
+  "file": "amb_work.mp3",
+  "bytes": 129192,
+  "seconds": 8.0,
+  "tags": [
+   [
+    "Single-lens reflex camera",
+    0.274
+   ],
+   [
+    "Camera",
+    0.153
+   ],
+   [
+    "Tick",
+    0.038
+   ],
+   [
+    "Tick-tock",
+    0.026
+   ],
+   [
+    "Mechanical fan",
+    0.025
+   ],
+   [
+    "Inside, small room",
+    0.018
+   ],
+   [
+    "Computer keyboard",
+    0.018
+   ],
+   [
+    "Squish",
+    0.017
+   ]
+  ]
+ },
+ {
+  "name": "amb_street",
+  "type": "sfx",
+  "text": "Calm night city street ambience outside an office tower: distant traffic hum, a light breeze, a far-off scooter passing once. No music, no voices, no horns.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "credits": 0,
+  "file": "amb_street.mp3",
+  "bytes": 129192,
+  "seconds": 8.0,
+  "tags": [
+   [
+    "Vehicle",
+    0.233
+   ],
+   [
+    "Car",
+    0.165
+   ],
+   [
+    "Car passing by",
+    0.125
+   ],
+   [
+    "Rustle",
+    0.06
+   ],
+   [
+    "Motor vehicle (road)",
+    0.048
+   ],
+   [
+    "White noise",
+    0.045
+   ],
+   [
+    "Field recording",
+    0.034
+   ],
+   [
+    "Whir",
+    0.031
+   ]
+  ]
+ }
+]
+vault sealed (rsa) 4 files for 1 keys
