@@ -1,0 +1,490 @@
+plan: {'tier': 'creator', 'character_count': 118949, 'character_limit': 123898, 'status': 'active', 'next_character_count_reset_unix': 1797012816}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "sfx_boing", "type": "sfx", "text": "A single cartoon spring boing, a springy comic wobble that bounces and fades quickly. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "credits": 0, "file": "sfx_boing.mp3", "bytes": 15089}
+{"name": "sfx_snip", "type": "sfx", "text": "A single crisp snip of small scissors cutting one silk thread. Close and clean, no music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "credits": 0, "file": "sfx_snip.mp3", "bytes": 8820}
+{"name": "sfx_snap", "type": "sfx", "text": "A single sharp snap of a taut silk cord breaking, a quick thin crack with a tiny whip of the loose ends. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "credits": 0, "file": "sfx_snap.mp3", "bytes": 10492}
+{"name": "sfx_pop", "type": "sfx", "text": "A single soft cartoon pop, like a cork or a bubble popping, short and bright. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "credits": 0, "file": "sfx_pop.mp3", "bytes": 8820}
+{"name": "sfx_sparkle", "type": "sfx", "text": "A short magical sparkle shimmer, tiny glassy chimes twinkling upward and fading. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "credits": 0, "file": "sfx_sparkle.mp3", "bytes": 24702}
+{"name": "sfx_bookshut", "type": "sfx", "text": "A single heavy old hardcover ledger slammed shut, a deep papery thump with a puff of pages. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "credits": 0, "file": "sfx_bookshut.mp3", "bytes": 13835}
+{"name": "sfx_paper", "type": "sfx", "text": "A crisp paper pop-up card springing open, a quick flutter of folded paper unfolding. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "credits": null, "file": "sfx_paper.mp3", "bytes": 17179}
+{"name": "sfx_wood", "type": "sfx", "text": "A single small wooden plaque knocking once against a wooden beam, a soft hollow clack. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "credits": null, "file": "sfx_wood.mp3", "bytes": 10492}
+{"name": "sfx_swish", "type": "sfx", "text": "A soft quick swish of a book flying past, airy and smooth, rising then falling. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "credits": null, "file": "sfx_swish.mp3", "bytes": 15089}
+{"name": "sfx_thump", "type": "sfx", "text": "A soft muffled thump of a woolly mitten pressed against a microphone, close, with a faint fabric rub. No music, no voice.", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "credits": null, "file": "sfx_thump.mp3", "bytes": 10492}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/transformers/audio_utils.py:860: UserWarning: At least one mel filter has all zero values. The value for `num_mel_filters` (128) may be set too high. Or, the value for `num_frequency_bins` (257) may be set too low.
+  warnings.warn(
+Loading weights:   0%|          | 0/203 [00:00<?, ?it/s]Loading weights: 100%|██████████| 203/203 [00:00<00:00, 6624.84it/s]
+sfx_boing [['Boing', 0.937], ['Sound effect', 0.134], ['Music', 0.041], ['Speech', 0.028], ['Vehicle', 0.004], ['Silence', 0.003], ['Inside, small room', 0.003], ['Animal', 0.002]]
+sfx_snip [['Scissors', 0.082], ['Crunch', 0.075], ['Tearing', 0.075], ['Coin (dropping)', 0.068], ['Sound effect', 0.036], ['Shuffling cards', 0.032], ['Single-lens reflex camera', 0.029], ['Speech', 0.027]]
+sfx_snap [['Sound effect', 0.046], ['Crack', 0.028], ['Finger snapping', 0.027], ['Slap, smack', 0.027], ['Scissors', 0.012], ['Breaking', 0.01], ['Crackle', 0.008], ['Whip', 0.008]]
+sfx_pop [['Plop', 0.909], ['Speech', 0.039], ['Music', 0.032], ['Sound effect', 0.023], ['Vehicle', 0.007], ['Male speech, man speaking', 0.006], ['Inside, small room', 0.005], ['Silence', 0.003]]
+sfx_sparkle [['Ding', 0.21], ['Chink, clink', 0.063], ['Clang', 0.057], ['Sound effect', 0.054], ['Ping', 0.043], ['Jingle, tinkle', 0.019], ['Breaking', 0.019], ['Music', 0.014]]
+sfx_bookshut [['Door', 0.165], ['Sound effect', 0.137], ['Slam', 0.066], ['Speech', 0.048], ['Sliding door', 0.042], ['Bang', 0.039], ['Coin (dropping)', 0.017], ['Music', 0.016]]
+sfx_paper [['Finger snapping', 0.298], ['Slap, smack', 0.082], ['Sound effect', 0.019], ['Ping', 0.011], ['Whip', 0.009], ['Scissors', 0.007], ['Speech', 0.007], ['Chopping (food)', 0.007]]
+sfx_wood [['Speech', 0.305], ['Sound effect', 0.111], ['Male speech, man speaking', 0.046], ['Music', 0.034], ['Throat clearing', 0.032], ['Burping, eructation', 0.019], ['Grunt', 0.015], ['Gasp', 0.014]]
+sfx_swish [['Zipper (clothing)', 0.146], ['Speech', 0.061], ['Crunch', 0.028], ['Tearing', 0.026], ['Sound effect', 0.026], ['Scrape', 0.026], ['Inside, small room', 0.023], ['Male speech, man speaking', 0.021]]
+sfx_thump [['Sound effect', 0.212], ['Speech', 0.036], ['Music', 0.027], ['Grunt', 0.027], ['Male speech, man speaking', 0.021], ['Gasp', 0.017], ['Door', 0.011], ['Bang', 0.009]]
+[
+ {
+  "name": "sfx_boing",
+  "type": "sfx",
+  "text": "A single cartoon spring boing, a springy comic wobble that bounces and fades quickly. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "credits": 0,
+  "file": "sfx_boing.mp3",
+  "bytes": 15089,
+  "seconds": 0.88,
+  "tags": [
+   [
+    "Boing",
+    0.937
+   ],
+   [
+    "Sound effect",
+    0.134
+   ],
+   [
+    "Music",
+    0.041
+   ],
+   [
+    "Speech",
+    0.028
+   ],
+   [
+    "Vehicle",
+    0.004
+   ],
+   [
+    "Silence",
+    0.003
+   ],
+   [
+    "Inside, small room",
+    0.003
+   ],
+   [
+    "Animal",
+    0.002
+   ]
+  ]
+ },
+ {
+  "name": "sfx_snip",
+  "type": "sfx",
+  "text": "A single crisp snip of small scissors cutting one silk thread. Close and clean, no music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "credits": 0,
+  "file": "sfx_snip.mp3",
+  "bytes": 8820,
+  "seconds": 0.48,
+  "tags": [
+   [
+    "Scissors",
+    0.082
+   ],
+   [
+    "Crunch",
+    0.075
+   ],
+   [
+    "Tearing",
+    0.075
+   ],
+   [
+    "Coin (dropping)",
+    0.068
+   ],
+   [
+    "Sound effect",
+    0.036
+   ],
+   [
+    "Shuffling cards",
+    0.032
+   ],
+   [
+    "Single-lens reflex camera",
+    0.029
+   ],
+   [
+    "Speech",
+    0.027
+   ]
+  ]
+ },
+ {
+  "name": "sfx_snap",
+  "type": "sfx",
+  "text": "A single sharp snap of a taut silk cord breaking, a quick thin crack with a tiny whip of the loose ends. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "credits": 0,
+  "file": "sfx_snap.mp3",
+  "bytes": 10492,
+  "seconds": 0.6,
+  "tags": [
+   [
+    "Sound effect",
+    0.046
+   ],
+   [
+    "Crack",
+    0.028
+   ],
+   [
+    "Finger snapping",
+    0.027
+   ],
+   [
+    "Slap, smack",
+    0.027
+   ],
+   [
+    "Scissors",
+    0.012
+   ],
+   [
+    "Breaking",
+    0.01
+   ],
+   [
+    "Crackle",
+    0.008
+   ],
+   [
+    "Whip",
+    0.008
+   ]
+  ]
+ },
+ {
+  "name": "sfx_pop",
+  "type": "sfx",
+  "text": "A single soft cartoon pop, like a cork or a bubble popping, short and bright. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "credits": 0,
+  "file": "sfx_pop.mp3",
+  "bytes": 8820,
+  "seconds": 0.48,
+  "tags": [
+   [
+    "Plop",
+    0.909
+   ],
+   [
+    "Speech",
+    0.039
+   ],
+   [
+    "Music",
+    0.032
+   ],
+   [
+    "Sound effect",
+    0.023
+   ],
+   [
+    "Vehicle",
+    0.007
+   ],
+   [
+    "Male speech, man speaking",
+    0.006
+   ],
+   [
+    "Inside, small room",
+    0.005
+   ],
+   [
+    "Silence",
+    0.003
+   ]
+  ]
+ },
+ {
+  "name": "sfx_sparkle",
+  "type": "sfx",
+  "text": "A short magical sparkle shimmer, tiny glassy chimes twinkling upward and fading. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "credits": 0,
+  "file": "sfx_sparkle.mp3",
+  "bytes": 24702,
+  "seconds": 1.48,
+  "tags": [
+   [
+    "Ding",
+    0.21
+   ],
+   [
+    "Chink, clink",
+    0.063
+   ],
+   [
+    "Clang",
+    0.057
+   ],
+   [
+    "Sound effect",
+    0.054
+   ],
+   [
+    "Ping",
+    0.043
+   ],
+   [
+    "Jingle, tinkle",
+    0.019
+   ],
+   [
+    "Breaking",
+    0.019
+   ],
+   [
+    "Music",
+    0.014
+   ]
+  ]
+ },
+ {
+  "name": "sfx_bookshut",
+  "type": "sfx",
+  "text": "A single heavy old hardcover ledger slammed shut, a deep papery thump with a puff of pages. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "credits": 0,
+  "file": "sfx_bookshut.mp3",
+  "bytes": 13835,
+  "seconds": 0.8,
+  "tags": [
+   [
+    "Door",
+    0.165
+   ],
+   [
+    "Sound effect",
+    0.137
+   ],
+   [
+    "Slam",
+    0.066
+   ],
+   [
+    "Speech",
+    0.048
+   ],
+   [
+    "Sliding door",
+    0.042
+   ],
+   [
+    "Bang",
+    0.039
+   ],
+   [
+    "Coin (dropping)",
+    0.017
+   ],
+   [
+    "Music",
+    0.016
+   ]
+  ]
+ },
+ {
+  "name": "sfx_paper",
+  "type": "sfx",
+  "text": "A crisp paper pop-up card springing open, a quick flutter of folded paper unfolding. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "credits": null,
+  "file": "sfx_paper.mp3",
+  "bytes": 17179,
+  "seconds": 1.0,
+  "tags": [
+   [
+    "Finger snapping",
+    0.298
+   ],
+   [
+    "Slap, smack",
+    0.082
+   ],
+   [
+    "Sound effect",
+    0.019
+   ],
+   [
+    "Ping",
+    0.011
+   ],
+   [
+    "Whip",
+    0.009
+   ],
+   [
+    "Scissors",
+    0.007
+   ],
+   [
+    "Speech",
+    0.007
+   ],
+   [
+    "Chopping (food)",
+    0.007
+   ]
+  ]
+ },
+ {
+  "name": "sfx_wood",
+  "type": "sfx",
+  "text": "A single small wooden plaque knocking once against a wooden beam, a soft hollow clack. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "credits": null,
+  "file": "sfx_wood.mp3",
+  "bytes": 10492,
+  "seconds": 0.6,
+  "tags": [
+   [
+    "Speech",
+    0.305
+   ],
+   [
+    "Sound effect",
+    0.111
+   ],
+   [
+    "Male speech, man speaking",
+    0.046
+   ],
+   [
+    "Music",
+    0.034
+   ],
+   [
+    "Throat clearing",
+    0.032
+   ],
+   [
+    "Burping, eructation",
+    0.019
+   ],
+   [
+    "Grunt",
+    0.015
+   ],
+   [
+    "Gasp",
+    0.014
+   ]
+  ]
+ },
+ {
+  "name": "sfx_swish",
+  "type": "sfx",
+  "text": "A soft quick swish of a book flying past, airy and smooth, rising then falling. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "credits": null,
+  "file": "sfx_swish.mp3",
+  "bytes": 15089,
+  "seconds": 0.88,
+  "tags": [
+   [
+    "Zipper (clothing)",
+    0.146
+   ],
+   [
+    "Speech",
+    0.061
+   ],
+   [
+    "Crunch",
+    0.028
+   ],
+   [
+    "Tearing",
+    0.026
+   ],
+   [
+    "Sound effect",
+    0.026
+   ],
+   [
+    "Scrape",
+    0.026
+   ],
+   [
+    "Inside, small room",
+    0.023
+   ],
+   [
+    "Male speech, man speaking",
+    0.021
+   ]
+  ]
+ },
+ {
+  "name": "sfx_thump",
+  "type": "sfx",
+  "text": "A soft muffled thump of a woolly mitten pressed against a microphone, close, with a faint fabric rub. No music, no voice.",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "credits": null,
+  "file": "sfx_thump.mp3",
+  "bytes": 10492,
+  "seconds": 0.6,
+  "tags": [
+   [
+    "Sound effect",
+    0.212
+   ],
+   [
+    "Speech",
+    0.036
+   ],
+   [
+    "Music",
+    0.027
+   ],
+   [
+    "Grunt",
+    0.027
+   ],
+   [
+    "Male speech, man speaking",
+    0.021
+   ],
+   [
+    "Gasp",
+    0.017
+   ],
+   [
+    "Door",
+    0.011
+   ],
+   [
+    "Bang",
+    0.009
+   ]
+  ]
+ }
+]
+vault sealed (rsa) 10 files for 1 keys
