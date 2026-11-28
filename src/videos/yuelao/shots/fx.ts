@@ -6,7 +6,7 @@
 // never repeats the subtitle, at most one every 8 seconds; cards belong to the sources' voice (facts, files, seals).
 import React from "react";
 import { FRAME_9x16, rectOf, slots, fit, type Rect } from "../../../kit/overlay/frame";
-import { SpoolLens, MittenCover, LensThreads, Hua, FateStamp, OS, CaseFile, Disclaimer, OrderSlip, Snaps, SideCard, SIDE_W, SIDE_H, CASE_W, CASE_H, type CaseKind } from "../hud/skin";
+import { SpoolLens, MittenCover, LensThreads, Hua, FateStamp, OS, CaseFile, Disclaimer, OrderSlip, Snaps, SideCard, TornXi, XI_W, XI_H, SIDE_W, SIDE_H, CASE_W, CASE_H, type CaseKind } from "../hud/skin";
 
 export type Fx = { what: string; kind: "card" | "effect"; from: number; to: number; rect: Rect; node: React.ReactNode };
 const h = React.createElement;
@@ -19,6 +19,14 @@ const turned = (cx: number, cy: number, w: number, h: number, rot = 0) => { cons
 export const hua = (f: number, o: { from: number; to: number; text: string; x: number; y: number; px?: number; rot?: number; col?: string }): Fx => {
   const px = o.px ?? 96;
   return { what: `花字「${o.text}」`, kind: "effect", from: o.from, to: o.to, rect: turned(o.x, o.y, em(o.text) * (px + 4) + px * 0.3, px * 1.36, o.rot ?? -5), node: h(Hua, { key: `hua${o.from}`, f, ...o }) };
+};
+/** 囍 torn in two, one sign after another (三对离婚 without words): the box round the signs where they land; the halves
+ *  fall on below it for about 150 px while they fade */
+export const tornXi = (f: number, o: { from: number; to: number; at: [number, number][]; px?: number; gap?: number; tear?: number }): Fx => {
+  const px = o.px ?? 120, w = px * XI_W * 1.15, hh = px * XI_H * 1.15;
+  const xs = o.at.map((a) => a[0]), ys = o.at.map((a) => a[1]);
+  const rect = { x0: Math.min(...xs) - w / 2, y0: Math.min(...ys) - hh / 2, x1: Math.max(...xs) + w / 2, y1: Math.max(...ys) + hh / 2 + 150 };
+  return { what: `囍撕成两半 x${o.at.length}`, kind: "effect", from: o.from, to: o.to, rect, node: h(TornXi, { key: `xi${o.from}`, f, ...o }) };
 };
 /** the running gag's stamp: 缘分未到 (ok: 缘分已到), centred on (x, y) */
 export const stamp = (f: number, o: { from: number; to: number; x: number; y: number; ok?: boolean; rot?: number; px?: number }): Fx => {

@@ -344,7 +344,7 @@ const build = (K: Kit): PlaceBuild => {
     P.add(mDesk, boxG(x1 - 0.42, x1 - 0.04, 0.06, t - 0.13, z0 + 0.06, z1 - 0.06), 0.005);
     for (const y of [0.2, 0.36]) P.add(mBrass, new THREE.SphereGeometry(0.014, 8, 6).translate(x1 - 0.23, y, z1 - 0.055), 0.003);
     // THE BOOK 姻缘簿, open in the middle, its spread read from his side (-z)
-    const bx = X(d.x), bz = d.z - 0.13;
+    const bx = X(D.book.x), bz = D.book.z;   // (places.ts OFFICE.book: its pages' top is t + 0.03, the spread on them t + 0.0315)
     P.add(Mk.flat("#7a1e20", 0.7), boxG(bx - 0.27, bx + 0.27, t, t + 0.012, bz - 0.18, bz + 0.18), 0.003);
     P.add(mPaper, boxG(bx - 0.255, bx - 0.005, t + 0.012, t + 0.03, bz - 0.17, bz + 0.17), 0.003);
     P.add(mPaper, boxG(bx + 0.005, bx + 0.255, t + 0.012, t + 0.03, bz - 0.17, bz + 0.17), 0.003);

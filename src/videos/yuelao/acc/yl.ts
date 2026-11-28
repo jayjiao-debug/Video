@@ -421,6 +421,13 @@ const ringMid = (g: THREE.BufferGeometry, i: number, out: THREE.Vector3) => {
 };
 /** the arm tube's own radius (m): the sleeve's cloth hangs below the arm by what it has beyond this */
 const ARM_R = 0.013;
+/** WHAT HIS SLEEVES LIE ON (v6, owner's notes 9 and 18 on v5: his hands, the pen and the cloth went into the desk and the
+ *  book): the tops of the things in front of him, as boxes in world metres { x0, x1, z0, z1, y = the top }. The shot
+ *  gives them every frame (act.ts: act({ rests })); cloth of a sleeve that would go below the top of a box it is over
+ *  lies flat on that top instead, REST_LIFT up (its ink line clear of the wood or the paper). */
+export type Rest = { x0: number; x1: number; z0: number; z1: number; y: number };
+const REST_LIFT = 0.006, REST_DRAPE = 0.08;
+export const setRests = (root: THREE.Object3D, rests: Rest[] | null | undefined) => { const U = root.userData; if (rests && rests.length) U.ylRests = rests; else delete U.ylRests; };
 /** A WIDE SLEEVE round arm `limb` (0 right, 1 left) from ring i0 to ring i1 of the kit's tube (0 = the shoulder .. 32
  *  = the hand), rad(u) thick at share u along it. The cloth below the arm hangs: each ring's middle drops (toward the
  *  ground, square to the arm) by `droop` of what the ring has beyond the arm, so the arm runs along the top of the
@@ -451,8 +458,9 @@ const sleeveOn = (b: PartKit, o: { limb: number; i0: number; i1: number; rad: (u
     if (!limbs || limbs[o.limb].attributes.position.count < LIMB_RINGS * RING) return;
     let sig = 0;
     for (let k = 0; k < n; k++) { ringMid(limbs[o.limb], o.i0 + k, C[k]); sig += C[k].x * (1.3 + 0.07 * k) + C[k].y * (2.1 + 0.05 * k) + C[k].z * (3.3 + 0.03 * k); }
-    const e = torso.matrix.elements;
+    const e = torso.matrix.elements, rests = root.userData.ylRests as Rest[] | undefined;
     sig += e[8] * 0.9 + e[10] * 1.9;
+    if (rests) for (const R of rests) sig += R.y * 1.7 + R.x0 * 0.3 + R.z1 * 0.5;
     if (sig === last) return;
     last = sig;
     N.set(e[8], e[9], e[10]);
@@ -473,6 +481,12 @@ const sleeveOn = (b: PartKit, o: { limb: number; i0: number; i1: number; rad: (u
         const a = (j / M) * Math.PI * 2, cs = Math.cos(a), sn = Math.sin(a), q = (i * (M + 1) + j) * 3;
         const nx = N.x * cs + Bn.x * sn, ny = N.y * cs + Bn.y * sn, nz = N.z * cs + Bn.z * sn;
         pos[q] = Q.x + nx * r; pos[q + 1] = Q.y + ny * r; pos[q + 2] = Q.z + nz * r;
+        if (rests) for (const R of rests) {
+          // over the top: lie on it; just past its edge: drape down over the edge (never steeper than 45 degrees there,
+          // so the cloth between a point on the top and one beyond it never cuts through the edge)
+          const ox = Math.max(R.x0 - pos[q], 0, pos[q] - R.x1), oz = Math.max(R.z0 - pos[q + 2], 0, pos[q + 2] - R.z1), d = Math.hypot(ox, oz);
+          if (d < REST_DRAPE) pos[q + 1] = Math.max(pos[q + 1], R.y + REST_LIFT - d);
+        }
         if (cap) { nor[q] = T.x * cap; nor[q + 1] = T.y * cap; nor[q + 2] = T.z * cap; } else { nor[q] = nx; nor[q + 1] = ny; nor[q + 2] = nz; }
       }
     }

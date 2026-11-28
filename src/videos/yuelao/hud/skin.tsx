@@ -430,6 +430,54 @@ export const OS: React.FC<{ f: number; from: number; to: number; x: number; y: n
     </Svg>
   );
 };
+/** 囍 TORN IN TWO (v6, in place of v5's 「离婚 +3」 花字: owner's note 6, pop-ups from the story's own world): the sign on
+ *  every wedding door, cut from red paper, slapped on one after another, and each one torn down the middle into its two
+ *  喜, which fall apart: 「三对离婚」 said in his world's own sign, with no words on the screen. at = the centres of the
+ *  signs; px = one sign's size; gap = frames between the signs; tear = frames from a sign's slap to its tear. The torn
+ *  halves fall out of the bottom of their box (they are gone 15 frames after the tear). Box: shots/fx.ts tornXi. */
+export const XI_W = 1.1, XI_H = 1.16;
+export const TornXi: React.FC<{ f: number; from: number; to: number; at: [number, number][]; px?: number; gap?: number; tear?: number }> = ({ f, from, to, at, px = 120, gap = 4, tear = 9 }) => {
+  if (f < from || f > to) return null;
+  const id = `xi${from}`, W = px * XI_W, H = px * XI_H;
+  // the tear: a ragged line down the middle of the sign, between its two 喜, a little different on each sign
+  const rag = (seed: number) => Array.from({ length: 10 }, (_, i) => [(hash01(i, seed) - 0.5) * px * 0.08, -H / 2 - 6 + ((H + 12) * i) / 9] as [number, number]);
+  // cut from red paper: an ink line round it, a rim of the paper's pale core inside that, the red on top; a soft shadow
+  const sign = (shadow: boolean) => shadow
+    ? <T x={px * 0.04} y={px * 0.1} px={px} anchor="middle" ff={BRUSH} weight={700} fill="rgba(34,16,8,0.32)" stroke="rgba(34,16,8,0.32)" sw={px * 0.16}>囍</T>
+    : <g>
+        <T x={0} y={px * 0.04} px={px} anchor="middle" ff={BRUSH} weight={700} fill={SK.ink} stroke={SK.ink} sw={px * 0.16}>囍</T>
+        <T x={0} y={px * 0.04} px={px} anchor="middle" ff={BRUSH} weight={700} fill={SK.cream} stroke={SK.cream} sw={px * 0.085}>囍</T>
+        <T x={0} y={px * 0.04} px={px} anchor="middle" ff={BRUSH} weight={700} fill={SK.red} stroke={SK.redDeep} sw={px * 0.012}>囍</T>
+      </g>;
+  return (
+    <Svg>
+      <defs>{at.map((_, i) => {
+        const r = rag(40 + 7 * i), line = r.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(" L");
+        return (
+          <g key={i}>
+            <clipPath id={`yl6-xiL-${id}-${i}`}><path d={`M${-W} ${-H} L${line} L${-W} ${H} Z`} /></clipPath>
+            <clipPath id={`yl6-xiR-${id}-${i}`}><path d={`M${W} ${-H} L${line} L${W} ${H} Z`} /></clipPath>
+          </g>
+        );
+      })}</defs>
+      {at.map(([x, y], i) => {
+        const t = f - from - i * gap; if (t < 0) return null;
+        const s = slap(t, 0, 1.45), d = t - tear, torn = d >= 0;
+        // before it goes the paper strains for two frames; then the halves part, turn away from each other and fall
+        const strain = d === -2 ? 1.5 : d === -1 ? -1.5 : 0;
+        const sep = torn ? 5 * d + 0.12 * d * d : 0, fall = torn ? 0.55 * d * d : 0, rot = torn ? 2.6 * d + 0.05 * d * d : 0;
+        const o = torn ? 1 - clamp01((d - 8) / 7) : 1;
+        if (o <= 0) return null;
+        const half = (side: -1 | 1) => (
+          <g transform={`translate(${(side * sep + strain * side).toFixed(1)} ${(fall * (side < 0 ? 1 : 1.12)).toFixed(1)}) rotate(${(side * rot).toFixed(2)} ${(side * W) / 4} 0)`}>
+            <g clipPath={`url(#yl6-xi${side < 0 ? "L" : "R"}-${id}-${i})`}>{sign(true)}{sign(false)}</g>
+          </g>
+        );
+        return <g key={i} opacity={o.toFixed(3)} transform={`translate(${x} ${y}) rotate(${(-6 + 5 * i) % 9}) scale(${s.toFixed(3)})`}>{half(-1)}{half(1)}</g>;
+      })}
+    </Svg>
+  );
+};
 
 // ------------------------------------------------------------------------------------------------- the case files
 export type CaseKind = "niulang" | "liangzhu" | "baishe" | "baodai" | "qixian";

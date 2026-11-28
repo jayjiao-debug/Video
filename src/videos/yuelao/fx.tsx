@@ -13,8 +13,9 @@ export const FACTS: Record<string, { rows: string[]; src: string; seal: "真事"
   B04: { rows: ["2025年 结婚【676.3万】对", "离婚【274.3万】对"], src: "民政部 · 2025年全年登记数", seal: "真事", y: 1010 },
   E03: { rows: ["唐《定婚店》：", "赤绳“以系【夫妻之足】”"], src: "李复言《续玄怪录》", seal: "传说", y: 1010 },
 };
-/** THE TITLE hangs in the room from the title block's first frame to the cut into scene B: its thread is strung once he has
- *  turned to go (threadAt), and the paper drops onto it when he has trotted out from under it (paperAt): it never covers him */
+/** THE TITLE hangs in the room from the title block's first frame to the cut into scene B (v6: no trot to the desk; he
+ *  stands low on the left presenting his bureau while she steps back, so the plaque comes down over the room and never
+ *  over him): its cords first (threadAt), then the plaque (paperAt) */
 export const TITLE_ON = { from: TITLE_BLOCK.from, to: seg("A").to, threadAt: 6, paperAt: 15 };
 /** HIS NAME TOKEN (v6, in place of the freeze card): it comes down beside him after 「一动，三对离婚。」 while he turns,
  *  and is pulled up again before 「等等……」; x / y = where its cord leaves the top of the frame (the shot keeps his face

@@ -20,8 +20,12 @@ export const OFFICE = {
   moon: { x: 0.2, y: 1.95, r: 0.85 },
   /** 月老's desk, pushed toward the back wall: centre, top height, size (x by z). He stands or sits BEHIND it (z < desk.z) or beside it */
   desk: { x: 0.35, z: -1.25, top: 0.62, w: 1.5, d: 0.7 },
-  /** his stool behind the desk: seat centre and height */
-  stool: { x: 0.35, z: -1.84, top: 0.34 },
+  /** his stool behind the desk: seat centre and height (v6: 4 cm further back and 3 cm higher than v5's, so his big head
+   *  clears the desk's edge when he slumps over it) */
+  stool: { x: 0.35, z: -1.88, top: 0.37 },
+  /** THE BOOK 姻缘簿 open on the desk in front of the stool: centre, size (x by z) and the top of its pages (sets/office.ts
+   *  builds it from this; a hand, a brush or a thread on it lies on this top, not on the desk's) */
+  book: { x: 0.35, z: -1.38, w: 0.54, d: 0.36, top: 0.652 },
   /** THE CASE-FILE CABINET: a wall of small square drawers (like a medicine chest) covering the -x wall from z -2.3 to 1.2,
    *  floor to 2.3 m; its front face is at x = cabinetX. Each drawer has a small paper label. Scene C plays in front of it */
   cabinetX: -2.72, cabinet: { z0: -2.3, z1: 1.2, top: 2.3 },

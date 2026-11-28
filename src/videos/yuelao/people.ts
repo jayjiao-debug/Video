@@ -125,6 +125,8 @@ export const FACES: Record<string, Expr | RigFace> = {
   suspicious: face("focus", "neutral", "focus", "neutral"), sly: face("smug", "smug", "neutral"), sag: face("sad", "sigh", "sad", "neutral"), quiet: face("sad", "neutral", "sad", "neutral"),
   wry: face("sad", "smile", "sad", "neutral"), wonder: face("smile", "whistle", "sad", "neutral"), joy: face("happy", "laugh", "neutral"), warm: face("smile", "smile", "neutral"),
   cough: face("smile_closed", "hush", "neutral"), shout: face("stern", "shock", "stern", "neutral"), hush: face("smile", "hush", "neutral"),
+  // v6: caught in the middle of the knot, don't you move (wide eyes, stern brows, a held breath)
+  warn: face("shock", "huff", "stern", "neutral"),
   // a thread in his teeth: busy / caught / hissing / grave
   bite: face("focus", "wince", "stern", "neutral"), caught: face("shock", "wince", "sad", "neutral"), hiss: face("stern", "wince", "stern", "neutral"), grave: face("deadpan", "wince", "stern", "neutral"),
   eager: face("happy", "smile", "sad", "neutral"), hope: face("smile", "smile", "sad", "neutral"), dread: face("shock", "nervous", "sad", "nervous"), sheepish: face("smile_closed", "nervous", "sad", "nervous"),
