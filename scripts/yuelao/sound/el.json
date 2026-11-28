@@ -1,17 +1,13 @@
 {
- "_note": "采访月老的一天 v7: the ElevenLabs recordings the film uses (make_el.py): the voice farm's sealed runs, and how each clip is cut from them. Beds: one static gain each (music normalised to about -16 LUFS; room tones to a -1.3 dBFS peak, their creaks and clicks stand 25 dB over their loudness); hits: peak-normalised to -1.3 dBFS. mus_theme is one composition in four sections at about 99.4 BPM (bar 2.415 s): the bureau theme 0-48 s, its city version 48-76.5, tender 76.5-96, the warm ending 96-108.5 (final chord at 108.0). Loop points are whole bars apart, found by matching the music on both sides. Room tones loop only their steady stretch: amb_office 0.2-4.75 s (its one creak at 4.9 s, looped, came back 14 times), amb_work 4.9-7.9 s (two clicks before).",
+ "_note": "采访月老的一天 v7: the ElevenLabs recordings the film uses (make_el.py): the branch yl-sound-v7 holds the voice farm's outputs (runs yuelao-sound-01 to 04) sealed for each machine that builds the film, and below is how each clip is cut from them. Beds: one static gain each (music normalised to about -16 LUFS; room tones to a -1.3 dBFS peak, their creaks and clicks stand 25 dB over their loudness); hits: peak-normalised to -1.3 dBFS. mus_theme is one composition in four sections at about 99.4 BPM (bar 2.415 s): the bureau theme 0-48 s, its city version 48-76.5, tender 76.5-96, the warm ending 96-108.5 (final chord at 108.0). Loop points are whole bars apart, found by matching the music on both sides. Room tones loop only their steady stretch: amb_office 0.2-4.75 s (its one creak at 4.9 s, looped, came back 14 times), amb_work 4.9-7.9 s (two clicks before).",
  "runs": {
-  "vo-yuelao-sound-01": [
+  "yl-sound-v7": [
    "sfx_stamps",
    "sfx_thread",
    "sfx_pops",
-   "mus_night"
-  ],
-  "vo-yuelao-sound-02": [
+   "mus_night",
    "sfx_whoosh_a",
-   "sfx_ding"
-  ],
-  "vo-yuelao-sound-03": [
+   "sfx_ding",
    "sfx_boing",
    "sfx_snip",
    "sfx_snap",
@@ -19,9 +15,7 @@
    "sfx_sparkle",
    "sfx_bookshut",
    "sfx_paper",
-   "sfx_thump"
-  ],
-  "vo-yuelao-sound-04": [
+   "sfx_thump",
    "mus_theme",
    "amb_office",
    "amb_work",
