@@ -1,17 +1,69 @@
 {
- "id": "yuelao-voice-01",
+ "id": "yuelao-voice-02",
  "own_branch": true,
  "words": true,
- "settle": 150,
+ "settle": 45,
  "items": [
   {
+   "type": "save_voice",
+   "name": "ylA_1",
+   "voice_name": "yuelao ylA_1",
+   "generated_voice_id": "bctWDlOBHyWjIDa9TrhW",
+   "description": "Native Mandarin Chinese speaker with a standard mainland Putonghua accent. A lively old man in his seventies, a cheeky old immortal: bright, slightly husky and reedy voice with a chuckle behind the words, warm and mischievous, quick-witted like a veteran crosstalk comedian, animated and expressive, yet gentle and tender when he slows down. Medium pitch, brisk pace, very clear diction. Perfect studio audio quality."
+  },
+  {
+   "type": "save_voice",
+   "name": "ylA_2",
+   "voice_name": "yuelao ylA_2",
+   "generated_voice_id": "kjsP29zwCBBDHioGRy4Q",
+   "description": "Native Mandarin Chinese speaker with a standard mainland Putonghua accent. A lively old man in his seventies, a cheeky old immortal: bright, slightly husky and reedy voice with a chuckle behind the words, warm and mischievous, quick-witted like a veteran crosstalk comedian, animated and expressive, yet gentle and tender when he slows down. Medium pitch, brisk pace, very clear diction. Perfect studio audio quality."
+  },
+  {
+   "type": "save_voice",
+   "name": "ylA_3",
+   "voice_name": "yuelao ylA_3",
+   "generated_voice_id": "BrsVpAvvyoAvhRToh69h",
+   "description": "Native Mandarin Chinese speaker with a standard mainland Putonghua accent. A lively old man in his seventies, a cheeky old immortal: bright, slightly husky and reedy voice with a chuckle behind the words, warm and mischievous, quick-witted like a veteran crosstalk comedian, animated and expressive, yet gentle and tender when he slows down. Medium pitch, brisk pace, very clear diction. Perfect studio audio quality."
+  },
+  {
    "type": "design",
-   "name": "ylA",
+   "name": "ylB",
    "lang": "zh",
    "model": "eleven_ttv_v3",
-   "seed": 3101,
-   "description": "Native Mandarin Chinese speaker with a standard mainland Putonghua accent. A lively old man in his seventies, a cheeky old immortal: bright, slightly husky and reedy voice with a chuckle behind the words, warm and mischievous, quick-witted like a veteran crosstalk comedian, animated and expressive, yet gentle and tender when he slows down. Medium pitch, brisk pace, very clear diction. Perfect studio audio quality.",
-   "text": "别动！一动，三对离婚。姻缘司，上下就我一个。别人九九六，我零零七。牛郎织女，我绑的！牢吧？现在的年轻人，线刚绑上，自己就剪了。当年太忙。想着忙完这阵，就给自己绑一根。这一阵，忙了一千二百年。成了！快记！我绑的！全是我绑的！"
+   "seed": 3202,
+   "description": "Native Mandarin Chinese speaker with a standard mainland Putonghua accent. An elderly man in his late sixties with a warm, mellow, smiling voice, a kindly grandfather telling stories by the fire: medium-low pitch, rounded and soft, a little breathy with age, unhurried and gentle, full of real tenderness; when he is excited he brightens and chuckles. Very clear diction. Perfect studio audio quality.",
+   "text": "别动！一动，三对离婚。姻缘司，上下就我一个。别人九九六，我零零七。牛郎织女，我绑的！牢吧？现在的年轻人，线刚绑上，自己就剪了。当年太忙。想着忙完这阵，就给自己绑一根。这一阵，忙了一千二百年。成了！快记！我绑的！全是我绑的！",
+   "save": true
+  },
+  {
+   "type": "design",
+   "name": "ylC",
+   "lang": "zh",
+   "model": "eleven_ttv_v3",
+   "seed": 3303,
+   "description": "Native Mandarin Chinese speaker with a light Beijing accent. A man of about sixty-five, a world-weary veteran office clerk with a dry sense of humour: a slightly nasal, grainy, mid-pitched voice, wry and deadpan, sighing, muttering his complaints quickly, then suddenly brisk and eager. Conversational and natural, with the comic timing of a seasoned sitcom actor. Clear diction. Perfect studio audio quality.",
+   "text": "别动！一动，三对离婚。姻缘司，上下就我一个。别人九九六，我零零七。牛郎织女，我绑的！牢吧？现在的年轻人，线刚绑上，自己就剪了。当年太忙。想着忙完这阵，就给自己绑一根。这一阵，忙了一千二百年。成了！快记！我绑的！全是我绑的！",
+   "save": true
+  },
+  {
+   "type": "design",
+   "name": "ylD",
+   "lang": "zh",
+   "model": "eleven_ttv_v3",
+   "seed": 3404,
+   "description": "Native Mandarin Chinese speaker with a standard mainland Putonghua accent. A very old, tiny, gentle celestial immortal of about eighty: a thin, light, rather high elderly male voice with a soft quaver, airy and delicate, courteous and a little theatrical like an old court official in a classic fantasy television drama; cheerful, eager to please, with quick little laughs. Clear diction. Perfect studio audio quality.",
+   "text": "别动！一动，三对离婚。姻缘司，上下就我一个。别人九九六，我零零七。牛郎织女，我绑的！牢吧？现在的年轻人，线刚绑上，自己就剪了。当年太忙。想着忙完这阵，就给自己绑一根。这一阵，忙了一千二百年。成了！快记！我绑的！全是我绑的！",
+   "save": true
+  },
+  {
+   "type": "design",
+   "name": "ylE",
+   "lang": "zh",
+   "model": "eleven_ttv_v3",
+   "seed": 3505,
+   "description": "Native Mandarin Chinese speaker with a standard mainland Putonghua accent. An animated film character voice: a small, feisty, lovable old man, raspy and gravelly yet full of energy, his voice cracking higher when he gets excited, hoarse little laughs, fast and punchy delivery with big emotions, like the comic old master in a Chinese animated feature. Very expressive and funny, clearly an old man. Perfect studio audio quality.",
+   "text": "别动！一动，三对离婚。姻缘司，上下就我一个。别人九九六，我零零七。牛郎织女，我绑的！牢吧？现在的年轻人，线刚绑上，自己就剪了。当年太忙。想着忙完这阵，就给自己绑一根。这一阵，忙了一千二百年。成了！快记！我绑的！全是我绑的！",
+   "save": true
   }
  ]
 }
