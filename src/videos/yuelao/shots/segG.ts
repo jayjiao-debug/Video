@@ -65,12 +65,12 @@ export const SEG: Segment = {
       { f: g05 + 46, ...WIDE }, { f: over + 2, ...HIM }, { f: up0, ...HIM }, { f: S.to - 5, ...MOON }, { f: S.to, ...MOON },
     ];
     let camera = shotCam("street", f, keys, { mood: "calm", amp: 0.5 });
-    for (const on of pulls) camera = kick(camera, f, on + 1, 0.012);
+    for (const on of pulls) camera = kick(camera, f, on + 1, 0.006);   // (v6c: half as hard: at her lens the jolts read as a flicker)
     w.setCamera(camera);
     // ---------------------------------------------------------------------------------------------- 月老
     const creep = walkAlong([Z0, Z1], CREEP, (f - creep0) / 30, { endFacing: 0 });
     // backing away = the same walk played backwards (he keeps facing her)
-    const backT = VERBS.walkTime([Z1, Z2], BACKING), backing = walkAlong([Z2, Z1], BACKING, backT - (f - back0) / 30, { startFacing: 0 });
+    const backT = VERBS.walkTime([Z1, Z2], BACKING), backing = walkAlong([Z2, Z1], BACKING, backT - (f - back0) / 30, { startFacing: 0, bounce: 0.55 });   // (v6c: small careful steps: the walk's nod swung his beard into his robe)
     const away = walkAlong(AWAY, TRUDGE, (f - walk0) / 30);
     const tip = 0.05 * win(f, creep0 + 6, back0 + 8, 10, 8);
     const sitK = 1 - smooth((f - sit0) / SIT), seated = f >= sit0;
@@ -126,13 +126,22 @@ export const SEG: Segment = {
     const pk = (i: number) => win(f, pulls[i] - 9, pulls[i] + 5, 4, 4), moonK = win(f, g05 - 2, g05 + 44, 8, 10), skyK = smooth((f - up0) / 8), knotK = win(f, tug + 2, up0 + 2, 5, 4), heldK = win(f, back0 + 4, walk0 - 2, 5, 5);
     const picking = f >= wound - 6 && f < back0;
     const gaze = f < x01 + 1 ? undefined : f < wound - 6 ? 0 : picking ? (pk(2) > 0.5 ? 1 : pk(3) > 0.5 ? -1 : 0) : seated ? (moonK > 0.4 ? -1 : knotK > 0.5 ? 1 : 0) : heldK > 0.5 ? 1 : 0;
-    const lookDown = f < mine - 4 ? 12 : f < creep0 ? -4 : f < back0 ? -12 * smooth((f - creep0) / 20) + 16 * pk(1) - 7 * pk(0) - 4 * pk(3) : !seated ? (turned ? 5 : 15 - 5 * heldK) : (16 + 8 * smooth((f - drop0) / 6) * knotK) * (1 - moonK) * (1 - skyK) - 16 * moonK - 12 * skyK;
+    // (v6c: his head never snaps. v6 cut from looking up into her lens (-16) to looking down at the knot (+15) in one frame
+    // as he stepped back; each switch below (on 我的, the creep, the step back, the walk, sitting down) is eased over 9 frames)
+    const lookAt = (g: number) => {
+      const pg = (i: number) => win(g, pulls[i] - 9, pulls[i] + 5, 4, 4), mk = win(g, g05 - 2, g05 + 44, 8, 10), sk = smooth((g - up0) / 8), kk = win(g, tug + 2, up0 + 2, 5, 4);
+      const tg = g >= walk0 - 4 && g < arrive + 10;
+      return g < mine - 4 ? 12 : g < creep0 ? -4 : g < back0 ? -4 * (1 - smooth((g - creep0) / 6)) - 12 * smooth((g - creep0) / 20) + 16 * pg(1) - 7 * pg(0) - 4 * pg(3)
+        : g < sit0 ? (tg ? 5 : 4) : (16 + 8 * smooth((g - drop0) / 6) * kk) * (1 - mk) * (1 - sk) - 16 * mk - 12 * sk;
+    };
+    let lookDown = 0;
+    for (let d = -4; d <= 4; d++) lookDown += ((5 - Math.abs(d)) / 25) * lookAt(f + d);
     const slump = ky(f, [[back0 + 8, 0], [back0 + 18, 1], [over - 2, 1], [over + 8, 1.7]]);
     const r = act(w, f, YL, {
       at, facing, faces, pose, hands, gaze, talkGaze: 0, lookDown, turn: f < creep0 || turned ? 1 : undefined,
       seat: seated ? stepSeat(sitK) : undefined, rise: seated ? sitK : undefined,
       twist: seated ? -0.75 * moonK : undefined,
-      lean: { pitch: (turned ? 2 : 5) * slump + 3 * Math.abs(sway) + 5 * hit(f, sat - 3, 14), roll: 3.2 * sway }, head: { dy: -0.025 * slump - 0.012 * Math.abs(sway) - 0.03 * hit(f, sat - 3, 12), tilt: 7 * moonK - 2.5 * sway },
+      lean: { pitch: (5 - 3 * win(f, walk0 - 8, arrive + 12, 8, 8)) * slump + 3 * Math.abs(sway) + 5 * hit(f, sat - 3, 14), roll: 3.2 * sway }, head: { dy: -0.025 * slump - 0.012 * Math.abs(sway) - 0.03 * hit(f, sat - 3, 12), tilt: 7 * moonK - 2.5 * sway },
     });
     // ---------------------------------------------------------------------------------------------- the rider
     const up = walkAlong(RIDER_UP, TROT, (f - rgo) / 30), dn = walkAlong(RIDER_DOWN, STROLL, (f - down0) / 30, { endFacing: -1.2 }), going = f >= down0;

@@ -14,6 +14,8 @@
 //   kpi     0 | 1   the decree: 0 = his own red brush beside it, 就差一对; 1 = the Board's 考绩合格 seal across it
 //   smoke   0..1    the burner's thin column of pale smoke (the prayers arriving)
 //   tangle  0..1    THE TANGLE's height (0 hides it)
+//   knobs   bitmask the case drawers of scene C that are pulled out (bit i = CASE_CELLS[i]): their brass knobs on the
+//                   cabinet's face hide (the drawer carries its own pull out with it; v6c: the knob was left floating in the hole)
 import * as THREE from "three";
 import type { Kit } from "../../../kit/props/kit";
 import { Part } from "../../../kit/props/kit";
@@ -46,7 +48,9 @@ const LOOK: PlaceLook = {
   fill: FILL,
   bloom: 0.3,
 };
-const PARAMS: Record<string, ParamValue> = { kpi: 0, smoke: 0, tangle: 1 };
+const PARAMS: Record<string, ParamValue> = { kpi: 0, smoke: 0, tangle: 1, knobs: 0 };
+/** the cabinet cells (column, row) of scene C's five case drawers, in its order (segC.ts reads them from here) */
+export const CASE_CELLS: [number, number][] = [[5, 5], [11, 4], [4, 7], [12, 5], [7, 1]];
 
 const REDS = ["#c3242b", "#9c1820", "#de4a4a"];
 /** the decree scroll: its width along the wall and the height of its lower edge (above the wainscot's rail at 1.05) */
@@ -289,7 +293,7 @@ const build = (K: Kit): PlaceBuild => {
   Mk.mesh("office.sky", new THREE.PlaneGeometry(6.5, 6.5).translate(X(D.moon.x), D.moon.y + 0.3, D.z0 - 2.6), Mk.basic("#ffffff", { map: skyTex() }), { cast: false, receive: false, noink: true });
 
   // ============================================================================================ dressing
-  const P = new Part(K), r = rng(401);
+  const P = new Part(K), r = rng(401), caseKnobs = new Map<string, THREE.Group>();
   // ---------------------------------------------------------------- THE CASE-FILE CABINET (-x wall)
   {
     const cx = D.cabinetX, z0 = D.cabinet.z0, z1 = D.cabinet.z1, top = D.cabinet.top, len = z1 - z0;
@@ -320,7 +324,9 @@ const build = (K: Kit): PlaceBuild => {
         }
         P.add(RC[0], cordRing(0.045).rotateX(Math.PI / 2).translate(X(cx + out * 0.45), yd + dy + 0.0066, zc), CORD_INK);
       } else {
-        P.add(mBrass, new THREE.CylinderGeometry(0.011, 0.014, 0.024, 10).rotateZ(Math.PI / 2).translate(X(cx + 0.012), yc, zc), 0.003);
+        const knob = new THREE.CylinderGeometry(0.011, 0.014, 0.024, 10).rotateZ(Math.PI / 2).translate(X(cx + 0.012), yc, zc);
+        if (CASE_CELLS.some(([cc, rr]) => cc === c && rr === row)) { const kg = new THREE.Group(); new Part(K).add(mBrass, knob, 0.003).into(kg, "office.cab.knob"); group.add(kg); caseKnobs.set(`${c},${row}`, kg); }
+        else P.add(mBrass, knob, 0.003);
       }
     }
     // on top: file boxes, a bundle of scrolls, spools, a thread basket
@@ -702,6 +708,7 @@ const build = (K: Kit): PlaceBuild => {
     setParam(name: string, v: ParamValue) {
       if (name === "kpi") applyKpi(Number(v));
       else if (name === "smoke") { smoke = clamp01(Number(v)); smokeAt(lastT); }
+      else if (name === "knobs") { const m = Number(v) | 0; CASE_CELLS.forEach(([c, row], i) => { const g = caseKnobs.get(`${c},${row}`); if (g) g.visible = !(m & (1 << i)); }); }
       else if (name === "tangle") { const k = clamp01(Number(v)); tangle.visible = k > 0.001; tangle.scale.set(1, 0.8 + 0.2 * k, 1); }   // (v6: the heap keeps its shape; it only settles a little once he is out)
     },
     cast(): Partial<CastLight> { return {}; },

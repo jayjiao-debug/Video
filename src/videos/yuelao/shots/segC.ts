@@ -33,6 +33,7 @@ import { act, YL, type MoodKey } from "./act";
 import { os, truth, draw, type Fx } from "./fx";
 import { toCab, CAB_AT } from "./segB";
 import { OFFICE } from "../places";
+import { CASE_CELLS } from "../sets/office";
 import { PB, type BookKind } from "../popbook";
 import type { World } from "../world";
 
@@ -42,7 +43,7 @@ type Cell = { z: number; y: number };
 const cell = (c: number, r: number): Cell => { const top = 2.2 - r * 0.26; return { z: OFFICE.cabinet.z1 - (c + 0.5) * 0.25, y: top - 0.13 }; };
 /** the five case drawers, spread over the wall so each flight reads beside him: 牛郎织女 at his right (her left), 梁祝
  *  high at his left, 白蛇传 in the bottom row, 红楼梦 at his left, 天仙配 in the top row over his head (top secret) */
-const CELLS = [cell(5, 5), cell(11, 4), cell(4, 7), cell(12, 5), cell(7, 1)];
+const CELLS = CASE_CELLS.map(([c, r]) => cell(c, r));   // (5,5), (11,4), (4,7), (12,5), (7,1): sets/office.ts hides each one's painted knob while it is out
 const KINDS: BookKind[] = ["niulang", "liangzhu", "baishe", "baodai", "qixian"];
 /** which hand beckons each drawer (-1 his right, +1 his left) */
 const SIDE = [-1, 1, -1, 1, -1];
@@ -54,7 +55,7 @@ export const CAM_C1 = { pos: [-0.35, 1.52, 1.45], look: [-2.72, 1.0, -0.5], fov:
 const HER = P("office", -0.44, 0, 1.43);
 const FRONT = faceTo(BASE, HER);
 /** the two books he lets fall: 梁祝 behind him, 白蛇传 at his feet (clear of his hem, and of his run in scene D) */
-const FLOOR2 = P("office", -2.32, 0, -0.62), FLOOR3 = P("office", -1.74, 0, 0.08);   // (v6b: FLOOR3 8 cm further out: his robe brushed it)
+const FLOOR2 = P("office", -2.36, 0, -0.8), FLOOR3 = P("office", -1.74, 0, 0.08);   // (v6b: FLOOR3 8 cm further out: his robe brushed it; v6c: FLOOR2 55 cm behind him, so the falling book clears his hem)
 
 // ------------------------------------------------------------------------------------------------- the books' frame
 type BP = { at: THREE.Vector3; q: THREE.Quaternion; open: number; s: number };
@@ -190,6 +191,7 @@ export const SEG: Segment = {
   id: "C", from: S.from, to: S.to, enter() {}, exit() {},
   pose(w, f) {
     w.setPlace("office"); w.set.param("tangle", 0.46); w.set.param("kpi", 0); w.set.param("smoke", 0);
+    w.set.param("knobs", outs(f).reduce((m, x, i) => m | (x > 0.004 ? 1 << i : 0), 0));   // (an open drawer's knob goes out with it)
     const t = W_;
     // ---------------------------------------------------------------------------------------------- the camera
     const C0: Omit<ShotKey, "f"> = { pos: [-0.55, 1.5, 1.2], at: [-2.72, 1.0, -0.4], sx: 540, sy: 960, fov: 56 };
@@ -235,7 +237,10 @@ export const SEG: Segment = {
       if (g < let2) return lerpBP(showAt(h0, 0), side, smooth((g - h0) / 4));
       const u = Math.min(1, (g - let2) / 9);
       if (u >= 1) return null;
-      const fl = onFloor(FLOOR2, 0.6), bp = lerpBP(side, fl, smooth(u)); bp.at.y = side.at.y + (fl.at.y - side.at.y) * u * u;
+      // (v6c: it leaves his back at once and falls clear of the bell of his robe: out fast, down with gravity)
+      const fl = onFloor(FLOOR2, 0.6), away = 1 - (1 - u) ** 2.5, bp = lerpBP(side, fl, smooth(u));
+      bp.at.x = side.at.x + (fl.at.x - side.at.x) * away; bp.at.z = side.at.z + (fl.at.z - side.at.z) * away;
+      bp.at.y = side.at.y + (fl.at.y - side.at.y) * u * u;
       return bp;
     };
     // ---------------------------------------------------------------------------------------------- the books

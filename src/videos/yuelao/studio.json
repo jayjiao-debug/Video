@@ -40,13 +40,13 @@
    },
    {
     "check": "clipping",
-    "match": "prop:drawer\\S* into office\\.cab|office\\.cab\\S* into prop:drawer",
-    "why": "a drawer in its own cabinet"
+    "match": "prop:(case)?[dD]rawer\\S* into office\\.(cab|left)|office\\.(cab|left)\\S* into prop:(case)?[dD]rawer",
+    "why": "a drawer in its own cabinet (scene C's case drawers too: a drawer's back runs on into the wall behind the cabinet, out of sight)"
    },
    {
     "check": "clipping",
-    "match": "prop:drawer\\S* into prop:(file|stack)|prop:(file|stack)\\S* into prop:drawer",
-    "why": "a file or the bale inside its drawer"
+    "match": "prop:(case)?[dD]rawer\\S* into prop:(file|stack|book)|prop:(file|stack|book)\\S* into prop:(case)?[dD]rawer",
+    "why": "a file, a case book or the bale inside its drawer"
    },
    {
     "check": "clipping",
@@ -72,12 +72,26 @@
     "check": "clipping",
     "match": "prop:stack\\S* into yuelao\\.acc:robe|prop:file\\S* into yuelao\\.acc:robe",
     "why": "his hem swings against the bale beside him as he starts (4 frames); the falling file passes his robe (1 frame)"
+   },
+   {
+    "check": "clipping",
+    "match": "prop:book\\S* into office\\.cab\\.body",
+    "why": "a case book standing in its drawer as the drawer slides shut into the cabinet"
+   },
+   {
+    "check": "ground",
+    "match": "^2:35\\.\\d: pixels pop",
+    "why": "scene G, the last strand pulled off her lens (a soft jolt) and his step back as she pulls out over the leaf-strewn pavement: fast motion over fine detail, looked at frame by frame (4648-4686): no sparkle, crawl or jiggle"
    }
   ]
  },
  "sound": {
   "build": "bash scripts/yuelao/sound/build_sound.sh {WORK}/sound {MIX}",
-  "stems": "python3 scripts/kit/day/sound/build.py --film yuelao --work {WORK}/sound --timing {WORK}/sound/voice/voice_timing.json --voice {WORK}/sound/voice/voice_48k_ride.wav --clips {WORK}/sound/clips --cues scripts/yuelao/sound/cues.json --only {GROUP} --nosafety --out {STEM}"
+  "stems": "python3 scripts/kit/day/sound/build.py --film yuelao --work {WORK}/sound --timing {WORK}/sound/voice/voice_timing.json --voice {WORK}/sound/voice/voice_48k.wav --clips {WORK}/sound/clips --cues scripts/yuelao/sound/cues_v6.json --only {GROUP} --nosafety --out {STEM}",
+  "groups": [
+   "voice"
+  ]
  },
- "_note": "Sound (27 Nov 2026, after the owner's audition): scripts/yuelao/sound/build_sound.sh rebuilds the whole mix from the repo and the voice farm's public takes: the 63 lines cut by the committed cut list (voice/takes.json: each line exactly the length the picture was timed to; it stops if the rebuilt timing is out of step with voice/timing_ref.json), the music and effects made in code (make_sound.py), the cues on the picture's own frames (cues.json from make_cues.py + events.ts), the voice ridden under the bed (voice_ride.py), then the kit's build.py. Mono mix about -18.9 LUFS, true peak about -2.3 dBTP. The stems command needs the build's {WORK}/sound from the same run. The gate.accept rules turn the clipping classes accepted in the film's own clipping notes into INFO, each with its reason."
+ "_note": "Sound (27 Nov 2026, after the owner's audition): scripts/yuelao/sound/build_sound.sh rebuilds the whole mix from the repo and the voice farm's public takes: the 63 lines cut by the committed cut list (voice/takes.json: each line exactly the length the picture was timed to; it stops if the rebuilt timing is out of step with voice/timing_ref.json), the music and effects made in code (make_sound.py), the cues on the picture's own frames (cues.json from make_cues.py + events.ts), the voice ridden under the bed (voice_ride.py), then the kit's build.py. Mono mix about -18.9 LUFS, true peak about -2.3 dBTP. The stems command needs the build's {WORK}/sound from the same run. The gate.accept rules turn the clipping classes accepted in the film's own clipping notes into INFO, each with its reason.",
+ "_note_v6": "v6 (28 Nov 2026): the cut carries the VOICES ONLY until the owner picks real music (build_sound.sh, cues_v6.json), so the gate's stems are built the same way: the voice stem from voice_48k.wav (no ride: nothing is under it) and no music, room or effects stems, so 'voice over the rest' is not measured (there is no rest by design). When the music card is answered, put back the cues.json + voice_48k_ride.wav stems command and the four groups."
 }
